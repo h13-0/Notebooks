@@ -4,6 +4,6 @@
   "cssTheme": "",
   "interfaceFontFamily": "思源黑体",
   "textFontFamily": "思源等宽",
-  "monospaceFontFamily": "Cascadia Code",
+  "monospaceFontFamily": "Cascadia Code,思源等宽",
   "translucency": true
 }
