@@ -1,0 +1,187 @@
+{
+  "main": {
+    "id": "c4b548e20567d06c",
+    "type": "split",
+    "children": [
+      {
+        "id": "c21125232c55118e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8f7d9aef3dfe397e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "CMake/CMake 变量表.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "ec7860831624088e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Others/Mutex.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "3fffddee4c4b78d0",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Obsidian/插件 自动目录@Dynamic table of contents.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "55ed8cea188e3fe6",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Obsidian/插件 自动目录@Dynamic table of contents.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ],
+        "currentTab": 3
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "cd3278d30764ab2f",
+    "type": "split",
+    "children": [
+      {
+        "id": "ce57341dd2d7d0cb",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7ddc64b2e3c9b5c8",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "d7694db761056d1c",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "tag:#环境变量",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "6d04244bcd16cc79",
+            "type": "leaf",
+            "state": {
+              "type": "starred",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "989a0ed08fe1a7b2",
+    "type": "split",
+    "children": [
+      {
+        "id": "fee78256467ec87d",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "062701aa100a3f19",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Obsidian/插件 自动目录@Dynamic table of contents.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "21dd06d587b3ddc7",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Obsidian/插件 自动目录@Dynamic table of contents.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "3c997c4dde5bf122",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "1bc30e82fd7b9190",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Obsidian/插件 自动目录@Dynamic table of contents.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "55ed8cea188e3fe6",
+  "lastOpenFiles": [
+    "CMake/CMake 变量表.md",
+    "Obsidian/插件 自动目录@Dynamic table of contents.md",
+    "Obsidian/Obsidian_qcYn5k3ZYU.png",
+    "Pasted image 20221127194144.png",
+    "Obsidian/Obsidian_SDeLdlStNw.png",
+    "Others/Mutex.md",
+    "Obsidian/未命名.md",
+    "2022-11-22.md"
+  ]
+}
