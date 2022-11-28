@@ -224,6 +224,7 @@
   "active": "00d99a0d6146f7ce",
   "lastOpenFiles": [
     "CPP/C++ 修饰符类型.md",
+    "CPP/C与C++标准.md",
     "Others/线程锁/线程锁与信号量.md",
     "Others/线程锁/实现/线程锁 with pthread.md",
     "Readme.md",
@@ -231,7 +232,6 @@
     "2022-11-27.md",
     "Obsidian/插件 自动目录@Dynamic table of contents.md",
     "CMake/CMake 变量表.md",
-    "Obsidian/Images/Obsidian_SDeLdlStNw.png",
-    "Obsidian/Images/Obsidian_qcYn5k3ZYU.png"
+    "Obsidian/Images/Obsidian_SDeLdlStNw.png"
   ]
 }
