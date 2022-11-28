@@ -4,6 +4,15 @@ C与C++标准：
 
 ```
 
+其中，C和C++标准的正式版需要授权使用、而其草稿均为免费使用。
+
+ISO标准查询：
+http://www.open-std.org/
+https://www.iso.org/obp/ui/#home
+
+C++委员会开源草稿：
+https://github.com/cplusplus/draft/tree/main/papers
+
 ## C标准
 
 ### Traditional C
@@ -48,8 +57,8 @@ C95 的主要改动：
 
 发布日期: 2011年
 
-最新免费草稿: 
-
+最新免费草稿：[N1570](http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf)，ISO/IEC 9899:201x
+![[n1570.pdf]]
 主要改动：
 
 特性支持表：
@@ -57,7 +66,8 @@ C95 的主要改动：
 
 ### C17
 
-发布日期：2018年6月
+发布日期：2018年6月，也因此又名C18
+
 
 
 ### C2x

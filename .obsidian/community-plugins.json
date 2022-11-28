@@ -1,5 +1,6 @@
 [
   "multi-column-markdown",
   "obsidian-dynamic-toc",
-  "obsidian-git"
+  "obsidian-git",
+  "obsidian-copy-block-link"
 ]
