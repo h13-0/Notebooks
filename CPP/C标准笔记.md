@@ -29,6 +29,8 @@ min_depth: 1
 4. 执行预处理指令，展开宏调用，并且执行`_Pragama`一元运算符表达式
 
 
+[\_Pragama with msvc](https://learn.microsoft.com/zh-cn/cpp/preprocessor/pragma-directives-and-the-pragma-keyword)
+
 # 6 语言
 
 ## 6.2 概念
