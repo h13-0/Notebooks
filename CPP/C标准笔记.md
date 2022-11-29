@@ -26,7 +26,8 @@ min_depth: 1
 1. ..
 2. 删除紧跟着换行符的反斜杠字符 `\` ，将物理源行拼成逻辑源行。只有物理源行的最后一个 `\` 才有资格被这样处理。任何非空的源文件应以换行符结尾，否则其前不应紧跟反斜杠字符 `\`
 3. 源文件被分解为预处理`token`和空白字符序列(如注释)，源文件不得以不完整的预处理标记或注释结尾，每一个注释会被一个空格取代(**所以反斜杠后面不能接注释**)，换行字符会被保留。TODO:Whether each nonempty sequence of white-space characters other than new-line is retained or replaced by one space character is implementation-defined
-4. 执行预处理指令，展开宏调用，并且执行`_Pragama`一元运算符表达式
+4. 执行预处理指令，展开宏调用，并且执行`_Pragama`一元运算符表达式。如果在`token`连接中生成了与通用字符名语法匹配的字符序列，则其行为是未定义的，如[[#6.10.3.3]]中的`##`运算符。使用`#include`预处理指令会递归的处理步骤1到4。
+5. 每一个设置了字符和转义字符串的字符常量和字符串会被计算或拼接为正确的值，若
 
 
 [\_Pragama with msvc](https://learn.microsoft.com/zh-cn/cpp/preprocessor/pragma-directives-and-the-pragma-keyword)
@@ -170,6 +171,12 @@ _Noreturn_ void func(int i)
 
 
 ### 6.7.8
+
+## 6.10
+
+### 6.10.3
+#### 6.10.3.3
+
 
 ## 6.11 C语言未来的发展方向
 
