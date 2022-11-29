@@ -38,9 +38,18 @@ min_depth: 1
 ### 5.1.2 运行环境
 
 运行环境有以下两种：
-- 独立环境
-- 托管环境
+- 独立环境(freestanding)
+- 托管环境()
 
+无论在哪种环境下，C程序都会被环境调用。在C程序启动之前，所有的静态储存类型[^1]都会被初始化[^2]并设定为初始值。这种初始化的方式和时间均未具体规定，程序终止后控制权将返回到运行环境。
+
+**引用**
+[^1]: 静态储存环境
+	[[C标准笔记#6.7.1 储存类型说明符]]
+[^2]: 初始化
+	[[#6.7.9]]
+
+#### 5.1.2.1
 
 
 [\_Pragama with msvc](https://learn.microsoft.com/zh-cn/cpp/preprocessor/pragma-directives-and-the-pragma-keyword)
