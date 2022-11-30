@@ -92,7 +92,6 @@ TODO
 # 5.2 环境因素
 
 
-[\_Pragama with msvc](https://learn.microsoft.com/zh-cn/cpp/preprocessor/pragma-directives-and-the-pragma-keyword)
 
 # 6 语言
 
@@ -238,6 +237,9 @@ _Noreturn_ void func(int i)
 
 ### 6.10.3
 #### 6.10.3.3
+
+### 6.10.6
+[\_Pragama with msvc](https://learn.microsoft.com/zh-cn/cpp/preprocessor/pragma-directives-and-the-pragma-keyword)
 
 
 ## 6.11 C语言未来的发展方向
