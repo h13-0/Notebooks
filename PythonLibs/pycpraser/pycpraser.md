@@ -12,23 +12,42 @@
 ### 抽象语法树(c_ast)
 
 pycparser的语法树节点可由[\_c_ast.cfg](https://github.com/eliben/pycparser/blob/master/pycparser/_c_ast.cfg)配置并生成，默认情况下其提供了以下节点：
-
 ```toc
 min_depth: 4
 ```
+在该文件的原文中：
+```yaml
+# Each entry is a Node sub-class name, listing the attributes
+# and child nodes of the class:
+#   <name>*     - a child node
+#   <name>**    - a sequence of child nodes
+#   <name>      - an attribute
+```
+是按照如下规则标记属性值的：
+	格式为：
+		`<name>* ` 的，是一个子节点
+		`<name>**` 的，是子节点序列
+		`<name>  ` 的，是一个属性值
 
 #### ArrayDecl
 
+数组声明，其拥有以下属性值：
+
+
+#### ArrayRef
+
+
+#### Assignment
+
+#### BinaryOp
+
+#### Break
+
+#### Case
+
+#### Cast(强制类型转换)
 
 
 
-| NodeType | Meaning |
-| -------- | ------- |
-| ArrayDecl | 数组声明 |
-| ArrayRef | 数组定义 |
-| Assignment | 符号 |
-| BinaryOp | 二进制运算符 |
-| Break | `break` |
-| Case | `case` |
-| Cast | 
+
 

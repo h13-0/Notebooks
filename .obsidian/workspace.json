@@ -283,6 +283,8 @@
   },
   "active": "5da38802534218c5",
   "lastOpenFiles": [
+    "Obsidian/插件 自动目录@Dynamic table of contents.md",
+    "PythonLibs/pycpraser/pycpraser.md",
     "Others/线程锁/线程锁与信号量.md",
     "CPP/C++ 修饰符类型.md",
     "CMake/CMake 变量表.md",
@@ -290,8 +292,6 @@
     "CPP/C标准笔记.md",
     "CPP/C与C++标准.md",
     "Readme.md",
-    "PythonLibs/pycpraser/pycpraser.md",
-    "CPP/Resources/n1570.pdf",
-    "Others/正则表达式/正则表达式.md"
+    "CPP/Resources/n1570.pdf"
   ]
 }
