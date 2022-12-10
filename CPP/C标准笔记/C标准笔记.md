@@ -280,13 +280,9 @@ end :
 
 ```
 
-### 6.8.2 Compound statement(即'块'，block)
+### 6.8.2 Compound statement(复合语句，即'块'，block)
 
-块主要包含以下几种：
-- 花括号及其包含的可选块序列：`{ block-item-list(opt) }`
-- 块或块序列
-
-块可以由声明和语句构成。
+复合语句即由花括号及其包含的可选块序列 `{ block-item-list(opt) }` 构成，符合语句必须包含花括号。
 
 **语义**
 一个 `Compound statement` 就是一个块(`block`)。
