@@ -1,18 +1,16 @@
-#include <stdint.h>
+#include <stdio.h>
 
 int main(int argc, char** argv)
 {
-    //
-
-    if(5 > 10)
+    if(5 > 3)
     {
-    label_a :
-        printf("Now we are jumped to label_a.");
-        return 0;
+main :
+        printf("jumped to label: \"main\"\r\n");
+        goto end;
     }
-    
-    main : 
-    goto label_a;
 
-    return -1;
+    goto main;
+
+end :
+    return 0;
 }
