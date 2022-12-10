@@ -238,11 +238,24 @@ _Noreturn_ void func(int i)
 ## 6.8 语句和块
 
 语句主要有以下几种：
-- 
+- Labeled statement
+- compound statement
+- expression statement
+- selection statement
+- iteration statement
+- jump statement
 
-### 6.8.1 语句
+**语义**
 
+### 6.8.1 Labeled statements
 
+Labeled statements主要包含以下几种：
+- `identifier` : statement (即普通label)
+- case `constant-expression` : statement (即case+常量表达式)
+- default : statement
+
+**限制**
+1. `case` 和 `default` 标签应只能在 `switch` 中出现
 
 ## 6.10
 
