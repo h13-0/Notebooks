@@ -246,6 +246,9 @@ _Noreturn_ void func(int i)
 - jump statement
 
 **语义**
+1. 一个语句(statement)就是一个要执行的操作，在未说明的情况下，这些语句会按照顺序执行。
+2. 块(block)允许将一组声明(如变量)和语句分组为一个语法单元。
+
 
 ### 6.8.1 Labeled statements
 
@@ -274,7 +277,12 @@ main :
 end :
     return 0;
 }
+
 ```
+
+### 6.8.2 Compound statement(块语句)
+
+用花括号 `{ }` 所包裹起来的语句称为语句块，
 
 
 ## 6.10
