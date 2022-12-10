@@ -15,7 +15,8 @@ https://github.com/cplusplus/draft/tree/main/papers
 
 ## C标准
 
-![[C标准笔记]]
+C标准笔记：
+	[[C标准笔记]]
 
 ### Traditional C
 

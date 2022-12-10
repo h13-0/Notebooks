@@ -48,12 +48,17 @@ pycparser的语法树节点可由[\_c_ast.cfg](https://github.com/eliben/pycpars
 #### ArrayDecl
 
 数组声明，其拥有以下属性值：
+- type
+- dim
+- dim_equals
 
-##### type
+**type**
+是一个Node，TODO
 
-##### dim
+**dim**
+是一个Node，是维度，
 
-##### dim_quals
+
 
 
 #### ArrayRef
