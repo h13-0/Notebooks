@@ -256,7 +256,25 @@ Labeled statements主要包含以下几种：
 
 **限制**
 1. `case` 和 `default` 标签应只能在 `switch` 中出现，更多的约束将在 `switch` 语句下进行讨论。
-2. 
+2. `Label` 同一个**函数内**(而不是块)不能同名，标签作用域是整个函数，即可以如下：
+```C
+#include <stdio.h>
+
+int main(int argc, char** argv)
+{
+    if(5 > 3)
+    {
+main :
+        printf("jumped to label: \"main\"\r\n");
+        goto end;
+    }
+
+    goto main;
+    
+end :
+    return 0;
+}
+```
 
 
 ## 6.10
