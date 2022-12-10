@@ -1,0 +1,4 @@
+{
+  "pythonInterpreter": "python",
+  "setupScript": "conda activate Obsidian"
+}
