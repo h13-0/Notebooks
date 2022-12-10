@@ -4,17 +4,33 @@
 
 
 
-`storage`为C语言的储存类型说明符，详见：[[C标准笔记#6.7.1 储存类型说明符]]
-`funcspec`为C语言的函数说明符，详见：[[C标准笔记#6.7.4 函数说明符]]
-
-
 
 ### 抽象语法树(c_ast)
 
 pycparser的语法树节点可由[\_c_ast.cfg](https://github.com/eliben/pycparser/blob/master/pycparser/_c_ast.cfg)配置并生成，默认情况下其提供了以下节点：
-```toc
-min_depth: 4
-```
+- ArrayDecl
+- ArrayRef
+- Assignment
+- BinaryOp
+- Break
+- Case
+- Cast
+- Compound
+- CompoundLiteral
+- Constant
+- Continue
+- Decl
+- DeclList
+- Default
+- DoWhile
+- EllipsisParam
+- EmptyStatement
+- Enum
+- Enumerator
+- EnumeratorList
+- ExprList
+- 
+
 在该文件的原文中：
 ```yaml
 # Each entry is a Node sub-class name, listing the attributes
@@ -33,6 +49,12 @@ min_depth: 4
 
 数组声明，其拥有以下属性值：
 
+##### type
+
+##### dim
+
+##### dim_quals
+
 
 #### ArrayRef
 
@@ -49,5 +71,9 @@ min_depth: 4
 
 
 
+#### Decl
+`storage`为C语言的储存类型说明符，详见：[[C标准笔记#6.7.1 储存类型说明符]]
+`funcspec`为C语言的函数说明符，详见：[[C标准笔记#6.7.4 函数说明符]]
 
-
+[[C标准笔记#6 8 2 Compound statement 复合语句，即'块'，block]]
+![[C标准笔记#6 8 2 Compound statement 复合语句，即'块'，block]]

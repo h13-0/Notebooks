@@ -15,6 +15,8 @@ https://github.com/cplusplus/draft/tree/main/papers
 
 ## C标准
 
+![[C标准笔记]]
+
 ### Traditional C
 
 发布日期: 
@@ -73,5 +75,7 @@ C95 的主要改动：
 ### C2x
 
 预计将于2022年12月发布
+
+
 
 ## C++标准
