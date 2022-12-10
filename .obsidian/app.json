@@ -3,5 +3,7 @@
   "spellcheckLanguages": [
     "zh-CN",
     "en-US"
-  ]
+  ],
+  "alwaysUpdateLinks": true,
+  "attachmentFolderPath": "Resources"
 }

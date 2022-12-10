@@ -255,7 +255,8 @@ Labeled statements主要包含以下几种：
 - default : statement
 
 **限制**
-1. `case` 和 `default` 标签应只能在 `switch` 中出现
+1. `case` 和 `default` 标签应只能在 `switch` 中出现，更多的约束将在 `switch` 语句下进行讨论。
+2. 
 
 ## 6.10
 
