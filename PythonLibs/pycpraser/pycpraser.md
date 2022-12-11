@@ -58,7 +58,7 @@ pycparser的语法树节点可由[\_c_ast.cfg](https://github.com/eliben/pycpars
 **dim**
 是一个Node，是维度，
 
-```jupyter
+```python
 print(1)
 ```
 
