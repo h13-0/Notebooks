@@ -29,9 +29,35 @@ pycparser的语法树节点可由[\_c_ast.cfg](https://github.com/eliben/pycpars
 - Enumerator
 - EnumeratorList
 - ExprList
-- 
+- FileAST
+- For
+- FuncCall
+- FuncDecl
+- FuncDef
+- Goto
+- ID
+- IdentifierType
+- If
+- InitList
+- Label
+- NamedInitializer
+- ParamList
+- PtrDecl
+- Return
+- StaticAssert
+- Struct
+- StructRef
+- Switch
+- TernaryOp
+- TypeDecl
+- Typedef
+- Typename
+- UnaryOp
+- Union
+- While
+- Pragma
 
-在该文件的原文中：
+在该文件的原文中是按照如下规则标记属性值的：
 ```yaml
 # Each entry is a Node sub-class name, listing the attributes
 # and child nodes of the class:
@@ -39,11 +65,10 @@ pycparser的语法树节点可由[\_c_ast.cfg](https://github.com/eliben/pycpars
 #   <name>**    - a sequence of child nodes
 #   <name>      - an attribute
 ```
-是按照如下规则标记属性值的：
-	格式为：
-		`<name>* ` 的，是一个子节点
-		`<name>**` 的，是子节点序列
-		`<name>  ` 的，是一个属性值
+即：
+	`<name>* ` 的，是一个子节点
+	`<name>**` 的，是子节点序列
+	`<name>  ` 的，是一个属性值
 
 #### ArrayDecl
 
@@ -59,6 +84,74 @@ pycparser的语法树节点可由[\_c_ast.cfg](https://github.com/eliben/pycpars
 
 **dim**
 是一个Node，是维度，
+
+Demo:
+```C
+int length = 10;
+int arr[5][length] = { 0 };
+```
+
+```AST
+FileAST(ext=[Decl(name='length',
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=TypeDecl(declname='length',
+                                quals=[
+                                      ],
+                                align=None,
+                                type=IdentifierType(names=['int'
+                                                          ]
+                                                    )
+                                ),
+                  init=Constant(type='int',
+                                value='10'
+                                ),
+                  bitsize=None
+                  ),
+             Decl(name='arr',
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=ArrayDecl(type=ArrayDecl(type=TypeDecl(declname='arr',
+                                                              quals=[
+                                                                    ],
+                                                              align=None,
+                                                              type=IdentifierType(names=['int'
+                                                                                        ]
+                                                                                  )
+                                                              ),
+                                                dim=ID(name='length'
+                                                       ),
+                                                dim_quals=[
+                                                          ]
+                                                ),
+                                 dim=Constant(type='int',
+                                              value='5'
+                                              ),
+                                 dim_quals=[
+                                           ]
+                                 ),
+                  init=InitList(exprs=[Constant(type='int',
+                                                value='0'
+                                                )
+                                      ]
+                                ),
+                  bitsize=None
+                  )
+            ]
+        )
+```
 
 ```jupyter
 import pycparser as pyc
