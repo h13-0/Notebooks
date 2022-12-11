@@ -52,6 +52,8 @@ pycparser的语法树节点可由[\_c_ast.cfg](https://github.com/eliben/pycpars
 - dim
 - dim_equals
 
+当其为一位数组时，该
+
 **type**
 是一个Node，TODO
 
@@ -62,15 +64,15 @@ pycparser的语法树节点可由[\_c_ast.cfg](https://github.com/eliben/pycpars
 import pycparser as pyc
 
 code = """
-int x = 10;
-int y = 5;
-int arr[x][y] = { 0 };
+int length = 10;
+int arr[5][length] = { 0 };
 """
 
-ast = pyc.CParser.parse(code)
+parser = pyc.CParser()
+ast = parser.parse(code)
 print(ast)
 ```
-
+例如上述代码，
 
 #### ArrayRef
 
