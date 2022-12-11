@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "629f549da748d8e6",
+        "id": "533b846ff71372ef",
         "type": "tabs",
         "children": [
           {
-            "id": "e74e569751f4bf9d",
+            "id": "81ed6d141077bbf0",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -136,8 +136,9 @@
     "width": 300,
     "collapsed": true
   },
-  "active": "e74e569751f4bf9d",
+  "active": "81ed6d141077bbf0",
   "lastOpenFiles": [
+    "2022-12-11.md",
     "PythonLibs/pycpraser/pycpraser.md",
     "CPP/C标准笔记/C标准笔记.md",
     "CPP/C与C++标准.md",
@@ -146,7 +147,6 @@
     "CMake/CMake 变量表.md",
     "Obsidian/插件 自动目录@Dynamic table of contents.md",
     "Tools/Tools.md",
-    "Readme.md",
-    "CPP/Resources/n1570.pdf"
+    "Readme.md"
   ]
 }

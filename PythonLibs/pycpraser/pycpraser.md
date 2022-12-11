@@ -85,7 +85,7 @@ pycparser的语法树节点可由[\_c_ast.cfg](https://github.com/eliben/pycpars
 **dim**
 是一个Node，是维度，
 
-Demo:
+Demo
 ```C
 int length = 10;
 int arr[5][length] = { 0 };
@@ -153,20 +153,6 @@ FileAST(ext=[Decl(name='length',
         )
 ```
 
-```jupyter
-import pycparser as pyc
-
-code = """
-int length = 10;
-int arr[5][length] = { 0 };
-"""
-
-parser = pyc.CParser()
-ast = parser.parse(code)
-print(ast)
-```
-例如上述代码，
-
 #### ArrayRef
 
 
@@ -180,11 +166,25 @@ print(ast)
 
 #### Cast(强制类型转换)
 
+#### Compound
+
+[[C标准笔记#6 8 2 Compound statement 复合语句，即'块'，block]]
+![[C标准笔记#6 8 2 Compound statement 复合语句，即'块'，block]]
 
 
 #### Decl
 `storage`为C语言的储存类型说明符，详见：[[C标准笔记#6.7.1 储存类型说明符]]
 `funcspec`为C语言的函数说明符，详见：[[C标准笔记#6.7.4 函数说明符]]
 
-[[C标准笔记#6 8 2 Compound statement 复合语句，即'块'，block]]
-![[C标准笔记#6 8 2 Compound statement 复合语句，即'块'，block]]
+
+
+
+
+
+
+#### FileAST
+
+FileAST作为AST的顶部，表示经过预处理后的单个C文件，也是C语言标准中的术语 #翻译单元 ，其包含外部声明列表("external-declaration"s)，即声明(Decl)、Typedef
+
+
+
