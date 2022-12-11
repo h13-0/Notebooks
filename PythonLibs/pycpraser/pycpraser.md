@@ -73,8 +73,8 @@ pycparser的语法树节点可由[\_c_ast.cfg](https://github.com/eliben/pycpars
 #### ArrayDecl
 
 数组声明，其拥有以下属性值：
-- type
-- dim
+- type*
+- dim**
 - dim_equals
 
 当其为一位数组时，该
@@ -83,7 +83,7 @@ pycparser的语法树节点可由[\_c_ast.cfg](https://github.com/eliben/pycpars
 是一个Node，TODO
 
 **dim**
-是一个Node，是维度，
+是一个Node，是维度，TODO
 
 Demo
 ```C
@@ -184,7 +184,13 @@ FileAST(ext=[Decl(name='length',
 
 #### FileAST
 
-FileAST作为AST的顶部，表示经过预处理后的单个C文件，也是C语言标准中的术语 #翻译单元 ，其包含外部声明列表("external-declaration"s)，即声明(Decl)、Typedef
+FileAST作为AST的顶部，表示经过预处理后的单个C文件，也是C语言标准中的术语 #翻译单元 ，其包含外部声明列表("external-declaration"s)，即声明(Decl)、Typedef或函数定义(FuncDef)。
+
+其拥有属性值：
+- ext**
+
+##### ext
+是子节点序列，元素即为上述的"external-declaration"s
 
 
 
