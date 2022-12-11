@@ -58,8 +58,17 @@ pycparser的语法树节点可由[\_c_ast.cfg](https://github.com/eliben/pycpars
 **dim**
 是一个Node，是维度，
 
-```python
-print(1)
+```jupyter
+import pycparser as pyc
+
+code = """
+int x = 10;
+int y = 5;
+int arr[x][y] = { 0 };
+"""
+
+ast = pyc.CParser.parse(code)
+print(ast)
 ```
 
 
