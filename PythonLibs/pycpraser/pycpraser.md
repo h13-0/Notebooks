@@ -3,7 +3,11 @@
 	https://github.com/eliben/pycparser
 
 
+## 目录
 
+```toc
+
+```
 
 ### 抽象语法树(c_ast)
 
@@ -234,6 +238,93 @@ FileAST(ext=[Decl(name='array',
 ```
 
 #### Assignment
+
+赋值操作符，有以下几种：
+- `=`
+- `*=`
+- `/=`
+- `%=`
+- `+=`
+- `-=`
+- `<<=`
+- `>>=`
+- `&=`
+- `|=`
+- `^=`
+
+其拥有以下属性值：
+- op
+- lvalue*
+- rvalue*
+
+Demo
+```C
+void func()
+{
+    int val = 0;
+    val += 1;
+}
+```
+
+```AST
+FileAST(ext=[FuncDef(decl=Decl(name='func',
+                               quals=[
+                                     ],
+                               align=[
+                                     ],
+                               storage=[
+                                       ],
+                               funcspec=[
+                                        ],
+                               type=FuncDecl(args=None,
+                                             type=TypeDecl(declname='func',
+                                                           quals=[
+                                                                 ],
+                                                           align=None,
+                                                           type=IdentifierType(names=['void'
+                                                                                     ]
+                                                                               )
+                                                           )
+                                             ),
+                               init=None,
+                               bitsize=None
+                               ),
+                     param_decls=None,
+                     body=Compound(block_items=[Decl(name='val',
+                                                     quals=[
+                                                           ],
+                                                     align=[
+                                                           ],
+                                                     storage=[
+                                                             ],
+                                                     funcspec=[
+                                                              ],
+                                                     type=TypeDecl(declname='val',
+                                                                   quals=[
+                                                                         ],
+                                                                   align=None,
+                                                                   type=IdentifierType(names=['int'
+                                                                                             ]
+                                                                                       )
+                                                                   ),
+                                                     init=Constant(type='int',
+                                                                   value='0'
+                                                                   ),
+                                                     bitsize=None
+                                                     ),
+                                                Assignment(op='+=',
+                                                           lvalue=ID(name='val'
+                                                                     ),
+                                                           rvalue=Constant(type='int',
+                                                                           value='1'
+                                                                           )
+                                                           )
+                                               ]
+                                   )
+                     )
+            ]
+        )
+```
 
 #### BinaryOp
 
