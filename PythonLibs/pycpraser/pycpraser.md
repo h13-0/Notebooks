@@ -554,10 +554,120 @@ FileAST(ext=[FuncDef(decl=Decl(name='func',
 
 
 #### CompoundLiteral
+[[C标准笔记#6.5.2.5 复合字面量(Compound literals)]]
+![[C标准笔记#6.5.2.5 复合字面量(Compound literals)]]
+
+Demo
+```C
+int *p = (int[]) { 1, 2, 3 };
+```
+
+```AST
+FileAST(ext=[Decl(name='p',
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=PtrDecl(quals=[
+                                     ],
+                               type=TypeDecl(declname='p',
+                                             quals=[
+                                                   ],
+                                             align=None,
+                                             type=IdentifierType(names=['int'
+                                                                       ]
+                                                                 )
+                                             )
+                               ),
+                  init=CompoundLiteral(type=Typename(name=None,
+                                                     quals=[
+                                                           ],
+                                                     align=None,
+                                                     type=ArrayDecl(type=TypeDecl(declname=None,
+                                                                                  quals=[
+                                                                                        ],
+                                                                                  align=None,
+                                                                                  type=IdentifierType(names=['int'
+                                                                                                            ]
+                                                                                                      )
+                                                                                  ),
+                                                                    dim=None,
+                                                                    dim_quals=[
+                                                                              ]
+                                                                    )
+                                                     ),
+                                       init=InitList(exprs=[Constant(type='int',
+                                                                     value='1'
+                                                                     ),
+                                                            Constant(type='int',
+                                                                     value='2'
+                                                                     ),
+                                                            Constant(type='int',
+                                                                     value='3'
+                                                                     )
+                                                           ]
+                                                     )
+                                       ),
+                  bitsize=None
+                  )
+            ]
+        )
+```
+
+#### Constant
+
+即常量，其属性有：
+- type
+- value
+
+**type**
+
+**value**
+
+Demo
+```C
+const int a = 1;
+```
+
+```AST
+FileAST(ext=[Decl(name='a',
+                  quals=['const'
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=TypeDecl(declname='a',
+                                quals=['const'
+                                      ],
+                                align=None,
+                                type=IdentifierType(names=['int'
+                                                          ]
+                                                    )
+                                ),
+                  init=Constant(type='int',
+                                value='1'
+                                ),
+                  bitsize=None
+                  )
+            ]
+        )
+```
+
+#### Continue
 
 
 
 #### Decl
+
+
+
 `storage`为C语言的储存类型说明符，详见：[[C标准笔记#6.7.1 储存类型说明符]]
 `funcspec`为C语言的函数说明符，详见：[[C标准笔记#6.7.4 函数说明符]]
 
