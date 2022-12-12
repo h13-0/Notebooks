@@ -12,7 +12,7 @@
 ### 抽象语法树(c_ast)
 
 pycparser的语法树节点可由[\_c_ast.cfg](https://github.com/eliben/pycparser/blob/master/pycparser/_c_ast.cfg)配置并生成，默认情况下其提供了以下节点：
-- ArrayDecl
+- ArrayDecl(Decl.type)
 - ArrayRef
 - Assignment
 - BinaryOp
@@ -666,7 +666,7 @@ FileAST(ext=[Decl(name='a',
 
 #### Decl
 
-
+所有声明语句均为Decl，
 
 `storage`为C语言的储存类型说明符，详见：[[C标准笔记#6.7.1 储存类型说明符]]
 `funcspec`为C语言的函数说明符，详见：[[C标准笔记#6.7.4 函数说明符]]
