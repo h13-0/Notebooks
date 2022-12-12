@@ -337,7 +337,62 @@ FileAST(ext=[FuncDef(decl=Decl(name='func',
 
 #### Alignas
 
-字节对齐
+字节对齐，即C11中的
+
+Demo
+```C
+int _Alignas(8) a;
+int b;
+```
+
+```AST
+FileAST(ext=[Decl(name='a',
+                  quals=[
+                        ],
+                  align=[Alignas(alignment=Constant(type='int',
+                                                    value='8'
+                                                    )
+                                 )
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=TypeDecl(declname='a',
+                                quals=[
+                                      ],
+                                align=None,
+                                type=IdentifierType(names=['int'
+                                                          ]
+                                                    )
+                                ),
+                  init=None,
+                  bitsize=None
+                  ),
+             Decl(name='b',
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=TypeDecl(declname='b',
+                                quals=[
+                                      ],
+                                align=None,
+                                type=IdentifierType(names=['int'
+                                                          ]
+                                                    )
+                                ),
+                  init=None,
+                  bitsize=None
+                  )
+            ]
+        )
+```
+
 
 #### BinaryOp
 
