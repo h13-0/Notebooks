@@ -421,12 +421,129 @@ FileAST(ext=[Decl(name='a',
 - `==`
 - `!=`
 
+其拥有如下属性：
+- op
+- left*
+- right*
 
+**op**
+类型为字符串，是上述操作符的字符串形式
 
+TODO.
+
+Demo
+```C
+int a = 1;
+int b = a == 1;
+```
+
+```AST
+FileAST(ext=[Decl(name='a',
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=TypeDecl(declname='a',
+                                quals=[
+                                      ],
+                                align=None,
+                                type=IdentifierType(names=['int'
+                                                          ]
+                                                    )
+                                ),
+                  init=Constant(type='int',
+                                value='1'
+                                ),
+                  bitsize=None
+                  ),
+             Decl(name='b',
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=TypeDecl(declname='b',
+                                quals=[
+                                      ],
+                                align=None,
+                                type=IdentifierType(names=['int'
+                                                          ]
+                                                    )
+                                ),
+                  init=BinaryOp(op='==',
+                                left=ID(name='a'
+                                        ),
+                                right=Constant(type='int',
+                                               value='1'
+                                               )
+                                ),
+                  bitsize=None
+                  )
+            ]
+        )
+```
 
 #### Break
 
+Demo
+```C
+void func()
+{
+    while(1)
+    {
+        break;
+    }
+}
+```
+
+```AST
+FileAST(ext=[FuncDef(decl=Decl(name='func',
+                               quals=[
+                                     ],
+                               align=[
+                                     ],
+                               storage=[
+                                       ],
+                               funcspec=[
+                                        ],
+                               type=FuncDecl(args=None,
+                                             type=TypeDecl(declname='func',
+                                                           quals=[
+                                                                 ],
+                                                           align=None,
+                                                           type=IdentifierType(names=['void'
+                                                                                     ]
+                                                                               )
+                                                           )
+                                             ),
+                               init=None,
+                               bitsize=None
+                               ),
+                     param_decls=None,
+                     body=Compound(block_items=[While(cond=Constant(type='int',
+                                                                    value='1'
+                                                                    ),
+                                                      stmt=Compound(block_items=[Break()
+                                                                                ]
+                                                                    )
+                                                      )
+                                               ]
+                                   )
+                     )
+            ]
+        )
+```
+
 #### Case
+
+
 
 #### Cast(强制类型转换)
 
@@ -434,6 +551,10 @@ FileAST(ext=[Decl(name='a',
 
 [[C标准笔记#6 8 2 Compound statement 复合语句，即'块'，block]]
 ![[C标准笔记#6 8 2 Compound statement 复合语句，即'块'，block]]
+
+
+#### CompoundLiteral
+
 
 
 #### Decl
@@ -453,7 +574,7 @@ FileAST作为AST的顶部，表示经过预处理后的单个C文件，也是C�
 其拥有属性值：
 - ext**
 
-##### ext
+**ext**
 是子节点序列，元素即为上述的"external-declaration"s
 
 
