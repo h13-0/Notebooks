@@ -155,7 +155,83 @@ FileAST(ext=[Decl(name='length',
 
 #### ArrayRef
 
+数组值引用，其拥有以下属性值：
+- name*
+- subscript*
 
+##### name
+
+
+##### subscript
+
+
+
+
+Demo
+```C
+int array[10] = { 0 };
+int val = array[5];
+```
+
+```AST
+FileAST(ext=[Decl(name='array',
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=ArrayDecl(type=TypeDecl(declname='array',
+                                               quals=[
+                                                     ],
+                                               align=None,
+                                               type=IdentifierType(names=['int'
+                                                                         ]
+                                                                   )
+                                               ),
+                                 dim=Constant(type='int',
+                                              value='10'
+                                              ),
+                                 dim_quals=[
+                                           ]
+                                 ),
+                  init=InitList(exprs=[Constant(type='int',
+                                                value='0'
+                                                )
+                                      ]
+                                ),
+                  bitsize=None
+                  ),
+             Decl(name='val',
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=TypeDecl(declname='val',
+                                quals=[
+                                      ],
+                                align=None,
+                                type=IdentifierType(names=['int'
+                                                          ]
+                                                    )
+                                ),
+                  init=ArrayRef(name=ID(name='array'
+                                        ),
+                                subscript=Constant(type='int',
+                                                   value='5'
+                                                   )
+                                ),
+                  bitsize=None
+                  )
+            ]
+        )
+```
 
 #### Assignment
 
