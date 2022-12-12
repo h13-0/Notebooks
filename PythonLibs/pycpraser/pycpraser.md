@@ -163,10 +163,10 @@ FileAST(ext=[Decl(name='length',
 - name*
 - subscript*
 
-##### name
+**name**
 
 
-##### subscript
+**subscript**
 
 
 
@@ -257,6 +257,15 @@ FileAST(ext=[Decl(name='array',
 - lvalue*
 - rvalue*
 
+**op**
+类型为字符串，是上述操作符的字符串形式
+
+**lvalue**
+左值
+
+**rvalue**
+右值
+
 Demo
 ```C
 void func()
@@ -325,6 +334,10 @@ FileAST(ext=[FuncDef(decl=Decl(name='func',
             ]
         )
 ```
+
+#### Alignas
+
+字节对齐
 
 #### BinaryOp
 
