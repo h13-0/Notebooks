@@ -25,7 +25,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "git/常用操作.md",
+                "file": "CPP/C标准笔记/C标准笔记.md",
                 "mode": "source",
                 "source": false
               }
@@ -98,7 +98,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "git/常用操作.md",
+                "file": "CPP/C标准笔记/C标准笔记.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -115,7 +115,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "git/常用操作.md",
+                "file": "CPP/C标准笔记/C标准笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -138,7 +138,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "git/常用操作.md"
+                "file": "CPP/C标准笔记/C标准笔记.md"
               }
             }
           }
@@ -151,6 +151,7 @@
   },
   "active": "931adf6a62529c86",
   "lastOpenFiles": [
+    "git/常用操作.md",
     "PythonLibs/pycpraser/pycpraser.md",
     "CPP/C标准笔记/C标准笔记.md",
     "CPP/C++ 修饰符类型.md",
@@ -159,7 +160,6 @@
     "Others/线程锁/线程锁与信号量.md",
     "CMake/CMake 变量表.md",
     "Obsidian/插件 自动目录@Dynamic table of contents.md",
-    "Tools/Tools.md",
-    "Readme.md"
+    "Tools/Tools.md"
   ]
 }
