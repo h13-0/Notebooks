@@ -631,6 +631,7 @@ FileAST(ext=[Decl(name='p',
 Demo
 ```C
 const int a = 1;
+int b = 0;
 ```
 
 ```AST
@@ -643,8 +644,30 @@ FileAST(ext=[Decl(name='a',
                           ],
                   funcspec=[
                            ],
-                  type=TypeDecl(declname='a',
+                  type=TypeDecl(declname='a', 
                                 quals=['const'
+                                      ],      
+                                align=None,   
+                                type=IdentifierType(names=['int'
+                                                          ]
+                                                    )
+                                ),
+                  init=Constant(type='int',
+                                value='1'
+                                ),
+                  bitsize=None
+                  ),
+             Decl(name='b',
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=TypeDecl(declname='b',
+                                quals=[
                                       ],
                                 align=None,
                                 type=IdentifierType(names=['int'
