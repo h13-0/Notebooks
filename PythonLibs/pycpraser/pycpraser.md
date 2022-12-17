@@ -695,8 +695,27 @@ FileAST(ext=[Decl(name='a',
 `funcspec`为C语言的函数说明符，详见：[[C标准笔记#6.7.4 函数说明符]]
 
 
+#### DeclList
 
+```C
+int a, b;
+```
 
+#### Default
+
+#### DoWhile
+
+#### EllipsisParam
+
+```C
+int mprint(char* fmt, ...);
+```
+
+#### EmptyStatement
+
+```C
+;
+```
 
 
 
