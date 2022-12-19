@@ -632,10 +632,32 @@ FileAST(ext=[Decl(name='a',
 
 ### Decl
 
-所有声明语句均为Decl，
 
-`storage`为C语言的储存类型说明符，详见：[[C标准笔记#6.7.1 储存类型说明符]]
-`funcspec`为C语言的函数说明符，详见：[[C标准笔记#6.7.4 函数说明符]]
+
+所有声明语句均为Decl，
+其属性有：
+- name
+- quals
+- align
+- storage
+- funcspec
+- type*
+- init*
+- bitsize*
+
+`name` 仅为声明对象的名字
+`quals` 为对象的限定符，包含
+`storage` 为C语言的储存类型说明符，详见：[[C标准笔记#6.7.1 储存类型说明符]]
+`funcspec` 为C语言的函数说明符，详见：[[C标准笔记#6.7.4 函数说明符]]
+
+最小示例：
+
+
+
+完整示例：
+```C
+
+```
 
 
 ### DeclList
