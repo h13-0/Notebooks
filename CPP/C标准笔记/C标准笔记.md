@@ -302,9 +302,9 @@ end :
 ## 6.10
 
 ### 6.10.3
-#### 6.10.3.3
+#### 6.10.3.3 
 
-### 6.10.6
+### 6.10.6 Pragma指令
 [\_Pragama with msvc](https://learn.microsoft.com/zh-cn/cpp/preprocessor/pragma-directives-and-the-pragma-keyword)
 
 

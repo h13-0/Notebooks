@@ -1090,3 +1090,57 @@ FileAST(ext=[Decl(name='obj',
 ```
 
 
+#### pragma
+
+[[C标准笔记#6.10.6 Pragma指令]]
+![[C标准笔记#6.10.6 Pragma指令]]
+
+Demo
+```C
+#pragma once
+```
+
+```AST
+FileAST(ext=[Pragma(string='once'
+                    )
+            ]
+        )
+```
+
+#### PtrDecl
+
+Demo
+```C
+int *a;
+```
+
+```AST
+FileAST(ext=[Decl(name='a',
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=PtrDecl(quals=[
+                                     ],
+                               type=TypeDecl(declname='a',
+                                             quals=[
+                                                   ],
+                                             align=None,
+                                             type=IdentifierType(names=['int'
+                                                                       ]
+                                                                 )
+                                             )
+                               ),
+                  init=None,
+                  bitsize=None
+                  )
+            ]
+        )
+```
+
+
+
