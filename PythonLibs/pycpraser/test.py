@@ -8,7 +8,7 @@ char test(char a)
 """
 
 code = """
-char a = ! 0xf0;
+static _Thread_local int a = 0;
 """
 
 parser = pyc.c_parser.CParser()

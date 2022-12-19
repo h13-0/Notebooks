@@ -651,6 +651,18 @@ FileAST(ext=[Decl(name='a',
 
 #### `quals`
 `quals` 为对象的限定符，包含：
+
+- \[[[C标准笔记#^rbqfe0|限制说明符]]\]
+	- `const`
+	- `volatile`
+	- `restrict`
+
+#### `align`
+
+
+
+#### `storge`
+storage` 为C语言的储存类型说明符，详见：[[C标准笔记#6.7.1 储存类型说明符]]
 - \[[[C标准笔记#6 7 1 储存类型说明符|储存类型说明符]]\]
 	- `typedef`
 	- `extern`
@@ -658,10 +670,10 @@ FileAST(ext=[Decl(name='a',
 	- `_Thread_local`
 	- `auto`
 	- `register`
-- `const` 
+当然，同笔记中所言：
+![[C标准笔记#^9zuwzp]]
 
- 
-`storage` 为C语言的储存类型说明符，详见：[[C标准笔记#6.7.1 储存类型说明符]]
+
 `funcspec` 为C语言的函数说明符，详见：[[C标准笔记#6.7.4 函数说明符]]
 
 最小示例：

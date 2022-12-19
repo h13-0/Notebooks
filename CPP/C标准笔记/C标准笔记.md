@@ -102,6 +102,11 @@ TODO
 
 ### 6.2.4
 
+### 6.2.5 类型
+
+26. 限制说明符...TODO..包含 `const` 、 `volatile` 、 `restrict`  ^rbqfe0
+27. 
+
 ## 6.4 词法元素
 
 ### 6.4.4 常量(Constants)
@@ -184,9 +189,9 @@ long-long后缀可以为：
 - register
 
 **限制**
-1. 除了之外`_Thread_local`可以和`static`、`extern`联合使用以外，一个变量最多使用一个储存类型说明符。
-2. 在具有块(block)范围的对象的声明中，如果使用了`_Thread_local`则他还应包含`static`或`extern`。TODO: If `_Thread_local` appears in any declaration of an object, it shall be present in every declaration of that object.
-3. `_Thread_local`不应该出现在函数声明中的说明符中。
+1. 除了之外 `_Thread_local` 可以和 `static` 、 `extern` 联合使用以外，一个变量最多使用一个储存类型说明符。 ^9zuwzp
+2. 在具有块(block)范围的对象的声明中，如果使用了 `_Thread_local` 则他还应包含 `static` 或 `extern` 。TODO: If `_Thread_local` appears in any declaration of an object, it shall be present in every declaration of that object.
+3. `_Thread_local` 不应该出现在函数声明中的说明符中。
 4. `typedef`被称为储存类型说明符只是为了语法方便，这一特性在章节[[#6.7.8]]中有所讨论，TODO:且在[[#6.2.2]]和[[#6.2.4]]中讨论了各种联系以及储存周期的含义。
 5. 带有`register`的说明符建议使用在需要尽可能快的访问对象的地方。当然编译器可以不听你的。
 6. 具有块作用域的函数声明中不应具有除`extern`以外的显示的储存类型说明符。
