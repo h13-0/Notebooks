@@ -33,6 +33,22 @@
       "PythonLibs/pycpraser/pycpraser.md",
       "PythonLibs/pycpraser/抽象语法树(c_ast).md",
       "PythonLibs/pycpraser/test.py"
+    ],
+    "/": [
+      "编译原理",
+      "计算机组成",
+      "CMake",
+      "CPP",
+      "CV",
+      "git",
+      "html",
+      "Obsidian",
+      "obsidian-jupyter.py",
+      "Others",
+      "PythonLibs",
+      "Resources",
+      "Tools",
+      "Readme.md"
     ]
   },
   "actionBarOrder": {},

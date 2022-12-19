@@ -4,59 +4,22 @@
     "type": "split",
     "children": [
       {
-        "id": "533b846ff71372ef",
+        "id": "1870f84a614abafa",
         "type": "tabs",
         "children": [
           {
-            "id": "456da9b76b6e352c",
+            "id": "3ab8a2f5c144d142",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Obsidian/插件/自动目录 Dynamic table of contents.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "6ca3b4773dd933a6",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Obsidian/插件/笔记md文件手动排序 bartender.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "9cb25db9226a7234",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Obsidian/插件/笔记md文件手动排序 bartender.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "497604ca2d446f92",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Obsidian/Markdown与html语法拓展/html常用语法拓展.md",
+                "file": "PythonLibs/pycpraser/抽象语法树(c_ast).md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -122,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Obsidian/插件/笔记md文件手动排序 bartender.md",
+                "file": "PythonLibs/pycpraser/抽象语法树(c_ast).md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -139,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Obsidian/插件/笔记md文件手动排序 bartender.md",
+                "file": "PythonLibs/pycpraser/抽象语法树(c_ast).md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -162,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Obsidian/插件/笔记md文件手动排序 bartender.md"
+                "file": "PythonLibs/pycpraser/抽象语法树(c_ast).md"
               }
             }
           }
@@ -173,17 +136,17 @@
     "width": 300,
     "collapsed": true
   },
-  "active": "9cb25db9226a7234",
+  "active": "3ab8a2f5c144d142",
   "lastOpenFiles": [
-    "Obsidian/插件/自动目录 Dynamic table of contents.md",
-    "PythonLibs/pycpraser/pycpraser.md",
-    "Obsidian/Markdown与html语法拓展/html常用语法拓展.md",
-    "Obsidian/插件/笔记md文件手动排序 bartender.md",
-    "Obsidian/插件/第三方插件安装器 Obsidian42-BRAT.md",
-    "PythonLibs/pycpraser/抽象语法树(c_ast).md",
-    "[[第三方插件安装器.md",
-    "Tools/Tools.md",
+    "CPP/C标准笔记/C标准笔记.md",
     "CPP/C标准笔记/C与C++标准.md",
-    "2022-12-20.md"
+    "CMake/CMake 变量表.md",
+    "Obsidian/插件/Obsidian42-BRAT 第三方插件安装器.md",
+    "Obsidian/插件/Dynamic table of contents 自动目录.md",
+    "PythonLibs/pycpraser/抽象语法树(c_ast).md",
+    "PythonLibs/pycpraser/pycpraser.md",
+    "Obsidian/插件/bartender 笔记md文件手动排序.md",
+    "Obsidian/Markdown与html语法拓展/html常用语法拓展.md",
+    "[[第三方插件安装器.md"
   ]
 }
