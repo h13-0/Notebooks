@@ -26,9 +26,25 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "3a210cf5c4ea7500",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {}
+            }
+          },
+          {
+            "id": "456da9b76b6e352c",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {}
+            }
           }
         ],
-        "currentTab": 1
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -94,7 +110,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "PythonLibs/pycpraser/pycpraser.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -111,7 +126,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "PythonLibs/pycpraser/pycpraser.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,9 +147,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "PythonLibs/pycpraser/pycpraser.md"
-              }
+              "state": {}
             }
           }
         ]
@@ -145,17 +157,17 @@
     "width": 300,
     "collapsed": true
   },
-  "active": "7ddc64b2e3c9b5c8",
+  "active": "456da9b76b6e352c",
   "lastOpenFiles": [
+    "2022-12-20.md",
+    "CPP/C++ 修饰符类型.md",
+    "CPP/C与C++标准.md",
+    "PythonLibs/pycpraser/未命名.md",
     "CPP/C标准笔记/C标准笔记.md",
     "git/git常用操作.md",
     "PythonLibs/pycpraser/pycpraser.md",
-    "CPP/C++ 修饰符类型.md",
     "2022-12-11.md",
-    "CPP/Resources/C与C++标准.md",
     "Others/线程锁/线程锁与信号量.md",
-    "CMake/CMake 变量表.md",
-    "Obsidian/插件 自动目录@Dynamic table of contents.md",
-    "Tools/Tools.md"
+    "CMake/CMake 变量表.md"
   ]
 }

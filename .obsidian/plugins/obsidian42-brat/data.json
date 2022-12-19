@@ -6,7 +6,7 @@
   "themesList": [],
   "updateAtStartup": false,
   "updateThemesAtStartup": false,
-  "ribbonIconEnabled": true,
+  "ribbonIconEnabled": false,
   "loggingEnabled": false,
   "loggingPath": "BRAT-log",
   "loggingVerboseEnabled": false,
