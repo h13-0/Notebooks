@@ -918,5 +918,175 @@ FileAST作为AST的顶部，表示经过预处理后的单个C文件，也是C�
 
 #### FuncDecl
 
+#### FuncDef
+
+#### Goto
+
+#### IdentifierType
+
+```C
+int a;
+```
+
+```AST
+FileAST(ext=[Decl(name='a',
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=TypeDecl(declname='a',
+                                quals=[
+                                      ],
+                                align=None,
+                                type=IdentifierType(names=['int'
+                                                          ]
+                                                    )
+                                ),
+                  init=None,
+                  bitsize=None
+                  )
+            ]
+        )
+```
+
+#### InitList
+
+Demo
+
+```C
+int a[3] = { 1, 2, 3 };
+```
+
+```AST
+FileAST(ext=[Decl(name='a',
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=ArrayDecl(type=TypeDecl(declname='a',
+                                               quals=[
+                                                     ],
+                                               align=None,
+                                               type=IdentifierType(names=['int'
+                                                                         ]
+                                                                   )
+                                               ),
+                                 dim=Constant(type='int',
+                                              value='3'
+                                              ),
+                                 dim_quals=[
+                                           ]
+                                 ),
+                  init=InitList(exprs=[Constant(type='int',
+                                                value='1'
+                                                ),
+                                       Constant(type='int',
+                                                value='2'
+                                                ),
+                                       Constant(type='int',
+                                                value='3'
+                                                )
+                                      ]
+                                ),
+                  bitsize=None
+                  )
+            ]
+        )
+```
+
+#### NamedInitializer
+
+Demo
+```C
+struct { int a; int b; } obj = { .a = 1, .b = 2 };
+```
+
+```AST
+FileAST(ext=[Decl(name='obj',
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=TypeDecl(declname='obj',
+                                quals=[
+                                      ],
+                                align=None,
+                                type=Struct(name=None,
+                                            decls=[Decl(name='a',
+                                                        quals=[
+                                                              ],
+                                                        align=[
+                                                              ],
+                                                        storage=[
+                                                                ],
+                                                        funcspec=[
+                                                                 ],
+                                                        type=TypeDecl(declname='a',
+                                                                      quals=[
+                                                                            ],
+                                                                      align=None,
+                                                                      type=IdentifierType(names=['int'
+                                                                                                ]
+                                                                                          )
+                                                                      ),
+                                                        init=None,
+                                                        bitsize=None
+                                                        ),
+                                                   Decl(name='b',
+                                                        quals=[
+                                                              ],
+                                                        align=[
+                                                              ],
+                                                        storage=[
+                                                                ],
+                                                        funcspec=[
+                                                                 ],
+                                                        type=TypeDecl(declname='b',
+                                                                      quals=[
+                                                                            ],
+                                                                      align=None,
+                                                                      type=IdentifierType(names=['int'
+                                                                                                ]
+                                                                                          )
+                                                                      ),
+                                                        init=None,
+                                                        bitsize=None
+                                                        )
+                                                  ]
+                                            )
+                                ),
+                  init=InitList(exprs=[NamedInitializer(name=[ID(name='a'
+                                                                 )
+                                                             ],
+                                                        expr=Constant(type='int',
+                                                                      value='1'
+                                                                      )
+                                                        ),
+                                       NamedInitializer(name=[ID(name='b'
+                                                                 )
+                                                             ],
+                                                        expr=Constant(type='int',
+                                                                      value='2'
+                                                                      )
+                                                        )
+                                      ]
+                                ),
+                  bitsize=None
+                  )
+            ]
+        )
+```
 
 

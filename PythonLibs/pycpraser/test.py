@@ -1,8 +1,7 @@
 import pycparser as pyc
 
 code = """
-int a, b, c;
-a = 1, b = 0, c = 2;
+struct { int a; int b; } obj = { .a = 1, .b = 2 };
 """
 
 parser = pyc.c_parser.CParser()
