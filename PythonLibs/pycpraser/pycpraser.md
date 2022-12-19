@@ -1227,3 +1227,62 @@ FileAST(ext=[Decl(name='a',
 
 
 
+
+
+#### Return
+
+
+#### Struct
+
+#### TernaryOp
+
+
+#### TypeDecl
+
+#### Typename
+
+
+
+#### UnaryOp
+
+Demo
+```C
+char a = ! 0xf0;
+```
+
+```AST
+FileAST(ext=[Decl(name='a',
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=TypeDecl(declname='a',
+                                quals=[
+                                      ],
+                                align=None,
+                                type=IdentifierType(names=['char'
+                                                          ]
+                                                    )
+                                ),
+                  init=UnaryOp(op='!',
+                               expr=Constant(type='int',
+                                             value='0xf0'
+                                             )
+                               ),
+                  bitsize=None
+                  )
+            ]
+        )
+```
+
+
+
+
+#### Union
+
+
+#### While

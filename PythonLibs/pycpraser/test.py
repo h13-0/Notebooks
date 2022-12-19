@@ -8,8 +8,7 @@ char test(char a)
 """
 
 code = """
-enum a;
-enum a b;
+char a = ! 0xf0;
 """
 
 parser = pyc.c_parser.CParser()
