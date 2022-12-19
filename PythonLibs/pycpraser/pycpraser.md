@@ -897,8 +897,91 @@ FileAST(ext=[Decl(name=None,
 
 #### ExprList
 
+Demo
+```C
+int a, b, c = (a = 1, b = 2);
+```
+expression list以逗号为分隔，其表达式值为最后一个语句的值，此时的 `a` 、 `b` 、 `c` 分别为 `1` 、 `2` 、 `2` 。
 
-
+```AST
+FileAST(ext=[Decl(name='a',
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=TypeDecl(declname='a',
+                                quals=[
+                                      ],
+                                align=None,
+                                type=IdentifierType(names=['int'
+                                                          ]
+                                                    )
+                                ),
+                  init=None,
+                  bitsize=None
+                  ),
+             Decl(name='b',
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=TypeDecl(declname='b',
+                                quals=[
+                                      ],
+                                align=None,
+                                type=IdentifierType(names=['int'
+                                                          ]
+                                                    )
+                                ),
+                  init=None,
+                  bitsize=None
+                  ),
+             Decl(name='c',
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=TypeDecl(declname='c',
+                                quals=[
+                                      ],
+                                align=None,
+                                type=IdentifierType(names=['int'
+                                                          ]
+                                                    )
+                                ),
+                  init=ExprList(exprs=[Assignment(op='=',
+                                                  lvalue=ID(name='a'
+                                                            ),
+                                                  rvalue=Constant(type='int',
+                                                                  value='1'
+                                                                  )
+                                                  ),
+                                       Assignment(op='=',
+                                                  lvalue=ID(name='b'
+                                                            ),
+                                                  rvalue=Constant(type='int',
+                                                                  value='2'
+                                                                  )
+                                                  )
+                                      ]
+                                ),
+                  bitsize=None
+                  )
+            ]
+        )
+```
 
 #### FileAST
 
