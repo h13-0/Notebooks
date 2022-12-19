@@ -8,7 +8,23 @@
     "4gu",
     "3856008753446912907088109"
   ],
-  "fileExplorerOrder": {},
+  "fileExplorerOrder": {
+    "Obsidian/Images": [
+      "Obsidian/Images/Obsidian_qcYn5k3ZYU.png",
+      "Obsidian/Images/Obsidian_SDeLdlStNw.png"
+    ],
+    "CPP": [
+      "CPP/Resources",
+      "CPP/C标准笔记",
+      "CPP/C++ 修饰符类型.md",
+      "CPP/C与C++标准.md"
+    ],
+    "CPP/C标准笔记": [
+      "CPP/C标准笔记/C与C++标准.md",
+      "CPP/C标准笔记/C标准笔记.md",
+      "CPP/C标准笔记/C++ 修饰符类型.md"
+    ]
+  },
   "actionBarOrder": {},
   "autoHide": true,
   "autoHideDelay": 2000,
