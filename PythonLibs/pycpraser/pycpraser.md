@@ -911,4 +911,12 @@ FileAST作为AST的顶部，表示经过预处理后的单个C文件，也是C�
 是子节点序列，元素即为上述的"external-declaration"s
 
 
+#### For
+
+
+#### FuncCall
+
+#### FuncDecl
+
+
 

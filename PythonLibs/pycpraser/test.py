@@ -1,8 +1,8 @@
 import pycparser as pyc
 
 code = """
-enum enum_type { a, b, c };
-enum enum_type obj;
+int a, b, c;
+a = 1, b = 0, c = 2;
 """
 
 parser = pyc.c_parser.CParser()
