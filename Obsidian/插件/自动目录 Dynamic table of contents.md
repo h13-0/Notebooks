@@ -1,4 +1,4 @@
-#Obsidian-Plugin 
+#Obsidian 
 
 项目地址：
 	https://github.com/aidurber/obsidian-plugin-dynamic-toc

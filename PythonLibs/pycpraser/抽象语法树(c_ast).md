@@ -1,10 +1,8 @@
-
-
-## 抽象语法树(c_ast)
+#pycpraser 
 
 pycparser的语法树节点可由[\_c_ast.cfg](https://github.com/eliben/pycparser/blob/master/pycparser/_c_ast.cfg)配置并生成，默认情况下其提供了以下节点：
 ```toc
-
+min_depth: 3
 ```
 
 在该文件的原文中是按照如下规则标记属性值的：
@@ -103,7 +101,7 @@ FileAST(ext=[Decl(name='length',
         )
 ```
 
-#### ArrayRef
+### ArrayRef
 
 数组值引用，其拥有以下属性值：
 - name*
@@ -113,7 +111,6 @@ FileAST(ext=[Decl(name='length',
 
 
 **subscript**
-
 
 
 
@@ -183,7 +180,7 @@ FileAST(ext=[Decl(name='array',
         )
 ```
 
-#### Assignment
+### Assignment
 
 赋值操作符，有以下几种：
 - `=`
@@ -281,7 +278,7 @@ FileAST(ext=[FuncDef(decl=Decl(name='func',
         )
 ```
 
-#### Alignas
+### Alignas
 
 字节对齐，即C11中的 `_Alignas` ，[[C标准笔记#6 7 5 字节对齐说明符]]，其拥有以下属性：
 - alignment*
@@ -343,7 +340,7 @@ FileAST(ext=[Decl(name='a',
         )
 ```
 
-#### BinaryOp
+### BinaryOp
 
 二进制运算符，有以下几种：
 - `+`
@@ -436,7 +433,7 @@ FileAST(ext=[Decl(name='a',
         )
 ```
 
-#### Break
+### Break
 
 Demo
 ```C
@@ -487,19 +484,19 @@ FileAST(ext=[FuncDef(decl=Decl(name='func',
         )
 ```
 
-#### Case
+### Case
 
 
 
-#### Cast(强制类型转换)
+### Cast(强制类型转换)
 
-#### Compound
+### Compound
 
 [[C标准笔记#6 8 2 Compound statement 复合语句，即'块'，block]]
 ![[C标准笔记#6 8 2 Compound statement 复合语句，即'块'，block]]
 
 
-#### CompoundLiteral
+### CompoundLiteral
 [[C标准笔记#6.5.2.5 复合字面量(Compound literals)]]
 ![[C标准笔记#6.5.2.5 复合字面量(Compound literals)]]
 
@@ -564,7 +561,7 @@ FileAST(ext=[Decl(name='p',
         )
 ```
 
-#### Constant
+### Constant
 
 即常量，其属性有：
 - type
@@ -629,11 +626,11 @@ FileAST(ext=[Decl(name='a',
         )
 ```
 
-#### Continue
+### Continue
 
 
 
-#### Decl
+### Decl
 
 所有声明语句均为Decl，
 
@@ -641,30 +638,30 @@ FileAST(ext=[Decl(name='a',
 `funcspec`为C语言的函数说明符，详见：[[C标准笔记#6.7.4 函数说明符]]
 
 
-#### DeclList
+### DeclList
 
 ```C
 int a, b;
 ```
 
-#### Default
+### Default
 
-#### DoWhile
+### DoWhile
 
-#### EllipsisParam
+### EllipsisParam
 
 ```C
 int mprint(char* fmt, ...);
 ```
 
-#### EmptyStatement
+### EmptyStatement
 
 ```C
 ;
 ```
 
 
-#### Enum
+### Enum
 
 Demo
 ```C
@@ -723,7 +720,7 @@ FileAST(ext=[Decl(name=None,
         )
 ```
 
-#### Enumerator
+### Enumerator
 
 Demo
 ```C
@@ -782,7 +779,7 @@ FileAST(ext=[Decl(name=None,
         )
 ```
 
-#### EnumeratorList
+### EnumeratorList
 
 Demo
 ```C
@@ -841,7 +838,7 @@ FileAST(ext=[Decl(name=None,
         )
 ```
 
-#### ExprList
+### ExprList
 
 Demo
 ```C
@@ -929,7 +926,7 @@ FileAST(ext=[Decl(name='a',
         )
 ```
 
-#### FileAST
+### FileAST
 
 FileAST作为AST的顶部，表示经过预处理后的单个C文件，也是C语言标准中的术语 #翻译单元 ，其包含外部声明列表("external-declaration"s)，即声明(Decl)、Typedef或函数定义(FuncDef)。
 
@@ -940,18 +937,18 @@ FileAST作为AST的顶部，表示经过预处理后的单个C文件，也是C�
 是子节点序列，元素即为上述的"external-declaration"s
 
 
-#### For
+### For
 
 
-#### FuncCall
+### FuncCall
 
-#### FuncDecl
+### FuncDecl
 
-#### FuncDef
+### FuncDef
 
-#### Goto
+### Goto
 
-#### IdentifierType
+### IdentifierType
 
 ```C
 int a;
@@ -982,7 +979,7 @@ FileAST(ext=[Decl(name='a',
         )
 ```
 
-#### InitList
+### InitList
 
 Demo
 
@@ -1031,7 +1028,7 @@ FileAST(ext=[Decl(name='a',
         )
 ```
 
-#### NamedInitializer
+### NamedInitializer
 
 Demo
 ```C
@@ -1119,7 +1116,7 @@ FileAST(ext=[Decl(name='obj',
 ```
 
 
-#### pragma
+### pragma
 
 [[C标准笔记#6.10.6 Pragma指令]]
 ![[C标准笔记#6.10.6 Pragma指令]]
@@ -1136,7 +1133,7 @@ FileAST(ext=[Pragma(string='once'
         )
 ```
 
-#### PtrDecl
+### PtrDecl
 
 Demo
 ```C
@@ -1172,24 +1169,21 @@ FileAST(ext=[Decl(name='a',
 ```
 
 
+### Return
+
+
+### Struct
+
+### TernaryOp
+
+
+### TypeDecl
+
+### Typename
 
 
 
-#### Return
-
-
-#### Struct
-
-#### TernaryOp
-
-
-#### TypeDecl
-
-#### Typename
-
-
-
-#### UnaryOp
+### UnaryOp
 
 Demo
 ```C
@@ -1228,7 +1222,7 @@ FileAST(ext=[Decl(name='a',
 
 
 
-#### Union
+### Union
 
 
-#### While
+### While
