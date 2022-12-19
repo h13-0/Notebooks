@@ -23,6 +23,16 @@
       "CPP/C标准笔记/C与C++标准.md",
       "CPP/C标准笔记/C标准笔记.md",
       "CPP/C标准笔记/C++ 修饰符类型.md"
+    ],
+    "Obsidian": [
+      "Obsidian/Images",
+      "Obsidian/插件",
+      "Obsidian/Markdown与html语法拓展"
+    ],
+    "PythonLibs/pycpraser": [
+      "PythonLibs/pycpraser/pycpraser.md",
+      "PythonLibs/pycpraser/抽象语法树(c_ast).md",
+      "PythonLibs/pycpraser/test.py"
     ]
   },
   "actionBarOrder": {},

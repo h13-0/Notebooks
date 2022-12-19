@@ -1,3 +1,4 @@
-#Obsidian42-BRAT
+#Obsidian-Plugin 
+
 插件地址：
 
