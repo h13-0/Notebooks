@@ -718,6 +718,187 @@ int mprint(char* fmt, ...);
 ```
 
 
+#### Enum
+
+Demo
+```C
+enum enum_type { a, b, c };
+enum enum_type obj;
+```
+则其中的 `obj` 即为 `Enum` ， `a` 则为 `Enumerator` ， `{ a, b, c }` 则为 `EnumeratorList`
+
+```AST
+FileAST(ext=[Decl(name=None,
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=Enum(name='enum_type',
+                            values=EnumeratorList(enumerators=[Enumerator(name='a',
+                                                                          value=None
+                                                                          ),
+                                                               Enumerator(name='b',
+                                                                          value=None
+                                                                          ),
+                                                               Enumerator(name='c',
+                                                                          value=None
+                                                                          )
+                                                              ]
+                                                  )
+                            ),
+                  init=None,
+                  bitsize=None
+                  ),
+             Decl(name='obj',
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=TypeDecl(declname='obj',
+                                quals=[
+                                      ],
+                                align=None,
+                                type=Enum(name='enum_type',
+                                          values=None
+                                          )
+                                ),
+                  init=None,
+                  bitsize=None
+                  )
+            ]
+        )
+```
+
+#### Enumerator
+
+Demo
+```C
+enum enum_type { a, b, c };
+enum enum_type obj;
+```
+则其中的 `obj` 即为 `Enum` ， `a` 则为 `Enumerator` ， `{ a, b, c }` 则为 `EnumeratorList`
+
+```AST
+FileAST(ext=[Decl(name=None,
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=Enum(name='enum_type',
+                            values=EnumeratorList(enumerators=[Enumerator(name='a',
+                                                                          value=None
+                                                                          ),
+                                                               Enumerator(name='b',
+                                                                          value=None
+                                                                          ),
+                                                               Enumerator(name='c',
+                                                                          value=None
+                                                                          )
+                                                              ]
+                                                  )
+                            ),
+                  init=None,
+                  bitsize=None
+                  ),
+             Decl(name='obj',
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=TypeDecl(declname='obj',
+                                quals=[
+                                      ],
+                                align=None,
+                                type=Enum(name='enum_type',
+                                          values=None
+                                          )
+                                ),
+                  init=None,
+                  bitsize=None
+                  )
+            ]
+        )
+```
+
+#### EnumeratorList
+
+Demo
+```C
+enum enum_type { a, b, c };
+enum enum_type obj;
+```
+则其中的 `obj` 即为 `Enum` ， `a` 则为 `Enumerator` ， `{ a, b, c }` 则为 `EnumeratorList`
+
+```AST
+FileAST(ext=[Decl(name=None,
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=Enum(name='enum_type',
+                            values=EnumeratorList(enumerators=[Enumerator(name='a',
+                                                                          value=None
+                                                                          ),
+                                                               Enumerator(name='b',
+                                                                          value=None
+                                                                          ),
+                                                               Enumerator(name='c',
+                                                                          value=None
+                                                                          )
+                                                              ]
+                                                  )
+                            ),
+                  init=None,
+                  bitsize=None
+                  ),
+             Decl(name='obj',
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=TypeDecl(declname='obj',
+                                quals=[
+                                      ],
+                                align=None,
+                                type=Enum(name='enum_type',
+                                          values=None
+                                          )
+                                ),
+                  init=None,
+                  bitsize=None
+                  )
+            ]
+        )
+```
+
+#### ExprList
+
+
+
 
 #### FileAST
 
