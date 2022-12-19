@@ -658,8 +658,12 @@ FileAST(ext=[Decl(name='a',
 	- `restrict`
 
 #### `align`
+即C语言中的字节对齐说明符：[[C标准笔记#6 7 5 字节对齐说明符]]
 
-
+Demo
+```C
+_Alignas(char) int a;
+```
 
 #### `storge`
 storage` 为C语言的储存类型说明符，详见：[[C标准笔记#6.7.1 储存类型说明符]]
@@ -676,12 +680,40 @@ storage` 为C语言的储存类型说明符，详见：[[C标准笔记#6.7.1 储
 
 `funcspec` 为C语言的函数说明符，详见：[[C标准笔记#6.7.4 函数说明符]]
 
+#### Demo
+
 最小示例：
-
-
 ```C
-
+int a;
 ```
+
+```AST
+FileAST(ext=[Decl(name='a',
+                  quals=[
+                        ],
+                  align=[
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=TypeDecl(declname='a',
+                                quals=[
+                                      ],
+                                align=None,
+                                type=IdentifierType(names=['int'
+                                                          ]
+                                                    )
+                                ),
+                  init=None,
+                  bitsize=None
+                  )
+            ]
+        )
+```
+
+变量示例：
+
 
 
 ### DeclList
