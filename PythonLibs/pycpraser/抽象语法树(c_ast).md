@@ -665,6 +665,76 @@ Demo
 _Alignas(char) int a;
 ```
 
+```AST
+FileAST(ext=[Decl(name='a',
+                  quals=[
+                        ],
+                  align=[Alignas(alignment=Typename(name=None,
+                                                    quals=[
+                                                          ],
+                                                    align=None,
+                                                    type=TypeDecl(declname=None,
+                                                                  quals=[
+                                                                        ],
+                                                                  align=None,
+                                                                  type=IdentifierType(names=['char'
+                                                                                            ]
+                                                                                      )
+                                                                  )
+                                                    )
+                                 )
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=TypeDecl(declname='a',
+                                quals=[
+                                      ],
+                                align=None,
+                                type=IdentifierType(names=['int'
+                                                          ]
+                                                    )
+                                ),
+                  init=None,
+                  bitsize=None
+                  )
+            ]
+        )
+```
+
+```C
+_Alignas(2) int a;
+```
+
+```AST
+FileAST(ext=[Decl(name='a',
+                  quals=[
+                        ],
+                  align=[Alignas(alignment=Constant(type='int',
+                                                    value='2'
+                                                    )
+                                 )
+                        ],
+                  storage=[
+                          ],
+                  funcspec=[
+                           ],
+                  type=TypeDecl(declname='a',
+                                quals=[
+                                      ],
+                                align=None,
+                                type=IdentifierType(names=['int'
+                                                          ]
+                                                    )
+                                ),
+                  init=None,
+                  bitsize=None
+                  )
+            ]
+        )
+```
+
 #### `storge`
 storage` 为C语言的储存类型说明符，详见：[[C标准笔记#6.7.1 储存类型说明符]]
 - \[[[C标准笔记#6 7 1 储存类型说明符|储存类型说明符]]\]
