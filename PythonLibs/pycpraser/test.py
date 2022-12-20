@@ -8,9 +8,10 @@ char test(char a)
 """
 #_Alignas(char) const volatile static _Thread_local int a;
 code = """
-typedef struct _lv_draw_ctx_t  {};
+typedef struct _lv_draw_ctx_t {} lv_draw_ctx_t;
 typedef struct {} lv_draw_rect_dsc_t;
-void safe_lv_draw_polygon(struct _lv_draw_ctx_t * draw_ctx, const lv_draw_rect_dsc_t * draw_dsc, const lv_point_t points, uint16_t point_cnt);
+typedef struct {} lv_point_t;
+void safe_lv_draw_polygon(struct _lv_draw_ctx_t * draw_ctx, const lv_draw_rect_dsc_t * draw_dsc, const lv_point_t * points, int point_cnt);
 """
 
 parser = pyc.c_parser.CParser()
