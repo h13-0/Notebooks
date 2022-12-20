@@ -36,8 +36,14 @@ Remove-Item .git/modules/${path} -recurse -force
 
 ## 从远程获取代码库(git fetch)
 
-通常用于在 `git checkout ${}` 后遇到报错：
+通常用于在 `git checkout ${commit-id}` 后遇到报错：
 ```shell
-error: pathspec '' did not match any file(s) known to git
+error: pathspec '${commit-id}' did not match any file(s) known to git
 ```
 
+执行：
+```shell
+git fetch
+```
+
+即可
