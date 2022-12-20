@@ -1336,7 +1336,11 @@ FileAST(ext=[Decl(name='a',
 
 ### Typename
 
+Demo
 
+```C
+void func(int);
+```
 
 ### UnaryOp
 
