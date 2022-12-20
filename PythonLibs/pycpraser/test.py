@@ -8,7 +8,8 @@ char test(char a)
 """
 #_Alignas(char) const volatile static _Thread_local int a;
 code = """
-int func(int a) {};
+typedef int new_int;
+new_int a;
 """
 
 parser = pyc.c_parser.CParser()
