@@ -1,9 +1,9 @@
 [
-  "multi-column-markdown",
   "obsidian-dynamic-toc",
-  "obsidian-git",
   "obsidian-copy-block-link",
   "obsidian-jupyter",
+  "obsidian-bartender",
+  "obsidian-git",
   "obsidian42-brat",
-  "obsidian-bartender"
+  "multi-column-markdown"
 ]

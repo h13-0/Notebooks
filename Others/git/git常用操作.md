@@ -48,5 +48,21 @@ git fetch
 
 即可
 
-## 屏蔽文件更改(`.gitignore`)
+## 屏蔽文件更改(.gitignore)
+
+通常来说，在仓库根目录创建文件 `.gitignore` 即可屏蔽文件更改，其语法如下
+```gitignore
+floder/
+file
+file/regex*
+```
+注意 `git` 中所有路径尽量使用windows和linux通用的路径分隔符，即 `/`
+但是当文件已经被追踪过时，上述更改不能生效，仍需追加：
+```bash
+git rm --cached file
+git rm --cached -r folder
+```
+即可。
+
+## 与Github联动
 
