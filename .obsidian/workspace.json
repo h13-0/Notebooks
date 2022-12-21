@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Obsidian/Markdown与html语法拓展/html常用语法拓展.md",
+                "file": "Others/git/git常用操作.md",
                 "mode": "source",
                 "source": false
               }
@@ -149,7 +149,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Obsidian/Markdown与html语法拓展/html常用语法拓展.md",
+                "file": "Others/git/git常用操作.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -166,7 +166,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Obsidian/Markdown与html语法拓展/html常用语法拓展.md",
+                "file": "Others/git/git常用操作.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -189,7 +189,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Obsidian/Markdown与html语法拓展/html常用语法拓展.md"
+                "file": "Others/git/git常用操作.md"
               }
             }
           }
@@ -212,6 +212,7 @@
   },
   "active": "3a810790efe18ceb",
   "lastOpenFiles": [
+    "Obsidian/Markdown与html语法拓展/html常用语法拓展.md",
     "Others/git/git常用操作.md",
     "CPP/C标准笔记/C标准笔记.md",
     "PythonLibs/pycpraser/抽象语法树(c_ast).md",
@@ -220,7 +221,6 @@
     "PythonLibs/pycpraser/pycpraser.md",
     "编译原理/编译原理.md",
     "Others/正则表达式/正则表达式.md",
-    "Others/协程/协程.md",
-    "Others/线程锁/线程锁与信号量.md"
+    "Others/协程/协程.md"
   ]
 }
