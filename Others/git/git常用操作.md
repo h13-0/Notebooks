@@ -66,3 +66,17 @@ git rm --cached -r folder
 
 ## 与Github联动
 
+### commit同时关闭issue
+
+只需要在提交的commit中包含以下内容之一即可：
+```git
++ fix #24
++ fixes #24
++ fixed #24
++ close #24
++ closes #24
++ closed #24
++ resolve #24
++ resolves #24
++ resolved #24
+```

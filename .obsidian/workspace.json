@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CPP/C标准笔记/C标准笔记.md",
+                "file": "Others/git/git常用操作.md",
                 "mode": "source",
                 "source": false
               }
@@ -149,7 +149,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "CPP/C标准笔记/C标准笔记.md",
+                "file": "Others/git/git常用操作.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -166,7 +166,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "CPP/C标准笔记/C标准笔记.md",
+                "file": "Others/git/git常用操作.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -189,7 +189,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "CPP/C标准笔记/C标准笔记.md"
+                "file": "Others/git/git常用操作.md"
               }
             }
           }
@@ -212,9 +212,9 @@
   },
   "active": "3a810790efe18ceb",
   "lastOpenFiles": [
+    "CPP/C标准笔记/C标准笔记.md",
     "PythonLibs/pycpraser/抽象语法树(c_ast).md",
     "CPP/C标准笔记/C++ 修饰符类型.md",
-    "CPP/C标准笔记/C标准笔记.md",
     "CPP/C标准笔记/C与C++标准.md",
     "PythonLibs/pycpraser/pycpraser.md",
     "编译原理/编译原理.md",
