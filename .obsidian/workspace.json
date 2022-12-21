@@ -20,6 +20,18 @@
             }
           },
           {
+            "id": "db72f63a6059d38a",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "CPP/编译器限定实现/gcc.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
             "id": "5f48f8bbc32e7d60",
             "type": "leaf",
             "state": {
@@ -83,7 +95,8 @@
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -149,7 +162,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Others/git/git常用操作.md",
+                "file": "CPP/编译器限定实现/gcc.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -166,7 +179,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Others/git/git常用操作.md",
+                "file": "CPP/编译器限定实现/gcc.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -189,7 +202,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Others/git/git常用操作.md"
+                "file": "CPP/编译器限定实现/gcc.md"
               }
             }
           }
@@ -210,10 +223,10 @@
       "publish:发布更改": false
     }
   },
-  "active": "3a810790efe18ceb",
+  "active": "db72f63a6059d38a",
   "lastOpenFiles": [
-    "Obsidian/Markdown与html语法拓展/html常用语法拓展.md",
     "Others/git/git常用操作.md",
+    "Obsidian/Markdown与html语法拓展/html常用语法拓展.md",
     "CPP/C标准笔记/C标准笔记.md",
     "PythonLibs/pycpraser/抽象语法树(c_ast).md",
     "CPP/C标准笔记/C++ 修饰符类型.md",
