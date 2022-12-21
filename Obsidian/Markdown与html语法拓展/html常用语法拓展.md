@@ -1,4 +1,4 @@
-#Obsidian 
+#Obsidian #html
 
 ```toc
 title: 目录
@@ -24,4 +24,25 @@ title: 目录
 
 <iframe height=100% width=100% src="https://github.com/h13-0/Notebooks">
 </iframe>
+
+
+### details单击展开折叠
+
+Demo:
+```html
+<details>
+<summary>提示内容</summary>
+
+需要折叠的内容
+
+</details>
+```
+
+效果：
+<details>
+<summary>单击展开折叠</summary>
+
+需要折叠的内容
+
+</details>
 
