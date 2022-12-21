@@ -1,4 +1,4 @@
-#pycpraser 
+#pycpraser #C-Language #编译原理 
 
 pycparser的语法树节点可由[\_c_ast.cfg](https://github.com/eliben/pycparser/blob/master/pycparser/_c_ast.cfg)配置并生成，默认情况下其提供了以下节点(Node)：
 ```toc
@@ -1076,7 +1076,7 @@ FileAST(ext=[Decl(name='a',
 
 ### FileAST
 
-FileAST作为AST的顶部，表示经过预处理后的单个C文件，也是C语言标准中的术语 #翻译单元 ，其包含外部声明列表("external-declaration"s)，即声明(Decl)、Typedef或函数定义(FuncDef)。
+FileAST作为AST的顶部，表示经过预处理后的单个C文件，也是C语言标准中的术语 `翻译单元` ，其包含外部声明列表("external-declaration"s)，即声明(Decl)、Typedef或函数定义(FuncDef)。
 
 其拥有属性值：
 - ext**
