@@ -7,7 +7,7 @@
 
 ## 添加头文件路径(include_directories)
 
-是作用最大，影响全局的添加头文件路径的命令，一旦使用，对后续的所有命令均生效。
+是作用最大，影响全局,且向下传递的添加头文件路径的命令，一旦使用，对后续的所有命令均生效。
 一般写在最外层以影响全局。
 
 命令定义：
@@ -35,6 +35,12 @@ include_directories([AFTER|BEFORE] [SYSTEM] dir1 [dir2 ...])
 > 通过显式地使用AFTER或BEFORE，您可以在追加和前缀之间进行选择，而不依赖于默认值。
 > 
 > **INTERFACE、PUBLIC和PRIVATE关键字用于（指定target_include_directories的影响范围）**
+
+### 权限修饰符
+
+关于权限修饰符，假设现在我们有如下依赖：
+![[未命名.canvas]]
+
 
 
 ## 文件操作命令(file)
