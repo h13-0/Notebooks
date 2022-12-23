@@ -17,13 +17,6 @@ git submodule add <url> <path>
 git submodule deinit -f ${path}
 ```
 
-## 更新submodules
-
-```bash
-git submodule update --init
-```
-
-
 ### 删除 `.gitmodules` 中的cache
 ```bash
 git rm --cached ${path}
@@ -40,6 +33,14 @@ rm -rf .git/modules/${path}
 ```powershell
 Remove-Item .git/modules/${path} -recurse -force
 ```
+
+## 更新submodules
+
+```bash
+git submodule update --init
+```
+
+
 
 ## 从远程获取代码库(git fetch)
 
