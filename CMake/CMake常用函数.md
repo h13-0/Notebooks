@@ -7,9 +7,15 @@
 
 ## 添加头文件路径(include_directories)
 
+是作用最大，影响全局的添加头文件路径的命令，一旦使用，对后续的所有命令均生效。
+一般写在最外层以影响全局。
+
 ```CMake
 include_directories()
 ```
+
+## 添加头文件路径(target_include_directories)
+
 
 
 ## 文件操作命令(file)
