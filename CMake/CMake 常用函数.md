@@ -38,9 +38,12 @@ include_directories([AFTER|BEFORE] [SYSTEM] dir1 [dir2 ...])
 
 ### 权限修饰符
 
-关于权限修饰符，假设现在我们有如下依赖：
-![[依赖图1.canvas]]
-
+关于权限修饰符，假设现在我们有如下module分层：
+	A -> B -> C
+即 B 是 A 的子模块， C 是 B 的子模块，此时若有以下三种情况：
+1. A中需要C中的api，但B中不需要C中的api，此时应使用 `INTERFACE` 。在这种情况下，C中头文件将对B中源文件不可见，但对B中头文件可见(也就是B中可以使用C中的一些 `typedef` 等声明)。
+2. B中需要C中的api，但A中不需要C中的api，此时应使用 `PRIVATE` 。在这种情况下，C中头文件将对A中源文件不可见。
+3. A和B均需要C中api，则此时使用 `PUBLIC` 。
 
 
 ## 文件操作命令(file)
