@@ -49,7 +49,19 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CMake/CMake 常用函数.md",
+                "file": "Others/正则表达式/正则表达式.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "c61cf2d8dbf057a9",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Others/正则表达式/正则表达式.md",
                 "mode": "source",
                 "source": false
               }
@@ -120,7 +132,7 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 4
       }
     ],
     "direction": "vertical"
@@ -186,7 +198,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "CMake/CMake 常用函数.md",
+                "file": "Others/正则表达式/正则表达式.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -203,7 +215,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "CMake/CMake 常用函数.md",
+                "file": "Others/正则表达式/正则表达式.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -226,7 +238,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "CMake/CMake 常用函数.md"
+                "file": "Others/正则表达式/正则表达式.md"
               }
             }
           }
@@ -247,17 +259,17 @@
       "publish:发布更改": false
     }
   },
-  "active": "1547fa82dc360b5b",
+  "active": "c61cf2d8dbf057a9",
   "lastOpenFiles": [
+    "Others/正则表达式/常用需求.md",
+    "Others/正则表达式/正则表达式.md",
+    "Others/Tools/Tools.md",
+    "CMake/CMake 常用函数.md",
     "CMake/CMake 变量表.md",
     "CMake/Resources/依赖图1.canvas",
-    "CMake/CMake 常用函数.md",
     "POSIX/Readme.md",
     "Readme.md",
     "Others/git/git常用操作.md",
-    "VisualStudio/Plugins/未命名.md",
-    "PythonLibs/pycpraser/抽象语法树(c_ast).md",
-    "PythonLibs/pycpraser/pycpraser.md",
-    "CPP/C标准笔记/C标准笔记.md"
+    "VisualStudio/Plugins/未命名.md"
   ]
 }
