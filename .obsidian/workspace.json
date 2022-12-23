@@ -47,15 +47,11 @@
             "id": "1547fa82dc360b5b",
             "type": "leaf",
             "state": {
-              "type": "canvas",
+              "type": "markdown",
               "state": {
-                "file": "CMake/未命名.canvas",
-                "viewState": {
-                  "x": 70,
-                  "y": -137,
-                  "zoom": 0.5,
-                  "snapToGrid": false
-                }
+                "file": "CMake/CMake 常用函数.md",
+                "mode": "source",
+                "source": false
               }
             }
           },
@@ -190,7 +186,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "CMake/未命名.canvas",
+                "file": "CMake/CMake 常用函数.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -207,7 +203,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "CMake/未命名.canvas",
+                "file": "CMake/CMake 常用函数.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -230,7 +226,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "CMake/未命名.canvas"
+                "file": "CMake/CMake 常用函数.md"
               }
             }
           }
@@ -253,15 +249,15 @@
   },
   "active": "1547fa82dc360b5b",
   "lastOpenFiles": [
-    "CMake/CMake常用函数.md",
     "CMake/CMake 变量表.md",
-    "CMake/未命名.canvas",
+    "CMake/Resources/依赖图1.canvas",
+    "CMake/CMake 常用函数.md",
+    "POSIX/Readme.md",
+    "Readme.md",
     "Others/git/git常用操作.md",
     "VisualStudio/Plugins/未命名.md",
-    "POSIX/Readme.md",
     "PythonLibs/pycpraser/抽象语法树(c_ast).md",
     "PythonLibs/pycpraser/pycpraser.md",
-    "CPP/C标准笔记/C标准笔记.md",
-    "CPP/编译器限定实现/gcc.md"
+    "CPP/C标准笔记/C标准笔记.md"
   ]
 }

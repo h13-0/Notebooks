@@ -40,7 +40,6 @@
       "CMake",
       "CPP",
       "CV",
-      "git",
       "html",
       "Obsidian",
       "obsidian-jupyter.py",
@@ -48,7 +47,14 @@
       "PythonLibs",
       "Resources",
       "Tools",
+      "POSIX",
+      "VisualStudio",
       "Readme.md"
+    ],
+    "CMake": [
+      "CMake/未命名.canvas",
+      "CMake/CMake常用函数.md",
+      "CMake/CMake 变量表.md"
     ]
   },
   "actionBarOrder": {},
