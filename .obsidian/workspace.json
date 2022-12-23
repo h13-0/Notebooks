@@ -49,7 +49,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "VisualStudio/Plugins/未命名.md",
+                "file": "Others/git/git常用操作.md",
                 "mode": "source",
                 "source": false
               }
@@ -186,7 +186,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "VisualStudio/Plugins/未命名.md",
+                "file": "Others/git/git常用操作.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -203,7 +203,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "VisualStudio/Plugins/未命名.md",
+                "file": "Others/git/git常用操作.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -226,7 +226,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "VisualStudio/Plugins/未命名.md"
+                "file": "Others/git/git常用操作.md"
               }
             }
           }
@@ -247,8 +247,9 @@
       "publish:发布更改": false
     }
   },
-  "active": "7ddc64b2e3c9b5c8",
+  "active": "1547fa82dc360b5b",
   "lastOpenFiles": [
+    "VisualStudio/Plugins/未命名.md",
     "POSIX/Readme.md",
     "PythonLibs/pycpraser/抽象语法树(c_ast).md",
     "PythonLibs/pycpraser/pycpraser.md",
@@ -257,7 +258,6 @@
     "CPP/编译器限定实现/gcc.md",
     "Obsidian/Markdown与html语法拓展/html常用语法拓展.md",
     "CPP/C标准笔记/C++ 修饰符类型.md",
-    "CPP/C标准笔记/C与C++标准.md",
-    "编译原理/编译原理.md"
+    "CPP/C标准笔记/C与C++标准.md"
   ]
 }
