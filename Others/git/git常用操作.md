@@ -72,6 +72,27 @@ git rm --cached -r folder
 ```
 即可。
 
+## 撤销文件更改
+
+按照提交流程，可以分为以下情况：
+- 更改后未做任何git操作
+- 更改后被Add到暂存区
+- 更改后生成commit
+- commit已push
+
+若文件还未被Add到暂存区，则可以直接：
+```shell
+git checkout ${commit_id} -- ${path_of_file}
+```
+若全部撤销，则可以：
+```shell
+git checkout ${commit_id} .
+```
+若已提交到暂存区，则需要：
+```shell
+git stash
+```
+
 ## 与Github联动
 
 ### commit同时关闭issue
