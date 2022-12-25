@@ -61,7 +61,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Others/git/git常用操作.md",
+                "file": "Others/Tools/Tools.md",
                 "mode": "source",
                 "source": false
               }
@@ -198,7 +198,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Others/git/git常用操作.md",
+                "file": "Others/Tools/Tools.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -215,7 +215,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Others/git/git常用操作.md",
+                "file": "Others/Tools/Tools.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -238,7 +238,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Others/git/git常用操作.md"
+                "file": "Others/Tools/Tools.md"
               }
             }
           }
@@ -261,6 +261,7 @@
   },
   "active": "c61cf2d8dbf057a9",
   "lastOpenFiles": [
+    "Others/git/git常用操作.md",
     "Others/Tools/Tools.md",
     "POSIX/Readme.md",
     "Others/正则表达式/正则表达式.md",
@@ -269,7 +270,6 @@
     "CMake/CMake 变量表.md",
     "CMake/Resources/依赖图1.canvas",
     "Readme.md",
-    "Others/git/git常用操作.md",
     "VisualStudio/Plugins/未命名.md"
   ]
 }
