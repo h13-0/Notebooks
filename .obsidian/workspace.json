@@ -71,10 +71,8 @@
             "id": "ea87fe9da72c6dac",
             "type": "leaf",
             "state": {
-              "type": "release-notes",
-              "state": {
-                "currentVersion": "1.1.9"
-              }
+              "type": "graph",
+              "state": {}
             }
           },
           {
