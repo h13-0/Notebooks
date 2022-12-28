@@ -68,6 +68,16 @@
             }
           },
           {
+            "id": "ea87fe9da72c6dac",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.1.9"
+              }
+            }
+          },
+          {
             "id": "5f48f8bbc32e7d60",
             "type": "leaf",
             "state": {
@@ -132,7 +142,7 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 5
       }
     ],
     "direction": "vertical"
@@ -259,7 +269,7 @@
       "publish:发布更改": false
     }
   },
-  "active": "c61cf2d8dbf057a9",
+  "active": "ea87fe9da72c6dac",
   "lastOpenFiles": [
     "Others/git/git常用操作.md",
     "Others/Tools/Tools.md",
