@@ -140,12 +140,33 @@ $$
 
 #### 1.1.6 绘制立面(Face)结构
 
-立面为直立面，一般用于绘制X撑、K撑
+立面为直立面，一般用于绘制X撑、K撑等。
+先选定立面：
 `Display` -> `Face`
 ![[Pasted image 20230415225153.png]]
 
+比如这里选择 `ROW A` 立面：
+![[Pasted image 20230415225416.png]]
 
+##### 1.1.6.1 绘制X撑
+选择：
+	`Member` -> `X Brace`
+![[Pasted image 20230415225527.png]]
 
+![[Pasted image 20230415225619.png]]
+| 参数 | 含义 |
+| --- | --- |
+| Center joint | X撑中心点名称 |
+| End joint of thru member | 未被打断杆件的起始点(可在UI中单击选定点) |
+| Other end of thru member | 未被打断杆件的终止点 |
+| End ... of non-thru ... | 被打断杆件的起始点 |
+| Other ... of non-thru ... | 被打断杆件的终止点 |
+
+例如我们要建下图：
+![[Pasted image 20230415230141.png]]
+
+未被打断杆件为右上到左下
+被打断杆件为左上到右下
 
 ### 1.4 设置单元及板的Group、Section属性
 
