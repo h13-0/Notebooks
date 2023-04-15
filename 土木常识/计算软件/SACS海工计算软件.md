@@ -112,7 +112,7 @@ $$
 ![[Pasted image 20230415223329.png]]
 
 ![[Pasted image 20230415222223.png]]
-`几个视图按钮` | 还没研究
+`几个视图按钮` | `切换为等轴视图(通常用于立面切换为立体图)`
 
 
 ##### 1.1.4.3 标签显示
@@ -157,16 +157,35 @@ $$
 | 参数 | 含义 |
 | --- | --- |
 | Center joint | X撑中心点名称 |
-| End joint of thru member | 未被打断杆件的起始点(可在UI中单击选定点) |
+| End joint of thru member | 未被打断杆件的起始点**(可在UI中单击选定点)** |
 | Other end of thru member | 未被打断杆件的终止点 |
 | End ... of non-thru ... | 被打断杆件的起始点 |
 | Other ... of non-thru ... | 被打断杆件的终止点 |
+| Group of thru member | 未被打断杆件的组(用于定义材料等) |
+| ... of non-thru ... | 被打断杆件的组 |
+
 
 例如我们要建下图：
 ![[Pasted image 20230415230141.png]]
 
 未被打断杆件为右上到左下
 被打断杆件为左上到右下
+
+则如下选择：
+![[Pasted image 20230415230642.png]]
+
+建模结果如下：
+![[Pasted image 20230415230731.png]]
+
+点击 `Display Active/Isometric` 按钮即可回立体图
+![[Pasted image 20230415231041.png]]
+
+#### 1.1.6 绘制水平撑(Plan)结构
+
+`Display` -> `Plan`
+![[Pasted image 20230415231305.png]]
+
+选择指定
 
 ### 1.4 设置单元及板的Group、Section属性
 
