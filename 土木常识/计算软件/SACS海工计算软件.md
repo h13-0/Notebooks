@@ -185,7 +185,23 @@ $$
 `Display` -> `Plan`
 ![[Pasted image 20230415231305.png]]
 
-选择指定
+选择指定高程平面(比如这里选定的是-79.5m的泥面线)
+![[Pasted image 20230415231422.png]]
+
+例如以建立下图为例
+![[Pasted image 20230415231730.png]]
+
+手动添加杆件：
+`Member` -> `Add`
+![[Pasted image 20230415232058.png]]
+
+建框、分组(略)：
+![[Pasted image 20230415232255.png]]
+
+然后要取断点：
+`Member` -> `Divide`
+
+
 
 ### 1.4 设置单元及板的Group、Section属性
 
