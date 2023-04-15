@@ -66,9 +66,19 @@
 `Row Labels` 中可以设定主腿的行列编号(参考右图)
 ![[Pasted image 20230415215100.png]]
 
-`Leg type` 中可设置主腿和桩之间的连接方式：
+`Leg type` 中可设置主腿和桩之间的连接方式，为灌浆和非灌浆：
 ![[Pasted image 20230415215349.png]]
 
+点击 `Leg Spacing at Working Point` 定义四腿之间的间距(以顶端为准)：
+![[Pasted image 20230415215820.png]]
+
+此时得到的坐标为此平面的几何中心：
+![[Pasted image 20230415215837.png]]
+
+定义四条主腿斜度：
+$$
+\begin{aligned}斜度=\frac{1}{tan(\theta)}\end{aligned}
+$$
 
 对于三角腿：
 
