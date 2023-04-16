@@ -113,24 +113,8 @@ $$
 `缩放至填充视图` `切换为实体图` `全选视图内所有元素` | `生成报告` | `撤销` `重做` `关闭所有对话框(比如前面的报告)`
 
 关于 `切换至实体图` 按钮效果：
-<html>
-    <table style="margin-left: auto; margin-right: auto;">
-        <tr>
-            <td>
-                <!--左侧内容-->
-                左侧
-            </td>
-            <td>
-                <!--右侧内容-->
-                右侧
-                ![[Pasted image 20230416121334.png]]
-            </td>
-        </tr>
-    </table>
-</html>
-
-
-
+![[Pasted image 20230416121342.png]]
+![[Pasted image 20230416121334.png]]
 
 
 
@@ -305,6 +289,8 @@ Perpendicular：
 
 ![[Pasted image 20230416121221.png]]
 
+若想修改现存构件的Group，点击 `Member` -> `Member Properties` 然后选中编辑即可
+![[Pasted image 20230416185640.png]]
 
 在这一步完成后，该模型可以称作为未修正的几何模型，通常还需要在其上进行偏移、关节点有效长度(由于压杆稳定等)设置等。
 
