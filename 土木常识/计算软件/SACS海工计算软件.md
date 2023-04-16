@@ -232,6 +232,16 @@ Perpendicular：
 ![[Pasted image 20230416094427.png]]
 选择点和线即可做垂线打断
 
+#### 1.1.7 上部组块建模
+
+![[Pasted image 20230416111357.png]]
+点击 `Add/Edit Deck Girder Data` 选择高程
+![[Pasted image 20230416111545.png]]
+下面的 `Add DKG` 等是是否需要生成图中所示结构。
+
+
+
+
 
 ### 1.4 设置单元及板的Group、Section属性
 
