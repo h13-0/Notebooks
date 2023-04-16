@@ -248,7 +248,12 @@ Perpendicular：
 ![[Pasted image 20230416113320.png]]
 
 ![[Pasted image 20230416113536.png]]
-`Undefined Groups` 中为未定义的组
+`Undefined Groups` 中为未定义的组，选中后点击 `Add` 即可。
+
+![[Pasted image 20230416114440.png]]
+`Group type` 中
+
+
 
 在这一步完成后，该模型可以称作为未修正的几何模型，通常还需要在其上进行偏移、关节点有效长度(由于压杆稳定等)设置等。
 
