@@ -114,7 +114,7 @@ $$
 
 关于 `切换至实体图` 按钮效果：
 ![[Pasted image 20230416121342.png]]
-![[Pasted image 20230416121334.png]]
+![[Pasted image 20230416121334.png]] ^bm8l64
 
 
 
@@ -289,6 +289,12 @@ Perpendicular：
 | Wide Flange | |
 | Compact Wide Flange | 工字钢 |
 
+![[Pasted image 20230416192823.png]]
+选中后可以看到工字钢的参数是否正确，也可以选定后在 `Edit` 中具体配置截面：
+![[Pasted image 20230416192916.png]]
+
+也可以在这个中间更改截面类型：
+![[Pasted image 20230416193353.png]]
 
 
 #### 1.4.2 配置圆管
@@ -310,14 +316,14 @@ Perpendicular：
 在该窗口的 `Segment` 的 group box 中即可选定和查看各段信息。
 ![[Pasted image 20230416121036.png]]
 
-设置完成后，点击
-
-![[Pasted image 20230416121221.png]]
+设置完成后，点击 `切换至实体图` 按钮即可预览效果
+![[SACS海工计算软件#^bm8l64]]
 
 若想修改现存构件的Group，点击 `Member` -> `Member Properties` 然后选中编辑即可
 ![[Pasted image 20230416185640.png]]
 
 按需设计即可得图纸：
+![[Pasted image 20230416193536.png]]
 
 在这一步完成后，该模型可以称作为未修正的几何模型，通常还需要在其上进行偏移、关节点有效长度(由于压杆稳定等)设置等。
 
