@@ -206,6 +206,20 @@ $$
 | --- | --- |
 | Ratio | 按比例分段 |
 | Length | 按长度分段 |
+|Z/Y/X Coordinate | 按坐标打断 |
+| Equal Parts | 选择分成几份 |
+| Perpendicular | 选择一点一线，做垂线打断 |
+| Intersection | 交叉打断 |
+| Existing Joint | 在存在的点的位置打断 |
+
+Equal Parts：
+![[Pasted image 20230416093827.png]]
+上面两个框为选择两个点，在点中均分打断。
+也可以直接选择直线进行打断
+
+Length：
+![[Pasted image 20230416094135.png]]
+以某方向，一定长度打断单元
 
 
 ### 1.4 设置单元及板的Group、Section属性
