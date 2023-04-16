@@ -252,10 +252,21 @@ Perpendicular：
 在这里限制Z显示区域的最低值为上部组块的最低值即可：
 ![[Pasted image 20230416192123.png]]
 
-### 1.4 设置单元及板的Group、Section属性
+### 1.2 添加板单元
+
+`Plate` -> `Add`
+![[Pasted image 20230416193914.png]]
+
+![[Pasted image 20230416193954.png]]
+类型中配置是三角形还是四边形，然后选择顶点配置Group即可。
+效果：
+![[Pasted image 20230416194056.png]]
+
+### 1.3 设置单元及板的Group、Section属性
 
 在前面章节中，已经对各个杆件设置了Group，接下来统一设置每个Group的弹性模量、密度、壁厚等属性即可。
 
+#### 1.3.1 设置杆件属性
 `Property` -> `Member Group`
 ![[Pasted image 20230416113320.png]]
 
@@ -273,7 +284,7 @@ Perpendicular：
 | Tubular(OD&WT) | 圆管，通过外直径和壁厚定义 |
 | Tubular()
 
-#### 1.4.1 型钢库
+##### 1.3.1.1 型钢库
 单击小三角：
 ![[Pasted image 20230416192505.png]]
 
@@ -297,7 +308,7 @@ Perpendicular：
 ![[Pasted image 20230416193353.png]]
 
 
-#### 1.4.2 配置圆管
+##### 1.3.1.2 配置圆管
 这里先选择 `Tubular(OD&WT)` ：
 ![[Pasted image 20230416115314.png]]
 
@@ -324,6 +335,15 @@ Perpendicular：
 
 按需设计即可得图纸：
 ![[Pasted image 20230416193536.png]]
+
+#### 1.3.2 设置板件
+
+`Property` -> `Plate Group`
+![[Pasted image 20230416194225.png]]
+
+然后在对话框中直接设置即可：
+![[Pasted image 20230416194415.png]]
+![[Pasted image 20230416194359.png]]
 
 在这一步完成后，该模型可以称作为未修正的几何模型，通常还需要在其上进行偏移、关节点有效长度(由于压杆稳定等)设置等。
 
