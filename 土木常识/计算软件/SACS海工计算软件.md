@@ -244,7 +244,13 @@ Perpendicular：
 点击 `Add/Edit Deck Girder Data` 选择高程
 ![[Pasted image 20230416111545.png]]
 下面的 `Add DKG` 等是是否需要生成图中所示结构。
-剩下的细节设置同[[#1.1.6 绘制水平撑(Plan)结构]]
+剩下的细节设置同[[#1.1.6 绘制水平撑(Plan)结构]]，如果想要只显示上部组块，可以点击：
+`Display` -> `Volumes` 设置显示区域：
+![[Pasted image 20230416192020.png]]
+
+![[Pasted image 20230416192056.png]]
+在这里限制Z显示区域的最低值为上部组块的最低值即可：
+![[Pasted image 20230416192123.png]]
 
 ### 1.4 设置单元及板的Group、Section属性
 
@@ -263,10 +269,29 @@ Perpendicular：
 
 | 选项 | 含义 |
 | --- | --- |
-| General | |
+| General | 标准型材 |
 | Tubular(OD&WT) | 圆管，通过外直径和壁厚定义 |
 | Tubular()
 
+#### 1.4.1 型钢库
+单击小三角：
+![[Pasted image 20230416192505.png]]
+
+进入型材库：
+![[Pasted image 20230416192531.png]]
+
+可以筛选型钢类型：
+![[Pasted image 20230416192604.png]]
+
+| 类型 | 含义 |
+| --- | --- |
+| Tubular | 圆管 |
+| Wide Flange | |
+| Compact Wide Flange | 工字钢 |
+
+
+
+#### 1.4.2 配置圆管
 这里先选择 `Tubular(OD&WT)` ：
 ![[Pasted image 20230416115314.png]]
 
@@ -292,7 +317,11 @@ Perpendicular：
 若想修改现存构件的Group，点击 `Member` -> `Member Properties` 然后选中编辑即可
 ![[Pasted image 20230416185640.png]]
 
+按需设计即可得图纸：
+
 在这一步完成后，该模型可以称作为未修正的几何模型，通常还需要在其上进行偏移、关节点有效长度(由于压杆稳定等)设置等。
+
+
 
 ### 各单元及板偏移设置
 
