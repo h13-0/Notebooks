@@ -46,3 +46,37 @@ Demo:
 
 </details>
 
+### 分栏
+```html
+<html>
+    <table style="margin-left: auto; margin-right: auto;">
+        <tr>
+            <td>
+                <!--左侧内容-->
+                左侧
+            </td>
+            <td>
+                <!--右侧内容-->
+                右侧
+            </td>
+        </tr>
+    </table>
+</html>
+
+```
+
+效果：
+<html>
+    <table style="margin-left: auto; margin-right: auto;">
+        <tr>
+            <td>
+                <!--左侧内容-->
+                左侧
+            </td>
+            <td>
+                <!--右侧内容-->
+                右侧
+            </td>
+        </tr>
+    </table>
+</html>
