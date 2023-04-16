@@ -195,6 +195,9 @@ $$
 `Member` -> `Add`
 ![[Pasted image 20230415232058.png]]
 
+![[Pasted image 20230416094623.png]]
+其中 `Add immediately` 勾选后不用每次点击 `Apply` 了
+
 建框、分组(略)：
 ![[Pasted image 20230415232255.png]]
 
@@ -220,6 +223,10 @@ Equal Parts：
 Length：
 ![[Pasted image 20230416094135.png]]
 以某方向，一定长度打断单元
+
+Perpendicular：
+![[Pasted image 20230416094427.png]]
+选择点和线即可做垂线打断
 
 
 ### 1.4 设置单元及板的Group、Section属性
