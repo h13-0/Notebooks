@@ -251,7 +251,26 @@ Perpendicular：
 `Undefined Groups` 中为未定义的组，选中后点击 `Add` 即可。
 
 ![[Pasted image 20230416114440.png]]
+
 `Group type` 中
+![[Pasted image 20230416114628.png]]
+
+| 选项 | 含义 |
+| --- | --- |
+| General | |
+| Tubular(OD&WT) | 圆管，通过外直径和壁厚定义 |
+| Tubular()
+
+这里先选择 `Tubular(OD&WT)` ：
+![[Pasted image 20230416115314.png]]
+
+| 基本参数 | 含义 |
+| ------ | --- |
+| E | 弹性模量 |
+
+
+
+当圆管需要分段时，点击 `Add Segment` 来进行分段赋予属性
 
 
 
