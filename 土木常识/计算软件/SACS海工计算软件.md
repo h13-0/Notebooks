@@ -357,6 +357,11 @@ Perpendicular：
 
 ![[Pasted image 20230416204852.png]]
 
+`Part of structure to include` 为需要做offset的节点的范围
+![[Pasted image 20230417111022.png]]
+`Active` 为当前所显示的节点
+`All` 为全部节点
+`Include select joints` 、 `Exclude selected joints` 字面意思
 
 
 
