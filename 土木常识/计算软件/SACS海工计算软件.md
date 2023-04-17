@@ -400,7 +400,8 @@ Tab `Can/Chord` 主要对加厚段长度进行设置
 ![[Pasted image 20230417114848.png]]
 
 先 `Display` -> `Plan` 选择要操作的层
-
+然后 `Joint` -> 
+然后 `Joint` -> `Joint Properties`
 
 ### 修正各杆件的有效长度
 
