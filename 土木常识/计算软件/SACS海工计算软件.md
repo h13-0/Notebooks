@@ -440,6 +440,16 @@ Tab `Can/Chord` 主要对加厚段长度进行设置
 由于是三角板，故需要同时设置三个节点的偏移：
 ![[Pasted image 20230417160825.png]]
 
+`Apply` 即可
+![[Pasted image 20230417160904.png]]
+
+也可以在 `Plate` -> `Plate Properties` 中对Group集体设置偏移量
+![[Pasted image 20230417160951.png]]
+
+#### 1.4.5 斜拉筋节点偏移设置
+
+`Member` -> `Offsets` 里面直接按需求设置
+
 
 ### 修正各杆件的有效长度
 
