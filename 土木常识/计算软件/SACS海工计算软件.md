@@ -400,8 +400,24 @@ Tab `Can/Chord` 主要对加厚段长度进行设置
 ![[Pasted image 20230417114848.png]]
 
 先 `Display` -> `Plan` 选择要操作的层
-然后 `Joint` -> 
-然后 `Joint` -> `Joint Properties`
+
+添加Offset：
+`Member` -> `Offsets`
+![[Pasted image 20230417154012.png]]
+
+点击 `Screen` 即可选中屏幕中所有构件，按住 `Ctrl` 可以选中或取消选中。
+在 `Offset type` 中可以选定偏移类型：
+![[Pasted image 20230417154547.png]]
+| 选项 | 含义 |
+| --- | --- |
+| Global | 整体坐标系 |
+| Local | 杆件局部坐标系 |
+| Top of steel | 钢材顶点 |
+
+一般选定钢材定点和设计高度对齐，选中 `Top of steel` 然后 `Apply` 即可。
+此时即可对齐：
+![[Pasted image 20230417154835.png]]
+
 
 ### 修正各杆件的有效长度
 
