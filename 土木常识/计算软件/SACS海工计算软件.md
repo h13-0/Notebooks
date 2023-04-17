@@ -363,6 +363,12 @@ Perpendicular：
 `All` 为全部节点
 `Include select joints` 、 `Exclude selected joints` 字面意思
 
+`Offset braces to outside of chord` 为将撑杆偏移到竹竿外侧，一般勾选
+
+
+
+例如规范会要求多杆结点的各杆有个最小间距：
+![[Pasted image 20230417112708.png]]
 
 
 ### 修正各杆件的有效长度
