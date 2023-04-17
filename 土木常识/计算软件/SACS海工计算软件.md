@@ -347,11 +347,11 @@ Perpendicular：
 
 在这一步完成后，该模型可以称作为未修正的几何模型，通常还需要在其上进行偏移、关节点有效长度(由于压杆稳定等)设置等。
 
-### 各单元及板偏移设置
+### 1.4 各单元及板偏移设置
 
 比如规范中规定的安装间距，以及实际安装方法等。
 
-
+#### 1.4.1 偏移各杆件
 `Joint` -> `Automatic Design`
 ![[Pasted image 20230416204814.png]]
 
@@ -381,7 +381,18 @@ Perpendicular：
 
 ![[Pasted image 20230417113509.png]]
 Tab `Can/Chord` 主要对加厚段长度进行设置
-`Update segmented groups `
+`Update segmented groups can lengths` 更新各分段加厚段长度，勾选
+`Increase joint can lengths only` 为只增加不减少加厚段长度，勾选
+
+设置完 `Apply` 即可
+![[Pasted image 20230417114011.png]]
+![[Pasted image 20230417114030.png]]
+
+此时再点击对应杆件的加厚段长度，会发现已经被更改且不是整数
+![[Pasted image 20230417114337.png]]
+在实际工程中向上取整即可。
+
+#### 1.4.2 偏移工字钢
 
 
 ### 修正各杆件的有效长度
