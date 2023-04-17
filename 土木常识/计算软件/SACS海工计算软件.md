@@ -365,10 +365,23 @@ Perpendicular：
 
 `Offset braces to outside of chord` 为将撑杆偏移到竹竿外侧，一般勾选
 
+此时会有三个选项：
+![[Pasted image 20230417112751.png]]
+| 选项 | 含义 |
+| --- | --- |
+| None | 不作操作 |
+| Move brace | 移动撑杆以满足间距要求 |
+| Increase chord | 增加主杆直径以满足要求 |
 
+![[Pasted image 20230417113027.png]]
 
-例如规范会要求多杆结点的各杆有个最小间距：
-![[Pasted image 20230417112708.png]]
+一般选择移动撑杆。
+![[Pasted image 20230417113425.png]]
+`Gap` 按规范设定即可。
+
+![[Pasted image 20230417113509.png]]
+Tab `Can/Chord` 主要对加厚段长度进行设置
+`Update segmented groups `
 
 
 ### 修正各杆件的有效长度
