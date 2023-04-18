@@ -478,7 +478,13 @@ Tab `Can/Chord` 主要对加厚段长度进行设置
 
 在实际工程中，比如电气设备等的载荷在软件中模拟较为麻烦，直接改为载荷即可。
 
-#### 1.6.1 定义Surface
+在 `SACS` 中，荷载可以分为：
+1. Surface Weight
+2. Footprint Weight
+
+#### 1.6.1 Surface荷载
+
+##### 1.6.1.1 定义Surface
 施加荷载必须先定义 `Surface` ,
 `Weight` -> `Surface Definition`
 ![[Pasted image 20230418194152.png]]
@@ -491,11 +497,19 @@ Tab `Can/Chord` 主要对加厚段长度进行设置
 `Load distribution` 为荷载分布沿单元的方向，没看懂，应该是分布在沿 `x轴` 还是 `y轴` 方向的单元上？
 `Boundary joints` 为 `Surface` 的边界，边界内均有荷载，一般选外边界，按 `Ctrl` 多选即可。
 
-#### 1.6.2 Surface上定义荷载
+##### 1.6.1.2 Surface上定义荷载
 
 `Weight` -> `Surface Weight`
 ![[Pasted image 20230418195733.png]]
-然后填写 `Weight group` 、 `Weight ID` 、 `Pressure` 、 `Density` 等，将左侧 `Defined Surface IDs` 中的组添加到右侧 `Included Surface IDs`
+然后填写 `Weight group` 、 `Weight ID` 、 `Pressure` 、 `Density` 等，将左侧 `Defined Surface IDs` 中的组添加到右侧 `Included Surface IDs` ， `Apply` 即可。
+
+**若要分别定义多组Surface，<font color = 'red'><b>在 `Apply` 后取消选中设置好的 `Surface` 后</b></font>，再走一遍流程就行**
+
+建议将同一个平面的多种不同荷载多次分别定义，如恒荷载和活荷载要分开定义。
+
+#### 1.6.2 Footprint荷载
+
+##### 1.6.2.1 
 
 
 ### 荷载工况组合
