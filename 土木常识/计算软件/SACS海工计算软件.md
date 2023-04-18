@@ -535,7 +535,7 @@ Tab `Can/Chord` 主要对加厚段长度进行设置
 然后弹出 `Sum` 窗口，检查后 `Keep` 即可。
 ![[Pasted image 20230418202638.png]]
 
-### 1.6.3 添加线载荷
+#### 1.6.3 添加线载荷
 
 比如人行走道，栏杆等可以以线载荷的方式施加。
 
@@ -561,7 +561,8 @@ Tab `Can/Chord` 主要对加厚段长度进行设置
 | `Concentrated weight` | 集中力大小 |
 | `Distance to concentrated weight` | 集中点距杆件起始点的距离 |
 | `Include buoyancy and wave load` | 是否考虑浮力和波浪载荷，要看波浪是否可以冲击到 |
-| `Density` | 在上面
+| `Density` | 在考虑浮力时，填入密度，通过荷载反推体积来算浮力 |
+
 其中，有些结构需要平放运输，直立安装后再安装设备，故通常设备等载荷不勾选 `Include buoyancy and wave load` ， 但是吊点(pad eye)等需要勾选。
 
 `Distance to concentrated weight` 为 `0m` 时
@@ -580,6 +581,25 @@ Tab `Can/Chord` 主要对加厚段长度进行设置
 选点，赋 `Group` 、 `ID` ，赋值， `Apply` -> `Keep` 即可。
 ![[Pasted image 20230418205700.png]]
 
+#### 1.6.5 阳极块(Anode)载荷配置
+
+`Weight` -> `Anode Weight`
+![[Pasted image 20230418211611.png]]
+| 参数 | 含义 |
+| --- | --- |
+| Anode weight | 单个阳极块重量 |
+| anodes per | 每个杆件上有几个阳极块 |
+| Include buoyancy and wave load | 是否考虑阳极块浮力和波浪载荷 |
+| Density | 同1.6.4 |
+
+
+然后多选单元， `Apply`
+![[Pasted image 20230418212027.png]]
+
+
+
+
+通常阳极块
 
 ### 荷载工况组合
 
