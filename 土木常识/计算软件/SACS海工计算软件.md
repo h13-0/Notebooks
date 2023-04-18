@@ -474,10 +474,11 @@ Tab `Can/Chord` 主要对加厚段长度进行设置
 
 到此为止，可以称当前模型为已修正的几何模型。
 
-### 施加载荷
+### 1.6 施加载荷
 
 在实际工程中，比如电气设备等的载荷在软件中模拟较为麻烦，直接改为载荷即可。
 
+#### 1.6.1 定义Surface
 施加荷载必须先定义 `Surface` ,
 `Weight` -> `Surface Definition`
 ![[Pasted image 20230418194152.png]]
@@ -487,7 +488,15 @@ Tab `Can/Chord` 主要对加厚段长度进行设置
 `3rd Joint` 为 `Surface` 局部坐标系的 `y轴` 方向
 
 `Tolerance` 为容许误差，不知道是干什么的反正尽量填大一点
-`Load dist`
+`Load distribution` 为荷载分布沿单元的方向，没看懂，应该是分布在沿 `x轴` 还是 `y轴` 方向的单元上？
+`Boundary joints` 为 `Surface` 的边界，边界内均有荷载，一般选外边界，按 `Ctrl` 多选即可。
+
+#### 1.6.2 Surface上定义荷载
+
+`Weight` -> `Surface Weight`
+![[Pasted image 20230418195733.png]]
+然后填写 `Weight group` 、 `Weight ID` 、 `Pressure` 、 `Density` 等，将左侧 `Defined Surface IDs` 中的组添加到右侧 `Included Surface IDs`
+
 
 ### 荷载工况组合
 
