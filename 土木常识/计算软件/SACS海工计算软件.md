@@ -597,8 +597,12 @@ Tab `Can/Chord` 主要对加厚段长度进行设置
 
 ### 1.7 将Weight转为Load
 
+章节1.6中只是定义了Weight，在计算时需要将Weight转化为Load
 
+先在 `Weight` -> `Center of roll` 中定义一个旋转中心，一般定义为坐标原点(相当于SACS是以考虑整体运动来计算运动和静止两种情况下的荷载，下面加速度只在z轴设置了)
+![[Pasted image 20230418213841.png]]
 
+然后去 `Environment` -> `Weight` 中
 
 ### 荷载工况组合
 
