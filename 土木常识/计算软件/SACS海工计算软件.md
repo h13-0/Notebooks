@@ -481,6 +481,8 @@ Tab `Can/Chord` 主要对加厚段长度进行设置
 在 `SACS` 中，荷载可以分为：
 1. Surface Weight
 2. Footprint Weight
+3. Member Weight
+4. Joint Weight
 
 #### 1.6.1 Surface荷载
 
@@ -532,13 +534,29 @@ Tab `Can/Chord` 主要对加厚段长度进行设置
 然后弹出 `Sum` 窗口，检查后 `Keep` 即可。
 ![[Pasted image 20230418202638.png]]
 
-### 1.6.3 附属构件荷载
+### 1.6.3 添加线载荷
 
-比如人行走道，栏杆等。
+比如人行走道，栏杆等可以以线载荷的方式施加。
 
 `Weight` -> `Member Weight`
 ![[Pasted image 20230418205031.png]]
-然后按住 `Ctrl` 多选即可
+然后按住 `Ctrl` 多选即可，然后赋 `Weight group` 和 `Weight ID` ，然后在 `Weight category` 中选择是分布型还是节点型(通常为分布型)
+![[Pasted image 20230418205229.png]]
+
+然后在起点和重点设置线载荷大小：
+![[Pasted image 20230418205326.png]]
+
+`Apply` -> `Keep` 即可。
+![[Pasted image 20230418205409.png]]
+
+#### 1.6.4 添加点载荷
+
+比如吊机等可以以点载荷方式施加。
+`Weight` -> `Joint Weight`
+![[Pasted image 20230418205734.png]]
+
+选点，赋 `Group` 、 `ID` ，赋值， `Apply` -> `Keep` 即可。
+![[Pasted image 20230418205700.png]]
 
 
 ### 荷载工况组合
