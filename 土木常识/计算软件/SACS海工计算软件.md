@@ -478,8 +478,16 @@ Tab `Can/Chord` 主要对加厚段长度进行设置
 
 在实际工程中，比如电气设备等的载荷在软件中模拟较为麻烦，直接改为载荷即可。
 
-施加荷载必须先定义 `Surface` 
+施加荷载必须先定义 `Surface` ,
+`Weight` -> `Surface Definition`
+![[Pasted image 20230418194152.png]]
+然后赋 `Surface ID` ，选三个点，注意：
+`1st Joint` 为 `Surface` 局部坐标系的原点
+`2nd Joint` 为 `Surface` 局部坐标系的 `x轴` 方向
+`3rd Joint` 为 `Surface` 局部坐标系的 `y轴` 方向
 
+`Tolerance` 为容许误差，不知道是干什么的反正尽量填大一点
+`Load dist`
 
 ### 荷载工况组合
 
