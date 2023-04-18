@@ -592,14 +592,13 @@ Tab `Can/Chord` 主要对加厚段长度进行设置
 | Include buoyancy and wave load | 是否考虑阳极块浮力和波浪载荷 |
 | Density | 同1.6.4 |
 
-
 然后多选单元， `Apply`
 ![[Pasted image 20230418212027.png]]
 
+### 1.7 将Weight转为Load
 
 
 
-通常阳极块
 
 ### 荷载工况组合
 
