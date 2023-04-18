@@ -509,13 +509,28 @@ Tab `Can/Chord` 主要对加厚段长度进行设置
 
 #### 1.6.2 Footprint荷载
 
-##### 1.6.2.1 
 `Weight` -> `Footprint Weight`
-
 ![[Pasted image 20230418201100.png]]
-注意 `Footprint Center` 是以 `SACS` 坐标系为准的坐标。
-`Weight Loaction` 为 `Footprint Weight` 的重心，例如对于方块型设备，其重心高度上通常为其本身高度的一般，故 `Footprint Weight` -> `Z` 填写
+注意 `Footprint Center` 是以 `SACS` 坐标系为准的坐标<font color = 'red'>(么?视频里原点是该截面的四条主腿的几何中心啊?)</font>。
+`Weight Loaction` 为 `Footprint Weight` 的重心，例如对于方块型设备，其重心高度上通常为其本身高度的一般，故 `Footprint Weight` -> `Z` 填写二分之一高度即可。
 
+![[Pasted image 20230418202244.png]]
+`Footprint type` 为荷载受力施加于结构的类型，
+| 选项 | 含义 |
+| --- | --- |
+| Skid | 分布到梁交叉节点上 |
+| Area | 为分布到面内所有的梁上 |
+
+通常选 `Skid` 。
+
+然后 `Footprint Size` 为荷载施加的长和宽
+![[Pasted image 20230418202308.png]]
+
+然后设置分布数量，填2和2即可：
+![[Pasted image 20230418202659.png]]
+
+然后弹出 `Sum` 窗口，检查后 `Keep` 即可。
+![[Pasted image 20230418202638.png]]
 
 ### 荷载工况组合
 
