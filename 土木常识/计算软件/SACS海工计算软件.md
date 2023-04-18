@@ -483,6 +483,7 @@ Tab `Can/Chord` 主要对加厚段长度进行设置
 2. Footprint Weight
 3. Member Weight
 4. Joint Weight
+上述荷载均为非结构荷载，即排除自重的额外荷载。
 
 #### 1.6.1 Surface荷载
 
@@ -540,7 +541,9 @@ Tab `Can/Chord` 主要对加厚段长度进行设置
 
 `Weight` -> `Member Weight`
 ![[Pasted image 20230418205031.png]]
-然后按住 `Ctrl` 多选即可，然后赋 `Weight group` 和 `Weight ID` ，然后在 `Weight category` 中选择是分布型还是节点型(通常为分布型)
+然后按住 `Ctrl` 多选即可，然后赋 `Weight group` 和 `Weight ID` ，然后在 `Weight category` 中选择是分布于整个杆件上还是集中于杆件一点(通常为分布型)
+
+##### 1.6.3.1 分布型
 ![[Pasted image 20230418205229.png]]
 
 然后在起点和重点设置线载荷大小：
@@ -549,9 +552,28 @@ Tab `Can/Chord` 主要对加厚段长度进行设置
 `Apply` -> `Keep` 即可。
 ![[Pasted image 20230418205409.png]]
 
+##### 1.6.3.2 集中型
+
+![[Pasted image 20230418210325.png]]
+
+| 参数 | 含义 |
+| --- | --- |
+| `Concentrated weight` | 集中力大小 |
+| `Distance to concentrated weight` | 集中点距杆件起始点的距离 |
+| `Include buoyancy and wave load` | 是否考虑浮力和波浪载荷，要看波浪是否可以冲击到 |
+| `Density` | 在上面
+其中，有些结构需要平放运输，直立安装后再安装设备，故通常设备等载荷不勾选 `Include buoyancy and wave load` ， 但是吊点(pad eye)等需要勾选。
+
+`Distance to concentrated weight` 为 `0m` 时
+![[Pasted image 20230418210314.png]]
+
+`Distance to concentrated weight` 为 `1.5m` 时(此时杆件长为3m)
+![[Pasted image 20230418210200.png]]
+
+
 #### 1.6.4 添加点载荷
 
-比如吊机等可以以点载荷方式施加。
+比如吊机、吊点(pad eye)等可以以点载荷方式施加。
 `Weight` -> `Joint Weight`
 ![[Pasted image 20230418205734.png]]
 
