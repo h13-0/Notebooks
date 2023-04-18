@@ -11,16 +11,6 @@
             "id": "13d853431d259e6e",
             "type": "leaf",
             "state": {
-              "type": "image",
-              "state": {
-                "file": "土木常识/Resources/Pasted image 20230417154012.png"
-              }
-            }
-          },
-          {
-            "id": "9b3afb01c32110db",
-            "type": "leaf",
-            "state": {
               "type": "markdown",
               "state": {
                 "file": "土木常识/计算软件/SACS海工计算软件.md",
@@ -29,8 +19,7 @@
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -153,16 +142,17 @@
       "switcher:打开快速切换": false,
       "command-palette:打开命令面板": false,
       "audio-recorder:开始/结束录音": false,
-      "graph:查看关系图谱": false,
-      "publish:发布更改": false
+      "graph:查看关系图谱": false
     }
   },
-  "active": "9b3afb01c32110db",
+  "active": "13d853431d259e6e",
   "lastOpenFiles": [
+    "Resources/Pasted image 20230418205031.png",
+    "未命名.canvas",
     "土木常识/Resources/Pasted image 20230417154012.png",
+    "土木常识/计算软件/SACS海工计算软件.md",
     "土木常识/Resources/Pasted image 20230418194152.png",
     "土木常识/Resources/Pasted image 20230418195733.png",
-    "土木常识/计算软件/SACS海工计算软件.md",
     "土木常识/Resources/Pasted image 20230418202659.png",
     "土木常识/Resources/Pasted image 20230418202638.png",
     "土木常识/Resources/Pasted image 20230418202433.png",
@@ -170,7 +160,6 @@
     "土木常识/Resources/Pasted image 20230418202306.png",
     "土木常识/Resources/Pasted image 20230418202244.png",
     "土木常识/Resources/Pasted image 20230418201100.png",
-    "土木常识/Resources/Pasted image 20230417154547.png",
     "土木常识/土木常识.md",
     "Obsidian/Markdown与html语法拓展/html常用语法拓展.md",
     "Obsidian/插件/bartender 笔记md文件手动排序.md",
@@ -181,7 +170,6 @@
     "Others/线程锁/线程锁与信号量.md",
     "Others/线程锁/实现/线程锁 with pthread.md",
     "编译原理/编译原理.md",
-    "未命名.canvas",
     "PythonLibs/pycpraser/抽象语法树(c_ast).md",
     "Others/git/git常用操作.md",
     "土木常识/未命名.md",
