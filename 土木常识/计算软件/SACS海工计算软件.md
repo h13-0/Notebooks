@@ -510,6 +510,11 @@ Tab `Can/Chord` 主要对加厚段长度进行设置
 #### 1.6.2 Footprint荷载
 
 ##### 1.6.2.1 
+`Weight` -> `Footprint Weight`
+
+![[Pasted image 20230418201100.png]]
+注意 `Footprint Center` 是以 `SACS` 坐标系为准的坐标。
+`Weight Loaction` 为 `Footprint Weight` 的重心，例如对于方块型设备，其重心高度上通常为其本身高度的一般，故 `Footprint Weight` -> `Z` 填写
 
 
 ### 荷载工况组合
