@@ -11,9 +11,11 @@
             "id": "13d853431d259e6e",
             "type": "leaf",
             "state": {
-              "type": "image",
+              "type": "markdown",
               "state": {
-                "file": "土木常识/Resources/Pasted image 20230417154547.png"
+                "file": "土木常识/计算软件/SACS海工计算软件.md",
+                "mode": "source",
+                "source": false
               }
             }
           }
@@ -83,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "土木常识/Resources/Pasted image 20230417154547.png",
+                "file": "土木常识/计算软件/SACS海工计算软件.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -100,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "土木常识/Resources/Pasted image 20230417154547.png",
+                "file": "土木常识/计算软件/SACS海工计算软件.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -123,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "土木常识/Resources/Pasted image 20230417154547.png"
+                "file": "土木常识/计算软件/SACS海工计算软件.md"
               }
             }
           }
@@ -144,8 +146,9 @@
       "publish:发布更改": false
     }
   },
-  "active": "7ddc64b2e3c9b5c8",
+  "active": "13d853431d259e6e",
   "lastOpenFiles": [
+    "土木常识/Resources/Pasted image 20230417154547.png",
     "土木常识/计算软件/SACS海工计算软件.md",
     "土木常识/Resources/Pasted image 20230417172929.png",
     "土木常识/Resources/Pasted image 20230417172507.png",
