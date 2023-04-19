@@ -659,7 +659,7 @@ Label `Clean` 为光滑结构， `Fouled` 为海生物附着后的粗糙结构�
 
 勾选 `Wave`
 ![[Pasted image 20230419145927.png]]
-`Wave type` 中有如下图所示类型的波浪(主要是选择波浪理论)
+在Tab `Wave I` 中的 `Wave type` 中有如下图所示类型的波浪(主要是选择波浪理论)
 ![[Pasted image 20230419150017.png]]
 
 | 选项 | 含义 |
@@ -672,6 +672,9 @@ Label `Clean` 为光滑结构， `Fouled` 为海生物附着后的粗糙结构�
 
 然后输入波浪要素即可。
 
+Tab `Wave II` 中设置多少个相位角计算一次载荷，因为每个相位角对结构的力是不一样的。
+在 `Critical position` 中选择最大基地剪应力 `Max base shear` 为指标
+然后
 
 ### 荷载工况组合
 
