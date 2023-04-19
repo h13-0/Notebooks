@@ -712,10 +712,12 @@ Tab `Wave II` 中设置多少个相位角计算一次载荷，因为每个相位
 ![[Pasted image 20230419154301.png]]
 ![[Pasted image 20230419154324.png]]
 `Buoyancy method` 为浮力的计算方法
+![[Pasted image 20230419154417.png]]
 
+`Direction of gravity` 为重力的计算方向
+`Include the buoyance below the mudline` 为是否要包括泥面以下的浮力
 
-
-### 荷载工况组合
+### 1.10 荷载工况组合
 
 
 ### 强度分析选项设定

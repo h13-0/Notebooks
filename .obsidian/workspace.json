@@ -11,11 +11,9 @@
             "id": "13d853431d259e6e",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "image",
               "state": {
-                "file": "土木常识/计算软件/SACS海工计算软件.md",
-                "mode": "source",
-                "source": false
+                "file": "土木常识/Resources/Pasted image 20230419153523.png"
               }
             }
           }
@@ -85,7 +83,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "土木常识/计算软件/SACS海工计算软件.md",
+                "file": "土木常识/Resources/Pasted image 20230419153523.png",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +100,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "土木常识/计算软件/SACS海工计算软件.md",
+                "file": "土木常识/Resources/Pasted image 20230419153523.png",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +123,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "土木常识/计算软件/SACS海工计算软件.md"
+                "file": "土木常识/Resources/Pasted image 20230419153523.png"
               }
             }
           }
@@ -147,17 +145,17 @@
   },
   "active": "13d853431d259e6e",
   "lastOpenFiles": [
-    "Resources/Pasted image 20230419154320.png",
+    "土木常识/Resources/Pasted image 20230419154201.png",
+    "土木常识/Resources/Pasted image 20230419154301.png",
+    "土木常识/Resources/Pasted image 20230419154324.png",
+    "土木常识/Resources/Pasted image 20230419154417.png",
+    "土木常识/Resources/Pasted image 20230419153753.png",
+    "土木常识/Resources/Pasted image 20230419154002.png",
+    "土木常识/Resources/Pasted image 20230419153523.png",
     "土木常识/计算软件/SACS海工计算软件.md",
-    "Resources/Pasted image 20230419154324.png",
-    "Resources/Pasted image 20230419154301.png",
-    "Resources/Pasted image 20230419154201.png",
-    "Resources/Pasted image 20230419154002.png",
-    "Resources/Pasted image 20230419153753.png",
+    "Resources/Pasted image 20230419154320.png",
     "Resources/Pasted image 20230419153605.png",
-    "Resources/Pasted image 20230419153523.png",
     "土木常识/Resources/Pasted image 20230419145806.png",
-    "土木常识/Resources/Pasted image 20230419152412.png",
     "未命名.canvas",
     "土木常识/土木常识.md",
     "Obsidian/Markdown与html语法拓展/html常用语法拓展.md",
