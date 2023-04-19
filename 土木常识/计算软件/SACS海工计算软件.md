@@ -617,6 +617,12 @@ Tab `Can/Chord` 主要对加厚段长度进行设置
 ### 1.8 环境荷载
 
 比如风浪流、海生物吸附等。
+`Environment` -> `Drag/Mass Coefficient` 配置 `Cd` 、 `Cm` 系数
+![[Pasted image 20230419114929.png]]
+`Table type` 选用户自定义( `User defined` )
+Label `Clean` 为光滑结构， `Fouled` 为海生物附着后的粗糙结构，
+取消勾选 `Use clean values for fouled members` 即可设置粗糙结构
+
 
 ### 荷载工况组合
 
