@@ -674,7 +674,26 @@ Label `Clean` 为光滑结构， `Fouled` 为海生物附着后的粗糙结构�
 
 Tab `Wave II` 中设置多少个相位角计算一次载荷，因为每个相位角对结构的力是不一样的。
 在 `Critical position` 中选择最大基地剪应力 `Max base shear` 为指标
-然后
+然后选择是否需要覆盖原来的水深和泥面线，在实际工程中通常结合高潮位和低潮位来设置
+![[Pasted image 20230419152412.png]]
+
+#### 1.9.2 定义风载荷
+
+勾选 `Wind`
+![[Pasted image 20230419152606.png]]
+
+一般通过定义风速来计算风载荷，勾选 `Velocity` 填写数值。
+`Reference height` 为参考高度，一般默认为 `10m` 
+`Wind height variation` 中可以选择对应规范
+![[Pasted image 20230419152840.png]]
+
+`Wind (deg)` 角度一般为 `0°`
+参考值：
+![[Pasted image 20230419153032.png]]
+
+在 `Wind II` 中设置风面( `Wind Area` )，一般用于闭合结构，不设置则默认为杆件受风。
+
+### 1.10 
 
 ### 荷载工况组合
 
