@@ -617,12 +617,28 @@ Tab `Can/Chord` 主要对加厚段长度进行设置
 ### 1.8 环境荷载
 
 比如风浪流、海生物吸附等。
+
+#### 1.8.1 定义Cd、Cm
 `Environment` -> `Drag/Mass Coefficient` 配置 `Cd` 、 `Cm` 系数
 ![[Pasted image 20230419114929.png]]
 `Table type` 选用户自定义( `User defined` )
 Label `Clean` 为光滑结构， `Fouled` 为海生物附着后的粗糙结构，
 取消勾选 `Use clean values for fouled members` 即可设置粗糙结构
 
+#### 1.8.2 定义海生物
+
+##### 1.8.2.1 统一定义
+`Environment` -> `Marine Growth`
+![[Pasted image 20230419115821.png]]
+`Mudline elevation override` 可以重定义泥面高度，一般填写泥面高度即可
+列 `Bottom` 、 `Top` 定义范围，高程从泥面开始计算， `Thickness` 为海生物厚度
+
+示例如下：
+![[Pasted image 20230419120234.png]]
+
+##### 1.8.2.2 单独修正单一杆件的海生物荷载
+比如可以单独修正某一条主腿的海生物荷载
+`Environment` -> 
 
 ### 荷载工况组合
 
