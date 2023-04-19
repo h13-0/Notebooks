@@ -719,6 +719,17 @@ Tab `Wave II` 中设置多少个相位角计算一次载荷，因为每个相位
 
 ### 1.10 荷载工况组合
 
+`Load` -> `Combine`
+![[Pasted image 20230419161158.png]]
+
+定义组合名，添加载荷，设置系数即可。
+![[Pasted image 20230419161150.png]]
+
+#### 1.11 分析选项设置
+
+`Option` -> `Load Condition Selection`
+
+
 
 ### 强度分析选项设定
 
