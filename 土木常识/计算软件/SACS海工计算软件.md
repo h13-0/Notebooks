@@ -599,10 +599,20 @@ Tab `Can/Chord` 主要对加厚段长度进行设置
 
 章节1.6中只是定义了Weight，在计算时需要将Weight转化为Load
 
-先在 `Weight` -> `Center of roll` 中定义一个旋转中心，一般定义为坐标原点(相当于SACS是以考虑整体运动来计算运动和静止两种情况下的荷载，下面加速度只在z轴设置了)
+先在 `Weight` -> `Center of roll` 中定义一个旋转中心，一般定义为坐标原点(相当于SACS是以考虑整体运动来计算运动和静止两种情况下的荷载，下面加速度只在z轴设置了一个1.0G就是只考虑静止时的荷载)
 ![[Pasted image 20230418213841.png]]
 
-然后去 `Environment` -> `Weight` 中
+然后去 `Environment` -> `Weight` 中，勾选 `Include Weight group` 和 `Acceleration` 。
+
+在 `Acceleration` 中的Z中填写 `1.0` 即可，不要忘记填写 `Center ID` 。
+![[Pasted image 20230418214321.png]]
+`Do NOT include sturctural weight for this acceleration` 为只考虑额外荷载而不考虑结构本身，一般勾选。
+
+然后在 `Include Weight group` 中勾选所需要包含的Group
+![[Pasted image 20230418214553.png]]
+`Apply`
+
+然后在
 
 ### 荷载工况组合
 
