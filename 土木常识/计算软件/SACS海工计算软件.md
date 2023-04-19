@@ -638,7 +638,16 @@ Label `Clean` 为光滑结构， `Fouled` 为海生物附着后的粗糙结构�
 
 ##### 1.8.2.2 单独修正单一杆件的海生物荷载
 比如可以单独修正某一条主腿的海生物荷载
-`Environment` -> 
+`Environment` -> `Member Group` -> `Global`
+![[Pasted image 20230419144632.png]]
+多选左侧 `Groups With No Overrides` ，然后在 `Coefficients` 输入Cd Cm即可
+![[Pasted image 20230419144912.png]]
+
+
+### 1.9 风浪流载荷
+
+`Environment` -> `Seastate`
+![[Pasted image 20230419145149.png]]
 
 ### 荷载工况组合
 
