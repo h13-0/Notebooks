@@ -324,8 +324,7 @@ Perpendicular：
 | Segment lenght | 分段长度，一般填写加厚段长度 |
 | Flooded member | 是否受到水流冲击 |
 
-如果圆管需要分段(如需要分为加厚段+普通段)，一般只需要在各个加厚段中的 `Segment length` 中填写加厚段长度，点 `Apply` 以应用，再点击 `Add Segment` 来进行普通段属性设置。此时普通段的 `Segment length` 可以留空，剩下的长度即为普通段。
-可以设置多个定义了 `Segment length` 的段+一个未定义的段即可完全定义一根杆件。
+如果圆管需要分段(如需要分为加厚段+普通段)，则需要从杆件的Joint A依次增加分段以确定分段顺序。一般需要多个定义了 `Segment length` 的段+一个未定义的段即可完全定义一根杆件。
 
 在该窗口的 `Segment` 的 group box 中即可选定和查看各段信息。
 ![[Pasted image 20230416121036.png]]
