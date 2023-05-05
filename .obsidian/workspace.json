@@ -30,9 +30,21 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "38559fd244d52523",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "土木常识/计算软件/SACS海工计算软件.md",
+                "mode": "source",
+                "source": false
+              }
+            }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -75,6 +87,14 @@
             "type": "leaf",
             "state": {
               "type": "starred",
+              "state": {}
+            }
+          },
+          {
+            "id": "fa7bed5878afb8af",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
               "state": {}
             }
           }
@@ -158,10 +178,10 @@
       "graph:查看关系图谱": false
     }
   },
-  "active": "2dde4ab2b3a9c966",
+  "active": "38559fd244d52523",
   "lastOpenFiles": [
-    "Resources/Pasted image 20230419161158.png",
-    "Resources/Pasted image 20230419161150.png",
+    "土木常识/Resources/Pasted image 20230419161158.png",
+    "土木常识/Resources/Pasted image 20230419161150.png",
     "土木常识/Resources/Pasted image 20230419153523.png",
     "土木常识/Resources/Pasted image 20230419154201.png",
     "土木常识/Resources/Pasted image 20230419154301.png",
