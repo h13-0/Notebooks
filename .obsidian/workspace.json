@@ -13,26 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "土木常识/计算软件/SACS海工计算软件.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "2dde4ab2b3a9c966",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "土木常识/计算软件/SACS海工计算软件.md",
+                "file": "前后端编程/JavaScript/JS简单入门.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -90,8 +77,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "989a0ed08fe1a7b2",
@@ -107,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "土木常识/计算软件/SACS海工计算软件.md",
+                "file": "前后端编程/JavaScript/JS简单入门.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -124,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "土木常识/计算软件/SACS海工计算软件.md",
+                "file": "前后端编程/JavaScript/JS简单入门.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -147,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "土木常识/计算软件/SACS海工计算软件.md"
+                "file": "前后端编程/JavaScript/JS简单入门.md"
               }
             }
           }
@@ -167,9 +153,13 @@
       "graph:查看关系图谱": false
     }
   },
-  "active": "2dde4ab2b3a9c966",
+  "active": "7ddc64b2e3c9b5c8",
   "lastOpenFiles": [
     "未命名.canvas",
+    "前后端编程/JavaScript/JS简单入门.md",
+    "前后端编程/JavaScript",
+    "未命名",
+    "前后端编程",
     "土木常识/计算软件/SACS海工计算软件.md",
     "土木常识/Resources/Pasted image 20230419161158.png",
     "土木常识/Resources/Pasted image 20230419161150.png",
