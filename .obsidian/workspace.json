@@ -13,24 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "前后端编程/JavaScript/JS简单入门.md",
+                "file": "Math/傅里叶变换.md",
                 "mode": "source",
                 "source": false
               }
             }
-          },
-          {
-            "id": "6a72162c23d9c0be",
-            "type": "leaf",
-            "state": {
-              "type": "release-notes",
-              "state": {
-                "currentVersion": "1.5.3"
-              }
-            }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -104,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "前后端编程/JavaScript/JS简单入门.md",
+                "file": "Math/傅里叶变换.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -121,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "前后端编程/JavaScript/JS简单入门.md",
+                "file": "Math/傅里叶变换.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -144,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "前后端编程/JavaScript/JS简单入门.md"
+                "file": "Math/傅里叶变换.md"
               }
             }
           }
@@ -164,12 +153,15 @@
       "graph:查看关系图谱": false
     }
   },
-  "active": "6a72162c23d9c0be",
+  "active": "13d853431d259e6e",
   "lastOpenFiles": [
-    "未命名.canvas",
+    "CPP/C标准笔记/C与C++标准.md",
+    "Math/傅里叶变换.md",
     "前后端编程/JavaScript/JS简单入门.md",
-    "前后端编程/JavaScript",
     "未命名",
+    "Math",
+    "未命名.canvas",
+    "前后端编程/JavaScript",
     "前后端编程",
     "土木常识/计算软件/SACS海工计算软件.md",
     "土木常识/Resources/Pasted image 20230419161158.png",
@@ -196,7 +188,6 @@
     "Others/git/git常用操作.md",
     "土木常识/未命名.md",
     "CPP/C标准笔记/C标准笔记.md",
-    "CPP/C标准笔记/C与C++标准.md",
     "CMake/CMake 常用函数.md",
     "Others/Tools/Tools.md",
     "POSIX/Readme.md"
