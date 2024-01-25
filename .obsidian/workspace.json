@@ -18,8 +18,19 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "6a72162c23d9c0be",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.5.3"
+              }
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -153,7 +164,7 @@
       "graph:查看关系图谱": false
     }
   },
-  "active": "7ddc64b2e3c9b5c8",
+  "active": "6a72162c23d9c0be",
   "lastOpenFiles": [
     "未命名.canvas",
     "前后端编程/JavaScript/JS简单入门.md",

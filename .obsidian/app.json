@@ -1,9 +1,6 @@
 {
   "showLineNumber": false,
-  "spellcheckLanguages": [
-    "zh-CN",
-    "en-US"
-  ],
+  "spellcheckLanguages": null,
   "alwaysUpdateLinks": true,
   "attachmentFolderPath": "Resources",
   "pdfExportSettings": {
