@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Math/复变函数.md",
+                "file": "Others/Tools/Tools.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Math/复变函数.md",
+                "file": "Others/Tools/Tools.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Math/复变函数.md",
+                "file": "Others/Tools/Tools.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Math/复变函数.md"
+                "file": "Others/Tools/Tools.md"
               }
             }
           }
@@ -155,8 +155,8 @@
   },
   "active": "13d853431d259e6e",
   "lastOpenFiles": [
-    "Math/傅里叶变换.md",
     "Math/复变函数.md",
+    "Math/傅里叶变换.md",
     "CPP/C标准笔记/C与C++标准.md",
     "前后端编程/JavaScript/JS简单入门.md",
     "未命名",
