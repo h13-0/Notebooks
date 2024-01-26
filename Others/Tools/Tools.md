@@ -14,7 +14,8 @@ max_depth: 3
 	https://github.com/zu1k/zlib-searcher
 
 ### z-library 教材查找
-https://z-library.se/
+官网：
+	https://z-library.se/
 
 ## 增强工具
 
