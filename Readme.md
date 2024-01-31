@@ -1,2 +1,2 @@
-They are `Notebooks` but not `Books`, so there must be a lot of mistakes and omissions.
+这是一本笔记。
 
