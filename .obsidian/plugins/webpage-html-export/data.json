@@ -29,12 +29,16 @@
   "graphEdgePruning": 100,
   "graphMinNodeSize": 3,
   "graphMaxNodeSize": 7,
-  "exportPath": "C:\\Users\\h13\\Documents\\Notebooks\\Notebooks-html",
+  "exportPath": "C:\\Users\\h13\\Documents\\Notebooks\\Notebooks-html\\Notebooks",
   "filesToExport": [
     [
       "编译原理/编译原理.md",
       "计算机网络/第一章 计算机网络体系结构/计算机网络体系结构.md",
       "计算机网络/Resources/Pasted image 20240131012214.png",
+      "计算机网络/Resources/Pasted image 20240131215832.png",
+      "计算机网络/Resources/Pasted image 20240131220255.png",
+      "计算机网络/Resources/Pasted image 20240131220430.png",
+      "计算机网络/Resources/Pasted image 20240131223838.png",
       "计算机网络/计算机网络概述.md",
       "前后端编程/JavaScript/JS简单入门.md",
       "土木常识/计算软件/SACS海工计算软件.md",
