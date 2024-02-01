@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "生活常识/生理健康/未命名.md",
+                "file": "CPP/应试笔记.md",
                 "mode": "source",
                 "source": false
               }
@@ -105,7 +105,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "生活常识/生理健康/未命名.md",
+                "file": "CPP/应试笔记.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -122,7 +122,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "生活常识/生理健康/未命名.md",
+                "file": "CPP/应试笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -145,7 +145,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "生活常识/生理健康/未命名.md"
+                "file": "CPP/应试笔记.md"
               }
             }
           }
@@ -167,10 +167,12 @@
       "graph:查看关系图谱": false
     }
   },
-  "active": "7ddc64b2e3c9b5c8",
+  "active": "13d853431d259e6e",
   "lastOpenFiles": [
-    "计算机网络/第一章 计算机网络体系结构/计算机网络体系结构.md",
+    "CPP/编译器限定实现/gcc.md",
+    "CPP/应试笔记.md",
     "生活常识/生理健康/未命名.md",
+    "计算机网络/第一章 计算机网络体系结构/计算机网络体系结构.md",
     "生活常识/生理健康",
     "生活常识",
     "Resources/Pasted image 20240131233509.png",
@@ -195,12 +197,10 @@
     "Obsidian/插件/bartender 笔记md文件手动排序.md",
     "CPP/C标准笔记/C标准笔记.md",
     "CPP/C标准笔记/C++ 修饰符类型.md",
-    "CPP/编译器限定实现/gcc.md",
     "CMake/CMake 常用函数.md",
     "CMake/CMake 变量表.md",
     "土木常识/土木常识.md",
     "土木常识/计算软件/SACS海工计算软件.md",
-    "前后端编程/JavaScript/JS简单入门.md",
     "计算机网络/Resources/Pasted image 20240131223838.png",
     "计算机网络/Resources/Pasted image 20240131220430.png",
     "计算机网络/Resources/Pasted image 20240131220255.png",
