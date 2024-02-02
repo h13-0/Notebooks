@@ -1,10 +1,11 @@
 {
   "pluginList": [
+    "KosmosisDire/obsidian-webpage-export",
     "nothingislost/obsidian-bartender"
   ],
   "pluginSubListFrozenVersion": [],
   "themesList": [],
-  "updateAtStartup": false,
+  "updateAtStartup": true,
   "updateThemesAtStartup": false,
   "enableAfterInstall": true,
   "loggingEnabled": false,
