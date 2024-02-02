@@ -105,7 +105,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Readme.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -122,7 +121,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Readme.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -144,9 +142,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "Readme.md"
-              }
+              "state": {}
             }
           }
         ]
@@ -167,10 +163,43 @@
       "graph:查看关系图谱": false
     }
   },
-  "active": "13d853431d259e6e",
+  "floating": {
+    "id": "aa4502b1894c2a94",
+    "type": "floating",
+    "children": [
+      {
+        "id": "6878c10fefffdca1",
+        "type": "window",
+        "children": [
+          {
+            "id": "7658f105af7cb938",
+            "type": "tabs",
+            "children": [
+              {
+                "id": "c9255213068e3ded",
+                "type": "leaf",
+                "state": {
+                  "type": "empty",
+                  "state": {}
+                }
+              }
+            ]
+          }
+        ],
+        "direction": "vertical",
+        "x": 317,
+        "y": 338,
+        "width": 802,
+        "height": 402,
+        "maximize": false,
+        "zoom": 0
+      }
+    ]
+  },
+  "active": "c9255213068e3ded",
   "lastOpenFiles": [
-    "计算机网络/第一章 计算机网络体系结构/计算机网络体系结构.md",
     "Readme.md",
+    "计算机网络/第一章 计算机网络体系结构/计算机网络体系结构.md",
     "VisualStudio/Plugins/未命名.md",
     "PythonLibs/pycpraser/pycpraser.md",
     "PythonLibs/argparse/常用操作.md",
