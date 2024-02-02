@@ -60,7 +60,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "tag:#计算机网络",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -85,7 +85,8 @@
               "state": {}
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -167,7 +168,7 @@
       "graph:查看关系图谱": false
     }
   },
-  "active": "13d853431d259e6e",
+  "active": "d7694db761056d1c",
   "lastOpenFiles": [
     "CPP/编译器限定实现/gcc.md",
     "计算机网络/第一章 计算机网络体系结构/计算机网络体系结构.md",
