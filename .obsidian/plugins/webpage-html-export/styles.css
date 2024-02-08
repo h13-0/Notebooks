@@ -29,6 +29,16 @@
 	align-items: center;
 }
 
+.flow-item:has(input:checked) {
+    background-color: hsla(var(--color-accent-hsl), 0.3);
+}
+
+.flow-item input[type="checkbox"] {
+    padding: 0;
+    margin: 0.1em;
+    margin-right: 0.5em;
+}
+
 /* Progressbar used in the render progress */
 
 .html-render-progressbar::-webkit-progress-bar {
@@ -114,6 +124,8 @@ input[type=checkbox].file-checkbox
 {
 	-webkit-mask-image-repeat: no-repeat;
 	-webkit-mask-image-position: center;
+	max-width: 1.3em;
+	height: 100%;
 }
 
 /* Skip outer wrappers around icons */
@@ -219,7 +231,7 @@ input[type=checkbox].file-checkbox
 
 .tree-container .tree-item.mod-active > .tree-link > .tree-item-contents
 {
-    color: var(--color-accent);
+    color: var(--interactive-accent);
 }
 
 .tree-container .tree-link {
@@ -335,7 +347,7 @@ input[type=checkbox].file-checkbox
 
 .tree-container .tree-item.mod-active
 {
-    border-left: var(--nav-indentation-guide-width) solid var(--color-accent);
+    border-left: var(--nav-indentation-guide-width) solid var(--interactive-accent);
 }
 
 
