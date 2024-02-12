@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "生活常识/国家标准/生活常识的国家标准.md",
+                "file": "CPP/C标准笔记/C标准笔记.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "生活常识/国家标准/生活常识的国家标准.md",
+                "file": "CPP/C标准笔记/C标准笔记.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "生活常识/国家标准/生活常识的国家标准.md",
+                "file": "CPP/C标准笔记/C标准笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "生活常识/国家标准/生活常识的国家标准.md"
+                "file": "CPP/C标准笔记/C标准笔记.md"
               }
             }
           }
@@ -157,8 +157,8 @@
   },
   "active": "f6f11e0bec9a5c91",
   "lastOpenFiles": [
-    "CPP/C标准笔记/C标准笔记.md",
     "生活常识/国家标准/生活常识的国家标准.md",
+    "CPP/C标准笔记/C标准笔记.md",
     "生活常识/国家标准",
     "CPP/编译器限定实现/gcc.md",
     "CPP/C标准笔记/C与C++标准.md",
