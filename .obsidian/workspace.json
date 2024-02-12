@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "计算机网络/第二章 物理层/第二章 物理层.md",
+                "file": "Others/NAS/CPU选型.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "计算机网络/第二章 物理层/第二章 物理层.md",
+                "file": "Others/NAS/CPU选型.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "计算机网络/第二章 物理层/第二章 物理层.md",
+                "file": "Others/NAS/CPU选型.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "计算机网络/第二章 物理层/第二章 物理层.md"
+                "file": "Others/NAS/CPU选型.md"
               }
             }
           }
@@ -158,11 +158,13 @@
   "active": "f6f11e0bec9a5c91",
   "lastOpenFiles": [
     "计算机网络/第二章 物理层/第二章 物理层.md",
+    "Others/NAS/CPU选型.md",
+    "Others/NAS",
     "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
     "Readme.md",
-    "PythonLibs/pycpraser/pycpraser.md",
-    "PythonLibs/pycpraser/抽象语法树(c_ast).md",
-    "PythonLibs/argparse/常用操作.md",
+    "Others/PythonLibs/pycpraser/pycpraser.md",
+    "Others/PythonLibs/pycpraser/抽象语法树(c_ast).md",
+    "Others/PythonLibs/argparse/常用操作.md",
     "Others/Tools/Tools.md",
     "Others/git/git常用操作.md",
     "Others/正则表达式/正则表达式.md",
@@ -170,9 +172,9 @@
     "Others/协程/协程.md",
     "Others/线程锁/线程锁与信号量.md",
     "Others/线程锁/实现/线程锁 with pthread.md",
-    "Obsidian/插件/Obsidian42-BRAT 第三方插件安装器.md",
-    "Obsidian/插件/Dynamic table of contents 自动目录.md",
-    "Obsidian/插件/bartender 笔记md文件手动排序.md",
+    "Others/Obsidian/插件/Obsidian42-BRAT 第三方插件安装器.md",
+    "Others/Obsidian/插件/Dynamic table of contents 自动目录.md",
+    "Others/Obsidian/插件/bartender 笔记md文件手动排序.md",
     "Math/傅里叶变换.md",
     "Math/复变函数.md",
     "CPP/C标准笔记/C与C++标准.md",
@@ -182,7 +184,6 @@
     "CMake/CMake 常用函数.md",
     "土木常识/土木常识.md",
     "土木常识/计算软件/SACS海工计算软件.md",
-    "生活常识/健康/未命名.md",
     "计算机网络/Resources/Pasted image 20240212184522.png",
     "计算机网络/第二章 物理层",
     "Resources/Pasted image 20240203021517.png",
@@ -202,7 +203,6 @@
     "计算机网络/第一章 计算机网络体系结构",
     "计算机网络",
     "Math",
-    "未命名.canvas",
-    "前后端编程/JavaScript"
+    "未命名.canvas"
   ]
 }
