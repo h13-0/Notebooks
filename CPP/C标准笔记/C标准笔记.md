@@ -11,11 +11,9 @@ min_depth: 1
 ### 重叠内存的拷贝(memcpy、memmove)
 
 1. <font color="#c00000">不可使用</font> `memcpy` 函数<font color="#c00000">拷贝</font>源内存片和目标内存片<font color="#c00000">有重叠的内存片</font>。如果重叠，则<font color="#c00000">结果未定义</font>。
-2. 当遇到内存
+2. 当遇到源内存和目标重叠时，应当使用memmove函数，该函数实际上会将要复制的 `n` 个字节的内存拷贝到一个新区域上，然后再将这 `n` 个字节拷贝到目标区域上。效率会降低。
+参见：[[C标准笔记#7 24 2 1 memcpy函数]]、[[C标准笔记#7 24 2 2 memmove函数]]
 
-
-参见：
-![[C标准笔记#7 24 2 1 memcpy函数]]
 
 
 ## 原文翻译部分
@@ -360,5 +358,8 @@ void *memcpy(void * restrict s1,
 #include <string.h>  
 void *memmove(void *s1, const void *s2, size_t n);
 ```
+描述：
+	`memmove` 函数将 `s2` 指向的内存的 `n` 个字符复制到 `s1` 指向的内存中。复制的过程就像是将 `s2` 指向的对象中的 `n` 个字符首先复制到一个 `n` 个字符的临时数组中，这个临时数组不会与 `s1` 和 `s2` 指向的内存重叠，然后将临时数组中的 `n` 个字符复制到 `s1` 指向的内存中。
 
-
+返回值：
+	`memmove` 函数将返回 `s1` 指针。
