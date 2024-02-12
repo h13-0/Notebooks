@@ -8,10 +8,14 @@ min_depth: 1
 ## 笔记部分
 
 
-### 内存的拷贝(memcpy、)
+### 重叠内存的拷贝(memcpy、memmove)
+
+1. <font color="#c00000">不可使用</font> `memcpy` 函数<font color="#c00000">拷贝</font>源内存片和目标内存片<font color="#c00000">有重叠的内存片</font>。如果重叠，则<font color="#c00000">结果未定义</font>。
+2. 当遇到内存
 
 
-
+参见：
+![[C标准笔记#7 24 2 1 memcpy函数]]
 
 
 ## 原文翻译部分
@@ -329,7 +333,32 @@ end :
 
 ### 7 库
 
+
 #### 7.24 字符串句柄<string.h>
+
 ##### 7.24.2 拷贝函数
+
 ###### 7.24.2.1 memcpy函数
+
+概要：
+```C
+#include <string.h>  
+void *memcpy(void * restrict s1,  
+	const void * restrict s2, 
+	size_t n);
+```
+描述：
+	`memcpy` 函数将 `s2` 指向的内存的 `n` 个字符复制到 `s1` 指向的内存中。<font color="#c00000">如果复制发生在重叠的对象之间，则行为是未定义的</font>。
+
+返回值：
+	`memcpy` 函数将返回 `s1` 指针。
+
+###### 7.24.2.2 memmove函数
+
+概要：
+```C
+#include <string.h>  
+void *memmove(void *s1, const void *s2, size_t n);
+```
+
 
