@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CPP/C标准笔记/C标准笔记.md",
+                "file": "数据结构算法/数据结构算法基础.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "CPP/C标准笔记/C标准笔记.md",
+                "file": "数据结构算法/数据结构算法基础.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "CPP/C标准笔记/C标准笔记.md",
+                "file": "数据结构算法/数据结构算法基础.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "CPP/C标准笔记/C标准笔记.md"
+                "file": "数据结构算法/数据结构算法基础.md"
               }
             }
           }
@@ -146,17 +146,19 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "webpage-html-export:Export Vault to HTML": false,
       "obsidian42-brat:BRAT": false,
       "canvas:新建白板": false,
       "switcher:打开快速切换": false,
       "command-palette:打开命令面板": false,
       "audio-recorder:开始/结束录音": false,
-      "graph:查看关系图谱": false
+      "graph:查看关系图谱": false,
+      "webpage-html-export:Export Vault to HTML": false
     }
   },
   "active": "f6f11e0bec9a5c91",
   "lastOpenFiles": [
+    "生活常识/常见物质生产方式.md",
+    "CPP/C标准笔记/C标准笔记.md",
     "Readme.md",
     "POSIX/Readme.md",
     "Others/VisualStudio/Plugins/未命名.md",
@@ -176,13 +178,11 @@
     "Math/傅里叶变换.md",
     "Math/复变函数.md",
     "CPP/C标准笔记/C与C++标准.md",
-    "CPP/C标准笔记/C标准笔记.md",
     "CPP/C标准笔记/C++ 修饰符类型.md",
     "CPP/编译器限定实现/gcc.md",
     "CMake/CMake 常用函数.md",
     "土木常识/土木常识.md",
     "土木常识/计算软件/SACS海工计算软件.md",
-    "数据结构算法/数据结构算法基础.md",
     "生活常识/国家标准",
     "数据结构算法",
     "Others/Obsidian/Resources/Pasted image 20240212222605.png",
