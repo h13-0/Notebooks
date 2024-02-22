@@ -17987,7 +17987,7 @@ var require_acorn = __commonJS({
           }
         }
       };
-      var Node = function Node2(parser, pos, loc) {
+      var Node2 = function Node3(parser, pos, loc) {
         this.type = "";
         this.start = pos;
         this.end = 0;
@@ -18003,10 +18003,10 @@ var require_acorn = __commonJS({
       };
       var pp$2 = Parser.prototype;
       pp$2.startNode = function() {
-        return new Node(this, this.start, this.startLoc);
+        return new Node2(this, this.start, this.startLoc);
       };
       pp$2.startNodeAt = function(pos, loc) {
-        return new Node(this, pos, loc);
+        return new Node2(this, pos, loc);
       };
       function finishNodeAt(node, type, pos, loc) {
         node.type = type;
@@ -18026,7 +18026,7 @@ var require_acorn = __commonJS({
         return finishNodeAt.call(this, node, type, pos, loc);
       };
       pp$2.copyNode = function(node) {
-        var newNode = new Node(this, node.start, this.startLoc);
+        var newNode = new Node2(this, node.start, this.startLoc);
         for (var prop in node) {
           newNode[prop] = node[prop];
         }
@@ -19893,7 +19893,7 @@ var require_acorn = __commonJS({
         Position,
         SourceLocation,
         getLineInfo,
-        Node,
+        Node: Node2,
         TokenType,
         tokTypes: types$1,
         keywordTypes: keywords,
@@ -19916,7 +19916,7 @@ var require_acorn = __commonJS({
       function tokenizer(input, options) {
         return Parser.tokenizer(input, options);
       }
-      exports2.Node = Node;
+      exports2.Node = Node2;
       exports2.Parser = Parser;
       exports2.Position = Position;
       exports2.SourceLocation = SourceLocation;
@@ -22095,9 +22095,7 @@ var require_bundle_min = __commonJS({
                 var ex = async ? new AST_Call({
                   expression: async,
                   args: exprs
-                }) : exprs.length == 1 ? exprs[0] : new AST_Sequence({
-                  expressions: exprs
-                });
+                }) : to_expr_or_sequence(start, exprs);
                 if (ex.start) {
                   const outer_comments_before = start.comments_before.length;
                   outer_comments_before_counts.set(start, outer_comments_before);
@@ -23066,6 +23064,15 @@ var require_bundle_min = __commonJS({
           }
           return left;
         };
+        var to_expr_or_sequence = function(start, exprs) {
+          if (exprs.length === 1) {
+            return exprs[0];
+          } else if (exprs.length > 1) {
+            return new AST_Sequence({ start, expressions: exprs, end: peek() });
+          } else {
+            croak("Invalid parenthesized expression");
+          }
+        };
         var expression = function(commas, no_in) {
           var start = S.token;
           var exprs = [];
@@ -23076,11 +23083,7 @@ var require_bundle_min = __commonJS({
             next();
             commas = true;
           }
-          return exprs.length == 1 ? exprs[0] : new AST_Sequence({
-            start,
-            expressions: exprs,
-            end: peek()
-          });
+          return to_expr_or_sequence(start, exprs);
         };
         function in_loop(cont) {
           ++S.in_loop;
@@ -26112,16 +26115,15 @@ var require_bundle_min = __commonJS({
       });
       (function() {
         var normalize_directives = function(body) {
-          var in_directive = true;
           for (var i = 0; i < body.length; i++) {
-            if (in_directive && body[i] instanceof AST_Statement && body[i].body instanceof AST_String) {
+            if (body[i] instanceof AST_Statement && body[i].body instanceof AST_String) {
               body[i] = new AST_Directive({
                 start: body[i].start,
                 end: body[i].end,
                 value: body[i].body.value
               });
-            } else if (in_directive && !(body[i] instanceof AST_Statement && body[i].body instanceof AST_String)) {
-              in_directive = false;
+            } else {
+              return body;
             }
           }
           return body;
@@ -27679,20 +27681,25 @@ var require_bundle_min = __commonJS({
           return left_is_object(node.expression);
         return false;
       }
-      const EXPECT_DIRECTIVE = /^$|[;{][\s\n]*$/;
       const CODE_LINE_BREAK = 10;
       const CODE_SPACE = 32;
-      const r_annotation = /[@#]__(PURE|INLINE|NOINLINE)__/g;
+      const r_annotation = /[@#]__(PURE|INLINE|NOINLINE)__/;
       function is_some_comments(comment) {
         return (comment.type === "comment2" || comment.type === "comment1") && /@preserve|@copyright|@lic|@cc_on|^\**!/i.test(comment.value);
       }
+      const ROPE_COMMIT_WHEN = 8 * 1e3;
       class Rope {
         constructor() {
           this.committed = "";
           this.current = "";
         }
         append(str) {
-          this.current += str;
+          if (this.current.length > ROPE_COMMIT_WHEN) {
+            this.committed += this.current + str;
+            this.current = "";
+          } else {
+            this.current += str;
+          }
         }
         insertAt(char, index) {
           const { committed, current } = this;
@@ -27712,11 +27719,33 @@ var require_bundle_min = __commonJS({
             return committed[index];
           return this.current[index - committed.length];
         }
-        curLength() {
-          return this.current.length;
+        charCodeAt(index) {
+          const { committed } = this;
+          if (index < committed.length)
+            return committed.charCodeAt(index);
+          return this.current.charCodeAt(index - committed.length);
         }
         length() {
           return this.committed.length + this.current.length;
+        }
+        expectDirective() {
+          let ch, n = this.length();
+          if (n <= 0)
+            return true;
+          while ((ch = this.charCodeAt(--n)) && (ch == CODE_SPACE || ch == CODE_LINE_BREAK))
+            ;
+          return !ch || ch === 59 || ch === 123;
+        }
+        hasNLB() {
+          let n = this.length() - 1;
+          while (n >= 0) {
+            const code = this.charCodeAt(n--);
+            if (code === CODE_LINE_BREAK)
+              return true;
+            if (code !== CODE_SPACE)
+              return false;
+          }
+          return true;
         }
         toString() {
           return this.committed + this.current;
@@ -27774,6 +27803,12 @@ var require_bundle_min = __commonJS({
           } else {
             comment_filter = return_true;
           }
+        }
+        if (options.preserve_annotations) {
+          let prev_comment_filter = comment_filter;
+          comment_filter = function(comment) {
+            return r_annotation.test(comment.value) || prev_comment_filter.apply(this, arguments);
+          };
         }
         var indentation = 0;
         var current_col = 0;
@@ -27913,9 +27948,9 @@ var require_bundle_min = __commonJS({
           if (current_col > options.max_line_len) {
             if (might_add_newline) {
               OUTPUT.insertAt("\n", might_add_newline);
-              const curLength = OUTPUT.curLength();
+              const len_after_newline = OUTPUT.length() - might_add_newline - 1;
               if (mappings) {
-                var delta = curLength - current_col;
+                var delta = len_after_newline - current_col;
                 mappings.forEach(function(mapping) {
                   mapping.line++;
                   mapping.col += delta;
@@ -27923,7 +27958,7 @@ var require_bundle_min = __commonJS({
               }
               current_line++;
               current_pos++;
-              current_col = curLength;
+              current_col = len_after_newline;
             }
           }
           if (might_add_newline) {
@@ -28094,21 +28129,6 @@ var require_bundle_min = __commonJS({
           }
           return OUTPUT.toString();
         }
-        function has_nlb() {
-          const output = OUTPUT.toString();
-          let n = output.length - 1;
-          while (n >= 0) {
-            const code = output.charCodeAt(n);
-            if (code === CODE_LINE_BREAK) {
-              return true;
-            }
-            if (code !== CODE_SPACE) {
-              return false;
-            }
-            n--;
-          }
-          return true;
-        }
         function filter_comment(comment) {
           if (!options.preserve_annotations) {
             comment = comment.replace(r_annotation, " ");
@@ -28168,7 +28188,7 @@ var require_bundle_min = __commonJS({
           comments = comments.filter(comment_filter, node).filter((c) => !printed_comments2.has(c));
           if (comments.length == 0)
             return;
-          var last_nlb = has_nlb();
+          var last_nlb = OUTPUT.hasNLB();
           comments.forEach(function(c, i) {
             printed_comments2.add(c);
             if (!last_nlb) {
@@ -28226,7 +28246,7 @@ var require_bundle_min = __commonJS({
               print("\n");
               indent();
               need_newline_indented = false;
-            } else if (c.nlb && (i > 0 || !has_nlb())) {
+            } else if (c.nlb && (i > 0 || !OUTPUT.hasNLB())) {
               print("\n");
               indent();
             } else if (i > 0 || !tail) {
@@ -28291,7 +28311,7 @@ var require_bundle_min = __commonJS({
           print_string: function(str, quote, escape_directive) {
             var encoded = encode_string(str, quote);
             if (escape_directive === true && !encoded.includes("\\")) {
-              if (!EXPECT_DIRECTIVE.test(OUTPUT.toString())) {
+              if (!OUTPUT.expectDirective()) {
                 force_semicolon();
               }
               force_semicolon();
@@ -28409,7 +28429,7 @@ var require_bundle_min = __commonJS({
           if (output.option("wrap_func_args") && p instanceof AST_Call && p.args.includes(this)) {
             return true;
           }
-          return p instanceof AST_PropAccess && p.expression === this;
+          return p instanceof AST_PropAccess && p.expression === this || p instanceof AST_Conditional && p.condition === this;
         });
         PARENS(AST_Object, function(output) {
           return !output.has_parens() && first_in_statement(output);
@@ -29864,7 +29884,8 @@ var require_bundle_min = __commonJS({
         options = defaults(options, {
           cache: null,
           ie8: false,
-          safari10: false
+          safari10: false,
+          module: false
         });
         if (!(toplevel instanceof AST_Toplevel)) {
           throw new Error("Invalid toplevel scope");
@@ -29996,6 +30017,9 @@ var require_bundle_min = __commonJS({
             js_error(`"${node.TYPE}" statement may only appear at the top level`, node.start.file, node.start.line, node.start.col, node.start.pos);
           }
         });
+        if (options.module) {
+          tw.directives["use strict"] = true;
+        }
         this.walk(tw);
         function mark_export(def, level) {
           if (in_destructuring) {
@@ -30552,7 +30576,7 @@ var require_bundle_min = __commonJS({
       })();
       let mangle_options = void 0;
       AST_Node.prototype.size = function(compressor, stack) {
-        mangle_options = compressor && compressor.mangle_options;
+        mangle_options = compressor && compressor._mangle_options;
         let size = 0;
         walk_parent(this, (node, info) => {
           size += node._size(info);
@@ -31046,7 +31070,7 @@ var require_bundle_min = __commonJS({
         return false;
       }
       function retain_top_func(fn, compressor) {
-        return compressor.top_retain && fn instanceof AST_Defun && has_flag(fn, TOP) && fn.name && compressor.top_retain(fn.name);
+        return compressor.top_retain && fn instanceof AST_Defun && has_flag(fn, TOP) && fn.name && compressor.top_retain(fn.name.definition());
       }
       function make_nested_lookup(obj) {
         const out = /* @__PURE__ */ new Map();
@@ -31691,85 +31715,6 @@ var require_bundle_min = __commonJS({
         if (parent instanceof AST_ForIn && parent.init === node)
           return node;
       }
-      (function(def_find_defs) {
-        function to_node(value, orig) {
-          if (value instanceof AST_Node) {
-            if (!(value instanceof AST_Constant)) {
-              value = value.clone(true);
-            }
-            return make_node(value.CTOR, orig, value);
-          }
-          if (Array.isArray(value))
-            return make_node(AST_Array, orig, {
-              elements: value.map(function(value2) {
-                return to_node(value2, orig);
-              })
-            });
-          if (value && typeof value == "object") {
-            var props = [];
-            for (var key in value)
-              if (HOP(value, key)) {
-                props.push(make_node(AST_ObjectKeyVal, orig, {
-                  key,
-                  value: to_node(value[key], orig)
-                }));
-              }
-            return make_node(AST_Object, orig, {
-              properties: props
-            });
-          }
-          return make_node_from_constant(value, orig);
-        }
-        AST_Toplevel.DEFMETHOD("resolve_defines", function(compressor) {
-          if (!compressor.option("global_defs"))
-            return this;
-          this.figure_out_scope({ ie8: compressor.option("ie8") });
-          return this.transform(new TreeTransformer(function(node) {
-            var def = node._find_defs(compressor, "");
-            if (!def)
-              return;
-            var level = 0, child = node, parent;
-            while (parent = this.parent(level++)) {
-              if (!(parent instanceof AST_PropAccess))
-                break;
-              if (parent.expression !== child)
-                break;
-              child = parent;
-            }
-            if (is_lhs(child, parent)) {
-              return;
-            }
-            return def;
-          }));
-        });
-        def_find_defs(AST_Node, noop);
-        def_find_defs(AST_Chain, function(compressor, suffix) {
-          return this.expression._find_defs(compressor, suffix);
-        });
-        def_find_defs(AST_Dot, function(compressor, suffix) {
-          return this.expression._find_defs(compressor, "." + this.property + suffix);
-        });
-        def_find_defs(AST_SymbolDeclaration, function() {
-          if (!this.global())
-            return;
-        });
-        def_find_defs(AST_SymbolRef, function(compressor, suffix) {
-          if (!this.global())
-            return;
-          var defines = compressor.option("global_defs");
-          var name = this.name + suffix;
-          if (HOP(defines, name))
-            return to_node(defines[name], this);
-        });
-        def_find_defs(AST_ImportMeta, function(compressor, suffix) {
-          var defines = compressor.option("global_defs");
-          var name = "import.meta" + suffix;
-          if (HOP(defines, name))
-            return to_node(defines[name], this);
-        });
-      })(function(node, func) {
-        node.DEFMETHOD("_find_defs", func);
-      });
       (function(def_negate) {
         function basic_negation(exp) {
           return make_node(AST_UnaryPrefix, exp, {
@@ -31881,7 +31826,13 @@ var require_bundle_min = __commonJS({
             return true;
           }
         }
-        return !!has_annotation(this, _PURE) || !compressor.pure_funcs(this);
+        if (this instanceof AST_New && compressor.option("pure_new")) {
+          return true;
+        }
+        if (compressor.option("side_effects") && has_annotation(this, _PURE)) {
+          return true;
+        }
+        return !compressor.pure_funcs(this);
       });
       AST_Node.DEFMETHOD("is_call_pure", return_false);
       AST_Dot.DEFMETHOD("is_call_pure", function(compressor) {
@@ -32575,6 +32526,8 @@ var require_bundle_min = __commonJS({
           return;
         if (compressor.has_directive("use asm"))
           return;
+        if (!this.variables)
+          return;
         var self2 = this;
         if (self2.pinned())
           return;
@@ -32592,7 +32545,7 @@ var require_bundle_min = __commonJS({
         var fixed_ids = /* @__PURE__ */ new Map();
         if (self2 instanceof AST_Toplevel && compressor.top_retain) {
           self2.variables.forEach(function(def) {
-            if (compressor.top_retain(def) && !in_use_ids.has(def.id)) {
+            if (compressor.top_retain(def)) {
               in_use_ids.set(def.id, def);
             }
           });
@@ -32606,9 +32559,7 @@ var require_bundle_min = __commonJS({
               if (!(argname instanceof AST_SymbolDeclaration))
                 return;
               var def = argname.definition();
-              if (!in_use_ids.has(def.id)) {
-                in_use_ids.set(def.id, def);
-              }
+              in_use_ids.set(def.id, def);
             });
           }
           if (node === self2)
@@ -32622,17 +32573,18 @@ var require_bundle_min = __commonJS({
             var node_def = node.name.definition();
             const in_export = tw.parent() instanceof AST_Export;
             if (in_export || !drop_funcs && scope === self2) {
-              if (node_def.global && !in_use_ids.has(node_def.id)) {
+              if (node_def.global) {
                 in_use_ids.set(node_def.id, node_def);
               }
             }
             map_add(initializations, node_def.id, node);
             return true;
           }
-          if (node instanceof AST_SymbolFunarg && scope === self2) {
+          const in_root_scope = scope === self2;
+          if (node instanceof AST_SymbolFunarg && in_root_scope) {
             map_add(var_defs_by_id, node.definition().id, node);
           }
-          if (node instanceof AST_Definitions && scope === self2) {
+          if (node instanceof AST_Definitions && in_root_scope) {
             const in_export = tw.parent() instanceof AST_Export;
             node.definitions.forEach(function(def) {
               if (def.name instanceof AST_SymbolVar) {
@@ -32642,7 +32594,7 @@ var require_bundle_min = __commonJS({
                 walk(def.name, (node2) => {
                   if (node2 instanceof AST_SymbolDeclaration) {
                     const def2 = node2.definition();
-                    if (def2.global && !in_use_ids.has(def2.id)) {
+                    if (def2.global) {
                       in_use_ids.set(def2.id, def2);
                     }
                   }
@@ -34650,16 +34602,24 @@ var require_bundle_min = __commonJS({
         }
         return false;
       }
+      function is_const_symbol_short_than_init_value(def, fixed_value) {
+        if (def.orig.length === 1 && fixed_value) {
+          const init_value_length = fixed_value.size();
+          const identifer_length = def.name.length;
+          return init_value_length > identifer_length;
+        }
+        return true;
+      }
       function inline_into_symbolref(self2, compressor) {
         const parent = compressor.parent();
         const def = self2.definition();
         const nearest_scope = compressor.find_scope();
-        if (compressor.top_retain && def.global && compressor.top_retain(def)) {
+        let fixed = self2.fixed_value();
+        if (compressor.top_retain && def.global && compressor.top_retain(def) && is_const_symbol_short_than_init_value(def, fixed)) {
           def.fixed = false;
           def.single_use = false;
           return self2;
         }
-        let fixed = self2.fixed_value();
         let single_use = def.single_use && !(parent instanceof AST_Call && parent.is_callee_pure(compressor) || has_annotation(parent, _NOINLINE)) && !(parent instanceof AST_Export && fixed instanceof AST_Lambda && fixed.name);
         if (single_use && fixed instanceof AST_Node) {
           single_use = !fixed.has_side_effects(compressor) && !fixed.may_throw(compressor);
@@ -34747,14 +34707,16 @@ var require_bundle_min = __commonJS({
         }
         return self2;
       }
-      function inline_into_call(self2, fn, compressor) {
+      function inline_into_call(self2, compressor) {
         var exp = self2.expression;
+        var fn = exp;
         var simple_args = self2.args.every((arg) => !(arg instanceof AST_Expansion));
         if (compressor.option("reduce_vars") && fn instanceof AST_SymbolRef && !has_annotation(self2, _NOINLINE)) {
           const fixed = fn.fixed_value();
-          if (!retain_top_func(fixed, compressor)) {
-            fn = fixed;
+          if (retain_top_func(fixed, compressor) || !compressor.toplevel.funcs && exp.definition().global) {
+            return self2;
           }
+          fn = fixed;
         }
         var is_func = fn instanceof AST_Lambda;
         var stat = is_func && fn.body[0];
@@ -35021,6 +34983,85 @@ var require_bundle_min = __commonJS({
           return expressions.map((exp2) => exp2.clone(true));
         }
       }
+      (function(def_find_defs) {
+        function to_node(value, orig) {
+          if (value instanceof AST_Node) {
+            if (!(value instanceof AST_Constant)) {
+              value = value.clone(true);
+            }
+            return make_node(value.CTOR, orig, value);
+          }
+          if (Array.isArray(value))
+            return make_node(AST_Array, orig, {
+              elements: value.map(function(value2) {
+                return to_node(value2, orig);
+              })
+            });
+          if (value && typeof value == "object") {
+            var props = [];
+            for (var key in value)
+              if (HOP(value, key)) {
+                props.push(make_node(AST_ObjectKeyVal, orig, {
+                  key,
+                  value: to_node(value[key], orig)
+                }));
+              }
+            return make_node(AST_Object, orig, {
+              properties: props
+            });
+          }
+          return make_node_from_constant(value, orig);
+        }
+        AST_Toplevel.DEFMETHOD("resolve_defines", function(compressor) {
+          if (!compressor.option("global_defs"))
+            return this;
+          this.figure_out_scope({ ie8: compressor.option("ie8") });
+          return this.transform(new TreeTransformer(function(node) {
+            var def = node._find_defs(compressor, "");
+            if (!def)
+              return;
+            var level = 0, child = node, parent;
+            while (parent = this.parent(level++)) {
+              if (!(parent instanceof AST_PropAccess))
+                break;
+              if (parent.expression !== child)
+                break;
+              child = parent;
+            }
+            if (is_lhs(child, parent)) {
+              return;
+            }
+            return def;
+          }));
+        });
+        def_find_defs(AST_Node, noop);
+        def_find_defs(AST_Chain, function(compressor, suffix) {
+          return this.expression._find_defs(compressor, suffix);
+        });
+        def_find_defs(AST_Dot, function(compressor, suffix) {
+          return this.expression._find_defs(compressor, "." + this.property + suffix);
+        });
+        def_find_defs(AST_SymbolDeclaration, function() {
+          if (!this.global())
+            return;
+        });
+        def_find_defs(AST_SymbolRef, function(compressor, suffix) {
+          if (!this.global())
+            return;
+          var defines = compressor.option("global_defs");
+          var name = this.name + suffix;
+          if (HOP(defines, name))
+            return to_node(defines[name], this);
+        });
+        def_find_defs(AST_ImportMeta, function(compressor, suffix) {
+          var defines = compressor.option("global_defs");
+          var name = "import.meta" + suffix;
+          if (HOP(defines, name))
+            return to_node(defines[name], this);
+        });
+      })(function(node, func) {
+        node.DEFMETHOD("_find_defs", func);
+      });
       class Compressor extends TreeWalker {
         constructor(options, { false_by_default = false, mangle_options: mangle_options2 = false }) {
           super();
@@ -35063,6 +35104,7 @@ var require_bundle_min = __commonJS({
             properties: !false_by_default,
             pure_getters: !false_by_default && "strict",
             pure_funcs: null,
+            pure_new: false,
             reduce_funcs: !false_by_default,
             reduce_vars: !false_by_default,
             sequences: !false_by_default,
@@ -35134,7 +35176,12 @@ var require_bundle_min = __commonJS({
           this.sequences_limit = sequences == 1 ? 800 : sequences | 0;
           this.evaluated_regexps = /* @__PURE__ */ new Map();
           this._toplevel = void 0;
-          this.mangle_options = mangle_options2 ? format_mangler_options(mangle_options2) : mangle_options2;
+          this._mangle_options = mangle_options2 ? format_mangler_options(mangle_options2) : mangle_options2;
+        }
+        mangle_options() {
+          var nth_identifier = this._mangle_options && this._mangle_options.nth_identifier || base54;
+          var module3 = this._mangle_options && this._mangle_options.module || this.option("module");
+          return { ie8: this.option("ie8"), nth_identifier, module: module3 };
         }
         option(key) {
           return this.options[key];
@@ -35176,12 +35223,11 @@ var require_bundle_min = __commonJS({
           var passes = +this.options.passes || 1;
           var min_count = 1 / 0;
           var stopping = false;
-          var nth_identifier = this.mangle_options && this.mangle_options.nth_identifier || base54;
-          var mangle = { ie8: this.option("ie8"), nth_identifier };
+          var mangle = this.mangle_options();
           for (var pass = 0; pass < passes; pass++) {
             this._toplevel.figure_out_scope(mangle);
             if (pass === 0 && this.option("drop_console")) {
-              this._toplevel = this._toplevel.drop_console();
+              this._toplevel = this._toplevel.drop_console(this.option("drop_console"));
             }
             if (pass > 0 || this.option("reduce_vars")) {
               this._toplevel.reset_opt_flags(this);
@@ -35250,19 +35296,25 @@ var require_bundle_min = __commonJS({
       def_optimize(AST_Node, function(self2) {
         return self2;
       });
-      AST_Toplevel.DEFMETHOD("drop_console", function() {
+      AST_Toplevel.DEFMETHOD("drop_console", function(options) {
+        var isArray = Array.isArray(options);
         return this.transform(new TreeTransformer(function(self2) {
-          if (self2.TYPE == "Call") {
-            var exp = self2.expression;
-            if (exp instanceof AST_PropAccess) {
-              var name = exp.expression;
-              while (name.expression) {
-                name = name.expression;
-              }
-              if (is_undeclared_ref(name) && name.name == "console") {
-                return make_node(AST_Undefined, self2);
-              }
-            }
+          if (self2.TYPE !== "Call") {
+            return;
+          }
+          var exp = self2.expression;
+          if (!(exp instanceof AST_PropAccess)) {
+            return;
+          }
+          if (isArray && options.indexOf(exp.property) === -1) {
+            return;
+          }
+          var name = exp.expression;
+          while (name.expression) {
+            name = name.expression;
+          }
+          if (is_undeclared_ref(name) && name.name == "console") {
+            return make_node(AST_Undefined, self2);
           }
         }));
       });
@@ -36222,11 +36274,8 @@ var require_bundle_min = __commonJS({
         var fn = exp;
         inline_array_like_spread(self2.args);
         var simple_args = self2.args.every((arg2) => !(arg2 instanceof AST_Expansion));
-        if (compressor.option("reduce_vars") && fn instanceof AST_SymbolRef && !has_annotation(self2, _NOINLINE)) {
-          const fixed = fn.fixed_value();
-          if (!retain_top_func(fixed, compressor)) {
-            fn = fixed;
-          }
+        if (compressor.option("reduce_vars") && fn instanceof AST_SymbolRef) {
+          fn = fn.fixed_value();
         }
         var is_func = fn instanceof AST_Lambda;
         if (is_func && fn.pinned())
@@ -36267,7 +36316,7 @@ var require_bundle_min = __commonJS({
           }
           self2.args.length = last2;
         }
-        if (compressor.option("unsafe")) {
+        if (compressor.option("unsafe") && !exp.contains_optional()) {
           if (exp instanceof AST_Dot && exp.start.value === "Array" && exp.property === "from" && self2.args.length === 1) {
             const [argument] = self2.args;
             if (argument instanceof AST_Array) {
@@ -36485,17 +36534,16 @@ var require_bundle_min = __commonJS({
               argnames: [],
               body: []
             }).optimize(compressor);
-          var nth_identifier = compressor.mangle_options && compressor.mangle_options.nth_identifier || base54;
           if (self2.args.every((x) => x instanceof AST_String)) {
             try {
               var code = "n(function(" + self2.args.slice(0, -1).map(function(arg2) {
                 return arg2.value;
               }).join(",") + "){" + self2.args[self2.args.length - 1].value + "})";
               var ast = parse(code);
-              var mangle = { ie8: compressor.option("ie8"), nth_identifier };
+              var mangle = compressor.mangle_options();
               ast.figure_out_scope(mangle);
               var comp = new Compressor(compressor.options, {
-                mangle_options: compressor.mangle_options
+                mangle_options: compressor._mangle_options
               });
               ast = ast.transform(comp);
               ast.figure_out_scope(mangle);
@@ -36528,7 +36576,18 @@ var require_bundle_min = __commonJS({
             }
           }
         }
-        return inline_into_call(self2, fn, compressor);
+        return inline_into_call(self2, compressor);
+      });
+      AST_Node.DEFMETHOD("contains_optional", function() {
+        if (this instanceof AST_PropAccess || this instanceof AST_Call || this instanceof AST_Chain) {
+          if (this.optional) {
+            return true;
+          } else {
+            return this.expression.contains_optional();
+          }
+        } else {
+          return false;
+        }
       });
       def_optimize(AST_New, function(self2, compressor) {
         if (compressor.option("unsafe") && is_undeclared_ref(self2.expression) && ["Object", "RegExp", "Function", "Error", "Array"].includes(self2.expression.name))
@@ -37819,6 +37878,13 @@ var require_bundle_min = __commonJS({
         return self2;
       });
       def_optimize(AST_Class, function(self2) {
+        for (let i = 0; i < self2.properties.length; i++) {
+          const prop = self2.properties[i];
+          if (prop instanceof AST_ClassStaticBlock && prop.body.length == 0) {
+            self2.properties.splice(i, 1);
+            i--;
+          }
+        }
         return self2;
       });
       def_optimize(AST_ClassStaticBlock, function(self2, compressor) {
@@ -37991,7 +38057,7 @@ var require_bundle_min = __commonJS({
           return true;
         }
       });
-      async function SourceMap(options) {
+      function* SourceMap(options) {
         options = defaults(options, {
           file: null,
           root: null,
@@ -38010,7 +38076,7 @@ var require_bundle_min = __commonJS({
             sourcesContent[name] = files[name];
           }
         if (options.orig) {
-          orig_map = await new sourceMap.SourceMapConsumer(options.orig);
+          orig_map = yield new sourceMap.SourceMapConsumer(options.orig);
           if (orig_map.sourcesContent) {
             orig_map.sources.forEach(function(source, i) {
               var content = orig_map.sourcesContent[i];
@@ -38255,6 +38321,7 @@ var require_bundle_min = __commonJS({
         "ADDITION",
         "ALIASED_LINE_WIDTH_RANGE",
         "ALIASED_POINT_SIZE_RANGE",
+        "ALL",
         "ALLOW_KEYBOARD_INPUT",
         "ALLPASS",
         "ALPHA",
@@ -38324,6 +38391,7 @@ var require_bundle_min = __commonJS({
         "BLEND_EQUATION_RGB",
         "BLEND_SRC_ALPHA",
         "BLEND_SRC_RGB",
+        "BLUE",
         "BLUE_BITS",
         "BLUR",
         "BOOL",
@@ -38406,6 +38474,7 @@ var require_bundle_min = __commonJS({
         "COMPRESSED_RGBA_S3TC_DXT5_EXT",
         "COMPRESSED_RGB_S3TC_DXT1_EXT",
         "COMPRESSED_TEXTURE_FORMATS",
+        "COMPUTE",
         "CONDITION_SATISFIED",
         "CONFIGURATION_UNSUPPORTED",
         "CONNECTING",
@@ -38414,8 +38483,10 @@ var require_bundle_min = __commonJS({
         "CONSTRAINT_ERR",
         "CONTEXT_LOST_WEBGL",
         "CONTROL_MASK",
+        "COPY_DST",
         "COPY_READ_BUFFER",
         "COPY_READ_BUFFER_BINDING",
+        "COPY_SRC",
         "COPY_WRITE_BUFFER",
         "COPY_WRITE_BUFFER_BINDING",
         "COUNTER_STYLE_RULE",
@@ -39149,6 +39220,7 @@ var require_bundle_min = __commonJS({
         "FOCUS",
         "FONT_FACE_RULE",
         "FONT_FEATURE_VALUES_RULE",
+        "FRAGMENT",
         "FRAGMENT_SHADER",
         "FRAGMENT_SHADER_DERIVATIVE_HINT",
         "FRAGMENT_SHADER_DERIVATIVE_HINT_OES",
@@ -39209,6 +39281,7 @@ var require_bundle_min = __commonJS({
         "GENERATE_MIPMAP_HINT",
         "GEQUAL",
         "GREATER",
+        "GREEN",
         "GREEN_BITS",
         "GainNode",
         "Gamepad",
@@ -39360,7 +39433,9 @@ var require_bundle_min = __commonJS({
         "IMPORT_RULE",
         "INCR",
         "INCR_WRAP",
+        "INDEX",
         "INDEX_SIZE_ERR",
+        "INDIRECT",
         "INT",
         "INTERLEAVED_ATTRIBS",
         "INT_2_10_10_10_REV",
@@ -39462,6 +39537,8 @@ var require_bundle_min = __commonJS({
         "Location",
         "Lock",
         "LockManager",
+        "MAP_READ",
+        "MAP_WRITE",
         "MAX",
         "MAX_3D_TEXTURE_SIZE",
         "MAX_ARRAY_TEXTURE_LAYERS",
@@ -39905,6 +39982,7 @@ var require_bundle_min = __commonJS({
         "PushSubscription",
         "PushSubscriptionOptions",
         "Q",
+        "QUERY_RESOLVE",
         "QUERY_RESULT",
         "QUERY_RESULT_AVAILABLE",
         "QUOTA_ERR",
@@ -39922,6 +40000,7 @@ var require_bundle_min = __commonJS({
         "R8UI",
         "R8_SNORM",
         "RASTERIZER_DISCARD",
+        "READ",
         "READ_BUFFER",
         "READ_FRAMEBUFFER",
         "READ_FRAMEBUFFER_BINDING",
@@ -39951,6 +40030,7 @@ var require_bundle_min = __commonJS({
         "RENDERING_INTENT_RELATIVE_COLORIMETRIC",
         "RENDERING_INTENT_SATURATION",
         "RENDERING_INTENT_UNKNOWN",
+        "RENDER_ATTACHMENT",
         "REPEAT",
         "REPLACE",
         "RG",
@@ -40131,6 +40211,8 @@ var require_bundle_min = __commonJS({
         "STENCIL_TEST",
         "STENCIL_VALUE_MASK",
         "STENCIL_WRITEMASK",
+        "STORAGE",
+        "STORAGE_BINDING",
         "STREAM_COPY",
         "STREAM_DRAW",
         "STREAM_READ",
@@ -40503,6 +40585,7 @@ var require_bundle_min = __commonJS({
         "TEXTURE_2D_ARRAY",
         "TEXTURE_3D",
         "TEXTURE_BASE_LEVEL",
+        "TEXTURE_BINDING",
         "TEXTURE_BINDING_2D",
         "TEXTURE_BINDING_2D_ARRAY",
         "TEXTURE_BINDING_3D",
@@ -40587,6 +40670,7 @@ var require_bundle_min = __commonJS({
         "U2F",
         "UIEvent",
         "UNCACHED",
+        "UNIFORM",
         "UNIFORM_ARRAY_STRIDE",
         "UNIFORM_BLOCK_ACTIVE_UNIFORMS",
         "UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES",
@@ -40677,6 +40761,7 @@ var require_bundle_min = __commonJS({
         "VERSION",
         "VERSION_CHANGE",
         "VERSION_ERR",
+        "VERTEX",
         "VERTEX_ARRAY_BINDING",
         "VERTEX_ATTRIB_ARRAY_BUFFER_BINDING",
         "VERTEX_ATTRIB_ARRAY_DIVISOR",
@@ -40713,6 +40798,7 @@ var require_bundle_min = __commonJS({
         "WEBKIT_KEYFRAMES_RULE",
         "WEBKIT_KEYFRAME_RULE",
         "WEBKIT_REGION_RULE",
+        "WRITE",
         "WRONG_DOCUMENT_ERR",
         "WakeLock",
         "WakeLockSentinel",
@@ -40882,6 +40968,7 @@ var require_bundle_min = __commonJS({
         "ZERO",
         "_XD0M_",
         "_YD0M_",
+        "__brand",
         "__defineGetter__",
         "__defineSetter__",
         "__lookupGetter__",
@@ -40902,6 +40989,7 @@ var require_bundle_min = __commonJS({
         "accept",
         "acceptCharset",
         "acceptNode",
+        "access",
         "accessKey",
         "accessKeyLabel",
         "accuracy",
@@ -40958,6 +41046,9 @@ var require_bundle_min = __commonJS({
         "addons",
         "address",
         "addressLine",
+        "addressModeU",
+        "addressModeV",
+        "addressModeW",
         "adoptNode",
         "adoptedStyleSheets",
         "adr",
@@ -40985,6 +41076,8 @@ var require_bundle_min = __commonJS({
         "allowedToPlay",
         "allowsFeature",
         "alpha",
+        "alphaMode",
+        "alphaToCoverageEnabled",
         "alt",
         "altGraphKey",
         "altHtml",
@@ -41103,6 +41196,8 @@ var require_bundle_min = __commonJS({
         "ariaValueNow",
         "ariaValueText",
         "arrayBuffer",
+        "arrayLayerCount",
+        "arrayStride",
         "artist",
         "artwork",
         "as",
@@ -41110,6 +41205,7 @@ var require_bundle_min = __commonJS({
         "asUintN",
         "asin",
         "asinh",
+        "aspect",
         "assert",
         "assign",
         "assignedElements",
@@ -41194,10 +41290,12 @@ var require_bundle_min = __commonJS({
         "badInput",
         "badge",
         "balance",
+        "baseArrayLayer",
         "baseFrequencyX",
         "baseFrequencyY",
         "baseLatency",
         "baseLayer",
+        "baseMipLevel",
         "baseNode",
         "baseOffset",
         "baseURI",
@@ -41206,11 +41304,15 @@ var require_bundle_min = __commonJS({
         "battery",
         "bday",
         "before",
+        "beginComputePass",
         "beginElement",
         "beginElementAt",
+        "beginOcclusionQuery",
         "beginPath",
         "beginQuery",
+        "beginRenderPass",
         "beginTransformFeedback",
+        "beginningOfPassWriteIndex",
         "behavior",
         "behaviorCookie",
         "behaviorPart",
@@ -41230,12 +41332,15 @@ var require_bundle_min = __commonJS({
         "bindBufferBase",
         "bindBufferRange",
         "bindFramebuffer",
+        "bindGroupLayouts",
         "bindRenderbuffer",
         "bindSampler",
         "bindTexture",
         "bindTransformFeedback",
         "bindVertexArray",
+        "binding",
         "bitness",
+        "blend",
         "blendColor",
         "blendEquation",
         "blendEquationSeparate",
@@ -41417,6 +41522,7 @@ var require_bundle_min = __commonJS({
         "buffered",
         "bufferedAmount",
         "bufferedAmountLowThreshold",
+        "buffers",
         "buildID",
         "buildNumber",
         "button",
@@ -41424,6 +41530,7 @@ var require_bundle_min = __commonJS({
         "buttons",
         "byteLength",
         "byteOffset",
+        "bytesPerRow",
         "bytesWritten",
         "c",
         "cache",
@@ -41520,6 +41627,7 @@ var require_bundle_min = __commonJS({
         "clear",
         "clearAppBadge",
         "clearAttributes",
+        "clearBuffer",
         "clearBufferfi",
         "clearBufferfv",
         "clearBufferiv",
@@ -41540,6 +41648,7 @@ var require_bundle_min = __commonJS({
         "clearShadow",
         "clearStencil",
         "clearTimeout",
+        "clearValue",
         "clearWatch",
         "click",
         "clickCount",
@@ -41594,10 +41703,13 @@ var require_bundle_min = __commonJS({
         "color-interpolation",
         "color-interpolation-filters",
         "colorAdjust",
+        "colorAttachments",
         "colorDepth",
+        "colorFormats",
         "colorInterpolation",
         "colorInterpolationFilters",
         "colorMask",
+        "colorSpace",
         "colorType",
         "cols",
         "column-count",
@@ -41626,6 +41738,7 @@ var require_bundle_min = __commonJS({
         "commitStyles",
         "commonAncestorContainer",
         "compact",
+        "compare",
         "compareBoundaryPoints",
         "compareDocumentPosition",
         "compareEndPoints",
@@ -41649,6 +41762,7 @@ var require_bundle_min = __commonJS({
         "compressedTexImage3D",
         "compressedTexSubImage2D",
         "compressedTexSubImage3D",
+        "compute",
         "computedStyleMap",
         "concat",
         "conditionText",
@@ -41660,6 +41774,7 @@ var require_bundle_min = __commonJS({
         "configurationName",
         "configurationValue",
         "configurations",
+        "configure",
         "confirm",
         "confirmComposition",
         "confirmSiteSpecificTrackingException",
@@ -41676,6 +41791,7 @@ var require_bundle_min = __commonJS({
         "connections",
         "console",
         "consolidate",
+        "constants",
         "constraint",
         "constrictionActive",
         "construct",
@@ -41720,10 +41836,15 @@ var require_bundle_min = __commonJS({
         "cookieEnabled",
         "coords",
         "copyBufferSubData",
+        "copyBufferToBuffer",
+        "copyBufferToTexture",
+        "copyExternalImageToTexture",
         "copyFromChannel",
         "copyTexImage2D",
         "copyTexSubImage2D",
         "copyTexSubImage3D",
+        "copyTextureToBuffer",
+        "copyTextureToTexture",
         "copyToChannel",
         "copyWithin",
         "correspondingElement",
@@ -41747,6 +41868,8 @@ var require_bundle_min = __commonJS({
         "createAnswer",
         "createAttribute",
         "createAttributeNS",
+        "createBindGroup",
+        "createBindGroupLayout",
         "createBiquadFilter",
         "createBuffer",
         "createBufferSource",
@@ -41755,7 +41878,10 @@ var require_bundle_min = __commonJS({
         "createCaption",
         "createChannelMerger",
         "createChannelSplitter",
+        "createCommandEncoder",
         "createComment",
+        "createComputePipeline",
+        "createComputePipelineAsync",
         "createConstantSource",
         "createContextualFragment",
         "createControlRange",
@@ -41802,15 +41928,20 @@ var require_bundle_min = __commonJS({
         "createPanner",
         "createPattern",
         "createPeriodicWave",
+        "createPipelineLayout",
         "createPolicy",
         "createPopup",
         "createProcessingInstruction",
         "createProgram",
         "createQuery",
+        "createQuerySet",
         "createRadialGradient",
         "createRange",
         "createRangeCollection",
         "createReader",
+        "createRenderBundleEncoder",
+        "createRenderPipeline",
+        "createRenderPipelineAsync",
         "createRenderbuffer",
         "createSVGAngle",
         "createSVGLength",
@@ -41845,6 +41976,7 @@ var require_bundle_min = __commonJS({
         "createScriptURL",
         "createSession",
         "createShader",
+        "createShaderModule",
         "createShadowRoot",
         "createStereoPanner",
         "createStyleSheet",
@@ -41859,6 +41991,7 @@ var require_bundle_min = __commonJS({
         "createTransformFeedback",
         "createTreeWalker",
         "createVertexArray",
+        "createView",
         "createWaveShaper",
         "creationTime",
         "credentials",
@@ -41875,6 +42008,7 @@ var require_bundle_min = __commonJS({
         "ctrlLeft",
         "cues",
         "cullFace",
+        "cullMode",
         "currentDirection",
         "currentLocalDescription",
         "currentNode",
@@ -41928,6 +42062,7 @@ var require_bundle_min = __commonJS({
         "defaultPlaybackRate",
         "defaultPolicy",
         "defaultPrevented",
+        "defaultQueue",
         "defaultRequest",
         "defaultSelected",
         "defaultStatus",
@@ -41982,11 +42117,25 @@ var require_bundle_min = __commonJS({
         "deltaY",
         "deltaZ",
         "dependentLocality",
+        "depthBias",
+        "depthBiasClamp",
+        "depthBiasSlopeScale",
+        "depthClearValue",
+        "depthCompare",
+        "depthFailOp",
         "depthFar",
         "depthFunc",
+        "depthLoadOp",
         "depthMask",
         "depthNear",
+        "depthOrArrayLayers",
         "depthRange",
+        "depthReadOnly",
+        "depthStencil",
+        "depthStencilAttachment",
+        "depthStencilFormat",
+        "depthStoreOp",
+        "depthWriteEnabled",
         "deref",
         "deriveBits",
         "deriveKey",
@@ -41996,6 +42145,7 @@ var require_bundle_min = __commonJS({
         "desiredSize",
         "destination",
         "destinationURL",
+        "destroy",
         "detach",
         "detachEvent",
         "detachShader",
@@ -42019,6 +42169,7 @@ var require_bundle_min = __commonJS({
         "didTimeout",
         "diffuseConstant",
         "digest",
+        "dimension",
         "dimensions",
         "dir",
         "dirName",
@@ -42033,6 +42184,8 @@ var require_bundle_min = __commonJS({
         "disconnect",
         "disconnectShark",
         "dispatchEvent",
+        "dispatchWorkgroups",
+        "dispatchWorkgroupsIndirect",
         "display",
         "displayId",
         "displayName",
@@ -42078,6 +42231,7 @@ var require_bundle_min = __commonJS({
         "dppx",
         "dragDrop",
         "draggable",
+        "draw",
         "drawArrays",
         "drawArraysInstanced",
         "drawArraysInstancedANGLE",
@@ -42089,6 +42243,9 @@ var require_bundle_min = __commonJS({
         "drawFocusIfNeeded",
         "drawImage",
         "drawImageFromRect",
+        "drawIndexed",
+        "drawIndexedIndirect",
+        "drawIndirect",
         "drawRangeElements",
         "drawSystemFocusRing",
         "drawingBufferHeight",
@@ -42096,6 +42253,7 @@ var require_bundle_min = __commonJS({
         "dropEffect",
         "droppedVideoFrames",
         "dropzone",
+        "dstFactor",
         "dtmf",
         "dump",
         "dumpProfile",
@@ -42151,6 +42309,8 @@ var require_bundle_min = __commonJS({
         "endContainer",
         "endElement",
         "endElementAt",
+        "endOcclusionQuery",
+        "endOfPassWriteIndex",
         "endOfStream",
         "endOffset",
         "endQuery",
@@ -42164,6 +42324,7 @@ var require_bundle_min = __commonJS({
         "enterKeyHint",
         "entities",
         "entries",
+        "entryPoint",
         "entryType",
         "enumerable",
         "enumerate",
@@ -42189,6 +42350,7 @@ var require_bundle_min = __commonJS({
         "execCommand",
         "execCommandShowHelp",
         "execScript",
+        "executeBundles",
         "exitFullscreen",
         "exitPictureInPicture",
         "exitPointerLock",
@@ -42214,12 +42376,14 @@ var require_bundle_min = __commonJS({
         "extentOffset",
         "external",
         "externalResourcesRequired",
+        "externalTexture",
         "extractContents",
         "extractable",
         "eye",
         "f",
         "face",
         "factoryReset",
+        "failOp",
         "failureReason",
         "fallback",
         "family",
@@ -42351,6 +42515,7 @@ var require_bundle_min = __commonJS({
         "for",
         "forEach",
         "force",
+        "forceFallbackAdapter",
         "forceRedraw",
         "form",
         "formAction",
@@ -42368,6 +42533,7 @@ var require_bundle_min = __commonJS({
         "forwardZ",
         "foundation",
         "fr",
+        "fragment",
         "fragmentDirective",
         "frame",
         "frameBorder",
@@ -42405,6 +42571,7 @@ var require_bundle_min = __commonJS({
         "fullscreenEnabled",
         "fx",
         "fy",
+        "g",
         "gain",
         "gamepad",
         "gamma",
@@ -42446,6 +42613,7 @@ var require_bundle_min = __commonJS({
         "getBattery",
         "getBigInt64",
         "getBigUint64",
+        "getBindGroupLayout",
         "getBlob",
         "getBookmark",
         "getBoundingClientRect",
@@ -42468,6 +42636,7 @@ var require_bundle_min = __commonJS({
         "getClientRect",
         "getClientRects",
         "getCoalescedEvents",
+        "getCompilationInfo",
         "getCompositionAlternatives",
         "getComputedStyle",
         "getComputedTextLength",
@@ -42481,6 +42650,7 @@ var require_bundle_min = __commonJS({
         "getCueAsHTML",
         "getCueById",
         "getCurrentPosition",
+        "getCurrentTexture",
         "getCurrentTime",
         "getData",
         "getDatabaseNames",
@@ -42549,6 +42719,7 @@ var require_bundle_min = __commonJS({
         "getLocalCandidates",
         "getLocalParameters",
         "getLocalStreams",
+        "getMappedRange",
         "getMarks",
         "getMatchedCSSRules",
         "getMaxGCPauseSinceClear",
@@ -42583,6 +42754,7 @@ var require_bundle_min = __commonJS({
         "getPredictedEvents",
         "getPreference",
         "getPreferenceDefault",
+        "getPreferredCanvasFormat",
         "getPresentationAttribute",
         "getPreventDefault",
         "getPrimaryService",
@@ -42701,6 +42873,7 @@ var require_bundle_min = __commonJS({
         "glyphOrientationVertical",
         "glyphRef",
         "go",
+        "gpu",
         "grabFrame",
         "grad",
         "gradientTransform",
@@ -42744,6 +42917,7 @@ var require_bundle_min = __commonJS({
         "gridTemplateRows",
         "gripSpace",
         "group",
+        "groups",
         "groupCollapsed",
         "groupEnd",
         "groupId",
@@ -42759,6 +42933,7 @@ var require_bundle_min = __commonJS({
         "hasBeenActive",
         "hasChildNodes",
         "hasComposition",
+        "hasDynamicOffset",
         "hasEnrolledInstrument",
         "hasExtension",
         "hasExternalDisplay",
@@ -42783,6 +42958,7 @@ var require_bundle_min = __commonJS({
         "high",
         "highWaterMark",
         "hint",
+        "hints",
         "history",
         "honorificPrefix",
         "honorificSuffix",
@@ -42829,6 +43005,7 @@ var require_bundle_min = __commonJS({
         "ime-mode",
         "imeMode",
         "implementation",
+        "importExternalTexture",
         "importKey",
         "importNode",
         "importStylesheet",
@@ -42848,6 +43025,7 @@ var require_bundle_min = __commonJS({
         "indexOf",
         "indexedDB",
         "indicate",
+        "indices",
         "inert",
         "inertiaDestinationX",
         "inertiaDestinationY",
@@ -42924,6 +43102,7 @@ var require_bundle_min = __commonJS({
         "insertCell",
         "insertDTMF",
         "insertData",
+        "insertDebugMarker",
         "insertItemBefore",
         "insertNode",
         "insertRow",
@@ -42994,6 +43173,7 @@ var require_bundle_min = __commonJS({
         "isEqualNode",
         "isExtensible",
         "isExternalCTAP2SecurityKeySupported",
+        "isFallbackAdapter",
         "isFile",
         "isFinite",
         "isFramebuffer",
@@ -43119,6 +43299,7 @@ var require_bundle_min = __commonJS({
         "latitude",
         "layerX",
         "layerY",
+        "layout",
         "layoutFlow",
         "layoutGrid",
         "layoutGridChar",
@@ -43141,6 +43322,7 @@ var require_bundle_min = __commonJS({
         "lighting-color",
         "lightingColor",
         "limitingConeAngle",
+        "limits",
         "line",
         "line-break",
         "line-height",
@@ -43150,7 +43332,9 @@ var require_bundle_min = __commonJS({
         "lineDashOffset",
         "lineHeight",
         "lineJoin",
+        "lineNum",
         "lineNumber",
+        "linePos",
         "lineTo",
         "lineWidth",
         "linearAcceleration",
@@ -43175,6 +43359,7 @@ var require_bundle_min = __commonJS({
         "load",
         "loadEventEnd",
         "loadEventStart",
+        "loadOp",
         "loadTime",
         "loadTimes",
         "loaded",
@@ -43191,6 +43376,8 @@ var require_bundle_min = __commonJS({
         "locked",
         "lockedFile",
         "locks",
+        "lodMaxClamp",
+        "lodMinClamp",
         "log",
         "log10",
         "log1p",
@@ -43205,6 +43392,7 @@ var require_bundle_min = __commonJS({
         "loopEnd",
         "loopStart",
         "looping",
+        "lost",
         "low",
         "lower",
         "lowerBound",
@@ -43226,11 +43414,15 @@ var require_bundle_min = __commonJS({
         "m42",
         "m43",
         "m44",
+        "magFilter",
         "makeXRCompatible",
         "manifest",
         "manufacturer",
         "manufacturerName",
         "map",
+        "mapAsync",
+        "mapState",
+        "mappedAtCreation",
         "mapping",
         "margin",
         "margin-block",
@@ -43308,21 +43500,53 @@ var require_bundle_min = __commonJS({
         "max-width",
         "maxActions",
         "maxAlternatives",
+        "maxAnisotropy",
+        "maxBindGroups",
+        "maxBindGroupsPlusVertexBuffers",
+        "maxBindingsPerBindGroup",
         "maxBlockSize",
+        "maxBufferSize",
         "maxChannelCount",
         "maxChannels",
+        "maxColorAttachmentBytesPerSample",
+        "maxColorAttachments",
+        "maxComputeInvocationsPerWorkgroup",
+        "maxComputeWorkgroupSizeX",
+        "maxComputeWorkgroupSizeY",
+        "maxComputeWorkgroupSizeZ",
+        "maxComputeWorkgroupStorageSize",
+        "maxComputeWorkgroupsPerDimension",
         "maxConnectionsPerServer",
         "maxDecibels",
         "maxDistance",
+        "maxDrawCount",
+        "maxDynamicStorageBuffersPerPipelineLayout",
+        "maxDynamicUniformBuffersPerPipelineLayout",
         "maxHeight",
         "maxInlineSize",
+        "maxInterStageShaderComponents",
+        "maxInterStageShaderVariables",
         "maxLayers",
         "maxLength",
         "maxMessageSize",
         "maxPacketLifeTime",
         "maxRetransmits",
+        "maxSampledTexturesPerShaderStage",
+        "maxSamplersPerShaderStage",
+        "maxStorageBufferBindingSize",
+        "maxStorageBuffersPerShaderStage",
+        "maxStorageTexturesPerShaderStage",
+        "maxTextureArrayLayers",
+        "maxTextureDimension1D",
+        "maxTextureDimension2D",
+        "maxTextureDimension3D",
         "maxTouchPoints",
+        "maxUniformBufferBindingSize",
+        "maxUniformBuffersPerShaderStage",
         "maxValue",
+        "maxVertexAttributes",
+        "maxVertexBufferArrayStride",
+        "maxVertexBuffers",
         "maxWidth",
         "measure",
         "measureText",
@@ -43343,6 +43567,7 @@ var require_bundle_min = __commonJS({
         "messageClass",
         "messageHandlers",
         "messageType",
+        "messages",
         "metaKey",
         "metadata",
         "method",
@@ -43356,13 +43581,20 @@ var require_bundle_min = __commonJS({
         "min-height",
         "min-inline-size",
         "min-width",
+        "minBindingSize",
         "minBlockSize",
         "minDecibels",
+        "minFilter",
         "minHeight",
         "minInlineSize",
         "minLength",
+        "minStorageBufferOffsetAlignment",
+        "minUniformBufferOffsetAlignment",
         "minValue",
         "minWidth",
+        "mipLevel",
+        "mipLevelCount",
+        "mipmapFilter",
         "miterLimit",
         "mix-blend-mode",
         "mixBlendMode",
@@ -43371,6 +43603,7 @@ var require_bundle_min = __commonJS({
         "mode",
         "model",
         "modify",
+        "module",
         "mount",
         "move",
         "moveBy",
@@ -43621,6 +43854,8 @@ var require_bundle_min = __commonJS({
         "multiple",
         "multiply",
         "multiplySelf",
+        "multisample",
+        "multisampled",
         "mutableFile",
         "muted",
         "n",
@@ -43697,6 +43932,7 @@ var require_bundle_min = __commonJS({
         "objectStoreNames",
         "objectType",
         "observe",
+        "occlusionQuerySet",
         "of",
         "offscreenBuffering",
         "offset",
@@ -43722,6 +43958,7 @@ var require_bundle_min = __commonJS({
         "oldVersion",
         "olderShadowRoot",
         "onLine",
+        "onSubmittedWorkDone",
         "onabort",
         "onabsolutedeviceorientation",
         "onactivate",
@@ -44018,6 +44255,7 @@ var require_bundle_min = __commonJS({
         "ontransitionend",
         "ontransitionrun",
         "ontransitionstart",
+        "onuncapturederror",
         "onunhandledrejection",
         "onunload",
         "onunmute",
@@ -44066,6 +44304,7 @@ var require_bundle_min = __commonJS({
         "opened",
         "opener",
         "opera",
+        "operation",
         "operationType",
         "operator",
         "opr",
@@ -44208,6 +44447,7 @@ var require_bundle_min = __commonJS({
         "parseInt",
         "part",
         "participants",
+        "passOp",
         "passive",
         "password",
         "pasteHTML",
@@ -44277,8 +44517,8 @@ var require_bundle_min = __commonJS({
         "placeItems",
         "placeSelf",
         "placeholder",
-        "platformVersion",
         "platform",
+        "platformVersion",
         "platforms",
         "play",
         "playEffect",
@@ -44305,6 +44545,8 @@ var require_bundle_min = __commonJS({
         "pointsAtZ",
         "polygonOffset",
         "pop",
+        "popDebugGroup",
+        "popErrorScope",
         "populateMatrix",
         "popupWindowFeatures",
         "popupWindowName",
@@ -44332,12 +44574,14 @@ var require_bundle_min = __commonJS({
         "pow",
         "powerEfficient",
         "powerOff",
+        "powerPreference",
         "preMultiplySelf",
         "precision",
         "preferredStyleSheetSet",
         "preferredStylesheetSet",
         "prefix",
         "preload",
+        "premultipliedAlpha",
         "prepend",
         "presentation",
         "preserveAlpha",
@@ -44357,6 +44601,7 @@ var require_bundle_min = __commonJS({
         "previousSibling",
         "previousTranslate",
         "primaryKey",
+        "primitive",
         "primitiveType",
         "primitiveUnits",
         "principals",
@@ -44394,6 +44639,8 @@ var require_bundle_min = __commonJS({
         "published",
         "pulse",
         "push",
+        "pushDebugGroup",
+        "pushErrorScope",
         "pushManager",
         "pushNotification",
         "pushState",
@@ -44412,6 +44659,8 @@ var require_bundle_min = __commonJS({
         "queryCommandValue",
         "querySelector",
         "querySelectorAll",
+        "querySet",
+        "queue",
         "queueMicrotask",
         "quote",
         "quotes",
@@ -44568,6 +44817,8 @@ var require_bundle_min = __commonJS({
         "replaceWith",
         "reportValidity",
         "request",
+        "requestAdapter",
+        "requestAdapterInfo",
         "requestAnimationFrame",
         "requestAutocomplete",
         "requestData",
@@ -44595,6 +44846,7 @@ var require_bundle_min = __commonJS({
         "required",
         "requiredExtensions",
         "requiredFeatures",
+        "requiredLimits",
         "reset",
         "resetPose",
         "resetTransform",
@@ -44602,6 +44854,9 @@ var require_bundle_min = __commonJS({
         "resizeBy",
         "resizeTo",
         "resolve",
+        "resolveQuerySet",
+        "resolveTarget",
+        "resource",
         "response",
         "responseBody",
         "responseEnd",
@@ -44656,6 +44911,7 @@ var require_bundle_min = __commonJS({
         "rowIndex",
         "rowSpan",
         "rows",
+        "rowsPerImage",
         "rtcpTransport",
         "rtt",
         "ruby-align",
@@ -44671,8 +44927,11 @@ var require_bundle_min = __commonJS({
         "s",
         "safari",
         "sample",
+        "sampleCount",
         "sampleCoverage",
         "sampleRate",
+        "sampleType",
+        "sampler",
         "samplerParameterf",
         "samplerParameteri",
         "sandbox",
@@ -44851,7 +45110,9 @@ var require_bundle_min = __commonJS({
         "setBaseAndExtent",
         "setBigInt64",
         "setBigUint64",
+        "setBindGroup",
         "setBingCurrentSearchDefault",
+        "setBlendConstant",
         "setCapture",
         "setCodecPreferences",
         "setColor",
@@ -44877,6 +45138,7 @@ var require_bundle_min = __commonJS({
         "setHours",
         "setIdentityProvider",
         "setImmediate",
+        "setIndexBuffer",
         "setInt16",
         "setInt32",
         "setInt8",
@@ -44907,6 +45169,7 @@ var require_bundle_min = __commonJS({
         "setParameter",
         "setParameters",
         "setPeriodicWave",
+        "setPipeline",
         "setPointerCapture",
         "setPosition",
         "setPositionState",
@@ -44923,6 +45186,7 @@ var require_bundle_min = __commonJS({
         "setResourceTimingBufferSize",
         "setRotate",
         "setScale",
+        "setScissorRect",
         "setSeconds",
         "setSelectionRange",
         "setServerCertificate",
@@ -44934,6 +45198,7 @@ var require_bundle_min = __commonJS({
         "setStartAfter",
         "setStartBefore",
         "setStdDeviation",
+        "setStencilReference",
         "setStreams",
         "setStringValue",
         "setStrokeColor",
@@ -44961,10 +45226,13 @@ var require_bundle_min = __commonJS({
         "setVariable",
         "setVelocity",
         "setVersion",
+        "setVertexBuffer",
+        "setViewport",
         "setYear",
         "settingName",
         "settingValue",
         "sex",
+        "shaderLocation",
         "shaderSource",
         "shadowBlur",
         "shadowColor",
@@ -45032,6 +45300,7 @@ var require_bundle_min = __commonJS({
         "sourceCapabilities",
         "sourceFile",
         "sourceIndex",
+        "sourceMap",
         "sources",
         "spacing",
         "span",
@@ -45053,6 +45322,7 @@ var require_bundle_min = __commonJS({
         "sqrt",
         "src",
         "srcElement",
+        "srcFactor",
         "srcFilter",
         "srcObject",
         "srcUrn",
@@ -45084,15 +45354,24 @@ var require_bundle_min = __commonJS({
         "statusbar",
         "stdDeviationX",
         "stdDeviationY",
+        "stencilBack",
+        "stencilClearValue",
+        "stencilFront",
         "stencilFunc",
         "stencilFuncSeparate",
+        "stencilLoadOp",
         "stencilMask",
         "stencilMaskSeparate",
         "stencilOp",
         "stencilOpSeparate",
+        "stencilReadMask",
+        "stencilReadOnly",
+        "stencilStoreOp",
+        "stencilWriteMask",
         "step",
         "stepDown",
         "stepMismatch",
+        "stepMode",
         "stepUp",
         "sticky",
         "stitchTiles",
@@ -45111,7 +45390,9 @@ var require_bundle_min = __commonJS({
         "storageArea",
         "storageName",
         "storageStatus",
+        "storageTexture",
         "store",
+        "storeOp",
         "storeSiteSpecificTrackingException",
         "storeWebWideTrackingException",
         "stpVersion",
@@ -45122,6 +45403,7 @@ var require_bundle_min = __commonJS({
         "string",
         "stringValue",
         "stringify",
+        "stripIndexFormat",
         "stroke",
         "stroke-dasharray",
         "stroke-dashoffset",
@@ -45209,6 +45491,7 @@ var require_bundle_min = __commonJS({
         "targetTouches",
         "targetX",
         "targetY",
+        "targets",
         "tcpType",
         "tee",
         "tel",
@@ -45282,6 +45565,7 @@ var require_bundle_min = __commonJS({
         "textTransform",
         "textUnderlineOffset",
         "textUnderlinePosition",
+        "texture",
         "then",
         "threadId",
         "threshold",
@@ -45300,6 +45584,7 @@ var require_bundle_min = __commonJS({
         "timeout",
         "timestamp",
         "timestampOffset",
+        "timestampWrites",
         "timing",
         "title",
         "to",
@@ -45345,6 +45630,7 @@ var require_bundle_min = __commonJS({
         "toolbar",
         "top",
         "topMargin",
+        "topology",
         "total",
         "totalFrameDelay",
         "totalVideoFrames",
@@ -45413,6 +45699,8 @@ var require_bundle_min = __commonJS({
         "uint32",
         "uint8",
         "uint8Clamped",
+        "unclippedDepth",
+        "unconfigure",
         "undefined",
         "unescape",
         "uneval",
@@ -45463,6 +45751,7 @@ var require_bundle_min = __commonJS({
         "unloadEventEnd",
         "unloadEventStart",
         "unlock",
+        "unmap",
         "unmount",
         "unobserve",
         "unpause",
@@ -45506,6 +45795,7 @@ var require_bundle_min = __commonJS({
         "url",
         "urn",
         "urns",
+        "usage",
         "usages",
         "usb",
         "usbVersionMajor",
@@ -45561,6 +45851,7 @@ var require_bundle_min = __commonJS({
         "vendorSub",
         "verify",
         "version",
+        "vertex",
         "vertexAttrib1f",
         "vertexAttrib1fv",
         "vertexAttrib2f",
@@ -45591,6 +45882,8 @@ var require_bundle_min = __commonJS({
         "view",
         "viewBox",
         "viewBoxString",
+        "viewDimension",
+        "viewFormats",
         "viewTarget",
         "viewTargetString",
         "viewport",
@@ -45809,6 +46102,7 @@ var require_bundle_min = __commonJS({
         "webkitdropzone",
         "webstore",
         "weight",
+        "wgslLanguageFeatures",
         "whatToShow",
         "wheelDelta",
         "wheelDeltaX",
@@ -45838,7 +46132,11 @@ var require_bundle_min = __commonJS({
         "writable",
         "writableAuxiliaries",
         "write",
+        "writeBuffer",
+        "writeMask",
         "writeText",
+        "writeTexture",
+        "writeTimestamp",
         "writeValue",
         "writeWithoutResponse",
         "writeln",
@@ -46249,7 +46547,7 @@ var require_bundle_min = __commonJS({
         };
         fs2.writeFileSync(log_path, "Options: \n" + options_str + "\n\nInput files:\n\n" + files_str(files) + "\n");
       }
-      async function minify2(files, options, _fs_module) {
+      function* minify_sync_or_async(files, options, _fs_module) {
         if (_fs_module && typeof process === "object" && process.env && typeof process.env.TERSER_DEBUG_DIR === "string") {
           log_input(files, options, _fs_module, process.env.TERSER_DEBUG_DIR);
         }
@@ -46369,6 +46667,9 @@ var require_bundle_min = __commonJS({
                 }
               }
           }
+          if (options.parse.toplevel === null) {
+            throw new Error("no source file given");
+          }
           toplevel = options.parse.toplevel;
         }
         if (quoted_props && options.mangle.properties.keep_quoted !== "strict") {
@@ -46440,7 +46741,7 @@ var require_bundle_min = __commonJS({
             if (options.sourceMap.includeSources && files instanceof AST_Toplevel) {
               throw new Error("original source content unavailable");
             }
-            format_options.source_map = await SourceMap({
+            format_options.source_map = yield* SourceMap({
               file: options.sourceMap.filename,
               orig: options.sourceMap.content,
               root: options.sourceMap.root,
@@ -46501,6 +46802,29 @@ var require_bundle_min = __commonJS({
           };
         }
         return result;
+      }
+      async function minify2(files, options, _fs_module) {
+        const gen = minify_sync_or_async(files, options, _fs_module);
+        let yielded;
+        let val;
+        do {
+          val = gen.next(await yielded);
+          yielded = val.value;
+        } while (!val.done);
+        return val.value;
+      }
+      function minify_sync(files, options, _fs_module) {
+        const gen = minify_sync_or_async(files, options, _fs_module);
+        let yielded;
+        let val;
+        do {
+          if (yielded && typeof yielded.then === "function") {
+            throw new Error("minify_sync cannot be used with the legacy source-map module");
+          }
+          val = gen.next(yielded);
+          yielded = val.value;
+        } while (!val.done);
+        return val.value;
       }
       async function run_cli({ program, packageJson, fs: fs2, path }) {
         const skip_keys = /* @__PURE__ */ new Set(["cname", "parent_scope", "scope", "uses_eval", "uses_with"]);
@@ -46974,6 +47298,7 @@ var require_bundle_min = __commonJS({
       exports2._default_options = _default_options;
       exports2._run_cli = run_cli;
       exports2.minify = minify2;
+      exports2.minify_sync = minify_sync;
     });
   }
 });
@@ -48559,6 +48884,7225 @@ var require_mime = __commonJS({
     "use strict";
     var Mime = require_Mime();
     module2.exports = new Mime(require_standard(), require_other());
+  }
+});
+
+// node_modules/mime-db/db.json
+var require_db = __commonJS({
+  "node_modules/mime-db/db.json"(exports, module2) {
+    module2.exports = {
+      "application/1d-interleaved-parityfec": {
+        source: "iana"
+      },
+      "application/3gpdash-qoe-report+xml": {
+        source: "iana"
+      },
+      "application/3gpp-ims+xml": {
+        source: "iana"
+      },
+      "application/a2l": {
+        source: "iana"
+      },
+      "application/activemessage": {
+        source: "iana"
+      },
+      "application/alto-costmap+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/alto-costmapfilter+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/alto-directory+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/alto-endpointcost+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/alto-endpointcostparams+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/alto-endpointprop+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/alto-endpointpropparams+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/alto-error+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/alto-networkmap+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/alto-networkmapfilter+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/aml": {
+        source: "iana"
+      },
+      "application/andrew-inset": {
+        source: "iana",
+        extensions: ["ez"]
+      },
+      "application/applefile": {
+        source: "iana"
+      },
+      "application/applixware": {
+        source: "apache",
+        extensions: ["aw"]
+      },
+      "application/atf": {
+        source: "iana"
+      },
+      "application/atfx": {
+        source: "iana"
+      },
+      "application/atom+xml": {
+        source: "iana",
+        compressible: true,
+        extensions: ["atom"]
+      },
+      "application/atomcat+xml": {
+        source: "iana",
+        extensions: ["atomcat"]
+      },
+      "application/atomdeleted+xml": {
+        source: "iana"
+      },
+      "application/atomicmail": {
+        source: "iana"
+      },
+      "application/atomsvc+xml": {
+        source: "iana",
+        extensions: ["atomsvc"]
+      },
+      "application/atxml": {
+        source: "iana"
+      },
+      "application/auth-policy+xml": {
+        source: "iana"
+      },
+      "application/bacnet-xdd+zip": {
+        source: "iana"
+      },
+      "application/batch-smtp": {
+        source: "iana"
+      },
+      "application/bdoc": {
+        compressible: false,
+        extensions: ["bdoc"]
+      },
+      "application/beep+xml": {
+        source: "iana"
+      },
+      "application/calendar+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/calendar+xml": {
+        source: "iana"
+      },
+      "application/call-completion": {
+        source: "iana"
+      },
+      "application/cals-1840": {
+        source: "iana"
+      },
+      "application/cbor": {
+        source: "iana"
+      },
+      "application/ccmp+xml": {
+        source: "iana"
+      },
+      "application/ccxml+xml": {
+        source: "iana",
+        extensions: ["ccxml"]
+      },
+      "application/cdfx+xml": {
+        source: "iana"
+      },
+      "application/cdmi-capability": {
+        source: "iana",
+        extensions: ["cdmia"]
+      },
+      "application/cdmi-container": {
+        source: "iana",
+        extensions: ["cdmic"]
+      },
+      "application/cdmi-domain": {
+        source: "iana",
+        extensions: ["cdmid"]
+      },
+      "application/cdmi-object": {
+        source: "iana",
+        extensions: ["cdmio"]
+      },
+      "application/cdmi-queue": {
+        source: "iana",
+        extensions: ["cdmiq"]
+      },
+      "application/cdni": {
+        source: "iana"
+      },
+      "application/cea": {
+        source: "iana"
+      },
+      "application/cea-2018+xml": {
+        source: "iana"
+      },
+      "application/cellml+xml": {
+        source: "iana"
+      },
+      "application/cfw": {
+        source: "iana"
+      },
+      "application/clue_info+xml": {
+        source: "iana"
+      },
+      "application/cms": {
+        source: "iana"
+      },
+      "application/cnrp+xml": {
+        source: "iana"
+      },
+      "application/coap-group+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/commonground": {
+        source: "iana"
+      },
+      "application/conference-info+xml": {
+        source: "iana"
+      },
+      "application/cpl+xml": {
+        source: "iana"
+      },
+      "application/csrattrs": {
+        source: "iana"
+      },
+      "application/csta+xml": {
+        source: "iana"
+      },
+      "application/cstadata+xml": {
+        source: "iana"
+      },
+      "application/csvm+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/cu-seeme": {
+        source: "apache",
+        extensions: ["cu"]
+      },
+      "application/cybercash": {
+        source: "iana"
+      },
+      "application/dart": {
+        compressible: true
+      },
+      "application/dash+xml": {
+        source: "iana",
+        extensions: ["mpd"]
+      },
+      "application/dashdelta": {
+        source: "iana"
+      },
+      "application/davmount+xml": {
+        source: "iana",
+        extensions: ["davmount"]
+      },
+      "application/dca-rft": {
+        source: "iana"
+      },
+      "application/dcd": {
+        source: "iana"
+      },
+      "application/dec-dx": {
+        source: "iana"
+      },
+      "application/dialog-info+xml": {
+        source: "iana"
+      },
+      "application/dicom": {
+        source: "iana"
+      },
+      "application/dicom+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/dicom+xml": {
+        source: "iana"
+      },
+      "application/dii": {
+        source: "iana"
+      },
+      "application/dit": {
+        source: "iana"
+      },
+      "application/dns": {
+        source: "iana"
+      },
+      "application/docbook+xml": {
+        source: "apache",
+        extensions: ["dbk"]
+      },
+      "application/dskpp+xml": {
+        source: "iana"
+      },
+      "application/dssc+der": {
+        source: "iana",
+        extensions: ["dssc"]
+      },
+      "application/dssc+xml": {
+        source: "iana",
+        extensions: ["xdssc"]
+      },
+      "application/dvcs": {
+        source: "iana"
+      },
+      "application/ecmascript": {
+        source: "iana",
+        compressible: true,
+        extensions: ["ecma"]
+      },
+      "application/edi-consent": {
+        source: "iana"
+      },
+      "application/edi-x12": {
+        source: "iana",
+        compressible: false
+      },
+      "application/edifact": {
+        source: "iana",
+        compressible: false
+      },
+      "application/efi": {
+        source: "iana"
+      },
+      "application/emergencycalldata.comment+xml": {
+        source: "iana"
+      },
+      "application/emergencycalldata.deviceinfo+xml": {
+        source: "iana"
+      },
+      "application/emergencycalldata.providerinfo+xml": {
+        source: "iana"
+      },
+      "application/emergencycalldata.serviceinfo+xml": {
+        source: "iana"
+      },
+      "application/emergencycalldata.subscriberinfo+xml": {
+        source: "iana"
+      },
+      "application/emma+xml": {
+        source: "iana",
+        extensions: ["emma"]
+      },
+      "application/emotionml+xml": {
+        source: "iana"
+      },
+      "application/encaprtp": {
+        source: "iana"
+      },
+      "application/epp+xml": {
+        source: "iana"
+      },
+      "application/epub+zip": {
+        source: "iana",
+        extensions: ["epub"]
+      },
+      "application/eshop": {
+        source: "iana"
+      },
+      "application/exi": {
+        source: "iana",
+        extensions: ["exi"]
+      },
+      "application/fastinfoset": {
+        source: "iana"
+      },
+      "application/fastsoap": {
+        source: "iana"
+      },
+      "application/fdt+xml": {
+        source: "iana"
+      },
+      "application/fits": {
+        source: "iana"
+      },
+      "application/font-sfnt": {
+        source: "iana"
+      },
+      "application/font-tdpfr": {
+        source: "iana",
+        extensions: ["pfr"]
+      },
+      "application/font-woff": {
+        source: "iana",
+        compressible: false,
+        extensions: ["woff"]
+      },
+      "application/font-woff2": {
+        compressible: false,
+        extensions: ["woff2"]
+      },
+      "application/framework-attributes+xml": {
+        source: "iana"
+      },
+      "application/geo+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/gml+xml": {
+        source: "apache",
+        extensions: ["gml"]
+      },
+      "application/gpx+xml": {
+        source: "apache",
+        extensions: ["gpx"]
+      },
+      "application/gxf": {
+        source: "apache",
+        extensions: ["gxf"]
+      },
+      "application/gzip": {
+        source: "iana",
+        compressible: false
+      },
+      "application/h224": {
+        source: "iana"
+      },
+      "application/held+xml": {
+        source: "iana"
+      },
+      "application/http": {
+        source: "iana"
+      },
+      "application/hyperstudio": {
+        source: "iana",
+        extensions: ["stk"]
+      },
+      "application/ibe-key-request+xml": {
+        source: "iana"
+      },
+      "application/ibe-pkg-reply+xml": {
+        source: "iana"
+      },
+      "application/ibe-pp-data": {
+        source: "iana"
+      },
+      "application/iges": {
+        source: "iana"
+      },
+      "application/im-iscomposing+xml": {
+        source: "iana"
+      },
+      "application/index": {
+        source: "iana"
+      },
+      "application/index.cmd": {
+        source: "iana"
+      },
+      "application/index.obj": {
+        source: "iana"
+      },
+      "application/index.response": {
+        source: "iana"
+      },
+      "application/index.vnd": {
+        source: "iana"
+      },
+      "application/inkml+xml": {
+        source: "iana",
+        extensions: ["ink", "inkml"]
+      },
+      "application/iotp": {
+        source: "iana"
+      },
+      "application/ipfix": {
+        source: "iana",
+        extensions: ["ipfix"]
+      },
+      "application/ipp": {
+        source: "iana"
+      },
+      "application/isup": {
+        source: "iana"
+      },
+      "application/its+xml": {
+        source: "iana"
+      },
+      "application/java-archive": {
+        source: "apache",
+        compressible: false,
+        extensions: ["jar", "war", "ear"]
+      },
+      "application/java-serialized-object": {
+        source: "apache",
+        compressible: false,
+        extensions: ["ser"]
+      },
+      "application/java-vm": {
+        source: "apache",
+        compressible: false,
+        extensions: ["class"]
+      },
+      "application/javascript": {
+        source: "iana",
+        charset: "UTF-8",
+        compressible: true,
+        extensions: ["js"]
+      },
+      "application/jose": {
+        source: "iana"
+      },
+      "application/jose+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/jrd+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/json": {
+        source: "iana",
+        charset: "UTF-8",
+        compressible: true,
+        extensions: ["json", "map"]
+      },
+      "application/json-patch+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/json-seq": {
+        source: "iana"
+      },
+      "application/json5": {
+        extensions: ["json5"]
+      },
+      "application/jsonml+json": {
+        source: "apache",
+        compressible: true,
+        extensions: ["jsonml"]
+      },
+      "application/jwk+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/jwk-set+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/jwt": {
+        source: "iana"
+      },
+      "application/kpml-request+xml": {
+        source: "iana"
+      },
+      "application/kpml-response+xml": {
+        source: "iana"
+      },
+      "application/ld+json": {
+        source: "iana",
+        compressible: true,
+        extensions: ["jsonld"]
+      },
+      "application/lgr+xml": {
+        source: "iana"
+      },
+      "application/link-format": {
+        source: "iana"
+      },
+      "application/load-control+xml": {
+        source: "iana"
+      },
+      "application/lost+xml": {
+        source: "iana",
+        extensions: ["lostxml"]
+      },
+      "application/lostsync+xml": {
+        source: "iana"
+      },
+      "application/lxf": {
+        source: "iana"
+      },
+      "application/mac-binhex40": {
+        source: "iana",
+        extensions: ["hqx"]
+      },
+      "application/mac-compactpro": {
+        source: "apache",
+        extensions: ["cpt"]
+      },
+      "application/macwriteii": {
+        source: "iana"
+      },
+      "application/mads+xml": {
+        source: "iana",
+        extensions: ["mads"]
+      },
+      "application/manifest+json": {
+        charset: "UTF-8",
+        compressible: true,
+        extensions: ["webmanifest"]
+      },
+      "application/marc": {
+        source: "iana",
+        extensions: ["mrc"]
+      },
+      "application/marcxml+xml": {
+        source: "iana",
+        extensions: ["mrcx"]
+      },
+      "application/mathematica": {
+        source: "iana",
+        extensions: ["ma", "nb", "mb"]
+      },
+      "application/mathml+xml": {
+        source: "iana",
+        extensions: ["mathml"]
+      },
+      "application/mathml-content+xml": {
+        source: "iana"
+      },
+      "application/mathml-presentation+xml": {
+        source: "iana"
+      },
+      "application/mbms-associated-procedure-description+xml": {
+        source: "iana"
+      },
+      "application/mbms-deregister+xml": {
+        source: "iana"
+      },
+      "application/mbms-envelope+xml": {
+        source: "iana"
+      },
+      "application/mbms-msk+xml": {
+        source: "iana"
+      },
+      "application/mbms-msk-response+xml": {
+        source: "iana"
+      },
+      "application/mbms-protection-description+xml": {
+        source: "iana"
+      },
+      "application/mbms-reception-report+xml": {
+        source: "iana"
+      },
+      "application/mbms-register+xml": {
+        source: "iana"
+      },
+      "application/mbms-register-response+xml": {
+        source: "iana"
+      },
+      "application/mbms-schedule+xml": {
+        source: "iana"
+      },
+      "application/mbms-user-service-description+xml": {
+        source: "iana"
+      },
+      "application/mbox": {
+        source: "iana",
+        extensions: ["mbox"]
+      },
+      "application/media-policy-dataset+xml": {
+        source: "iana"
+      },
+      "application/media_control+xml": {
+        source: "iana"
+      },
+      "application/mediaservercontrol+xml": {
+        source: "iana",
+        extensions: ["mscml"]
+      },
+      "application/merge-patch+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/metalink+xml": {
+        source: "apache",
+        extensions: ["metalink"]
+      },
+      "application/metalink4+xml": {
+        source: "iana",
+        extensions: ["meta4"]
+      },
+      "application/mets+xml": {
+        source: "iana",
+        extensions: ["mets"]
+      },
+      "application/mf4": {
+        source: "iana"
+      },
+      "application/mikey": {
+        source: "iana"
+      },
+      "application/mods+xml": {
+        source: "iana",
+        extensions: ["mods"]
+      },
+      "application/moss-keys": {
+        source: "iana"
+      },
+      "application/moss-signature": {
+        source: "iana"
+      },
+      "application/mosskey-data": {
+        source: "iana"
+      },
+      "application/mosskey-request": {
+        source: "iana"
+      },
+      "application/mp21": {
+        source: "iana",
+        extensions: ["m21", "mp21"]
+      },
+      "application/mp4": {
+        source: "iana",
+        extensions: ["mp4s", "m4p"]
+      },
+      "application/mpeg4-generic": {
+        source: "iana"
+      },
+      "application/mpeg4-iod": {
+        source: "iana"
+      },
+      "application/mpeg4-iod-xmt": {
+        source: "iana"
+      },
+      "application/mrb-consumer+xml": {
+        source: "iana"
+      },
+      "application/mrb-publish+xml": {
+        source: "iana"
+      },
+      "application/msc-ivr+xml": {
+        source: "iana"
+      },
+      "application/msc-mixer+xml": {
+        source: "iana"
+      },
+      "application/msword": {
+        source: "iana",
+        compressible: false,
+        extensions: ["doc", "dot"]
+      },
+      "application/mxf": {
+        source: "iana",
+        extensions: ["mxf"]
+      },
+      "application/nasdata": {
+        source: "iana"
+      },
+      "application/news-checkgroups": {
+        source: "iana"
+      },
+      "application/news-groupinfo": {
+        source: "iana"
+      },
+      "application/news-transmission": {
+        source: "iana"
+      },
+      "application/nlsml+xml": {
+        source: "iana"
+      },
+      "application/nss": {
+        source: "iana"
+      },
+      "application/ocsp-request": {
+        source: "iana"
+      },
+      "application/ocsp-response": {
+        source: "iana"
+      },
+      "application/octet-stream": {
+        source: "iana",
+        compressible: false,
+        extensions: ["bin", "dms", "lrf", "mar", "so", "dist", "distz", "pkg", "bpk", "dump", "elc", "deploy", "exe", "dll", "deb", "dmg", "iso", "img", "msi", "msp", "msm", "buffer"]
+      },
+      "application/oda": {
+        source: "iana",
+        extensions: ["oda"]
+      },
+      "application/odx": {
+        source: "iana"
+      },
+      "application/oebps-package+xml": {
+        source: "iana",
+        extensions: ["opf"]
+      },
+      "application/ogg": {
+        source: "iana",
+        compressible: false,
+        extensions: ["ogx"]
+      },
+      "application/omdoc+xml": {
+        source: "apache",
+        extensions: ["omdoc"]
+      },
+      "application/onenote": {
+        source: "apache",
+        extensions: ["onetoc", "onetoc2", "onetmp", "onepkg"]
+      },
+      "application/oxps": {
+        source: "iana",
+        extensions: ["oxps"]
+      },
+      "application/p2p-overlay+xml": {
+        source: "iana"
+      },
+      "application/parityfec": {
+        source: "iana"
+      },
+      "application/patch-ops-error+xml": {
+        source: "iana",
+        extensions: ["xer"]
+      },
+      "application/pdf": {
+        source: "iana",
+        compressible: false,
+        extensions: ["pdf"]
+      },
+      "application/pdx": {
+        source: "iana"
+      },
+      "application/pgp-encrypted": {
+        source: "iana",
+        compressible: false,
+        extensions: ["pgp"]
+      },
+      "application/pgp-keys": {
+        source: "iana"
+      },
+      "application/pgp-signature": {
+        source: "iana",
+        extensions: ["asc", "sig"]
+      },
+      "application/pics-rules": {
+        source: "apache",
+        extensions: ["prf"]
+      },
+      "application/pidf+xml": {
+        source: "iana"
+      },
+      "application/pidf-diff+xml": {
+        source: "iana"
+      },
+      "application/pkcs10": {
+        source: "iana",
+        extensions: ["p10"]
+      },
+      "application/pkcs12": {
+        source: "iana"
+      },
+      "application/pkcs7-mime": {
+        source: "iana",
+        extensions: ["p7m", "p7c"]
+      },
+      "application/pkcs7-signature": {
+        source: "iana",
+        extensions: ["p7s"]
+      },
+      "application/pkcs8": {
+        source: "iana",
+        extensions: ["p8"]
+      },
+      "application/pkix-attr-cert": {
+        source: "iana",
+        extensions: ["ac"]
+      },
+      "application/pkix-cert": {
+        source: "iana",
+        extensions: ["cer"]
+      },
+      "application/pkix-crl": {
+        source: "iana",
+        extensions: ["crl"]
+      },
+      "application/pkix-pkipath": {
+        source: "iana",
+        extensions: ["pkipath"]
+      },
+      "application/pkixcmp": {
+        source: "iana",
+        extensions: ["pki"]
+      },
+      "application/pls+xml": {
+        source: "iana",
+        extensions: ["pls"]
+      },
+      "application/poc-settings+xml": {
+        source: "iana"
+      },
+      "application/postscript": {
+        source: "iana",
+        compressible: true,
+        extensions: ["ai", "eps", "ps"]
+      },
+      "application/ppsp-tracker+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/problem+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/problem+xml": {
+        source: "iana"
+      },
+      "application/provenance+xml": {
+        source: "iana"
+      },
+      "application/prs.alvestrand.titrax-sheet": {
+        source: "iana"
+      },
+      "application/prs.cww": {
+        source: "iana",
+        extensions: ["cww"]
+      },
+      "application/prs.hpub+zip": {
+        source: "iana"
+      },
+      "application/prs.nprend": {
+        source: "iana"
+      },
+      "application/prs.plucker": {
+        source: "iana"
+      },
+      "application/prs.rdf-xml-crypt": {
+        source: "iana"
+      },
+      "application/prs.xsf+xml": {
+        source: "iana"
+      },
+      "application/pskc+xml": {
+        source: "iana",
+        extensions: ["pskcxml"]
+      },
+      "application/qsig": {
+        source: "iana"
+      },
+      "application/raptorfec": {
+        source: "iana"
+      },
+      "application/rdap+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/rdf+xml": {
+        source: "iana",
+        compressible: true,
+        extensions: ["rdf"]
+      },
+      "application/reginfo+xml": {
+        source: "iana",
+        extensions: ["rif"]
+      },
+      "application/relax-ng-compact-syntax": {
+        source: "iana",
+        extensions: ["rnc"]
+      },
+      "application/remote-printing": {
+        source: "iana"
+      },
+      "application/reputon+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/resource-lists+xml": {
+        source: "iana",
+        extensions: ["rl"]
+      },
+      "application/resource-lists-diff+xml": {
+        source: "iana",
+        extensions: ["rld"]
+      },
+      "application/rfc+xml": {
+        source: "iana"
+      },
+      "application/riscos": {
+        source: "iana"
+      },
+      "application/rlmi+xml": {
+        source: "iana"
+      },
+      "application/rls-services+xml": {
+        source: "iana",
+        extensions: ["rs"]
+      },
+      "application/rpki-ghostbusters": {
+        source: "iana",
+        extensions: ["gbr"]
+      },
+      "application/rpki-manifest": {
+        source: "iana",
+        extensions: ["mft"]
+      },
+      "application/rpki-roa": {
+        source: "iana",
+        extensions: ["roa"]
+      },
+      "application/rpki-updown": {
+        source: "iana"
+      },
+      "application/rsd+xml": {
+        source: "apache",
+        extensions: ["rsd"]
+      },
+      "application/rss+xml": {
+        source: "apache",
+        compressible: true,
+        extensions: ["rss"]
+      },
+      "application/rtf": {
+        source: "iana",
+        compressible: true,
+        extensions: ["rtf"]
+      },
+      "application/rtploopback": {
+        source: "iana"
+      },
+      "application/rtx": {
+        source: "iana"
+      },
+      "application/samlassertion+xml": {
+        source: "iana"
+      },
+      "application/samlmetadata+xml": {
+        source: "iana"
+      },
+      "application/sbml+xml": {
+        source: "iana",
+        extensions: ["sbml"]
+      },
+      "application/scaip+xml": {
+        source: "iana"
+      },
+      "application/scim+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/scvp-cv-request": {
+        source: "iana",
+        extensions: ["scq"]
+      },
+      "application/scvp-cv-response": {
+        source: "iana",
+        extensions: ["scs"]
+      },
+      "application/scvp-vp-request": {
+        source: "iana",
+        extensions: ["spq"]
+      },
+      "application/scvp-vp-response": {
+        source: "iana",
+        extensions: ["spp"]
+      },
+      "application/sdp": {
+        source: "iana",
+        extensions: ["sdp"]
+      },
+      "application/sep+xml": {
+        source: "iana"
+      },
+      "application/sep-exi": {
+        source: "iana"
+      },
+      "application/session-info": {
+        source: "iana"
+      },
+      "application/set-payment": {
+        source: "iana"
+      },
+      "application/set-payment-initiation": {
+        source: "iana",
+        extensions: ["setpay"]
+      },
+      "application/set-registration": {
+        source: "iana"
+      },
+      "application/set-registration-initiation": {
+        source: "iana",
+        extensions: ["setreg"]
+      },
+      "application/sgml": {
+        source: "iana"
+      },
+      "application/sgml-open-catalog": {
+        source: "iana"
+      },
+      "application/shf+xml": {
+        source: "iana",
+        extensions: ["shf"]
+      },
+      "application/sieve": {
+        source: "iana"
+      },
+      "application/simple-filter+xml": {
+        source: "iana"
+      },
+      "application/simple-message-summary": {
+        source: "iana"
+      },
+      "application/simplesymbolcontainer": {
+        source: "iana"
+      },
+      "application/slate": {
+        source: "iana"
+      },
+      "application/smil": {
+        source: "iana"
+      },
+      "application/smil+xml": {
+        source: "iana",
+        extensions: ["smi", "smil"]
+      },
+      "application/smpte336m": {
+        source: "iana"
+      },
+      "application/soap+fastinfoset": {
+        source: "iana"
+      },
+      "application/soap+xml": {
+        source: "iana",
+        compressible: true
+      },
+      "application/sparql-query": {
+        source: "iana",
+        extensions: ["rq"]
+      },
+      "application/sparql-results+xml": {
+        source: "iana",
+        extensions: ["srx"]
+      },
+      "application/spirits-event+xml": {
+        source: "iana"
+      },
+      "application/sql": {
+        source: "iana"
+      },
+      "application/srgs": {
+        source: "iana",
+        extensions: ["gram"]
+      },
+      "application/srgs+xml": {
+        source: "iana",
+        extensions: ["grxml"]
+      },
+      "application/sru+xml": {
+        source: "iana",
+        extensions: ["sru"]
+      },
+      "application/ssdl+xml": {
+        source: "apache",
+        extensions: ["ssdl"]
+      },
+      "application/ssml+xml": {
+        source: "iana",
+        extensions: ["ssml"]
+      },
+      "application/tamp-apex-update": {
+        source: "iana"
+      },
+      "application/tamp-apex-update-confirm": {
+        source: "iana"
+      },
+      "application/tamp-community-update": {
+        source: "iana"
+      },
+      "application/tamp-community-update-confirm": {
+        source: "iana"
+      },
+      "application/tamp-error": {
+        source: "iana"
+      },
+      "application/tamp-sequence-adjust": {
+        source: "iana"
+      },
+      "application/tamp-sequence-adjust-confirm": {
+        source: "iana"
+      },
+      "application/tamp-status-query": {
+        source: "iana"
+      },
+      "application/tamp-status-response": {
+        source: "iana"
+      },
+      "application/tamp-update": {
+        source: "iana"
+      },
+      "application/tamp-update-confirm": {
+        source: "iana"
+      },
+      "application/tar": {
+        compressible: true
+      },
+      "application/tei+xml": {
+        source: "iana",
+        extensions: ["tei", "teicorpus"]
+      },
+      "application/thraud+xml": {
+        source: "iana",
+        extensions: ["tfi"]
+      },
+      "application/timestamp-query": {
+        source: "iana"
+      },
+      "application/timestamp-reply": {
+        source: "iana"
+      },
+      "application/timestamped-data": {
+        source: "iana",
+        extensions: ["tsd"]
+      },
+      "application/ttml+xml": {
+        source: "iana"
+      },
+      "application/tve-trigger": {
+        source: "iana"
+      },
+      "application/ulpfec": {
+        source: "iana"
+      },
+      "application/urc-grpsheet+xml": {
+        source: "iana"
+      },
+      "application/urc-ressheet+xml": {
+        source: "iana"
+      },
+      "application/urc-targetdesc+xml": {
+        source: "iana"
+      },
+      "application/urc-uisocketdesc+xml": {
+        source: "iana"
+      },
+      "application/vcard+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vcard+xml": {
+        source: "iana"
+      },
+      "application/vemmi": {
+        source: "iana"
+      },
+      "application/vividence.scriptfile": {
+        source: "apache"
+      },
+      "application/vnd.3gpp-prose+xml": {
+        source: "iana"
+      },
+      "application/vnd.3gpp-prose-pc3ch+xml": {
+        source: "iana"
+      },
+      "application/vnd.3gpp.access-transfer-events+xml": {
+        source: "iana"
+      },
+      "application/vnd.3gpp.bsf+xml": {
+        source: "iana"
+      },
+      "application/vnd.3gpp.mid-call+xml": {
+        source: "iana"
+      },
+      "application/vnd.3gpp.pic-bw-large": {
+        source: "iana",
+        extensions: ["plb"]
+      },
+      "application/vnd.3gpp.pic-bw-small": {
+        source: "iana",
+        extensions: ["psb"]
+      },
+      "application/vnd.3gpp.pic-bw-var": {
+        source: "iana",
+        extensions: ["pvb"]
+      },
+      "application/vnd.3gpp.sms": {
+        source: "iana"
+      },
+      "application/vnd.3gpp.sms+xml": {
+        source: "iana"
+      },
+      "application/vnd.3gpp.srvcc-ext+xml": {
+        source: "iana"
+      },
+      "application/vnd.3gpp.srvcc-info+xml": {
+        source: "iana"
+      },
+      "application/vnd.3gpp.state-and-event-info+xml": {
+        source: "iana"
+      },
+      "application/vnd.3gpp.ussd+xml": {
+        source: "iana"
+      },
+      "application/vnd.3gpp2.bcmcsinfo+xml": {
+        source: "iana"
+      },
+      "application/vnd.3gpp2.sms": {
+        source: "iana"
+      },
+      "application/vnd.3gpp2.tcap": {
+        source: "iana",
+        extensions: ["tcap"]
+      },
+      "application/vnd.3lightssoftware.imagescal": {
+        source: "iana"
+      },
+      "application/vnd.3m.post-it-notes": {
+        source: "iana",
+        extensions: ["pwn"]
+      },
+      "application/vnd.accpac.simply.aso": {
+        source: "iana",
+        extensions: ["aso"]
+      },
+      "application/vnd.accpac.simply.imp": {
+        source: "iana",
+        extensions: ["imp"]
+      },
+      "application/vnd.acucobol": {
+        source: "iana",
+        extensions: ["acu"]
+      },
+      "application/vnd.acucorp": {
+        source: "iana",
+        extensions: ["atc", "acutc"]
+      },
+      "application/vnd.adobe.air-application-installer-package+zip": {
+        source: "apache",
+        extensions: ["air"]
+      },
+      "application/vnd.adobe.flash.movie": {
+        source: "iana"
+      },
+      "application/vnd.adobe.formscentral.fcdt": {
+        source: "iana",
+        extensions: ["fcdt"]
+      },
+      "application/vnd.adobe.fxp": {
+        source: "iana",
+        extensions: ["fxp", "fxpl"]
+      },
+      "application/vnd.adobe.partial-upload": {
+        source: "iana"
+      },
+      "application/vnd.adobe.xdp+xml": {
+        source: "iana",
+        extensions: ["xdp"]
+      },
+      "application/vnd.adobe.xfdf": {
+        source: "iana",
+        extensions: ["xfdf"]
+      },
+      "application/vnd.aether.imp": {
+        source: "iana"
+      },
+      "application/vnd.ah-barcode": {
+        source: "iana"
+      },
+      "application/vnd.ahead.space": {
+        source: "iana",
+        extensions: ["ahead"]
+      },
+      "application/vnd.airzip.filesecure.azf": {
+        source: "iana",
+        extensions: ["azf"]
+      },
+      "application/vnd.airzip.filesecure.azs": {
+        source: "iana",
+        extensions: ["azs"]
+      },
+      "application/vnd.amazon.ebook": {
+        source: "apache",
+        extensions: ["azw"]
+      },
+      "application/vnd.amazon.mobi8-ebook": {
+        source: "iana"
+      },
+      "application/vnd.americandynamics.acc": {
+        source: "iana",
+        extensions: ["acc"]
+      },
+      "application/vnd.amiga.ami": {
+        source: "iana",
+        extensions: ["ami"]
+      },
+      "application/vnd.amundsen.maze+xml": {
+        source: "iana"
+      },
+      "application/vnd.android.package-archive": {
+        source: "apache",
+        compressible: false,
+        extensions: ["apk"]
+      },
+      "application/vnd.anki": {
+        source: "iana"
+      },
+      "application/vnd.anser-web-certificate-issue-initiation": {
+        source: "iana",
+        extensions: ["cii"]
+      },
+      "application/vnd.anser-web-funds-transfer-initiation": {
+        source: "apache",
+        extensions: ["fti"]
+      },
+      "application/vnd.antix.game-component": {
+        source: "iana",
+        extensions: ["atx"]
+      },
+      "application/vnd.apache.thrift.binary": {
+        source: "iana"
+      },
+      "application/vnd.apache.thrift.compact": {
+        source: "iana"
+      },
+      "application/vnd.apache.thrift.json": {
+        source: "iana"
+      },
+      "application/vnd.api+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.apple.installer+xml": {
+        source: "iana",
+        extensions: ["mpkg"]
+      },
+      "application/vnd.apple.mpegurl": {
+        source: "iana",
+        extensions: ["m3u8"]
+      },
+      "application/vnd.apple.pkpass": {
+        compressible: false,
+        extensions: ["pkpass"]
+      },
+      "application/vnd.arastra.swi": {
+        source: "iana"
+      },
+      "application/vnd.aristanetworks.swi": {
+        source: "iana",
+        extensions: ["swi"]
+      },
+      "application/vnd.artsquare": {
+        source: "iana"
+      },
+      "application/vnd.astraea-software.iota": {
+        source: "iana",
+        extensions: ["iota"]
+      },
+      "application/vnd.audiograph": {
+        source: "iana",
+        extensions: ["aep"]
+      },
+      "application/vnd.autopackage": {
+        source: "iana"
+      },
+      "application/vnd.avistar+xml": {
+        source: "iana"
+      },
+      "application/vnd.balsamiq.bmml+xml": {
+        source: "iana"
+      },
+      "application/vnd.balsamiq.bmpr": {
+        source: "iana"
+      },
+      "application/vnd.bekitzur-stech+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.biopax.rdf+xml": {
+        source: "iana"
+      },
+      "application/vnd.blueice.multipass": {
+        source: "iana",
+        extensions: ["mpm"]
+      },
+      "application/vnd.bluetooth.ep.oob": {
+        source: "iana"
+      },
+      "application/vnd.bluetooth.le.oob": {
+        source: "iana"
+      },
+      "application/vnd.bmi": {
+        source: "iana",
+        extensions: ["bmi"]
+      },
+      "application/vnd.businessobjects": {
+        source: "iana",
+        extensions: ["rep"]
+      },
+      "application/vnd.cab-jscript": {
+        source: "iana"
+      },
+      "application/vnd.canon-cpdl": {
+        source: "iana"
+      },
+      "application/vnd.canon-lips": {
+        source: "iana"
+      },
+      "application/vnd.cendio.thinlinc.clientconf": {
+        source: "iana"
+      },
+      "application/vnd.century-systems.tcp_stream": {
+        source: "iana"
+      },
+      "application/vnd.chemdraw+xml": {
+        source: "iana",
+        extensions: ["cdxml"]
+      },
+      "application/vnd.chess-pgn": {
+        source: "iana"
+      },
+      "application/vnd.chipnuts.karaoke-mmd": {
+        source: "iana",
+        extensions: ["mmd"]
+      },
+      "application/vnd.cinderella": {
+        source: "iana",
+        extensions: ["cdy"]
+      },
+      "application/vnd.cirpack.isdn-ext": {
+        source: "iana"
+      },
+      "application/vnd.citationstyles.style+xml": {
+        source: "iana"
+      },
+      "application/vnd.claymore": {
+        source: "iana",
+        extensions: ["cla"]
+      },
+      "application/vnd.cloanto.rp9": {
+        source: "iana",
+        extensions: ["rp9"]
+      },
+      "application/vnd.clonk.c4group": {
+        source: "iana",
+        extensions: ["c4g", "c4d", "c4f", "c4p", "c4u"]
+      },
+      "application/vnd.cluetrust.cartomobile-config": {
+        source: "iana",
+        extensions: ["c11amc"]
+      },
+      "application/vnd.cluetrust.cartomobile-config-pkg": {
+        source: "iana",
+        extensions: ["c11amz"]
+      },
+      "application/vnd.coffeescript": {
+        source: "iana"
+      },
+      "application/vnd.collection+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.collection.doc+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.collection.next+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.comicbook+zip": {
+        source: "iana"
+      },
+      "application/vnd.commerce-battelle": {
+        source: "iana"
+      },
+      "application/vnd.commonspace": {
+        source: "iana",
+        extensions: ["csp"]
+      },
+      "application/vnd.contact.cmsg": {
+        source: "iana",
+        extensions: ["cdbcmsg"]
+      },
+      "application/vnd.coreos.ignition+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.cosmocaller": {
+        source: "iana",
+        extensions: ["cmc"]
+      },
+      "application/vnd.crick.clicker": {
+        source: "iana",
+        extensions: ["clkx"]
+      },
+      "application/vnd.crick.clicker.keyboard": {
+        source: "iana",
+        extensions: ["clkk"]
+      },
+      "application/vnd.crick.clicker.palette": {
+        source: "iana",
+        extensions: ["clkp"]
+      },
+      "application/vnd.crick.clicker.template": {
+        source: "iana",
+        extensions: ["clkt"]
+      },
+      "application/vnd.crick.clicker.wordbank": {
+        source: "iana",
+        extensions: ["clkw"]
+      },
+      "application/vnd.criticaltools.wbs+xml": {
+        source: "iana",
+        extensions: ["wbs"]
+      },
+      "application/vnd.ctc-posml": {
+        source: "iana",
+        extensions: ["pml"]
+      },
+      "application/vnd.ctct.ws+xml": {
+        source: "iana"
+      },
+      "application/vnd.cups-pdf": {
+        source: "iana"
+      },
+      "application/vnd.cups-postscript": {
+        source: "iana"
+      },
+      "application/vnd.cups-ppd": {
+        source: "iana",
+        extensions: ["ppd"]
+      },
+      "application/vnd.cups-raster": {
+        source: "iana"
+      },
+      "application/vnd.cups-raw": {
+        source: "iana"
+      },
+      "application/vnd.curl": {
+        source: "iana"
+      },
+      "application/vnd.curl.car": {
+        source: "apache",
+        extensions: ["car"]
+      },
+      "application/vnd.curl.pcurl": {
+        source: "apache",
+        extensions: ["pcurl"]
+      },
+      "application/vnd.cyan.dean.root+xml": {
+        source: "iana"
+      },
+      "application/vnd.cybank": {
+        source: "iana"
+      },
+      "application/vnd.d2l.coursepackage1p0+zip": {
+        source: "iana"
+      },
+      "application/vnd.dart": {
+        source: "iana",
+        compressible: true,
+        extensions: ["dart"]
+      },
+      "application/vnd.data-vision.rdz": {
+        source: "iana",
+        extensions: ["rdz"]
+      },
+      "application/vnd.debian.binary-package": {
+        source: "iana"
+      },
+      "application/vnd.dece.data": {
+        source: "iana",
+        extensions: ["uvf", "uvvf", "uvd", "uvvd"]
+      },
+      "application/vnd.dece.ttml+xml": {
+        source: "iana",
+        extensions: ["uvt", "uvvt"]
+      },
+      "application/vnd.dece.unspecified": {
+        source: "iana",
+        extensions: ["uvx", "uvvx"]
+      },
+      "application/vnd.dece.zip": {
+        source: "iana",
+        extensions: ["uvz", "uvvz"]
+      },
+      "application/vnd.denovo.fcselayout-link": {
+        source: "iana",
+        extensions: ["fe_launch"]
+      },
+      "application/vnd.desmume-movie": {
+        source: "iana"
+      },
+      "application/vnd.desmume.movie": {
+        source: "apache"
+      },
+      "application/vnd.dir-bi.plate-dl-nosuffix": {
+        source: "iana"
+      },
+      "application/vnd.dm.delegation+xml": {
+        source: "iana"
+      },
+      "application/vnd.dna": {
+        source: "iana",
+        extensions: ["dna"]
+      },
+      "application/vnd.document+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.dolby.mlp": {
+        source: "apache",
+        extensions: ["mlp"]
+      },
+      "application/vnd.dolby.mobile.1": {
+        source: "iana"
+      },
+      "application/vnd.dolby.mobile.2": {
+        source: "iana"
+      },
+      "application/vnd.doremir.scorecloud-binary-document": {
+        source: "iana"
+      },
+      "application/vnd.dpgraph": {
+        source: "iana",
+        extensions: ["dpg"]
+      },
+      "application/vnd.dreamfactory": {
+        source: "iana",
+        extensions: ["dfac"]
+      },
+      "application/vnd.drive+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.ds-keypoint": {
+        source: "apache",
+        extensions: ["kpxx"]
+      },
+      "application/vnd.dtg.local": {
+        source: "iana"
+      },
+      "application/vnd.dtg.local.flash": {
+        source: "iana"
+      },
+      "application/vnd.dtg.local.html": {
+        source: "iana"
+      },
+      "application/vnd.dvb.ait": {
+        source: "iana",
+        extensions: ["ait"]
+      },
+      "application/vnd.dvb.dvbj": {
+        source: "iana"
+      },
+      "application/vnd.dvb.esgcontainer": {
+        source: "iana"
+      },
+      "application/vnd.dvb.ipdcdftnotifaccess": {
+        source: "iana"
+      },
+      "application/vnd.dvb.ipdcesgaccess": {
+        source: "iana"
+      },
+      "application/vnd.dvb.ipdcesgaccess2": {
+        source: "iana"
+      },
+      "application/vnd.dvb.ipdcesgpdd": {
+        source: "iana"
+      },
+      "application/vnd.dvb.ipdcroaming": {
+        source: "iana"
+      },
+      "application/vnd.dvb.iptv.alfec-base": {
+        source: "iana"
+      },
+      "application/vnd.dvb.iptv.alfec-enhancement": {
+        source: "iana"
+      },
+      "application/vnd.dvb.notif-aggregate-root+xml": {
+        source: "iana"
+      },
+      "application/vnd.dvb.notif-container+xml": {
+        source: "iana"
+      },
+      "application/vnd.dvb.notif-generic+xml": {
+        source: "iana"
+      },
+      "application/vnd.dvb.notif-ia-msglist+xml": {
+        source: "iana"
+      },
+      "application/vnd.dvb.notif-ia-registration-request+xml": {
+        source: "iana"
+      },
+      "application/vnd.dvb.notif-ia-registration-response+xml": {
+        source: "iana"
+      },
+      "application/vnd.dvb.notif-init+xml": {
+        source: "iana"
+      },
+      "application/vnd.dvb.pfr": {
+        source: "iana"
+      },
+      "application/vnd.dvb.service": {
+        source: "iana",
+        extensions: ["svc"]
+      },
+      "application/vnd.dxr": {
+        source: "iana"
+      },
+      "application/vnd.dynageo": {
+        source: "iana",
+        extensions: ["geo"]
+      },
+      "application/vnd.dzr": {
+        source: "iana"
+      },
+      "application/vnd.easykaraoke.cdgdownload": {
+        source: "iana"
+      },
+      "application/vnd.ecdis-update": {
+        source: "iana"
+      },
+      "application/vnd.ecowin.chart": {
+        source: "iana",
+        extensions: ["mag"]
+      },
+      "application/vnd.ecowin.filerequest": {
+        source: "iana"
+      },
+      "application/vnd.ecowin.fileupdate": {
+        source: "iana"
+      },
+      "application/vnd.ecowin.series": {
+        source: "iana"
+      },
+      "application/vnd.ecowin.seriesrequest": {
+        source: "iana"
+      },
+      "application/vnd.ecowin.seriesupdate": {
+        source: "iana"
+      },
+      "application/vnd.emclient.accessrequest+xml": {
+        source: "iana"
+      },
+      "application/vnd.enliven": {
+        source: "iana",
+        extensions: ["nml"]
+      },
+      "application/vnd.enphase.envoy": {
+        source: "iana"
+      },
+      "application/vnd.eprints.data+xml": {
+        source: "iana"
+      },
+      "application/vnd.epson.esf": {
+        source: "iana",
+        extensions: ["esf"]
+      },
+      "application/vnd.epson.msf": {
+        source: "iana",
+        extensions: ["msf"]
+      },
+      "application/vnd.epson.quickanime": {
+        source: "iana",
+        extensions: ["qam"]
+      },
+      "application/vnd.epson.salt": {
+        source: "iana",
+        extensions: ["slt"]
+      },
+      "application/vnd.epson.ssf": {
+        source: "iana",
+        extensions: ["ssf"]
+      },
+      "application/vnd.ericsson.quickcall": {
+        source: "iana"
+      },
+      "application/vnd.espass-espass+zip": {
+        source: "iana"
+      },
+      "application/vnd.eszigno3+xml": {
+        source: "iana",
+        extensions: ["es3", "et3"]
+      },
+      "application/vnd.etsi.aoc+xml": {
+        source: "iana"
+      },
+      "application/vnd.etsi.asic-e+zip": {
+        source: "iana"
+      },
+      "application/vnd.etsi.asic-s+zip": {
+        source: "iana"
+      },
+      "application/vnd.etsi.cug+xml": {
+        source: "iana"
+      },
+      "application/vnd.etsi.iptvcommand+xml": {
+        source: "iana"
+      },
+      "application/vnd.etsi.iptvdiscovery+xml": {
+        source: "iana"
+      },
+      "application/vnd.etsi.iptvprofile+xml": {
+        source: "iana"
+      },
+      "application/vnd.etsi.iptvsad-bc+xml": {
+        source: "iana"
+      },
+      "application/vnd.etsi.iptvsad-cod+xml": {
+        source: "iana"
+      },
+      "application/vnd.etsi.iptvsad-npvr+xml": {
+        source: "iana"
+      },
+      "application/vnd.etsi.iptvservice+xml": {
+        source: "iana"
+      },
+      "application/vnd.etsi.iptvsync+xml": {
+        source: "iana"
+      },
+      "application/vnd.etsi.iptvueprofile+xml": {
+        source: "iana"
+      },
+      "application/vnd.etsi.mcid+xml": {
+        source: "iana"
+      },
+      "application/vnd.etsi.mheg5": {
+        source: "iana"
+      },
+      "application/vnd.etsi.overload-control-policy-dataset+xml": {
+        source: "iana"
+      },
+      "application/vnd.etsi.pstn+xml": {
+        source: "iana"
+      },
+      "application/vnd.etsi.sci+xml": {
+        source: "iana"
+      },
+      "application/vnd.etsi.simservs+xml": {
+        source: "iana"
+      },
+      "application/vnd.etsi.timestamp-token": {
+        source: "iana"
+      },
+      "application/vnd.etsi.tsl+xml": {
+        source: "iana"
+      },
+      "application/vnd.etsi.tsl.der": {
+        source: "iana"
+      },
+      "application/vnd.eudora.data": {
+        source: "iana"
+      },
+      "application/vnd.ezpix-album": {
+        source: "iana",
+        extensions: ["ez2"]
+      },
+      "application/vnd.ezpix-package": {
+        source: "iana",
+        extensions: ["ez3"]
+      },
+      "application/vnd.f-secure.mobile": {
+        source: "iana"
+      },
+      "application/vnd.fastcopy-disk-image": {
+        source: "iana"
+      },
+      "application/vnd.fdf": {
+        source: "iana",
+        extensions: ["fdf"]
+      },
+      "application/vnd.fdsn.mseed": {
+        source: "iana",
+        extensions: ["mseed"]
+      },
+      "application/vnd.fdsn.seed": {
+        source: "iana",
+        extensions: ["seed", "dataless"]
+      },
+      "application/vnd.ffsns": {
+        source: "iana"
+      },
+      "application/vnd.filmit.zfc": {
+        source: "iana"
+      },
+      "application/vnd.fints": {
+        source: "iana"
+      },
+      "application/vnd.firemonkeys.cloudcell": {
+        source: "iana"
+      },
+      "application/vnd.flographit": {
+        source: "iana",
+        extensions: ["gph"]
+      },
+      "application/vnd.fluxtime.clip": {
+        source: "iana",
+        extensions: ["ftc"]
+      },
+      "application/vnd.font-fontforge-sfd": {
+        source: "iana"
+      },
+      "application/vnd.framemaker": {
+        source: "iana",
+        extensions: ["fm", "frame", "maker", "book"]
+      },
+      "application/vnd.frogans.fnc": {
+        source: "iana",
+        extensions: ["fnc"]
+      },
+      "application/vnd.frogans.ltf": {
+        source: "iana",
+        extensions: ["ltf"]
+      },
+      "application/vnd.fsc.weblaunch": {
+        source: "iana",
+        extensions: ["fsc"]
+      },
+      "application/vnd.fujitsu.oasys": {
+        source: "iana",
+        extensions: ["oas"]
+      },
+      "application/vnd.fujitsu.oasys2": {
+        source: "iana",
+        extensions: ["oa2"]
+      },
+      "application/vnd.fujitsu.oasys3": {
+        source: "iana",
+        extensions: ["oa3"]
+      },
+      "application/vnd.fujitsu.oasysgp": {
+        source: "iana",
+        extensions: ["fg5"]
+      },
+      "application/vnd.fujitsu.oasysprs": {
+        source: "iana",
+        extensions: ["bh2"]
+      },
+      "application/vnd.fujixerox.art-ex": {
+        source: "iana"
+      },
+      "application/vnd.fujixerox.art4": {
+        source: "iana"
+      },
+      "application/vnd.fujixerox.ddd": {
+        source: "iana",
+        extensions: ["ddd"]
+      },
+      "application/vnd.fujixerox.docuworks": {
+        source: "iana",
+        extensions: ["xdw"]
+      },
+      "application/vnd.fujixerox.docuworks.binder": {
+        source: "iana",
+        extensions: ["xbd"]
+      },
+      "application/vnd.fujixerox.docuworks.container": {
+        source: "iana"
+      },
+      "application/vnd.fujixerox.hbpl": {
+        source: "iana"
+      },
+      "application/vnd.fut-misnet": {
+        source: "iana"
+      },
+      "application/vnd.fuzzysheet": {
+        source: "iana",
+        extensions: ["fzs"]
+      },
+      "application/vnd.genomatix.tuxedo": {
+        source: "iana",
+        extensions: ["txd"]
+      },
+      "application/vnd.geo+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.geocube+xml": {
+        source: "iana"
+      },
+      "application/vnd.geogebra.file": {
+        source: "iana",
+        extensions: ["ggb"]
+      },
+      "application/vnd.geogebra.tool": {
+        source: "iana",
+        extensions: ["ggt"]
+      },
+      "application/vnd.geometry-explorer": {
+        source: "iana",
+        extensions: ["gex", "gre"]
+      },
+      "application/vnd.geonext": {
+        source: "iana",
+        extensions: ["gxt"]
+      },
+      "application/vnd.geoplan": {
+        source: "iana",
+        extensions: ["g2w"]
+      },
+      "application/vnd.geospace": {
+        source: "iana",
+        extensions: ["g3w"]
+      },
+      "application/vnd.gerber": {
+        source: "iana"
+      },
+      "application/vnd.globalplatform.card-content-mgt": {
+        source: "iana"
+      },
+      "application/vnd.globalplatform.card-content-mgt-response": {
+        source: "iana"
+      },
+      "application/vnd.gmx": {
+        source: "iana",
+        extensions: ["gmx"]
+      },
+      "application/vnd.google-apps.document": {
+        compressible: false,
+        extensions: ["gdoc"]
+      },
+      "application/vnd.google-apps.presentation": {
+        compressible: false,
+        extensions: ["gslides"]
+      },
+      "application/vnd.google-apps.spreadsheet": {
+        compressible: false,
+        extensions: ["gsheet"]
+      },
+      "application/vnd.google-earth.kml+xml": {
+        source: "iana",
+        compressible: true,
+        extensions: ["kml"]
+      },
+      "application/vnd.google-earth.kmz": {
+        source: "iana",
+        compressible: false,
+        extensions: ["kmz"]
+      },
+      "application/vnd.gov.sk.e-form+xml": {
+        source: "iana"
+      },
+      "application/vnd.gov.sk.e-form+zip": {
+        source: "iana"
+      },
+      "application/vnd.gov.sk.xmldatacontainer+xml": {
+        source: "iana"
+      },
+      "application/vnd.grafeq": {
+        source: "iana",
+        extensions: ["gqf", "gqs"]
+      },
+      "application/vnd.gridmp": {
+        source: "iana"
+      },
+      "application/vnd.groove-account": {
+        source: "iana",
+        extensions: ["gac"]
+      },
+      "application/vnd.groove-help": {
+        source: "iana",
+        extensions: ["ghf"]
+      },
+      "application/vnd.groove-identity-message": {
+        source: "iana",
+        extensions: ["gim"]
+      },
+      "application/vnd.groove-injector": {
+        source: "iana",
+        extensions: ["grv"]
+      },
+      "application/vnd.groove-tool-message": {
+        source: "iana",
+        extensions: ["gtm"]
+      },
+      "application/vnd.groove-tool-template": {
+        source: "iana",
+        extensions: ["tpl"]
+      },
+      "application/vnd.groove-vcard": {
+        source: "iana",
+        extensions: ["vcg"]
+      },
+      "application/vnd.hal+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.hal+xml": {
+        source: "iana",
+        extensions: ["hal"]
+      },
+      "application/vnd.handheld-entertainment+xml": {
+        source: "iana",
+        extensions: ["zmm"]
+      },
+      "application/vnd.hbci": {
+        source: "iana",
+        extensions: ["hbci"]
+      },
+      "application/vnd.hcl-bireports": {
+        source: "iana"
+      },
+      "application/vnd.hdt": {
+        source: "iana"
+      },
+      "application/vnd.heroku+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.hhe.lesson-player": {
+        source: "iana",
+        extensions: ["les"]
+      },
+      "application/vnd.hp-hpgl": {
+        source: "iana",
+        extensions: ["hpgl"]
+      },
+      "application/vnd.hp-hpid": {
+        source: "iana",
+        extensions: ["hpid"]
+      },
+      "application/vnd.hp-hps": {
+        source: "iana",
+        extensions: ["hps"]
+      },
+      "application/vnd.hp-jlyt": {
+        source: "iana",
+        extensions: ["jlt"]
+      },
+      "application/vnd.hp-pcl": {
+        source: "iana",
+        extensions: ["pcl"]
+      },
+      "application/vnd.hp-pclxl": {
+        source: "iana",
+        extensions: ["pclxl"]
+      },
+      "application/vnd.httphone": {
+        source: "iana"
+      },
+      "application/vnd.hydrostatix.sof-data": {
+        source: "iana",
+        extensions: ["sfd-hdstx"]
+      },
+      "application/vnd.hyperdrive+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.hzn-3d-crossword": {
+        source: "iana"
+      },
+      "application/vnd.ibm.afplinedata": {
+        source: "iana"
+      },
+      "application/vnd.ibm.electronic-media": {
+        source: "iana"
+      },
+      "application/vnd.ibm.minipay": {
+        source: "iana",
+        extensions: ["mpy"]
+      },
+      "application/vnd.ibm.modcap": {
+        source: "iana",
+        extensions: ["afp", "listafp", "list3820"]
+      },
+      "application/vnd.ibm.rights-management": {
+        source: "iana",
+        extensions: ["irm"]
+      },
+      "application/vnd.ibm.secure-container": {
+        source: "iana",
+        extensions: ["sc"]
+      },
+      "application/vnd.iccprofile": {
+        source: "iana",
+        extensions: ["icc", "icm"]
+      },
+      "application/vnd.ieee.1905": {
+        source: "iana"
+      },
+      "application/vnd.igloader": {
+        source: "iana",
+        extensions: ["igl"]
+      },
+      "application/vnd.immervision-ivp": {
+        source: "iana",
+        extensions: ["ivp"]
+      },
+      "application/vnd.immervision-ivu": {
+        source: "iana",
+        extensions: ["ivu"]
+      },
+      "application/vnd.ims.imsccv1p1": {
+        source: "iana"
+      },
+      "application/vnd.ims.imsccv1p2": {
+        source: "iana"
+      },
+      "application/vnd.ims.imsccv1p3": {
+        source: "iana"
+      },
+      "application/vnd.ims.lis.v2.result+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.ims.lti.v2.toolconsumerprofile+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.ims.lti.v2.toolproxy+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.ims.lti.v2.toolproxy.id+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.ims.lti.v2.toolsettings+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.ims.lti.v2.toolsettings.simple+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.informedcontrol.rms+xml": {
+        source: "iana"
+      },
+      "application/vnd.informix-visionary": {
+        source: "iana"
+      },
+      "application/vnd.infotech.project": {
+        source: "iana"
+      },
+      "application/vnd.infotech.project+xml": {
+        source: "iana"
+      },
+      "application/vnd.innopath.wamp.notification": {
+        source: "iana"
+      },
+      "application/vnd.insors.igm": {
+        source: "iana",
+        extensions: ["igm"]
+      },
+      "application/vnd.intercon.formnet": {
+        source: "iana",
+        extensions: ["xpw", "xpx"]
+      },
+      "application/vnd.intergeo": {
+        source: "iana",
+        extensions: ["i2g"]
+      },
+      "application/vnd.intertrust.digibox": {
+        source: "iana"
+      },
+      "application/vnd.intertrust.nncp": {
+        source: "iana"
+      },
+      "application/vnd.intu.qbo": {
+        source: "iana",
+        extensions: ["qbo"]
+      },
+      "application/vnd.intu.qfx": {
+        source: "iana",
+        extensions: ["qfx"]
+      },
+      "application/vnd.iptc.g2.catalogitem+xml": {
+        source: "iana"
+      },
+      "application/vnd.iptc.g2.conceptitem+xml": {
+        source: "iana"
+      },
+      "application/vnd.iptc.g2.knowledgeitem+xml": {
+        source: "iana"
+      },
+      "application/vnd.iptc.g2.newsitem+xml": {
+        source: "iana"
+      },
+      "application/vnd.iptc.g2.newsmessage+xml": {
+        source: "iana"
+      },
+      "application/vnd.iptc.g2.packageitem+xml": {
+        source: "iana"
+      },
+      "application/vnd.iptc.g2.planningitem+xml": {
+        source: "iana"
+      },
+      "application/vnd.ipunplugged.rcprofile": {
+        source: "iana",
+        extensions: ["rcprofile"]
+      },
+      "application/vnd.irepository.package+xml": {
+        source: "iana",
+        extensions: ["irp"]
+      },
+      "application/vnd.is-xpr": {
+        source: "iana",
+        extensions: ["xpr"]
+      },
+      "application/vnd.isac.fcs": {
+        source: "iana",
+        extensions: ["fcs"]
+      },
+      "application/vnd.jam": {
+        source: "iana",
+        extensions: ["jam"]
+      },
+      "application/vnd.japannet-directory-service": {
+        source: "iana"
+      },
+      "application/vnd.japannet-jpnstore-wakeup": {
+        source: "iana"
+      },
+      "application/vnd.japannet-payment-wakeup": {
+        source: "iana"
+      },
+      "application/vnd.japannet-registration": {
+        source: "iana"
+      },
+      "application/vnd.japannet-registration-wakeup": {
+        source: "iana"
+      },
+      "application/vnd.japannet-setstore-wakeup": {
+        source: "iana"
+      },
+      "application/vnd.japannet-verification": {
+        source: "iana"
+      },
+      "application/vnd.japannet-verification-wakeup": {
+        source: "iana"
+      },
+      "application/vnd.jcp.javame.midlet-rms": {
+        source: "iana",
+        extensions: ["rms"]
+      },
+      "application/vnd.jisp": {
+        source: "iana",
+        extensions: ["jisp"]
+      },
+      "application/vnd.joost.joda-archive": {
+        source: "iana",
+        extensions: ["joda"]
+      },
+      "application/vnd.jsk.isdn-ngn": {
+        source: "iana"
+      },
+      "application/vnd.kahootz": {
+        source: "iana",
+        extensions: ["ktz", "ktr"]
+      },
+      "application/vnd.kde.karbon": {
+        source: "iana",
+        extensions: ["karbon"]
+      },
+      "application/vnd.kde.kchart": {
+        source: "iana",
+        extensions: ["chrt"]
+      },
+      "application/vnd.kde.kformula": {
+        source: "iana",
+        extensions: ["kfo"]
+      },
+      "application/vnd.kde.kivio": {
+        source: "iana",
+        extensions: ["flw"]
+      },
+      "application/vnd.kde.kontour": {
+        source: "iana",
+        extensions: ["kon"]
+      },
+      "application/vnd.kde.kpresenter": {
+        source: "iana",
+        extensions: ["kpr", "kpt"]
+      },
+      "application/vnd.kde.kspread": {
+        source: "iana",
+        extensions: ["ksp"]
+      },
+      "application/vnd.kde.kword": {
+        source: "iana",
+        extensions: ["kwd", "kwt"]
+      },
+      "application/vnd.kenameaapp": {
+        source: "iana",
+        extensions: ["htke"]
+      },
+      "application/vnd.kidspiration": {
+        source: "iana",
+        extensions: ["kia"]
+      },
+      "application/vnd.kinar": {
+        source: "iana",
+        extensions: ["kne", "knp"]
+      },
+      "application/vnd.koan": {
+        source: "iana",
+        extensions: ["skp", "skd", "skt", "skm"]
+      },
+      "application/vnd.kodak-descriptor": {
+        source: "iana",
+        extensions: ["sse"]
+      },
+      "application/vnd.las.las+xml": {
+        source: "iana",
+        extensions: ["lasxml"]
+      },
+      "application/vnd.liberty-request+xml": {
+        source: "iana"
+      },
+      "application/vnd.llamagraphics.life-balance.desktop": {
+        source: "iana",
+        extensions: ["lbd"]
+      },
+      "application/vnd.llamagraphics.life-balance.exchange+xml": {
+        source: "iana",
+        extensions: ["lbe"]
+      },
+      "application/vnd.lotus-1-2-3": {
+        source: "iana",
+        extensions: ["123"]
+      },
+      "application/vnd.lotus-approach": {
+        source: "iana",
+        extensions: ["apr"]
+      },
+      "application/vnd.lotus-freelance": {
+        source: "iana",
+        extensions: ["pre"]
+      },
+      "application/vnd.lotus-notes": {
+        source: "iana",
+        extensions: ["nsf"]
+      },
+      "application/vnd.lotus-organizer": {
+        source: "iana",
+        extensions: ["org"]
+      },
+      "application/vnd.lotus-screencam": {
+        source: "iana",
+        extensions: ["scm"]
+      },
+      "application/vnd.lotus-wordpro": {
+        source: "iana",
+        extensions: ["lwp"]
+      },
+      "application/vnd.macports.portpkg": {
+        source: "iana",
+        extensions: ["portpkg"]
+      },
+      "application/vnd.mapbox-vector-tile": {
+        source: "iana"
+      },
+      "application/vnd.marlin.drm.actiontoken+xml": {
+        source: "iana"
+      },
+      "application/vnd.marlin.drm.conftoken+xml": {
+        source: "iana"
+      },
+      "application/vnd.marlin.drm.license+xml": {
+        source: "iana"
+      },
+      "application/vnd.marlin.drm.mdcf": {
+        source: "iana"
+      },
+      "application/vnd.mason+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.maxmind.maxmind-db": {
+        source: "iana"
+      },
+      "application/vnd.mcd": {
+        source: "iana",
+        extensions: ["mcd"]
+      },
+      "application/vnd.medcalcdata": {
+        source: "iana",
+        extensions: ["mc1"]
+      },
+      "application/vnd.mediastation.cdkey": {
+        source: "iana",
+        extensions: ["cdkey"]
+      },
+      "application/vnd.meridian-slingshot": {
+        source: "iana"
+      },
+      "application/vnd.mfer": {
+        source: "iana",
+        extensions: ["mwf"]
+      },
+      "application/vnd.mfmp": {
+        source: "iana",
+        extensions: ["mfm"]
+      },
+      "application/vnd.micro+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.micrografx.flo": {
+        source: "iana",
+        extensions: ["flo"]
+      },
+      "application/vnd.micrografx.igx": {
+        source: "iana",
+        extensions: ["igx"]
+      },
+      "application/vnd.microsoft.portable-executable": {
+        source: "iana"
+      },
+      "application/vnd.miele+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.mif": {
+        source: "iana",
+        extensions: ["mif"]
+      },
+      "application/vnd.minisoft-hp3000-save": {
+        source: "iana"
+      },
+      "application/vnd.mitsubishi.misty-guard.trustweb": {
+        source: "iana"
+      },
+      "application/vnd.mobius.daf": {
+        source: "iana",
+        extensions: ["daf"]
+      },
+      "application/vnd.mobius.dis": {
+        source: "iana",
+        extensions: ["dis"]
+      },
+      "application/vnd.mobius.mbk": {
+        source: "iana",
+        extensions: ["mbk"]
+      },
+      "application/vnd.mobius.mqy": {
+        source: "iana",
+        extensions: ["mqy"]
+      },
+      "application/vnd.mobius.msl": {
+        source: "iana",
+        extensions: ["msl"]
+      },
+      "application/vnd.mobius.plc": {
+        source: "iana",
+        extensions: ["plc"]
+      },
+      "application/vnd.mobius.txf": {
+        source: "iana",
+        extensions: ["txf"]
+      },
+      "application/vnd.mophun.application": {
+        source: "iana",
+        extensions: ["mpn"]
+      },
+      "application/vnd.mophun.certificate": {
+        source: "iana",
+        extensions: ["mpc"]
+      },
+      "application/vnd.motorola.flexsuite": {
+        source: "iana"
+      },
+      "application/vnd.motorola.flexsuite.adsi": {
+        source: "iana"
+      },
+      "application/vnd.motorola.flexsuite.fis": {
+        source: "iana"
+      },
+      "application/vnd.motorola.flexsuite.gotap": {
+        source: "iana"
+      },
+      "application/vnd.motorola.flexsuite.kmr": {
+        source: "iana"
+      },
+      "application/vnd.motorola.flexsuite.ttc": {
+        source: "iana"
+      },
+      "application/vnd.motorola.flexsuite.wem": {
+        source: "iana"
+      },
+      "application/vnd.motorola.iprm": {
+        source: "iana"
+      },
+      "application/vnd.mozilla.xul+xml": {
+        source: "iana",
+        compressible: true,
+        extensions: ["xul"]
+      },
+      "application/vnd.ms-3mfdocument": {
+        source: "iana"
+      },
+      "application/vnd.ms-artgalry": {
+        source: "iana",
+        extensions: ["cil"]
+      },
+      "application/vnd.ms-asf": {
+        source: "iana"
+      },
+      "application/vnd.ms-cab-compressed": {
+        source: "iana",
+        extensions: ["cab"]
+      },
+      "application/vnd.ms-color.iccprofile": {
+        source: "apache"
+      },
+      "application/vnd.ms-excel": {
+        source: "iana",
+        compressible: false,
+        extensions: ["xls", "xlm", "xla", "xlc", "xlt", "xlw"]
+      },
+      "application/vnd.ms-excel.addin.macroenabled.12": {
+        source: "iana",
+        extensions: ["xlam"]
+      },
+      "application/vnd.ms-excel.sheet.binary.macroenabled.12": {
+        source: "iana",
+        extensions: ["xlsb"]
+      },
+      "application/vnd.ms-excel.sheet.macroenabled.12": {
+        source: "iana",
+        extensions: ["xlsm"]
+      },
+      "application/vnd.ms-excel.template.macroenabled.12": {
+        source: "iana",
+        extensions: ["xltm"]
+      },
+      "application/vnd.ms-fontobject": {
+        source: "iana",
+        compressible: true,
+        extensions: ["eot"]
+      },
+      "application/vnd.ms-htmlhelp": {
+        source: "iana",
+        extensions: ["chm"]
+      },
+      "application/vnd.ms-ims": {
+        source: "iana",
+        extensions: ["ims"]
+      },
+      "application/vnd.ms-lrm": {
+        source: "iana",
+        extensions: ["lrm"]
+      },
+      "application/vnd.ms-office.activex+xml": {
+        source: "iana"
+      },
+      "application/vnd.ms-officetheme": {
+        source: "iana",
+        extensions: ["thmx"]
+      },
+      "application/vnd.ms-opentype": {
+        source: "apache",
+        compressible: true
+      },
+      "application/vnd.ms-package.obfuscated-opentype": {
+        source: "apache"
+      },
+      "application/vnd.ms-pki.seccat": {
+        source: "apache",
+        extensions: ["cat"]
+      },
+      "application/vnd.ms-pki.stl": {
+        source: "apache",
+        extensions: ["stl"]
+      },
+      "application/vnd.ms-playready.initiator+xml": {
+        source: "iana"
+      },
+      "application/vnd.ms-powerpoint": {
+        source: "iana",
+        compressible: false,
+        extensions: ["ppt", "pps", "pot"]
+      },
+      "application/vnd.ms-powerpoint.addin.macroenabled.12": {
+        source: "iana",
+        extensions: ["ppam"]
+      },
+      "application/vnd.ms-powerpoint.presentation.macroenabled.12": {
+        source: "iana",
+        extensions: ["pptm"]
+      },
+      "application/vnd.ms-powerpoint.slide.macroenabled.12": {
+        source: "iana",
+        extensions: ["sldm"]
+      },
+      "application/vnd.ms-powerpoint.slideshow.macroenabled.12": {
+        source: "iana",
+        extensions: ["ppsm"]
+      },
+      "application/vnd.ms-powerpoint.template.macroenabled.12": {
+        source: "iana",
+        extensions: ["potm"]
+      },
+      "application/vnd.ms-printdevicecapabilities+xml": {
+        source: "iana"
+      },
+      "application/vnd.ms-printing.printticket+xml": {
+        source: "apache"
+      },
+      "application/vnd.ms-printschematicket+xml": {
+        source: "iana"
+      },
+      "application/vnd.ms-project": {
+        source: "iana",
+        extensions: ["mpp", "mpt"]
+      },
+      "application/vnd.ms-tnef": {
+        source: "iana"
+      },
+      "application/vnd.ms-windows.devicepairing": {
+        source: "iana"
+      },
+      "application/vnd.ms-windows.nwprinting.oob": {
+        source: "iana"
+      },
+      "application/vnd.ms-windows.printerpairing": {
+        source: "iana"
+      },
+      "application/vnd.ms-windows.wsd.oob": {
+        source: "iana"
+      },
+      "application/vnd.ms-wmdrm.lic-chlg-req": {
+        source: "iana"
+      },
+      "application/vnd.ms-wmdrm.lic-resp": {
+        source: "iana"
+      },
+      "application/vnd.ms-wmdrm.meter-chlg-req": {
+        source: "iana"
+      },
+      "application/vnd.ms-wmdrm.meter-resp": {
+        source: "iana"
+      },
+      "application/vnd.ms-word.document.macroenabled.12": {
+        source: "iana",
+        extensions: ["docm"]
+      },
+      "application/vnd.ms-word.template.macroenabled.12": {
+        source: "iana",
+        extensions: ["dotm"]
+      },
+      "application/vnd.ms-works": {
+        source: "iana",
+        extensions: ["wps", "wks", "wcm", "wdb"]
+      },
+      "application/vnd.ms-wpl": {
+        source: "iana",
+        extensions: ["wpl"]
+      },
+      "application/vnd.ms-xpsdocument": {
+        source: "iana",
+        compressible: false,
+        extensions: ["xps"]
+      },
+      "application/vnd.msa-disk-image": {
+        source: "iana"
+      },
+      "application/vnd.mseq": {
+        source: "iana",
+        extensions: ["mseq"]
+      },
+      "application/vnd.msign": {
+        source: "iana"
+      },
+      "application/vnd.multiad.creator": {
+        source: "iana"
+      },
+      "application/vnd.multiad.creator.cif": {
+        source: "iana"
+      },
+      "application/vnd.music-niff": {
+        source: "iana"
+      },
+      "application/vnd.musician": {
+        source: "iana",
+        extensions: ["mus"]
+      },
+      "application/vnd.muvee.style": {
+        source: "iana",
+        extensions: ["msty"]
+      },
+      "application/vnd.mynfc": {
+        source: "iana",
+        extensions: ["taglet"]
+      },
+      "application/vnd.ncd.control": {
+        source: "iana"
+      },
+      "application/vnd.ncd.reference": {
+        source: "iana"
+      },
+      "application/vnd.nearst.inv+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.nervana": {
+        source: "iana"
+      },
+      "application/vnd.netfpx": {
+        source: "iana"
+      },
+      "application/vnd.neurolanguage.nlu": {
+        source: "iana",
+        extensions: ["nlu"]
+      },
+      "application/vnd.nintendo.nitro.rom": {
+        source: "iana"
+      },
+      "application/vnd.nintendo.snes.rom": {
+        source: "iana"
+      },
+      "application/vnd.nitf": {
+        source: "iana",
+        extensions: ["ntf", "nitf"]
+      },
+      "application/vnd.noblenet-directory": {
+        source: "iana",
+        extensions: ["nnd"]
+      },
+      "application/vnd.noblenet-sealer": {
+        source: "iana",
+        extensions: ["nns"]
+      },
+      "application/vnd.noblenet-web": {
+        source: "iana",
+        extensions: ["nnw"]
+      },
+      "application/vnd.nokia.catalogs": {
+        source: "iana"
+      },
+      "application/vnd.nokia.conml+wbxml": {
+        source: "iana"
+      },
+      "application/vnd.nokia.conml+xml": {
+        source: "iana"
+      },
+      "application/vnd.nokia.iptv.config+xml": {
+        source: "iana"
+      },
+      "application/vnd.nokia.isds-radio-presets": {
+        source: "iana"
+      },
+      "application/vnd.nokia.landmark+wbxml": {
+        source: "iana"
+      },
+      "application/vnd.nokia.landmark+xml": {
+        source: "iana"
+      },
+      "application/vnd.nokia.landmarkcollection+xml": {
+        source: "iana"
+      },
+      "application/vnd.nokia.n-gage.ac+xml": {
+        source: "iana"
+      },
+      "application/vnd.nokia.n-gage.data": {
+        source: "iana",
+        extensions: ["ngdat"]
+      },
+      "application/vnd.nokia.n-gage.symbian.install": {
+        source: "iana",
+        extensions: ["n-gage"]
+      },
+      "application/vnd.nokia.ncd": {
+        source: "iana"
+      },
+      "application/vnd.nokia.pcd+wbxml": {
+        source: "iana"
+      },
+      "application/vnd.nokia.pcd+xml": {
+        source: "iana"
+      },
+      "application/vnd.nokia.radio-preset": {
+        source: "iana",
+        extensions: ["rpst"]
+      },
+      "application/vnd.nokia.radio-presets": {
+        source: "iana",
+        extensions: ["rpss"]
+      },
+      "application/vnd.novadigm.edm": {
+        source: "iana",
+        extensions: ["edm"]
+      },
+      "application/vnd.novadigm.edx": {
+        source: "iana",
+        extensions: ["edx"]
+      },
+      "application/vnd.novadigm.ext": {
+        source: "iana",
+        extensions: ["ext"]
+      },
+      "application/vnd.ntt-local.content-share": {
+        source: "iana"
+      },
+      "application/vnd.ntt-local.file-transfer": {
+        source: "iana"
+      },
+      "application/vnd.ntt-local.ogw_remote-access": {
+        source: "iana"
+      },
+      "application/vnd.ntt-local.sip-ta_remote": {
+        source: "iana"
+      },
+      "application/vnd.ntt-local.sip-ta_tcp_stream": {
+        source: "iana"
+      },
+      "application/vnd.oasis.opendocument.chart": {
+        source: "iana",
+        extensions: ["odc"]
+      },
+      "application/vnd.oasis.opendocument.chart-template": {
+        source: "iana",
+        extensions: ["otc"]
+      },
+      "application/vnd.oasis.opendocument.database": {
+        source: "iana",
+        extensions: ["odb"]
+      },
+      "application/vnd.oasis.opendocument.formula": {
+        source: "iana",
+        extensions: ["odf"]
+      },
+      "application/vnd.oasis.opendocument.formula-template": {
+        source: "iana",
+        extensions: ["odft"]
+      },
+      "application/vnd.oasis.opendocument.graphics": {
+        source: "iana",
+        compressible: false,
+        extensions: ["odg"]
+      },
+      "application/vnd.oasis.opendocument.graphics-template": {
+        source: "iana",
+        extensions: ["otg"]
+      },
+      "application/vnd.oasis.opendocument.image": {
+        source: "iana",
+        extensions: ["odi"]
+      },
+      "application/vnd.oasis.opendocument.image-template": {
+        source: "iana",
+        extensions: ["oti"]
+      },
+      "application/vnd.oasis.opendocument.presentation": {
+        source: "iana",
+        compressible: false,
+        extensions: ["odp"]
+      },
+      "application/vnd.oasis.opendocument.presentation-template": {
+        source: "iana",
+        extensions: ["otp"]
+      },
+      "application/vnd.oasis.opendocument.spreadsheet": {
+        source: "iana",
+        compressible: false,
+        extensions: ["ods"]
+      },
+      "application/vnd.oasis.opendocument.spreadsheet-template": {
+        source: "iana",
+        extensions: ["ots"]
+      },
+      "application/vnd.oasis.opendocument.text": {
+        source: "iana",
+        compressible: false,
+        extensions: ["odt"]
+      },
+      "application/vnd.oasis.opendocument.text-master": {
+        source: "iana",
+        extensions: ["odm"]
+      },
+      "application/vnd.oasis.opendocument.text-template": {
+        source: "iana",
+        extensions: ["ott"]
+      },
+      "application/vnd.oasis.opendocument.text-web": {
+        source: "iana",
+        extensions: ["oth"]
+      },
+      "application/vnd.obn": {
+        source: "iana"
+      },
+      "application/vnd.oftn.l10n+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.oipf.contentaccessdownload+xml": {
+        source: "iana"
+      },
+      "application/vnd.oipf.contentaccessstreaming+xml": {
+        source: "iana"
+      },
+      "application/vnd.oipf.cspg-hexbinary": {
+        source: "iana"
+      },
+      "application/vnd.oipf.dae.svg+xml": {
+        source: "iana"
+      },
+      "application/vnd.oipf.dae.xhtml+xml": {
+        source: "iana"
+      },
+      "application/vnd.oipf.mippvcontrolmessage+xml": {
+        source: "iana"
+      },
+      "application/vnd.oipf.pae.gem": {
+        source: "iana"
+      },
+      "application/vnd.oipf.spdiscovery+xml": {
+        source: "iana"
+      },
+      "application/vnd.oipf.spdlist+xml": {
+        source: "iana"
+      },
+      "application/vnd.oipf.ueprofile+xml": {
+        source: "iana"
+      },
+      "application/vnd.oipf.userprofile+xml": {
+        source: "iana"
+      },
+      "application/vnd.olpc-sugar": {
+        source: "iana",
+        extensions: ["xo"]
+      },
+      "application/vnd.oma-scws-config": {
+        source: "iana"
+      },
+      "application/vnd.oma-scws-http-request": {
+        source: "iana"
+      },
+      "application/vnd.oma-scws-http-response": {
+        source: "iana"
+      },
+      "application/vnd.oma.bcast.associated-procedure-parameter+xml": {
+        source: "iana"
+      },
+      "application/vnd.oma.bcast.drm-trigger+xml": {
+        source: "iana"
+      },
+      "application/vnd.oma.bcast.imd+xml": {
+        source: "iana"
+      },
+      "application/vnd.oma.bcast.ltkm": {
+        source: "iana"
+      },
+      "application/vnd.oma.bcast.notification+xml": {
+        source: "iana"
+      },
+      "application/vnd.oma.bcast.provisioningtrigger": {
+        source: "iana"
+      },
+      "application/vnd.oma.bcast.sgboot": {
+        source: "iana"
+      },
+      "application/vnd.oma.bcast.sgdd+xml": {
+        source: "iana"
+      },
+      "application/vnd.oma.bcast.sgdu": {
+        source: "iana"
+      },
+      "application/vnd.oma.bcast.simple-symbol-container": {
+        source: "iana"
+      },
+      "application/vnd.oma.bcast.smartcard-trigger+xml": {
+        source: "iana"
+      },
+      "application/vnd.oma.bcast.sprov+xml": {
+        source: "iana"
+      },
+      "application/vnd.oma.bcast.stkm": {
+        source: "iana"
+      },
+      "application/vnd.oma.cab-address-book+xml": {
+        source: "iana"
+      },
+      "application/vnd.oma.cab-feature-handler+xml": {
+        source: "iana"
+      },
+      "application/vnd.oma.cab-pcc+xml": {
+        source: "iana"
+      },
+      "application/vnd.oma.cab-subs-invite+xml": {
+        source: "iana"
+      },
+      "application/vnd.oma.cab-user-prefs+xml": {
+        source: "iana"
+      },
+      "application/vnd.oma.dcd": {
+        source: "iana"
+      },
+      "application/vnd.oma.dcdc": {
+        source: "iana"
+      },
+      "application/vnd.oma.dd2+xml": {
+        source: "iana",
+        extensions: ["dd2"]
+      },
+      "application/vnd.oma.drm.risd+xml": {
+        source: "iana"
+      },
+      "application/vnd.oma.group-usage-list+xml": {
+        source: "iana"
+      },
+      "application/vnd.oma.lwm2m+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.oma.lwm2m+tlv": {
+        source: "iana"
+      },
+      "application/vnd.oma.pal+xml": {
+        source: "iana"
+      },
+      "application/vnd.oma.poc.detailed-progress-report+xml": {
+        source: "iana"
+      },
+      "application/vnd.oma.poc.final-report+xml": {
+        source: "iana"
+      },
+      "application/vnd.oma.poc.groups+xml": {
+        source: "iana"
+      },
+      "application/vnd.oma.poc.invocation-descriptor+xml": {
+        source: "iana"
+      },
+      "application/vnd.oma.poc.optimized-progress-report+xml": {
+        source: "iana"
+      },
+      "application/vnd.oma.push": {
+        source: "iana"
+      },
+      "application/vnd.oma.scidm.messages+xml": {
+        source: "iana"
+      },
+      "application/vnd.oma.xcap-directory+xml": {
+        source: "iana"
+      },
+      "application/vnd.omads-email+xml": {
+        source: "iana"
+      },
+      "application/vnd.omads-file+xml": {
+        source: "iana"
+      },
+      "application/vnd.omads-folder+xml": {
+        source: "iana"
+      },
+      "application/vnd.omaloc-supl-init": {
+        source: "iana"
+      },
+      "application/vnd.onepager": {
+        source: "iana"
+      },
+      "application/vnd.openblox.game+xml": {
+        source: "iana"
+      },
+      "application/vnd.openblox.game-binary": {
+        source: "iana"
+      },
+      "application/vnd.openeye.oeb": {
+        source: "iana"
+      },
+      "application/vnd.openofficeorg.extension": {
+        source: "apache",
+        extensions: ["oxt"]
+      },
+      "application/vnd.openstreetmap.data+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.custom-properties+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.customxmlproperties+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.drawing+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.drawingml.chart+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.drawingml.chartshapes+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.drawingml.diagramcolors+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.drawingml.diagramdata+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.drawingml.diagramlayout+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.drawingml.diagramstyle+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.extended-properties+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.presentationml-template": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.presentationml.commentauthors+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.presentationml.comments+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.presentationml.handoutmaster+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.presentationml.notesmaster+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.presentationml.notesslide+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation": {
+        source: "iana",
+        compressible: false,
+        extensions: ["pptx"]
+      },
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.presentationml.presprops+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.presentationml.slide": {
+        source: "iana",
+        extensions: ["sldx"]
+      },
+      "application/vnd.openxmlformats-officedocument.presentationml.slide+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.presentationml.slidelayout+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.presentationml.slidemaster+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.presentationml.slideshow": {
+        source: "iana",
+        extensions: ["ppsx"]
+      },
+      "application/vnd.openxmlformats-officedocument.presentationml.slideshow.main+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.presentationml.slideupdateinfo+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.presentationml.tablestyles+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.presentationml.tags+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.presentationml.template": {
+        source: "apache",
+        extensions: ["potx"]
+      },
+      "application/vnd.openxmlformats-officedocument.presentationml.template.main+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.presentationml.viewprops+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml-template": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.calcchain+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.chartsheet+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.comments+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.connections+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.dialogsheet+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.externallink+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.pivotcachedefinition+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.pivotcacherecords+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.pivottable+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.querytable+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.revisionheaders+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.revisionlog+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sharedstrings+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+        source: "iana",
+        compressible: false,
+        extensions: ["xlsx"]
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheetmetadata+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.tablesinglecells+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.template": {
+        source: "apache",
+        extensions: ["xltx"]
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.template.main+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.usernames+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.volatiledependencies+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.theme+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.themeoverride+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.vmldrawing": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.wordprocessingml-template": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.comments+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document": {
+        source: "iana",
+        compressible: false,
+        extensions: ["docx"]
+      },
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document.glossary+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.fonttable+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.footnotes+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.template": {
+        source: "apache",
+        extensions: ["dotx"]
+      },
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.template.main+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.websettings+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-package.core-properties+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-package.digital-signature-xmlsignature+xml": {
+        source: "iana"
+      },
+      "application/vnd.openxmlformats-package.relationships+xml": {
+        source: "iana"
+      },
+      "application/vnd.oracle.resource+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.orange.indata": {
+        source: "iana"
+      },
+      "application/vnd.osa.netdeploy": {
+        source: "iana"
+      },
+      "application/vnd.osgeo.mapguide.package": {
+        source: "iana",
+        extensions: ["mgp"]
+      },
+      "application/vnd.osgi.bundle": {
+        source: "iana"
+      },
+      "application/vnd.osgi.dp": {
+        source: "iana",
+        extensions: ["dp"]
+      },
+      "application/vnd.osgi.subsystem": {
+        source: "iana",
+        extensions: ["esa"]
+      },
+      "application/vnd.otps.ct-kip+xml": {
+        source: "iana"
+      },
+      "application/vnd.oxli.countgraph": {
+        source: "iana"
+      },
+      "application/vnd.pagerduty+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.palm": {
+        source: "iana",
+        extensions: ["pdb", "pqa", "oprc"]
+      },
+      "application/vnd.panoply": {
+        source: "iana"
+      },
+      "application/vnd.paos+xml": {
+        source: "iana"
+      },
+      "application/vnd.paos.xml": {
+        source: "apache"
+      },
+      "application/vnd.pawaafile": {
+        source: "iana",
+        extensions: ["paw"]
+      },
+      "application/vnd.pcos": {
+        source: "iana"
+      },
+      "application/vnd.pg.format": {
+        source: "iana",
+        extensions: ["str"]
+      },
+      "application/vnd.pg.osasli": {
+        source: "iana",
+        extensions: ["ei6"]
+      },
+      "application/vnd.piaccess.application-licence": {
+        source: "iana"
+      },
+      "application/vnd.picsel": {
+        source: "iana",
+        extensions: ["efif"]
+      },
+      "application/vnd.pmi.widget": {
+        source: "iana",
+        extensions: ["wg"]
+      },
+      "application/vnd.poc.group-advertisement+xml": {
+        source: "iana"
+      },
+      "application/vnd.pocketlearn": {
+        source: "iana",
+        extensions: ["plf"]
+      },
+      "application/vnd.powerbuilder6": {
+        source: "iana",
+        extensions: ["pbd"]
+      },
+      "application/vnd.powerbuilder6-s": {
+        source: "iana"
+      },
+      "application/vnd.powerbuilder7": {
+        source: "iana"
+      },
+      "application/vnd.powerbuilder7-s": {
+        source: "iana"
+      },
+      "application/vnd.powerbuilder75": {
+        source: "iana"
+      },
+      "application/vnd.powerbuilder75-s": {
+        source: "iana"
+      },
+      "application/vnd.preminet": {
+        source: "iana"
+      },
+      "application/vnd.previewsystems.box": {
+        source: "iana",
+        extensions: ["box"]
+      },
+      "application/vnd.proteus.magazine": {
+        source: "iana",
+        extensions: ["mgz"]
+      },
+      "application/vnd.publishare-delta-tree": {
+        source: "iana",
+        extensions: ["qps"]
+      },
+      "application/vnd.pvi.ptid1": {
+        source: "iana",
+        extensions: ["ptid"]
+      },
+      "application/vnd.pwg-multiplexed": {
+        source: "iana"
+      },
+      "application/vnd.pwg-xhtml-print+xml": {
+        source: "iana"
+      },
+      "application/vnd.qualcomm.brew-app-res": {
+        source: "iana"
+      },
+      "application/vnd.quarantainenet": {
+        source: "iana"
+      },
+      "application/vnd.quark.quarkxpress": {
+        source: "iana",
+        extensions: ["qxd", "qxt", "qwd", "qwt", "qxl", "qxb"]
+      },
+      "application/vnd.quobject-quoxdocument": {
+        source: "iana"
+      },
+      "application/vnd.radisys.moml+xml": {
+        source: "iana"
+      },
+      "application/vnd.radisys.msml+xml": {
+        source: "iana"
+      },
+      "application/vnd.radisys.msml-audit+xml": {
+        source: "iana"
+      },
+      "application/vnd.radisys.msml-audit-conf+xml": {
+        source: "iana"
+      },
+      "application/vnd.radisys.msml-audit-conn+xml": {
+        source: "iana"
+      },
+      "application/vnd.radisys.msml-audit-dialog+xml": {
+        source: "iana"
+      },
+      "application/vnd.radisys.msml-audit-stream+xml": {
+        source: "iana"
+      },
+      "application/vnd.radisys.msml-conf+xml": {
+        source: "iana"
+      },
+      "application/vnd.radisys.msml-dialog+xml": {
+        source: "iana"
+      },
+      "application/vnd.radisys.msml-dialog-base+xml": {
+        source: "iana"
+      },
+      "application/vnd.radisys.msml-dialog-fax-detect+xml": {
+        source: "iana"
+      },
+      "application/vnd.radisys.msml-dialog-fax-sendrecv+xml": {
+        source: "iana"
+      },
+      "application/vnd.radisys.msml-dialog-group+xml": {
+        source: "iana"
+      },
+      "application/vnd.radisys.msml-dialog-speech+xml": {
+        source: "iana"
+      },
+      "application/vnd.radisys.msml-dialog-transform+xml": {
+        source: "iana"
+      },
+      "application/vnd.rainstor.data": {
+        source: "iana"
+      },
+      "application/vnd.rapid": {
+        source: "iana"
+      },
+      "application/vnd.rar": {
+        source: "iana"
+      },
+      "application/vnd.realvnc.bed": {
+        source: "iana",
+        extensions: ["bed"]
+      },
+      "application/vnd.recordare.musicxml": {
+        source: "iana",
+        extensions: ["mxl"]
+      },
+      "application/vnd.recordare.musicxml+xml": {
+        source: "iana",
+        extensions: ["musicxml"]
+      },
+      "application/vnd.renlearn.rlprint": {
+        source: "iana"
+      },
+      "application/vnd.rig.cryptonote": {
+        source: "iana",
+        extensions: ["cryptonote"]
+      },
+      "application/vnd.rim.cod": {
+        source: "apache",
+        extensions: ["cod"]
+      },
+      "application/vnd.rn-realmedia": {
+        source: "apache",
+        extensions: ["rm"]
+      },
+      "application/vnd.rn-realmedia-vbr": {
+        source: "apache",
+        extensions: ["rmvb"]
+      },
+      "application/vnd.route66.link66+xml": {
+        source: "iana",
+        extensions: ["link66"]
+      },
+      "application/vnd.rs-274x": {
+        source: "iana"
+      },
+      "application/vnd.ruckus.download": {
+        source: "iana"
+      },
+      "application/vnd.s3sms": {
+        source: "iana"
+      },
+      "application/vnd.sailingtracker.track": {
+        source: "iana",
+        extensions: ["st"]
+      },
+      "application/vnd.sbm.cid": {
+        source: "iana"
+      },
+      "application/vnd.sbm.mid2": {
+        source: "iana"
+      },
+      "application/vnd.scribus": {
+        source: "iana"
+      },
+      "application/vnd.sealed.3df": {
+        source: "iana"
+      },
+      "application/vnd.sealed.csf": {
+        source: "iana"
+      },
+      "application/vnd.sealed.doc": {
+        source: "iana"
+      },
+      "application/vnd.sealed.eml": {
+        source: "iana"
+      },
+      "application/vnd.sealed.mht": {
+        source: "iana"
+      },
+      "application/vnd.sealed.net": {
+        source: "iana"
+      },
+      "application/vnd.sealed.ppt": {
+        source: "iana"
+      },
+      "application/vnd.sealed.tiff": {
+        source: "iana"
+      },
+      "application/vnd.sealed.xls": {
+        source: "iana"
+      },
+      "application/vnd.sealedmedia.softseal.html": {
+        source: "iana"
+      },
+      "application/vnd.sealedmedia.softseal.pdf": {
+        source: "iana"
+      },
+      "application/vnd.seemail": {
+        source: "iana",
+        extensions: ["see"]
+      },
+      "application/vnd.sema": {
+        source: "iana",
+        extensions: ["sema"]
+      },
+      "application/vnd.semd": {
+        source: "iana",
+        extensions: ["semd"]
+      },
+      "application/vnd.semf": {
+        source: "iana",
+        extensions: ["semf"]
+      },
+      "application/vnd.shana.informed.formdata": {
+        source: "iana",
+        extensions: ["ifm"]
+      },
+      "application/vnd.shana.informed.formtemplate": {
+        source: "iana",
+        extensions: ["itp"]
+      },
+      "application/vnd.shana.informed.interchange": {
+        source: "iana",
+        extensions: ["iif"]
+      },
+      "application/vnd.shana.informed.package": {
+        source: "iana",
+        extensions: ["ipk"]
+      },
+      "application/vnd.simtech-mindmapper": {
+        source: "iana",
+        extensions: ["twd", "twds"]
+      },
+      "application/vnd.siren+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.smaf": {
+        source: "iana",
+        extensions: ["mmf"]
+      },
+      "application/vnd.smart.notebook": {
+        source: "iana"
+      },
+      "application/vnd.smart.teacher": {
+        source: "iana",
+        extensions: ["teacher"]
+      },
+      "application/vnd.software602.filler.form+xml": {
+        source: "iana"
+      },
+      "application/vnd.software602.filler.form-xml-zip": {
+        source: "iana"
+      },
+      "application/vnd.solent.sdkm+xml": {
+        source: "iana",
+        extensions: ["sdkm", "sdkd"]
+      },
+      "application/vnd.spotfire.dxp": {
+        source: "iana",
+        extensions: ["dxp"]
+      },
+      "application/vnd.spotfire.sfs": {
+        source: "iana",
+        extensions: ["sfs"]
+      },
+      "application/vnd.sss-cod": {
+        source: "iana"
+      },
+      "application/vnd.sss-dtf": {
+        source: "iana"
+      },
+      "application/vnd.sss-ntf": {
+        source: "iana"
+      },
+      "application/vnd.stardivision.calc": {
+        source: "apache",
+        extensions: ["sdc"]
+      },
+      "application/vnd.stardivision.draw": {
+        source: "apache",
+        extensions: ["sda"]
+      },
+      "application/vnd.stardivision.impress": {
+        source: "apache",
+        extensions: ["sdd"]
+      },
+      "application/vnd.stardivision.math": {
+        source: "apache",
+        extensions: ["smf"]
+      },
+      "application/vnd.stardivision.writer": {
+        source: "apache",
+        extensions: ["sdw", "vor"]
+      },
+      "application/vnd.stardivision.writer-global": {
+        source: "apache",
+        extensions: ["sgl"]
+      },
+      "application/vnd.stepmania.package": {
+        source: "iana",
+        extensions: ["smzip"]
+      },
+      "application/vnd.stepmania.stepchart": {
+        source: "iana",
+        extensions: ["sm"]
+      },
+      "application/vnd.street-stream": {
+        source: "iana"
+      },
+      "application/vnd.sun.wadl+xml": {
+        source: "iana"
+      },
+      "application/vnd.sun.xml.calc": {
+        source: "apache",
+        extensions: ["sxc"]
+      },
+      "application/vnd.sun.xml.calc.template": {
+        source: "apache",
+        extensions: ["stc"]
+      },
+      "application/vnd.sun.xml.draw": {
+        source: "apache",
+        extensions: ["sxd"]
+      },
+      "application/vnd.sun.xml.draw.template": {
+        source: "apache",
+        extensions: ["std"]
+      },
+      "application/vnd.sun.xml.impress": {
+        source: "apache",
+        extensions: ["sxi"]
+      },
+      "application/vnd.sun.xml.impress.template": {
+        source: "apache",
+        extensions: ["sti"]
+      },
+      "application/vnd.sun.xml.math": {
+        source: "apache",
+        extensions: ["sxm"]
+      },
+      "application/vnd.sun.xml.writer": {
+        source: "apache",
+        extensions: ["sxw"]
+      },
+      "application/vnd.sun.xml.writer.global": {
+        source: "apache",
+        extensions: ["sxg"]
+      },
+      "application/vnd.sun.xml.writer.template": {
+        source: "apache",
+        extensions: ["stw"]
+      },
+      "application/vnd.sus-calendar": {
+        source: "iana",
+        extensions: ["sus", "susp"]
+      },
+      "application/vnd.svd": {
+        source: "iana",
+        extensions: ["svd"]
+      },
+      "application/vnd.swiftview-ics": {
+        source: "iana"
+      },
+      "application/vnd.symbian.install": {
+        source: "apache",
+        extensions: ["sis", "sisx"]
+      },
+      "application/vnd.syncml+xml": {
+        source: "iana",
+        extensions: ["xsm"]
+      },
+      "application/vnd.syncml.dm+wbxml": {
+        source: "iana",
+        extensions: ["bdm"]
+      },
+      "application/vnd.syncml.dm+xml": {
+        source: "iana",
+        extensions: ["xdm"]
+      },
+      "application/vnd.syncml.dm.notification": {
+        source: "iana"
+      },
+      "application/vnd.syncml.dmddf+wbxml": {
+        source: "iana"
+      },
+      "application/vnd.syncml.dmddf+xml": {
+        source: "iana"
+      },
+      "application/vnd.syncml.dmtnds+wbxml": {
+        source: "iana"
+      },
+      "application/vnd.syncml.dmtnds+xml": {
+        source: "iana"
+      },
+      "application/vnd.syncml.ds.notification": {
+        source: "iana"
+      },
+      "application/vnd.tao.intent-module-archive": {
+        source: "iana",
+        extensions: ["tao"]
+      },
+      "application/vnd.tcpdump.pcap": {
+        source: "iana",
+        extensions: ["pcap", "cap", "dmp"]
+      },
+      "application/vnd.tmd.mediaflex.api+xml": {
+        source: "iana"
+      },
+      "application/vnd.tml": {
+        source: "iana"
+      },
+      "application/vnd.tmobile-livetv": {
+        source: "iana",
+        extensions: ["tmo"]
+      },
+      "application/vnd.tri.onesource": {
+        source: "iana"
+      },
+      "application/vnd.trid.tpt": {
+        source: "iana",
+        extensions: ["tpt"]
+      },
+      "application/vnd.triscape.mxs": {
+        source: "iana",
+        extensions: ["mxs"]
+      },
+      "application/vnd.trueapp": {
+        source: "iana",
+        extensions: ["tra"]
+      },
+      "application/vnd.truedoc": {
+        source: "iana"
+      },
+      "application/vnd.ubisoft.webplayer": {
+        source: "iana"
+      },
+      "application/vnd.ufdl": {
+        source: "iana",
+        extensions: ["ufd", "ufdl"]
+      },
+      "application/vnd.uiq.theme": {
+        source: "iana",
+        extensions: ["utz"]
+      },
+      "application/vnd.umajin": {
+        source: "iana",
+        extensions: ["umj"]
+      },
+      "application/vnd.unity": {
+        source: "iana",
+        extensions: ["unityweb"]
+      },
+      "application/vnd.uoml+xml": {
+        source: "iana",
+        extensions: ["uoml"]
+      },
+      "application/vnd.uplanet.alert": {
+        source: "iana"
+      },
+      "application/vnd.uplanet.alert-wbxml": {
+        source: "iana"
+      },
+      "application/vnd.uplanet.bearer-choice": {
+        source: "iana"
+      },
+      "application/vnd.uplanet.bearer-choice-wbxml": {
+        source: "iana"
+      },
+      "application/vnd.uplanet.cacheop": {
+        source: "iana"
+      },
+      "application/vnd.uplanet.cacheop-wbxml": {
+        source: "iana"
+      },
+      "application/vnd.uplanet.channel": {
+        source: "iana"
+      },
+      "application/vnd.uplanet.channel-wbxml": {
+        source: "iana"
+      },
+      "application/vnd.uplanet.list": {
+        source: "iana"
+      },
+      "application/vnd.uplanet.list-wbxml": {
+        source: "iana"
+      },
+      "application/vnd.uplanet.listcmd": {
+        source: "iana"
+      },
+      "application/vnd.uplanet.listcmd-wbxml": {
+        source: "iana"
+      },
+      "application/vnd.uplanet.signal": {
+        source: "iana"
+      },
+      "application/vnd.uri-map": {
+        source: "iana"
+      },
+      "application/vnd.valve.source.material": {
+        source: "iana"
+      },
+      "application/vnd.vcx": {
+        source: "iana",
+        extensions: ["vcx"]
+      },
+      "application/vnd.vd-study": {
+        source: "iana"
+      },
+      "application/vnd.vectorworks": {
+        source: "iana"
+      },
+      "application/vnd.vel+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.verimatrix.vcas": {
+        source: "iana"
+      },
+      "application/vnd.vidsoft.vidconference": {
+        source: "iana"
+      },
+      "application/vnd.visio": {
+        source: "iana",
+        extensions: ["vsd", "vst", "vss", "vsw"]
+      },
+      "application/vnd.visionary": {
+        source: "iana",
+        extensions: ["vis"]
+      },
+      "application/vnd.vividence.scriptfile": {
+        source: "iana"
+      },
+      "application/vnd.vsf": {
+        source: "iana",
+        extensions: ["vsf"]
+      },
+      "application/vnd.wap.sic": {
+        source: "iana"
+      },
+      "application/vnd.wap.slc": {
+        source: "iana"
+      },
+      "application/vnd.wap.wbxml": {
+        source: "iana",
+        extensions: ["wbxml"]
+      },
+      "application/vnd.wap.wmlc": {
+        source: "iana",
+        extensions: ["wmlc"]
+      },
+      "application/vnd.wap.wmlscriptc": {
+        source: "iana",
+        extensions: ["wmlsc"]
+      },
+      "application/vnd.webturbo": {
+        source: "iana",
+        extensions: ["wtb"]
+      },
+      "application/vnd.wfa.p2p": {
+        source: "iana"
+      },
+      "application/vnd.wfa.wsc": {
+        source: "iana"
+      },
+      "application/vnd.windows.devicepairing": {
+        source: "iana"
+      },
+      "application/vnd.wmc": {
+        source: "iana"
+      },
+      "application/vnd.wmf.bootstrap": {
+        source: "iana"
+      },
+      "application/vnd.wolfram.mathematica": {
+        source: "iana"
+      },
+      "application/vnd.wolfram.mathematica.package": {
+        source: "iana"
+      },
+      "application/vnd.wolfram.player": {
+        source: "iana",
+        extensions: ["nbp"]
+      },
+      "application/vnd.wordperfect": {
+        source: "iana",
+        extensions: ["wpd"]
+      },
+      "application/vnd.wqd": {
+        source: "iana",
+        extensions: ["wqd"]
+      },
+      "application/vnd.wrq-hp3000-labelled": {
+        source: "iana"
+      },
+      "application/vnd.wt.stf": {
+        source: "iana",
+        extensions: ["stf"]
+      },
+      "application/vnd.wv.csp+wbxml": {
+        source: "iana"
+      },
+      "application/vnd.wv.csp+xml": {
+        source: "iana"
+      },
+      "application/vnd.wv.ssp+xml": {
+        source: "iana"
+      },
+      "application/vnd.xacml+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/vnd.xara": {
+        source: "iana",
+        extensions: ["xar"]
+      },
+      "application/vnd.xfdl": {
+        source: "iana",
+        extensions: ["xfdl"]
+      },
+      "application/vnd.xfdl.webform": {
+        source: "iana"
+      },
+      "application/vnd.xmi+xml": {
+        source: "iana"
+      },
+      "application/vnd.xmpie.cpkg": {
+        source: "iana"
+      },
+      "application/vnd.xmpie.dpkg": {
+        source: "iana"
+      },
+      "application/vnd.xmpie.plan": {
+        source: "iana"
+      },
+      "application/vnd.xmpie.ppkg": {
+        source: "iana"
+      },
+      "application/vnd.xmpie.xlim": {
+        source: "iana"
+      },
+      "application/vnd.yamaha.hv-dic": {
+        source: "iana",
+        extensions: ["hvd"]
+      },
+      "application/vnd.yamaha.hv-script": {
+        source: "iana",
+        extensions: ["hvs"]
+      },
+      "application/vnd.yamaha.hv-voice": {
+        source: "iana",
+        extensions: ["hvp"]
+      },
+      "application/vnd.yamaha.openscoreformat": {
+        source: "iana",
+        extensions: ["osf"]
+      },
+      "application/vnd.yamaha.openscoreformat.osfpvg+xml": {
+        source: "iana",
+        extensions: ["osfpvg"]
+      },
+      "application/vnd.yamaha.remote-setup": {
+        source: "iana"
+      },
+      "application/vnd.yamaha.smaf-audio": {
+        source: "iana",
+        extensions: ["saf"]
+      },
+      "application/vnd.yamaha.smaf-phrase": {
+        source: "iana",
+        extensions: ["spf"]
+      },
+      "application/vnd.yamaha.through-ngn": {
+        source: "iana"
+      },
+      "application/vnd.yamaha.tunnel-udpencap": {
+        source: "iana"
+      },
+      "application/vnd.yaoweme": {
+        source: "iana"
+      },
+      "application/vnd.yellowriver-custom-menu": {
+        source: "iana",
+        extensions: ["cmp"]
+      },
+      "application/vnd.zul": {
+        source: "iana",
+        extensions: ["zir", "zirz"]
+      },
+      "application/vnd.zzazz.deck+xml": {
+        source: "iana",
+        extensions: ["zaz"]
+      },
+      "application/voicexml+xml": {
+        source: "iana",
+        extensions: ["vxml"]
+      },
+      "application/vq-rtcpxr": {
+        source: "iana"
+      },
+      "application/watcherinfo+xml": {
+        source: "iana"
+      },
+      "application/whoispp-query": {
+        source: "iana"
+      },
+      "application/whoispp-response": {
+        source: "iana"
+      },
+      "application/widget": {
+        source: "iana",
+        extensions: ["wgt"]
+      },
+      "application/winhlp": {
+        source: "apache",
+        extensions: ["hlp"]
+      },
+      "application/wita": {
+        source: "iana"
+      },
+      "application/wordperfect5.1": {
+        source: "iana"
+      },
+      "application/wsdl+xml": {
+        source: "iana",
+        extensions: ["wsdl"]
+      },
+      "application/wspolicy+xml": {
+        source: "iana",
+        extensions: ["wspolicy"]
+      },
+      "application/x-7z-compressed": {
+        source: "apache",
+        compressible: false,
+        extensions: ["7z"]
+      },
+      "application/x-abiword": {
+        source: "apache",
+        extensions: ["abw"]
+      },
+      "application/x-ace-compressed": {
+        source: "apache",
+        extensions: ["ace"]
+      },
+      "application/x-amf": {
+        source: "apache"
+      },
+      "application/x-apple-diskimage": {
+        source: "apache",
+        extensions: ["dmg"]
+      },
+      "application/x-authorware-bin": {
+        source: "apache",
+        extensions: ["aab", "x32", "u32", "vox"]
+      },
+      "application/x-authorware-map": {
+        source: "apache",
+        extensions: ["aam"]
+      },
+      "application/x-authorware-seg": {
+        source: "apache",
+        extensions: ["aas"]
+      },
+      "application/x-bcpio": {
+        source: "apache",
+        extensions: ["bcpio"]
+      },
+      "application/x-bdoc": {
+        compressible: false,
+        extensions: ["bdoc"]
+      },
+      "application/x-bittorrent": {
+        source: "apache",
+        extensions: ["torrent"]
+      },
+      "application/x-blorb": {
+        source: "apache",
+        extensions: ["blb", "blorb"]
+      },
+      "application/x-bzip": {
+        source: "apache",
+        compressible: false,
+        extensions: ["bz"]
+      },
+      "application/x-bzip2": {
+        source: "apache",
+        compressible: false,
+        extensions: ["bz2", "boz"]
+      },
+      "application/x-cbr": {
+        source: "apache",
+        extensions: ["cbr", "cba", "cbt", "cbz", "cb7"]
+      },
+      "application/x-cdlink": {
+        source: "apache",
+        extensions: ["vcd"]
+      },
+      "application/x-cfs-compressed": {
+        source: "apache",
+        extensions: ["cfs"]
+      },
+      "application/x-chat": {
+        source: "apache",
+        extensions: ["chat"]
+      },
+      "application/x-chess-pgn": {
+        source: "apache",
+        extensions: ["pgn"]
+      },
+      "application/x-chrome-extension": {
+        extensions: ["crx"]
+      },
+      "application/x-cocoa": {
+        source: "nginx",
+        extensions: ["cco"]
+      },
+      "application/x-compress": {
+        source: "apache"
+      },
+      "application/x-conference": {
+        source: "apache",
+        extensions: ["nsc"]
+      },
+      "application/x-cpio": {
+        source: "apache",
+        extensions: ["cpio"]
+      },
+      "application/x-csh": {
+        source: "apache",
+        extensions: ["csh"]
+      },
+      "application/x-deb": {
+        compressible: false
+      },
+      "application/x-debian-package": {
+        source: "apache",
+        extensions: ["deb", "udeb"]
+      },
+      "application/x-dgc-compressed": {
+        source: "apache",
+        extensions: ["dgc"]
+      },
+      "application/x-director": {
+        source: "apache",
+        extensions: ["dir", "dcr", "dxr", "cst", "cct", "cxt", "w3d", "fgd", "swa"]
+      },
+      "application/x-doom": {
+        source: "apache",
+        extensions: ["wad"]
+      },
+      "application/x-dtbncx+xml": {
+        source: "apache",
+        extensions: ["ncx"]
+      },
+      "application/x-dtbook+xml": {
+        source: "apache",
+        extensions: ["dtb"]
+      },
+      "application/x-dtbresource+xml": {
+        source: "apache",
+        extensions: ["res"]
+      },
+      "application/x-dvi": {
+        source: "apache",
+        compressible: false,
+        extensions: ["dvi"]
+      },
+      "application/x-envoy": {
+        source: "apache",
+        extensions: ["evy"]
+      },
+      "application/x-eva": {
+        source: "apache",
+        extensions: ["eva"]
+      },
+      "application/x-font-bdf": {
+        source: "apache",
+        extensions: ["bdf"]
+      },
+      "application/x-font-dos": {
+        source: "apache"
+      },
+      "application/x-font-framemaker": {
+        source: "apache"
+      },
+      "application/x-font-ghostscript": {
+        source: "apache",
+        extensions: ["gsf"]
+      },
+      "application/x-font-libgrx": {
+        source: "apache"
+      },
+      "application/x-font-linux-psf": {
+        source: "apache",
+        extensions: ["psf"]
+      },
+      "application/x-font-otf": {
+        source: "apache",
+        compressible: true,
+        extensions: ["otf"]
+      },
+      "application/x-font-pcf": {
+        source: "apache",
+        extensions: ["pcf"]
+      },
+      "application/x-font-snf": {
+        source: "apache",
+        extensions: ["snf"]
+      },
+      "application/x-font-speedo": {
+        source: "apache"
+      },
+      "application/x-font-sunos-news": {
+        source: "apache"
+      },
+      "application/x-font-ttf": {
+        source: "apache",
+        compressible: true,
+        extensions: ["ttf", "ttc"]
+      },
+      "application/x-font-type1": {
+        source: "apache",
+        extensions: ["pfa", "pfb", "pfm", "afm"]
+      },
+      "application/x-font-vfont": {
+        source: "apache"
+      },
+      "application/x-freearc": {
+        source: "apache",
+        extensions: ["arc"]
+      },
+      "application/x-futuresplash": {
+        source: "apache",
+        extensions: ["spl"]
+      },
+      "application/x-gca-compressed": {
+        source: "apache",
+        extensions: ["gca"]
+      },
+      "application/x-glulx": {
+        source: "apache",
+        extensions: ["ulx"]
+      },
+      "application/x-gnumeric": {
+        source: "apache",
+        extensions: ["gnumeric"]
+      },
+      "application/x-gramps-xml": {
+        source: "apache",
+        extensions: ["gramps"]
+      },
+      "application/x-gtar": {
+        source: "apache",
+        extensions: ["gtar"]
+      },
+      "application/x-gzip": {
+        source: "apache"
+      },
+      "application/x-hdf": {
+        source: "apache",
+        extensions: ["hdf"]
+      },
+      "application/x-httpd-php": {
+        compressible: true,
+        extensions: ["php"]
+      },
+      "application/x-install-instructions": {
+        source: "apache",
+        extensions: ["install"]
+      },
+      "application/x-iso9660-image": {
+        source: "apache",
+        extensions: ["iso"]
+      },
+      "application/x-java-archive-diff": {
+        source: "nginx",
+        extensions: ["jardiff"]
+      },
+      "application/x-java-jnlp-file": {
+        source: "apache",
+        compressible: false,
+        extensions: ["jnlp"]
+      },
+      "application/x-javascript": {
+        compressible: true
+      },
+      "application/x-latex": {
+        source: "apache",
+        compressible: false,
+        extensions: ["latex"]
+      },
+      "application/x-lua-bytecode": {
+        extensions: ["luac"]
+      },
+      "application/x-lzh-compressed": {
+        source: "apache",
+        extensions: ["lzh", "lha"]
+      },
+      "application/x-makeself": {
+        source: "nginx",
+        extensions: ["run"]
+      },
+      "application/x-mie": {
+        source: "apache",
+        extensions: ["mie"]
+      },
+      "application/x-mobipocket-ebook": {
+        source: "apache",
+        extensions: ["prc", "mobi"]
+      },
+      "application/x-mpegurl": {
+        compressible: false
+      },
+      "application/x-ms-application": {
+        source: "apache",
+        extensions: ["application"]
+      },
+      "application/x-ms-shortcut": {
+        source: "apache",
+        extensions: ["lnk"]
+      },
+      "application/x-ms-wmd": {
+        source: "apache",
+        extensions: ["wmd"]
+      },
+      "application/x-ms-wmz": {
+        source: "apache",
+        extensions: ["wmz"]
+      },
+      "application/x-ms-xbap": {
+        source: "apache",
+        extensions: ["xbap"]
+      },
+      "application/x-msaccess": {
+        source: "apache",
+        extensions: ["mdb"]
+      },
+      "application/x-msbinder": {
+        source: "apache",
+        extensions: ["obd"]
+      },
+      "application/x-mscardfile": {
+        source: "apache",
+        extensions: ["crd"]
+      },
+      "application/x-msclip": {
+        source: "apache",
+        extensions: ["clp"]
+      },
+      "application/x-msdos-program": {
+        extensions: ["exe"]
+      },
+      "application/x-msdownload": {
+        source: "apache",
+        extensions: ["exe", "dll", "com", "bat", "msi"]
+      },
+      "application/x-msmediaview": {
+        source: "apache",
+        extensions: ["mvb", "m13", "m14"]
+      },
+      "application/x-msmetafile": {
+        source: "apache",
+        extensions: ["wmf", "wmz", "emf", "emz"]
+      },
+      "application/x-msmoney": {
+        source: "apache",
+        extensions: ["mny"]
+      },
+      "application/x-mspublisher": {
+        source: "apache",
+        extensions: ["pub"]
+      },
+      "application/x-msschedule": {
+        source: "apache",
+        extensions: ["scd"]
+      },
+      "application/x-msterminal": {
+        source: "apache",
+        extensions: ["trm"]
+      },
+      "application/x-mswrite": {
+        source: "apache",
+        extensions: ["wri"]
+      },
+      "application/x-netcdf": {
+        source: "apache",
+        extensions: ["nc", "cdf"]
+      },
+      "application/x-ns-proxy-autoconfig": {
+        compressible: true,
+        extensions: ["pac"]
+      },
+      "application/x-nzb": {
+        source: "apache",
+        extensions: ["nzb"]
+      },
+      "application/x-perl": {
+        source: "nginx",
+        extensions: ["pl", "pm"]
+      },
+      "application/x-pilot": {
+        source: "nginx",
+        extensions: ["prc", "pdb"]
+      },
+      "application/x-pkcs12": {
+        source: "apache",
+        compressible: false,
+        extensions: ["p12", "pfx"]
+      },
+      "application/x-pkcs7-certificates": {
+        source: "apache",
+        extensions: ["p7b", "spc"]
+      },
+      "application/x-pkcs7-certreqresp": {
+        source: "apache",
+        extensions: ["p7r"]
+      },
+      "application/x-rar-compressed": {
+        source: "apache",
+        compressible: false,
+        extensions: ["rar"]
+      },
+      "application/x-redhat-package-manager": {
+        source: "nginx",
+        extensions: ["rpm"]
+      },
+      "application/x-research-info-systems": {
+        source: "apache",
+        extensions: ["ris"]
+      },
+      "application/x-sea": {
+        source: "nginx",
+        extensions: ["sea"]
+      },
+      "application/x-sh": {
+        source: "apache",
+        compressible: true,
+        extensions: ["sh"]
+      },
+      "application/x-shar": {
+        source: "apache",
+        extensions: ["shar"]
+      },
+      "application/x-shockwave-flash": {
+        source: "apache",
+        compressible: false,
+        extensions: ["swf"]
+      },
+      "application/x-silverlight-app": {
+        source: "apache",
+        extensions: ["xap"]
+      },
+      "application/x-sql": {
+        source: "apache",
+        extensions: ["sql"]
+      },
+      "application/x-stuffit": {
+        source: "apache",
+        compressible: false,
+        extensions: ["sit"]
+      },
+      "application/x-stuffitx": {
+        source: "apache",
+        extensions: ["sitx"]
+      },
+      "application/x-subrip": {
+        source: "apache",
+        extensions: ["srt"]
+      },
+      "application/x-sv4cpio": {
+        source: "apache",
+        extensions: ["sv4cpio"]
+      },
+      "application/x-sv4crc": {
+        source: "apache",
+        extensions: ["sv4crc"]
+      },
+      "application/x-t3vm-image": {
+        source: "apache",
+        extensions: ["t3"]
+      },
+      "application/x-tads": {
+        source: "apache",
+        extensions: ["gam"]
+      },
+      "application/x-tar": {
+        source: "apache",
+        compressible: true,
+        extensions: ["tar"]
+      },
+      "application/x-tcl": {
+        source: "apache",
+        extensions: ["tcl", "tk"]
+      },
+      "application/x-tex": {
+        source: "apache",
+        extensions: ["tex"]
+      },
+      "application/x-tex-tfm": {
+        source: "apache",
+        extensions: ["tfm"]
+      },
+      "application/x-texinfo": {
+        source: "apache",
+        extensions: ["texinfo", "texi"]
+      },
+      "application/x-tgif": {
+        source: "apache",
+        extensions: ["obj"]
+      },
+      "application/x-ustar": {
+        source: "apache",
+        extensions: ["ustar"]
+      },
+      "application/x-wais-source": {
+        source: "apache",
+        extensions: ["src"]
+      },
+      "application/x-web-app-manifest+json": {
+        compressible: true,
+        extensions: ["webapp"]
+      },
+      "application/x-www-form-urlencoded": {
+        source: "iana",
+        compressible: true
+      },
+      "application/x-x509-ca-cert": {
+        source: "apache",
+        extensions: ["der", "crt", "pem"]
+      },
+      "application/x-xfig": {
+        source: "apache",
+        extensions: ["fig"]
+      },
+      "application/x-xliff+xml": {
+        source: "apache",
+        extensions: ["xlf"]
+      },
+      "application/x-xpinstall": {
+        source: "apache",
+        compressible: false,
+        extensions: ["xpi"]
+      },
+      "application/x-xz": {
+        source: "apache",
+        extensions: ["xz"]
+      },
+      "application/x-zmachine": {
+        source: "apache",
+        extensions: ["z1", "z2", "z3", "z4", "z5", "z6", "z7", "z8"]
+      },
+      "application/x400-bp": {
+        source: "iana"
+      },
+      "application/xacml+xml": {
+        source: "iana"
+      },
+      "application/xaml+xml": {
+        source: "apache",
+        extensions: ["xaml"]
+      },
+      "application/xcap-att+xml": {
+        source: "iana"
+      },
+      "application/xcap-caps+xml": {
+        source: "iana"
+      },
+      "application/xcap-diff+xml": {
+        source: "iana",
+        extensions: ["xdf"]
+      },
+      "application/xcap-el+xml": {
+        source: "iana"
+      },
+      "application/xcap-error+xml": {
+        source: "iana"
+      },
+      "application/xcap-ns+xml": {
+        source: "iana"
+      },
+      "application/xcon-conference-info+xml": {
+        source: "iana"
+      },
+      "application/xcon-conference-info-diff+xml": {
+        source: "iana"
+      },
+      "application/xenc+xml": {
+        source: "iana",
+        extensions: ["xenc"]
+      },
+      "application/xhtml+xml": {
+        source: "iana",
+        compressible: true,
+        extensions: ["xhtml", "xht"]
+      },
+      "application/xhtml-voice+xml": {
+        source: "apache"
+      },
+      "application/xml": {
+        source: "iana",
+        compressible: true,
+        extensions: ["xml", "xsl", "xsd", "rng"]
+      },
+      "application/xml-dtd": {
+        source: "iana",
+        compressible: true,
+        extensions: ["dtd"]
+      },
+      "application/xml-external-parsed-entity": {
+        source: "iana"
+      },
+      "application/xml-patch+xml": {
+        source: "iana"
+      },
+      "application/xmpp+xml": {
+        source: "iana"
+      },
+      "application/xop+xml": {
+        source: "iana",
+        compressible: true,
+        extensions: ["xop"]
+      },
+      "application/xproc+xml": {
+        source: "apache",
+        extensions: ["xpl"]
+      },
+      "application/xslt+xml": {
+        source: "iana",
+        extensions: ["xslt"]
+      },
+      "application/xspf+xml": {
+        source: "apache",
+        extensions: ["xspf"]
+      },
+      "application/xv+xml": {
+        source: "iana",
+        extensions: ["mxml", "xhvml", "xvml", "xvm"]
+      },
+      "application/yang": {
+        source: "iana",
+        extensions: ["yang"]
+      },
+      "application/yang-data+json": {
+        source: "iana",
+        compressible: true
+      },
+      "application/yang-data+xml": {
+        source: "iana"
+      },
+      "application/yin+xml": {
+        source: "iana",
+        extensions: ["yin"]
+      },
+      "application/zip": {
+        source: "iana",
+        compressible: false,
+        extensions: ["zip"]
+      },
+      "application/zlib": {
+        source: "iana"
+      },
+      "audio/1d-interleaved-parityfec": {
+        source: "iana"
+      },
+      "audio/32kadpcm": {
+        source: "iana"
+      },
+      "audio/3gpp": {
+        source: "iana",
+        compressible: false,
+        extensions: ["3gpp"]
+      },
+      "audio/3gpp2": {
+        source: "iana"
+      },
+      "audio/ac3": {
+        source: "iana"
+      },
+      "audio/adpcm": {
+        source: "apache",
+        extensions: ["adp"]
+      },
+      "audio/amr": {
+        source: "iana"
+      },
+      "audio/amr-wb": {
+        source: "iana"
+      },
+      "audio/amr-wb+": {
+        source: "iana"
+      },
+      "audio/aptx": {
+        source: "iana"
+      },
+      "audio/asc": {
+        source: "iana"
+      },
+      "audio/atrac-advanced-lossless": {
+        source: "iana"
+      },
+      "audio/atrac-x": {
+        source: "iana"
+      },
+      "audio/atrac3": {
+        source: "iana"
+      },
+      "audio/basic": {
+        source: "iana",
+        compressible: false,
+        extensions: ["au", "snd"]
+      },
+      "audio/bv16": {
+        source: "iana"
+      },
+      "audio/bv32": {
+        source: "iana"
+      },
+      "audio/clearmode": {
+        source: "iana"
+      },
+      "audio/cn": {
+        source: "iana"
+      },
+      "audio/dat12": {
+        source: "iana"
+      },
+      "audio/dls": {
+        source: "iana"
+      },
+      "audio/dsr-es201108": {
+        source: "iana"
+      },
+      "audio/dsr-es202050": {
+        source: "iana"
+      },
+      "audio/dsr-es202211": {
+        source: "iana"
+      },
+      "audio/dsr-es202212": {
+        source: "iana"
+      },
+      "audio/dv": {
+        source: "iana"
+      },
+      "audio/dvi4": {
+        source: "iana"
+      },
+      "audio/eac3": {
+        source: "iana"
+      },
+      "audio/encaprtp": {
+        source: "iana"
+      },
+      "audio/evrc": {
+        source: "iana"
+      },
+      "audio/evrc-qcp": {
+        source: "iana"
+      },
+      "audio/evrc0": {
+        source: "iana"
+      },
+      "audio/evrc1": {
+        source: "iana"
+      },
+      "audio/evrcb": {
+        source: "iana"
+      },
+      "audio/evrcb0": {
+        source: "iana"
+      },
+      "audio/evrcb1": {
+        source: "iana"
+      },
+      "audio/evrcnw": {
+        source: "iana"
+      },
+      "audio/evrcnw0": {
+        source: "iana"
+      },
+      "audio/evrcnw1": {
+        source: "iana"
+      },
+      "audio/evrcwb": {
+        source: "iana"
+      },
+      "audio/evrcwb0": {
+        source: "iana"
+      },
+      "audio/evrcwb1": {
+        source: "iana"
+      },
+      "audio/evs": {
+        source: "iana"
+      },
+      "audio/fwdred": {
+        source: "iana"
+      },
+      "audio/g711-0": {
+        source: "iana"
+      },
+      "audio/g719": {
+        source: "iana"
+      },
+      "audio/g722": {
+        source: "iana"
+      },
+      "audio/g7221": {
+        source: "iana"
+      },
+      "audio/g723": {
+        source: "iana"
+      },
+      "audio/g726-16": {
+        source: "iana"
+      },
+      "audio/g726-24": {
+        source: "iana"
+      },
+      "audio/g726-32": {
+        source: "iana"
+      },
+      "audio/g726-40": {
+        source: "iana"
+      },
+      "audio/g728": {
+        source: "iana"
+      },
+      "audio/g729": {
+        source: "iana"
+      },
+      "audio/g7291": {
+        source: "iana"
+      },
+      "audio/g729d": {
+        source: "iana"
+      },
+      "audio/g729e": {
+        source: "iana"
+      },
+      "audio/gsm": {
+        source: "iana"
+      },
+      "audio/gsm-efr": {
+        source: "iana"
+      },
+      "audio/gsm-hr-08": {
+        source: "iana"
+      },
+      "audio/ilbc": {
+        source: "iana"
+      },
+      "audio/ip-mr_v2.5": {
+        source: "iana"
+      },
+      "audio/isac": {
+        source: "apache"
+      },
+      "audio/l16": {
+        source: "iana"
+      },
+      "audio/l20": {
+        source: "iana"
+      },
+      "audio/l24": {
+        source: "iana",
+        compressible: false
+      },
+      "audio/l8": {
+        source: "iana"
+      },
+      "audio/lpc": {
+        source: "iana"
+      },
+      "audio/midi": {
+        source: "apache",
+        extensions: ["mid", "midi", "kar", "rmi"]
+      },
+      "audio/mobile-xmf": {
+        source: "iana"
+      },
+      "audio/mp3": {
+        compressible: false,
+        extensions: ["mp3"]
+      },
+      "audio/mp4": {
+        source: "iana",
+        compressible: false,
+        extensions: ["m4a", "mp4a"]
+      },
+      "audio/mp4a-latm": {
+        source: "iana"
+      },
+      "audio/mpa": {
+        source: "iana"
+      },
+      "audio/mpa-robust": {
+        source: "iana"
+      },
+      "audio/mpeg": {
+        source: "iana",
+        compressible: false,
+        extensions: ["mpga", "mp2", "mp2a", "mp3", "m2a", "m3a"]
+      },
+      "audio/mpeg4-generic": {
+        source: "iana"
+      },
+      "audio/musepack": {
+        source: "apache"
+      },
+      "audio/ogg": {
+        source: "iana",
+        compressible: false,
+        extensions: ["oga", "ogg", "spx"]
+      },
+      "audio/opus": {
+        source: "iana"
+      },
+      "audio/parityfec": {
+        source: "iana"
+      },
+      "audio/pcma": {
+        source: "iana"
+      },
+      "audio/pcma-wb": {
+        source: "iana"
+      },
+      "audio/pcmu": {
+        source: "iana"
+      },
+      "audio/pcmu-wb": {
+        source: "iana"
+      },
+      "audio/prs.sid": {
+        source: "iana"
+      },
+      "audio/qcelp": {
+        source: "iana"
+      },
+      "audio/raptorfec": {
+        source: "iana"
+      },
+      "audio/red": {
+        source: "iana"
+      },
+      "audio/rtp-enc-aescm128": {
+        source: "iana"
+      },
+      "audio/rtp-midi": {
+        source: "iana"
+      },
+      "audio/rtploopback": {
+        source: "iana"
+      },
+      "audio/rtx": {
+        source: "iana"
+      },
+      "audio/s3m": {
+        source: "apache",
+        extensions: ["s3m"]
+      },
+      "audio/silk": {
+        source: "apache",
+        extensions: ["sil"]
+      },
+      "audio/smv": {
+        source: "iana"
+      },
+      "audio/smv-qcp": {
+        source: "iana"
+      },
+      "audio/smv0": {
+        source: "iana"
+      },
+      "audio/sp-midi": {
+        source: "iana"
+      },
+      "audio/speex": {
+        source: "iana"
+      },
+      "audio/t140c": {
+        source: "iana"
+      },
+      "audio/t38": {
+        source: "iana"
+      },
+      "audio/telephone-event": {
+        source: "iana"
+      },
+      "audio/tone": {
+        source: "iana"
+      },
+      "audio/uemclip": {
+        source: "iana"
+      },
+      "audio/ulpfec": {
+        source: "iana"
+      },
+      "audio/vdvi": {
+        source: "iana"
+      },
+      "audio/vmr-wb": {
+        source: "iana"
+      },
+      "audio/vnd.3gpp.iufp": {
+        source: "iana"
+      },
+      "audio/vnd.4sb": {
+        source: "iana"
+      },
+      "audio/vnd.audiokoz": {
+        source: "iana"
+      },
+      "audio/vnd.celp": {
+        source: "iana"
+      },
+      "audio/vnd.cisco.nse": {
+        source: "iana"
+      },
+      "audio/vnd.cmles.radio-events": {
+        source: "iana"
+      },
+      "audio/vnd.cns.anp1": {
+        source: "iana"
+      },
+      "audio/vnd.cns.inf1": {
+        source: "iana"
+      },
+      "audio/vnd.dece.audio": {
+        source: "iana",
+        extensions: ["uva", "uvva"]
+      },
+      "audio/vnd.digital-winds": {
+        source: "iana",
+        extensions: ["eol"]
+      },
+      "audio/vnd.dlna.adts": {
+        source: "iana"
+      },
+      "audio/vnd.dolby.heaac.1": {
+        source: "iana"
+      },
+      "audio/vnd.dolby.heaac.2": {
+        source: "iana"
+      },
+      "audio/vnd.dolby.mlp": {
+        source: "iana"
+      },
+      "audio/vnd.dolby.mps": {
+        source: "iana"
+      },
+      "audio/vnd.dolby.pl2": {
+        source: "iana"
+      },
+      "audio/vnd.dolby.pl2x": {
+        source: "iana"
+      },
+      "audio/vnd.dolby.pl2z": {
+        source: "iana"
+      },
+      "audio/vnd.dolby.pulse.1": {
+        source: "iana"
+      },
+      "audio/vnd.dra": {
+        source: "iana",
+        extensions: ["dra"]
+      },
+      "audio/vnd.dts": {
+        source: "iana",
+        extensions: ["dts"]
+      },
+      "audio/vnd.dts.hd": {
+        source: "iana",
+        extensions: ["dtshd"]
+      },
+      "audio/vnd.dvb.file": {
+        source: "iana"
+      },
+      "audio/vnd.everad.plj": {
+        source: "iana"
+      },
+      "audio/vnd.hns.audio": {
+        source: "iana"
+      },
+      "audio/vnd.lucent.voice": {
+        source: "iana",
+        extensions: ["lvp"]
+      },
+      "audio/vnd.ms-playready.media.pya": {
+        source: "iana",
+        extensions: ["pya"]
+      },
+      "audio/vnd.nokia.mobile-xmf": {
+        source: "iana"
+      },
+      "audio/vnd.nortel.vbk": {
+        source: "iana"
+      },
+      "audio/vnd.nuera.ecelp4800": {
+        source: "iana",
+        extensions: ["ecelp4800"]
+      },
+      "audio/vnd.nuera.ecelp7470": {
+        source: "iana",
+        extensions: ["ecelp7470"]
+      },
+      "audio/vnd.nuera.ecelp9600": {
+        source: "iana",
+        extensions: ["ecelp9600"]
+      },
+      "audio/vnd.octel.sbc": {
+        source: "iana"
+      },
+      "audio/vnd.qcelp": {
+        source: "iana"
+      },
+      "audio/vnd.rhetorex.32kadpcm": {
+        source: "iana"
+      },
+      "audio/vnd.rip": {
+        source: "iana",
+        extensions: ["rip"]
+      },
+      "audio/vnd.rn-realaudio": {
+        compressible: false
+      },
+      "audio/vnd.sealedmedia.softseal.mpeg": {
+        source: "iana"
+      },
+      "audio/vnd.vmx.cvsd": {
+        source: "iana"
+      },
+      "audio/vnd.wave": {
+        compressible: false
+      },
+      "audio/vorbis": {
+        source: "iana",
+        compressible: false
+      },
+      "audio/vorbis-config": {
+        source: "iana"
+      },
+      "audio/wav": {
+        compressible: false,
+        extensions: ["wav"]
+      },
+      "audio/wave": {
+        compressible: false,
+        extensions: ["wav"]
+      },
+      "audio/webm": {
+        source: "apache",
+        compressible: false,
+        extensions: ["weba"]
+      },
+      "audio/x-aac": {
+        source: "apache",
+        compressible: false,
+        extensions: ["aac"]
+      },
+      "audio/x-aiff": {
+        source: "apache",
+        extensions: ["aif", "aiff", "aifc"]
+      },
+      "audio/x-caf": {
+        source: "apache",
+        compressible: false,
+        extensions: ["caf"]
+      },
+      "audio/x-flac": {
+        source: "apache",
+        extensions: ["flac"]
+      },
+      "audio/x-m4a": {
+        source: "nginx",
+        extensions: ["m4a"]
+      },
+      "audio/x-matroska": {
+        source: "apache",
+        extensions: ["mka"]
+      },
+      "audio/x-mpegurl": {
+        source: "apache",
+        extensions: ["m3u"]
+      },
+      "audio/x-ms-wax": {
+        source: "apache",
+        extensions: ["wax"]
+      },
+      "audio/x-ms-wma": {
+        source: "apache",
+        extensions: ["wma"]
+      },
+      "audio/x-pn-realaudio": {
+        source: "apache",
+        extensions: ["ram", "ra"]
+      },
+      "audio/x-pn-realaudio-plugin": {
+        source: "apache",
+        extensions: ["rmp"]
+      },
+      "audio/x-realaudio": {
+        source: "nginx",
+        extensions: ["ra"]
+      },
+      "audio/x-tta": {
+        source: "apache"
+      },
+      "audio/x-wav": {
+        source: "apache",
+        extensions: ["wav"]
+      },
+      "audio/xm": {
+        source: "apache",
+        extensions: ["xm"]
+      },
+      "chemical/x-cdx": {
+        source: "apache",
+        extensions: ["cdx"]
+      },
+      "chemical/x-cif": {
+        source: "apache",
+        extensions: ["cif"]
+      },
+      "chemical/x-cmdf": {
+        source: "apache",
+        extensions: ["cmdf"]
+      },
+      "chemical/x-cml": {
+        source: "apache",
+        extensions: ["cml"]
+      },
+      "chemical/x-csml": {
+        source: "apache",
+        extensions: ["csml"]
+      },
+      "chemical/x-pdb": {
+        source: "apache"
+      },
+      "chemical/x-xyz": {
+        source: "apache",
+        extensions: ["xyz"]
+      },
+      "font/opentype": {
+        compressible: true,
+        extensions: ["otf"]
+      },
+      "image/bmp": {
+        source: "iana",
+        compressible: true,
+        extensions: ["bmp"]
+      },
+      "image/cgm": {
+        source: "iana",
+        extensions: ["cgm"]
+      },
+      "image/dicom-rle": {
+        source: "iana"
+      },
+      "image/emf": {
+        source: "iana"
+      },
+      "image/fits": {
+        source: "iana"
+      },
+      "image/g3fax": {
+        source: "iana",
+        extensions: ["g3"]
+      },
+      "image/gif": {
+        source: "iana",
+        compressible: false,
+        extensions: ["gif"]
+      },
+      "image/ief": {
+        source: "iana",
+        extensions: ["ief"]
+      },
+      "image/jls": {
+        source: "iana"
+      },
+      "image/jp2": {
+        source: "iana"
+      },
+      "image/jpeg": {
+        source: "iana",
+        compressible: false,
+        extensions: ["jpeg", "jpg", "jpe"]
+      },
+      "image/jpm": {
+        source: "iana"
+      },
+      "image/jpx": {
+        source: "iana"
+      },
+      "image/ktx": {
+        source: "iana",
+        extensions: ["ktx"]
+      },
+      "image/naplps": {
+        source: "iana"
+      },
+      "image/pjpeg": {
+        compressible: false
+      },
+      "image/png": {
+        source: "iana",
+        compressible: false,
+        extensions: ["png"]
+      },
+      "image/prs.btif": {
+        source: "iana",
+        extensions: ["btif"]
+      },
+      "image/prs.pti": {
+        source: "iana"
+      },
+      "image/pwg-raster": {
+        source: "iana"
+      },
+      "image/sgi": {
+        source: "apache",
+        extensions: ["sgi"]
+      },
+      "image/svg+xml": {
+        source: "iana",
+        compressible: true,
+        extensions: ["svg", "svgz"]
+      },
+      "image/t38": {
+        source: "iana"
+      },
+      "image/tiff": {
+        source: "iana",
+        compressible: false,
+        extensions: ["tiff", "tif"]
+      },
+      "image/tiff-fx": {
+        source: "iana"
+      },
+      "image/vnd.adobe.photoshop": {
+        source: "iana",
+        compressible: true,
+        extensions: ["psd"]
+      },
+      "image/vnd.airzip.accelerator.azv": {
+        source: "iana"
+      },
+      "image/vnd.cns.inf2": {
+        source: "iana"
+      },
+      "image/vnd.dece.graphic": {
+        source: "iana",
+        extensions: ["uvi", "uvvi", "uvg", "uvvg"]
+      },
+      "image/vnd.djvu": {
+        source: "iana",
+        extensions: ["djvu", "djv"]
+      },
+      "image/vnd.dvb.subtitle": {
+        source: "iana",
+        extensions: ["sub"]
+      },
+      "image/vnd.dwg": {
+        source: "iana",
+        extensions: ["dwg"]
+      },
+      "image/vnd.dxf": {
+        source: "iana",
+        extensions: ["dxf"]
+      },
+      "image/vnd.fastbidsheet": {
+        source: "iana",
+        extensions: ["fbs"]
+      },
+      "image/vnd.fpx": {
+        source: "iana",
+        extensions: ["fpx"]
+      },
+      "image/vnd.fst": {
+        source: "iana",
+        extensions: ["fst"]
+      },
+      "image/vnd.fujixerox.edmics-mmr": {
+        source: "iana",
+        extensions: ["mmr"]
+      },
+      "image/vnd.fujixerox.edmics-rlc": {
+        source: "iana",
+        extensions: ["rlc"]
+      },
+      "image/vnd.globalgraphics.pgb": {
+        source: "iana"
+      },
+      "image/vnd.microsoft.icon": {
+        source: "iana"
+      },
+      "image/vnd.mix": {
+        source: "iana"
+      },
+      "image/vnd.mozilla.apng": {
+        source: "iana"
+      },
+      "image/vnd.ms-modi": {
+        source: "iana",
+        extensions: ["mdi"]
+      },
+      "image/vnd.ms-photo": {
+        source: "apache",
+        extensions: ["wdp"]
+      },
+      "image/vnd.net-fpx": {
+        source: "iana",
+        extensions: ["npx"]
+      },
+      "image/vnd.radiance": {
+        source: "iana"
+      },
+      "image/vnd.sealed.png": {
+        source: "iana"
+      },
+      "image/vnd.sealedmedia.softseal.gif": {
+        source: "iana"
+      },
+      "image/vnd.sealedmedia.softseal.jpg": {
+        source: "iana"
+      },
+      "image/vnd.svf": {
+        source: "iana"
+      },
+      "image/vnd.tencent.tap": {
+        source: "iana"
+      },
+      "image/vnd.valve.source.texture": {
+        source: "iana"
+      },
+      "image/vnd.wap.wbmp": {
+        source: "iana",
+        extensions: ["wbmp"]
+      },
+      "image/vnd.xiff": {
+        source: "iana",
+        extensions: ["xif"]
+      },
+      "image/vnd.zbrush.pcx": {
+        source: "iana"
+      },
+      "image/webp": {
+        source: "apache",
+        extensions: ["webp"]
+      },
+      "image/wmf": {
+        source: "iana"
+      },
+      "image/x-3ds": {
+        source: "apache",
+        extensions: ["3ds"]
+      },
+      "image/x-cmu-raster": {
+        source: "apache",
+        extensions: ["ras"]
+      },
+      "image/x-cmx": {
+        source: "apache",
+        extensions: ["cmx"]
+      },
+      "image/x-freehand": {
+        source: "apache",
+        extensions: ["fh", "fhc", "fh4", "fh5", "fh7"]
+      },
+      "image/x-icon": {
+        source: "apache",
+        compressible: true,
+        extensions: ["ico"]
+      },
+      "image/x-jng": {
+        source: "nginx",
+        extensions: ["jng"]
+      },
+      "image/x-mrsid-image": {
+        source: "apache",
+        extensions: ["sid"]
+      },
+      "image/x-ms-bmp": {
+        source: "nginx",
+        compressible: true,
+        extensions: ["bmp"]
+      },
+      "image/x-pcx": {
+        source: "apache",
+        extensions: ["pcx"]
+      },
+      "image/x-pict": {
+        source: "apache",
+        extensions: ["pic", "pct"]
+      },
+      "image/x-portable-anymap": {
+        source: "apache",
+        extensions: ["pnm"]
+      },
+      "image/x-portable-bitmap": {
+        source: "apache",
+        extensions: ["pbm"]
+      },
+      "image/x-portable-graymap": {
+        source: "apache",
+        extensions: ["pgm"]
+      },
+      "image/x-portable-pixmap": {
+        source: "apache",
+        extensions: ["ppm"]
+      },
+      "image/x-rgb": {
+        source: "apache",
+        extensions: ["rgb"]
+      },
+      "image/x-tga": {
+        source: "apache",
+        extensions: ["tga"]
+      },
+      "image/x-xbitmap": {
+        source: "apache",
+        extensions: ["xbm"]
+      },
+      "image/x-xcf": {
+        compressible: false
+      },
+      "image/x-xpixmap": {
+        source: "apache",
+        extensions: ["xpm"]
+      },
+      "image/x-xwindowdump": {
+        source: "apache",
+        extensions: ["xwd"]
+      },
+      "message/cpim": {
+        source: "iana"
+      },
+      "message/delivery-status": {
+        source: "iana"
+      },
+      "message/disposition-notification": {
+        source: "iana"
+      },
+      "message/external-body": {
+        source: "iana"
+      },
+      "message/feedback-report": {
+        source: "iana"
+      },
+      "message/global": {
+        source: "iana"
+      },
+      "message/global-delivery-status": {
+        source: "iana"
+      },
+      "message/global-disposition-notification": {
+        source: "iana"
+      },
+      "message/global-headers": {
+        source: "iana"
+      },
+      "message/http": {
+        source: "iana",
+        compressible: false
+      },
+      "message/imdn+xml": {
+        source: "iana",
+        compressible: true
+      },
+      "message/news": {
+        source: "iana"
+      },
+      "message/partial": {
+        source: "iana",
+        compressible: false
+      },
+      "message/rfc822": {
+        source: "iana",
+        compressible: true,
+        extensions: ["eml", "mime"]
+      },
+      "message/s-http": {
+        source: "iana"
+      },
+      "message/sip": {
+        source: "iana"
+      },
+      "message/sipfrag": {
+        source: "iana"
+      },
+      "message/tracking-status": {
+        source: "iana"
+      },
+      "message/vnd.si.simp": {
+        source: "iana"
+      },
+      "message/vnd.wfa.wsc": {
+        source: "iana"
+      },
+      "model/gltf+json": {
+        source: "iana",
+        compressible: true
+      },
+      "model/iges": {
+        source: "iana",
+        compressible: false,
+        extensions: ["igs", "iges"]
+      },
+      "model/mesh": {
+        source: "iana",
+        compressible: false,
+        extensions: ["msh", "mesh", "silo"]
+      },
+      "model/vnd.collada+xml": {
+        source: "iana",
+        extensions: ["dae"]
+      },
+      "model/vnd.dwf": {
+        source: "iana",
+        extensions: ["dwf"]
+      },
+      "model/vnd.flatland.3dml": {
+        source: "iana"
+      },
+      "model/vnd.gdl": {
+        source: "iana",
+        extensions: ["gdl"]
+      },
+      "model/vnd.gs-gdl": {
+        source: "apache"
+      },
+      "model/vnd.gs.gdl": {
+        source: "iana"
+      },
+      "model/vnd.gtw": {
+        source: "iana",
+        extensions: ["gtw"]
+      },
+      "model/vnd.moml+xml": {
+        source: "iana"
+      },
+      "model/vnd.mts": {
+        source: "iana",
+        extensions: ["mts"]
+      },
+      "model/vnd.opengex": {
+        source: "iana"
+      },
+      "model/vnd.parasolid.transmit.binary": {
+        source: "iana"
+      },
+      "model/vnd.parasolid.transmit.text": {
+        source: "iana"
+      },
+      "model/vnd.rosette.annotated-data-model": {
+        source: "iana"
+      },
+      "model/vnd.valve.source.compiled-map": {
+        source: "iana"
+      },
+      "model/vnd.vtu": {
+        source: "iana",
+        extensions: ["vtu"]
+      },
+      "model/vrml": {
+        source: "iana",
+        compressible: false,
+        extensions: ["wrl", "vrml"]
+      },
+      "model/x3d+binary": {
+        source: "apache",
+        compressible: false,
+        extensions: ["x3db", "x3dbz"]
+      },
+      "model/x3d+fastinfoset": {
+        source: "iana"
+      },
+      "model/x3d+vrml": {
+        source: "apache",
+        compressible: false,
+        extensions: ["x3dv", "x3dvz"]
+      },
+      "model/x3d+xml": {
+        source: "iana",
+        compressible: true,
+        extensions: ["x3d", "x3dz"]
+      },
+      "model/x3d-vrml": {
+        source: "iana"
+      },
+      "multipart/alternative": {
+        source: "iana",
+        compressible: false
+      },
+      "multipart/appledouble": {
+        source: "iana"
+      },
+      "multipart/byteranges": {
+        source: "iana"
+      },
+      "multipart/digest": {
+        source: "iana"
+      },
+      "multipart/encrypted": {
+        source: "iana",
+        compressible: false
+      },
+      "multipart/form-data": {
+        source: "iana",
+        compressible: false
+      },
+      "multipart/header-set": {
+        source: "iana"
+      },
+      "multipart/mixed": {
+        source: "iana",
+        compressible: false
+      },
+      "multipart/parallel": {
+        source: "iana"
+      },
+      "multipart/related": {
+        source: "iana",
+        compressible: false
+      },
+      "multipart/report": {
+        source: "iana"
+      },
+      "multipart/signed": {
+        source: "iana",
+        compressible: false
+      },
+      "multipart/voice-message": {
+        source: "iana"
+      },
+      "multipart/x-mixed-replace": {
+        source: "iana"
+      },
+      "text/1d-interleaved-parityfec": {
+        source: "iana"
+      },
+      "text/cache-manifest": {
+        source: "iana",
+        compressible: true,
+        extensions: ["appcache", "manifest"]
+      },
+      "text/calendar": {
+        source: "iana",
+        extensions: ["ics", "ifb"]
+      },
+      "text/calender": {
+        compressible: true
+      },
+      "text/cmd": {
+        compressible: true
+      },
+      "text/coffeescript": {
+        extensions: ["coffee", "litcoffee"]
+      },
+      "text/css": {
+        source: "iana",
+        compressible: true,
+        extensions: ["css"]
+      },
+      "text/csv": {
+        source: "iana",
+        compressible: true,
+        extensions: ["csv"]
+      },
+      "text/csv-schema": {
+        source: "iana"
+      },
+      "text/directory": {
+        source: "iana"
+      },
+      "text/dns": {
+        source: "iana"
+      },
+      "text/ecmascript": {
+        source: "iana"
+      },
+      "text/encaprtp": {
+        source: "iana"
+      },
+      "text/enriched": {
+        source: "iana"
+      },
+      "text/fwdred": {
+        source: "iana"
+      },
+      "text/grammar-ref-list": {
+        source: "iana"
+      },
+      "text/hjson": {
+        extensions: ["hjson"]
+      },
+      "text/html": {
+        source: "iana",
+        compressible: true,
+        extensions: ["html", "htm", "shtml"]
+      },
+      "text/jade": {
+        extensions: ["jade"]
+      },
+      "text/javascript": {
+        source: "iana",
+        compressible: true
+      },
+      "text/jcr-cnd": {
+        source: "iana"
+      },
+      "text/jsx": {
+        compressible: true,
+        extensions: ["jsx"]
+      },
+      "text/less": {
+        extensions: ["less"]
+      },
+      "text/markdown": {
+        source: "iana"
+      },
+      "text/mathml": {
+        source: "nginx",
+        extensions: ["mml"]
+      },
+      "text/mizar": {
+        source: "iana"
+      },
+      "text/n3": {
+        source: "iana",
+        compressible: true,
+        extensions: ["n3"]
+      },
+      "text/parameters": {
+        source: "iana"
+      },
+      "text/parityfec": {
+        source: "iana"
+      },
+      "text/plain": {
+        source: "iana",
+        compressible: true,
+        extensions: ["txt", "text", "conf", "def", "list", "log", "in", "ini"]
+      },
+      "text/provenance-notation": {
+        source: "iana"
+      },
+      "text/prs.fallenstein.rst": {
+        source: "iana"
+      },
+      "text/prs.lines.tag": {
+        source: "iana",
+        extensions: ["dsc"]
+      },
+      "text/prs.prop.logic": {
+        source: "iana"
+      },
+      "text/raptorfec": {
+        source: "iana"
+      },
+      "text/red": {
+        source: "iana"
+      },
+      "text/rfc822-headers": {
+        source: "iana"
+      },
+      "text/richtext": {
+        source: "iana",
+        compressible: true,
+        extensions: ["rtx"]
+      },
+      "text/rtf": {
+        source: "iana",
+        compressible: true,
+        extensions: ["rtf"]
+      },
+      "text/rtp-enc-aescm128": {
+        source: "iana"
+      },
+      "text/rtploopback": {
+        source: "iana"
+      },
+      "text/rtx": {
+        source: "iana"
+      },
+      "text/sgml": {
+        source: "iana",
+        extensions: ["sgml", "sgm"]
+      },
+      "text/slim": {
+        extensions: ["slim", "slm"]
+      },
+      "text/stylus": {
+        extensions: ["stylus", "styl"]
+      },
+      "text/t140": {
+        source: "iana"
+      },
+      "text/tab-separated-values": {
+        source: "iana",
+        compressible: true,
+        extensions: ["tsv"]
+      },
+      "text/troff": {
+        source: "iana",
+        extensions: ["t", "tr", "roff", "man", "me", "ms"]
+      },
+      "text/turtle": {
+        source: "iana",
+        extensions: ["ttl"]
+      },
+      "text/ulpfec": {
+        source: "iana"
+      },
+      "text/uri-list": {
+        source: "iana",
+        compressible: true,
+        extensions: ["uri", "uris", "urls"]
+      },
+      "text/vcard": {
+        source: "iana",
+        compressible: true,
+        extensions: ["vcard"]
+      },
+      "text/vnd.a": {
+        source: "iana"
+      },
+      "text/vnd.abc": {
+        source: "iana"
+      },
+      "text/vnd.ascii-art": {
+        source: "iana"
+      },
+      "text/vnd.curl": {
+        source: "iana",
+        extensions: ["curl"]
+      },
+      "text/vnd.curl.dcurl": {
+        source: "apache",
+        extensions: ["dcurl"]
+      },
+      "text/vnd.curl.mcurl": {
+        source: "apache",
+        extensions: ["mcurl"]
+      },
+      "text/vnd.curl.scurl": {
+        source: "apache",
+        extensions: ["scurl"]
+      },
+      "text/vnd.debian.copyright": {
+        source: "iana"
+      },
+      "text/vnd.dmclientscript": {
+        source: "iana"
+      },
+      "text/vnd.dvb.subtitle": {
+        source: "iana",
+        extensions: ["sub"]
+      },
+      "text/vnd.esmertec.theme-descriptor": {
+        source: "iana"
+      },
+      "text/vnd.fly": {
+        source: "iana",
+        extensions: ["fly"]
+      },
+      "text/vnd.fmi.flexstor": {
+        source: "iana",
+        extensions: ["flx"]
+      },
+      "text/vnd.graphviz": {
+        source: "iana",
+        extensions: ["gv"]
+      },
+      "text/vnd.in3d.3dml": {
+        source: "iana",
+        extensions: ["3dml"]
+      },
+      "text/vnd.in3d.spot": {
+        source: "iana",
+        extensions: ["spot"]
+      },
+      "text/vnd.iptc.newsml": {
+        source: "iana"
+      },
+      "text/vnd.iptc.nitf": {
+        source: "iana"
+      },
+      "text/vnd.latex-z": {
+        source: "iana"
+      },
+      "text/vnd.motorola.reflex": {
+        source: "iana"
+      },
+      "text/vnd.ms-mediapackage": {
+        source: "iana"
+      },
+      "text/vnd.net2phone.commcenter.command": {
+        source: "iana"
+      },
+      "text/vnd.radisys.msml-basic-layout": {
+        source: "iana"
+      },
+      "text/vnd.si.uricatalogue": {
+        source: "iana"
+      },
+      "text/vnd.sun.j2me.app-descriptor": {
+        source: "iana",
+        extensions: ["jad"]
+      },
+      "text/vnd.trolltech.linguist": {
+        source: "iana"
+      },
+      "text/vnd.wap.si": {
+        source: "iana"
+      },
+      "text/vnd.wap.sl": {
+        source: "iana"
+      },
+      "text/vnd.wap.wml": {
+        source: "iana",
+        extensions: ["wml"]
+      },
+      "text/vnd.wap.wmlscript": {
+        source: "iana",
+        extensions: ["wmls"]
+      },
+      "text/vtt": {
+        charset: "UTF-8",
+        compressible: true,
+        extensions: ["vtt"]
+      },
+      "text/x-asm": {
+        source: "apache",
+        extensions: ["s", "asm"]
+      },
+      "text/x-c": {
+        source: "apache",
+        extensions: ["c", "cc", "cxx", "cpp", "h", "hh", "dic"]
+      },
+      "text/x-component": {
+        source: "nginx",
+        extensions: ["htc"]
+      },
+      "text/x-fortran": {
+        source: "apache",
+        extensions: ["f", "for", "f77", "f90"]
+      },
+      "text/x-gwt-rpc": {
+        compressible: true
+      },
+      "text/x-handlebars-template": {
+        extensions: ["hbs"]
+      },
+      "text/x-java-source": {
+        source: "apache",
+        extensions: ["java"]
+      },
+      "text/x-jquery-tmpl": {
+        compressible: true
+      },
+      "text/x-lua": {
+        extensions: ["lua"]
+      },
+      "text/x-markdown": {
+        compressible: true,
+        extensions: ["markdown", "md", "mkd"]
+      },
+      "text/x-nfo": {
+        source: "apache",
+        extensions: ["nfo"]
+      },
+      "text/x-opml": {
+        source: "apache",
+        extensions: ["opml"]
+      },
+      "text/x-pascal": {
+        source: "apache",
+        extensions: ["p", "pas"]
+      },
+      "text/x-processing": {
+        compressible: true,
+        extensions: ["pde"]
+      },
+      "text/x-sass": {
+        extensions: ["sass"]
+      },
+      "text/x-scss": {
+        extensions: ["scss"]
+      },
+      "text/x-setext": {
+        source: "apache",
+        extensions: ["etx"]
+      },
+      "text/x-sfv": {
+        source: "apache",
+        extensions: ["sfv"]
+      },
+      "text/x-suse-ymp": {
+        compressible: true,
+        extensions: ["ymp"]
+      },
+      "text/x-uuencode": {
+        source: "apache",
+        extensions: ["uu"]
+      },
+      "text/x-vcalendar": {
+        source: "apache",
+        extensions: ["vcs"]
+      },
+      "text/x-vcard": {
+        source: "apache",
+        extensions: ["vcf"]
+      },
+      "text/xml": {
+        source: "iana",
+        compressible: true,
+        extensions: ["xml"]
+      },
+      "text/xml-external-parsed-entity": {
+        source: "iana"
+      },
+      "text/yaml": {
+        extensions: ["yaml", "yml"]
+      },
+      "video/1d-interleaved-parityfec": {
+        source: "apache"
+      },
+      "video/3gpp": {
+        source: "apache",
+        extensions: ["3gp", "3gpp"]
+      },
+      "video/3gpp-tt": {
+        source: "apache"
+      },
+      "video/3gpp2": {
+        source: "apache",
+        extensions: ["3g2"]
+      },
+      "video/bmpeg": {
+        source: "apache"
+      },
+      "video/bt656": {
+        source: "apache"
+      },
+      "video/celb": {
+        source: "apache"
+      },
+      "video/dv": {
+        source: "apache"
+      },
+      "video/encaprtp": {
+        source: "apache"
+      },
+      "video/h261": {
+        source: "apache",
+        extensions: ["h261"]
+      },
+      "video/h263": {
+        source: "apache",
+        extensions: ["h263"]
+      },
+      "video/h263-1998": {
+        source: "apache"
+      },
+      "video/h263-2000": {
+        source: "apache"
+      },
+      "video/h264": {
+        source: "apache",
+        extensions: ["h264"]
+      },
+      "video/h264-rcdo": {
+        source: "apache"
+      },
+      "video/h264-svc": {
+        source: "apache"
+      },
+      "video/h265": {
+        source: "apache"
+      },
+      "video/iso.segment": {
+        source: "apache"
+      },
+      "video/jpeg": {
+        source: "apache",
+        extensions: ["jpgv"]
+      },
+      "video/jpeg2000": {
+        source: "apache"
+      },
+      "video/jpm": {
+        source: "apache",
+        extensions: ["jpm", "jpgm"]
+      },
+      "video/mj2": {
+        source: "apache",
+        extensions: ["mj2", "mjp2"]
+      },
+      "video/mp1s": {
+        source: "apache"
+      },
+      "video/mp2p": {
+        source: "apache"
+      },
+      "video/mp2t": {
+        source: "apache",
+        extensions: ["ts"]
+      },
+      "video/mp4": {
+        source: "apache",
+        compressible: false,
+        extensions: ["mp4", "mp4v", "mpg4"]
+      },
+      "video/mp4v-es": {
+        source: "apache"
+      },
+      "video/mpeg": {
+        source: "apache",
+        compressible: false,
+        extensions: ["mpeg", "mpg", "mpe", "m1v", "m2v"]
+      },
+      "video/mpeg4-generic": {
+        source: "apache"
+      },
+      "video/mpv": {
+        source: "apache"
+      },
+      "video/nv": {
+        source: "apache"
+      },
+      "video/ogg": {
+        source: "apache",
+        compressible: false,
+        extensions: ["ogv"]
+      },
+      "video/parityfec": {
+        source: "apache"
+      },
+      "video/pointer": {
+        source: "apache"
+      },
+      "video/quicktime": {
+        source: "apache",
+        compressible: false,
+        extensions: ["qt", "mov"]
+      },
+      "video/raptorfec": {
+        source: "apache"
+      },
+      "video/raw": {
+        source: "apache"
+      },
+      "video/rtp-enc-aescm128": {
+        source: "apache"
+      },
+      "video/rtploopback": {
+        source: "apache"
+      },
+      "video/rtx": {
+        source: "apache"
+      },
+      "video/smpte292m": {
+        source: "apache"
+      },
+      "video/ulpfec": {
+        source: "apache"
+      },
+      "video/vc1": {
+        source: "apache"
+      },
+      "video/vnd.cctv": {
+        source: "apache"
+      },
+      "video/vnd.dece.hd": {
+        source: "apache",
+        extensions: ["uvh", "uvvh"]
+      },
+      "video/vnd.dece.mobile": {
+        source: "apache",
+        extensions: ["uvm", "uvvm"]
+      },
+      "video/vnd.dece.mp4": {
+        source: "apache"
+      },
+      "video/vnd.dece.pd": {
+        source: "apache",
+        extensions: ["uvp", "uvvp"]
+      },
+      "video/vnd.dece.sd": {
+        source: "apache",
+        extensions: ["uvs", "uvvs"]
+      },
+      "video/vnd.dece.video": {
+        source: "apache",
+        extensions: ["uvv", "uvvv"]
+      },
+      "video/vnd.directv.mpeg": {
+        source: "apache"
+      },
+      "video/vnd.directv.mpeg-tts": {
+        source: "apache"
+      },
+      "video/vnd.dlna.mpeg-tts": {
+        source: "apache"
+      },
+      "video/vnd.dvb.file": {
+        source: "apache",
+        extensions: ["dvb"]
+      },
+      "video/vnd.fvt": {
+        source: "apache",
+        extensions: ["fvt"]
+      },
+      "video/vnd.hns.video": {
+        source: "apache"
+      },
+      "video/vnd.iptvforum.1dparityfec-1010": {
+        source: "apache"
+      },
+      "video/vnd.iptvforum.1dparityfec-2005": {
+        source: "apache"
+      },
+      "video/vnd.iptvforum.2dparityfec-1010": {
+        source: "apache"
+      },
+      "video/vnd.iptvforum.2dparityfec-2005": {
+        source: "apache"
+      },
+      "video/vnd.iptvforum.ttsavc": {
+        source: "apache"
+      },
+      "video/vnd.iptvforum.ttsmpeg2": {
+        source: "apache"
+      },
+      "video/vnd.motorola.video": {
+        source: "apache"
+      },
+      "video/vnd.motorola.videop": {
+        source: "apache"
+      },
+      "video/vnd.mpegurl": {
+        source: "apache",
+        extensions: ["mxu", "m4u"]
+      },
+      "video/vnd.ms-playready.media.pyv": {
+        source: "apache",
+        extensions: ["pyv"]
+      },
+      "video/vnd.nokia.interleaved-multimedia": {
+        source: "apache"
+      },
+      "video/vnd.nokia.videovoip": {
+        source: "apache"
+      },
+      "video/vnd.objectvideo": {
+        source: "apache"
+      },
+      "video/vnd.radgamettools.bink": {
+        source: "apache"
+      },
+      "video/vnd.radgamettools.smacker": {
+        source: "apache"
+      },
+      "video/vnd.sealed.mpeg1": {
+        source: "apache"
+      },
+      "video/vnd.sealed.mpeg4": {
+        source: "apache"
+      },
+      "video/vnd.sealed.swf": {
+        source: "apache"
+      },
+      "video/vnd.sealedmedia.softseal.mov": {
+        source: "apache"
+      },
+      "video/vnd.uvvu.mp4": {
+        source: "apache",
+        extensions: ["uvu", "uvvu"]
+      },
+      "video/vnd.vivo": {
+        source: "apache",
+        extensions: ["viv"]
+      },
+      "video/vp8": {
+        source: "apache"
+      },
+      "video/webm": {
+        source: "apache",
+        compressible: false,
+        extensions: ["webm"]
+      },
+      "video/x-f4v": {
+        source: "apache",
+        extensions: ["f4v"]
+      },
+      "video/x-fli": {
+        source: "apache",
+        extensions: ["fli"]
+      },
+      "video/x-flv": {
+        source: "apache",
+        compressible: false,
+        extensions: ["flv"]
+      },
+      "video/x-m4v": {
+        source: "apache",
+        extensions: ["m4v"]
+      },
+      "video/x-matroska": {
+        source: "apache",
+        compressible: false,
+        extensions: ["mkv", "mk3d", "mks"]
+      },
+      "video/x-mng": {
+        source: "apache",
+        extensions: ["mng"]
+      },
+      "video/x-ms-asf": {
+        source: "apache",
+        extensions: ["asf", "asx"]
+      },
+      "video/x-ms-vob": {
+        source: "apache",
+        extensions: ["vob"]
+      },
+      "video/x-ms-wm": {
+        source: "apache",
+        extensions: ["wm"]
+      },
+      "video/x-ms-wmv": {
+        source: "apache",
+        compressible: false,
+        extensions: ["wmv"]
+      },
+      "video/x-ms-wmx": {
+        source: "apache",
+        extensions: ["wmx"]
+      },
+      "video/x-ms-wvx": {
+        source: "apache",
+        extensions: ["wvx"]
+      },
+      "video/x-msvideo": {
+        source: "apache",
+        extensions: ["avi"]
+      },
+      "video/x-sgi-movie": {
+        source: "apache",
+        extensions: ["movie"]
+      },
+      "video/x-smv": {
+        source: "apache",
+        extensions: ["smv"]
+      },
+      "x-conference/x-cooltalk": {
+        source: "apache",
+        extensions: ["ice"]
+      },
+      "x-shader/x-fragment": {
+        compressible: true
+      },
+      "x-shader/x-vertex": {
+        compressible: true
+      }
+    };
+  }
+});
+
+// node_modules/mime-db/index.js
+var require_mime_db = __commonJS({
+  "node_modules/mime-db/index.js"(exports, module2) {
+    module2.exports = require_db();
+  }
+});
+
+// node_modules/mime-types/index.js
+var require_mime_types = __commonJS({
+  "node_modules/mime-types/index.js"(exports) {
+    "use strict";
+    var db = require_mime_db();
+    var extname = require("path").extname;
+    var extractTypeRegExp = /^\s*([^;\s]*)(?:;|\s|$)/;
+    var textTypeRegExp = /^text\//i;
+    exports.charset = charset;
+    exports.charsets = { lookup: charset };
+    exports.contentType = contentType;
+    exports.extension = extension;
+    exports.extensions = /* @__PURE__ */ Object.create(null);
+    exports.lookup = lookup2;
+    exports.types = /* @__PURE__ */ Object.create(null);
+    populateMaps(exports.extensions, exports.types);
+    function charset(type) {
+      if (!type || typeof type !== "string") {
+        return false;
+      }
+      var match = extractTypeRegExp.exec(type);
+      var mime3 = match && db[match[1].toLowerCase()];
+      if (mime3 && mime3.charset) {
+        return mime3.charset;
+      }
+      if (match && textTypeRegExp.test(match[1])) {
+        return "UTF-8";
+      }
+      return false;
+    }
+    function contentType(str) {
+      if (!str || typeof str !== "string") {
+        return false;
+      }
+      var mime3 = str.indexOf("/") === -1 ? exports.lookup(str) : str;
+      if (!mime3) {
+        return false;
+      }
+      if (mime3.indexOf("charset") === -1) {
+        var charset2 = exports.charset(mime3);
+        if (charset2)
+          mime3 += "; charset=" + charset2.toLowerCase();
+      }
+      return mime3;
+    }
+    function extension(type) {
+      if (!type || typeof type !== "string") {
+        return false;
+      }
+      var match = extractTypeRegExp.exec(type);
+      var exts = match && exports.extensions[match[1].toLowerCase()];
+      if (!exts || !exts.length) {
+        return false;
+      }
+      return exts[0];
+    }
+    function lookup2(path) {
+      if (!path || typeof path !== "string") {
+        return false;
+      }
+      var extension2 = extname("x." + path).toLowerCase().substr(1);
+      if (!extension2) {
+        return false;
+      }
+      return exports.types[extension2] || false;
+    }
+    function populateMaps(extensions2, types) {
+      var preference = ["nginx", "apache", void 0, "iana"];
+      Object.keys(db).forEach(function forEachMimeType(type) {
+        var mime3 = db[type];
+        var exts = mime3.extensions;
+        if (!exts || !exts.length) {
+          return;
+        }
+        extensions2[type] = exts;
+        for (var i = 0; i < exts.length; i++) {
+          var extension2 = exts[i];
+          if (types[extension2]) {
+            var from = preference.indexOf(db[types[extension2]].source);
+            var to = preference.indexOf(mime3.source);
+            if (types[extension2] !== "application/octet-stream" && from > to || from === to && types[extension2].substr(0, 12) === "application/") {
+              continue;
+            }
+          }
+          types[extension2] = type;
+        }
+      });
+    }
+  }
+});
+
+// node_modules/xml/lib/escapeForXML.js
+var require_escapeForXML = __commonJS({
+  "node_modules/xml/lib/escapeForXML.js"(exports, module2) {
+    var XML_CHARACTER_MAP = {
+      "&": "&amp;",
+      '"': "&quot;",
+      "'": "&apos;",
+      "<": "&lt;",
+      ">": "&gt;"
+    };
+    function escapeForXML(string) {
+      return string && string.replace ? string.replace(/([&"<>'])/g, function(str, item) {
+        return XML_CHARACTER_MAP[item];
+      }) : string;
+    }
+    module2.exports = escapeForXML;
+  }
+});
+
+// node_modules/xml/lib/xml.js
+var require_xml = __commonJS({
+  "node_modules/xml/lib/xml.js"(exports, module2) {
+    var escapeForXML = require_escapeForXML();
+    var Stream = require("stream").Stream;
+    var DEFAULT_INDENT = "    ";
+    function xml(input, options) {
+      if (typeof options !== "object") {
+        options = {
+          indent: options
+        };
+      }
+      var stream = options.stream ? new Stream() : null, output = "", interrupted = false, indent = !options.indent ? "" : options.indent === true ? DEFAULT_INDENT : options.indent, instant = true;
+      function delay(func) {
+        if (!instant) {
+          func();
+        } else {
+          process.nextTick(func);
+        }
+      }
+      function append(interrupt, out) {
+        if (out !== void 0) {
+          output += out;
+        }
+        if (interrupt && !interrupted) {
+          stream = stream || new Stream();
+          interrupted = true;
+        }
+        if (interrupt && interrupted) {
+          var data = output;
+          delay(function() {
+            stream.emit("data", data);
+          });
+          output = "";
+        }
+      }
+      function add(value, last2) {
+        format(append, resolve(value, indent, indent ? 1 : 0), last2);
+      }
+      function end() {
+        if (stream) {
+          var data = output;
+          delay(function() {
+            stream.emit("data", data);
+            stream.emit("end");
+            stream.readable = false;
+            stream.emit("close");
+          });
+        }
+      }
+      function addXmlDeclaration(declaration) {
+        var encoding = declaration.encoding || "UTF-8", attr = { version: "1.0", encoding };
+        if (declaration.standalone) {
+          attr.standalone = declaration.standalone;
+        }
+        add({ "?xml": { _attr: attr } });
+        output = output.replace("/>", "?>");
+      }
+      delay(function() {
+        instant = false;
+      });
+      if (options.declaration) {
+        addXmlDeclaration(options.declaration);
+      }
+      if (input && input.forEach) {
+        input.forEach(function(value, i) {
+          var last2;
+          if (i + 1 === input.length)
+            last2 = end;
+          add(value, last2);
+        });
+      } else {
+        add(input, end);
+      }
+      if (stream) {
+        stream.readable = true;
+        return stream;
+      }
+      return output;
+    }
+    function element() {
+      var input = Array.prototype.slice.call(arguments), self2 = {
+        _elem: resolve(input)
+      };
+      self2.push = function(input2) {
+        if (!this.append) {
+          throw new Error("not assigned to a parent!");
+        }
+        var that = this;
+        var indent = this._elem.indent;
+        format(this.append, resolve(input2, indent, this._elem.icount + (indent ? 1 : 0)), function() {
+          that.append(true);
+        });
+      };
+      self2.close = function(input2) {
+        if (input2 !== void 0) {
+          this.push(input2);
+        }
+        if (this.end) {
+          this.end();
+        }
+      };
+      return self2;
+    }
+    function create_indent(character, count) {
+      return new Array(count || 0).join(character || "");
+    }
+    function resolve(data, indent, indent_count) {
+      indent_count = indent_count || 0;
+      var indent_spaces = create_indent(indent, indent_count);
+      var name;
+      var values = data;
+      var interrupt = false;
+      if (typeof data === "object") {
+        var keys = Object.keys(data);
+        name = keys[0];
+        values = data[name];
+        if (values && values._elem) {
+          values._elem.name = name;
+          values._elem.icount = indent_count;
+          values._elem.indent = indent;
+          values._elem.indents = indent_spaces;
+          values._elem.interrupt = values;
+          return values._elem;
+        }
+      }
+      var attributes = [], content = [];
+      var isStringContent;
+      function get_attributes(obj) {
+        var keys2 = Object.keys(obj);
+        keys2.forEach(function(key) {
+          attributes.push(attribute(key, obj[key]));
+        });
+      }
+      switch (typeof values) {
+        case "object":
+          if (values === null)
+            break;
+          if (values._attr) {
+            get_attributes(values._attr);
+          }
+          if (values._cdata) {
+            content.push(("<![CDATA[" + values._cdata).replace(/\]\]>/g, "]]]]><![CDATA[>") + "]]>");
+          }
+          if (values.forEach) {
+            isStringContent = false;
+            content.push("");
+            values.forEach(function(value) {
+              if (typeof value == "object") {
+                var _name = Object.keys(value)[0];
+                if (_name == "_attr") {
+                  get_attributes(value._attr);
+                } else {
+                  content.push(resolve(value, indent, indent_count + 1));
+                }
+              } else {
+                content.pop();
+                isStringContent = true;
+                content.push(escapeForXML(value));
+              }
+            });
+            if (!isStringContent) {
+              content.push("");
+            }
+          }
+          break;
+        default:
+          content.push(escapeForXML(values));
+      }
+      return {
+        name,
+        interrupt,
+        attributes,
+        content,
+        icount: indent_count,
+        indents: indent_spaces,
+        indent
+      };
+    }
+    function format(append, elem, end) {
+      if (typeof elem != "object") {
+        return append(false, elem);
+      }
+      var len = elem.interrupt ? 1 : elem.content.length;
+      function proceed() {
+        while (elem.content.length) {
+          var value = elem.content.shift();
+          if (value === void 0)
+            continue;
+          if (interrupt(value))
+            return;
+          format(append, value);
+        }
+        append(false, (len > 1 ? elem.indents : "") + (elem.name ? "</" + elem.name + ">" : "") + (elem.indent && !end ? "\n" : ""));
+        if (end) {
+          end();
+        }
+      }
+      function interrupt(value) {
+        if (value.interrupt) {
+          value.interrupt.append = append;
+          value.interrupt.end = proceed;
+          value.interrupt = false;
+          append(true);
+          return true;
+        }
+        return false;
+      }
+      append(false, elem.indents + (elem.name ? "<" + elem.name : "") + (elem.attributes.length ? " " + elem.attributes.join(" ") : "") + (len ? elem.name ? ">" : "" : elem.name ? "/>" : "") + (elem.indent && len > 1 ? "\n" : ""));
+      if (!len) {
+        return append(false, elem.indent ? "\n" : "");
+      }
+      if (!interrupt(elem)) {
+        proceed();
+      }
+    }
+    function attribute(key, value) {
+      return key + '="' + escapeForXML(value) + '"';
+    }
+    module2.exports = xml;
+    module2.exports.element = module2.exports.Element = element;
+  }
+});
+
+// node_modules/rss/lib/index.js
+var require_lib3 = __commonJS({
+  "node_modules/rss/lib/index.js"(exports, module2) {
+    "use strict";
+    var mime3 = require_mime_types();
+    var xml = require_xml();
+    var fs2 = require("fs");
+    function ifTruePush(bool, array, data) {
+      if (bool) {
+        array.push(data);
+      }
+    }
+    function ifTruePushArray(bool, array, dataArray) {
+      if (!bool) {
+        return;
+      }
+      dataArray.forEach(function(item) {
+        ifTruePush(item, array, item);
+      });
+    }
+    function getSize(filename) {
+      if (typeof fs2 === "undefined") {
+        return 0;
+      }
+      return fs2.statSync(filename).size;
+    }
+    function generateXML(data) {
+      var channel = [];
+      channel.push({ title: { _cdata: data.title } });
+      channel.push({ description: { _cdata: data.description || data.title } });
+      channel.push({ link: data.site_url || "http://github.com/dylang/node-rss" });
+      if (data.image_url) {
+        channel.push({ image: [{ url: data.image_url }, { title: data.title }, { link: data.site_url }] });
+      }
+      channel.push({ generator: data.generator });
+      channel.push({ lastBuildDate: new Date().toUTCString() });
+      ifTruePush(data.feed_url, channel, { "atom:link": { _attr: { href: data.feed_url, rel: "self", type: "application/rss+xml" } } });
+      ifTruePush(data.author, channel, { "author": { _cdata: data.author } });
+      ifTruePush(data.pubDate, channel, { "pubDate": new Date(data.pubDate).toGMTString() });
+      ifTruePush(data.copyright, channel, { "copyright": { _cdata: data.copyright } });
+      ifTruePush(data.language, channel, { "language": { _cdata: data.language } });
+      ifTruePush(data.managingEditor, channel, { "managingEditor": { _cdata: data.managingEditor } });
+      ifTruePush(data.webMaster, channel, { "webMaster": { _cdata: data.webMaster } });
+      ifTruePush(data.docs, channel, { "docs": data.docs });
+      ifTruePush(data.ttl, channel, { "ttl": data.ttl });
+      ifTruePush(data.hub, channel, { "atom:link": { _attr: { href: data.hub, rel: "hub" } } });
+      if (data.categories) {
+        data.categories.forEach(function(category) {
+          ifTruePush(category, channel, { category: { _cdata: category } });
+        });
+      }
+      ifTruePushArray(data.custom_elements, channel, data.custom_elements);
+      data.items.forEach(function(item) {
+        var item_values = [
+          { title: { _cdata: item.title } }
+        ];
+        ifTruePush(item.description, item_values, { description: { _cdata: item.description } });
+        ifTruePush(item.url, item_values, { link: item.url });
+        ifTruePush(item.link || item.guid || item.title, item_values, { guid: [{ _attr: { isPermaLink: !item.guid && !!item.url } }, item.guid || item.url || item.title] });
+        item.categories.forEach(function(category) {
+          ifTruePush(category, item_values, { category: { _cdata: category } });
+        });
+        ifTruePush(item.author || data.author, item_values, { "dc:creator": { _cdata: item.author || data.author } });
+        ifTruePush(item.date, item_values, { pubDate: new Date(item.date).toGMTString() });
+        data.geoRSS = data.geoRSS || item.lat && item.long;
+        ifTruePush(item.lat, item_values, { "geo:lat": item.lat });
+        ifTruePush(item.long, item_values, { "geo:long": item.long });
+        if (item.enclosure && item.enclosure.url) {
+          if (item.enclosure.file) {
+            item_values.push({
+              enclosure: {
+                _attr: {
+                  url: item.enclosure.url,
+                  length: item.enclosure.size || getSize(item.enclosure.file),
+                  type: item.enclosure.type || mime3.lookup(item.enclosure.file)
+                }
+              }
+            });
+          } else {
+            item_values.push({
+              enclosure: {
+                _attr: {
+                  url: item.enclosure.url,
+                  length: item.enclosure.size || 0,
+                  type: item.enclosure.type || mime3.lookup(item.enclosure.url)
+                }
+              }
+            });
+          }
+        }
+        ifTruePushArray(item.custom_elements, item_values, item.custom_elements);
+        channel.push({ item: item_values });
+      });
+      var _attr = {
+        "xmlns:dc": "http://purl.org/dc/elements/1.1/",
+        "xmlns:content": "http://purl.org/rss/1.0/modules/content/",
+        "xmlns:atom": "http://www.w3.org/2005/Atom",
+        version: "2.0"
+      };
+      Object.keys(data.custom_namespaces).forEach(function(name) {
+        _attr["xmlns:" + name] = data.custom_namespaces[name];
+      });
+      if (data.geoRSS) {
+        _attr["xmlns:geo"] = "http://www.w3.org/2003/01/geo/wgs84_pos#";
+      }
+      return {
+        rss: [
+          { _attr },
+          { channel }
+        ]
+      };
+    }
+    function RSS2(options, items) {
+      options = options || {};
+      this.title = options.title || "Untitled RSS Feed";
+      this.description = options.description || "";
+      this.generator = options.generator || "RSS for Node";
+      this.feed_url = options.feed_url;
+      this.site_url = options.site_url;
+      this.image_url = options.image_url;
+      this.author = options.author;
+      this.categories = options.categories;
+      this.pubDate = options.pubDate;
+      this.hub = options.hub;
+      this.docs = options.docs;
+      this.copyright = options.copyright;
+      this.language = options.language;
+      this.managingEditor = options.managingEditor;
+      this.webMaster = options.webMaster;
+      this.ttl = options.ttl;
+      this.geoRSS = options.geoRSS || false;
+      this.custom_namespaces = options.custom_namespaces || {};
+      this.custom_elements = options.custom_elements || [];
+      this.items = items || [];
+      this.item = function(options2) {
+        options2 = options2 || {};
+        var item = {
+          title: options2.title || "No title",
+          description: options2.description || "",
+          url: options2.url,
+          guid: options2.guid,
+          categories: options2.categories || [],
+          author: options2.author,
+          date: options2.date,
+          lat: options2.lat,
+          long: options2.long,
+          enclosure: options2.enclosure || false,
+          custom_elements: options2.custom_elements || []
+        };
+        this.items.push(item);
+        return this;
+      };
+      this.xml = function(indent) {
+        return '<?xml version="1.0" encoding="UTF-8"?>' + xml(generateXML(this), indent);
+      };
+    }
+    module2.exports = RSS2;
   }
 });
 
@@ -51197,7 +58741,7 @@ var require_readable_browser = __commonJS({
 });
 
 // node_modules/readable-web-to-node-stream/lib/index.js
-var require_lib3 = __commonJS({
+var require_lib4 = __commonJS({
   "node_modules/readable-web-to-node-stream/lib/index.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -51370,18 +58914,18 @@ class GraphAssembly
     static minRadius = 0;
 
     /**  
-     * @param {{nodeCount: number, linkCount:number, radii: number[], labels: string[], paths: string[], linkSources: number[], linkTargets: number[], linkCounts: number[]}} nodes
+     * @param {{graphOptions: {attractionForce: number, linkLength: number, repulsionForce: number, centralForce: number, edgePruning: number, minNodeRadius: number, maxNodeRadius: number}, nodeCount: number, linkCount:number, radii: number[], labels: string[], paths: string[], linkSources: number[], linkTargets: number[], linkCounts: number[]}} graphData
     */
-    static init(nodes)
+    static init(graphData)
     {
-        GraphAssembly.nodeCount = nodes.nodeCount;
-        GraphAssembly.linkCount = nodes.linkCount;
+        GraphAssembly.nodeCount = graphData.nodeCount;
+        GraphAssembly.linkCount = graphData.linkCount;
 
         // create arrays for the data
         let positions = new Float32Array(GraphAssembly.nodeCount * 2);
-        GraphAssembly.radii = new Float32Array(nodes.radii);
-        GraphAssembly.linkSources = new Int32Array(nodes.linkSources);
-        GraphAssembly.linkTargets = new Int32Array(nodes.linkTargets);
+        GraphAssembly.radii = new Float32Array(graphData.radii);
+        GraphAssembly.linkSources = new Int32Array(graphData.linkSources);
+        GraphAssembly.linkTargets = new Int32Array(graphData.linkTargets);
 
         // allocate memory on the heap
         GraphAssembly.#positionsPtr = Module._malloc(positions.byteLength);
@@ -51411,10 +58955,10 @@ class GraphAssembly
             GraphAssembly.linkCount, 
             batchFraction, 
             dt, 
-            attractionForce, 
-            linkLength, 
-            repulsionForce, 
-            centralForce
+            graphData.graphOptions.attractionForce, 
+            graphData.graphOptions.linkLength, 
+            graphData.graphOptions.repulsionForce,
+            graphData.graphOptions.centralForce,
         );
     }
 
@@ -51621,9 +59165,9 @@ class GraphRenderWorker
             linkTargets: GraphAssembly.linkTargets,
             nodeCount: GraphAssembly.nodeCount,
             radii: GraphAssembly.radii,
-            labels: nodes.labels,
-            linkLength: linkLength,
-            edgePruning: edgePruning,
+            labels: graphData.labels,
+            linkLength: graphData.graphOptions.linkLength,
+            edgePruning: graphData.graphOptions.edgePruning,
             options: { width: width, height: height, view: this.view },
         }, [this.view]);
     }
@@ -51642,50 +59186,55 @@ class GraphRenderWorker
 		this.cameraOffset = { x: (this.width / 2) - ((rect.minX + width / 2) * scale), y: (this.height / 2) - ((rect.minY + height / 2) * scale) };
 	}
 
+	fitToNodes()
+	{
+		this.fitToRect(startingCameraRect);
+	}
+
+	sampleColor(variable) 
+	{
+		let testEl = document.createElement('div');
+		document.body.appendChild(testEl);
+		testEl.style.setProperty('display', 'none');
+		testEl.style.setProperty('color', 'var(' + variable + ')');
+
+		let col = getComputedStyle(testEl).color;
+		let opacity = getComputedStyle(testEl).opacity;
+
+		testEl.remove();
+
+		function toColorObject(str)
+		{
+			var match = str.match(/rgb?\\((\\d+),\\s*(\\d+),\\s*(\\d+)\\)/);
+			return match ? {
+				red: parseInt(match[1]),
+				green: parseInt(match[2]),
+				blue: parseInt(match[3]),
+				alpha: 1
+			} : null
+		}
+
+		let color = toColorObject(col);
+		let alpha = parseFloat(opacity);
+		let result = 
+		{
+			a: (alpha * color?.alpha ?? 1) ?? 1,
+			rgb: (color?.red << 16 | color?.green << 8 | color?.blue) ?? 0x888888
+		};
+
+		return result;
+	};
+
     resampleColors()
     {
-        function sampleColor(variable) 
-        {
-            let testEl = document.createElement('div');
-            document.body.appendChild(testEl);
-            testEl.style.setProperty('display', 'none');
-            testEl.style.setProperty('color', 'var(' + variable + ')');
-
-            let col = getComputedStyle(testEl).color;
-            let opacity = getComputedStyle(testEl).opacity;
-
-            testEl.remove();
-
-            function toColorObject(str)
-            {
-                var match = str.match(/rgb?\\((\\d+),\\s*(\\d+),\\s*(\\d+)\\)/);
-                return match ? {
-                    red: parseInt(match[1]),
-                    green: parseInt(match[2]),
-                    blue: parseInt(match[3]),
-                    alpha: 1
-                } : null
-            }
-
-            var color = toColorObject(col), alpha = parseFloat(opacity);
-            return isNaN(alpha) && (alpha = 1),
-            color ? {
-                a: alpha * color.alpha,
-                rgb: color.red << 16 | color.green << 8 | color.blue
-            } : {
-                a: alpha,
-                rgb: 8947848
-            }
-        };
-
         this.colors =
         {
-            background: sampleColor('--background-secondary').rgb,
-            link: sampleColor('--graph-line').rgb,
-            node: sampleColor('--graph-node').rgb,
-            outline: sampleColor('--graph-line').rgb,
-            text: sampleColor('--graph-text').rgb,
-            accent: sampleColor('--interactive-accent').rgb,
+            background: this.sampleColor('--background-secondary').rgb,
+            link: this.sampleColor('--graph-line').rgb,
+            node: this.sampleColor('--graph-node').rgb,
+            outline: this.sampleColor('--graph-line').rgb,
+            text: this.sampleColor('--graph-text').rgb,
+            accent: this.sampleColor('--interactive-accent').rgb,
         };
     }
 
@@ -51918,11 +59467,11 @@ async function initializeGraphView()
     if(running) return;
 	running = true;
 
-	repulsionForce /= batchFraction; // compensate for batch fraction
+	graphData.graphOptions.repulsionForce /= batchFraction; // compensate for batch fraction
 	pixiApp = new PIXI.Application();
 
     console.log("Module Ready");
-    GraphAssembly.init(nodes);
+    GraphAssembly.init(graphData); // graphData is a global variable set in another script
 
     graphRenderer = new GraphRenderWorker();
     window.graphRenderer = graphRenderer;
@@ -51933,8 +59482,6 @@ async function initializeGraphView()
     pixiApp.ticker.add(updateGraph);
 
     setActiveDocument(new URL(window.location.href), false, false);
-
-	setTimeout(() => graphRenderer?.canvas?.classList.remove("hide"), 500);
 
     setInterval(() =>
     {
@@ -51966,11 +59513,18 @@ async function initializeGraphView()
     }, 1000);
 }
 
+let firstUpdate = true;
 function updateGraph()
 {
     if(!running) return;
 
 	if (graphRenderer.canvasSidebar.classList.contains("is-collapsed")) return;
+
+	if (firstUpdate)
+	{
+		setTimeout(() => graphRenderer?.canvas?.classList.remove("hide"), 500);
+		firstUpdate = false;
+	}
 
     GraphAssembly.update(mouseWorldPos, graphRenderer.grabbedNode, graphRenderer.cameraScale);
 
@@ -51989,14 +59543,14 @@ function updateGraph()
     {
         batchFraction = Math.max(batchFraction - 0.5 * 1/targetFPS, minBatchFraction);
         GraphAssembly.batchFraction = batchFraction;
-        GraphAssembly.repulsionForce = repulsionForce / batchFraction;
+        GraphAssembly.repulsionForce = graphData.graphOptions.repulsionForce / batchFraction;
     }
 
 	if (averageFPS > targetFPS * 1.2 && batchFraction < 1)
 	{
 		batchFraction = Math.min(batchFraction + 0.5 * 1/targetFPS, 1);
 		GraphAssembly.batchFraction = batchFraction;
-		GraphAssembly.repulsionForce = repulsionForce / batchFraction;
+		GraphAssembly.repulsionForce = graphData.graphOptions.repulsionForce / batchFraction;
 	}
 
     if (scrollVelocity != 0)
@@ -52123,8 +59677,8 @@ function initializeGraphEvents()
 	{
 		if (!graphExpanded) GraphAssembly.saveState(graphRenderer);
 		else toggleExpandedGraph();
-		let url = nodes.paths[nodeIndex];
-		if(window.location.pathname.endsWith(nodes.paths[nodeIndex])) return;
+		let url = graphData.paths[nodeIndex];
+		if(window.location.pathname.endsWith(graphData.paths[nodeIndex])) return;
 		await loadDocument(url, true, true);
 	}
 
@@ -52339,6 +59893,12 @@ function initializeGraphEvents()
 			}
 			scrollVelocity *= 1.4;
 		}
+	});
+
+	// recenter the graph on double click
+	graphContainer.addEventListener("dblclick", function(e)
+	{
+		graphRenderer.fitToNodes();
 	});
 
 	document.querySelector(".theme-toggle-input")?.addEventListener("change", event =>
@@ -53256,6 +60816,8 @@ if( 'function' === typeof importScripts)
     function invertColor(hex, bw) 
     {
         hex = hex.toString(16); // force conversion
+		// fill extra space up to 6 characters with 0
+		while (hex.length < 6) hex = "0" + hex;
 
         if (hex.indexOf('#') === 0) {
             hex = hex.slice(1);
@@ -53265,7 +60827,7 @@ if( 'function' === typeof importScripts)
             hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
         }
         if (hex.length !== 6) {
-            throw new Error('Invalid HEX color.');
+            throw new Error('Invalid HEX color:' + hex);
         }
         var r = parseInt(hex.slice(0, 2), 16),
             g = parseInt(hex.slice(2, 4), 16),
@@ -53394,7 +60956,8 @@ if( 'function' === typeof importScripts)
 			{
 				if (screenRadius > 2)
 				{
-					let labelFade = lerp(0, (screenRadius - 4) / 10 - (1/cameraScaleRoot)/6 * 0.9, Math.max(1 - hoverFade, 0.2));
+					
+					let labelFade = lerp(0, (screenRadius - 4) / 8 - (1/cameraScaleRoot)/6 * 0.9, Math.max(1 - hoverFade, 0.2));
 					showLabel(i, labelFade);
 				}
 				else 
@@ -54215,9 +61778,9 @@ async function loadDocument(url, changeURL, showInTree)
 
 	if (response.ok)
 	{
-		console.log("load: " + changeURL)
 		setActiveDocument(loadedURL, showInTree, changeURL);
 		let extention = getURLExtention(url);
+		if (extention == "/") extention = "html"; // if no extention assume it is html
 
 		documentType = "none";
 		embedType = "none";
@@ -54299,6 +61862,8 @@ function setActiveDocument(url, showInTree, changeURL, animate = true)
 	let relativePath = getVaultRelativePath(url.href);
 	let decodedRelativePath = decodeURI(relativePath);
 	let searchlessHeaderlessPath = decodedRelativePath.split("#")[0].split("?")[0].replace("\\"", "\\\\\\"").replace("\\'", "\\\\\\'");
+	
+	if (searchlessHeaderlessPath == "/" || searchlessHeaderlessPath == "") searchlessHeaderlessPath = "index.html";
 
 	// switch active file in file tree
 	let oldActiveTreeItem = document.querySelector(".file-tree .tree-item.mod-active");
@@ -54311,9 +61876,9 @@ function setActiveDocument(url, showInTree, changeURL, animate = true)
 	}
 
 	// set the active file in the graph view
-	if(typeof nodes != 'undefined' && window.graphRenderer)
+	if(typeof graphData != 'undefined' && window.graphRenderer)
 	{
-		let activeNode = nodes?.paths.findIndex(function(item) { return item.endsWith(searchlessHeaderlessPath); }) ?? -1;
+		let activeNode = graphData?.paths.findIndex(function(item) { return item.endsWith(searchlessHeaderlessPath); }) ?? -1;
 		
 		if(activeNode >= 0) 
 		{
@@ -55110,9 +62675,12 @@ function setupCanvas(setupOnNode)
 	// make canvas draggable / panable
 	canvasWrapper.addEventListener("mousedown", canvasWrapperMouseDownHandler);
 	canvasWrapper.addEventListener("touchstart", canvasWrapperMouseDownHandler);
+	let scrollInterferance = false;
 	function canvasWrapperMouseDownHandler(mouseDownEv)
 	{
 		let touchesDown = mouseDownEv.touches ?? [];
+
+		scrollInterferance = false;
 
 		// if there is already one tough down we don't want to start another mouse down event
 		// extra fingers are already being handled in the move event below
@@ -55140,7 +62708,6 @@ function setupCanvas(setupOnNode)
 				let deltaX = pointer.x - lastPointerPos.x;
 				let deltaY = pointer.y - lastPointerPos.y;
 
-				let scrollInterferance = false;
 				if ((mouseDownEv.button == 1 || touchesMove.length == 1) && focusedCanvasNode)
 				{
 					let mouseHoriz = Math.abs(deltaX) > Math.abs(deltaY * 1.5);
@@ -55153,9 +62720,13 @@ function setupCanvas(setupOnNode)
 						let scrollableVert = sizer.scrollHeight > sizer.parentElement.clientHeight + 1;
 						let scrollableHoriz = sizer.scrollWidth > sizer.parentElement.clientWidth + 1;
 
-						if ((mouseHoriz && scrollableHoriz) || (mouseVert && scrollableVert))
+						if (((mouseHoriz && scrollableHoriz) || (mouseVert && scrollableVert)) && (window?.navigator?.platform?.startsWith("Win") ?? true))
 						{
 							scrollInterferance = true;
+						}
+						else
+						{
+							scrollInterferance = false;
 						}
 					}
 				}
@@ -55205,6 +62776,7 @@ function setupCanvas(setupOnNode)
 				document.body.removeEventListener("touchmove", mouseMoveHandler);
 				document.body.removeEventListener("touchend", mouseUpHandler);
 				document.body.removeEventListener("touchcancel", mouseUpHandler);
+				scrollInterferance = false;
 			};
 
 			let mouseEnterHandler = function (mouseEnterEv)
@@ -56617,6 +64189,17 @@ body .webpage-container .tree-container .tree-scroll-area
   width: fit-content;
 }
 
+body.show-inline-title .page-title
+{
+	font-weight: var(--inline-title-weight);
+    font-size: var(--inline-title-size);
+    font-style: var(--inline-title-style);
+    font-variant: var(--inline-title-variant);
+    font-family: var(--inline-title-font);
+    letter-spacing: -0.015em;
+    color: var(--inline-title-color);
+}
+
 .heading
 {
 	position: relative;
@@ -56654,7 +64237,7 @@ html > body > .webpage-container > .document-container > .markdown-preview-view 
 
 .markdown-rendered .heading-wrapper:has(> .heading-children > div:last-child > :is(p,pre,table,ul,ol)) + .heading-wrapper > .heading:first-child
 {
-    margin-top: var(--heading-spacing) !important;
+    margin-top: var(--heading-spacing);
 }
 
 .heading-children
@@ -56663,6 +64246,7 @@ html > body > .webpage-container > .document-container > .markdown-preview-view 
 	transition-duration: 0.2s;
 	display: flow;
 	position: relative;
+	contain: inline-size;
 }
 
 .heading-children.is-collapsed
@@ -57193,30 +64777,6 @@ body.is-phone .heading-wrapper .heading-collapse-indicator
 
 @media print 
 {
-    /* .sidebar, .outline-container, .theme-toggle-container, .theme-toggle-container-inline, .toggle-background, .theme-toggle-input, .obsidian-banner-wrapper, .heading-after
-    {
-        display: none !important;
-    }
-
-	head, body, .webpage-container, .document-container, .markdown-preview-sizer, .markdown-preview-view, .view-content
-	{
-		display: block !important;
-		margin: 0 !important;
-		overflow: visible !important;
-		contain: none !important;
-		position: relative;
-	}
-
-	.heading-children
-	{
-		display: contents !important;
-	}
-
-	*:has(+ .heading-children)
-	{
-		padding-bottom: 1em !important;
-	}*/
-
 	body .webpage-container .document-container *
 	{ 
 		overflow: visible !important;
@@ -57224,12 +64784,12 @@ body.is-phone .heading-wrapper .heading-collapse-indicator
 		overflow-x: visible !important;
 	}
 
-	.sidebar
+	html body.publish :is(.sidebar, script, style, include)
 	{
 		display: none !important;
 	}
 
-	:root, html body.publish > :is(.webpage-container, .document-container, .markdown-preview-view)
+	:root, html body.publish > :is(.webpage-container, .document-container, .markdown-preview-view):not(script, style, include)
 	{
 		display: contents !important;
 	}
@@ -57245,9 +64805,18 @@ body.is-phone .heading-wrapper .heading-collapse-indicator
 		background: var(--background-primary);
 	}
 
-	.document-container>.markdown-preview-view>.markdown-preview-sizer
+	.document-container > .markdown-preview-view > .markdown-preview-sizer
 	{
+		padding: 0 !important;
+		margin: 0 !important;
+		padding: var(--file-margins) !important;
 		padding-bottom: 0 !important;
+	}
+
+	html body.publish :is(.document-container, .markdown-preview-view)
+	{
+		margin: 0 !important;
+		padding: 0 !important;
 	}
 
 
@@ -57338,9 +64907,9 @@ input[type=search] {
 
 /*#region Sidebar Resize */
 
-.sidebar-handle:hover ~ .sidebar-content, .sidebar.is-resizing .sidebar-content
+.sidebar .sidebar-handle:hover ~ .sidebar-content, .sidebar.is-resizing .sidebar-content
 {
-	outline-width: var(--divider-width-hover);
+	box-shadow: 0 0 0 var(--divider-width-hover) var(--divider-color-hover);
 }
 
 .sidebar-handle {
@@ -57376,7 +64945,14 @@ input[type=search] {
 	margin-right: 0.5em;
 }
 
-.tree-item-contents:has(.tree-item-icon) .tree-item-title::before
+.tree-item::before
+{
+	margin-left: calc(var(--tree-horizontal-spacing) - 0.3em);
+}
+
+.tree-item-contents:has(.tree-item-icon) .tree-item-title::before, 
+.tree-item-contents:has(.tree-item-icon)::before, 
+.tree-item:has(.tree-item-contents > .tree-item-icon)::before
 {
 	display: none !important;
 }
@@ -57533,6 +65109,11 @@ body.theme-light .excalidraw-svg svg.light, body.theme-light .excalidraw-plugin 
 	display: none;
 }
 
+.markdown-preview-view:has(.obsidian-banner-wrapper)
+{
+	padding-top: 0 !important;
+}
+
 /*#endregion */
 
 /*#region Mind Map  */
@@ -57658,7 +65239,7 @@ function waitLoadScripts(scriptNames, callback)
 `;
 
 // assets/deferred.txt.css
-var deferred_txt_default2 = "/* Define default values for variables */\nbody\n{\n	--line-width: 40em;\n	--line-width-adaptive: 40em;\n	--file-line-width: 40em;\n	--sidebar-width: min(20em, 80vw);\n	--collapse-arrow-size: 11px;\n	--tree-horizontal-spacing: 0.6em;\n	--tree-vertical-spacing: 0.6em;\n	--sidebar-margin: 12px;\n}\n\n/*#region Sidebars */\n\n.sidebar {\n    height: 100%;\n    min-width: calc(var(--sidebar-width) + var(--divider-width-hover));\n    max-width: calc(var(--sidebar-width) + var(--divider-width-hover));\n    font-size: 14px;\n    z-index: 10;\n\n    position: relative;\n    overflow: hidden;\n    overflow: clip;\n	\n    transition: min-width ease-in-out, max-width ease-in-out;\n	transition-duration: .2s;\n}\n\n.sidebar-left {\n    left: 0;\n}\n\n.sidebar-right {\n    right: 0;\n}\n\n.sidebar.is-collapsed {\n    min-width: 0;\n    max-width: 0;\n}\n\nbody.floating-sidebars .sidebar {\n	position: absolute;\n}\n\n.sidebar-content {\n    height: 100%;\n    min-width: calc(var(--sidebar-width) - var(--divider-width-hover));\n    top: 0;\n    padding: var(--sidebar-margin);\n    padding-top: 4em;\n    line-height: var(--line-height-tight);\n    background-color: var(--background-secondary);\n    transition: background-color,border-right,border-left,outline-width;\n    transition-duration: var(--color-fade-speed);\n    transition-timing-function: ease-in-out;\n    position: absolute;\n    display: flex;\n    flex-direction: column;\n    outline-width: 0;\n    outline-color: var(--divider-color-hover);\n    outline-style: solid;\n}\n\n/* If the sidebar isn't collapsed the content should have the same width as it */\n.sidebar:not(.is-collapsed) .sidebar-content {\n    min-width: calc(max(100%,var(--sidebar-width)) - 3px);\n    max-width: calc(max(100%,var(--sidebar-width)) - 3px);\n}\n\n.sidebar-left .sidebar-content\n{\n    left: 0;\n    border-right: 1px solid var(--divider-color);\n    border-top-right-radius: var(--radius-l);\n	border-bottom-right-radius: var(--radius-l);\n}\n\n.sidebar-right .sidebar-content \n{\n    right: 0;\n    border-left: 1px solid var(--divider-color);\n	border-top-left-radius: var(--radius-l);\n	border-bottom-left-radius: var(--radius-l);\n}\n\n/* Hide empty sidebars */\n.sidebar:has(.sidebar-content:empty):has(.topbar-content:empty)\n{\n	display: none;\n}\n\n.sidebar-topbar {\n    height: 2em;\n    width: var(--sidebar-width);\n    top: var(--sidebar-margin);\n    padding-inline: var(--sidebar-margin);\n    z-index: 1;\n\n    position: fixed;\n    display: flex;\n    align-items: center;\n\n    transition: width ease-in-out;\n    transition-duration: inherit;\n}\n\n.sidebar.is-collapsed .sidebar-topbar {\n    width: calc(2.3em + var(--sidebar-margin) * 2);\n}\n\n.sidebar .sidebar-topbar.is-collapsed\n{\n	width: 0;\n}\n\n.sidebar-left .sidebar-topbar {\n	left: 0;\n}\n\n.sidebar-right .sidebar-topbar {\n	right: 0;\n}\n\n.topbar-content {\n    overflow: hidden;\n    overflow: clip;\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    transition: inherit;\n}\n\n.sidebar.is-collapsed .topbar-content {\n	width: 0;\n	transition: inherit;\n}\n\n.clickable-icon.sidebar-collapse-icon {\n    background-color: transparent;\n    color: var(--icon-color-focused);\n    padding: 0!important;\n    margin: 0!important;\n    height: 100%!important;\n	width: 2.3em !important;\n    margin-inline: 0.14em!important;\n    position: absolute;\n}\n\n.sidebar-left .clickable-icon.sidebar-collapse-icon {\n    transform: rotateY(180deg);\n	right: var(--sidebar-margin);\n}\n\n.sidebar-right .clickable-icon.sidebar-collapse-icon {\n    transform: rotateY(180deg);\n	left: var(--sidebar-margin);\n}\n\n.clickable-icon.sidebar-collapse-icon svg.svg-icon {\n    width: 100%;\n	height: 100%;\n}\n\n.sidebar-section-header\n{\n  margin: 0 0 1em 0;\n  text-transform: uppercase;\n  letter-spacing: 0.06em;\n  font-weight: 600;\n}\n\n/*#endregion */\n\n/*#region Content / Markdown Preview View */\n\nbody\n{\n	transition: background-color var(--color-fade-speed) ease-in-out;\n}\n\n.webpage-container {\n    display: flex;\n    flex-direction: row;\n    height: 100%;\n    width: 100%;\n    position: fixed;\n    align-items: stretch;\n    justify-content: center;\n}\n\n.document-container {\n	opacity: 1;\n    flex-basis: 100%;\n    width: 100%;\n    height: 100%;\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    padding: 1em;\n    max-width: 100%;\n	padding-bottom: 0;\n	transition: opacity 0.2s ease-in-out;\n}\n\n.document-container:has(>.view-content) {\n    padding: 0;\n}\n\n.hide\n{\n	opacity: 0;\n	transition: opacity 0.2s ease-in-out;\n}\n\n.document-container>.markdown-preview-view {\n    padding: 1em!important;\n    padding-bottom: 30em;\n    background-color: var(--background-primary);\n    transition: background-color var(--color-fade-speed) ease-in-out;\n    border-top-right-radius: var(--window-radius,var(--radius-m));\n    border-top-left-radius: var(--window-radius,var(--radius-m));\n    overflow-x: hidden!important;\n    overflow-y: auto!important;\n    scrollbar-gutter: auto!important;\n    display: flex !important;\n    flex-direction: column !important;\n    align-items: center !important;\n}\n\n.document-container>.markdown-preview-view>.markdown-preview-sizer {\n    padding: 1.5em !important;\n    padding-bottom: 50vh !important;\n    width: 100% !important;\n    max-width: var(--line-width) !important;\n    flex-basis: var(--line-width) !important;\n    transition: background-color var(--color-fade-speed) ease-in-out;\n}\n\n.view-content img:not([width]), .markdown-rendered img:not([width]) \n{\n    max-width: 100%;\n    outline: none;\n}\n\n/* If the markdown view is displaying a raw file or embed then increase it's size to make everything as large as possible */\n.document-container > .view-content.embed {\n    display: flex;\n    padding: 1em;\n    height: 100%;\n    width: 100%;\n    align-items: center;\n    justify-content: center;\n}\n\n.document-container > .view-content.embed > *\n{\n	max-width: 100%;\n	max-height: 100%;\n	object-fit: contain;\n}\n\n/* For custom view exports */\n.document-container > .view-content\n{\n	overflow-x: auto;\n	contain: content;\n	padding: 0;\n	margin: 0;\n	height: 100%;\n}\n\n/*#endregion */\n\n/*#region Loading */\n\n.scroll-highlight \n{\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    pointer-events: none;\n    z-index: 1000;\n    background-color: hsla(var(--color-accent-hsl),.25);\n    opacity: 0;\n    padding: 1em;\n    inset: 50%;\n    translate: -50% -50%;\n    border-radius: var(--radius-s);\n}\n\n/*#endregion */\n";
+var deferred_txt_default2 = "/* Define default values for variables */\nbody\n{\n	--line-width: 40em;\n	--line-width-adaptive: 40em;\n	--file-line-width: 40em;\n	--sidebar-width: min(20em, 80vw);\n	--collapse-arrow-size: 11px;\n	--tree-horizontal-spacing: 0.6em;\n	--tree-vertical-spacing: 0.6em;\n	--sidebar-margin: 12px;\n}\n\n/*#region Sidebars */\n\n.sidebar {\n    height: 100%;\n    min-width: calc(var(--sidebar-width) + var(--divider-width-hover));\n    max-width: calc(var(--sidebar-width) + var(--divider-width-hover));\n    font-size: 14px;\n    z-index: 10;\n\n    position: relative;\n    overflow: hidden;\n    /* overflow: clip; */\n	\n    transition: min-width ease-in-out, max-width ease-in-out;\n	transition-duration: .2s;\n	contain: size;\n}\n\n.sidebar-left {\n    left: 0;\n}\n\n.sidebar-right {\n    right: 0;\n}\n\n.sidebar.is-collapsed {\n    min-width: 0;\n    max-width: 0;\n}\n\nbody.floating-sidebars .sidebar {\n	position: absolute;\n}\n\n.sidebar-content {\n    height: 100%;\n    min-width: calc(var(--sidebar-width) - var(--divider-width-hover));\n    top: 0;\n    padding: var(--sidebar-margin);\n    padding-top: 4em;\n    line-height: var(--line-height-tight);\n    background-color: var(--background-secondary);\n    transition: background-color,border-right,border-left,box-shadow;\n    transition-duration: var(--color-fade-speed);\n    transition-timing-function: ease-in-out;\n    position: absolute;\n    display: flex;\n    flex-direction: column;\n}\n\n/* If the sidebar isn't collapsed the content should have the same width as it */\n.sidebar:not(.is-collapsed) .sidebar-content {\n    min-width: calc(max(100%,var(--sidebar-width)) - 3px);\n    max-width: calc(max(100%,var(--sidebar-width)) - 3px);\n}\n\n.sidebar-left .sidebar-content\n{\n    left: 0;\n    border-top-right-radius: var(--radius-l);\n	border-bottom-right-radius: var(--radius-l);\n}\n\n.sidebar-right .sidebar-content \n{\n    right: 0;\n	border-top-left-radius: var(--radius-l);\n	border-bottom-left-radius: var(--radius-l);\n}\n\n/* Hide empty sidebars */\n.sidebar:has(.sidebar-content:empty):has(.topbar-content:empty)\n{\n	display: none;\n}\n\n.sidebar-topbar {\n    height: 2em;\n    width: var(--sidebar-width);\n    top: var(--sidebar-margin);\n    padding-inline: var(--sidebar-margin);\n    z-index: 1;\n\n    position: fixed;\n    display: flex;\n    align-items: center;\n\n    transition: width ease-in-out;\n    transition-duration: inherit;\n}\n\n.sidebar.is-collapsed .sidebar-topbar {\n    width: calc(2.3em + var(--sidebar-margin) * 2);\n}\n\n.sidebar .sidebar-topbar.is-collapsed\n{\n	width: 0;\n}\n\n.sidebar-left .sidebar-topbar {\n	left: 0;\n}\n\n.sidebar-right .sidebar-topbar {\n	right: 0;\n}\n\n.topbar-content {\n    overflow: hidden;\n    overflow: clip;\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    transition: inherit;\n}\n\n.sidebar.is-collapsed .topbar-content {\n	width: 0;\n	transition: inherit;\n}\n\n.clickable-icon.sidebar-collapse-icon {\n    background-color: transparent;\n    color: var(--icon-color-focused);\n    padding: 0!important;\n    margin: 0!important;\n    height: 100%!important;\n	width: 2.3em !important;\n    margin-inline: 0.14em!important;\n    position: absolute;\n}\n\n.sidebar-left .clickable-icon.sidebar-collapse-icon {\n    transform: rotateY(180deg);\n	right: var(--sidebar-margin);\n}\n\n.sidebar-right .clickable-icon.sidebar-collapse-icon {\n    transform: rotateY(180deg);\n	left: var(--sidebar-margin);\n}\n\n.clickable-icon.sidebar-collapse-icon svg.svg-icon {\n    width: 100%;\n	height: 100%;\n}\n\n.sidebar-section-header\n{\n  margin: 0 0 1em 0;\n  text-transform: uppercase;\n  letter-spacing: 0.06em;\n  font-weight: 600;\n}\n\n/*#endregion */\n\n/*#region Content / Markdown Preview View */\n\nbody\n{\n	transition: background-color var(--color-fade-speed) ease-in-out;\n}\n\n.webpage-container {\n    display: flex;\n    flex-direction: row;\n    height: 100%;\n    width: 100%;\n    align-items: stretch;\n    justify-content: center;\n}\n\n.document-container \n{\n	opacity: 1;\n    flex-basis: 100%;\n    max-width: 100%;\n    width: 100%;\n    height: 100%;\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n	transition: opacity 0.2s ease-in-out;\n	contain: inline-size;\n}\n\n.hide\n{\n	opacity: 0;\n	transition: opacity 0.2s ease-in-out;\n}\n\n.document-container > .markdown-preview-view \n{\n	margin: var(--sidebar-margin);\n	margin-bottom: 0;\n	width: 100%;\n	width: -webkit-fill-available;\n	width: -moz-available;\n	width: fill-available;\n    background-color: var(--background-primary);\n    transition: background-color var(--color-fade-speed) ease-in-out;\n    border-top-right-radius: var(--window-radius, var(--radius-m));\n    border-top-left-radius: var(--window-radius, var(--radius-m));\n    overflow-x: hidden !important;\n    overflow-y: auto !important;\n    display: flex !important;\n    flex-direction: column !important;\n    align-items: center !important;\n	contain: inline-size;\n}\n\n.document-container>.markdown-preview-view>.markdown-preview-sizer \n{\n    padding-bottom: 80vh !important;\n    width: 100% !important;\n    max-width: var(--line-width) !important;\n    flex-basis: var(--line-width) !important;\n    transition: background-color var(--color-fade-speed) ease-in-out;\n	contain: inline-size;\n}\n\n.view-content img:not([width]), .markdown-rendered img:not([width]) \n{\n    max-width: 100%;\n    outline: none;\n}\n\n/* If the markdown view is displaying a raw file or embed then increase it's size to make everything as large as possible */\n.document-container > .view-content.embed {\n    display: flex;\n    padding: 1em;\n    height: 100%;\n    width: 100%;\n    align-items: center;\n    justify-content: center;\n}\n\n.document-container > .view-content.embed > *\n{\n	max-width: 100%;\n	max-height: 100%;\n	object-fit: contain;\n}\n\n*:has(> :is(.math, table)) {\n    overflow-x: auto !important;\n}\n\n/* For custom view exports */\n.document-container > .view-content\n{\n	overflow-x: auto;\n	contain: content;\n	padding: 0;\n	margin: 0;\n	height: 100%;\n}\n\n/*#endregion */\n\n/*#region Loading */\n\n.scroll-highlight \n{\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    pointer-events: none;\n    z-index: 1000;\n    background-color: hsla(var(--color-accent-hsl),.25);\n    opacity: 0;\n    padding: 1em;\n    inset: 50%;\n    translate: -50% -50%;\n    border-radius: var(--radius-s);\n}\n\n/*#endregion */\n";
 
 // assets/theme-load.txt.js
 var theme_load_txt_default = 'let theme = localStorage.getItem("theme") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");\nif (theme == "dark")\n{\n	document.body.classList.add("theme-dark");\n	document.body.classList.remove("theme-light");\n}\nelse\n{\n	document.body.classList.add("theme-light");\n	document.body.classList.remove("theme-dark");\n}\n\nif (window.innerWidth < 480) document.body.classList.add("is-phone");\nelse if (window.innerWidth < 768) document.body.classList.add("is-tablet");\nelse if (window.innerWidth < 1024) document.body.classList.add("is-small-screen");\nelse document.body.classList.add("is-large-screen");\n';
@@ -57684,36 +65265,8 @@ var import_obsidian10 = require("obsidian");
 // scripts/utils/utils.ts
 var import_obsidian9 = require("obsidian");
 
-// scripts/html-generation/markdown-renderer.ts
-var import_obsidian8 = require("obsidian");
-
-// scripts/utils/tab-manager.ts
-var TabManager;
-((TabManager2) => {
-  function getLeaf(navType, splitDirection = "vertical") {
-    let leaf = navType === "split" ? app.workspace.getLeaf(navType, splitDirection) : app.workspace.getLeaf(navType);
-    return leaf;
-  }
-  async function openFileInNewTab(file, navType, splitDirection = "vertical") {
-    let leaf = getLeaf(navType, splitDirection);
-    try {
-      await leaf.openFile(file, void 0).catch((reason) => {
-        RenderLog.error(reason);
-      });
-    } catch (error) {
-      RenderLog.error(error);
-    }
-    return leaf;
-  }
-  TabManager2.openFileInNewTab = openFileInNewTab;
-  function openNewTab(navType, splitDirection = "vertical") {
-    return getLeaf(navType, splitDirection);
-  }
-  TabManager2.openNewTab = openNewTab;
-})(TabManager || (TabManager = {}));
-
 // scripts/settings/settings.ts
-var import_obsidian6 = require("obsidian");
+var import_obsidian7 = require("obsidian");
 
 // assets/third-party-styles-blacklist.txt
 var third_party_styles_blacklist_default = "advanced-pdf-export\ncustom-classes\nfile-tree-alternative\nhomepage\nOA-file-hider\nobsidian-asciimath\nobsidian-discordrpc\nobsidian-dynamic-background\nobsidian-dynamic-toc\nobsidian-excel-to-markdown-table\nobsidian-full-calendar\nobsidian-graphviz\nobsidian-latex\nobsidian-latex-suite\nobsidian-minimal-settings\nobsidian-plantuml\nobsidian-prozen\nobsidian-statusbar-pomo\nobsidian-style-settings\nobsidian-underline\nsettings-search\nsurfing\ntable-editor-obsidian\ntext-snippets-obsidian\nwebpage-html-export\nlapel\nobsidian-regex-replace\ntemplater-obsidian\nediting-toolbar\nobsidian-admonition\nobsidian-banners\nobsidian-charts\nobsidian-excalidraw-plugin\nobsidian42-brat\nobsidian-icon-folder\nvscode-editor\n";
@@ -57753,13 +65306,13 @@ var FlowList = class {
 };
 
 // scripts/settings/export-modal.ts
-var import_obsidian4 = require("obsidian");
+var import_obsidian5 = require("obsidian");
 
 // scripts/objects/file-picker.ts
-var import_obsidian3 = require("obsidian");
+var import_obsidian4 = require("obsidian");
 
 // scripts/objects/file-tree.ts
-var import_obsidian2 = require("obsidian");
+var import_obsidian3 = require("obsidian");
 
 // scripts/objects/tree.ts
 var Tree = class {
@@ -57946,7 +65499,7 @@ var TreeItem = class {
   async createItemTitle(container) {
     let titleEl = container.createEl("span", { cls: "tree-item-title" });
     if (this.tree.renderMarkdownTitles)
-      MarkdownRenderer.renderSingleLineMarkdown(this.title, titleEl);
+      MarkdownRendererAPI.renderMarkdownSimpleEl(this.title, titleEl);
     else
       titleEl.innerText = this.title;
     return titleEl;
@@ -57956,7 +65509,7 @@ var TreeItem = class {
       return void 0;
     let itemIconEl = container.createDiv("tree-item-icon");
     if (this.tree.renderMarkdownTitles)
-      MarkdownRenderer.renderSingleLineMarkdown(this.icon, itemIconEl);
+      MarkdownRendererAPI.renderMarkdownSimpleEl(this.icon, itemIconEl);
     else
       itemIconEl.innerText = this.icon;
     return itemIconEl;
@@ -58028,30 +65581,22 @@ var Downloadable = class {
       throw new Error("vaultRelativeDestination must be a folder: " + vaultRelativeDestination.asString);
     this.filename = filename;
     this.content = content;
-    this.relativeDownloadDirectory = vaultRelativeDestination;
-    this.relativeDownloadPath = vaultRelativeDestination.joinString(filename);
+    this.relativeDirectory = vaultRelativeDestination;
     this.encoding = encoding;
+  }
+  get relativePath() {
+    return this.relativeDirectory.joinString(this.filename);
   }
   async download(downloadDirectory) {
     let data = this.content instanceof Buffer ? this.content : Buffer.from(this.content.toString(), this.encoding);
     let writePath = this.getAbsoluteDownloadDirectory(downloadDirectory).joinString(this.filename);
     await writePath.writeFile(data, this.encoding);
   }
-  setFilename(filename) {
-    this.filename = filename;
-    this.relativeDownloadPath = this.relativeDownloadDirectory.joinString(filename);
-  }
-  setRelativeDownloadDirectory(relativeDownloadDirectory) {
-    if (relativeDownloadDirectory.isFile)
-      throw new Error("relativeDownloadDirectory must be a folder: " + relativeDownloadDirectory.asString);
-    this.relativeDownloadDirectory = relativeDownloadDirectory;
-    this.relativeDownloadPath = relativeDownloadDirectory.joinString(this.filename);
-  }
   getAbsoluteDownloadPath(downloadDirectory) {
-    return this.relativeDownloadDirectory.absolute(downloadDirectory).joinString(this.filename);
+    return this.relativeDirectory.absolute(downloadDirectory).joinString(this.filename);
   }
   getAbsoluteDownloadDirectory(downloadDirectory) {
-    return this.relativeDownloadDirectory.absolute(downloadDirectory);
+    return this.relativeDirectory.absolute(downloadDirectory);
   }
 };
 
@@ -58065,7 +65610,7 @@ var OutlineTree = class extends Tree {
     this.webpage = webpage;
     this.file = webpage.source;
     this.minDepth = minDepth;
-    let headings = webpage.getHeadings();
+    let headings = webpage.headings;
     this.depth = Math.min(...headings.map((h) => h.level)) - 1;
     let parent = this;
     for (let heading of headings) {
@@ -58108,7 +65653,7 @@ var OutlineTreeItem = class extends TreeItem {
     super(tree, parent, heading.level);
     this.children = [];
     this.heading = heading.heading;
-    this.href = tree.webpage.exportPath + "#" + heading.headingEl.id;
+    this.href = tree.webpage.relativePath + "#" + heading.headingEl.id;
   }
   forAllChildren(func, recursive = true) {
     super.forAllChildren(func, recursive);
@@ -58124,6 +65669,7 @@ var OutlineTreeItem = class extends TreeItem {
 // scripts/objects/graph-view.ts
 var GraphView = class {
   constructor() {
+    this.graphOptions = new GraphViewOptions();
     this.isInitialized = false;
   }
   static InOutQuadBlend(start, end, t) {
@@ -58133,10 +65679,11 @@ var GraphView = class {
     t2 *= 2;
     return start + (end - start) * t2;
   }
-  async init(files, minRadius, maxRadius, extraDepth = 0) {
+  async init(files, options) {
     var _a2, _b;
     if (this.isInitialized)
       return;
+    Object.assign(this.graphOptions, options.graphViewOptions);
     this.paths = files.map((f) => f.path);
     this.nodeCount = this.paths.length;
     this.linkSources = [];
@@ -58155,7 +65702,7 @@ var GraphView = class {
       let sourceIndex = sources.indexOf(source);
       let file = files.find((f) => f.path == source);
       if (file) {
-        let titleInfo = await Website.getTitleAndIcon(file);
+        let titleInfo = await Website.getTitleAndIcon(file, true);
         this.labels.push(titleInfo.title);
       }
       if (sourceIndex != -1) {
@@ -58179,13 +65726,8 @@ var GraphView = class {
       }
     }
     let maxLinks = Math.max(...linkCounts);
-    this.radii = linkCounts.map((l) => GraphView.InOutQuadBlend(minRadius, maxRadius, Math.min(l / (maxLinks * 0.8), 1)));
-    this.paths = this.paths.map((p) => {
-      let path = new Path(p).setExtension(".html").makeUnixStyle().asString;
-      if (Settings.makeNamesWebStyle)
-        path = Path.toWebStyle(path);
-      return path;
-    });
+    this.radii = linkCounts.map((l) => GraphView.InOutQuadBlend(this.graphOptions.minNodeRadius, this.graphOptions.maxNodeRadius, Math.min(l / (maxLinks * 0.8), 1)));
+    this.paths = this.paths.map((p) => new Path(p).setExtension(".html").makeUnixStyle().makeWebStyle(options.webStylePaths).asString);
     this.linkCount = this.linkSources.length;
     this.isInitialized = true;
   }
@@ -58208,465 +65750,24 @@ var GraphView = class {
   getExportData() {
     if (!this.isInitialized)
       throw new Error("Graph not initialized");
-    return `
-let nodes=
-${JSON.stringify(this)};
-let attractionForce = ${Settings.graphAttractionForce};
-let linkLength = ${Settings.graphLinkLength};
-let repulsionForce = ${Settings.graphRepulsionForce};
-let centralForce = ${Settings.graphCentralForce};
-let edgePruning = ${Settings.graphEdgePruning};
-`;
+    return `let graphData=
+${JSON.stringify(this)};`;
   }
 };
-
-// scripts/objects/webpage.ts
-var { minify } = require_htmlminifier();
-var Webpage = class {
-  constructor(file, website, destination, partOfBatch, fileName, forceExportToRoot = false) {
-    this.dependencies = [];
-    this.viewType = "markdown";
-    this.isConvertable = false;
-    var _a2, _b;
-    if (!destination.isAbsolute)
-      throw new Error("exportToFolder must be an absolute path" + destination.asString);
-    this.source = file;
-    this.website = website;
-    this.destinationFolder = destination.directory;
-    this.sourceFolder = new Path(file.path).directory;
-    this.partOfBatch = partOfBatch;
-    this.name = fileName;
-    this.isConvertable = MarkdownRenderer.isConvertable(file.extension);
-    this.name += this.isConvertable ? ".html" : "." + file.extension;
-    if (this.isConvertable)
-      this.document = document.implementation.createHTMLDocument(this.source.basename);
-    let parentPath = (_b = (_a2 = file.parent) == null ? void 0 : _a2.path) != null ? _b : "/";
-    if (parentPath.trim() == "/" || parentPath.trim() == "\\")
-      parentPath = "";
-    this.exportPath = Path.joinStrings(parentPath, this.name);
-    if (forceExportToRoot)
-      this.exportPath.reparse(this.name);
-    this.exportPath.setWorkingDirectory(this.destinationFolder.asString);
-    if (Settings.makeNamesWebStyle) {
-      this.name = Path.toWebStyle(this.name);
-      this.exportPath.makeWebStyle();
-    }
-  }
-  async getHTML() {
-    var _a2;
-    let htmlString = "<!DOCTYPE html>\n" + ((_a2 = this.document) == null ? void 0 : _a2.documentElement.outerHTML);
-    return htmlString;
-  }
-  get contentElement() {
-    var _a2, _b, _c, _d;
-    if (this.viewType != "markdown")
-      return (_a2 = this.document) == null ? void 0 : _a2.querySelector(".view-content");
-    return (_d = (_b = this.document) == null ? void 0 : _b.querySelector(".markdown-preview-view")) != null ? _d : (_c = this.document) == null ? void 0 : _c.querySelector(".view-content");
-  }
-  get sizerElement() {
-    var _a2, _b, _c;
-    if (this.viewType != "markdown")
-      return (_b = (_a2 = this.document) == null ? void 0 : _a2.querySelector(".view-content")) == null ? void 0 : _b.firstChild;
-    return (_c = this.document) == null ? void 0 : _c.querySelector(".markdown-preview-sizer");
-  }
-  get exportPathAbsolute() {
-    return this.destinationFolder.join(this.exportPath);
-  }
-  get pathToRoot() {
-    return Path.getRelativePath(this.exportPath, new Path(this.exportPath.workingDirectory), true).makeUnixStyle();
-  }
-  async getSelfDownloadable() {
-    var _a2;
-    let content = (_a2 = this.isConvertable ? await this.getHTML() : await new Path(this.source.path).readFileBuffer()) != null ? _a2 : "";
-    let downloadable = new Downloadable(this.name, content, this.exportPath.directory.makeForceFolder());
-    downloadable.modifiedTime = this.source.stat.mtime;
-    return downloadable;
-  }
-  async create() {
-    var _a2;
-    if (!this.isConvertable || !this.document)
-      return this;
-    let webpageWithContent = await this.getDocumentHTML();
-    if (!webpageWithContent) {
-      if (!MarkdownRenderer.checkCancelled())
-        RenderLog.error(this.source, "Failed to create webpage");
-      return;
-    }
-    let layout = this.generateWebpageLayout(this.contentElement);
-    this.document.body.appendChild(layout.container);
-    let bodyScript = this.document.createElement("script");
-    bodyScript.setAttribute("defer", "");
-    bodyScript.innerHTML = AssetHandler.themeLoadJS.content.toString();
-    this.document.body.prepend(bodyScript);
-    await this.addMetadata();
-    await this.addTitle();
-    if (Settings.exportPreset != "raw-documents" /* RawDocuments */) {
-      let rightSidebar = layout.right;
-      let leftSidebar = layout.left;
-      if (Settings.includeGraphView) {
-        GraphView.generateGraphEl(rightSidebar);
-      }
-      if (Settings.includeOutline) {
-        let headerTree = new OutlineTree(this, 1);
-        headerTree.class = "outline-tree";
-        headerTree.title = "Table Of Contents";
-        headerTree.showNestingIndicator = false;
-        headerTree.generateWithItemsClosed = Settings.startOutlineCollapsed;
-        headerTree.minCollapsableDepth = Settings.minOutlineCollapse;
-        await headerTree.generateTreeWithContainer(rightSidebar);
-      }
-      if (Settings.includeThemeToggle) {
-        HTMLGeneration.createThemeToggle(layout.leftBar);
-      }
-      if (Settings.includeSearchBar) {
-        let searchbarHTML = `<div class="search-input-container"><input enterkeyhint="search" type="search" spellcheck="false" placeholder="Search..."><div class="search-input-clear-button" aria-label="Clear search"></div></div>`;
-        leftSidebar.createDiv().outerHTML = searchbarHTML;
-      }
-      if (Settings.includeFileTree) {
-        leftSidebar.createDiv().outerHTML = this.website.fileTreeAsset.getHTML();
-        if (Settings.exportPreset != "website" /* Website */) {
-          let sidebar = leftSidebar.querySelector(".file-tree");
-          let unixPath = this.exportPath.copy.makeUnixStyle().asString;
-          let fileElement = sidebar == null ? void 0 : sidebar.querySelector(`[href="${unixPath}"]`);
-          fileElement = fileElement == null ? void 0 : fileElement.closest(".tree-item");
-          while (fileElement) {
-            fileElement == null ? void 0 : fileElement.classList.remove("is-collapsed");
-            let children = fileElement == null ? void 0 : fileElement.querySelector(".tree-item-children");
-            if (children)
-              children.style.display = "block";
-            fileElement = (_a2 = fileElement == null ? void 0 : fileElement.parentElement) == null ? void 0 : _a2.closest(".tree-item");
-          }
-        }
-      }
-    } else {
-      layout.container.querySelectorAll(".sidebar").forEach((el) => el.remove());
-    }
-    return this;
-  }
-  getTags() {
-    var _a2, _b;
-    let tagCaches = (_b = (_a2 = app.metadataCache.getFileCache(this.source)) == null ? void 0 : _a2.tags) == null ? void 0 : _b.values();
-    if (tagCaches) {
-      let tags = Array.from(tagCaches).map((tag) => tag.tag);
-      return tags;
-    }
-    return [];
-  }
-  getHeadings() {
-    let headers = [];
-    if (this.document) {
-      this.document.querySelectorAll(".heading").forEach((headerEl) => {
-        var _a2, _b;
-        let level = parseInt(headerEl.tagName[1]);
-        if (headerEl.closest("[class^='block-language-']") || headerEl.closest(".markdown-embed.inline-embed"))
-          level += 6;
-        let heading = (_b = (_a2 = headerEl.getAttribute("data-heading")) != null ? _a2 : headerEl.innerText) != null ? _b : "";
-        headers.push({ heading, level, headingEl: headerEl });
-      });
-    }
-    return headers;
-  }
-  async getDocumentHTML() {
-    var _a2;
-    if (!this.isConvertable || !this.document)
-      return this;
-    let body = this.document.body;
-    body.setAttribute("class", Website.validBodyClasses);
-    let renderInfo = await MarkdownRenderer.renderFile(this.source, body);
-    let contentEl = renderInfo == null ? void 0 : renderInfo.contentEl;
-    this.viewType = (_a2 = renderInfo == null ? void 0 : renderInfo.viewType) != null ? _a2 : "markdown";
-    if (!contentEl)
-      return void 0;
-    if (MarkdownRenderer.checkCancelled())
-      return void 0;
-    if (this.viewType == "markdown") {
-      contentEl.classList.toggle("allow-fold-headings", Settings.allowFoldingHeadings);
-      contentEl.classList.toggle("allow-fold-lists", Settings.allowFoldingLists);
-      contentEl.classList.add("is-readable-line-width");
-    }
-    if (this.sizerElement)
-      this.sizerElement.style.paddingBottom = "";
-    HTMLGeneration.makeHeadingsTrees(contentEl);
-    this.convertLinks();
-    let mathStyleEl = document.createElement("style");
-    mathStyleEl.id = "MJX-CHTML-styles";
-    await AssetHandler.mathjaxStyles.load();
-    mathStyleEl.innerHTML = AssetHandler.mathjaxStyles.content;
-    this.contentElement.prepend(mathStyleEl);
-    let outlinedImages = [];
-    if (Settings.inlineAssets)
-      await this.inlineMedia();
-    else
-      outlinedImages = await this.exportMedia();
-    this.dependencies.push(...outlinedImages);
-    if (Settings.makeNamesWebStyle) {
-      this.dependencies.forEach((file) => {
-        var _a3;
-        file.filename = Path.toWebStyle(file.filename);
-        file.relativeDownloadDirectory = (_a3 = file.relativeDownloadDirectory) == null ? void 0 : _a3.makeWebStyle();
-      });
-    }
-    return this;
-  }
-  generateWebpageLayout(middleContent) {
-    if (!this.document)
-      return { container: middleContent, left: middleContent, leftBar: middleContent, right: middleContent, rightBar: middleContent, center: middleContent };
-    let collapseSidebarIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><path d="M21 3H3C1.89543 3 1 3.89543 1 5V19C1 20.1046 1.89543 21 3 21H21C22.1046 21 23 20.1046 23 19V5C23 3.89543 22.1046 3 21 3Z"></path><path d="M10 4V20"></path><path d="M4 7H7"></path><path d="M4 10H7"></path><path d="M4 13H7"></path></svg>`;
-    let pageContainer = this.document.createElement("div");
-    let leftSidebar = this.document.createElement("div");
-    let leftSidebarHandle = this.document.createElement("div");
-    let leftContent = this.document.createElement("div");
-    let leftTopbar = this.document.createElement("div");
-    let leftTopbarContent = this.document.createElement("div");
-    let leftCollapseIcon = this.document.createElement("div");
-    let documentContainer = this.document.createElement("div");
-    let rightSidebar = this.document.createElement("div");
-    let rightSidebarHandle = this.document.createElement("div");
-    let rightContent = this.document.createElement("div");
-    let rightTopbar = this.document.createElement("div");
-    let rightTopbarContent = this.document.createElement("div");
-    let rightCollapseIcon = this.document.createElement("div");
-    pageContainer.setAttribute("class", "webpage-container workspace");
-    leftSidebar.setAttribute("class", "sidebar-left sidebar");
-    leftSidebarHandle.setAttribute("class", "sidebar-handle");
-    leftContent.setAttribute("class", "sidebar-content");
-    leftTopbar.setAttribute("class", "sidebar-topbar");
-    leftTopbarContent.setAttribute("class", "topbar-content");
-    leftCollapseIcon.setAttribute("class", "clickable-icon sidebar-collapse-icon");
-    documentContainer.setAttribute("class", "document-container markdown-reading-view hide");
-    rightSidebar.setAttribute("class", "sidebar-right sidebar");
-    rightSidebarHandle.setAttribute("class", "sidebar-handle");
-    rightContent.setAttribute("class", "sidebar-content");
-    rightTopbar.setAttribute("class", "sidebar-topbar");
-    rightTopbarContent.setAttribute("class", "topbar-content");
-    rightCollapseIcon.setAttribute("class", "clickable-icon sidebar-collapse-icon");
-    pageContainer.appendChild(leftSidebar);
-    pageContainer.appendChild(documentContainer);
-    pageContainer.appendChild(rightSidebar);
-    if (Settings.allowResizingSidebars)
-      leftSidebar.appendChild(leftSidebarHandle);
-    leftSidebar.appendChild(leftTopbar);
-    leftSidebar.appendChild(leftContent);
-    leftTopbar.appendChild(leftTopbarContent);
-    leftTopbar.appendChild(leftCollapseIcon);
-    leftCollapseIcon.innerHTML = collapseSidebarIcon;
-    documentContainer.appendChild(middleContent);
-    if (Settings.allowResizingSidebars)
-      rightSidebar.appendChild(rightSidebarHandle);
-    rightSidebar.appendChild(rightTopbar);
-    rightSidebar.appendChild(rightContent);
-    rightTopbar.appendChild(rightTopbarContent);
-    rightTopbar.appendChild(rightCollapseIcon);
-    rightCollapseIcon.innerHTML = collapseSidebarIcon;
-    let leftSidebarScript = leftSidebar.createEl("script");
-    let rightSidebarScript = rightSidebar.createEl("script");
-    leftSidebarScript.setAttribute("defer", "");
-    rightSidebarScript.setAttribute("defer", "");
-    leftSidebarScript.innerHTML = `let ls = document.querySelector(".sidebar-left"); ls.classList.add("is-collapsed"); if (window.innerWidth > 768) ls.classList.remove("is-collapsed"); ls.style.setProperty("--sidebar-width", localStorage.getItem("sidebar-left-width"));`;
-    rightSidebarScript.innerHTML = `let rs = document.querySelector(".sidebar-right"); rs.classList.add("is-collapsed"); if (window.innerWidth > 768) rs.classList.remove("is-collapsed"); rs.style.setProperty("--sidebar-width", localStorage.getItem("sidebar-right-width"));`;
-    return { container: pageContainer, left: leftContent, leftBar: leftTopbarContent, right: rightContent, rightBar: rightTopbarContent, center: documentContainer };
-  }
-  async addTitle() {
-    var _a2, _b, _c, _d, _e;
-    if (!this.document || !this.sizerElement || this.viewType != "markdown")
-      return;
-    let inlineTitle = this.document.querySelector(".inline-title");
-    inlineTitle == null ? void 0 : inlineTitle.remove();
-    let makeTitle = this.document.querySelector(".mk-inline-context");
-    makeTitle == null ? void 0 : makeTitle.remove();
-    let modHeader = this.document.querySelector(".mod-header");
-    modHeader == null ? void 0 : modHeader.remove();
-    let titleInfo = await Website.getTitleAndIcon(this.source);
-    let title = titleInfo.title;
-    let icon = titleInfo.icon;
-    let firstHeader = this.document.querySelector(":is(h1, h2, h3, h4, h5, h6):not(.markdown-embed-content *)");
-    if (firstHeader) {
-      let firstHeaderText = (_c = (_b = (_a2 = firstHeader.getAttribute("data-heading")) != null ? _a2 : firstHeader.textContent) == null ? void 0 : _b.toLowerCase()) != null ? _c : "";
-      let lowerTitle = title.toLowerCase();
-      let titleDiff = Utils.levenshteinDistance(firstHeaderText, lowerTitle) / lowerTitle.length;
-      let basenameDiff = Utils.levenshteinDistance(firstHeaderText, this.source.basename.toLowerCase()) / this.source.basename.length;
-      let difference = Math.min(titleDiff, basenameDiff);
-      if (firstHeader.tagName == "H1" && difference < 0.2 || firstHeader.tagName == "H2" && difference < 0.1) {
-        if (titleInfo.isDefaultTitle) {
-          title = firstHeader.innerHTML;
-          RenderLog.log(`Using "${firstHeaderText}" header because it was very similar to the file's title.`);
-        } else {
-          RenderLog.log(`Replacing "${firstHeaderText}" header because it was very similar to the file's title.`);
-        }
-        firstHeader.remove();
-      } else if (firstHeader.tagName == "H1") {
-        let headerEl = (_d = firstHeader.closest(".heading-wrapper")) != null ? _d : firstHeader;
-        let headerParent = headerEl.parentElement;
-        if (headerParent && headerParent.classList.contains("markdown-preview-sizer")) {
-          let childPosition = Array.from(headerParent.children).indexOf(headerEl);
-          if (childPosition <= 2) {
-            if (titleInfo.isDefaultTitle) {
-              title = firstHeader.innerHTML;
-              RenderLog.log(`Using "${firstHeaderText}" header as title because it was H1 at the top of the page`);
-            } else {
-              RenderLog.log(`Replacing "${firstHeaderText}" header because it was H1 at the top of the page`);
-            }
-            firstHeader.remove();
-          }
-        }
-      }
-    }
-    (_e = this.document.querySelector(".banner-header")) == null ? void 0 : _e.remove();
-    let titleEl = this.document.createElement("h1");
-    titleEl.classList.add("page-title", "heading");
-    titleEl.id = title;
-    let pageIcon = void 0;
-    if (icon != "" && !titleInfo.isDefaultIcon) {
-      pageIcon = this.document.createElement("div");
-      pageIcon.id = "webpage-icon";
-    }
-    MarkdownRenderer.renderSingleLineMarkdown(title, titleEl);
-    if (pageIcon) {
-      MarkdownRenderer.renderSingleLineMarkdown(icon, pageIcon);
-      titleEl.prepend(pageIcon);
-    }
-    this.sizerElement.prepend(titleEl);
-  }
-  async addMetadata() {
-    if (!this.document)
-      return;
-    let rootPath = this.pathToRoot.copy.makeWebStyle(Settings.makeNamesWebStyle).asString;
-    let titleInfo = await Website.getTitleAndIcon(this.source);
-    let head = `
-		<title>${titleInfo.title}</title>
-		<base href="${rootPath}/">
-		<meta id="root-path" root-path="${rootPath}/">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, minimum-scale=1.0, maximum-scale=5.0">
-		<meta charset="UTF-8">
-		<meta name="description" content="${app.vault.getName() + " - " + titleInfo.title}">
-		`;
-    head += AssetHandler.getHeadReferences();
-    this.document.head.innerHTML = head;
-  }
-  convertLinks() {
-    if (!this.document)
-      return;
-    this.document.querySelectorAll("a.internal-link").forEach((linkEl) => {
-      linkEl.setAttribute("target", "_self");
-      let href = linkEl.getAttribute("href");
-      if (!href)
-        return;
-      if (href.startsWith("#")) {
-        linkEl.setAttribute("href", href.replaceAll(" ", "_"));
-      } else {
-        let targetHeader = href.split("#").length > 1 ? "#" + href.split("#")[1] : "";
-        let target = href.split("#")[0];
-        let targetFile = app.metadataCache.getFirstLinkpathDest(target, this.source.path);
-        if (!targetFile)
-          return;
-        let targetPath = new Path(targetFile.path);
-        if (MarkdownRenderer.isConvertable(targetPath.extensionName))
-          targetPath.setExtension("html");
-        targetPath.makeWebStyle(Settings.makeNamesWebStyle);
-        let finalHref = targetPath.makeUnixStyle() + targetHeader.replaceAll(" ", "_");
-        linkEl.setAttribute("href", finalHref);
-      }
-    });
-    this.document.querySelectorAll("a.footnote-link").forEach((linkEl) => {
-      linkEl.setAttribute("target", "_self");
-    });
-    this.document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach((headerEl) => {
-      var _a2, _b, _c;
-      headerEl.setAttribute("id", (_c = (_b = (_a2 = headerEl.getAttribute("data-heading")) != null ? _a2 : headerEl.textContent) == null ? void 0 : _b.replaceAll(" ", "_")) != null ? _c : "");
-    });
-  }
-  async inlineMedia() {
-    var _a2, _b, _c;
-    if (!this.document)
-      return;
-    let elements = Array.from(this.document.querySelectorAll("[src]:not(head [src])"));
-    for (let mediaEl of elements) {
-      let rawSrc = (_a2 = mediaEl.getAttribute("src")) != null ? _a2 : "";
-      let filePath = Webpage.getMediaPath(rawSrc, this.source.path);
-      if (filePath.isEmpty || filePath.isDirectory || filePath.isAbsolute)
-        continue;
-      let base64 = (_b = await filePath.readFileString("base64")) != null ? _b : "";
-      if (base64 === "")
-        return;
-      let ext = filePath.extensionName;
-      let type = (_c = app.viewRegistry.typeByExtension[ext]) != null ? _c : "audio";
-      if (ext === "svg")
-        ext += "+xml";
-      mediaEl.setAttribute("src", `data:${type}/${ext};base64,${base64}`);
-    }
-    ;
-  }
-  async exportMedia() {
-    var _a2, _b;
-    if (!this.document)
-      return [];
-    let downloads = [];
-    let elements = Array.from(this.document.querySelectorAll("[src]:not(head [src]):not(span)"));
-    for (let mediaEl of elements) {
-      let rawSrc = (_a2 = mediaEl.getAttribute("src")) != null ? _a2 : "";
-      let filePath = Webpage.getMediaPath(rawSrc, this.source.path);
-      if (filePath.isEmpty || filePath.isDirectory || filePath.isAbsolute || MarkdownRenderer.isConvertable(filePath.extension))
-        continue;
-      let exportLocation = filePath.copy;
-      let mediaPathInExport = Path.getRelativePath(this.sourceFolder, filePath);
-      if (mediaPathInExport.asString.startsWith("..")) {
-        exportLocation = AssetHandler.mediaPath.joinString(filePath.fullName);
-      }
-      exportLocation.makeWebStyle(Settings.makeNamesWebStyle);
-      mediaEl.setAttribute("src", exportLocation.asString);
-      let data = (_b = await filePath.readFileBuffer()) != null ? _b : Buffer.from([]);
-      let imageDownload = new Downloadable(exportLocation.fullName, data, exportLocation.directory.makeForceFolder());
-      let imageStat = filePath.stat;
-      if (imageStat)
-        imageDownload.modifiedTime = imageStat.mtimeMs;
-      if (data.length == 0)
-        RenderLog.log(filePath, "No data for file: ");
-      downloads.push(imageDownload);
-    }
-    ;
-    return downloads;
-  }
-  static getMediaPath(src, exportingFilePath) {
-    var _a2, _b, _c, _d;
-    let pathString = "";
-    if (src.startsWith("app://")) {
-      let fail = false;
-      try {
-        pathString = (_b = (_a2 = app.vault.resolveFileUrl(src)) == null ? void 0 : _a2.path) != null ? _b : "";
-        if (pathString == "")
-          fail = true;
-      } catch (e) {
-        fail = true;
-      }
-      if (fail) {
-        pathString = src.replaceAll("app://", "").replaceAll("\\", "/");
-        pathString = pathString.replaceAll(pathString.split("/")[0] + "/", "");
-        pathString = Path.getRelativePathFromVault(new Path(pathString), true).asString;
-        RenderLog.log(pathString, "Fallback path parsing:");
-      }
-    } else {
-      pathString = (_d = (_c = app.metadataCache.getFirstLinkpathDest(src, exportingFilePath)) == null ? void 0 : _c.path) != null ? _d : "";
-    }
-    pathString = pathString != null ? pathString : "";
-    return new Path(pathString);
-  }
-};
-
-// scripts/objects/website.ts
-var import_obsidian = require("obsidian");
 
 // scripts/html-generation/assets/asset.ts
 var { minify: runMinify } = require_htmlminifier();
 var mime = require_mime();
 var Asset = class extends Downloadable {
-  constructor(filename, content, type, inlinePolicy, minify2, mutability, loadMethod = "async" /* Async */, loadPriority = 100, cdnPath = void 0) {
-    if (Settings.makeNamesWebStyle)
+  constructor(filename, content, type, inlinePolicy, minify2, mutability, loadMethod = "async" /* Async */, loadPriority = 100, cdnPath = void 0, options = new MarkdownWebpageRendererAPIOptions2()) {
+    if (options.webStylePaths)
       filename = Path.toWebStyle(filename);
     super(filename, content, Asset.typeToPath(type));
     this.loadMethod = "" /* Default */;
     this.loadPriority = 100;
     this.onlineURL = void 0;
     this.childAssets = [];
+    this.exportOptions = options;
     this.type = type;
     this.inlinePolicy = inlinePolicy;
     this.mutability = mutability;
@@ -58690,7 +65791,8 @@ var Asset = class extends Downloadable {
     if (mutability != "child" /* Child */)
       AssetHandler.allAssets.push(this);
   }
-  async load() {
+  async load(options) {
+    this.exportOptions = options;
     if (this.type == "style" /* Style */ && typeof this.content == "string") {
       this.childAssets = [];
       this.content = await AssetHandler.getStyleChildAssets(this, false);
@@ -58700,7 +65802,7 @@ var Asset = class extends Downloadable {
     }
   }
   async download(downloadDirectory) {
-    if (this.isInlineFormat())
+    if (this.isInlineFormat(this.exportOptions))
       return;
     await super.download(downloadDirectory);
   }
@@ -58754,30 +65856,30 @@ var Asset = class extends Downloadable {
       tempContent = tempContent.replace("<script>", "").replace("<\/script>", "").replace("<style>", "").replace("</style>", "");
       this.content = tempContent;
     } catch (e) {
-      RenderLog.warning("Unable to minify " + (isJS ? "JS" : "CSS") + " file.");
+      ExportLog.warning("Unable to minify " + (isJS ? "JS" : "CSS") + " file.");
       this.content = this.content.replace(/[\n\r]+/g, "");
     }
   }
   getAssetPath(relativeFrom = void 0) {
-    if (this.isInlineFormat())
+    if (this.isInlineFormat(this.exportOptions))
       return new Path("");
     if (relativeFrom == void 0)
       relativeFrom = Path.rootPath;
     let toRoot = Path.getRelativePath(relativeFrom, Path.rootPath);
-    let newPath = toRoot.join(this.relativeDownloadPath).makeUnixStyle();
-    newPath.makeWebStyle(Settings.makeNamesWebStyle);
+    let newPath = toRoot.join(this.relativePath).makeUnixStyle();
+    newPath.makeWebStyle(this.exportOptions.webStylePaths);
     return newPath;
   }
-  isInlineFormat() {
-    let isInlineFormat = this.inlinePolicy == "inline" /* Inline */ || this.inlinePolicy == "inlinehead" /* InlineHead */ || (this.inlinePolicy == "auto" /* Auto */ || this.inlinePolicy == "autohead" /* AutoHead */) && Settings.inlineAssets;
+  isInlineFormat(options) {
+    let isInlineFormat = this.inlinePolicy == "inline" /* Inline */ || this.inlinePolicy == "inlinehead" /* InlineHead */ || (this.inlinePolicy == "auto" /* Auto */ || this.inlinePolicy == "autohead" /* AutoHead */) && (options.inlineCSS && this.type == "style" /* Style */ || options.inlineJS && this.type == "script" /* Script */ || options.inlineMedia && this.type == "media" /* Media */ || options.inlineHTML && this.type == "html" /* HTML */ || options.inlineFonts && this.type == "font" /* Font */);
     return isInlineFormat;
   }
-  isRefFormat() {
-    let isRefFormat = this.inlinePolicy == "download" /* Download */ || this.inlinePolicy == "downloadhead" /* DownloadHead */ || (this.inlinePolicy == "auto" /* Auto */ || this.inlinePolicy == "autohead" /* AutoHead */) && !Settings.inlineAssets;
+  isRefFormat(options) {
+    let isRefFormat = this.inlinePolicy == "download" /* Download */ || this.inlinePolicy == "downloadhead" /* DownloadHead */ || (this.inlinePolicy == "auto" /* Auto */ || this.inlinePolicy == "autohead" /* AutoHead */) && !(options.inlineCSS && this.type == "style" /* Style */ || options.inlineJS && this.type == "script" /* Script */ || options.inlineMedia && this.type == "media" /* Media */ || options.inlineHTML && this.type == "html" /* HTML */ || options.inlineFonts && this.type == "font" /* Font */);
     return isRefFormat;
   }
-  getHTML(allowOnlineURLs = false) {
-    if (this.isInlineFormat()) {
+  getHTML(options) {
+    if (this.isInlineFormat(options)) {
       switch (this.type) {
         case "style" /* Style */:
           return `<style>${this.content}</style>`;
@@ -58793,9 +65895,9 @@ var Asset = class extends Downloadable {
           return "";
       }
     }
-    if (this.isRefFormat()) {
-      let path = this.getAssetPath().asString;
-      if (allowOnlineURLs && this.onlineURL)
+    if (this.isRefFormat(options)) {
+      let path = this.getAssetPath(void 0).asString;
+      if (options.offlineResources === false && this.onlineURL)
         path = this.onlineURL;
       let include = "";
       let attr = "";
@@ -58807,7 +65909,7 @@ var Asset = class extends Downloadable {
           }
           return include;
         case "script" /* Script */:
-          include = `<script ${this.loadMethod} id="${this.relativeDownloadPath.basename + "-script"}" src="${path}" onload='this.onload=null;this.setAttribute("loaded", "true")'><\/script>`;
+          include = `<script ${this.loadMethod} id="${this.relativePath.basename + "-script"}" src="${path}" onload='this.onload=null;this.setAttribute("loaded", "true")'><\/script>`;
           return include;
         case "media" /* Media */:
           attr = this.loadMethod == "defer" /* Defer */ ? "loading='eager'" : "loading='lazy'";
@@ -58829,6 +65931,12 @@ var Asset = class extends Downloadable {
   static mimeToExtention(mime3) {
     const FileMimeType = { "audio/x-mpeg": "mpega", "application/postscript": "ps", "audio/x-aiff": "aiff", "application/x-aim": "aim", "image/x-jg": "art", "video/x-ms-asf": "asx", "audio/basic": "ulw", "video/x-msvideo": "avi", "video/x-rad-screenplay": "avx", "application/x-bcpio": "bcpio", "application/octet-stream": "exe", "image/bmp": "dib", "text/html": "html", "application/x-cdf": "cdf", "application/pkix-cert": "cer", "application/java": "class", "application/x-cpio": "cpio", "application/x-csh": "csh", "text/css": "css", "application/msword": "doc", "application/xml-dtd": "dtd", "video/x-dv": "dv", "application/x-dvi": "dvi", "application/vnd.ms-fontobject": "eot", "text/x-setext": "etx", "image/gif": "gif", "application/x-gtar": "gtar", "application/x-gzip": "gz", "application/x-hdf": "hdf", "application/mac-binhex40": "hqx", "text/x-component": "htc", "image/ief": "ief", "text/vnd.sun.j2me.app-descriptor": "jad", "application/java-archive": "jar", "text/x-java-source": "java", "application/x-java-jnlp-file": "jnlp", "image/jpeg": "jpg", "application/javascript": "js", "text/plain": "txt", "application/json": "json", "audio/midi": "midi", "application/x-latex": "latex", "audio/x-mpegurl": "m3u", "image/x-macpaint": "pnt", "text/troff": "tr", "application/mathml+xml": "mathml", "application/x-mif": "mif", "video/quicktime": "qt", "video/x-sgi-movie": "movie", "audio/mpeg": "mpa", "video/mp4": "mp4", "video/mpeg": "mpg", "video/mpeg2": "mpv2", "application/x-wais-source": "src", "application/x-netcdf": "nc", "application/oda": "oda", "application/vnd.oasis.opendocument.database": "odb", "application/vnd.oasis.opendocument.chart": "odc", "application/vnd.oasis.opendocument.formula": "odf", "application/vnd.oasis.opendocument.graphics": "odg", "application/vnd.oasis.opendocument.image": "odi", "application/vnd.oasis.opendocument.text-master": "odm", "application/vnd.oasis.opendocument.presentation": "odp", "application/vnd.oasis.opendocument.spreadsheet": "ods", "application/vnd.oasis.opendocument.text": "odt", "application/vnd.oasis.opendocument.graphics-template": "otg", "application/vnd.oasis.opendocument.text-web": "oth", "application/vnd.oasis.opendocument.presentation-template": "otp", "application/vnd.oasis.opendocument.spreadsheet-template": "ots", "application/vnd.oasis.opendocument.text-template": "ott", "application/ogg": "ogx", "video/ogg": "ogv", "audio/ogg": "spx", "application/x-font-opentype": "otf", "audio/flac": "flac", "application/annodex": "anx", "audio/annodex": "axa", "video/annodex": "axv", "application/xspf+xml": "xspf", "image/x-portable-bitmap": "pbm", "image/pict": "pict", "application/pdf": "pdf", "image/x-portable-graymap": "pgm", "audio/x-scpls": "pls", "image/png": "png", "image/x-portable-anymap": "pnm", "image/x-portable-pixmap": "ppm", "application/vnd.ms-powerpoint": "pps", "image/vnd.adobe.photoshop": "psd", "image/x-quicktime": "qtif", "image/x-cmu-raster": "ras", "application/rdf+xml": "rdf", "image/x-rgb": "rgb", "application/vnd.rn-realmedia": "rm", "application/rtf": "rtf", "text/richtext": "rtx", "application/font-sfnt": "sfnt", "application/x-sh": "sh", "application/x-shar": "shar", "application/x-stuffit": "sit", "application/x-sv4cpio": "sv4cpio", "application/x-sv4crc": "sv4crc", "image/svg+xml": "svg", "application/x-shockwave-flash": "swf", "application/x-tar": "tar", "application/x-tcl": "tcl", "application/x-tex": "tex", "application/x-texinfo": "texinfo", "image/tiff": "tiff", "text/tab-separated-values": "tsv", "application/x-font-ttf": "ttf", "application/x-ustar": "ustar", "application/voicexml+xml": "vxml", "image/x-xbitmap": "xbm", "application/xhtml+xml": "xhtml", "application/vnd.ms-excel": "xls", "application/xml": "xsl", "image/x-xpixmap": "xpm", "application/xslt+xml": "xslt", "application/vnd.mozilla.xul+xml": "xul", "image/x-xwindowdump": "xwd", "application/vnd.visio": "vsd", "audio/x-wav": "wav", "image/vnd.wap.wbmp": "wbmp", "text/vnd.wap.wml": "wml", "application/vnd.wap.wmlc": "wmlc", "text/vnd.wap.wmlsc": "wmls", "application/vnd.wap.wmlscriptc": "wmlscriptc", "video/x-ms-wmv": "wmv", "application/font-woff": "woff", "application/font-woff2": "woff2", "model/vrml": "wrl", "application/wspolicy+xml": "wspolicy", "application/x-compress": "z", "application/zip": "zip" };
     return FileMimeType[mime3] || mime3.split("/")[1] || "txt";
+  }
+  static extentionToMime(extention) {
+    if (extention.startsWith("."))
+      extention = extention.slice(1);
+    const FileMimeType = { "mpega": "audio/x-mpeg", "ps": "application/postscript", "aiff": "audio/x-aiff", "aim": "application/x-aim", "art": "image/x-jg", "asx": "video/x-ms-asf", "ulw": "audio/basic", "avi": "video/x-msvideo", "avx": "video/x-rad-screenplay", "bcpio": "application/x-bcpio", "exe": "application/octet-stream", "dib": "image/bmp", "html": "text/html", "cdf": "application/x-cdf", "cer": "application/pkix-cert", "class": "application/java", "cpio": "application/x-cpio", "csh": "application/x-csh", "css": "text/css", "doc": "application/msword", "dtd": "application/xml-dtd", "dv": "video/x-dv", "dvi": "application/x-dvi", "eot": "application/vnd.ms-fontobject", "etx": "text/x-setext", "gif": "image/gif", "gtar": "application/x-gtar", "gz": "application/x-gzip", "hdf": "application/x-hdf", "hqx": "application/mac-binhex40", "htc": "text/x-component", "ief": "image/ief", "jad": "text/vnd.sun.j2me.app-descriptor", "jar": "application/java-archive", "java": "text/x-java-source", "jnlp": "application/x-java-jnlp-file", "jpg": "image/jpeg", "js": "application/javascript", "txt": "text/plain", "json": "application/json", "midi": "audio/midi", "latex": "application/x-latex", "m3u": "audio/x-mpegurl", "pnt": "image/x-macpaint", "tr": "text/troff", "mathml": "application/mathml+xml", "mif": "application/x-mif", "qt": "video/quicktime", "movie": "video/x-sgi-movie", "mpa": "audio/mpeg", "mp4": "video/mp4", "mpg": "video/mpeg", "mpv2": "video/mpeg2", "src": "application/x-wais-source", "nc": "application/x-netcdf", "oda": "application/oda", "odb": "application/vnd.oasis.opendocument.database", "odc": "application/vnd.oasis.opendocument.chart", "odf": "application/vnd.oasis.opendocument.formula", "odg": "application/vnd.oasis.opendocument.graphics", "odi": "application/vnd.oasis.opendocument.image", "odm": "application/vnd.oasis.opendocument.text-master", "odp": "application/vnd.oasis.opendocument.presentation", "ods": "application/vnd.oasis.opendocument.spreadsheet", "odt": "application/vnd.oasis.opendocument.text", "otg": "application/vnd.oasis.opendocument.graphics-template", "oth": "application/vnd.oasis.opendocument.text-web", "otp": "application/vnd.oasis.opendocument.presentation-template", "ots": "application/vnd.oasis.opendocument.spreadsheet-template", "ott": "application/vnd.oasis.opendocument.text-template", "ogx": "application/ogg", "ogv": "video/ogg", "spx": "audio/ogg", "otf": "application/x-font-opentype", "flac": "audio/flac", "anx": "application/annodex", "axa": "audio/annodex", "axv": "video/annodex", "xspf": "application/xspf+xml", "pbm": "image/x-portable-bitmap", "pict": "image/pict", "pdf": "application/pdf", "pgm": "image/x-portable-graymap", "pls": "audio/x-scpls", "png": "image/png", "pnm": "image/x-portable-anymap", "ppm": "image/x-portable-pixmap", "pps": "application/vnd.ms-powerpoint", "psd": "image/vnd.adobe.photoshop", "qtif": "image/x-quicktime", "ras": "image/x-cmu-raster", "rdf": "application/rdf+xml", "rgb": "image/x-rgb", "rm": "application/vnd.rn-realmedia", "rtf": "application/rtf", "rtx": "text/richtext", "sfnt": "application/font-sfnt", "sh": "application/x-sh", "shar": "application/x-shar", "sit": "application/x-stuffit", "sv4cpio": "application/x-sv4cpio", "sv4crc": "application/x-sv4crc", "svg": "image/svg+xml", "swf": "application/x-shockwave-flash", "tar": "application/x-tar", "tcl": "application/x-tcl", "tex": "application/x-tex", "texinfo": "application/x-texinfo", "tiff": "image/tiff", "tsv": "text/tab-separated-values", "ttf": "application/x-font-ttf", "ustar": "application/x-ustar", "vxml": "application/voicexml+xml", "xbm": "image/x-xbitmap", "xhtml": "application/xhtml+xml", "xls": "application/vnd.ms-excel", "xsl": "application/xml", "xpm": "image/x-xpixmap", "xslt": "application/xslt+xml", "xul": "application/vnd.mozilla.xul+xml", "xwd": "image/x-xwindowdump", "vsd": "application/vnd.visio", "wav": "audio/x-wav", "wbmp": "image/vnd.wap.wbmp", "wml": "text/vnd.wap.wml", "wmlc": "application/vnd.wap.wmlc", "wmls": "text/vnd.wap.wmlsc", "wmlscriptc": "application/vnd.wap.wmlscriptc", "wmv": "video/x-ms-wmv", "woff": "application/font-woff", "woff2": "application/font-woff2", "wrl": "model/vrml", "wspolicy": "application/wspolicy+xml", "z": "application/x-compress", "zip": "application/zip" };
+    return FileMimeType[extention] || "application/octet-stream";
   }
   getContentBase64() {
     let extension = this.filename.split(".").pop() || "txt";
@@ -58852,6 +65960,781 @@ var Asset = class extends Downloadable {
     return extToTag[extension] || "img";
   }
 };
+
+// scripts/html-generation/html-generation-helpers.ts
+var import_obsidian = require("obsidian");
+
+// assets/obsidian-styles.txt.css
+var obsidian_styles_txt_default = ".markdown-preview-view .heading-collapse-indicator \n{\n    margin-left: calc( 0px - var(--collapse-arrow-size) - 10px) !important;\n    padding: 0px 0px !important;\n}\n\n.node-insert-event \n{\n    animation-duration: unset !important;\n    animation-name: none !important;\n}\n\nhr\n{\n    border: none;\n	border-top: var(--hr-thickness) solid;\n    border-color: var(--hr-color);\n}\n\nh1:hover .collapse-indicator, h2:hover .collapse-indicator, h3:hover .collapse-indicator, h4:hover .collapse-indicator, h5:hover .collapse-indicator, h6:hover .collapse-indicator, .collapse-indicator:hover, .is-collapsed .collapse-indicator, .cm-fold-indicator.is-collapsed .collapse-indicator, .cm-gutterElement:hover .collapse-indicator, .cm-gutterElement .is-collapsed .collapse-indicator, .cm-line:hover .cm-fold-indicator .collapse-indicator, .fold-gutter.is-collapsed, .fold-gutter:hover, .metadata-properties-heading:hover .collapse-indicator {\n    opacity: 1;\n	transition: opacity 0.15s ease-in-out;\n}\n\n.collapse-indicator, .fold-gutter\n{\n	opacity: 0;\n	transition: opacity 0.15s ease-in-out;\n}\n\n@media print \n{\n    html body > :not(.print) \n    {\n        display: unset !important;\n    }\n\n    .collapse-indicator\n    {\n        display: none !important;\n    }\n\n    .is-collapsed > element > .collapse-indicator\n    {\n        display: unset !important;\n    }\n}\n\n/*#region Misc Hiding */\n\n.mod-header .metadata-container\n{\n	display: none !important;\n}\n\n/*#endregion */\n\n/*#region Transclusions */\n\n.markdown-embed .heading-collapse-indicator {\n    translate: -1em 0;\n}\n\n.markdown-embed.internal-embed.inline-embed .markdown-embed-content,\n.markdown-embed.internal-embed.inline-embed .markdown-embed-content .markdown-preview-view\n{\n	overflow: visible !important;\n}\n\n.markdown-embed-link\n{\n	display: none !important;\n}\n\n/*#endregion  */\n\n/*#region Canvas */\n\n.canvas-wrapper:not(.mod-readonly) .canvas-node-content.markdown-embed>.markdown-embed-content>.markdown-preview-view\n{\n	user-select: text !important;\n}\n\n.canvas-card-menu {\n	display: none;\n	cursor: default !important;\n\n}\n\n.canvas-controls {\n	display: none;\n	cursor: default !important;\n\n}\n\n.canvas-background\n{\n	pointer-events: visible !important;\n	cursor: grab !important;\n}\n\n.canvas-background:active\n{\n	cursor: grabbing !important;\n}\n\n.canvas-node-connection-point \n{\n	display: none;\n	cursor: default !important;\n\n}\n\n.canvas-node-content\n{\n	backface-visibility: visible !important;\n}\n\n.canvas-menu-container {\n	display: none;\n}\n\n.canvas-node-content-blocker\n{\n	cursor: pointer !important;\n}\n\n.canvas-wrapper\n{\n	position: relative;\n	cursor: default !important;\n}\n\n.canvas-node-resizer\n{\n	cursor: default !important;\n}\n\n.canvas-node-container\n{\n	cursor: default !important;\n}\n\n/*#endregion */\n\n/*#region Code Copy */\n\n/* Make code block copy button fade in and out */\n.markdown-rendered pre:not(:hover) > button.copy-code-button\n{\n	display: unset;\n	opacity: 0;\n}\n\n.markdown-rendered pre:hover > button.copy-code-button\n{\n	opacity: 1;\n}\n\n.markdown-rendered pre button.copy-code-button\n{\n	transition: opacity 0.2s ease-in-out, width 0.3s ease-in-out, background-color 0.2s ease-in-out;\n	text-overflow: clip;\n}\n\n.markdown-rendered pre > button.copy-code-button:hover\n{\n	background-color: var(--interactive-normal);\n}\n\n.markdown-rendered pre > button.copy-code-button:active\n{\n	background-color: var(--interactive-hover);\n	box-shadow: var(--input-shadow);\n	transition: none;\n}\n\n/*#endregion */\n\n/*#region Lists */\n\n.webpage-container .is-collapsed .list-collapse-indicator svg.svg-icon, \n.webpage-container .is-collapsed .collapse-indicator svg.svg-icon\n{\n	color: var(--collapse-icon-color-collapsed);\n}\n\n/*#endregion */\n";
+
+// scripts/html-generation/assets/obsidian-styles.ts
+var _ObsidianStyles = class extends Asset {
+  constructor() {
+    super("obsidian.css", "", "style" /* Style */, "autohead" /* AutoHead */, true, "dynamic" /* Dynamic */, "" /* Default */, 10);
+    this.content = "";
+  }
+  removeSelectors(css, containing) {
+    let regex = new RegExp(`([w :*+~\\-\\.\\>\\[\\]()"=]*${containing}[\\w\\s:*+~\\-\\.\\>\\[\\]()"=]+)(,|{)`, "gm");
+    let toRemove = [...css.matchAll(regex)];
+    for (let match of toRemove) {
+      css = css.replace(match[1], "");
+    }
+    css = css.trim();
+    return css;
+  }
+  async load(options) {
+    var _a2;
+    this.content = "";
+    let appSheet = document.styleSheets[1];
+    let stylesheets = document.styleSheets;
+    for (let i = 0; i < stylesheets.length; i++) {
+      if (stylesheets[i].href && ((_a2 = stylesheets[i].href) == null ? void 0 : _a2.includes("app.css"))) {
+        appSheet = stylesheets[i];
+        break;
+      }
+    }
+    this.content += obsidian_styles_txt_default;
+    for (let i = 0; i < appSheet.cssRules.length; i++) {
+      let rule = appSheet.cssRules[i];
+      if (rule) {
+        let skip = false;
+        let cssText = rule.cssText;
+        let selector = cssText.split("{")[0];
+        for (let keep of _ObsidianStyles.stylesKeep) {
+          if (!selector.includes(keep)) {
+            for (let filter of _ObsidianStyles.stylesFilter) {
+              if (selector.includes(filter)) {
+                skip = true;
+                break;
+              }
+            }
+          } else {
+            skip = false;
+            break;
+          }
+        }
+        if (skip)
+          continue;
+        cssText = this.removeSelectors(cssText, "\\.cm-");
+        if (cssText.startsWith("{"))
+          continue;
+        cssText += "\n";
+        this.content += cssText;
+      }
+    }
+    this.modifiedTime = Date.now();
+    await super.load(options);
+  }
+};
+var ObsidianStyles = _ObsidianStyles;
+ObsidianStyles.stylesFilter = [
+  "workspace-",
+  "cm-",
+  "ghost",
+  "leaf",
+  "CodeMirror",
+  "@media",
+  "pdf",
+  "xfa",
+  "annotation",
+  "@keyframes",
+  "load",
+  "@-webkit",
+  "setting",
+  "filter",
+  "decorator",
+  "dictionary",
+  "status",
+  "windows",
+  "titlebar",
+  "source",
+  "menu",
+  "message",
+  "popover",
+  "suggestion",
+  "prompt",
+  "tab",
+  "HyperMD",
+  "workspace",
+  "publish",
+  "backlink",
+  "sync",
+  "vault",
+  "mobile",
+  "tablet",
+  "phone",
+  "textLayer",
+  "header",
+  "linux",
+  "macos",
+  "rename",
+  "edit",
+  "progress",
+  "native",
+  "aria",
+  "tooltip",
+  "drop",
+  "sidebar",
+  "mod-windows",
+  "is-frameless",
+  "is-hidden-frameless",
+  "obsidian-app",
+  "show-view-header",
+  "is-maximized",
+  "is-translucent",
+  "community"
+];
+ObsidianStyles.stylesKeep = ["scrollbar", "input[type", "table", "markdown-rendered", "css-settings-manager", "inline-embed", "background", "token"];
+
+// scripts/html-generation/html-generation-helpers.ts
+var HTMLGeneration;
+((HTMLGeneration2) => {
+  function createThemeToggle(container) {
+    let label = container.createEl("label");
+    let input = label.createEl("input");
+    let div = label.createDiv();
+    label.classList.add("theme-toggle-container");
+    label.setAttribute("for", "theme_toggle");
+    input.classList.add("theme-toggle-input");
+    input.setAttribute("type", "checkbox");
+    input.setAttribute("id", "theme_toggle");
+    div.classList.add("toggle-background");
+    return label;
+  }
+  HTMLGeneration2.createThemeToggle = createThemeToggle;
+  let _validBodyClasses = void 0;
+  async function getValidBodyClasses(cleanCache) {
+    if (cleanCache)
+      _validBodyClasses = void 0;
+    if (_validBodyClasses)
+      return _validBodyClasses;
+    let bodyClasses = Array.from(document.body.classList);
+    bodyClasses = bodyClasses.filter((value) => ObsidianStyles.stylesKeep.some((keep) => value.includes(keep)) || !ObsidianStyles.stylesFilter.some((filter) => value.includes(filter)));
+    let validClasses = "";
+    validClasses += " publish ";
+    validClasses += " css-settings-manager ";
+    let styles = AssetHandler.getAssetsOfType("style" /* Style */);
+    let i = 0;
+    let classes = [];
+    for (var style of styles) {
+      ExportLog.progress(i, styles.length, "Compiling css classes", "Scanning: " + style.filename, "var(--color-yellow)");
+      if (typeof style.content != "string")
+        continue;
+      let matches = Array.from(style.content.matchAll(/\.([A-Za-z_-]+[\w-]+)/g));
+      let styleClasses = matches.map((match) => match[0].substring(1).trim());
+      styleClasses = styleClasses.filter((value, index, self2) => self2.indexOf(value) === index);
+      classes = classes.concat(styleClasses);
+      i++;
+      await Utils.delay(0);
+    }
+    ExportLog.progress(1, 1, "Filtering classes", "...", "var(--color-yellow)");
+    classes = classes.filter((value, index, self2) => self2.indexOf(value) === index);
+    ExportLog.progress(1, 1, "Sorting classes", "...", "var(--color-yellow)");
+    classes = classes.sort();
+    i = 0;
+    for (var bodyClass of bodyClasses) {
+      ExportLog.progress(i, bodyClasses.length, "Collecting valid classes", "Scanning: " + bodyClass, "var(--color-yellow)");
+      if (classes.includes(bodyClass)) {
+        validClasses += bodyClass + " ";
+      }
+      i++;
+    }
+    ExportLog.progress(1, 1, "Cleanup classes", "...", "var(--color-yellow)");
+    _validBodyClasses = validClasses.replace(/\s\s+/g, " ");
+    ExportLog.progress(1, 1, "Filter duplicate classes", _validBodyClasses.length + " classes", "var(--color-yellow)");
+    _validBodyClasses = _validBodyClasses.split(" ").filter((value, index, self2) => self2.indexOf(value) === index).join(" ").trim();
+    ExportLog.progress(1, 1, "Classes done", "...", "var(--color-yellow)");
+    return _validBodyClasses;
+  }
+  HTMLGeneration2.getValidBodyClasses = getValidBodyClasses;
+  function getLucideIcon(iconName) {
+    const iconEl = (0, import_obsidian.getIcon)(iconName);
+    if (iconEl) {
+      let svg = iconEl.outerHTML;
+      iconEl.remove();
+      return svg;
+    } else {
+      return void 0;
+    }
+  }
+  HTMLGeneration2.getLucideIcon = getLucideIcon;
+  function getEmojiIcon(iconCode) {
+    let iconCodeInt = parseInt(iconCode, 16);
+    if (!isNaN(iconCodeInt)) {
+      return String.fromCodePoint(iconCodeInt);
+    } else {
+      return void 0;
+    }
+  }
+  HTMLGeneration2.getEmojiIcon = getEmojiIcon;
+  async function getIcon2(iconName) {
+    var _a2, _b, _c;
+    if (iconName.startsWith("emoji//")) {
+      const iconCode = iconName.replace(/^emoji\/\//, "");
+      iconName = (_a2 = getEmojiIcon(iconCode)) != null ? _a2 : "\uFFFD";
+    } else if (iconName.startsWith("lucide//")) {
+      const lucideIconName = iconName.replace(/^lucide\/\//, "");
+      iconName = (_b = getLucideIcon(lucideIconName)) != null ? _b : "\uFFFD";
+    }
+    if (/^\p{Emoji}/gu.test(iconName)) {
+      let codepoint = [...iconName].map((e) => e.codePointAt(0).toString(16)).join(`-`);
+      switch (Settings.emojiStyle) {
+        case "Twemoji" /* Twemoji */:
+          return `<img src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/${codepoint}.svg" class="emoji" />`;
+        case "OpenMoji" /* OpenMoji */:
+          console.log(codepoint);
+          return `<img src="https://openmoji.org/data/color/svg/${codepoint.toUpperCase()}.svg" class="emoji" />`;
+        case "OpenMojiOutline" /* OpenMojiOutline */:
+          let req = await (0, import_obsidian.requestUrl)(`https://openmoji.org/data/black/svg/${codepoint.toUpperCase()}.svg`);
+          if (req.status == 200)
+            return req.text.replaceAll(/#00+/g, "currentColor").replaceAll(`stroke-width="2"`, `stroke-width="5"`);
+          return iconName;
+        case "FluentUI" /* FluentUI */:
+          return `<img src="https://emoji.fluent-cdn.com/1.0.0/100x100/${codepoint}.png" class="emoji" />`;
+        default:
+          return iconName;
+      }
+    }
+    return (_c = getLucideIcon(iconName.toLowerCase())) != null ? _c : iconName;
+  }
+  HTMLGeneration2.getIcon = getIcon2;
+})(HTMLGeneration || (HTMLGeneration = {}));
+
+// scripts/objects/webpage.ts
+var { minify } = require_htmlminifier();
+var Webpage = class extends Downloadable {
+  constructor(file, destination, name, website, options) {
+    if (destination && (!destination.isAbsolute || !destination.isDirectory))
+      throw new Error("destination must be an absolute directory path: " + (destination == null ? void 0 : destination.asString));
+    super(file.basename, "", Path.emptyPath);
+    this.dependencies = [];
+    this.viewType = "markdown";
+    this.isConvertable = false;
+    this.title = "";
+    this.icon = "";
+    this.titleInfo = { title: "", icon: "", isDefaultTitle: true, isDefaultIcon: true };
+    options = Object.assign(new MarkdownWebpageRendererAPIOptions2(), options);
+    let isConvertable = MarkdownRendererAPI.isConvertable(file.extension);
+    this.filename = name != null ? name : file.basename;
+    this.filename += isConvertable ? ".html" : "." + file.extension;
+    this.isConvertable = isConvertable;
+    this.exportOptions = options;
+    this.source = file;
+    this.website = website != null ? website : void 0;
+    this.destinationFolder = destination != null ? destination : Path.vaultPath.joinString("Export");
+    if (this.isConvertable)
+      this.document = document.implementation.createHTMLDocument(this.source.basename);
+    let sourcePath = new Path(file.path);
+    this.relativeDirectory = sourcePath.directory;
+    if (this.exportOptions.flattenExportPaths)
+      this.relativeDirectory = Path.emptyPath;
+    if (this.exportOptions.webStylePaths) {
+      this.filename = Path.toWebStyle(this.filename);
+      this.relativeDirectory.makeWebStyle();
+    }
+  }
+  get html() {
+    var _a2;
+    let htmlString = "<!DOCTYPE html> " + ((_a2 = this.document) == null ? void 0 : _a2.documentElement.outerHTML);
+    return htmlString;
+  }
+  get viewElement() {
+    if (!this.document)
+      throw new Error("Document is not defined");
+    let viewContent = this.document.querySelector(".view-content");
+    let markdownPreview = this.document.querySelector(".markdown-preview-view");
+    if (!viewContent && !markdownPreview) {
+      throw new Error("No content element found");
+    }
+    if (this.viewType != "markdown")
+      return viewContent != null ? viewContent : markdownPreview;
+    return markdownPreview != null ? markdownPreview : viewContent;
+  }
+  get sizerElement() {
+    var _a2, _b, _c;
+    if (this.viewType != "markdown")
+      return (_b = (_a2 = this.document) == null ? void 0 : _a2.querySelector(".view-content")) == null ? void 0 : _b.firstChild;
+    return (_c = this.document) == null ? void 0 : _c.querySelector(".markdown-preview-sizer");
+  }
+  get exportPath() {
+    var _a2, _b;
+    return (_b = (_a2 = this.destinationFolder) == null ? void 0 : _a2.join(this.relativePath)) != null ? _b : Path.vaultPath.join(this.relativePath);
+  }
+  get pathToRoot() {
+    return Path.getRelativePath(this.relativePath, new Path(this.relativePath.workingDirectory), true).makeUnixStyle();
+  }
+  get tags() {
+    var _a2, _b;
+    let tagCaches = (_b = (_a2 = app.metadataCache.getFileCache(this.source)) == null ? void 0 : _a2.tags) == null ? void 0 : _b.values();
+    if (tagCaches) {
+      let tags = Array.from(tagCaches).map((tag) => tag.tag);
+      return tags;
+    }
+    return [];
+  }
+  get headings() {
+    let headers = [];
+    if (this.document) {
+      this.document.querySelectorAll(".heading").forEach((headerEl) => {
+        var _a2, _b;
+        let level = parseInt(headerEl.tagName[1]);
+        if (headerEl.closest("[class^='block-language-']") || headerEl.closest(".markdown-embed.inline-embed"))
+          level += 6;
+        let heading = (_b = (_a2 = headerEl.getAttribute("data-heading")) != null ? _a2 : headerEl.innerText) != null ? _b : "";
+        headers.push({ heading, level, headingEl: headerEl });
+      });
+    }
+    return headers;
+  }
+  get aliases() {
+    var _a2, _b;
+    let aliases = (_b = (_a2 = this.frontmatter) == null ? void 0 : _a2.aliases) != null ? _b : [];
+    return aliases;
+  }
+  get description() {
+    return this.frontmatter["description"] || this.frontmatter["summary"] || "";
+  }
+  get author() {
+    return this.frontmatter["author"] || this.exportOptions.authorName || "";
+  }
+  get fullURL() {
+    var _a2;
+    let url = Path.joinStrings((_a2 = this.exportOptions.siteURL) != null ? _a2 : "", this.relativePath.asString).makeUnixStyle().asString;
+    return url;
+  }
+  get metadataImageURL() {
+    var _a2, _b, _c;
+    let mediaPathStr = (_b = (_a2 = this.viewElement.querySelector("img")) == null ? void 0 : _a2.getAttribute("src")) != null ? _b : "";
+    let hasMedia = mediaPathStr.length > 0;
+    if (!hasMedia)
+      return void 0;
+    if (!mediaPathStr.startsWith("http") && !mediaPathStr.startsWith("data:")) {
+      let mediaPath = Path.joinStrings((_c = this.exportOptions.siteURL) != null ? _c : "", mediaPathStr);
+      mediaPathStr = mediaPath.asString;
+    }
+    return mediaPathStr;
+  }
+  get frontmatter() {
+    var _a2, _b;
+    let frontmatter = (_b = (_a2 = app.metadataCache.getFileCache(this.source)) == null ? void 0 : _a2.frontmatter) != null ? _b : {};
+    return frontmatter;
+  }
+  getCompatibilityContent() {
+    let oldContent = this.sizerElement.outerHTML;
+    let compatContent = this.sizerElement;
+    compatContent.querySelectorAll("script, style, .collapse-indicator, .callout-icon, .icon, a.tag").forEach((script) => script.remove());
+    function moveChildrenOut(element) {
+      var _a2;
+      let children = Array.from(element.children);
+      (_a2 = element.parentElement) == null ? void 0 : _a2.append(...children);
+      element.remove();
+    }
+    let headingTreeElements = Array.from(compatContent.querySelectorAll(".heading-wrapper"));
+    headingTreeElements.forEach(moveChildrenOut);
+    headingTreeElements = Array.from(compatContent.querySelectorAll(".heading-children"));
+    headingTreeElements.forEach(moveChildrenOut);
+    let lowDivs = Array.from(compatContent.children).filter((el) => el.tagName == "DIV" && el.childElementCount == 1);
+    lowDivs.forEach(moveChildrenOut);
+    let all = Array.from(compatContent.querySelectorAll("*"));
+    all.forEach((el) => {
+      let fillDefault = el.tagName == "text" ? "#181818" : "white";
+      el.style.fill = el.style.fill.replace(/var\(([\w -]+)\)/g, `var($1, ${fillDefault})`);
+      el.style.stroke = el.style.stroke.replace(/var\(([\w -]+)\)/g, "var($1, #181818)");
+      el.style.backgroundColor = el.style.backgroundColor.replace(/var\(([\w -]+)\)/g, "var($1, white)");
+      el.style.color = el.style.color.replace(/var\(([\w -]+)\)/g, "var($1, #181818)");
+      el.removeAttribute("id");
+      el.removeAttribute("class");
+      el.removeAttribute("font-family");
+    });
+    let result = compatContent.innerHTML;
+    compatContent.innerHTML = oldContent;
+    result = result.replaceAll("<", " <");
+    return result;
+  }
+  async create() {
+    var _a2, _b, _c;
+    this.titleInfo = await Website.getTitleAndIcon(this.source);
+    this.title = this.titleInfo.title;
+    this.icon = this.titleInfo.icon;
+    if (!this.isConvertable) {
+      this.content = (_a2 = await new Path(this.source.path).readFileBuffer()) != null ? _a2 : "";
+      this.modifiedTime = this.source.stat.mtime;
+      return this;
+    }
+    if (!this.document)
+      return this;
+    let webpageWithContent = await this.populateDocument();
+    if (!webpageWithContent) {
+      if (!MarkdownRendererAPI.checkCancelled())
+        ExportLog.error(this.source, "Failed to create webpage");
+      return;
+    }
+    if (this.exportOptions.addHeadTag)
+      await this.addHead();
+    if (this.exportOptions.addTitle)
+      await this.addTitle();
+    if (this.exportOptions.addSidebars) {
+      let innerContent = this.document.body.innerHTML;
+      this.document.body.innerHTML = "";
+      let layout = this.generateWebpageLayout(innerContent);
+      this.document.body.appendChild(layout.container);
+      let rightSidebar = layout.right;
+      let leftSidebar = layout.left;
+      if (this.exportOptions.addGraphView) {
+        GraphView.generateGraphEl(rightSidebar);
+      }
+      if (this.exportOptions.addOutline) {
+        let headerTree = new OutlineTree(this, 1);
+        headerTree.class = "outline-tree";
+        headerTree.title = "Table Of Contents";
+        headerTree.showNestingIndicator = false;
+        headerTree.generateWithItemsClosed = this.exportOptions.startOutlineCollapsed === true;
+        headerTree.minCollapsableDepth = (_b = this.exportOptions.minOutlineCollapsibleLevel) != null ? _b : 2;
+        await headerTree.generateTreeWithContainer(rightSidebar);
+      }
+      if (this.exportOptions.addThemeToggle) {
+        HTMLGeneration.createThemeToggle(layout.leftBar);
+      }
+      if (this.exportOptions.addSearch) {
+        let searchbarHTML = `<div class="search-input-container"><input enterkeyhint="search" type="search" spellcheck="false" placeholder="Search..."><div class="search-input-clear-button" aria-label="Clear search"></div></div>`;
+        leftSidebar.createDiv().outerHTML = searchbarHTML;
+      }
+      if (this.website && this.exportOptions.addFileNavigation) {
+        leftSidebar.createDiv().outerHTML = this.website.fileTreeAsset.getHTML(this.exportOptions);
+        if (this.exportOptions.openNavFileLocation) {
+          let sidebar = leftSidebar.querySelector(".file-tree");
+          let unixPath = this.relativePath.copy.makeUnixStyle().asString;
+          let fileElement = sidebar == null ? void 0 : sidebar.querySelector(`[href="${unixPath}"]`);
+          fileElement = fileElement == null ? void 0 : fileElement.closest(".tree-item");
+          while (fileElement) {
+            fileElement == null ? void 0 : fileElement.classList.remove("is-collapsed");
+            let children = fileElement == null ? void 0 : fileElement.querySelector(".tree-item-children");
+            if (children)
+              children.style.display = "block";
+            fileElement = (_c = fileElement == null ? void 0 : fileElement.parentElement) == null ? void 0 : _c.closest(".tree-item");
+          }
+        }
+      }
+    }
+    if (this.exportOptions.includeJS) {
+      let bodyScript = this.document.body.createEl("script");
+      bodyScript.setAttribute("defer", "");
+      bodyScript.innerText = AssetHandler.themeLoadJS.content.toString();
+      this.document.body.prepend(bodyScript);
+    }
+    this.content = this.html;
+    return this;
+  }
+  async populateDocument() {
+    var _a2;
+    if (!this.isConvertable || !this.document)
+      return this;
+    let body = this.document.body;
+    if (this.exportOptions.addBodyClasses)
+      body.setAttribute("class", Website.validBodyClasses || await HTMLGeneration.getValidBodyClasses(false));
+    let options = { ...this.exportOptions, container: body };
+    let renderInfo = await MarkdownRendererAPI.renderFile(this.source, options);
+    let contentEl = renderInfo == null ? void 0 : renderInfo.contentEl;
+    this.viewType = (_a2 = renderInfo == null ? void 0 : renderInfo.viewType) != null ? _a2 : "markdown";
+    if (!contentEl)
+      return void 0;
+    if (MarkdownRendererAPI.checkCancelled())
+      return void 0;
+    if (this.viewType == "markdown") {
+      contentEl.classList.toggle("allow-fold-headings", this.exportOptions.allowFoldingHeadings);
+      contentEl.classList.toggle("allow-fold-lists", this.exportOptions.allowFoldingLists);
+      contentEl.classList.add("is-readable-line-width");
+    }
+    if (this.sizerElement)
+      this.sizerElement.style.paddingBottom = "";
+    if (this.exportOptions.fixLinks)
+      this.convertLinks();
+    if (this.exportOptions.addMathjaxStyles) {
+      let mathStyleEl = document.createElement("style");
+      mathStyleEl.id = "MJX-CHTML-styles";
+      await AssetHandler.mathjaxStyles.load(this.exportOptions);
+      mathStyleEl.innerHTML = AssetHandler.mathjaxStyles.content;
+      this.viewElement.prepend(mathStyleEl);
+    }
+    let outlinedImages = [];
+    if (this.exportOptions.inlineMedia)
+      await this.inlineMedia();
+    else
+      outlinedImages = await this.exportMedia();
+    this.dependencies.push(...outlinedImages);
+    if (this.exportOptions.webStylePaths) {
+      this.dependencies.forEach((file) => {
+        var _a3;
+        file.filename = Path.toWebStyle(file.filename);
+        file.relativeDirectory = (_a3 = file.relativeDirectory) == null ? void 0 : _a3.makeWebStyle();
+      });
+    }
+    return this;
+  }
+  generateWebpageLayout(middleContent) {
+    if (!this.document)
+      throw new Error("Document is not defined");
+    let collapseSidebarIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><path d="M21 3H3C1.89543 3 1 3.89543 1 5V19C1 20.1046 1.89543 21 3 21H21C22.1046 21 23 20.1046 23 19V5C23 3.89543 22.1046 3 21 3Z"></path><path d="M10 4V20"></path><path d="M4 7H7"></path><path d="M4 10H7"></path><path d="M4 13H7"></path></svg>`;
+    let pageContainer = this.document.createElement("div");
+    let leftSidebar = this.document.createElement("div");
+    let leftSidebarHandle = this.document.createElement("div");
+    let leftContent = this.document.createElement("div");
+    let leftTopbar = this.document.createElement("div");
+    let leftTopbarContent = this.document.createElement("div");
+    let leftCollapseIcon = this.document.createElement("div");
+    let documentContainer = this.document.createElement("div");
+    let rightSidebar = this.document.createElement("div");
+    let rightSidebarHandle = this.document.createElement("div");
+    let rightContent = this.document.createElement("div");
+    let rightTopbar = this.document.createElement("div");
+    let rightTopbarContent = this.document.createElement("div");
+    let rightCollapseIcon = this.document.createElement("div");
+    pageContainer.setAttribute("class", "webpage-container workspace");
+    leftSidebar.setAttribute("class", "sidebar-left sidebar");
+    leftSidebarHandle.setAttribute("class", "sidebar-handle");
+    leftContent.setAttribute("class", "sidebar-content");
+    leftTopbar.setAttribute("class", "sidebar-topbar");
+    leftTopbarContent.setAttribute("class", "topbar-content");
+    leftCollapseIcon.setAttribute("class", "clickable-icon sidebar-collapse-icon");
+    documentContainer.setAttribute("class", "document-container markdown-reading-view");
+    if (this.exportOptions.includeJS)
+      documentContainer.classList.add("hide");
+    rightSidebar.setAttribute("class", "sidebar-right sidebar");
+    rightSidebarHandle.setAttribute("class", "sidebar-handle");
+    rightContent.setAttribute("class", "sidebar-content");
+    rightTopbar.setAttribute("class", "sidebar-topbar");
+    rightTopbarContent.setAttribute("class", "topbar-content");
+    rightCollapseIcon.setAttribute("class", "clickable-icon sidebar-collapse-icon");
+    pageContainer.appendChild(leftSidebar);
+    pageContainer.appendChild(documentContainer);
+    pageContainer.appendChild(rightSidebar);
+    if (this.exportOptions.allowResizeSidebars && this.exportOptions.includeJS)
+      leftSidebar.appendChild(leftSidebarHandle);
+    leftSidebar.appendChild(leftTopbar);
+    leftSidebar.appendChild(leftContent);
+    leftTopbar.appendChild(leftTopbarContent);
+    leftTopbar.appendChild(leftCollapseIcon);
+    leftCollapseIcon.innerHTML = collapseSidebarIcon;
+    documentContainer.innerHTML += middleContent instanceof HTMLElement ? middleContent.outerHTML : middleContent.toString();
+    if (this.exportOptions.allowResizeSidebars && this.exportOptions.includeJS)
+      rightSidebar.appendChild(rightSidebarHandle);
+    rightSidebar.appendChild(rightTopbar);
+    rightSidebar.appendChild(rightContent);
+    rightTopbar.appendChild(rightTopbarContent);
+    rightTopbar.appendChild(rightCollapseIcon);
+    rightCollapseIcon.innerHTML = collapseSidebarIcon;
+    let leftSidebarScript = leftSidebar.createEl("script");
+    let rightSidebarScript = rightSidebar.createEl("script");
+    leftSidebarScript.setAttribute("defer", "");
+    rightSidebarScript.setAttribute("defer", "");
+    leftSidebarScript.innerHTML = `let ls = document.querySelector(".sidebar-left"); ls.classList.add("is-collapsed"); if (window.innerWidth > 768) ls.classList.remove("is-collapsed"); ls.style.setProperty("--sidebar-width", localStorage.getItem("sidebar-left-width"));`;
+    rightSidebarScript.innerHTML = `let rs = document.querySelector(".sidebar-right"); rs.classList.add("is-collapsed"); if (window.innerWidth > 768) rs.classList.remove("is-collapsed"); rs.style.setProperty("--sidebar-width", localStorage.getItem("sidebar-right-width"));`;
+    return { container: pageContainer, left: leftContent, leftBar: leftTopbarContent, right: rightContent, rightBar: rightTopbarContent, center: documentContainer };
+  }
+  async addTitle() {
+    var _a2, _b, _c, _d, _e, _f, _g, _h;
+    if (!this.document || !this.sizerElement || this.viewType != "markdown")
+      return;
+    let inlineTitle = this.document.querySelector(".inline-title");
+    inlineTitle == null ? void 0 : inlineTitle.remove();
+    let makeTitle = this.document.querySelector(".mk-inline-context");
+    makeTitle == null ? void 0 : makeTitle.remove();
+    let modHeader = this.document.querySelector(".mod-header");
+    modHeader == null ? void 0 : modHeader.remove();
+    let firstHeader = this.document.querySelector(":is(h1, h2, h3, h4, h5, h6):not(.markdown-embed-content *)");
+    if (firstHeader) {
+      let firstHeaderText = (_c = (_b = (_a2 = firstHeader.getAttribute("data-heading")) != null ? _a2 : firstHeader.textContent) == null ? void 0 : _b.toLowerCase()) != null ? _c : "";
+      let lowerTitle = this.title.toLowerCase();
+      let titleDiff = Utils.levenshteinDistance(firstHeaderText, lowerTitle) / lowerTitle.length;
+      let basenameDiff = Utils.levenshteinDistance(firstHeaderText, this.source.basename.toLowerCase()) / this.source.basename.length;
+      let difference = Math.min(titleDiff, basenameDiff);
+      if (firstHeader.tagName == "H1" && difference < 0.2 || firstHeader.tagName == "H2" && difference < 0.1) {
+        if (this.titleInfo.isDefaultTitle) {
+          (_d = firstHeader.querySelector(".heading-collapse-indicator")) == null ? void 0 : _d.remove();
+          this.title = firstHeader.innerHTML;
+          ExportLog.log(`Using "${firstHeaderText}" header because it was very similar to the file's title.`);
+        } else {
+          ExportLog.log(`Replacing "${firstHeaderText}" header because it was very similar to the file's title.`);
+        }
+        firstHeader.remove();
+      } else if (firstHeader.tagName == "H1") {
+        let headerEl = (_e = firstHeader.closest(".heading-wrapper")) != null ? _e : firstHeader;
+        let headerParent = headerEl.parentElement;
+        if (headerParent && headerParent.classList.contains("markdown-preview-sizer")) {
+          let childPosition = Array.from(headerParent.children).indexOf(headerEl);
+          if (childPosition <= 2) {
+            if (this.titleInfo.isDefaultTitle) {
+              (_f = firstHeader.querySelector(".heading-collapse-indicator")) == null ? void 0 : _f.remove();
+              this.title = firstHeader.innerHTML;
+              ExportLog.log(`Using "${firstHeaderText}" header as title because it was H1 at the top of the page`);
+            } else {
+              ExportLog.log(`Replacing "${firstHeaderText}" header because it was H1 at the top of the page`);
+            }
+            firstHeader.remove();
+          }
+        }
+      }
+    }
+    (_g = this.document.querySelector(".banner-header")) == null ? void 0 : _g.remove();
+    let titleEl = this.document.createElement("h1");
+    titleEl.classList.add("page-title", "heading");
+    if ((_h = this.document) == null ? void 0 : _h.body.classList.contains("show-inline-title"))
+      titleEl.classList.add("inline-title");
+    titleEl.id = this.title;
+    let pageIcon = void 0;
+    if (this.icon != "" && !this.titleInfo.isDefaultIcon) {
+      pageIcon = this.document.createElement("div");
+      pageIcon.id = "webpage-icon";
+    }
+    MarkdownRendererAPI.renderMarkdownSimpleEl(this.title, titleEl);
+    if (pageIcon) {
+      MarkdownRendererAPI.renderMarkdownSimpleEl(this.icon, pageIcon);
+      titleEl.prepend(pageIcon);
+    }
+    this.sizerElement.prepend(titleEl);
+  }
+  async addHead() {
+    var _a2, _b, _c;
+    if (!this.document)
+      return;
+    let rootPath = this.pathToRoot.copy.makeWebStyle(this.exportOptions.webStylePaths).asString;
+    let description = this.description || this.exportOptions.siteName + " - " + this.titleInfo.title;
+    let head = `
+		<title>${this.titleInfo.title}</title>
+		<base href="${rootPath}/">
+		<meta id="root-path" root-path="${rootPath}/">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, minimum-scale=1.0, maximum-scale=5.0">
+		<meta charset="UTF-8">
+		<meta name="description" content="${description}">
+		<meta property="og:title" content="${this.titleInfo.title}">
+		<meta property="og:description" content="${description}">
+		<meta property="og:type" content="website">
+		<meta property="og:url" content="${this.fullURL}">
+		<meta property="og:image" content="${this.metadataImageURL}">
+		<meta property="og:site_name" content="${this.exportOptions.siteName}">
+		`;
+    if (this.author && this.author != "") {
+      head += `<meta name="author" content="${this.author}">`;
+    }
+    if (this.exportOptions.addRSS) {
+      let rssURL = Path.joinStrings((_a2 = this.exportOptions.siteURL) != null ? _a2 : "", (_c = (_b = this.website) == null ? void 0 : _b.rssPath) != null ? _c : "").makeUnixStyle().asString;
+      head += `<link rel="alternate" type="application/rss+xml" title="RSS Feed" href="${rssURL}">`;
+    }
+    head += AssetHandler.getHeadReferences(this.exportOptions);
+    this.document.head.innerHTML = head;
+  }
+  convertLinks() {
+    if (!this.document)
+      return;
+    this.document.querySelectorAll("a.internal-link").forEach((linkEl) => {
+      linkEl.setAttribute("target", "_self");
+      let href = linkEl.getAttribute("href");
+      if (!href)
+        return;
+      if (href.startsWith("#")) {
+        linkEl.setAttribute("href", href.replaceAll(" ", "_"));
+      } else {
+        let targetHeader = href.split("#").length > 1 ? "#" + href.split("#")[1] : "";
+        let target = href.split("#")[0];
+        let targetFile = app.metadataCache.getFirstLinkpathDest(target, this.source.path);
+        if (!targetFile)
+          return;
+        let targetPath = new Path(targetFile.path);
+        if (MarkdownRendererAPI.isConvertable(targetPath.extensionName))
+          targetPath.setExtension("html");
+        targetPath.makeWebStyle(this.exportOptions.webStylePaths);
+        let finalHref = targetPath.makeUnixStyle() + targetHeader.replaceAll(" ", "_");
+        linkEl.setAttribute("href", finalHref);
+      }
+    });
+    this.document.querySelectorAll("a.footnote-link").forEach((linkEl) => {
+      linkEl.setAttribute("target", "_self");
+    });
+    this.document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach((headerEl) => {
+      var _a2, _b, _c;
+      headerEl.setAttribute("id", (_c = (_b = (_a2 = headerEl.getAttribute("data-heading")) != null ? _a2 : headerEl.textContent) == null ? void 0 : _b.replaceAll(" ", "_")) != null ? _c : "");
+    });
+  }
+  async inlineMedia() {
+    var _a2, _b, _c;
+    if (!this.document)
+      return;
+    let elements = Array.from(this.document.querySelectorAll("[src]:not(head [src])"));
+    for (let mediaEl of elements) {
+      let rawSrc = (_a2 = mediaEl.getAttribute("src")) != null ? _a2 : "";
+      let filePath = Webpage.getMediaPath(rawSrc, this.source.path);
+      if (filePath.isEmpty || filePath.isDirectory || filePath.isAbsolute)
+        continue;
+      let base64 = (_b = await filePath.readFileString("base64")) != null ? _b : "";
+      if (base64 === "")
+        return;
+      let ext = filePath.extensionName;
+      let type = (_c = app.viewRegistry.typeByExtension[ext]) != null ? _c : "audio";
+      if (ext === "svg")
+        ext += "+xml";
+      mediaEl.setAttribute("src", `data:${type}/${ext};base64,${base64}`);
+    }
+    ;
+  }
+  async exportMedia() {
+    var _a2;
+    if (!this.document)
+      return [];
+    let downloads = [];
+    let elements = Array.from(this.document.querySelectorAll("[src]:not(head [src]):not(span)"));
+    for (let mediaEl of elements) {
+      let rawSrc = (_a2 = mediaEl.getAttribute("src")) != null ? _a2 : "";
+      let filePath = Webpage.getMediaPath(rawSrc, this.source.path);
+      if (filePath.isEmpty || filePath.isDirectory || filePath.isAbsolute || MarkdownRendererAPI.isConvertable(filePath.extension))
+        continue;
+      let exportLocation = filePath.copy;
+      let sourceFolder = new Path(this.source.path).directory;
+      let mediaPathInExport = Path.getRelativePath(sourceFolder, filePath);
+      if (mediaPathInExport.asString.startsWith("..")) {
+        exportLocation = AssetHandler.mediaPath.joinString(filePath.fullName);
+      }
+      exportLocation = exportLocation.makeWebStyle(this.exportOptions.webStylePaths).makeUnixStyle();
+      mediaEl.setAttribute("src", exportLocation.asString);
+      let data = await filePath.readFileBuffer();
+      if (data) {
+        let imageDownload = new Downloadable(exportLocation.fullName, data, exportLocation.directory.makeForceFolder());
+        let imageStat = filePath.stat;
+        if (imageStat)
+          imageDownload.modifiedTime = imageStat.mtimeMs;
+        downloads.push(imageDownload);
+      }
+    }
+    ;
+    return downloads;
+  }
+  static getMediaPath(src, exportingFilePath) {
+    var _a2, _b, _c, _d;
+    let pathString = "";
+    if (src.startsWith("app://")) {
+      let fail = false;
+      try {
+        pathString = (_b = (_a2 = app.vault.resolveFileUrl(src)) == null ? void 0 : _a2.path) != null ? _b : "";
+        if (pathString == "")
+          fail = true;
+      } catch (e) {
+        fail = true;
+      }
+      if (fail) {
+        pathString = src.replaceAll("app://", "").replaceAll("\\", "/");
+        pathString = pathString.replaceAll(pathString.split("/")[0] + "/", "");
+        pathString = Path.getRelativePathFromVault(new Path(pathString), true).asString;
+        ExportLog.log(pathString, "Fallback path parsing:");
+      }
+    } else {
+      pathString = (_d = (_c = app.metadataCache.getFirstLinkpathDest(src, exportingFilePath)) == null ? void 0 : _c.path) != null ? _d : "";
+    }
+    pathString = pathString != null ? pathString : "";
+    return new Path(pathString);
+  }
+};
+
+// scripts/objects/website.ts
+var import_obsidian2 = require("obsidian");
 
 // node_modules/minisearch/dist/es/index.js
 var __assign = function() {
@@ -60692,15 +68575,52 @@ var WebsiteIndex = class {
     this.exportTime = Date.now();
     this.previousMetadata = await this.getExportMetadata();
     this.index = await this.getExportIndex();
-    if (!this.shouldApplyIncrementalExport() && Settings.onlyExportModified) {
-      RenderLog.warning("Something changed which requires a full re-export of all files");
-    }
+    this.shouldApplyIncrementalExport(true);
     if (!this.previousMetadata)
       return false;
     return true;
   }
-  shouldApplyIncrementalExport() {
-    return Settings.onlyExportModified && !this.isVersionChanged() && Settings.exportPreset == "website" /* Website */ && this.previousMetadata != void 0 && this.index != void 0;
+  shouldApplyIncrementalExport(printWarning = false) {
+    var _a2, _b;
+    let result = true;
+    if (!Settings.onlyExportModified)
+      result = false;
+    if (Settings.exportPreset != "website" /* Website */)
+      result = false;
+    if (this.isVersionChanged() && this.previousMetadata) {
+      if (printWarning)
+        ExportLog.warning("Plugin version changed. All files will be re-exported.");
+      result = false;
+    }
+    if (this.previousMetadata == void 0) {
+      if (printWarning)
+        ExportLog.warning("No existing export metadata found. All files will be exported.");
+      result = false;
+    }
+    if (this.index == void 0) {
+      if (printWarning)
+        ExportLog.warning("No existing search index found. All files will be exported.");
+      result = false;
+    }
+    let rssAbsoultePath = this.web.destination.joinString(this.web.rssPath);
+    if (!rssAbsoultePath.exists && this.web.exportOptions.addRSS) {
+      if (printWarning)
+        ExportLog.warning("No existing RSS feed found. All files will be exported.");
+      result = false;
+    }
+    let customHeadChanged = this.previousMetadata && ((_a2 = this.previousMetadata) == null ? void 0 : _a2.useCustomHeadContent) != (Settings.customHeadContentPath != "");
+    if (customHeadChanged) {
+      if (printWarning)
+        ExportLog.warning(`${Settings.customHeadContentPath != "" ? "Added" : "Removed"} custom head content. All files will be re-exported.`);
+      result = false;
+    }
+    let customFaviconChanged = this.previousMetadata && ((_b = this.previousMetadata) == null ? void 0 : _b.useCustomFavicon) != (Settings.faviconPath != "");
+    if (customFaviconChanged) {
+      if (printWarning)
+        ExportLog.warning(`${Settings.faviconPath != "" ? "Added" : "Removed"} custom favicon. All files will be re-exported.`);
+      result = false;
+    }
+    return result;
   }
   async getExportMetadata() {
     try {
@@ -60709,7 +68629,7 @@ var WebsiteIndex = class {
       if (metadata)
         return JSON.parse(metadata);
     } catch (e) {
-      RenderLog.warning(e, "Failed to parse metadata.json. Recreating metadata.");
+      ExportLog.warning(e, "Failed to parse metadata.json. Recreating metadata.");
     }
     return void 0;
   }
@@ -60722,7 +68642,7 @@ var WebsiteIndex = class {
         index = MiniSearch.loadJSON(indexJson, this.indexOptions);
       }
     } catch (e) {
-      RenderLog.warning(e, "Failed to load search-index.json. Creating new index.");
+      ExportLog.warning(e, "Failed to load search-index.json. Creating new index.");
       index = void 0;
     }
     return index;
@@ -60750,25 +68670,25 @@ var WebsiteIndex = class {
       content = content.trim().replace(/\s+/g, " ");
       return content;
     }
-    const htmlWebpages = this.web.webpages.filter((webpage) => webpage.document && webpage.contentElement);
+    const htmlWebpages = this.web.webpages.filter((webpage) => webpage.document && webpage.viewElement);
     let progressCount = 0;
     let totalCount = htmlWebpages.length + this.web.dependencies.length + this.removedFiles.length;
     for (const webpage of htmlWebpages) {
-      if (MarkdownRenderer.checkCancelled())
+      if (MarkdownRendererAPI.checkCancelled())
         return void 0;
-      RenderLog.progress(progressCount, totalCount, "Indexing", "Adding: " + webpage.exportPath.asString, "var(--color-blue)");
-      const content = preprocessContent(webpage.contentElement);
+      ExportLog.progress(progressCount, totalCount, "Indexing", "Adding: " + webpage.relativePath.asString, "var(--color-blue)");
+      const content = preprocessContent(webpage.viewElement);
       if (content) {
-        const webpagePath = webpage.exportPath.copy.makeUnixStyle().asString;
+        const webpagePath = webpage.relativePath.copy.makeUnixStyle().asString;
         if (this.index.has(webpagePath)) {
           this.index.discard(webpagePath);
         }
         this.index.add({
           path: webpagePath,
-          title: (await Website.getTitleAndIcon(webpage.source)).title,
+          title: webpage.title,
           content,
-          tags: webpage.getTags(),
-          headers: webpage.getHeadings().map((header) => header.heading)
+          tags: webpage.tags,
+          headers: webpage.headings.map((header) => header.heading)
         });
       } else {
         console.warn(`No indexable content found for ${webpage.source.basename}`);
@@ -60776,16 +68696,16 @@ var WebsiteIndex = class {
       progressCount++;
     }
     for (const file of this.web.dependencies) {
-      if (MarkdownRenderer.checkCancelled())
+      if (MarkdownRendererAPI.checkCancelled())
         return void 0;
-      const filePath = file.relativeDownloadPath.asString;
+      const filePath = file.relativePath.asString;
       if (this.index.has(filePath)) {
         continue;
       }
-      RenderLog.progress(progressCount, totalCount, "Indexing", "Adding: " + file.filename, "var(--color-blue)");
+      ExportLog.progress(progressCount, totalCount, "Indexing", "Adding: " + file.filename, "var(--color-blue)");
       this.index.add({
         path: filePath,
-        title: file.relativeDownloadPath.basename,
+        title: file.relativePath.basename,
         content: "",
         tags: [],
         headers: []
@@ -60793,92 +68713,95 @@ var WebsiteIndex = class {
       progressCount++;
     }
     for (const oldFile of this.removedFiles) {
-      if (MarkdownRenderer.checkCancelled())
+      if (MarkdownRendererAPI.checkCancelled())
         return void 0;
-      RenderLog.progress(progressCount, totalCount, "Indexing", "Removing: " + oldFile, "var(--color-blue)");
+      ExportLog.progress(progressCount, totalCount, "Indexing", "Removing: " + oldFile, "var(--color-blue)");
       if (this.index.has(oldFile))
         this.index.discard(oldFile);
       progressCount++;
     }
-    RenderLog.progress(totalCount, totalCount, "Indexing", "Cleanup index", "var(--color-blue)");
+    ExportLog.progress(totalCount, totalCount, "Indexing", "Cleanup index", "var(--color-blue)");
     this.index.vacuum();
     return new Asset("search-index.json", JSON.stringify(this.index), "other" /* Other */, "download" /* Download */, false, "temporary" /* Temporary */);
   }
-  async createMetadata() {
+  async createMetadata(options) {
     let metadata = this.previousMetadata ? JSON.parse(JSON.stringify(this.previousMetadata)) : {};
-    metadata.vaultName = app.vault.getName();
+    metadata.vaultName = this.web.exportOptions.siteName;
     metadata.lastExport = this.exportTime;
     metadata.pluginVersion = HTMLExportPlugin.plugin.manifest.version;
     metadata.validBodyClasses = Website.validBodyClasses;
+    metadata.useCustomHeadContent = Settings.customHeadContentPath != "";
+    metadata.useCustomFavicon = Settings.faviconPath != "";
     metadata.files = this.allFiles;
-    metadata.mainDependencies = AssetHandler.getDownloads().map((asset) => asset.relativeDownloadPath.copy.makeUnixStyle().asString);
+    metadata.mainDependencies = AssetHandler.getDownloads(options).map((asset) => asset.relativePath.copy.makeUnixStyle().asString);
     if (!metadata.fileInfo)
       metadata.fileInfo = {};
     let progressCount = 0;
     let totalCount = this.web.webpages.length + this.web.dependencies.length + this.removedFiles.length;
     for (const page of this.web.webpages) {
-      if (MarkdownRenderer.checkCancelled())
+      if (MarkdownRendererAPI.checkCancelled())
         return void 0;
-      RenderLog.progress(progressCount, totalCount, "Creating Metadata", "Adding: " + page.exportPath.asString, "var(--color-cyan)");
+      ExportLog.progress(progressCount, totalCount, "Creating Metadata", "Adding: " + page.relativePath.asString, "var(--color-cyan)");
       let fileInfo = {};
       fileInfo.modifiedTime = this.exportTime;
       fileInfo.sourceSize = page.source.stat.size;
-      fileInfo.exportedPath = page.exportPath.copy.makeUnixStyle().asString;
-      fileInfo.dependencies = page.dependencies.map((asset) => asset.relativeDownloadPath.copy.makeUnixStyle().asString);
+      fileInfo.exportedPath = page.relativePath.copy.makeUnixStyle().asString;
+      fileInfo.dependencies = page.dependencies.map((asset) => asset.relativePath.copy.makeUnixStyle().asString);
       let exportPath = new Path(page.source.path).makeUnixStyle().asString;
       metadata.fileInfo[exportPath] = fileInfo;
       progressCount++;
     }
     for (const file of this.web.dependencies) {
-      if (MarkdownRenderer.checkCancelled())
+      if (MarkdownRendererAPI.checkCancelled())
         return void 0;
-      RenderLog.progress(progressCount, totalCount, "Creating Metadata", "Adding: " + file.relativeDownloadPath.asString, "var(--color-cyan)");
+      ExportLog.progress(progressCount, totalCount, "Creating Metadata", "Adding: " + file.relativePath.asString, "var(--color-cyan)");
       let fileInfo = {};
       fileInfo.modifiedTime = this.exportTime;
       fileInfo.sourceSize = file.content.length;
-      fileInfo.exportedPath = file.relativeDownloadPath.copy.makeUnixStyle().asString;
+      fileInfo.exportedPath = file.relativePath.copy.makeUnixStyle().asString;
       fileInfo.dependencies = [];
-      let exportPath = file.relativeDownloadPath.copy.makeUnixStyle().asString;
+      let exportPath = file.relativePath.copy.makeUnixStyle().asString;
       metadata.fileInfo[exportPath] = fileInfo;
       progressCount++;
     }
     for (const oldFile of this.removedFiles) {
-      if (MarkdownRenderer.checkCancelled())
+      if (MarkdownRendererAPI.checkCancelled())
         return void 0;
-      RenderLog.progress(progressCount, totalCount, "Creating Metadata", "Removing: " + oldFile, "var(--color-cyan)");
+      ExportLog.progress(progressCount, totalCount, "Creating Metadata", "Removing: " + oldFile, "var(--color-cyan)");
       delete metadata.fileInfo[oldFile];
       progressCount++;
     }
     return new Asset("metadata.json", JSON.stringify(metadata, null, 2), "other" /* Other */, "download" /* Download */, false, "temporary" /* Temporary */);
   }
-  async deleteOldFiles() {
+  async deleteOldFiles(options) {
+    options = Object.assign(new MarkdownWebpageRendererAPIOptions2(), options);
     if (!this.previousMetadata)
       return;
     if (this.removedFiles.length == 0) {
-      RenderLog.log("No old files to delete");
+      ExportLog.log("No old files to delete");
       return;
     }
     for (let i = 0; i < this.removedFiles.length; i++) {
-      if (MarkdownRenderer.checkCancelled())
+      if (MarkdownRendererAPI.checkCancelled())
         return;
       let removedPath = this.removedFiles[i];
       console.log("Removing old file: ", this.previousMetadata.fileInfo);
       let exportedPath = new Path(this.previousMetadata.fileInfo[removedPath].exportedPath);
-      exportedPath.makeWebStyle(Settings.makeNamesWebStyle);
+      exportedPath.makeWebStyle(options.webStylePaths);
       let deletePath = this.web.destination.join(exportedPath);
       console.log("Deleting old file: " + deletePath.asString);
       await deletePath.delete(true);
-      RenderLog.progress(i, this.removedFiles.length, "Deleting Old Files", "Deleting: " + deletePath.asString, "var(--color-orange)");
+      ExportLog.progress(i, this.removedFiles.length, "Deleting Old Files", "Deleting: " + deletePath.asString, "var(--color-orange)");
     }
     let folders = await Path.getAllEmptyFoldersRecursive(this.web.destination);
-    if (MarkdownRenderer.checkCancelled())
+    if (MarkdownRendererAPI.checkCancelled())
       return;
     folders.sort((a, b) => a.depth - b.depth);
     for (let i = 0; i < folders.length; i++) {
-      if (MarkdownRenderer.checkCancelled())
+      if (MarkdownRendererAPI.checkCancelled())
         return;
       let folder = folders[i];
-      RenderLog.progress(i, folders.length, "Deleting Empty Folders", "Deleting: " + folder.asString, "var(--color-orange)");
+      ExportLog.progress(i, folders.length, "Deleting Empty Folders", "Deleting: " + folder.asString, "var(--color-orange)");
       await folder.directory.delete(true);
     }
   }
@@ -60890,7 +68813,7 @@ var WebsiteIndex = class {
     console.log("Updating body classes of previous export");
     let convertableFiles = this.previousMetadata.files.filter((path) => {
       var _a2;
-      return MarkdownRenderer.isConvertable((_a2 = path.split(".").pop()) != null ? _a2 : "");
+      return MarkdownRendererAPI.isConvertable((_a2 = path.split(".").pop()) != null ? _a2 : "");
     });
     let exportedPaths = convertableFiles.map((path) => {
       var _a2, _b, _c;
@@ -60898,7 +68821,7 @@ var WebsiteIndex = class {
     });
     exportedPaths = exportedPaths.filter((path) => !path.isEmpty);
     for (let i = 0; i < exportedPaths.length; i++) {
-      if (MarkdownRenderer.checkCancelled())
+      if (MarkdownRendererAPI.checkCancelled())
         return;
       let exportedPath = exportedPaths[i];
       let content = await exportedPath.readFileString();
@@ -60910,7 +68833,7 @@ var WebsiteIndex = class {
         continue;
       body.className = Website.validBodyClasses;
       await exportedPath.writeFile(dom.documentElement.outerHTML);
-      RenderLog.progress(i, exportedPaths.length, "Updating Body Classes", "Updating: " + exportedPath.asString, "var(--color-yellow)");
+      ExportLog.progress(i, exportedPaths.length, "Updating Body Classes", "Updating: " + exportedPath.asString, "var(--color-yellow)");
     }
   }
   isFileChanged(file) {
@@ -60944,9 +68867,9 @@ var WebsiteIndex = class {
       this.allFiles.push(file.path);
     }
     for (let asset of this.web.dependencies) {
-      if (this.allFiles.some((path) => Path.equal(path, asset.relativeDownloadPath.asString)))
+      if (this.allFiles.some((path) => Path.equal(path, asset.relativePath.asString)))
         continue;
-      this.allFiles.push(asset.relativeDownloadPath.copy.makeUnixStyle().asString);
+      this.allFiles.push(asset.relativePath.copy.makeUnixStyle().asString);
     }
     return this.allFiles;
   }
@@ -60983,17 +68906,17 @@ var WebsiteIndex = class {
     this.allFiles = this.allFiles.filter((path, index) => this.allFiles.findIndex((f) => f == path) == index);
     return this.keptDependencies;
   }
-  async build() {
+  async build(options) {
     this.getAllFiles();
     this.getKeptDependencies();
     this.getRemovedFiles();
     this.getAddedFiles();
-    let metadataAsset = await this.createMetadata();
+    let metadataAsset = await this.createMetadata(options);
     if (!metadataAsset)
       return false;
     this.web.dependencies.push(metadataAsset);
     this.web.downloads.push(metadataAsset);
-    if (Settings.includeSearchBar) {
+    if (options.addSearch) {
       let index = await this.createIndex();
       if (!index)
         return false;
@@ -61005,6 +68928,7 @@ var WebsiteIndex = class {
 };
 
 // scripts/objects/website.ts
+var import_rss = __toESM(require_lib3());
 var Website = class {
   constructor() {
     this.webpages = [];
@@ -61012,87 +68936,23 @@ var Website = class {
     this.downloads = [];
     this.batchFiles = [];
     this.progress = 0;
+    this.rssPath = AssetHandler.libraryPath.joinString("rss.xml").makeUnixStyle().asString;
     this.fileTreeHtml = "";
   }
-  giveWarnings() {
-    var _a2, _b, _c, _d, _e;
-    if (app.plugins.enabledPlugins.has("obsidian-icon-folder")) {
-      let fileToIconName = app.plugins.plugins["obsidian-icon-folder"].data;
-      let noteIconsEnabled = (_a2 = fileToIconName.settings.iconsInNotesEnabled) != null ? _a2 : false;
-      if (!noteIconsEnabled) {
-        RenderLog.warning('For Iconize plugin support, enable "Toggle icons while editing notes" in the Iconize plugin settings.');
-      }
-    }
-    if (app.plugins.enabledPlugins.has("obsidian-excalidraw-plugin")) {
-      let embedMode = (_c = (_b = app.plugins.plugins["obsidian-excalidraw-plugin"]) == null ? void 0 : _b.settings["previewImageType"]) != null ? _c : "";
-      if (embedMode != "SVG") {
-        RenderLog.warning('For Excalidraw embed support, set the embed mode to "Native SVG" in the Excalidraw plugin settings.');
-      }
-    }
-    if (app.plugins.enabledPlugins.has("obsidian-banners")) {
-      let bannerPlugin = app.plugins.plugins["obsidian-banners"];
-      let version = (_e = (_d = bannerPlugin == null ? void 0 : bannerPlugin.manifest) == null ? void 0 : _d.version) != null ? _e : "0.0.0";
-      version = version.substring(0, 5);
-      if (version < "2.0.5") {
-        RenderLog.warning("The Banner plugin version 2.0.5 or higher is required for full support. You have version " + version + ".");
-      }
-    }
-  }
-  async initExport() {
-    this.progress = 0;
-    this.index = new WebsiteIndex(this);
-    await MarkdownRenderer.beginBatch();
-    this.giveWarnings();
-    if (Settings.includeGraphView) {
-      RenderLog.progress(0, 1, "Initialize Export", "Generating graph view", "var(--color-yellow)");
-      let convertableFiles = this.batchFiles.filter((file) => MarkdownRenderer.isConvertable(file.extension));
-      this.globalGraph = new GraphView();
-      await this.globalGraph.init(convertableFiles, Settings.graphMinNodeSize, Settings.graphMaxNodeSize);
-    }
-    if (Settings.includeFileTree) {
-      RenderLog.progress(0, 1, "Initialize Export", "Generating file tree", "var(--color-yellow)");
-      this.fileTree = new FileTree(this.batchFiles, false, true);
-      this.fileTree.makeLinksWebStyle = Settings.makeNamesWebStyle;
-      this.fileTree.showNestingIndicator = true;
-      this.fileTree.generateWithItemsClosed = true;
-      this.fileTree.showFileExtentionTags = true;
-      this.fileTree.hideFileExtentionTags = ["md"];
-      this.fileTree.title = app.vault.getName();
-      this.fileTree.class = "file-tree";
-      let tempTreeContainer = document.body.createDiv();
-      await this.fileTree.generateTreeWithContainer(tempTreeContainer);
-      this.fileTreeHtml = tempTreeContainer.innerHTML;
-      tempTreeContainer.remove();
-    }
-    RenderLog.progress(0, 1, "Initialize Export", "loading assets", "var(--color-yellow)");
-    await AssetHandler.reloadAssets();
-    Website.validBodyClasses = await HTMLGeneration.getValidBodyClasses(true);
-    if (Settings.includeGraphView) {
-      RenderLog.progress(1, 1, "Loading graph asset", "...", "var(--color-yellow)");
-      this.graphDataAsset = new Asset("graph-data.js", this.globalGraph.getExportData(), "script" /* Script */, "autohead" /* AutoHead */, true, "temporary" /* Temporary */);
-      this.graphDataAsset.load();
-    }
-    if (Settings.includeFileTree) {
-      RenderLog.progress(1, 1, "Loading file tree asset", "...", "var(--color-yellow)");
-      this.fileTreeAsset = new Asset("file-tree.html", this.fileTreeHtml, "html" /* HTML */, "auto" /* Auto */, true, "temporary" /* Temporary */);
-      this.fileTreeAsset.load();
-    }
-    RenderLog.progress(1, 1, "Initializing index", "...", "var(--color-yellow)");
-    await this.index.init();
-  }
-  async createWithFiles(files, destination) {
+  async createWithFiles(files, destination, options) {
+    this.exportOptions = Object.assign(new MarkdownWebpageRendererAPIOptions2(), options);
     this.batchFiles = files;
     this.destination = destination;
     await this.initExport();
     console.log("Creating website with files: ", files);
     let useIncrementalExport = this.index.shouldApplyIncrementalExport();
     for (let file of files) {
-      if (MarkdownRenderer.checkCancelled())
-        return void 0;
-      RenderLog.progress(this.progress, this.batchFiles.length, "Generating HTML", "Exporting: " + file.path, "var(--interactive-accent)");
+      if (MarkdownRendererAPI.checkCancelled())
+        return;
+      ExportLog.progress(this.progress, this.batchFiles.length, "Generating HTML", "Exporting: " + file.path, "var(--interactive-accent)");
       this.progress++;
       let filename = new Path(file.path).basename;
-      let webpage = new Webpage(file, this, destination, this.batchFiles.length > 1, filename, Settings.inlineAssets && this.batchFiles.length == 1);
+      let webpage = new Webpage(file, destination, filename, this, this.exportOptions);
       let shouldExportPage = useIncrementalExport && this.index.isFileChanged(file) || !useIncrementalExport;
       if (!shouldExportPage)
         continue;
@@ -61100,39 +68960,254 @@ var Website = class {
       if (!createdPage)
         continue;
       this.webpages.push(webpage);
+      this.downloads.push(webpage);
       this.downloads.push(...webpage.dependencies);
-      this.downloads.push(await webpage.getSelfDownloadable());
       this.dependencies.push(...webpage.dependencies);
     }
-    this.dependencies.push(...AssetHandler.getDownloads());
-    this.downloads.push(...AssetHandler.getDownloads());
+    this.dependencies.push(...AssetHandler.getDownloads(this.exportOptions));
+    this.downloads.push(...AssetHandler.getDownloads(this.exportOptions));
     this.filterDownloads(true);
-    this.index.build();
+    this.index.build(this.exportOptions);
     this.filterDownloads();
+    if (this.exportOptions.addRSS) {
+      this.createRSS();
+    }
     console.log("Website created: ", this);
     return this;
   }
+  giveWarnings() {
+    var _a2, _b, _c, _d, _e;
+    if (app.plugins.enabledPlugins.has("obsidian-icon-folder")) {
+      let fileToIconName = app.plugins.plugins["obsidian-icon-folder"].data;
+      let noteIconsEnabled = (_a2 = fileToIconName.settings.iconsInNotesEnabled) != null ? _a2 : false;
+      if (!noteIconsEnabled) {
+        ExportLog.warning('For Iconize plugin support, enable "Toggle icons while editing notes" in the Iconize plugin settings.');
+      }
+    }
+    if (app.plugins.enabledPlugins.has("obsidian-excalidraw-plugin")) {
+      let embedMode = (_c = (_b = app.plugins.plugins["obsidian-excalidraw-plugin"]) == null ? void 0 : _b.settings["previewImageType"]) != null ? _c : "";
+      if (embedMode != "SVG") {
+        ExportLog.warning('For Excalidraw embed support, set the embed mode to "Native SVG" in the Excalidraw plugin settings.');
+      }
+    }
+    if (app.plugins.enabledPlugins.has("obsidian-banners")) {
+      let bannerPlugin = app.plugins.plugins["obsidian-banners"];
+      let version = (_e = (_d = bannerPlugin == null ? void 0 : bannerPlugin.manifest) == null ? void 0 : _d.version) != null ? _e : "0.0.0";
+      version = version.substring(0, 5);
+      if (version < "2.0.5") {
+        ExportLog.warning("The Banner plugin version 2.0.5 or higher is required for full support. You have version " + version + ".");
+      }
+    }
+    if (this.exportOptions.addRSS && (this.exportOptions.siteURL == "" || this.exportOptions.siteURL == void 0)) {
+      ExportLog.warning("Creating an RSS feed requires a site url to be set in the export settings.");
+    }
+  }
+  async initExport() {
+    var _a2, _b;
+    this.progress = 0;
+    this.index = new WebsiteIndex(this);
+    await MarkdownRendererAPI.beginBatch();
+    this.giveWarnings();
+    if (this.exportOptions.addGraphView) {
+      ExportLog.progress(0, 1, "Initialize Export", "Generating graph view", "var(--color-yellow)");
+      let convertableFiles = this.batchFiles.filter((file) => MarkdownRendererAPI.isConvertable(file.extension));
+      this.globalGraph = new GraphView();
+      await this.globalGraph.init(convertableFiles, this.exportOptions);
+    }
+    if (this.exportOptions.addFileNavigation) {
+      ExportLog.progress(0, 1, "Initialize Export", "Generating file tree", "var(--color-yellow)");
+      this.fileTree = new FileTree(this.batchFiles, false, true);
+      this.fileTree.makeLinksWebStyle = (_a2 = this.exportOptions.webStylePaths) != null ? _a2 : true;
+      this.fileTree.showNestingIndicator = true;
+      this.fileTree.generateWithItemsClosed = true;
+      this.fileTree.showFileExtentionTags = true;
+      this.fileTree.hideFileExtentionTags = ["md"];
+      this.fileTree.title = (_b = this.exportOptions.siteName) != null ? _b : app.vault.getName();
+      this.fileTree.class = "file-tree";
+      let tempTreeContainer = document.body.createDiv();
+      await this.fileTree.generateTreeWithContainer(tempTreeContainer);
+      this.fileTreeHtml = tempTreeContainer.innerHTML;
+      tempTreeContainer.remove();
+    }
+    ExportLog.progress(0, 1, "Initialize Export", "loading assets", "var(--color-yellow)");
+    await AssetHandler.reloadAssets();
+    Website.validBodyClasses = await HTMLGeneration.getValidBodyClasses(true);
+    if (this.exportOptions.addGraphView) {
+      ExportLog.progress(1, 1, "Loading graph asset", "...", "var(--color-yellow)");
+      this.graphDataAsset = new Asset("graph-data.js", this.globalGraph.getExportData(), "script" /* Script */, "autohead" /* AutoHead */, true, "temporary" /* Temporary */);
+      this.graphDataAsset.load(this.exportOptions);
+    }
+    if (this.exportOptions.addFileNavigation) {
+      ExportLog.progress(1, 1, "Loading file tree asset", "...", "var(--color-yellow)");
+      this.fileTreeAsset = new Asset("file-tree.html", this.fileTreeHtml, "html" /* HTML */, "auto" /* Auto */, true, "temporary" /* Temporary */);
+      this.fileTreeAsset.load(this.exportOptions);
+    }
+    ExportLog.progress(1, 1, "Initializing index", "...", "var(--color-yellow)");
+    await this.index.init();
+  }
+  async createRSS() {
+    var _a2, _b, _c, _d, _e, _f, _g;
+    let author = this.exportOptions.authorName || void 0;
+    this.rss = new import_rss.default({
+      title: (_a2 = this.exportOptions.siteName) != null ? _a2 : app.vault.getName(),
+      description: "Obsidian digital garden",
+      generator: "Webpage HTML Export plugin for Obsidian",
+      feed_url: Path.joinStrings((_b = this.exportOptions.siteURL) != null ? _b : "", this.rssPath).asString,
+      site_url: (_c = this.exportOptions.siteURL) != null ? _c : "",
+      image_url: Path.joinStrings((_d = this.exportOptions.siteURL) != null ? _d : "", AssetHandler.favicon.relativePath.asString).asString,
+      pubDate: new Date(this.index.exportTime),
+      copyright: author,
+      ttl: 60,
+      custom_elements: [
+        { "dc:creator": author }
+      ]
+    });
+    for (let page of this.webpages) {
+      if (!page.isConvertable || page.sizerElement.innerText.length < 5)
+        continue;
+      let title = page.title;
+      let url = Path.joinStrings((_e = this.exportOptions.siteURL) != null ? _e : "", page.relativePath.asString).asString;
+      let guid = page.source.path;
+      let date = new Date(page.source.stat.mtime);
+      author = (_f = page.author) != null ? _f : author;
+      let media = (_g = page.metadataImageURL) != null ? _g : "";
+      let hasMedia = media != "";
+      let description = page.description;
+      if (!description) {
+        let keepTextLinksImages = function(element) {
+          var _a3, _b2, _c2;
+          let walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT);
+          let node;
+          let nodes = [];
+          while (node = walker.nextNode()) {
+            if (node.nodeType == Node.ELEMENT_NODE) {
+              let element2 = node;
+              if (element2.tagName == "A" || element2.tagName == "IMG" || element2.tagName == "BR") {
+                nodes.push(element2);
+              }
+              if (element2.tagName == "DIV") {
+                let classes = (_a3 = element2.parentElement) == null ? void 0 : _a3.classList;
+                if ((classes == null ? void 0 : classes.contains("heading-children")) || (classes == null ? void 0 : classes.contains("markdown-preview-sizer"))) {
+                  nodes.push(document.createElement("br"));
+                }
+              }
+              if (element2.tagName == "LI") {
+                nodes.push(document.createElement("br"));
+              }
+            } else {
+              if (((_b2 = node.parentElement) == null ? void 0 : _b2.tagName) != "A" && ((_c2 = node.parentElement) == null ? void 0 : _c2.tagName) != "IMG")
+                nodes.push(node);
+            }
+          }
+          element.innerHTML = "";
+          element.append(...nodes);
+        };
+        let content = page.viewElement.cloneNode(true);
+        content.querySelectorAll(`h1, h2, h3, h4, h5, h6, .mermaid, table, mjx-container, style, script, 
+.mod-header, .mod-footer, .metadata-container, .frontmatter, img[src^="data:"]`).forEach((heading) => heading.remove());
+        content.querySelectorAll("[src]").forEach((el) => {
+          var _a3;
+          let src = el.src;
+          if (!src)
+            return;
+          if (src.startsWith("http") || src.startsWith("data:"))
+            return;
+          src = src.replace("app://obsidian", "");
+          src = src.replace(".md", "");
+          let path = Path.joinStrings((_a3 = this.exportOptions.siteURL) != null ? _a3 : "", src);
+          el.src = path.asString;
+        });
+        content.querySelectorAll("[href]").forEach((el) => {
+          var _a3;
+          let href = el.href;
+          if (!href)
+            return;
+          if (href.startsWith("http") || href.startsWith("data:"))
+            return;
+          href = href.replace("app://obsidian", "");
+          href = href.replace(".md", "");
+          let path = Path.joinStrings((_a3 = this.exportOptions.siteURL) != null ? _a3 : "", href);
+          el.href = path.asString;
+        });
+        keepTextLinksImages(content);
+        description = content.innerHTML;
+        content.remove();
+      }
+      let tags = page.tags.map((t) => t).map((tag) => `<a class="tag" href="${this.exportOptions.siteURL}?query=tag:${tag.replace("#", "")}">${tag}</a>`).join(" ");
+      let tagContainer = document.body.createDiv();
+      tagContainer.innerHTML = tags;
+      tagContainer.style.display = "flex";
+      tagContainer.style.gap = "0.4em";
+      tagContainer.querySelectorAll("a.tag").forEach((tag) => {
+        tag.style.backgroundColor = "#046c74";
+        tag.style.color = "white";
+        tag.style.fontWeight = "700";
+        tag.style.border = "none";
+        tag.style.borderRadius = "1em";
+        tag.style.padding = "0.2em 0.5em";
+      });
+      description = tagContainer.innerHTML + " \n " + description;
+      tagContainer.remove();
+      this.rss.item({
+        title,
+        description,
+        url,
+        guid,
+        date,
+        enclosure: hasMedia ? { url: media } : void 0,
+        author,
+        custom_elements: [
+          hasMedia ? { "content:encoded": `<figure><img src="${media}"></figure>` } : void 0
+        ]
+      });
+    }
+    let result = this.rss.xml();
+    let rssAbsoultePath = this.destination.joinString(this.rssPath);
+    let rssFileOld = await rssAbsoultePath.readFileString();
+    if (rssFileOld) {
+      let rssDocOld = new DOMParser().parseFromString(rssFileOld, "text/xml");
+      let rssDocNew = new DOMParser().parseFromString(result, "text/xml");
+      let oldItems = Array.from(rssDocOld.querySelectorAll("item"));
+      let newItems = Array.from(rssDocNew.querySelectorAll("item"));
+      oldItems = oldItems.filter((oldItem) => !newItems.find((newItem) => {
+        var _a3, _b2;
+        return ((_a3 = newItem.querySelector("guid")) == null ? void 0 : _a3.textContent) == ((_b2 = oldItem.querySelector("guid")) == null ? void 0 : _b2.textContent);
+      }));
+      oldItems = oldItems.filter((oldItem) => {
+        var _a3, _b2;
+        return !this.index.removedFiles.contains((_b2 = (_a3 = oldItem.querySelector("guid")) == null ? void 0 : _a3.textContent) != null ? _b2 : "");
+      });
+      newItems = newItems.concat(oldItems);
+      newItems.forEach((item) => item.remove());
+      let channel = rssDocNew.querySelector("channel");
+      newItems.forEach((item) => channel == null ? void 0 : channel.appendChild(item));
+      result = rssDocNew.documentElement.outerHTML;
+    }
+    let rss = new Asset("rss.xml", result, "other" /* Other */, "download" /* Download */, false, "temporary" /* Temporary */);
+    rss.download(this.destination);
+  }
   filterDownloads(onlyDuplicates = false) {
-    this.dependencies = this.dependencies.filter((file, index) => this.dependencies.findIndex((f) => f.relativeDownloadPath.asString == file.relativeDownloadPath.asString) == index);
-    this.downloads = this.downloads.filter((file, index) => this.downloads.findIndex((f) => f.relativeDownloadPath.asString == file.relativeDownloadPath.asString) == index);
+    this.dependencies = this.dependencies.filter((file, index) => this.dependencies.findIndex((f) => f.relativePath.asString == file.relativePath.asString) == index);
+    this.downloads = this.downloads.filter((file, index) => this.downloads.findIndex((f) => f.relativePath.asString == file.relativePath.asString) == index);
     if (!this.index.shouldApplyIncrementalExport() || onlyDuplicates)
       return;
     let localThis = this;
     function filterFunction(file) {
       if (file.filename.endsWith(".html"))
         return true;
-      if (localThis.index.hasFileByPath(file.relativeDownloadPath.asString) && file.filename.endsWith(".woff") || file.filename.endsWith(".woff2") || file.filename.endsWith(".otf") || file.filename.endsWith(".ttf")) {
+      if (localThis.index.hasFileByPath(file.relativePath.asString) && file.filename.endsWith(".woff") || file.filename.endsWith(".woff2") || file.filename.endsWith(".otf") || file.filename.endsWith(".ttf")) {
         return false;
       }
-      let metadata = localThis.index.getMetadataForPath(file.relativeDownloadPath.copy.makeUnixStyle().asString);
+      let metadata = localThis.index.getMetadataForPath(file.relativePath.copy.makeUnixStyle().asString);
       if (metadata && (file.modifiedTime > metadata.modifiedTime || metadata.sourceSize != file.content.length))
         return true;
+      console.log("Excluding: " + file.relativePath.asString);
       return false;
     }
     this.dependencies = this.dependencies.filter(filterFunction);
     this.downloads = this.downloads.filter(filterFunction);
   }
-  static async getTitleAndIcon(file) {
+  static async getTitleAndIcon(file, skipIcon = false) {
     var _a2, _b, _c, _d, _e, _f;
     const { app: app2 } = HTMLExportPlugin.plugin;
     const { titleProperty } = Settings;
@@ -61141,7 +69216,7 @@ var Website = class {
     let title = file.name;
     let isDefaultTitle = true;
     let useDefaultIcon = false;
-    if (file instanceof import_obsidian.TFile) {
+    if (file instanceof import_obsidian2.TFile) {
       const fileCache = app2.metadataCache.getFileCache(file);
       const frontmatter = fileCache == null ? void 0 : fileCache.frontmatter;
       const titleFromFrontmatter = (_a2 = frontmatter == null ? void 0 : frontmatter[titleProperty]) != null ? _a2 : frontmatter == null ? void 0 : frontmatter.banner_header;
@@ -61159,7 +69234,9 @@ var Website = class {
           iconProperty = "lucide//layout-dashboard";
       }
     }
-    if (file instanceof import_obsidian.TFolder && Settings.showDefaultTreeIcons) {
+    if (skipIcon)
+      return { title, icon: "", isDefaultIcon: true, isDefaultTitle };
+    if (file instanceof import_obsidian2.TFolder && Settings.showDefaultTreeIcons) {
       iconProperty = Settings.defaultFolderIcon;
       useDefaultIcon = true;
     }
@@ -61176,7 +69253,7 @@ var Website = class {
           iconProperty2 = (_f = iconProperty2.iconName) != null ? _f : "";
         }
         if (iconProperty2 && typeof iconProperty2 == "string" && iconProperty2.trim() != "") {
-          if (file instanceof import_obsidian.TFile)
+          if (file instanceof import_obsidian2.TFile)
             app2.fileManager.processFrontMatter(file, (frontmatter) => {
               frontmatter.icon = iconProperty2;
             });
@@ -61215,7 +69292,7 @@ var FileTree = class extends Tree {
       let parent = this;
       for (let i = 1; i < pathSections.length; i++) {
         let section = pathSections[i];
-        let isFolder = section instanceof import_obsidian2.TFolder;
+        let isFolder = section instanceof import_obsidian3.TFolder;
         let child = parent.children.find((sibling) => sibling.title == section.name && sibling.isFolder == isFolder && sibling.depth == i);
         if (child == void 0) {
           child = new FileTreeItem(this, parent, i);
@@ -61234,13 +69311,13 @@ var FileTree = class extends Tree {
       if (parent instanceof FileTreeItem) {
         let titleInfo = await Website.getTitleAndIcon(file);
         let path = new Path(file.path).makeUnixStyle();
-        if (file instanceof import_obsidian2.TFolder)
+        if (file instanceof import_obsidian3.TFolder)
           path.makeForceFolder();
         else {
           if (path.asString.endsWith(".excalidraw.md"))
             path.setExtension("drawing");
           parent.originalExtension = path.extensionName;
-          if (!this.keepOriginalExtensions && MarkdownRenderer.isConvertable(path.extensionName))
+          if (!this.keepOriginalExtensions && MarkdownRendererAPI.isConvertable(path.extensionName))
             path.setExtension("html");
         }
         parent.href = path.asString;
@@ -61327,7 +69404,7 @@ var FilePickerTree = class extends FileTree {
       let parent = this;
       for (let i = 1; i < pathSections.length; i++) {
         let section = pathSections[i];
-        let isFolder = section instanceof import_obsidian3.TFolder;
+        let isFolder = section instanceof import_obsidian4.TFolder;
         let child = parent.children.find((sibling) => sibling.title == section.name && sibling.isFolder == isFolder && sibling.depth == i);
         if (child == void 0) {
           child = new FilePickerTreeItem(this, parent, i);
@@ -61335,8 +69412,6 @@ var FilePickerTree = class extends FileTree {
           child.isFolder = isFolder;
           if (child.isFolder) {
             child.href = section.path;
-            let titleInfo = await Website.getTitleAndIcon(section);
-            child.icon = titleInfo.icon;
             child.itemClass = "mod-tree-folder";
           } else {
             child.file = file;
@@ -61347,18 +69422,17 @@ var FilePickerTree = class extends FileTree {
         parent = child;
       }
       if (parent instanceof FilePickerTreeItem) {
-        let titleInfo = await Website.getTitleAndIcon(file);
+        let titleInfo = await Website.getTitleAndIcon(file, true);
         let path = new Path(file.path).makeUnixStyle();
-        if (file instanceof import_obsidian3.TFolder)
+        if (file instanceof import_obsidian4.TFolder)
           path.makeForceFolder();
         else {
           parent.originalExtension = path.extensionName;
-          if (!this.keepOriginalExtensions && MarkdownRenderer.isConvertable(path.extensionName))
+          if (!this.keepOriginalExtensions && MarkdownRendererAPI.isConvertable(path.extensionName))
             path.setExtension("html");
         }
         parent.href = path.asString;
         parent.title = path.basename == "." ? "" : titleInfo.title;
-        parent.icon = titleInfo.icon || "";
       }
     }
     if (this.sort) {
@@ -61511,7 +69585,7 @@ var FilePickerTreeItem = class extends FileTreeItem {
 };
 
 // scripts/settings/export-modal.ts
-var _ExportModal = class extends import_obsidian4.Modal {
+var _ExportModal = class extends import_obsidian5.Modal {
   constructor() {
     super(app);
     this.isClosed = true;
@@ -61532,7 +69606,7 @@ var _ExportModal = class extends import_obsidian4.Modal {
       this.containerEl.insertBefore(this.filePickerModalEl, this.modalEl);
       this.filePickerModalEl.style.position = "relative";
       this.filePickerModalEl.style.zIndex = "1";
-      this.filePickerModalEl.style.width = "20em";
+      this.filePickerModalEl.style.width = "25em";
       this.filePickerModalEl.style.padding = "0";
       this.filePickerModalEl.style.margin = "10px";
       this.filePickerModalEl.style.maxHeight = "80%";
@@ -61561,10 +69635,10 @@ var _ExportModal = class extends import_obsidian4.Modal {
         let filesToPick = (_d = (_c = this.pickedFiles) == null ? void 0 : _c.map((file) => file.path)) != null ? _d : Settings.filesToExport[0];
         this.filePicker.setSelectedFiles(filesToPick);
       }
-      let saveFiles = new import_obsidian4.Setting(container).addButton((button) => {
+      let saveFiles = new import_obsidian5.Setting(container).addButton((button) => {
         button.setButtonText("Save").onClick(async () => {
           Settings.filesToExport[0] = this.filePicker.getSelectedFilesSavePaths();
-          await SettingsPage6.saveSettings();
+          await SettingsPage3.saveSettings();
         });
       });
       saveFiles.settingEl.style.border = "none";
@@ -61602,38 +69676,38 @@ var _ExportModal = class extends import_obsidian4.Modal {
       "documents": "This will export self-contained, but slow loading and large, html documents.",
       "raw-documents": "This will export raw, self-contained documents without the website layout. This is useful for sharing individual notes, or printing."
     };
-    let exportModeSetting = new import_obsidian4.Setting(contentEl).setName("Export Mode").setDesc(modeDescriptions[Settings.exportPreset] + "\n\nSome options are only available in certain modes.").setHeading().addDropdown((dropdown) => dropdown.addOption("website", "Online Web Server").addOption("documents", "HTML Documents").addOption("raw-documents", "Raw HTML Documents").setValue(["website", "documents", "raw-documents"].contains(Settings.exportPreset) ? Settings.exportPreset : "website").onChange(async (value) => {
+    let exportModeSetting = new import_obsidian5.Setting(contentEl).setName("Export Mode").setDesc(modeDescriptions[Settings.exportPreset] + "\n\nSome options are only available in certain modes.").setHeading().addDropdown((dropdown) => dropdown.addOption("website", "Online Web Server").addOption("documents", "HTML Documents").addOption("raw-documents", "Raw HTML Documents").setValue(["website", "documents", "raw-documents"].contains(Settings.exportPreset) ? Settings.exportPreset : "website").onChange(async (value) => {
       Settings.exportPreset = value;
       switch (value) {
         case "website":
           Settings.inlineAssets = false;
           Settings.makeNamesWebStyle = true;
-          Settings.includeGraphView = true;
-          Settings.includeFileTree = true;
-          Settings.includeSearchBar = true;
-          await SettingsPage6.saveSettings();
+          Settings.addGraphView = true;
+          Settings.addFileNav = true;
+          Settings.addSearchBar = true;
+          await SettingsPage3.saveSettings();
           break;
         case "documents":
           Settings.inlineAssets = true;
           Settings.makeNamesWebStyle = false;
-          Settings.includeFileTree = true;
-          Settings.includeGraphView = false;
-          Settings.includeSearchBar = false;
-          await SettingsPage6.saveSettings();
+          Settings.addFileNav = true;
+          Settings.addGraphView = false;
+          Settings.addSearchBar = false;
+          await SettingsPage3.saveSettings();
           break;
         case "raw-documents":
           Settings.inlineAssets = true;
           Settings.makeNamesWebStyle = false;
-          Settings.includeGraphView = false;
-          Settings.includeFileTree = false;
-          Settings.includeSearchBar = false;
-          await SettingsPage6.saveSettings();
+          Settings.addGraphView = false;
+          Settings.addFileNav = false;
+          Settings.addSearchBar = false;
+          await SettingsPage3.saveSettings();
           break;
       }
       this.open();
     }));
     exportModeSetting.descEl.style.whiteSpace = "pre-wrap";
-    SettingsPage6.createToggle(contentEl, "Open after export", () => Settings.openAfterExport, (value) => Settings.openAfterExport = value);
+    SettingsPage3.createToggle(contentEl, "Open after export", () => Settings.openAfterExport, (value) => Settings.openAfterExport = value);
     let exportButton = void 0;
     function setExportDisabled(disabled) {
       if (exportButton) {
@@ -61644,8 +69718,15 @@ var _ExportModal = class extends import_obsidian4.Modal {
           exportButton.buttonEl.style.opacity = "1";
       }
     }
-    let validatePath = (path) => path.validate(false, true, false, false, false, true);
-    let exportPathInput = SettingsPage6.createFileInput(contentEl, () => Settings.exportPath, (value) => Settings.exportPath = value, {
+    let validatePath = (path) => path.validate({
+      allowEmpty: false,
+      allowRelative: false,
+      allowAbsolute: true,
+      allowDirectories: true,
+      allowTildeHomeDirectory: true,
+      requireExists: true
+    });
+    let exportPathInput = SettingsPage3.createFileInput(contentEl, () => Settings.exportPath, (value) => Settings.exportPath = value, {
       name: "",
       description: "",
       placeholder: "Type or browse an export directory...",
@@ -61663,7 +69744,7 @@ var _ExportModal = class extends import_obsidian4.Modal {
         this.close();
       });
     });
-    new import_obsidian4.Setting(contentEl).setDesc("More options located on the plugin settings page.").addExtraButton((button) => button.setTooltip("Open plugin settings").onClick(() => {
+    new import_obsidian5.Setting(contentEl).setDesc("More options located on the plugin settings page.").addExtraButton((button) => button.setTooltip("Open plugin settings").onClick(() => {
       app.setting.open();
       app.setting.openTabById("webpage-html-export");
     }));
@@ -61685,11 +69766,11 @@ var ExportModal = _ExportModal;
 ExportModal.title = "Export to HTML";
 
 // scripts/settings/settings-migration.ts
-var import_obsidian5 = require("obsidian");
+var import_obsidian6 = require("obsidian");
 async function migrateSettings() {
   if (Settings.settingsVersion == HTMLExportPlugin.pluginVersion)
     return;
-  new import_obsidian5.Notice("Webpage HTML Export settings have been updated to a new version. Please update your settings if any have been reset.", 1e4);
+  new import_obsidian6.Notice("Webpage HTML Export settings have been updated to a new version. Please update your settings if any have been reset.", 1e4);
   var settingsToSave = [
     "filesToExport",
     "exportPath",
@@ -61712,10 +69793,10 @@ async function migrateSettings() {
     }
     Settings.settingsVersion = HTMLExportPlugin.pluginVersion;
   } catch (e) {
-    RenderLog.error(e, "Failed to migrate settings, resetting to default settings.");
+    ExportLog.error(e, "Failed to migrate settings, resetting to default settings.");
     Object.assign(Settings, DEFAULT_SETTINGS);
   }
-  await SettingsPage6.saveSettings();
+  await SettingsPage3.saveSettings();
   return;
 }
 
@@ -61751,12 +69832,16 @@ var DEFAULT_SETTINGS = {
   makeNamesWebStyle: true,
   onlyExportModified: true,
   deleteOldFiles: true,
-  includeThemeToggle: true,
-  includeOutline: true,
-  includeFileTree: true,
-  includeSearchBar: true,
-  includeGraphView: true,
-  addFilenameTitle: true,
+  addThemeToggle: true,
+  addOutline: true,
+  addFileNav: true,
+  addSearchBar: true,
+  addGraphView: true,
+  addTitle: true,
+  addRSSFeed: true,
+  siteURL: "",
+  authorName: "",
+  vaultTitle: app.vault.getName(),
   exportPreset: "website" /* Website */,
   openAfterExport: false,
   graphAttractionForce: 1,
@@ -61774,7 +69859,7 @@ var DEFAULT_SETTINGS = {
   exportPath: "",
   filesToExport: [[]]
 };
-var _SettingsPage = class extends import_obsidian6.PluginSettingTab {
+var _SettingsPage = class extends import_obsidian7.PluginSettingTab {
   constructor(plugin) {
     super(app, plugin);
     this.blacklistedPluginIDs = [];
@@ -61801,7 +69886,7 @@ var _SettingsPage = class extends import_obsidian6.PluginSettingTab {
     supportContainer.style.gridTemplateRows = "40px 20px";
     supportContainer.appendChild(supportLink);
     let debugInfoButton = contentEl.createEl("button");
-    let bugIcon = (0, import_obsidian6.getIcon)("bug");
+    let bugIcon = (0, import_obsidian7.getIcon)("bug");
     if (bugIcon)
       debugInfoButton.appendChild(bugIcon);
     debugInfoButton.style.height = "100%";
@@ -61811,8 +69896,8 @@ var _SettingsPage = class extends import_obsidian6.PluginSettingTab {
     debugHeader.style.display = "block";
     debugHeader.style.justifySelf = "end";
     debugInfoButton.addEventListener("click", () => {
-      navigator.clipboard.writeText(RenderLog.getDebugInfo());
-      new import_obsidian6.Notice("Debug info copied to clipboard!");
+      navigator.clipboard.writeText(ExportLog.getDebugInfo());
+      new import_obsidian7.Notice("Debug info copied to clipboard!");
     });
     supportContainer.appendChild(debugInfoButton);
     supportContainer.appendChild(supportHeader);
@@ -61820,51 +69905,50 @@ var _SettingsPage = class extends import_obsidian6.PluginSettingTab {
     if (Settings.exportPreset != "raw-documents" /* RawDocuments */) {
       _SettingsPage.createDivider(contentEl);
       let section2 = _SettingsPage.createSection(contentEl, "Page Features", "Control the visibility of different page features");
-      _SettingsPage.createToggle(section2, "Theme toggle", () => Settings.includeThemeToggle, (value) => Settings.includeThemeToggle = value);
-      _SettingsPage.createToggle(section2, "Document outline / table of contents", () => Settings.includeOutline, (value) => Settings.includeOutline = value);
-      _SettingsPage.createToggle(section2, "File navigation tree", () => Settings.includeFileTree, (value) => Settings.includeFileTree = value);
+      _SettingsPage.createToggle(section2, "Theme toggle", () => Settings.addThemeToggle, (value) => Settings.addThemeToggle = value);
+      _SettingsPage.createToggle(section2, "Document outline / table of contents", () => Settings.addOutline, (value) => Settings.addOutline = value);
+      _SettingsPage.createToggle(section2, "File navigation tree", () => Settings.addFileNav, (value) => Settings.addFileNav = value);
       _SettingsPage.createToggle(section2, "File & folder icons", () => Settings.showDefaultTreeIcons, (value) => Settings.showDefaultTreeIcons = value);
       if (Settings.exportPreset == "website" /* Website */) {
-        _SettingsPage.createToggle(section2, "Search bar", () => Settings.includeSearchBar, (value) => Settings.includeSearchBar = value);
-        _SettingsPage.createToggle(section2, "Graph view", () => Settings.includeGraphView, (value) => Settings.includeGraphView = value);
+        _SettingsPage.createToggle(section2, "Search bar", () => Settings.addSearchBar, (value) => Settings.addSearchBar = value);
+        _SettingsPage.createToggle(section2, "Graph view", () => Settings.addGraphView, (value) => Settings.addGraphView = value);
         let graphViewSection = _SettingsPage.createSection(section2, "Graph View Settings", "Control the behavior of the graph view simulation");
-        new import_obsidian6.Setting(graphViewSection).setName("Attraction Force").setDesc("How much should linked nodes attract each other? This will make the graph appear more clustered.").addSlider((slider) => slider.setLimits(0, 100, 1).setValue(Settings.graphAttractionForce / (2 / 100)).setDynamicTooltip().onChange(async (value) => {
+        new import_obsidian7.Setting(graphViewSection).setName("Attraction Force").setDesc("How much should linked nodes attract each other? This will make the graph appear more clustered.").addSlider((slider) => slider.setLimits(0, 100, 1).setValue(Settings.graphAttractionForce / (2 / 100)).setDynamicTooltip().onChange(async (value) => {
           let remapMultiplier = 2 / 100;
           Settings.graphAttractionForce = value * remapMultiplier;
           await _SettingsPage.saveSettings();
         }).showTooltip());
-        new import_obsidian6.Setting(graphViewSection).setName("Link Length").setDesc("How long should the links between nodes be? The shorter the links the closer connected nodes will cluster together.").addSlider((slider) => slider.setLimits(0, 100, 1).setValue(Settings.graphLinkLength).setDynamicTooltip().onChange(async (value) => {
+        new import_obsidian7.Setting(graphViewSection).setName("Link Length").setDesc("How long should the links between nodes be? The shorter the links the closer connected nodes will cluster together.").addSlider((slider) => slider.setLimits(0, 100, 1).setValue(Settings.graphLinkLength).setDynamicTooltip().onChange(async (value) => {
           Settings.graphLinkLength = value;
           await _SettingsPage.saveSettings();
         }).showTooltip());
-        new import_obsidian6.Setting(graphViewSection).setName("Repulsion Force").setDesc("How much should nodes repel each other? This will make the graph appear more spread out.").addSlider((slider) => slider.setLimits(0, 100, 1).setValue(Settings.graphRepulsionForce / 3).setDynamicTooltip().onChange(async (value) => {
+        new import_obsidian7.Setting(graphViewSection).setName("Repulsion Force").setDesc("How much should nodes repel each other? This will make the graph appear more spread out.").addSlider((slider) => slider.setLimits(0, 100, 1).setValue(Settings.graphRepulsionForce / 3).setDynamicTooltip().onChange(async (value) => {
           Settings.graphRepulsionForce = value * 3;
           await _SettingsPage.saveSettings();
         }).showTooltip());
-        new import_obsidian6.Setting(graphViewSection).setName("Central Force").setDesc("How much should nodes be attracted to the center? This will make the graph appear more dense and circular.").addSlider((slider) => slider.setLimits(0, 100, 1).setValue(Settings.graphCentralForce / (5 / 100)).setDynamicTooltip().onChange(async (value) => {
+        new import_obsidian7.Setting(graphViewSection).setName("Central Force").setDesc("How much should nodes be attracted to the center? This will make the graph appear more dense and circular.").addSlider((slider) => slider.setLimits(0, 100, 1).setValue(Settings.graphCentralForce / (5 / 100)).setDynamicTooltip().onChange(async (value) => {
           let remapMultiplier = 5 / 100;
           Settings.graphCentralForce = value * remapMultiplier;
           await _SettingsPage.saveSettings();
         }).showTooltip());
-        new import_obsidian6.Setting(graphViewSection).setName("Max Node Radius").setDesc("How large should the largest nodes be? Nodes are sized by how many links they have. The larger a node is the more it will attract other nodes. This can be used to create a good grouping around the most important nodes.").addSlider((slider) => slider.setLimits(3, 15, 1).setValue(Settings.graphMaxNodeSize).setDynamicTooltip().onChange(async (value) => {
+        new import_obsidian7.Setting(graphViewSection).setName("Max Node Radius").setDesc("How large should the largest nodes be? Nodes are sized by how many links they have. The larger a node is the more it will attract other nodes. This can be used to create a good grouping around the most important nodes.").addSlider((slider) => slider.setLimits(3, 15, 1).setValue(Settings.graphMaxNodeSize).setDynamicTooltip().onChange(async (value) => {
           Settings.graphMaxNodeSize = value;
           await _SettingsPage.saveSettings();
         }).showTooltip());
-        new import_obsidian6.Setting(graphViewSection).setName("Min Node Radius").setDesc("How small should the smallest nodes be? The smaller a node is the less it will attract other nodes.").addSlider((slider) => slider.setLimits(3, 15, 1).setValue(Settings.graphMinNodeSize).setDynamicTooltip().onChange(async (value) => {
+        new import_obsidian7.Setting(graphViewSection).setName("Min Node Radius").setDesc("How small should the smallest nodes be? The smaller a node is the less it will attract other nodes.").addSlider((slider) => slider.setLimits(3, 15, 1).setValue(Settings.graphMinNodeSize).setDynamicTooltip().onChange(async (value) => {
           Settings.graphMinNodeSize = value;
           await _SettingsPage.saveSettings();
         }).showTooltip());
-        new import_obsidian6.Setting(graphViewSection).setName("Edge Pruning Factor").setDesc("Edges with a length above this threshold will not be rendered, however they will still contribute to the simulation. This can help large tangled graphs look more organised. Hovering over a node will still display these links.").addSlider((slider) => slider.setLimits(0, 100, 1).setValue(100 - Settings.graphEdgePruning).setDynamicTooltip().onChange(async (value) => {
+        new import_obsidian7.Setting(graphViewSection).setName("Edge Pruning Factor").setDesc("Edges with a length above this threshold will not be rendered, however they will still contribute to the simulation. This can help large tangled graphs look more organised. Hovering over a node will still display these links.").addSlider((slider) => slider.setLimits(0, 100, 1).setValue(100 - Settings.graphEdgePruning).setDynamicTooltip().onChange(async (value) => {
           Settings.graphEdgePruning = 100 - value;
           await _SettingsPage.saveSettings();
         }).showTooltip());
       }
-      let iconTutorial = new import_obsidian6.Setting(section2).setName("Custom icons").setDesc(`Use the 'Iconize' plugin to add custom icons to your files and folders.
+      let iconTutorial = new import_obsidian7.Setting(section2).setName("Custom icons").setDesc(`Use the 'Iconize' plugin to add custom icons to your files and folders.
 Or set the 'icon' property of your file to an emoji or lucide icon name.
- This feature does not require "File & folder icons" to be enbaled.
-(Also supports MAKE.md plugin)`);
+This feature does not require "File & folder icons" to be enbaled.`);
       iconTutorial.infoEl.style.whiteSpace = "pre-wrap";
-      new import_obsidian6.Setting(section2).setName("Emoji style").addDropdown((dropdown) => {
+      new import_obsidian7.Setting(section2).setName("Icon emoji style").addDropdown((dropdown) => {
         for (let style in EmojiStyle)
           dropdown.addOption(style, style);
         dropdown.setValue(Settings.emojiStyle);
@@ -61879,21 +69963,35 @@ Or set the 'icon' property of your file to an emoji or lucide icon name.
         description: "Custom scripts, styles, or anything else (html file)",
         placeholder: "Path to html formatted file...",
         defaultPath: Path.vaultPath,
-        validation: (path) => path.validate(true, true, true, false, true, false, ["html", "htm", "txt"])
+        validation: (path) => path.validate({
+          allowEmpty: true,
+          allowAbsolute: true,
+          allowRelative: true,
+          allowFiles: true,
+          requireExists: true,
+          requireExtentions: ["html, htm, txt"]
+        })
       });
       _SettingsPage.createFileInput(section2, () => Settings.faviconPath, (value) => Settings.faviconPath = value, {
         name: "Favicon path",
         description: "Add a custom favicon image to the website",
         placeholder: "Path to image file...",
         defaultPath: Path.vaultPath,
-        validation: (path) => path.validate(true, true, true, false, true, false, ["png", "ico", "jpg", "jpeg", "svg"])
+        validation: (path) => path.validate({
+          allowEmpty: true,
+          allowAbsolute: true,
+          allowRelative: true,
+          allowFiles: true,
+          requireExists: true,
+          requireExtentions: ["png", "ico", "jpg", "jpeg", "svg"]
+        })
       });
     }
     let section;
     if (Settings.exportPreset != "raw-documents" /* RawDocuments */) {
       _SettingsPage.createDivider(contentEl);
       section = _SettingsPage.createSection(contentEl, "Page Behaviors", "Change the behavior of included page features");
-      new import_obsidian6.Setting(section).setName("Min Outline Collapse Depth").setDesc("Only allow outline items to be collapsed if they are at least this many levels deep in the tree.").addDropdown((dropdown) => dropdown.addOption("1", "1").addOption("2", "2").addOption("100", "No Collapse").setValue(Settings.minOutlineCollapse.toString()).onChange(async (value) => {
+      new import_obsidian7.Setting(section).setName("Min Outline Collapse Depth").setDesc("Only allow outline items to be collapsed if they are at least this many levels deep in the tree.").addDropdown((dropdown) => dropdown.addOption("1", "1").addOption("2", "2").addOption("100", "No Collapse").setValue(Settings.minOutlineCollapse.toString()).onChange(async (value) => {
         Settings.minOutlineCollapse = parseInt(value);
         await _SettingsPage.saveSettings();
       }));
@@ -61904,7 +70002,7 @@ Or set the 'icon' property of your file to an emoji or lucide icon name.
     }
     _SettingsPage.createDivider(contentEl);
     section = _SettingsPage.createSection(contentEl, "Layout Options", "Set document and sidebar widths");
-    new import_obsidian6.Setting(section).setName("Document Width").setDesc("Sets the line width of the exported document in css units. (ex. 600px, 50em)").addText((text) => text.setValue(Settings.documentWidth).setPlaceholder("40em").onChange(async (value) => {
+    new import_obsidian7.Setting(section).setName("Document Width").setDesc("Sets the line width of the exported document in css units. (ex. 600px, 50em)").addText((text) => text.setValue(Settings.documentWidth).setPlaceholder("40em").onChange(async (value) => {
       Settings.documentWidth = value;
       await _SettingsPage.saveSettings();
     })).addExtraButton((button) => button.setIcon("reset").setTooltip("Reset to default").onClick(() => {
@@ -61912,7 +70010,7 @@ Or set the 'icon' property of your file to an emoji or lucide icon name.
       _SettingsPage.saveSettings();
       this.display();
     }));
-    new import_obsidian6.Setting(section).setName("Sidebar Width").setDesc("Sets the width of the sidebar in css units. (ex. 20em, 200px)").addText((text) => text.setValue(Settings.sidebarWidth).setPlaceholder("20em").onChange(async (value) => {
+    new import_obsidian7.Setting(section).setName("Sidebar Width").setDesc("Sets the width of the sidebar in css units. (ex. 20em, 200px)").addText((text) => text.setValue(Settings.sidebarWidth).setPlaceholder("20em").onChange(async (value) => {
       Settings.sidebarWidth = value;
       await _SettingsPage.saveSettings();
     })).addExtraButton((button) => button.setIcon("reset").setTooltip("Reset to default").onClick(() => {
@@ -61925,7 +70023,7 @@ Or set the 'icon' property of your file to an emoji or lucide icon name.
     _SettingsPage.createToggle(section, "Only export modfied files", () => Settings.onlyExportModified, (value) => Settings.onlyExportModified = value, "Only generate new html for files which have been modified since the last export.");
     _SettingsPage.createToggle(section, "Delete old files", () => Settings.deleteOldFiles, (value) => Settings.deleteOldFiles = value, "Delete files from a previous export that are no longer being exported.");
     _SettingsPage.createToggle(section, "Minify HTML", () => Settings.minifyHTML, (value) => Settings.minifyHTML = value, "Minify HTML to make it load faster.");
-    new import_obsidian6.Setting(section).setName("Log Level").setDesc("Set the level of logging to display in the export log.").addDropdown((dropdown) => dropdown.addOption("all", "All").addOption("warning", "Warning").addOption("error", "Error").addOption("fatal", "Only Fatal Errors").setValue(Settings.logLevel).onChange(async (value) => {
+    new import_obsidian7.Setting(section).setName("Log Level").setDesc("Set the level of logging to display in the export log.").addDropdown((dropdown) => dropdown.addOption("all", "All").addOption("warning", "Warning").addOption("error", "Error").addOption("fatal", "Only Fatal Errors").setValue(Settings.logLevel).onChange(async (value) => {
       Settings.logLevel = value;
       await _SettingsPage.saveSettings();
     }));
@@ -61933,7 +70031,7 @@ Or set the 'icon' property of your file to an emoji or lucide icon name.
     section = _SettingsPage.createSection(contentEl, "Asset Options", "Add plugin styles, or make the page offline compatible.");
     _SettingsPage.createToggle(section, "Make Offline Compatible", () => Settings.makeOfflineCompatible, (value) => Settings.makeOfflineCompatible = value, "Download any online assets / images / scripts so the page can be viewed offline. Or so the website does not depend on a CDN.");
     _SettingsPage.createToggle(section, "Include Svelte CSS", () => Settings.includeSvelteCSS, (value) => Settings.includeSvelteCSS = value, "Include the CSS from any plugins that use the svelte framework. These can not be chosen individually because their styles are not associated with their respective plugins.");
-    new import_obsidian6.Setting(section).setName("Include CSS from Plugins").setDesc("Include the CSS from the following plugins in the exported HTML. If plugin features aren't rendering correctly, try adding the plugin to this list. Avoid adding plugins unless you specifically notice a problem, because more CSS will increase the loading time of your page.");
+    new import_obsidian7.Setting(section).setName("Include CSS from Plugins").setDesc("Include the CSS from the following plugins in the exported HTML. If plugin features aren't rendering correctly, try adding the plugin to this list. Avoid adding plugins unless you specifically notice a problem, because more CSS will increase the loading time of your page.");
     let pluginsList = new FlowList(section);
     Utils.getPluginIDs().forEach(async (plugin) => {
       let pluginManifest = Utils.getPluginManifest(plugin);
@@ -61955,6 +70053,15 @@ Or set the 'icon' property of your file to an emoji or lucide icon name.
         _SettingsPage.saveSettings();
       });
     });
+    _SettingsPage.createDivider(contentEl);
+    section = _SettingsPage.createSection(contentEl, "Metadata", "Control general site data and RSS feed creation");
+    _SettingsPage.createText(section, "Public site URL", () => Settings.siteURL, (value) => Settings.siteURL = (value.endsWith("/") || value == "" ? value : value + "/").trim(), "The url that this site will be hosted at. This is needed to reference links and images in metadata and RSS. (Because these links cannot be relative)", (value) => value.startsWith("http://") || value.startsWith("https://") || value.trim() == "" ? "" : "URL must start with 'http://' or 'https://'");
+    _SettingsPage.createText(section, "Author Name", () => Settings.authorName, (value) => Settings.authorName = value, "The default name of the author of the site");
+    _SettingsPage.createText(section, "Vault Title", () => Settings.vaultTitle, (value) => Settings.vaultTitle = value, "The title of the vault");
+    _SettingsPage.createToggle(section, "Create RSS feed", () => Settings.addRSSFeed, (value) => Settings.addRSSFeed = value, `Create an RSS feed for the website located at ${Settings.siteURL}lib/rss.xml`);
+    let summaryTutorial = new import_obsidian7.Setting(section).setName("Metadata Properties").setDesc(`Use the 'description' or 'summary' property to set a custom summary of a page.
+Use the 'author' property to set the author of a specific page.`);
+    summaryTutorial.infoEl.style.whiteSpace = "pre-wrap";
   }
   async getBlacklistedPluginIDs() {
     if (this.blacklistedPluginIDs.length > 0)
@@ -61991,7 +70098,7 @@ Or set the 'icon' property of your file to an emoji or lucide icon name.
     let files = Settings.filesToExport[0];
     let path = new Path(Settings.exportPath);
     if (files.length == 0 && overrideFiles == void 0 || !path.exists || !path.isAbsolute || !path.isDirectory) {
-      new import_obsidian6.Notice("Please set the export path and files to export in the settings first.", 5e3);
+      new import_obsidian7.Notice("Please set the export path and files to export in the settings first.", 5e3);
       let modal = new ExportModal();
       if (overrideFiles)
         modal.overridePickedFiles(overrideFiles);
@@ -62001,15 +70108,15 @@ Or set the 'icon' property of your file to an emoji or lucide icon name.
   }
   static getFilesToExport() {
     let files = [];
-    let allFiles = HTMLExportPlugin.plugin.app.vault.getFiles();
+    let allFiles = app.vault.getFiles();
     let exportPaths = Settings.filesToExport[0];
     if (!exportPaths)
       return [];
     for (let path of exportPaths) {
       let file = app.vault.getAbstractFileByPath(path);
-      if (file instanceof import_obsidian6.TFile)
+      if (file instanceof import_obsidian7.TFile)
         files.push(file);
-      else if (file instanceof import_obsidian6.TFolder) {
+      else if (file instanceof import_obsidian7.TFolder) {
         let newFiles = allFiles.filter((f) => {
           var _a2;
           return f.path.startsWith((_a2 = file == null ? void 0 : file.path) != null ? _a2 : "*");
@@ -62028,7 +70135,7 @@ Or set the 'icon' property of your file to an emoji or lucide icon name.
     hr.style.opacity = "0.5";
   }
   static createToggle(container, name, get, set, desc = "") {
-    let setting = new import_obsidian6.Setting(container);
+    let setting = new import_obsidian7.Setting(container);
     setting.setName(name);
     if (desc != "")
       setting.setDesc(desc);
@@ -62038,14 +70145,22 @@ Or set the 'icon' property of your file to an emoji or lucide icon name.
     }));
     return setting;
   }
-  static createText(container, name, get, set, desc = "") {
-    let setting = new import_obsidian6.Setting(container);
+  static createText(container, name, get, set, desc = "", validation) {
+    let setting = new import_obsidian7.Setting(container);
+    let errorText = this.createError(container);
+    let value = get();
+    if (value != "")
+      errorText.setText(validation ? validation(value) : "");
     setting.setName(name);
     if (desc != "")
       setting.setDesc(desc);
-    setting.addText((text) => text.setValue(get()).onChange(async (value) => {
-      set(value);
-      await _SettingsPage.saveSettings();
+    setting.addText((text) => text.setValue(value).onChange(async (value2) => {
+      let error = validation ? validation(value2) : "";
+      if (error == "") {
+        set(value2);
+        await _SettingsPage.saveSettings();
+      }
+      errorText.setText(error);
     }));
     return setting;
   }
@@ -62071,7 +70186,7 @@ Or set the 'icon' property of your file to an emoji or lucide icon name.
       headContentErrorMessage.setText(validation(tempPath).error);
     }
     let headContentInput = void 0;
-    let fileInput = new import_obsidian6.Setting(container);
+    let fileInput = new import_obsidian7.Setting(container);
     if (name != "")
       fileInput.setName(name);
     if (description != "")
@@ -62111,6 +70226,8 @@ Or set the 'icon' property of your file to an emoji or lucide icon name.
           if (valid.valid) {
             await _SettingsPage.saveSettings();
           }
+          if (onChanged)
+            onChanged(path);
           headContentInput == null ? void 0 : headContentInput.setValue(get());
         });
       });
@@ -62125,129 +70242,105 @@ Or set the 'icon' property of your file to an emoji or lucide icon name.
     summary.style.marginLeft = "-1em";
     section.style.paddingLeft = "2em";
     section.style.borderLeft = "1px solid var(--interactive-accent)";
-    new import_obsidian6.Setting(summary).setName(name).setDesc(desc).setHeading();
+    new import_obsidian7.Setting(summary).setName(name).setDesc(desc).setHeading();
     return section;
   }
 };
-var SettingsPage6 = _SettingsPage;
-SettingsPage6.settings = DEFAULT_SETTINGS;
-SettingsPage6.loaded = false;
+var SettingsPage3 = _SettingsPage;
+SettingsPage3.settings = DEFAULT_SETTINGS;
+SettingsPage3.loaded = false;
 
-// scripts/html-generation/html-generation-helpers.ts
-var import_obsidian7 = require("obsidian");
-
-// assets/obsidian-styles.txt.css
-var obsidian_styles_txt_default = ".markdown-preview-view .heading-collapse-indicator \n{\n    margin-left: calc( 0px - var(--collapse-arrow-size) - 10px) !important;\n    padding: 0px 0px !important;\n}\n\n.node-insert-event \n{\n    animation-duration: unset !important;\n    animation-name: none !important;\n}\n\nhr\n{\n    border: none;\n	border-top: var(--hr-thickness) solid;\n    border-color: var(--hr-color);\n}\n\nh1:hover .collapse-indicator, h2:hover .collapse-indicator, h3:hover .collapse-indicator, h4:hover .collapse-indicator, h5:hover .collapse-indicator, h6:hover .collapse-indicator, .collapse-indicator:hover, .is-collapsed .collapse-indicator, .cm-fold-indicator.is-collapsed .collapse-indicator, .cm-gutterElement:hover .collapse-indicator, .cm-gutterElement .is-collapsed .collapse-indicator, .cm-line:hover .cm-fold-indicator .collapse-indicator, .fold-gutter.is-collapsed, .fold-gutter:hover, .metadata-properties-heading:hover .collapse-indicator {\n    opacity: 1;\n	transition: opacity 0.15s ease-in-out;\n}\n\n.collapse-indicator, .fold-gutter\n{\n	opacity: 0;\n	transition: opacity 0.15s ease-in-out;\n}\n\n@media print \n{\n    html body > :not(.print) \n    {\n        display: unset !important;\n    }\n\n    .collapse-indicator\n    {\n        display: none !important;\n    }\n\n    .is-collapsed > element > .collapse-indicator\n    {\n        display: unset !important;\n    }\n}\n\n/*#region Misc Hiding */\n\n.mod-header .metadata-container\n{\n	display: none !important;\n}\n\n/*#endregion */\n\n/*#region Transclusions */\n\n.markdown-embed .heading-collapse-indicator {\n    translate: -1em 0;\n}\n\n.markdown-embed.internal-embed.inline-embed .markdown-embed-content,\n.markdown-embed.internal-embed.inline-embed .markdown-embed-content .markdown-preview-view\n{\n	overflow: visible !important;\n}\n\n.markdown-embed-link\n{\n	display: none !important;\n}\n\n/*#endregion  */\n\n/*#region Canvas */\n\n.canvas-wrapper:not(.mod-readonly) .canvas-node-content.markdown-embed>.markdown-embed-content>.markdown-preview-view\n{\n	user-select: text !important;\n}\n\n.canvas-card-menu {\n	display: none;\n	cursor: default !important;\n\n}\n\n.canvas-controls {\n	display: none;\n	cursor: default !important;\n\n}\n\n.canvas-background\n{\n	pointer-events: visible !important;\n	cursor: grab !important;\n}\n\n.canvas-background:active\n{\n	cursor: grabbing !important;\n}\n\n.canvas-node-connection-point \n{\n	display: none;\n	cursor: default !important;\n\n}\n\n.canvas-node-content\n{\n	backface-visibility: visible !important;\n}\n\n.canvas-menu-container {\n	display: none;\n}\n\n.canvas-node-content-blocker\n{\n	cursor: pointer !important;\n}\n\n.canvas-wrapper\n{\n	position: relative;\n	cursor: default !important;\n}\n\n.canvas-node-resizer\n{\n	cursor: default !important;\n}\n\n.canvas-node-container\n{\n	cursor: default !important;\n}\n\n/*#endregion */\n\n/*#region Code Copy */\n\n/* Make code block copy button fade in and out */\n.markdown-rendered pre:not(:hover) > button.copy-code-button\n{\n	display: unset;\n	opacity: 0;\n}\n\n.markdown-rendered pre:hover > button.copy-code-button\n{\n	opacity: 1;\n}\n\n.markdown-rendered pre button.copy-code-button\n{\n	transition: opacity 0.2s ease-in-out, width 0.3s ease-in-out, background-color 0.2s ease-in-out;\n	text-overflow: clip;\n}\n\n.markdown-rendered pre > button.copy-code-button:hover\n{\n	background-color: var(--interactive-normal);\n}\n\n.markdown-rendered pre > button.copy-code-button:active\n{\n	background-color: var(--interactive-hover);\n	box-shadow: var(--input-shadow);\n	transition: none;\n}\n\n/*#endregion */\n\n/*#region Lists */\n\n.webpage-container .is-collapsed .list-collapse-indicator svg.svg-icon, \n.webpage-container .is-collapsed .collapse-indicator svg.svg-icon\n{\n	color: var(--collapse-icon-color-collapsed);\n}\n\n/*#endregion */\n";
-
-// scripts/html-generation/assets/obsidian-styles.ts
-var _ObsidianStyles = class extends Asset {
+// scripts/api-options.ts
+var MarkdownRendererAPIOptions = class {
   constructor() {
-    super("obsidian.css", "", "style" /* Style */, "autohead" /* AutoHead */, true, "dynamic" /* Dynamic */, "" /* Default */, 10);
-    this.content = "";
-  }
-  async load() {
-    var _a2;
-    this.content = "";
-    let appSheet = document.styleSheets[1];
-    let stylesheets = document.styleSheets;
-    for (let i = 0; i < stylesheets.length; i++) {
-      if (stylesheets[i].href && ((_a2 = stylesheets[i].href) == null ? void 0 : _a2.includes("app.css"))) {
-        appSheet = stylesheets[i];
-        break;
-      }
-    }
-    this.content += obsidian_styles_txt_default;
-    for (let i = 0; i < appSheet.cssRules.length; i++) {
-      let rule = appSheet.cssRules[i];
-      if (rule) {
-        let skip = false;
-        let selector = rule.cssText.split("{")[0];
-        for (let keep of _ObsidianStyles.stylesKeep) {
-          if (!selector.includes(keep)) {
-            for (let filter of _ObsidianStyles.stylesFilter) {
-              if (selector.includes(filter)) {
-                skip = true;
-                break;
-              }
-            }
-          } else {
-            skip = false;
-            break;
-          }
-        }
-        if (skip)
-          continue;
-        let cssText = rule.cssText + "\n";
-        this.content += cssText;
-      }
-    }
-    this.modifiedTime = Date.now();
-    await super.load();
+    this.container = void 0;
+    this.keepViewContainer = true;
+    this.makeHeadersTrees = true;
+    this.postProcess = true;
+    this.displayProgress = true;
   }
 };
-var ObsidianStyles = _ObsidianStyles;
-ObsidianStyles.stylesFilter = [
-  "workspace-",
-  "cm-",
-  "ghost",
-  "leaf",
-  "CodeMirror",
-  "@media",
-  "pdf",
-  "xfa",
-  "annotation",
-  "@keyframes",
-  "load",
-  "@-webkit",
-  "setting",
-  "filter",
-  "decorator",
-  "dictionary",
-  "status",
-  "windows",
-  "titlebar",
-  "source",
-  "menu",
-  "message",
-  "popover",
-  "suggestion",
-  "prompt",
-  "tab",
-  "HyperMD",
-  "workspace",
-  "publish",
-  "backlink",
-  "sync",
-  "vault",
-  "mobile",
-  "tablet",
-  "phone",
-  "textLayer",
-  "header",
-  "linux",
-  "macos",
-  "rename",
-  "edit",
-  "progress",
-  "native",
-  "aria",
-  "tooltip",
-  "drop",
-  "sidebar",
-  "mod-windows",
-  "is-frameless",
-  "is-hidden-frameless",
-  "obsidian-app",
-  "show-view-header",
-  "is-maximized",
-  "is-translucent"
-];
-ObsidianStyles.stylesKeep = ["scrollbar", "input[type", "table", "markdown-rendered", "css-settings-manager", "inline-embed", "background", "token"];
+var GraphViewOptions = class {
+  constructor() {
+    this.attractionForce = 1;
+    this.linkLength = 10;
+    this.repulsionForce = 150;
+    this.centralForce = 3;
+    this.edgePruning = 100;
+    this.minNodeRadius = 3;
+    this.maxNodeRadius = 7;
+  }
+};
+var MarkdownWebpageRendererAPIOptions2 = class extends MarkdownRendererAPIOptions {
+  constructor() {
+    super(...arguments);
+    this.addSidebars = Settings.exportPreset != "raw-documents" /* RawDocuments */;
+    this.addThemeToggle = Settings.addThemeToggle;
+    this.addFileNavigation = Settings.addFileNav;
+    this.addOutline = Settings.addOutline;
+    this.addSearch = Settings.addSearchBar;
+    this.addGraphView = Settings.addGraphView;
+    this.addBodyClasses = true;
+    this.addMathjaxStyles = true;
+    this.addHeadTag = true;
+    this.addRSS = Settings.addRSSFeed;
+    this.addTitle = Settings.addTitle;
+    this.graphViewOptions = new GraphViewOptions();
+    this.allowFoldingLists = Settings.allowFoldingLists;
+    this.allowFoldingHeadings = Settings.allowFoldingHeadings;
+    this.allowResizeSidebars = Settings.allowResizingSidebars;
+    this.openNavFileLocation = true;
+    this.startOutlineCollapsed = Settings.startOutlineCollapsed;
+    this.minOutlineCollapsibleLevel = Settings.minOutlineCollapse;
+    this.includeJS = true;
+    this.includeCSS = true;
+    this.inlineMedia = Settings.inlineAssets;
+    this.inlineCSS = Settings.inlineAssets;
+    this.inlineJS = Settings.inlineAssets;
+    this.inlineHTML = Settings.inlineAssets;
+    this.inlineFonts = Settings.inlineAssets;
+    this.offlineResources = Settings.makeOfflineCompatible;
+    this.webStylePaths = Settings.makeNamesWebStyle;
+    this.flattenExportPaths = false;
+    this.fixLinks = true;
+    this.siteURL = Settings.siteURL;
+    this.siteName = Settings.vaultTitle || app.vault.getName();
+    this.authorName = Settings.authorName;
+  }
+};
 
-// scripts/html-generation/html-generation-helpers.ts
-var HTMLGeneration;
-((HTMLGeneration2) => {
-  HTMLGeneration2.arrowHTML = "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='svg-icon right-triangle'><path d='M3 8L12 17L21 8'></path></svg>";
+// scripts/render-api.ts
+var import_obsidian8 = require("obsidian");
+
+// scripts/utils/tab-manager.ts
+var TabManager;
+((TabManager2) => {
+  function getLeaf(navType, splitDirection = "vertical") {
+    let leaf = navType === "split" ? app.workspace.getLeaf(navType, splitDirection) : app.workspace.getLeaf(navType);
+    return leaf;
+  }
+  async function openFileInNewTab(file, navType, splitDirection = "vertical") {
+    let leaf = getLeaf(navType, splitDirection);
+    try {
+      await leaf.openFile(file, void 0).catch((reason) => {
+        ExportLog.error(reason);
+      });
+    } catch (error) {
+      ExportLog.error(error);
+    }
+    return leaf;
+  }
+  TabManager2.openFileInNewTab = openFileInNewTab;
+  function openNewTab(navType, splitDirection = "vertical") {
+    return getLeaf(navType, splitDirection);
+  }
+  TabManager2.openNewTab = openNewTab;
+})(TabManager || (TabManager = {}));
+
+// scripts/render-api.ts
+var MarkdownRendererAPI;
+((MarkdownRendererAPI2) => {
+  MarkdownRendererAPI2.convertableExtensions = ["md", "canvas", "drawing", "excalidraw"];
   function makeHeadingsTrees(html) {
     function getHeaderEl(headingContainer) {
       let first = headingContainer.firstElementChild;
@@ -62285,7 +70378,7 @@ var HTMLGeneration;
       let collapseIcon = hEl.querySelector(".heading-collapse-indicator");
       if (!collapseIcon) {
         collapseIcon = hEl.createDiv({ cls: "heading-collapse-indicator collapse-indicator collapse-icon" });
-        collapseIcon.innerHTML = HTMLGeneration2.arrowHTML;
+        collapseIcon.innerHTML = _MarkdownRendererInternal.arrowHTML;
         hEl.prepend(collapseIcon);
       }
       let children = header.createDiv({ cls: "heading-children" });
@@ -62298,254 +70391,205 @@ var HTMLGeneration;
     });
     html.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach((el) => el.innerHTML = el.innerHTML.replaceAll("\n", ""));
   }
-  HTMLGeneration2.makeHeadingsTrees = makeHeadingsTrees;
-  function createThemeToggle(container) {
-    let label = container.createEl("label");
-    let input = label.createEl("input");
-    let div = label.createDiv();
-    label.classList.add("theme-toggle-container");
-    label.setAttribute("for", "theme_toggle");
-    input.classList.add("theme-toggle-input");
-    input.setAttribute("type", "checkbox");
-    input.setAttribute("id", "theme_toggle");
-    div.classList.add("toggle-background");
-    return label;
+  async function renderMarkdownToString(markdown, options) {
+    options = Object.assign(new MarkdownRendererAPIOptions(), options);
+    let html = await _MarkdownRendererInternal.renderMarkdown(markdown, options);
+    if (!html)
+      return;
+    if (options.postProcess)
+      await _MarkdownRendererInternal.postProcessHTML(html, options);
+    if (options.makeHeadersTrees)
+      makeHeadingsTrees(html);
+    let text = html.innerHTML;
+    if (!options.container)
+      html.remove();
+    return text;
   }
-  HTMLGeneration2.createThemeToggle = createThemeToggle;
-  let _validBodyClasses = void 0;
-  async function getValidBodyClasses(cleanCache) {
-    if (cleanCache)
-      _validBodyClasses = void 0;
-    if (_validBodyClasses)
-      return _validBodyClasses;
-    let bodyClasses = Array.from(document.body.classList);
-    bodyClasses = bodyClasses.filter((value) => ObsidianStyles.stylesKeep.some((keep) => value.includes(keep)) || !ObsidianStyles.stylesFilter.some((filter) => value.includes(filter)));
-    let validClasses = "";
-    validClasses += " publish ";
-    validClasses += " css-settings-manager ";
-    let styles = AssetHandler.getAssetsOfType("style" /* Style */);
-    let i = 0;
-    let classes = [];
-    for (var style of styles) {
-      RenderLog.progress(i, styles.length, "Compiling css classes", "Scanning: " + style.filename, "var(--color-yellow)");
-      if (typeof style.content != "string")
-        continue;
-      let matches = Array.from(style.content.matchAll(/\.([A-Za-z_-]+[\w-]+)/g));
-      let styleClasses = matches.map((match) => match[0].substring(1).trim());
-      styleClasses = styleClasses.filter((value, index, self2) => self2.indexOf(value) === index);
-      classes = classes.concat(styleClasses);
-      i++;
-      await Utils.delay(0);
-    }
-    RenderLog.progress(1, 1, "Filtering classes", "...", "var(--color-yellow)");
-    classes = classes.filter((value, index, self2) => self2.indexOf(value) === index);
-    RenderLog.progress(1, 1, "Sorting classes", "...", "var(--color-yellow)");
-    classes = classes.sort();
-    i = 0;
-    for (var bodyClass of bodyClasses) {
-      RenderLog.progress(i, bodyClasses.length, "Collecting valid classes", "Scanning: " + bodyClass, "var(--color-yellow)");
-      if (classes.includes(bodyClass)) {
-        validClasses += bodyClass + " ";
-      }
-      i++;
-    }
-    RenderLog.progress(1, 1, "Cleanup classes", "...", "var(--color-yellow)");
-    _validBodyClasses = validClasses.replace(/\s\s+/g, " ");
-    RenderLog.progress(1, 1, "Filter duplicate classes", _validBodyClasses.length + " classes", "var(--color-yellow)");
-    _validBodyClasses = _validBodyClasses.split(" ").filter((value, index, self2) => self2.indexOf(value) === index).join(" ").trim();
-    RenderLog.progress(1, 1, "Classes done", "...", "var(--color-yellow)");
-    return _validBodyClasses;
+  MarkdownRendererAPI2.renderMarkdownToString = renderMarkdownToString;
+  async function renderMarkdownToElement(markdown, options) {
+    options = Object.assign(new MarkdownRendererAPIOptions(), options);
+    let html = await _MarkdownRendererInternal.renderMarkdown(markdown, options);
+    if (!html)
+      return;
+    if (options.postProcess)
+      await _MarkdownRendererInternal.postProcessHTML(html, options);
+    if (options.makeHeadersTrees)
+      makeHeadingsTrees(html);
+    return html;
   }
-  HTMLGeneration2.getValidBodyClasses = getValidBodyClasses;
-  function getLucideIcon(iconName) {
-    const iconEl = (0, import_obsidian7.getIcon)(iconName);
-    if (iconEl) {
-      let svg = iconEl.outerHTML;
-      iconEl.remove();
-      return svg;
-    } else {
-      return void 0;
-    }
+  MarkdownRendererAPI2.renderMarkdownToElement = renderMarkdownToElement;
+  async function renderFile(file, options) {
+    options = Object.assign(new MarkdownRendererAPIOptions(), options);
+    let result = await _MarkdownRendererInternal.renderFile(file, options);
+    if (!result)
+      return;
+    if (options.postProcess)
+      await _MarkdownRendererInternal.postProcessHTML(result.contentEl, options);
+    if (options.makeHeadersTrees)
+      makeHeadingsTrees(result.contentEl);
+    return result;
   }
-  HTMLGeneration2.getLucideIcon = getLucideIcon;
-  function getEmojiIcon(iconCode) {
-    let iconCodeInt = parseInt(iconCode, 16);
-    if (!isNaN(iconCodeInt)) {
-      return String.fromCodePoint(iconCodeInt);
-    } else {
-      return void 0;
-    }
+  MarkdownRendererAPI2.renderFile = renderFile;
+  async function renderFileToString(file, options) {
+    options = Object.assign(new MarkdownRendererAPIOptions(), options);
+    let result = await this.renderFile(file, options);
+    if (!result)
+      return;
+    let text = result.contentEl.innerHTML;
+    if (!options.container)
+      result.contentEl.remove();
+    return text;
   }
-  HTMLGeneration2.getEmojiIcon = getEmojiIcon;
-  async function getIcon3(iconName) {
-    var _a2, _b, _c;
-    if (iconName.startsWith("emoji//")) {
-      const iconCode = iconName.replace(/^emoji\/\//, "");
-      iconName = (_a2 = getEmojiIcon(iconCode)) != null ? _a2 : "\uFFFD";
-    } else if (iconName.startsWith("lucide//")) {
-      const lucideIconName = iconName.replace(/^lucide\/\//, "");
-      iconName = (_b = getLucideIcon(lucideIconName)) != null ? _b : "\uFFFD";
+  MarkdownRendererAPI2.renderFileToString = renderFileToString;
+  async function renderFileToWebpage(file, options) {
+    options = Object.assign(new MarkdownWebpageRendererAPIOptions2(), options);
+    this.beginBatch(options);
+    let webpage = new Webpage(file, void 0, file.basename, void 0, options);
+    webpage = await webpage.create();
+    if (!webpage) {
+      ExportLog.error("Failed to create webpage for file " + file.path);
+      return;
     }
-    if (/^\p{Emoji}/gu.test(iconName)) {
-      let codepoint = [...iconName].map((e) => e.codePointAt(0).toString(16)).join(`-`);
-      switch (Settings.emojiStyle) {
-        case "Twemoji" /* Twemoji */:
-          return `<img src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/${codepoint}.svg" class="emoji" />`;
-        case "OpenMoji" /* OpenMoji */:
-          console.log(codepoint);
-          return `<img src="https://openmoji.org/data/color/svg/${codepoint.toUpperCase()}.svg" class="emoji" />`;
-        case "OpenMojiOutline" /* OpenMojiOutline */:
-          let req = await (0, import_obsidian7.requestUrl)(`https://openmoji.org/data/black/svg/${codepoint.toUpperCase()}.svg`);
-          if (req.status == 200)
-            return req.text.replaceAll(/#00+/g, "currentColor").replaceAll(`stroke-width="2"`, `stroke-width="5"`);
-          return iconName;
-        case "FluentUI" /* FluentUI */:
-          return `<img src="https://emoji.fluent-cdn.com/1.0.0/100x100/${codepoint}.png" class="emoji" />`;
-        default:
-          return iconName;
-      }
-    }
-    return (_c = getLucideIcon(iconName.toLowerCase())) != null ? _c : iconName;
+    this.endBatch();
+    return webpage;
   }
-  HTMLGeneration2.getIcon = getIcon3;
-})(HTMLGeneration || (HTMLGeneration = {}));
-
-// scripts/html-generation/markdown-renderer.ts
-var MarkdownRenderer;
-((MarkdownRenderer2) => {
-  MarkdownRenderer2.convertableExtensions = ["md", "canvas", "drawing", "excalidraw"];
-  MarkdownRenderer2.errorInBatch = false;
-  MarkdownRenderer2.cancelled = false;
-  MarkdownRenderer2.batchStarted = false;
-  let logContainer;
-  let loadingContainer;
-  let infoColor = "var(--text-normal)";
-  let warningColor = "var(--color-yellow)";
-  let errorColor = "var(--color-red)";
-  let infoBoxColor = "rgba(0,0,0,0.15)";
-  let warningBoxColor = "rgba(var(--color-yellow-rgb), 0.15)";
-  let errorBoxColor = "rgba(var(--color-red-rgb), 0.15)";
+  MarkdownRendererAPI2.renderFileToWebpage = renderFileToWebpage;
+  async function renderMarkdownSimple(markdown) {
+    let container = document.body.createDiv();
+    await _MarkdownRendererInternal.renderSimpleMarkdown(markdown, container);
+    let text = container.innerHTML;
+    container.remove();
+    return text;
+  }
+  MarkdownRendererAPI2.renderMarkdownSimple = renderMarkdownSimple;
+  async function renderMarkdownSimpleEl(markdown, container) {
+    await _MarkdownRendererInternal.renderSimpleMarkdown(markdown, container);
+  }
+  MarkdownRendererAPI2.renderMarkdownSimpleEl = renderMarkdownSimpleEl;
   function isConvertable(extention) {
     if (extention.startsWith("."))
       extention = extention.substring(1);
-    return MarkdownRenderer2.convertableExtensions.contains(extention);
+    return this.convertableExtensions.contains(extention);
   }
-  MarkdownRenderer2.isConvertable = isConvertable;
+  MarkdownRendererAPI2.isConvertable = isConvertable;
   function checkCancelled() {
-    if (MarkdownRenderer2.cancelled || !MarkdownRenderer2.renderLeaf) {
-      RenderLog.log("cancelled");
-      endBatch();
+    return _MarkdownRendererInternal.checkCancelled();
+  }
+  MarkdownRendererAPI2.checkCancelled = checkCancelled;
+  async function beginBatch(options) {
+    options = Object.assign(new MarkdownRendererAPIOptions(), options);
+    await _MarkdownRendererInternal.beginBatch(options);
+  }
+  MarkdownRendererAPI2.beginBatch = beginBatch;
+  function endBatch() {
+    _MarkdownRendererInternal.endBatch();
+  }
+  MarkdownRendererAPI2.endBatch = endBatch;
+})(MarkdownRendererAPI || (MarkdownRendererAPI = {}));
+var _MarkdownRendererInternal;
+((_MarkdownRendererInternal2) => {
+  _MarkdownRendererInternal2.errorInBatch = false;
+  _MarkdownRendererInternal2.cancelled = false;
+  _MarkdownRendererInternal2.batchStarted = false;
+  let logContainer;
+  let loadingContainer;
+  const infoColor = "var(--text-normal)";
+  const warningColor = "var(--color-yellow)";
+  const errorColor = "var(--color-red)";
+  const infoBoxColor = "rgba(0,0,0,0.15)";
+  const warningBoxColor = "rgba(var(--color-yellow-rgb), 0.15)";
+  const errorBoxColor = "rgba(var(--color-red-rgb), 0.15)";
+  _MarkdownRendererInternal2.arrowHTML = "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='svg-icon right-triangle'><path d='M3 8L12 17L21 8'></path></svg>";
+  function checkCancelled() {
+    if (_MarkdownRendererInternal2.cancelled || !_MarkdownRendererInternal2.renderLeaf) {
+      ExportLog.log("cancelled");
+      _MarkdownRendererInternal2.endBatch();
       return true;
     }
     return false;
   }
-  MarkdownRenderer2.checkCancelled = checkCancelled;
+  _MarkdownRendererInternal2.checkCancelled = checkCancelled;
   function failRender(file, message) {
     var _a2;
     if (checkCancelled())
       return void 0;
-    RenderLog.error(message, `Rendering ${(_a2 = file == null ? void 0 : file.path) != null ? _a2 : " custom markdown "} failed: `);
+    ExportLog.error(message, `Rendering ${(_a2 = file == null ? void 0 : file.path) != null ? _a2 : " custom markdown "} failed: `);
     return;
   }
-  async function renderFile(file, container) {
-    let loneFile = !MarkdownRenderer2.batchStarted;
+  async function renderFile(file, options) {
+    let loneFile = !_MarkdownRendererInternal2.batchStarted;
     if (loneFile) {
-      RenderLog.log("Exporting single file, starting batch");
-      await MarkdownRenderer2.beginBatch();
+      ExportLog.log("Exporting single file, starting batch");
+      await _MarkdownRendererInternal2.beginBatch(options);
     }
-    let success = await Utils.waitUntil(() => MarkdownRenderer2.renderLeaf != void 0 || checkCancelled(), 2e3, 1);
-    if (!success || !MarkdownRenderer2.renderLeaf)
+    let success = await Utils.waitUntil(() => _MarkdownRendererInternal2.renderLeaf != void 0 || checkCancelled(), 2e3, 1);
+    if (!success || !_MarkdownRendererInternal2.renderLeaf)
       return failRender(file, "Failed to get leaf for rendering!");
     try {
-      await MarkdownRenderer2.renderLeaf.openFile(file, { active: false });
+      await _MarkdownRendererInternal2.renderLeaf.openFile(file, { active: false });
     } catch (e) {
       return failRender(file, e);
     }
     let html;
-    let view = MarkdownRenderer2.renderLeaf.view;
+    let view = _MarkdownRendererInternal2.renderLeaf.view;
     let viewType = view.getViewType();
     switch (viewType) {
       case "markdown":
         let preview = view.previewMode;
-        html = await renderMarkdownView(preview, container);
+        html = await renderMarkdownView(preview, options);
         break;
       case "kanban":
-        html = await renderGeneric(view, container);
+        html = await renderGeneric(view, options);
         break;
       case "excalidraw":
-        html = await renderExcalidraw(view, container);
+        html = await renderExcalidraw(view, options);
         break;
       case "canvas":
-        html = await renderCanvas(view, container);
+        html = await renderCanvas(view, options);
         break;
       default:
-        html = await renderGeneric(view, container);
+        html = await renderGeneric(view, options);
         break;
     }
     if (checkCancelled())
       return void 0;
     if (!html)
       return failRender(file, "Failed to render file!");
-    await postProcessHTML(html);
     if (loneFile)
-      MarkdownRenderer2.endBatch();
+      _MarkdownRendererInternal2.endBatch();
     return { contentEl: html, viewType };
   }
-  MarkdownRenderer2.renderFile = renderFile;
-  async function renderMarkdownInsert(markdown, container, addMarkdownContainer = true) {
-    let loneFile = !MarkdownRenderer2.batchStarted;
+  _MarkdownRendererInternal2.renderFile = renderFile;
+  async function renderMarkdown(markdown, options) {
+    let loneFile = !_MarkdownRendererInternal2.batchStarted;
     if (loneFile) {
-      RenderLog.log("Exporting single file, starting batch");
-      await MarkdownRenderer2.beginBatch();
+      ExportLog.log("Exporting single file, starting batch");
+      await _MarkdownRendererInternal2.beginBatch(options);
     }
-    let success = await Utils.waitUntil(() => MarkdownRenderer2.renderLeaf != void 0 || checkCancelled(), 2e3, 1);
-    if (!success || !MarkdownRenderer2.renderLeaf)
+    let success = await Utils.waitUntil(() => _MarkdownRendererInternal2.renderLeaf != void 0 || checkCancelled(), 2e3, 1);
+    if (!success || !_MarkdownRendererInternal2.renderLeaf)
       return failRender(void 0, "Failed to get leaf for rendering!");
-    let view = new import_obsidian8.MarkdownView(MarkdownRenderer2.renderLeaf);
-    MarkdownRenderer2.renderLeaf.view = view;
+    let view = new import_obsidian8.MarkdownView(_MarkdownRendererInternal2.renderLeaf);
+    _MarkdownRendererInternal2.renderLeaf.view = view;
     try {
       view.setViewData(markdown, true);
     } catch (e) {
       return failRender(void 0, e);
     }
     let html;
-    let viewType = view.getViewType();
     let preview = view.previewMode;
-    html = await renderMarkdownView(preview, container, addMarkdownContainer);
+    html = await renderMarkdownView(preview, options);
     if (checkCancelled())
       return void 0;
     if (!html)
       return failRender(void 0, "Failed to render file!");
-    await postProcessHTML(html);
     if (loneFile)
-      MarkdownRenderer2.endBatch();
+      _MarkdownRendererInternal2.endBatch();
     return html;
   }
-  async function renderMarkdown(markdown, options) {
-    var _a2;
-    let container = options == null ? void 0 : options.container;
-    let internalContainer = false;
-    if (!container) {
-      container = document.createElement("div");
-      container.style.display = "none";
-      document.body.appendChild(container);
-      internalContainer = true;
-    }
-    let html = await renderMarkdownInsert(markdown, container, (_a2 = options == null ? void 0 : options.addMarkdownContainer) != null ? _a2 : false);
-    if (!html)
-      return "";
-    if (!(options == null ? void 0 : options.addMarkdownContainer)) {
-      html.querySelectorAll(".mod-header, .mod-footer").forEach((e) => e.remove());
-    }
-    if (internalContainer) {
-      let text = html.innerHTML;
-      container.remove();
-      return text;
-    }
-    return html;
-  }
-  MarkdownRenderer2.renderMarkdown = renderMarkdown;
-  async function renderMarkdownView(preview, container, addMarkdownContainer = true) {
+  _MarkdownRendererInternal2.renderMarkdown = renderMarkdown;
+  async function renderMarkdownView(preview, options) {
+    var _a2, _b, _c, _d;
     preview.load();
     let renderer = preview.renderer;
     await renderer.unfoldAllHeadings();
@@ -62555,13 +70599,13 @@ var MarkdownRenderer;
       await (0, import_obsidian8.loadMermaid)();
     }
     let sections = renderer.sections;
-    let newSizerEl = container;
-    let newMarkdownEl = container;
-    if (addMarkdownContainer) {
-      newMarkdownEl = document.body.createDiv({ cls: "markdown-preview-view markdown-rendered" });
-      newSizerEl = newMarkdownEl.createDiv({ cls: "markdown-preview-sizer markdown-preview-section" });
-    }
+    let newMarkdownEl = document.body.createDiv({ cls: "markdown-preview-view markdown-rendered" });
+    let newSizerEl = newMarkdownEl.createDiv({ cls: "markdown-preview-sizer markdown-preview-section" });
+    if (!newMarkdownEl || !newSizerEl)
+      return failRender(preview.file, "Please specify a container element, or enable keepViewContainer!");
+    preview.containerEl = newSizerEl;
     let promises = [];
+    let foldedCallouts = [];
     for (let i = 0; i < sections.length; i++) {
       let section = sections[i];
       section.shown = true;
@@ -62579,17 +70623,36 @@ var MarkdownRenderer;
       if (!success)
         return failRender(preview.file, "Failed to compute section!");
       await preview.postProcess(section, promises, renderer.frontmatter);
-      await Utils.waitUntil(() => section.el.querySelectorAll(".block-language-dataview:empty").length == 0 || checkCancelled(), 4e3, 5);
+      let folded = Array.from(section.el.querySelectorAll(".callout-content[style*='display: none']"));
+      for (let callout of folded) {
+        callout.style.display = "";
+      }
+      foldedCallouts.push(...folded);
+      let dataview = app.plugins.plugins["dataview"];
+      if (dataview) {
+        let jsKeyword = (_b = (_a2 = dataview.settings) == null ? void 0 : _a2.dataviewJsKeyword) != null ? _b : "dataviewjs";
+        let emptyDataviewSelector = `:is(.block-language-dataview, .block-language-${jsKeyword}):not(.node-insert-event), :is(.block-language-dataview, .block-language-${jsKeyword}):empty`;
+        await Utils.waitUntil(() => !section.el.querySelector(emptyDataviewSelector) || checkCancelled(), 4e3, 1);
+        if (checkCancelled())
+          return void 0;
+        if (section.el.querySelector(emptyDataviewSelector)) {
+          ExportLog.warning("Dataview plugin elements were not rendered correctly in file " + preview.file.name + "!");
+        }
+      }
+      await Utils.waitUntil(() => !section.el.querySelector(".markdown-preview-sizer:empty") || checkCancelled(), 500, 1);
       if (checkCancelled())
         return void 0;
-      if (section.el.querySelectorAll(".block-language-dataview:empty").length > 0) {
-        RenderLog.warning(preview.file.name, "Failed to render dataviews in file: ");
+      if (section.el.querySelector(".markdown-preview-sizer:empty")) {
+        ExportLog.warning("Transclusions were not rendered correctly in file " + preview.file.name + "!");
       }
+      await Utils.waitUntil(() => !section.el.querySelector("[class^='block-language-']:empty") || checkCancelled(), 500, 1);
+      if (checkCancelled())
+        return void 0;
       let canvases = Array.from(section.el.querySelectorAll("canvas:not(.pdf-embed canvas)"));
       for (let canvas of canvases) {
         let data = canvas.toDataURL();
         if (data.length < 100) {
-          RenderLog.log(canvas.outerHTML, "Failed to render plugin element in file " + preview.file.name + ":");
+          ExportLog.log(canvas.outerHTML, "Failed to render canvas based plugin element in file " + preview.file.name + ":");
           canvas.remove();
           continue;
         }
@@ -62600,25 +70663,34 @@ var MarkdownRenderer;
         canvas.replaceWith(image);
       }
       ;
+      console.debug(section.el.outerHTML);
+      let invalidPluginBlocks = Array.from(section.el.querySelectorAll("[class^='block-language-']:empty"));
+      for (let block of invalidPluginBlocks) {
+        ExportLog.warning(`Plugin element ${block.className || ((_c = block.parentElement) == null ? void 0 : _c.className) || "unknown"} from ${preview.file.name} not rendered correctly!`);
+      }
     }
     await Promise.all(promises);
+    for (let callout of foldedCallouts) {
+      callout.style.display = "none";
+    }
+    newSizerEl.empty();
     for (let i = 0; i < sections.length; i++) {
       let section = sections[i];
-      newSizerEl.appendChild(section.el);
+      newSizerEl.appendChild(section.el.cloneNode(true));
     }
     let banner = preview.containerEl.querySelector(".obsidian-banner-wrapper");
     if (banner) {
       newSizerEl.before(banner);
     }
-    if (addMarkdownContainer) {
-      container.appendChild(newMarkdownEl.cloneNode(true));
-      newMarkdownEl.remove();
-      newMarkdownEl = container.querySelector(".markdown-preview-view");
+    if (options.keepViewContainer === false) {
+      newMarkdownEl.outerHTML = newSizerEl.innerHTML;
+      console.log("keeping only sizer content");
     }
+    (_d = options.container) == null ? void 0 : _d.appendChild(newMarkdownEl);
     return newMarkdownEl;
   }
-  MarkdownRenderer2.renderMarkdownView = renderMarkdownView;
-  async function renderSingleLineMarkdown(markdown, container) {
+  _MarkdownRendererInternal2.renderMarkdownView = renderMarkdownView;
+  async function renderSimpleMarkdown(markdown, container) {
     let renderComp = new import_obsidian8.Component();
     renderComp.load();
     await import_obsidian8.MarkdownRenderer.render(app, markdown, container, "/", renderComp);
@@ -62627,6 +70699,9 @@ var MarkdownRenderer;
     if (renderedEl && renderedEl.tagName == "P") {
       renderedEl.outerHTML = renderedEl.innerHTML;
     }
+    container.querySelectorAll("a.tag").forEach((element) => {
+      element.remove();
+    });
     container.querySelectorAll("ol").forEach((listEl) => {
       var _a2;
       if (listEl.parentElement) {
@@ -62648,16 +70723,18 @@ var MarkdownRenderer;
       }
     });
   }
-  MarkdownRenderer2.renderSingleLineMarkdown = renderSingleLineMarkdown;
-  async function renderGeneric(view, container) {
+  _MarkdownRendererInternal2.renderSimpleMarkdown = renderSimpleMarkdown;
+  async function renderGeneric(view, options) {
+    var _a2;
     await Utils.delay(2e3);
     if (checkCancelled())
       return void 0;
-    let content = view.contentEl;
-    container.appendChild(content);
-    return content;
+    let contentEl = view.containerEl;
+    (_a2 = options.container) == null ? void 0 : _a2.appendChild(contentEl);
+    return contentEl;
   }
-  async function renderExcalidraw(view, container) {
+  async function renderExcalidraw(view, options) {
+    var _a2;
     await Utils.delay(500);
     let scene = view.excalidrawData.scene;
     let svg = await view.svg(scene, "", false);
@@ -62672,11 +70749,14 @@ var MarkdownRenderer;
     sizerEl.appendChild(svg);
     if (checkCancelled())
       return void 0;
-    container.appendChild(contentEl);
+    if (options.keepViewContainer === false) {
+      contentEl = svg;
+    }
+    (_a2 = options.container) == null ? void 0 : _a2.appendChild(contentEl);
     return contentEl;
   }
-  async function renderCanvas(view, container) {
-    var _a2, _b;
+  async function renderCanvas(view, options) {
+    var _a2, _b, _c;
     if (checkCancelled())
       return void 0;
     let canvas = view.canvas;
@@ -62702,7 +70782,9 @@ var MarkdownRenderer;
       if (childPreview && embedEl) {
         node[1].render();
         embedEl.innerHTML = "";
-        await renderMarkdownView(childPreview, embedEl);
+        let optionsCopy = Object.assign({}, options);
+        optionsCopy.container = embedEl;
+        await renderMarkdownView(childPreview, optionsCopy);
       }
       canvasEl.appendChild(nodeEl);
     }
@@ -62718,15 +70800,25 @@ var MarkdownRenderer;
     }
     if (checkCancelled())
       return void 0;
-    container.appendChild(contentEl);
+    if (options.keepViewContainer === false) {
+      contentEl = canvasEl;
+    }
+    (_c = options.container) == null ? void 0 : _c.appendChild(contentEl);
     return contentEl;
   }
-  async function postProcessHTML(html) {
+  _MarkdownRendererInternal2.renderCanvas = renderCanvas;
+  async function postProcessHTML(html, options) {
     var _a2;
+    if (options.keepViewContainer === false) {
+      html.querySelectorAll(".mod-header, .mod-footer").forEach((e) => e.remove());
+    }
     html.querySelectorAll("p:has(div)").forEach((element) => {
       let span = document.body.createEl("span");
       span.innerHTML = element.innerHTML;
       element.replaceWith(span);
+      span.style.display = "block";
+      span.style.marginBlockStart = "var(--p-spacing)";
+      span.style.marginBlockEnd = "var(--p-spacing)";
     });
     html.querySelectorAll("input[type=text]").forEach((element) => {
       element.setAttribute("value", element.value);
@@ -62781,35 +70873,36 @@ var MarkdownRenderer;
       let collapseIcon = item.querySelector(".collapse-icon");
       if (!collapseIcon) {
         collapseIcon = item.createDiv({ cls: "list-collapse-indicator collapse-indicator collapse-icon" });
-        collapseIcon.innerHTML = HTMLGeneration.arrowHTML;
+        collapseIcon.innerHTML = this.arrowHTML;
         item.prepend(collapseIcon);
       }
     }
     let tocEls = Array.from(html.querySelectorAll(".block-language-toc.dynamic-toc li > a"));
     for (const element of tocEls) {
       let renderEl = document.body.createDiv();
-      renderSingleLineMarkdown((_a2 = element.textContent) != null ? _a2 : "", renderEl);
+      renderSimpleMarkdown((_a2 = element.textContent) != null ? _a2 : "", renderEl);
       element.textContent = renderEl.textContent;
       renderEl.remove();
     }
   }
-  async function beginBatch() {
-    if (MarkdownRenderer2.batchStarted) {
-      throw new Error("Cannot start a new batch while one is already running!");
-    }
-    MarkdownRenderer2.errorInBatch = false;
-    MarkdownRenderer2.cancelled = false;
-    MarkdownRenderer2.batchStarted = true;
+  _MarkdownRendererInternal2.postProcessHTML = postProcessHTML;
+  async function beginBatch(options) {
+    if (_MarkdownRendererInternal2.batchStarted)
+      return;
+    _MarkdownRendererInternal2.errorInBatch = false;
+    _MarkdownRendererInternal2.cancelled = false;
+    _MarkdownRendererInternal2.batchStarted = true;
     loadingContainer = void 0;
     logContainer = void 0;
     logShowing = false;
-    MarkdownRenderer2.renderLeaf = TabManager.openNewTab("window", "vertical");
-    let parentFound = await Utils.waitUntil(() => MarkdownRenderer2.renderLeaf && MarkdownRenderer2.renderLeaf.parent || checkCancelled(), 2e3, 1);
+    AssetHandler.exportOptions = options;
+    _MarkdownRendererInternal2.renderLeaf = TabManager.openNewTab("window", "vertical");
+    let parentFound = await Utils.waitUntil(() => _MarkdownRendererInternal2.renderLeaf && _MarkdownRendererInternal2.renderLeaf.parent || checkCancelled(), 2e3, 1);
     if (!parentFound) {
       try {
-        MarkdownRenderer2.renderLeaf.detach();
+        _MarkdownRendererInternal2.renderLeaf.detach();
       } catch (e) {
-        RenderLog.error(e, "Failed to detach render leaf: ");
+        ExportLog.error(e, "Failed to detach render leaf: ");
       }
       if (!checkCancelled()) {
         new import_obsidian8.Notice("Error: Failed to create leaf for rendering!");
@@ -62817,58 +70910,63 @@ var MarkdownRenderer;
       }
       return;
     }
-    MarkdownRenderer2.renderLeaf.parent.containerEl.style.height = "0";
-    MarkdownRenderer2.renderLeaf.parent.parent.containerEl.querySelector(".clickable-icon, .workspace-tab-header-container-inner").style.display = "none";
-    MarkdownRenderer2.renderLeaf.parent.containerEl.style.maxHeight = "var(--header-height)";
-    MarkdownRenderer2.renderLeaf.parent.parent.containerEl.classList.remove("mod-vertical");
-    MarkdownRenderer2.renderLeaf.parent.parent.containerEl.classList.add("mod-horizontal");
-    let newSize = { width: 800, height: 400 };
-    MarkdownRenderer2.renderLeaf.view.containerEl.win.resizeTo(newSize.width, newSize.height);
-    let newPosition = { x: window.screen.width / 2 - 450, y: window.screen.height - 450 - 75 };
-    MarkdownRenderer2.renderLeaf.view.containerEl.win.moveTo(newPosition.x, newPosition.y);
-    let renderBrowserWindow = MarkdownRenderer2.renderLeaf.view.containerEl.win.electronWindow;
-    if (!renderBrowserWindow) {
+    let obsidianWindow = _MarkdownRendererInternal2.renderLeaf.view.containerEl.win;
+    _MarkdownRendererInternal2.electronWindow = obsidianWindow.electronWindow;
+    if (!_MarkdownRendererInternal2.electronWindow) {
       new import_obsidian8.Notice("Failed to get the render window, please try again.");
-      MarkdownRenderer2.errorInBatch = false;
-      MarkdownRenderer2.cancelled = false;
-      MarkdownRenderer2.batchStarted = false;
-      MarkdownRenderer2.renderLeaf = void 0;
+      _MarkdownRendererInternal2.errorInBatch = false;
+      _MarkdownRendererInternal2.cancelled = false;
+      _MarkdownRendererInternal2.batchStarted = false;
+      _MarkdownRendererInternal2.renderLeaf = void 0;
+      _MarkdownRendererInternal2.electronWindow = void 0;
       return;
     }
-    renderBrowserWindow.setAlwaysOnTop(true, "floating", 1);
-    renderBrowserWindow.webContents.setFrameRate(120);
-    renderBrowserWindow.on("close", () => {
-      if (MarkdownRenderer2.cancelled)
+    if (options.displayProgress === false) {
+      let newPosition = { x: 0, y: window.screen.height };
+      obsidianWindow.moveTo(newPosition.x, newPosition.y);
+      _MarkdownRendererInternal2.electronWindow.hide();
+    } else {
+      _MarkdownRendererInternal2.renderLeaf.parent.containerEl.style.height = "0";
+      _MarkdownRendererInternal2.renderLeaf.parent.parent.containerEl.querySelector(".clickable-icon, .workspace-tab-header-container-inner").style.display = "none";
+      _MarkdownRendererInternal2.renderLeaf.parent.containerEl.style.maxHeight = "var(--header-height)";
+      _MarkdownRendererInternal2.renderLeaf.parent.parent.containerEl.classList.remove("mod-vertical");
+      _MarkdownRendererInternal2.renderLeaf.parent.parent.containerEl.classList.add("mod-horizontal");
+      let newSize = { width: 800, height: 400 };
+      obsidianWindow.resizeTo(newSize.width, newSize.height);
+      let newPosition = { x: window.screen.width / 2 - 450, y: window.screen.height - 450 - 75 };
+      obsidianWindow.moveTo(newPosition.x, newPosition.y);
+    }
+    _MarkdownRendererInternal2.electronWindow.setAlwaysOnTop(true, "floating", 1);
+    _MarkdownRendererInternal2.electronWindow.webContents.setBackgroundThrottling(false);
+    function windowClosed() {
+      var _a2;
+      if (_MarkdownRendererInternal2.cancelled)
         return;
       endBatch();
-      MarkdownRenderer2.cancelled = true;
-    }, { once: true });
-    let allWindows = window.electron.remote.BrowserWindow.getAllWindows();
-    for (const win of allWindows) {
-      win.webContents.setBackgroundThrottling(false);
+      _MarkdownRendererInternal2.cancelled = true;
+      (_a2 = _MarkdownRendererInternal2.electronWindow) == null ? void 0 : _a2.off("close", windowClosed);
     }
+    _MarkdownRendererInternal2.electronWindow.on("close", windowClosed);
     createLoadingContainer();
   }
-  MarkdownRenderer2.beginBatch = beginBatch;
+  _MarkdownRendererInternal2.beginBatch = beginBatch;
   function endBatch() {
-    if (!MarkdownRenderer2.batchStarted)
+    if (!_MarkdownRendererInternal2.batchStarted)
       return;
-    if (MarkdownRenderer2.renderLeaf) {
-      if (!MarkdownRenderer2.errorInBatch) {
-        RenderLog.log("Closing render window");
-        MarkdownRenderer2.renderLeaf.detach();
+    if (_MarkdownRendererInternal2.renderLeaf) {
+      if (!_MarkdownRendererInternal2.errorInBatch) {
+        ExportLog.log("Closing render window");
+        _MarkdownRendererInternal2.renderLeaf.detach();
       } else {
-        RenderLog.warning("Error in batch, leaving render window open");
+        ExportLog.warning("Error in batch, leaving render window open");
         _reportProgress(1, 1, "Completed with errors", "Please see the log for more details.", errorColor);
       }
     }
-    let allWindows = window.electron.remote.BrowserWindow.getAllWindows();
-    for (const win of allWindows) {
-      win.webContents.setBackgroundThrottling(false);
-    }
-    MarkdownRenderer2.batchStarted = false;
+    _MarkdownRendererInternal2.electronWindow = void 0;
+    _MarkdownRendererInternal2.renderLeaf = void 0;
+    _MarkdownRendererInternal2.batchStarted = false;
   }
-  MarkdownRenderer2.endBatch = endBatch;
+  _MarkdownRendererInternal2.endBatch = endBatch;
   function generateLogEl(title, message, textColor, backgroundColor) {
     let logEl = document.createElement("div");
     logEl.className = "html-render-log-item";
@@ -62889,7 +70987,6 @@ var MarkdownRenderer;
     logEl.style.borderTop = "1px solid var(--divider-color)";
     return logEl;
   }
-  MarkdownRenderer2.generateLogEl = generateLogEl;
   function createLoadingContainer() {
     if (!loadingContainer) {
       loadingContainer = document.createElement("div");
@@ -62909,19 +71006,19 @@ var MarkdownRenderer;
 				</div>
 			</div>
 			`;
-      MarkdownRenderer2.renderLeaf.parent.parent.containerEl.appendChild(loadingContainer);
+      _MarkdownRendererInternal2.renderLeaf.parent.parent.containerEl.appendChild(loadingContainer);
     }
   }
   let logShowing = false;
   function appendLogEl(logEl) {
     var _a2;
     logContainer = (_a2 = loadingContainer == null ? void 0 : loadingContainer.querySelector(".html-render-log")) != null ? _a2 : void 0;
-    if (!logContainer || !MarkdownRenderer2.renderLeaf) {
+    if (!logContainer || !_MarkdownRendererInternal2.renderLeaf) {
       console.error("Failed to append log element, log container or render leaf is undefined!");
       return;
     }
     if (!logShowing) {
-      MarkdownRenderer2.renderLeaf.view.containerEl.win.resizeTo(900, 500);
+      _MarkdownRendererInternal2.renderLeaf.view.containerEl.win.resizeTo(900, 500);
       logContainer.style.display = "flex";
       logShowing = true;
     }
@@ -62929,11 +71026,12 @@ var MarkdownRenderer;
     logEl.scrollIntoView({ behavior: "instant", block: "end", inline: "end" });
   }
   async function _reportProgress(complete, total, message, subMessage, progressColor) {
-    if (!MarkdownRenderer2.batchStarted)
+    var _a2;
+    if (!_MarkdownRendererInternal2.batchStarted)
       return;
-    if (!MarkdownRenderer2.renderLeaf || !MarkdownRenderer2.renderLeaf.parent || !MarkdownRenderer2.renderLeaf.parent.parent)
+    if (!_MarkdownRendererInternal2.renderLeaf || !_MarkdownRendererInternal2.renderLeaf.parent || !_MarkdownRendererInternal2.renderLeaf.parent.parent)
       return;
-    let loadingContainer2 = MarkdownRenderer2.renderLeaf.parent.parent.containerEl.querySelector(`.html-render-progress-container`);
+    let loadingContainer2 = _MarkdownRendererInternal2.renderLeaf.parent.parent.containerEl.querySelector(`.html-render-progress-container`);
     if (!loadingContainer2)
       return;
     let progress = complete / total;
@@ -62951,47 +71049,48 @@ var MarkdownRenderer;
     if (subMessageElement) {
       subMessageElement.innerText = subMessage;
     }
+    (_a2 = _MarkdownRendererInternal2.electronWindow) == null ? void 0 : _a2.setProgressBar(progress);
   }
-  MarkdownRenderer2._reportProgress = _reportProgress;
+  _MarkdownRendererInternal2._reportProgress = _reportProgress;
   async function _reportError(messageTitle, message, fatal) {
-    if (!MarkdownRenderer2.batchStarted)
+    if (!_MarkdownRendererInternal2.batchStarted)
       return;
-    MarkdownRenderer2.errorInBatch = true;
-    let found = await Utils.waitUntil(() => MarkdownRenderer2.renderLeaf && MarkdownRenderer2.renderLeaf.parent && MarkdownRenderer2.renderLeaf.parent.parent, 100, 10);
+    _MarkdownRendererInternal2.errorInBatch = true;
+    let found = await Utils.waitUntil(() => _MarkdownRendererInternal2.renderLeaf && _MarkdownRendererInternal2.renderLeaf.parent && _MarkdownRendererInternal2.renderLeaf.parent.parent, 100, 10);
     if (!found)
       return;
     appendLogEl(generateLogEl(messageTitle, message, errorColor, errorBoxColor));
     if (fatal) {
-      MarkdownRenderer2.renderLeaf = void 0;
+      _MarkdownRendererInternal2.renderLeaf = void 0;
       loadingContainer = void 0;
       logContainer = void 0;
     }
   }
-  MarkdownRenderer2._reportError = _reportError;
+  _MarkdownRendererInternal2._reportError = _reportError;
   async function _reportWarning(messageTitle, message) {
-    if (!MarkdownRenderer2.batchStarted)
+    if (!_MarkdownRendererInternal2.batchStarted)
       return;
-    let found = await Utils.waitUntil(() => MarkdownRenderer2.renderLeaf && MarkdownRenderer2.renderLeaf.parent && MarkdownRenderer2.renderLeaf.parent.parent, 100, 10);
+    let found = await Utils.waitUntil(() => _MarkdownRendererInternal2.renderLeaf && _MarkdownRendererInternal2.renderLeaf.parent && _MarkdownRendererInternal2.renderLeaf.parent.parent, 100, 10);
     if (!found)
       return;
     appendLogEl(generateLogEl(messageTitle, message, warningColor, warningBoxColor));
   }
-  MarkdownRenderer2._reportWarning = _reportWarning;
+  _MarkdownRendererInternal2._reportWarning = _reportWarning;
   async function _reportInfo(messageTitle, message) {
-    if (!MarkdownRenderer2.batchStarted)
+    if (!_MarkdownRendererInternal2.batchStarted)
       return;
-    let found = await Utils.waitUntil(() => MarkdownRenderer2.renderLeaf && MarkdownRenderer2.renderLeaf.parent && MarkdownRenderer2.renderLeaf.parent.parent, 100, 10);
+    let found = await Utils.waitUntil(() => _MarkdownRendererInternal2.renderLeaf && _MarkdownRendererInternal2.renderLeaf.parent && _MarkdownRendererInternal2.renderLeaf.parent.parent, 100, 10);
     if (!found)
       return;
     appendLogEl(generateLogEl(messageTitle, message, infoColor, infoBoxColor));
   }
-  MarkdownRenderer2._reportInfo = _reportInfo;
-})(MarkdownRenderer || (MarkdownRenderer = {}));
+  _MarkdownRendererInternal2._reportInfo = _reportInfo;
+})(_MarkdownRendererInternal || (_MarkdownRendererInternal = {}));
 
 // scripts/html-generation/render-log.ts
-var RenderLog;
-((RenderLog2) => {
-  RenderLog2.fullLog = "";
+var ExportLog;
+((ExportLog2) => {
+  ExportLog2.fullLog = "";
   function logToString(message, title) {
     let messageString = typeof message === "string" ? message : JSON.stringify(message).replaceAll("\n", "\n		");
     let titleString = title != "" ? title + "	" : "";
@@ -63017,34 +71116,34 @@ var RenderLog;
   function log(message, messageTitle = "") {
     pullPathLogs();
     messageTitle = `[INFO] ${messageTitle}`;
-    RenderLog2.fullLog += logToString(message, messageTitle);
-    if (SettingsPage6.loaded && !(Settings.logLevel == "all"))
+    ExportLog2.fullLog += logToString(message, messageTitle);
+    if (SettingsPage3.loaded && !(Settings.logLevel == "all"))
       return;
     if (messageTitle != "")
       console.log(messageTitle + " ", message);
     else
       console.log(message);
-    MarkdownRenderer._reportInfo(messageTitle, message);
+    _MarkdownRendererInternal._reportInfo(messageTitle, message);
   }
-  RenderLog2.log = log;
+  ExportLog2.log = log;
   function warning(message, messageTitle = "") {
     pullPathLogs();
     messageTitle = `[WARNING] ${messageTitle}`;
-    RenderLog2.fullLog += logToString(message, messageTitle);
-    if (SettingsPage6.loaded && !["warning", "all"].contains(Settings.logLevel))
+    ExportLog2.fullLog += logToString(message, messageTitle);
+    if (SettingsPage3.loaded && !["warning", "all"].contains(Settings.logLevel))
       return;
     if (messageTitle != "")
       console.warn(messageTitle + " ", message);
     else
       console.warn(message);
-    MarkdownRenderer._reportWarning(messageTitle, message);
+    _MarkdownRendererInternal._reportWarning(messageTitle, message);
   }
-  RenderLog2.warning = warning;
+  ExportLog2.warning = warning;
   function error(message, messageTitle = "", fatal = false) {
     pullPathLogs();
     messageTitle = (fatal ? "[FATAL ERROR] " : "[ERROR] ") + messageTitle;
-    RenderLog2.fullLog += logToString(message, messageTitle);
-    if (SettingsPage6.loaded && !fatal && !["error", "warning", "all"].contains(Settings.logLevel))
+    ExportLog2.fullLog += logToString(message, messageTitle);
+    if (SettingsPage3.loaded && !fatal && !["error", "warning", "all"].contains(Settings.logLevel))
       return;
     if (fatal && messageTitle == "Error")
       messageTitle = "Fatal Error";
@@ -63052,18 +71151,18 @@ var RenderLog;
       console.error(messageTitle + " ", message);
     else
       console.error(message);
-    MarkdownRenderer._reportError(messageTitle, message, fatal);
+    _MarkdownRendererInternal._reportError(messageTitle, message, fatal);
   }
-  RenderLog2.error = error;
+  ExportLog2.error = error;
   function progress(complete, total, message, subMessage, progressColor = "var(--interactive-accent)") {
     pullPathLogs();
     if (total == 0) {
       complete = 1;
       total = 1;
     }
-    MarkdownRenderer._reportProgress(complete, total, message, subMessage, progressColor);
+    _MarkdownRendererInternal._reportProgress(complete, total, message, subMessage, progressColor);
   }
-  RenderLog2.progress = progress;
+  ExportLog2.progress = progress;
   function pullPathLogs() {
     let logs = Path.dequeueLog();
     for (let thisLog of logs) {
@@ -63086,7 +71185,7 @@ var RenderLog;
   function getDebugInfo() {
     let debugInfo = "";
     debugInfo += `Log:
-${RenderLog2.fullLog}
+${ExportLog2.fullLog}
 
 `;
     let settingsCopy = Object.assign({}, Settings);
@@ -63101,14 +71200,14 @@ ${humanReadableJSON(settingsCopy)}
 	${loadedPlugins}`;
     return debugInfo;
   }
-  RenderLog2.getDebugInfo = getDebugInfo;
+  ExportLog2.getDebugInfo = getDebugInfo;
   function testThrowError(chance) {
     if (Math.random() < chance) {
       throw new Error("Test error");
     }
   }
-  RenderLog2.testThrowError = testThrowError;
-})(RenderLog || (RenderLog = {}));
+  ExportLog2.testThrowError = testThrowError;
+})(ExportLog || (ExportLog = {}));
 
 // scripts/utils/utils.ts
 var dialog = require("electron").remote.dialog;
@@ -63180,11 +71279,11 @@ var Utils = class {
       filters,
       properties: ["showOverwriteConfirmation"]
     });
-    if (picker.canceled)
+    if (picker.canceled || !picker.filePath)
       return;
     let pickedPath = new Path(picker.filePath);
     Settings.exportPath = pickedPath.asString;
-    SettingsPage6.saveSettings();
+    SettingsPage3.saveSettings();
     return pickedPath;
   }
   static async showSelectFolderDialog(defaultPath) {
@@ -63198,7 +71297,7 @@ var Utils = class {
       return;
     let path = new Path(picker.filePaths[0]);
     Settings.exportPath = path.directory.asString;
-    SettingsPage6.saveSettings();
+    SettingsPage3.saveSettings();
     return path;
   }
   static async showSelectFileDialog(defaultPath) {
@@ -63223,14 +71322,14 @@ var Utils = class {
   static async downloadFiles(files, rootPath) {
     if (!rootPath.isAbsolute)
       throw new Error("folderPath must be absolute: " + rootPath.asString);
-    RenderLog.progress(0, files.length, "Saving HTML files to disk", "...", "var(--color-green)");
+    ExportLog.progress(0, files.length, "Saving HTML files to disk", "...", "var(--color-green)");
     for (let i = 0; i < files.length; i++) {
       let file = files[i];
       try {
         await file.download(rootPath.directory);
-        RenderLog.progress(i + 1, files.length, "Saving HTML files to disk", "Saving: " + file.filename, "var(--color-green)");
+        ExportLog.progress(i + 1, files.length, "Saving HTML files to disk", "Saving: " + file.filename, "var(--color-green)");
       } catch (e) {
-        RenderLog.error(e.stack, "Could not save file: " + file.filename);
+        ExportLog.error(e.stack, "Could not save file: " + file.filename);
         continue;
       }
     }
@@ -63309,6 +71408,7 @@ var Utils = class {
 // scripts/utils/path.ts
 var import_fs2 = require("fs");
 var import_fs3 = require("fs");
+var import_os = require("os");
 var pathTools = require_upath();
 var _Path = class {
   constructor(path, workingDirectory = _Path.vaultPath.asString) {
@@ -63352,7 +71452,8 @@ var _Path = class {
     this._rawString = path;
     if (this._isWindows) {
       if (this._root.startsWith("http:") || this._root.startsWith("https:")) {
-        this.makeUnixStyle();
+        this._isWindows = false;
+        this.reparse(this._fullPath.replaceAll("\\", "/"));
       } else {
         this._root = this._root.replaceAll("/", "\\");
         this._dir = this._dir.replaceAll("/", "\\");
@@ -63548,7 +71649,7 @@ var _Path = class {
   assertExists() {
     if (!this.exists) {
       new import_obsidian10.Notice("Error: Path does not exist: \n\n" + this.asString, 5e3);
-      RenderLog.error("Path does not exist: " + this.asString);
+      ExportLog.error("Path does not exist: " + this.asString);
     }
     return this.exists;
   }
@@ -63582,34 +71683,38 @@ var _Path = class {
   absolute(workingDirectory = this._workingDirectory) {
     return this.copy.makeAbsolute(workingDirectory);
   }
-  validate(allowEmpty = false, requireExists = false, requireAbsolute = false, requireRelative = false, requireIsFile = false, requireIsDirectory = false, requireExtention = []) {
+  validate(options) {
+    var _a2, _b;
     let error = "";
     let valid = true;
     let isEmpty = this.rawString.trim() == "";
-    requireExtention = requireExtention.map((e) => e.replace(".", ""));
-    let dottedExtention = requireExtention.map((e) => "." + e);
-    if (!allowEmpty && isEmpty) {
-      error += "Path cannot be empty";
+    options.requireExtentions = (_b = (_a2 = options.requireExtentions) == null ? void 0 : _a2.map((e) => e.replace(".", ""))) != null ? _b : [];
+    let dottedExtention = options.requireExtentions.map((e) => "." + e);
+    if (!options.allowEmpty && isEmpty) {
+      error += "Path cannot be empty\n";
       valid = false;
-    } else if (allowEmpty && isEmpty) {
+    } else if (options.allowEmpty && isEmpty) {
       return { valid: true, isEmpty, error: "" };
     }
-    if (requireExists && !this.exists) {
+    if (options.requireExists && !this.exists) {
       error += "Path does not exist";
       valid = false;
-    } else if (requireAbsolute && !this.isAbsolute) {
-      error += "Path must be absolute";
+    } else if (!options.allowTildeHomeDirectory && this.asString.startsWith("~")) {
+      error += "Home directory with tilde (~) is not allowed";
       valid = false;
-    } else if (requireRelative && !this.isRelative) {
-      error += "Path must be relative";
+    } else if (!options.allowAbsolute && this.isAbsolute) {
+      error += "Path cannot be absolute";
       valid = false;
-    } else if (requireIsFile && !this.isFile && !isEmpty) {
-      error += "Path must be a file";
+    } else if (!options.allowRelative && this.isRelative) {
+      error += "Path cannot be relative";
       valid = false;
-    } else if (requireIsDirectory && !this.isDirectory && !isEmpty) {
-      error += "Path must be a directory";
+    } else if (!options.allowFiles && this.isFile) {
+      error += "Path cannot be a file";
       valid = false;
-    } else if (requireExtention.length > 0 && !requireExtention.includes(this.extensionName) && !isEmpty) {
+    } else if (!options.allowDirectories && this.isDirectory) {
+      error += "Path cannot be a directory";
+      valid = false;
+    } else if (options.requireExtentions.length > 0 && !options.requireExtentions.includes(this.extensionName) && !isEmpty) {
       error += "Path must be: " + dottedExtention.join(", ");
       valid = false;
     }
@@ -63686,13 +71791,18 @@ var _Path = class {
     var _a2;
     let args = (_a2 = path.split("?")[1]) != null ? _a2 : "";
     path = path.split("?")[0];
+    if (process.platform === "win32") {
+      if (path.startsWith("~")) {
+        path = path.replace("~", (0, import_os.homedir)());
+      }
+    }
     try {
       path = decodeURI(path);
     } catch (trash) {
       try {
         path = decodeURI(path.replaceAll("%", ""));
       } catch (e) {
-        this.log("Could not decode path:" + path, e, "error");
+        this.log("Could not decode path:" + path, e, "info");
       }
     }
     let parsed = pathTools.parse(path);
@@ -63723,9 +71833,9 @@ var _Path = class {
       parsed.root = "http://";
     else if (fullPath.startsWith("https:"))
       parsed.root = "https://";
-    parsed.dir = parsed.dir.replace(/[:][\\](?![\\])/g, "://");
+    parsed.dir = parsed.dir.replace(/[:][\\/](?![\\/])/g, "://");
     parent = parsed.dir;
-    fullPath = fullPath.replace(/[:][\\](?![\\])/g, "://");
+    fullPath = fullPath.replace(/[:][\\/](?![\\/])/g, "://");
     return { root: parsed.root, dir: parsed.dir, parent, base: parsed.base, ext: parsed.ext, name: parsed.name, fullPath };
   }
   static pathExists(path) {
@@ -63733,10 +71843,13 @@ var _Path = class {
   }
   static joinStringPaths(...paths) {
     let joined = pathTools.join(...paths);
+    if (joined.startsWith("http")) {
+      joined = joined.replaceAll(":/", "://");
+    }
     try {
       return decodeURI(joined);
     } catch (e) {
-      this.log("Could not decode joined paths: " + joined, e, "error");
+      this.log("Could not decode joined paths: " + joined, e, "info");
       return joined;
     }
   }
@@ -63817,7 +71930,7 @@ var _Path = class {
     for (let i = 0; i < folderFiles.length; i++) {
       let file = folderFiles[i];
       let path = folder.joinString(file);
-      RenderLog.progress(i, folderFiles.length, "Finding Old Files", "Searching: " + folder.asString, "var(--color-yellow)");
+      ExportLog.progress(i, folderFiles.length, "Finding Old Files", "Searching: " + folder.asString, "var(--color-yellow)");
       if ((await import_fs2.promises.stat(path.asString)).isDirectory()) {
         files.push(...await this.getAllFilesInFolderRecursive(path));
       } else {
@@ -63839,7 +71952,7 @@ var OtherPluginStyles = class extends Asset {
     this.content = "";
     this.lastEnabledPluginStyles = "";
   }
-  async load() {
+  async load(options) {
     if (this.lastEnabledPluginStyles == Settings.includePluginCSS)
       return;
     this.content = "";
@@ -63858,7 +71971,7 @@ var OtherPluginStyles = class extends Asset {
     }
     this.modifiedTime = Date.now();
     this.lastEnabledPluginStyles = Settings.includePluginCSS;
-    await super.load();
+    await super.load(options);
   }
 };
 
@@ -63875,7 +71988,7 @@ var ThemeStyles = class extends Asset {
       return "/* Using default theme. */";
     let themePath = AssetHandler.vaultPluginsPath.joinString(`../themes/${themeName}/theme.css`).absolute();
     if (!themePath.exists) {
-      RenderLog.warning("Cannot find theme at path: \n\n" + themePath);
+      ExportLog.warning("Cannot find theme at path: \n\n" + themePath);
       return "";
     }
     let themeContent = (_a2 = await themePath.readFileString()) != null ? _a2 : "";
@@ -63886,7 +71999,7 @@ var ThemeStyles = class extends Asset {
     let themeName = (_a2 = app.vault.config) == null ? void 0 : _a2.cssTheme;
     return (themeName != null ? themeName : "") == "" ? "Default" : themeName;
   }
-  async load() {
+  async load(options) {
     let themeName = ThemeStyles.getCurrentThemeName();
     if (themeName == this.lastThemeName) {
       this.modifiedTime = 0;
@@ -63895,7 +72008,7 @@ var ThemeStyles = class extends Asset {
     this.content = await ThemeStyles.getThemeContent(themeName);
     this.modifiedTime = Date.now();
     this.lastThemeName = themeName;
-    await super.load();
+    await super.load(options);
   }
 };
 
@@ -63920,7 +72033,7 @@ var SnippetStyles = class extends Asset {
     }
     return snippetContents;
   }
-  async load() {
+  async load(options) {
     let snippetsList = await SnippetStyles.getStyleSnippetsContent();
     let snippets = "\n";
     for (let i = 0; i < snippetsList.length; i++) {
@@ -63929,7 +72042,7 @@ var SnippetStyles = class extends Asset {
     snippets = snippets.replaceAll(/^publish /gm, "html body[class].publish ");
     this.content = snippets;
     this.modifiedTime = Date.now();
-    await super.load();
+    await super.load(options);
   }
 };
 
@@ -63941,7 +72054,7 @@ var MathjaxStyles = class extends Asset {
     this.lastMathjaxChanged = -1;
     this.content = "";
   }
-  async load() {
+  async load(options) {
     var _a2;
     if (this.mathjaxStylesheet == void 0)
       this.mathjaxStylesheet = Array.from(document.styleSheets).find((sheet) => sheet.ownerNode.id == "MJX-CHTML-styles");
@@ -63959,7 +72072,7 @@ var MathjaxStyles = class extends Asset {
       return;
     }
     this.lastMathjaxChanged = changed;
-    await super.load();
+    await super.load(options);
   }
 };
 
@@ -63969,24 +72082,30 @@ var CustomHeadContent = class extends Asset {
     super("custom-head-content.html", "", "html" /* HTML */, "autohead" /* AutoHead */, false, "dynamic" /* Dynamic */);
     this.content = "";
   }
-  async load() {
+  async load(options) {
     var _a2, _b, _c;
-    if (!SettingsPage6.loaded)
+    if (!SettingsPage3.loaded)
       return;
     let customHeadPath = new Path(Settings.customHeadContentPath);
     if (customHeadPath.isEmpty) {
       this.content = "";
       return;
     }
-    let validation = customHeadPath.validate(false, true, true, false, true, false, ["html"]);
+    let validation = customHeadPath.validate({
+      allowEmpty: false,
+      allowFiles: true,
+      allowAbsolute: true,
+      allowRelative: true,
+      requireExists: true
+    });
     if (!validation.valid) {
       this.content = "";
-      RenderLog.error(validation.error + customHeadPath.asString);
+      ExportLog.error(validation.error + customHeadPath.asString);
       return;
     }
     this.modifiedTime = (_b = (_a2 = customHeadPath.stat) == null ? void 0 : _a2.mtimeMs) != null ? _b : this.modifiedTime;
     this.content = (_c = await customHeadPath.readFileString()) != null ? _c : "";
-    await super.load();
+    await super.load(options);
   }
 };
 
@@ -63996,7 +72115,7 @@ var GlobalVariableStyles = class extends Asset {
     super("global-variable-styles.css", "", "style" /* Style */, "autohead" /* AutoHead */, true, "dynamic" /* Dynamic */, "async" /* Async */, 6);
     this.content = "";
   }
-  async load() {
+  async load(options) {
     var _a2;
     let bodyStyle = ((_a2 = document.body.getAttribute("style")) != null ? _a2 : "").replaceAll('"', "'").replaceAll("; ", " !important;\n	");
     let lineWidth = Settings.documentWidth || "40em";
@@ -64021,7 +72140,7 @@ var GlobalVariableStyles = class extends Asset {
         }
         `;
     this.modifiedTime = Date.now();
-    await super.load();
+    await super.load(options);
   }
 };
 
@@ -64033,7 +72152,7 @@ var Favicon = class extends Asset {
   constructor() {
     super("favicon.png", "", "media" /* Media */, "autohead" /* AutoHead */, false, "dynamic" /* Dynamic */);
   }
-  async load() {
+  async load(options) {
     var _a2, _b;
     if (Settings.faviconPath == "")
       this.content = Buffer.from(icon_default);
@@ -64041,10 +72160,10 @@ var Favicon = class extends Asset {
     let icon = await iconPath.readFileBuffer();
     if (icon) {
       this.content = icon;
-      this.setFilename("favicon" + iconPath.extension);
+      this.filename = "favicon" + iconPath.extension;
       this.modifiedTime = (_b = (_a2 = iconPath.stat) == null ? void 0 : _a2.mtimeMs) != null ? _b : this.modifiedTime;
     }
-    await super.load();
+    await super.load(options);
   }
   getHTML() {
     if (Settings.inlineAssets) {
@@ -64059,7 +72178,7 @@ var Favicon = class extends Asset {
 var import_obsidian11 = require("obsidian");
 
 // node_modules/file-type/browser.js
-var import_readable_web_to_node_stream = __toESM(require_lib3(), 1);
+var import_readable_web_to_node_stream = __toESM(require_lib4(), 1);
 
 // node_modules/file-type/core.js
 var import_node_buffer3 = require("node:buffer");
@@ -66235,14 +74354,14 @@ var FetchBuffer = class extends Asset {
     if (stringURL.startsWith("http"))
       this.onlineURL = stringURL;
   }
-  async load() {
+  async load(options) {
     if (this.url instanceof Path) {
       if (this.url.isRelative) {
         this.url.setWorkingDirectory("").makeAbsolute();
       }
       this.url = this.url.makeUnixStyle().asString;
     }
-    if (!Settings.makeOfflineCompatible && this.url.startsWith("http"))
+    if (options.offlineResources === false && this.url.startsWith("http"))
       return;
     if (this.url.startsWith("http") && (this.url.split(".").length <= 2 || this.url.split("/").length <= 2)) {
       this.onlineURL = void 0;
@@ -66255,18 +74374,18 @@ var FetchBuffer = class extends Asset {
         if (testResp.type == "opaque")
           res = await (0, import_obsidian11.requestUrl)(this.url);
         else {
-          RenderLog.log(`Url ${this.url} is not available`);
+          ExportLog.log(`Url ${this.url} is not available`);
           return;
         }
       } else {
         res = await fetch(this.url);
       }
     } catch (e) {
-      RenderLog.log(e, `Failed to fetch ${this.url}`);
+      ExportLog.log(e, `Failed to fetch ${this.url}`);
       return;
     }
     if (res.status != 200) {
-      RenderLog.log(`Failed to fetch ${this.url} with status ${res.status}`);
+      ExportLog.log(`Failed to fetch ${this.url} with status ${res.status}`);
       return;
     }
     let data;
@@ -66277,16 +74396,16 @@ var FetchBuffer = class extends Asset {
     }
     this.content = Buffer.from(data);
     this.modifiedTime = Date.now();
-    if (this.relativeDownloadPath.extension == "") {
+    if (this.relativePath.extension == "") {
       let type = await fileTypeFromBuffer(this.content);
       if (type) {
-        this.relativeDownloadPath.setExtension(type.ext);
-        this.filename = this.relativeDownloadPath.fullName;
+        this.relativePath.setExtension(type.ext);
+        this.filename = this.relativePath.fullName;
         this.type = Asset.extentionToType(type.ext);
-        this.setRelativeDownloadDirectory(Asset.typeToPath(this.type));
+        this.relativeDirectory = Asset.typeToPath(this.type);
       }
     }
-    await super.load();
+    await super.load(options);
   }
 };
 
@@ -66296,14 +74415,14 @@ var SupportedPluginStyles = class extends Asset {
     super("supported-plugins.css", "", "style" /* Style */, "autohead" /* AutoHead */, true, "dynamic" /* Dynamic */, "async" /* Async */, 5);
     this.content = "";
   }
-  async load() {
+  async load(options) {
     var _a2;
     this.content = "";
     let stylesheets = document.styleSheets;
     for (let i = 1; i < stylesheets.length; i++) {
       let styleID = (_a2 = stylesheets[i].ownerNode) == null ? void 0 : _a2.id;
       if (styleID == "ADMONITIONS_CUSTOM_STYLE_SHEET" || styleID == "css-settings-manager" || Settings.includeSvelteCSS && this.isSvelteStylesheet(stylesheets[i])) {
-        RenderLog.log("Including stylesheet: " + styleID);
+        ExportLog.log("Including stylesheet: " + styleID);
         let style = stylesheets[i].cssRules;
         for (let item in style) {
           if (style[item].cssText != void 0) {
@@ -66314,7 +74433,7 @@ var SupportedPluginStyles = class extends Asset {
       this.content += "\n\n /* ---- */\n\n";
     }
     this.modifiedTime = Date.now();
-    await super.load();
+    await super.load(options);
   }
   getStylesheetContent(stylesheet) {
     let content = "";
@@ -66347,32 +74466,32 @@ var _AssetHandler = class {
   static get libraryPath() {
     if (!this.libraryFolder)
       this.initialize();
-    return _AssetHandler.libraryFolder.copy.makeWebStyle(Settings.makeNamesWebStyle);
+    return _AssetHandler.libraryFolder.copy.makeWebStyle(this.exportOptions.webStylePaths);
   }
   static get mediaPath() {
     if (!this.mediaFolder)
       this.initialize();
-    return _AssetHandler.mediaFolder.copy.makeWebStyle(Settings.makeNamesWebStyle);
+    return _AssetHandler.mediaFolder.copy.makeWebStyle(this.exportOptions.webStylePaths);
   }
   static get jsPath() {
     if (!this.jsFolder)
       this.initialize();
-    return _AssetHandler.jsFolder.copy.makeWebStyle(Settings.makeNamesWebStyle);
+    return _AssetHandler.jsFolder.copy.makeWebStyle(this.exportOptions.webStylePaths);
   }
   static get cssPath() {
     if (!this.cssFolder)
       this.initialize();
-    return _AssetHandler.cssFolder.copy.makeWebStyle(Settings.makeNamesWebStyle);
+    return _AssetHandler.cssFolder.copy.makeWebStyle(this.exportOptions.webStylePaths);
   }
   static get fontPath() {
     if (!this.fontFolder)
       this.initialize();
-    return _AssetHandler.fontFolder.copy.makeWebStyle(Settings.makeNamesWebStyle);
+    return _AssetHandler.fontFolder.copy.makeWebStyle(this.exportOptions.webStylePaths);
   }
   static get htmlPath() {
     if (!this.htmlFolder)
       this.initialize();
-    return _AssetHandler.htmlFolder.copy.makeWebStyle(Settings.makeNamesWebStyle);
+    return _AssetHandler.htmlFolder.copy.makeWebStyle(this.exportOptions.webStylePaths);
   }
   static async initialize() {
     var _a2, _b;
@@ -66388,7 +74507,7 @@ var _AssetHandler = class {
     this.allAssets.sort((a, b) => a.loadPriority - b.loadPriority);
     let loadPromises = [];
     for (let asset of this.allAssets) {
-      loadPromises.push(asset.load());
+      loadPromises.push(asset.load(this.exportOptions));
     }
     await Promise.all(loadPromises);
     let graphViewJSPath = this.graphViewJS.getAssetPath();
@@ -66400,10 +74519,10 @@ var _AssetHandler = class {
     let i = 0;
     let loadPromises = [];
     for (let asset of this.dynamicAssets) {
-      let loadPromise = asset.load();
+      let loadPromise = asset.load(this.exportOptions);
       loadPromise.then(() => {
         i++;
-        RenderLog.progress(i, this.dynamicAssets.length, "Initialize Export", "Loading asset: " + asset.filename, "var(--color-yellow)");
+        ExportLog.progress(i, this.dynamicAssets.length, "Initialize Export", "Loading asset: " + asset.filename, "var(--color-yellow)");
       });
       loadPromises.push(loadPromise);
     }
@@ -66419,34 +74538,40 @@ var _AssetHandler = class {
     assets = assets.concat(this.allAssets.map((asset) => asset.childAssets).flat().filter((asset) => asset.inlinePolicy == inlinePolicy));
     return assets;
   }
-  static filterDownloads(downloads) {
-    if (!Settings.includeGraphView) {
+  static filterDownloads(downloads, options) {
+    if (!options.addGraphView || !options.addSidebars) {
       downloads = downloads.filter((asset) => ![this.graphViewJS, this.graphWASMJS, this.graphWASM, this.renderWorkerJS, this.tinyColorJS, this.pixiJS].includes(asset));
     }
-    if (!Settings.includeSearchBar) {
+    if (!options.addSearch || !options.addSidebars) {
       downloads = downloads.filter((asset) => ![this.minisearchJS].includes(asset));
     }
-    downloads = downloads.filter((asset, index, self2) => self2.findIndex((t) => t.relativeDownloadPath.asString == asset.relativeDownloadPath.asString) === index);
+    if (!options.includeCSS) {
+      downloads = downloads.filter((asset) => asset.type != "style" /* Style */);
+    }
+    if (!options.includeJS) {
+      downloads = downloads.filter((asset) => asset.type != "script" /* Script */);
+    }
+    downloads = downloads.filter((asset, index, self2) => self2.findIndex((t) => t.relativePath.asString == asset.relativePath.asString) === index);
     downloads = downloads.filter((asset) => asset.content && asset.content.length > 0);
     return downloads;
   }
-  static getDownloads() {
+  static getDownloads(options) {
     let downloads = this.getAssetsOfInlinePolicy("download" /* Download */).concat(this.getAssetsOfInlinePolicy("downloadhead" /* DownloadHead */));
-    if (!Settings.inlineAssets) {
+    if (!options.inlineMedia) {
       downloads = downloads.concat(this.getAssetsOfInlinePolicy("auto" /* Auto */));
       downloads = downloads.concat(this.getAssetsOfInlinePolicy("autohead" /* AutoHead */));
     }
-    downloads = this.filterDownloads(downloads);
+    downloads = this.filterDownloads(downloads, options);
     downloads.sort((a, b) => b.loadPriority - a.loadPriority);
     return downloads;
   }
-  static getHeadReferences() {
+  static getHeadReferences(options) {
     let head = "";
     let referenceAssets = this.getAssetsOfInlinePolicy("downloadhead" /* DownloadHead */).concat(this.getAssetsOfInlinePolicy("autohead" /* AutoHead */)).concat(this.getAssetsOfInlinePolicy("inlinehead" /* InlineHead */));
-    referenceAssets = this.filterDownloads(referenceAssets);
+    referenceAssets = this.filterDownloads(referenceAssets, options);
     referenceAssets.sort((a, b) => b.loadPriority - a.loadPriority);
     for (let asset of referenceAssets) {
-      head += asset.getHTML(!Settings.makeOfflineCompatible);
+      head += asset.getHTML(options);
     }
     return head;
   }
@@ -66460,12 +74585,12 @@ var _AssetHandler = class {
     for (let urlObj of urls) {
       let url = urlObj[1] || urlObj[2];
       url = url.trim();
-      if (!Settings.makeOfflineCompatible && url.startsWith("http"))
+      if (!this.exportOptions.offlineResources && url.startsWith("http"))
         continue;
       if (url == "")
         continue;
       if (url.startsWith("data:")) {
-        if (!Settings.inlineAssets && makeBase64External) {
+        if (!this.exportOptions.inlineMedia && makeBase64External) {
           let hash = function(str, seed = 0) {
             let h1 = 3735928559 ^ seed, h2 = 1103547991 ^ seed;
             for (let i = 0, ch; i < str.length; i++) {
@@ -66494,7 +74619,7 @@ var _AssetHandler = class {
           let type2 = Asset.extentionToType(extension);
           let childAsset2 = new Asset(filename, buffer, type2, "download" /* Download */, false, "child" /* Child */);
           asset.childAssets.push(childAsset2);
-          let loadPromise2 = childAsset2.load();
+          let loadPromise2 = childAsset2.load(this.exportOptions);
           promises.push(loadPromise2);
           loadPromise2.then(() => {
             if (childAsset2.content == void 0 || childAsset2.content == null || childAsset2.content.length == 0) {
@@ -66510,19 +74635,19 @@ var _AssetHandler = class {
       let type = Asset.extentionToType(path.extension);
       let childAsset = new FetchBuffer(path.fullName, url, type, "download" /* Download */, false, "child" /* Child */);
       asset.childAssets.push(childAsset);
-      let loadPromise = childAsset.load();
+      let loadPromise = childAsset.load(this.exportOptions);
       promises.push(loadPromise);
       loadPromise.then(() => {
         if (childAsset.content == void 0 || childAsset.content == null || childAsset.content.length == 0) {
           return;
         }
-        if (Settings.inlineAssets) {
+        if (this.exportOptions.inlineMedia) {
           let base64 = childAsset.content.toString("base64");
           content = content.replaceAll(url, `data:${mime2.getType(url)};base64,${base64}`);
         } else {
-          childAsset.setRelativeDownloadDirectory(childAsset.relativeDownloadDirectory.makeWebStyle(Settings.makeNamesWebStyle));
-          if (Settings.makeNamesWebStyle)
-            childAsset.setFilename(Path.toWebStyle(childAsset.filename));
+          childAsset.relativeDirectory.makeWebStyle(this.exportOptions.webStylePaths);
+          if (this.exportOptions.webStylePaths)
+            childAsset.filename = Path.toWebStyle(childAsset.filename);
           let newPath = childAsset.getAssetPath(asset.getAssetPath());
           content = content.replaceAll(url, newPath.asString);
         }
@@ -66537,6 +74662,7 @@ AssetHandler.staticAssets = [];
 AssetHandler.dynamicAssets = [];
 AssetHandler.allAssets = [];
 AssetHandler.temporaryAssets = [];
+AssetHandler.exportOptions = new MarkdownWebpageRendererAPIOptions2();
 AssetHandler.obsidianStyles = new ObsidianStyles();
 AssetHandler.otherPluginStyles = new OtherPluginStyles();
 AssetHandler.themeStyles = new ThemeStyles();
@@ -66565,10 +74691,10 @@ var import_obsidian12 = require("obsidian");
 var HTMLExporter = class {
   static async export(usePreviousSettings = true, overrideFiles = void 0) {
     var _a2, _b, _c;
-    let info = await SettingsPage6.updateSettings(usePreviousSettings, overrideFiles);
+    let info = await SettingsPage3.updateSettings(usePreviousSettings, overrideFiles);
     if (!info && !usePreviousSettings || info && info.canceled)
       return;
-    let files = (_b = (_a2 = info == null ? void 0 : info.pickedFiles) != null ? _a2 : overrideFiles) != null ? _b : SettingsPage6.getFilesToExport();
+    let files = (_b = (_a2 = info == null ? void 0 : info.pickedFiles) != null ? _a2 : overrideFiles) != null ? _b : SettingsPage3.getFilesToExport();
     let exportPath = (_c = info == null ? void 0 : info.exportPath) != null ? _c : new Path(Settings.exportPath);
     let website = await HTMLExporter.exportFiles(files, exportPath, true, Settings.deleteOldFiles);
     if (!website)
@@ -66589,7 +74715,7 @@ var HTMLExporter = class {
     if (saveFiles) {
       await Utils.downloadFiles(website.downloads, destination);
     }
-    MarkdownRenderer.endBatch();
+    MarkdownRendererAPI.endBatch();
     return website;
   }
   static async exportFolder(folder, rootExportPath, saveFiles, clearDirectory) {
@@ -66608,9 +74734,10 @@ var HTMLExporter = class {
 var _HTMLExportPlugin = class extends import_obsidian13.Plugin {
   constructor() {
     super(...arguments);
-    this.markdownRenderer = MarkdownRenderer;
+    this.api = MarkdownRendererAPI;
     this.settings = Settings;
     this.assetHandler = AssetHandler;
+    this.Path = Path;
   }
   async onload() {
     console.log("Loading webpage-html-export plugin");
@@ -66618,13 +74745,13 @@ var _HTMLExportPlugin = class extends import_obsidian13.Plugin {
     this.checkForUpdates();
     _HTMLExportPlugin.pluginVersion = this.manifest.version;
     window.WebpageHTMLExport = this;
-    this.addSettingTab(new SettingsPage6(this));
-    await SettingsPage6.loadSettings();
+    this.addSettingTab(new SettingsPage3(this));
+    await SettingsPage3.loadSettings();
     await AssetHandler.initialize();
     this.addRibbonIcon("folder-up", "Export Vault to HTML", () => {
       HTMLExporter.export(false);
     });
-    this.registerEvent(this.app.vault.on("rename", SettingsPage6.renameFile));
+    this.registerEvent(this.app.vault.on("rename", SettingsPage3.renameFile));
     this.addCommand({
       id: "export-html-vault",
       name: "Export using previous settings",
@@ -66661,7 +74788,7 @@ var _HTMLExportPlugin = class extends import_obsidian13.Plugin {
             let filesInFolder = this.app.vault.getFiles().filter((f) => new Path(f.path).directory.asString.startsWith(file.path));
             HTMLExporter.export(false, filesInFolder);
           } else {
-            RenderLog.error("File is not a TFile or TFolder! Invalid type: " + typeof file);
+            ExportLog.error("File is not a TFile or TFolder! Invalid type: " + typeof file);
             new import_obsidian13.Notice("File is not a File or Folder! Invalid type: " + typeof file, 5e3);
           }
         });
@@ -66684,16 +74811,16 @@ var _HTMLExportPlugin = class extends import_obsidian13.Plugin {
       let updateNote = (_b = manifest.updateNote) != null ? _b : "";
       _HTMLExportPlugin.updateInfo = { updateAvailable, latestVersion, currentVersion, updateNote };
       if (updateAvailable)
-        RenderLog.log("Update available: " + latestVersion + " (current: " + currentVersion + ")");
+        ExportLog.log("Update available: " + latestVersion + " (current: " + currentVersion + ")");
       return _HTMLExportPlugin.updateInfo;
     } catch (e) {
-      RenderLog.log("Could not check for update");
+      ExportLog.log("Could not check for update");
       _HTMLExportPlugin.updateInfo = { updateAvailable: false, latestVersion: currentVersion, currentVersion, updateNote: "" };
       return _HTMLExportPlugin.updateInfo;
     }
   }
   onunload() {
-    RenderLog.log("unloading webpage-html-export plugin");
+    ExportLog.log("unloading webpage-html-export plugin");
   }
 };
 var HTMLExportPlugin = _HTMLExportPlugin;
@@ -66704,5 +74831,16 @@ HTMLExportPlugin.pluginVersion = "0.0.0";
  * Modified by Juriy "kangax" Zaytsev
  * Original code by Erik Arvidsson, Mozilla Public License
  * http://erik.eae.net/simplehtmlparser/simplehtmlparser.js
+ */
+/*!
+ * mime-db
+ * Copyright(c) 2014 Jonathan Ong
+ * MIT Licensed
+ */
+/*!
+ * mime-types
+ * Copyright(c) 2014 Jonathan Ong
+ * Copyright(c) 2015 Douglas Christopher Wilson
+ * MIT Licensed
  */
 /*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
