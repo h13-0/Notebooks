@@ -18,8 +18,19 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "2bd283bac64de7e9",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.5.8"
+              }
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -155,7 +166,7 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "f6f11e0bec9a5c91",
+  "active": "2bd283bac64de7e9",
   "lastOpenFiles": [
     "生活常识/常见物质生产方式.md",
     "CPP/C标准笔记/C标准笔记.md",
