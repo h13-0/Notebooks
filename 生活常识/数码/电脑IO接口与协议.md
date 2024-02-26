@@ -48,12 +48,14 @@ M.2接口即NGFF接口，即 `Next Generation Form Factor` ，是一种外形尺
 	![[chrome_Oas0fwGQjX.png]]
 - 如 `A+E Key` 、 `B+M Key` 的组合是拥有两个卡口区域的PCB，对于 `A+E Key` 的PCB，其可以同时使用 `A Key` 的连接器和 `E Key` 的连接器，示意图如下
 	![[Pasted image 20240227005439.png]]
+- 卡口引脚范围的上下限<font color="#c00000">从A到E</font><span style="background:#fff88f"><font color="#c00000">依次增加</font></span>，卡口在PCB上的位置为<span style="background:#fff88f"><font color="#c00000">依次右移</font></span>。
+- 各M.2接口包含卡口均共计75个引脚。
 
 因此各个插槽型号对应的常用应用场景如下：
 
-| 插槽型号  | <center>应用场景</center> |
-| :---: | :-------------------- |
-| A Key | 无线设备                  |
-| B Key | WWAN+GNSS或SSD         |
-| E Key | 无线设备                  |
-| M Key | SSD                   |
+| 插槽型号  | <center>应用场景</center>                                    |
+| :---: | :------------------------------------------------------- |
+| A Key | 无线设备                                                     |
+| B Key | WWAN+GNSS或SSD(SATA、PCIe <font color="#c00000">x2</font>) |
+| E Key | 无线设备                                                     |
+| M Key | SSD(SATA、PCIe <span style="background:#fff88f"><font color="#c00000">x4</font></span>)                                        |
