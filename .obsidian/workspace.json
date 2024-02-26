@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "生活常识/数码/电脑IO接口与协议.md",
+                "file": "Readme.md",
                 "mode": "source",
                 "source": false
               }
@@ -77,8 +77,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 261.5,
-    "collapsed": true
+    "width": 261.5
   },
   "right": {
     "id": "989a0ed08fe1a7b2",
@@ -94,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "生活常识/数码/电脑IO接口与协议.md",
+                "file": "Readme.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -111,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "生活常识/数码/电脑IO接口与协议.md",
+                "file": "Readme.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -134,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "生活常识/数码/电脑IO接口与协议.md"
+                "file": "Readme.md"
               }
             }
           }
@@ -158,13 +157,13 @@
   },
   "active": "e06e89e5f22cf3c0",
   "lastOpenFiles": [
+    "生活常识/数码/电脑IO接口与协议.md",
     "生活常识/Readme.md",
     "Resources/Pasted image 20240227005439.png",
     "Resources/Pasted image 20240227005645.png",
     "Resources/Pasted image 20240227005641.png",
     "Resources/Pasted image 20240203021517.png",
     "Resources/chrome_Oas0fwGQjX.png",
-    "生活常识/数码/电脑IO接口与协议.md",
     "生活常识/生物/驴、马、骡.md",
     "生活常识/生物",
     "生活常识/常见物质生产方式.md",
