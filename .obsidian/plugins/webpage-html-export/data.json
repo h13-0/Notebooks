@@ -1,6 +1,6 @@
 {
   "settingsVersion": "1.8.0",
-  "makeOfflineCompatible": false,
+  "makeOfflineCompatible": true,
   "inlineAssets": false,
   "includePluginCSS": "",
   "includeSvelteCSS": true,
