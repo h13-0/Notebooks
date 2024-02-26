@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "生活常识/经济生活/贷款与利息.md",
+                "file": "Others/MS .NET Framework/Core and Framework.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "生活常识/经济生活/贷款与利息.md",
+                "file": "Others/MS .NET Framework/Core and Framework.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "生活常识/经济生活/贷款与利息.md",
+                "file": "Others/MS .NET Framework/Core and Framework.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "生活常识/经济生活/贷款与利息.md"
+                "file": "Others/MS .NET Framework/Core and Framework.md"
               }
             }
           }
@@ -155,13 +155,15 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "e06e89e5f22cf3c0",
+  "active": "7ddc64b2e3c9b5c8",
   "lastOpenFiles": [
+    "Others/NAS/CPU选型.md",
+    "Others/MS .NET Framework/Core and Framework.md",
     "生活常识/经济生活/贷款与利息.md",
     "生活常识/经济生活",
     "生活常识/医学健康/常用药剂.md",
     "Readme.md",
-    "POSIX/Readme.md",
+    "Others/POSIX/Readme.md",
     "Others/VisualStudio/Plugins/未命名.md",
     "Others/PythonLibs/pycpraser/pycpraser.md",
     "Others/PythonLibs/pycpraser/抽象语法树(c_ast).md",
@@ -170,8 +172,6 @@
     "Others/Obsidian/插件/Obsidian42-BRAT 第三方插件安装器.md",
     "Others/Obsidian/插件/Dynamic table of contents 自动目录.md",
     "Others/Obsidian/插件/bartender 笔记md文件手动排序.md",
-    "Others/NAS/CPU选型.md",
-    "Others/MS .NET Framework/Core and Framework.md",
     "Others/git/git常用操作.md",
     "Others/正则表达式/正则表达式.md",
     "Others/正则表达式/常用需求.md",
