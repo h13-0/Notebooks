@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Math/复变函数.md",
+                "file": "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Math/复变函数.md",
+                "file": "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Math/复变函数.md",
+                "file": "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Math/复变函数.md"
+                "file": "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md"
               }
             }
           }
@@ -157,6 +157,7 @@
   },
   "active": "1bec9a145bfe365a",
   "lastOpenFiles": [
+    "Math/复变函数.md",
     "CPP/C标准笔记/C标准笔记.md",
     "生活常识/国家标准/生活常识的国家标准.md",
     "生活常识/经济生活/贷款与利息.md",
@@ -177,7 +178,6 @@
     "CMake/CMake 常用函数.md",
     "CMake/CMake 变量表.md",
     "Math/傅里叶变换.md",
-    "Math/复变函数.md",
     "Readme.md",
     "Others/VisualStudio/Plugins/未命名.md",
     "Others/PythonLibs/pycpraser/pycpraser.md",
