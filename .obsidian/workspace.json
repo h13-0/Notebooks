@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Readme.md",
+                "file": "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Readme.md",
+                "file": "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Readme.md",
+                "file": "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Readme.md"
+                "file": "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md"
               }
             }
           }
@@ -157,6 +157,17 @@
   },
   "active": "e06e89e5f22cf3c0",
   "lastOpenFiles": [
+    "计算机网络/第二章 物理层/第二章 物理层.md",
+    "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
+    "计算机网络体系结构.md",
+    "计算机网络/计算机网络概述.md",
+    "CMake/CMake 常用函数.md",
+    "CMake/CMake 变量表.md",
+    "Math/傅里叶变换.md",
+    "Math/复变函数.md",
+    "数据结构算法/数据结构算法基础.md",
+    "土木常识/计算软件/SACS海工计算软件.md",
+    "Readme.md",
     "Others/VisualStudio/Plugins/未命名.md",
     "Others/PythonLibs/pycpraser/pycpraser.md",
     "Others/PythonLibs/pycpraser/抽象语法树(c_ast).md",
@@ -172,17 +183,6 @@
     "Others/正则表达式/常用需求.md",
     "Others/协程/协程.md",
     "Others/线程锁/线程锁与信号量.md",
-    "Math/傅里叶变换.md",
-    "Math/复变函数.md",
-    "CPP/C标准笔记/C与C++标准.md",
-    "CPP/C标准笔记/C标准笔记.md",
-    "CPP/C标准笔记/C++ 修饰符类型.md",
-    "CMake/CMake 常用函数.md",
-    "土木常识/土木常识.md",
-    "土木常识/计算软件/SACS海工计算软件.md",
-    "数据结构算法/数据结构算法基础.md",
-    "生活常识/Readme.md",
-    "生活常识/常见物质生产方式.md",
     "Resources/Pasted image 20240227005439.png",
     "Resources/Pasted image 20240227005645.png",
     "Resources/Pasted image 20240227005641.png",
