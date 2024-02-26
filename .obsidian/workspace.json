@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Others/MS .NET Framework/Core and Framework.md",
+                "file": "编译原理/编译原理.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Others/MS .NET Framework/Core and Framework.md",
+                "file": "编译原理/编译原理.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Others/MS .NET Framework/Core and Framework.md",
+                "file": "编译原理/编译原理.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Others/MS .NET Framework/Core and Framework.md"
+                "file": "编译原理/编译原理.md"
               }
             }
           }
@@ -157,8 +157,8 @@
   },
   "active": "7ddc64b2e3c9b5c8",
   "lastOpenFiles": [
-    "Others/NAS/CPU选型.md",
     "Others/MS .NET Framework/Core and Framework.md",
+    "Others/NAS/CPU选型.md",
     "生活常识/经济生活/贷款与利息.md",
     "生活常识/经济生活",
     "生活常识/医学健康/常用药剂.md",
