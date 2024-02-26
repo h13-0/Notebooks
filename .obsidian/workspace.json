@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "生活常识/数码/电脑IO接口与协议(主要是M.2).md",
+                "file": "生活常识/数码/电脑IO接口与协议.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "生活常识/数码/电脑IO接口与协议(主要是M.2).md",
+                "file": "生活常识/数码/电脑IO接口与协议.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "生活常识/数码/电脑IO接口与协议(主要是M.2).md",
+                "file": "生活常识/数码/电脑IO接口与协议.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "生活常识/数码/电脑IO接口与协议(主要是M.2).md"
+                "file": "生活常识/数码/电脑IO接口与协议.md"
               }
             }
           }
@@ -158,7 +158,7 @@
   "active": "e06e89e5f22cf3c0",
   "lastOpenFiles": [
     "生活常识/生物/驴、马、骡.md",
-    "生活常识/数码/电脑IO接口与协议(主要是M.2).md",
+    "生活常识/数码/电脑IO接口与协议.md",
     "生活常识/生物",
     "生活常识/常见物质生产方式.md",
     "编译原理/编译原理.md",
