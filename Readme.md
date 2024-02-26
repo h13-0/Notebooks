@@ -9,3 +9,7 @@
 ![[Pasted image 20240203021517.png]]
 
 如果功能不正常请尝试使用科学上网并清除缓存。
+
+## 声明
+
+本笔记中所有知识和观点<span style="background:#fff88f"><font color="#c00000">均不为权威观点</font></span>，仅为本人学习生活所用，阅读时请自行辨别，<span style="background:#fff88f"><font color="#c00000">一切后果自负</font></span>。
