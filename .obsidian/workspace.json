@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
+                "file": "CPP/C标准笔记/C标准笔记.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
+                "file": "CPP/C标准笔记/C标准笔记.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
+                "file": "CPP/C标准笔记/C标准笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md"
+                "file": "CPP/C标准笔记/C标准笔记.md"
               }
             }
           }
@@ -157,8 +157,8 @@
   },
   "active": "1bec9a145bfe365a",
   "lastOpenFiles": [
-    "Readme.md",
     "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
+    "Readme.md",
     "Others/VisualStudio/Plugins/未命名.md",
     "Others/PythonLibs/pycpraser/pycpraser.md",
     "Others/PythonLibs/pycpraser/抽象语法树(c_ast).md",
