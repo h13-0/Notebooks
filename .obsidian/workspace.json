@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CPP/应试笔记与八股.md",
+                "file": "数据结构算法/数据结构算法基础.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "CPP/应试笔记与八股.md",
+                "file": "数据结构算法/数据结构算法基础.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "CPP/应试笔记与八股.md",
+                "file": "数据结构算法/数据结构算法基础.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "CPP/应试笔记与八股.md"
+                "file": "数据结构算法/数据结构算法基础.md"
               }
             }
           }
@@ -157,6 +157,7 @@
   },
   "active": "1bec9a145bfe365a",
   "lastOpenFiles": [
+    "CPP/应试笔记与八股.md",
     "数据结构算法/数据结构算法基础.md",
     "CPP/C标准笔记/C标准笔记.md",
     "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
@@ -182,7 +183,6 @@
     "CPP/C标准笔记/C++ 修饰符类型.md",
     "CPP/编译器限定实现/gcc.md",
     "CMake/CMake 常用函数.md",
-    "土木常识/土木常识.md",
     "生活常识/Resources/Pasted image 20240227005439.png",
     "生活常识/Resources/chrome_Oas0fwGQjX.png",
     "Resources/Pasted image 20240203021517.png",
