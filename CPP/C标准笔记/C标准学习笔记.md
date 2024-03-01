@@ -121,6 +121,57 @@ TODO
 
 #### 6.4 词法元素
 
+##### 6.4.1 关键词(Keywords)
+
+C11标准中的关键词如下：
+- auto
+- break
+- case
+- char
+- const
+- continue
+- default
+- do
+- double
+- else
+- enum
+- extern
+- float
+- for
+- goto
+- if
+- inline
+- int
+- long
+- register
+- restrict
+- return
+- short
+- signed
+- sizeof
+- static
+- struct
+- typedef
+- union
+- unsigned
+- void
+- volatile
+- while
+- \_Alignas
+- \_Alignof
+- \_Atomic
+- \_Bool
+- \_Complex
+- \_Generic
+- \_Imaginary
+- \_Noreturn
+- \_Static_assert
+- \_Thread_local
+
+以上关键词被预留为
+
+##### 6.4.2 标识符(Identifiers)
+
 ##### 6.4.4 常量(Constants)
 
 常量类型主要有
