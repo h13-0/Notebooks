@@ -159,6 +159,7 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "header-enhancer:Header Enhancer": false,
       "obsidian42-brat:BRAT": false,
       "canvas:新建白板": false,
       "switcher:打开快速切换": false,

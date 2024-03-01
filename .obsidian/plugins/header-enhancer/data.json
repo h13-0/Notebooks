@@ -1,0 +1,14 @@
+{
+  "language": "zh",
+  "showOnStatusBar": true,
+  "startHeaderLevel": 1,
+  "maxHeaderLevel": 6,
+  "isAutoNumbering": true,
+  "isUseYaml": true,
+  "autoNumberingStartNumber": "1",
+  "autoNumberingSeparator": ".",
+  "autoNumberingHeaderSeparator": "\t",
+  "isSeparateTitleFont": true,
+  "titleFontFamily": "inherit",
+  "titleFontSize": "inherit"
+}
