@@ -31,8 +31,7 @@
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -107,7 +106,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "CPP/C标准笔记/C标准学习笔记.md",
+                "file": "CPP/应试笔记与八股.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -124,7 +123,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "CPP/C标准笔记/C标准学习笔记.md",
+                "file": "CPP/应试笔记与八股.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -147,7 +146,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "CPP/C标准笔记/C标准学习笔记.md"
+                "file": "CPP/应试笔记与八股.md"
               }
             }
           }
@@ -169,10 +168,10 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "8a133eb049e5865e",
+  "active": "208717f2402ecffd",
   "lastOpenFiles": [
-    "CPP/应试笔记与八股.md",
     "CPP/C标准笔记/C标准学习笔记.md",
+    "CPP/应试笔记与八股.md",
     "CPP/C标准笔记/C与C++标准.md",
     "CPP/C标准笔记/C++ 修饰符类型.md",
     "计算机网络/第二章 物理层/第二章 物理层.md",
