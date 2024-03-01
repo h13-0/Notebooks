@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "计算机网络/第二章 物理层/第二章 物理层.md",
+                "file": "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
                 "mode": "source",
                 "source": false
               }
@@ -117,7 +117,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "计算机网络/第二章 物理层/第二章 物理层.md",
+                "file": "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -134,7 +134,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "计算机网络/第二章 物理层/第二章 物理层.md",
+                "file": "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -157,7 +157,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "计算机网络/第二章 物理层/第二章 物理层.md"
+                "file": "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md"
               }
             }
           }
@@ -181,8 +181,8 @@
   },
   "active": "208717f2402ecffd",
   "lastOpenFiles": [
-    "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
     "计算机网络/第二章 物理层/第二章 物理层.md",
+    "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
     "CPP/C标准笔记/C标准学习笔记.md",
     "Resources/Pasted image 20240301211723.png",
     "计算机网络/Resources/Pasted image 20240301202429.png",
