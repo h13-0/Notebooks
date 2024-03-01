@@ -281,7 +281,7 @@ FileAST(ext=[FuncDef(decl=Decl(name='func',
 
 ### Alignas
 
-字节对齐，即C11中的 `_Alignas` ，[[C标准笔记#6 7 5 字节对齐说明符]]，其拥有以下属性：
+字节对齐，即C11中的 `_Alignas` ，[[C标准学习笔记#6 7 5 字节对齐说明符]]，其拥有以下属性：
 - alignment*
 
 **alignment**
@@ -493,13 +493,13 @@ FileAST(ext=[FuncDef(decl=Decl(name='func',
 
 ### Compound
 
-[[C标准笔记#6 8 2 Compound statement 复合语句，即'块'，block]]
-![[C标准笔记#6 8 2 Compound statement 复合语句，即'块'，block]]
+[[C标准学习笔记#6 8 2 Compound statement 复合语句，即'块'，block]]
+![[C标准学习笔记#6 8 2 Compound statement 复合语句，即'块'，block]]
 
 
 ### CompoundLiteral
-[[C标准笔记#6.5.2.5 复合字面量(Compound literals)]]
-![[C标准笔记#6.5.2.5 复合字面量(Compound literals)]]
+[[C标准学习笔记#6.5.2.5 复合字面量(Compound literals)]]
+![[C标准学习笔记#6.5.2.5 复合字面量(Compound literals)]]
 
 Demo
 ```C
@@ -652,13 +652,13 @@ FileAST(ext=[Decl(name='a',
 #### `quals`
 `quals` 为对象的限定符，包含：
 
-- \[[[C标准笔记#^rbqfe0|限制说明符]]\]
+- \[[[C标准学习笔记#^rbqfe0|限制说明符]]\]
 	- `const`
 	- `volatile`
 	- `restrict`
 
 #### `align`
-即C语言中的字节对齐说明符：[[C标准笔记#6 7 5 字节对齐说明符]]
+即C语言中的字节对齐说明符：[[C标准学习笔记#6 7 5 字节对齐说明符]]
 
 Demo
 ```C
@@ -736,8 +736,8 @@ FileAST(ext=[Decl(name='a',
 ```
 
 #### `storge`
-storage` 为C语言的储存类型说明符，详见：[[C标准笔记#6.7.1 储存类型说明符]]
-- \[[[C标准笔记#6 7 1 储存类型说明符|储存类型说明符]]\]
+storage` 为C语言的储存类型说明符，详见：[[C标准学习笔记#6.7.1 储存类型说明符]]
+- \[[[C标准学习笔记#6 7 1 储存类型说明符|储存类型说明符]]\]
 	- `typedef`
 	- `extern`
 	- `static`
@@ -745,10 +745,10 @@ storage` 为C语言的储存类型说明符，详见：[[C标准笔记#6.7.1 储
 	- `auto`
 	- `register`
 当然，同笔记中所言：
-![[C标准笔记#^9zuwzp]]
+![[C标准学习笔记#^9zuwzp]]
 
 
-`funcspec` 为C语言的函数说明符，详见：[[C标准笔记#6.7.4 函数说明符]]
+`funcspec` 为C语言的函数说明符，详见：[[C标准学习笔记#6.7.4 函数说明符]]
 
 #### Demo
 
@@ -1273,8 +1273,8 @@ FileAST(ext=[Decl(name='obj',
 
 ### pragma
 
-[[C标准笔记#6.10.6 Pragma指令]]
-![[C标准笔记#6.10.6 Pragma指令]]
+[[C标准学习笔记#6.10.6 Pragma指令]]
+![[C标准学习笔记#6.10.6 Pragma指令]]
 
 Demo
 ```C

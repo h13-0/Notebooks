@@ -12,7 +12,7 @@ min_depth: 1
 
 1. <font color="#c00000">不可使用</font> `memcpy` 函数<font color="#c00000">拷贝</font>源内存片和目标内存片<font color="#c00000">有重叠的内存片</font>。如果重叠，则<font color="#c00000">结果未定义</font>。
 2. 当遇到源内存和目标重叠时，应当使用memmove函数，该函数实际上会将要复制的 `n` 个字节的内存拷贝到一个新区域上，然后再将这 `n` 个字节拷贝到目标区域上。效率会降低。
-参见：[[C标准笔记#7 24 2 1 memcpy函数]]、[[C标准笔记#7 24 2 2 memmove函数]]
+参见：[[C标准学习笔记#7 24 2 1 memcpy函数]]、[[C标准学习笔记#7 24 2 2 memmove函数]]
 
 
 
@@ -61,7 +61,7 @@ TODO: 检查空字符 `\0` 和空格字符` ` 是否有理解错误
 
 **引用**
 [^1]: 静态储存环境
-	[[C标准笔记#6.7.1 储存类型说明符]]
+	[[C标准学习笔记#6.7.1 储存类型说明符]]
 [^2]: 初始化
 	[[#6.7.9]]
 
@@ -187,18 +187,44 @@ long-long后缀可以为：
 ###### 6.5.3.4 sizeof和_Alignof运算符
 
 **限制**
-`sizeof` 运算符不能用于函数类型(参数不可为函数名)或不完备的变量类型，或含有位域的成员表达式。如：
-```C
-typedef struct {
-	int a:2;
-	int b:2;
-} test_t;
-
-
-
-```
-
+`sizeof` 运算符不能用于函数类型(参数不可为函数名)或不完备的变量类型，或用括号包裹的变量类型，或含有位域的成员表达式。
 `_Alignof` 运算符不能用于函数类型(参数不可为函数名)或不完备的变量类型。
+如：
+```C
+#include <stdio.h>
+
+typedef struct {
+	int a : 2;
+	int b : 2;
+} typea_t;
+
+typedef struct {
+	int a;
+	int b;
+} typeb_t;
+
+int main()
+{
+	typea_t typea;
+	typeb_t typeb;
+	
+	printf("testa_t: %lld\r\n", sizeof(typea_t));  //4
+	
+	//printf("testa_t: %lld\r\n", sizeof((typea_t)));//参数不可为含括号的类型
+	
+	//printf("testa_t: %lld\r\n", sizeof(typea.a));  //参数不可为含位域的成员
+	
+	printf("testa_t: %lld\r\n", sizeof(typeb.a));  //4
+	
+	//printf("testa_t: %lld\r\n", sizeof(main));     //参数不可为函数名
+	
+	return 0;
+}
+```
+**语义**
+
+
+
 #### 6.7 声明
 
 ##### 6.7.1 储存类型说明符
