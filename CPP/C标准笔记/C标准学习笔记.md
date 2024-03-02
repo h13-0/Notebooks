@@ -329,16 +329,11 @@ int main()
 int main() {
 	printf("%d\r\n", 5/3);  // 5/3=1.6667  => 1
 	printf("%d\r\n", -5/3); // -5/3/-1.667 => -1
+	printf("%d\r\n", -5/3); // -5/3/-1.667 => -1
 }
 ```
 5. <span style="background:#fff88f"><font color="#c00000">整数除法的结果是整数</font></span>，而非先算出小数再转整数。
-```C
-#include <stdio.h>
-int main() {
-	printf("%d\r\n", 5/3);      // 5/3=1.6667  => 1
-	printf("%d\r\n", 5.1/3.0);  // x86上：
-}
-```
+
 
 
 
