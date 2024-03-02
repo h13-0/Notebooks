@@ -4,16 +4,16 @@
 		{"id":"f9df843c1d2dcd38","x":250,"y":-99,"width":190,"height":50,"type":"text","text":"构造类型"},
 		{"id":"160135ad4b4f189c","x":250,"y":21,"width":190,"height":50,"type":"text","text":"指针类型"},
 		{"id":"9e503b274cac33e0","x":250,"y":120,"width":190,"height":50,"type":"text","text":"空类型(void)"},
-		{"id":"43d2efbff39a63bc","x":584,"y":-533,"width":250,"height":60,"type":"text","text":"数值类型"},
-		{"id":"3bfaaba3e365ec5a","x":584,"y":-394,"width":250,"height":60,"type":"text","text":"字符类型(char)"},
-		{"id":"987a14a0f41d8adb","x":912,"y":-642,"width":250,"height":60,"type":"text","text":"实型"},
-		{"id":"0cf6caf6ed1cbf16","x":1241,"y":-713,"width":250,"height":60,"type":"text","text":"整形"},
-		{"id":"2c5ae856ec18b452","x":1248,"y":-586,"width":250,"height":60,"type":"text","text":"浮点型"},
-		{"id":"f967943495427706","x":576,"y":-279,"width":250,"height":60,"type":"text","text":"数组"},
-		{"id":"9b7ce4a70ef719d7","x":586,"y":-181,"width":250,"height":60,"type":"text","text":"结构体"},
-		{"id":"fa390a994dcd7add","x":592,"y":-69,"width":250,"height":60,"type":"text","text":"共用体(union)"},
-		{"id":"0cf78b69789afd49","x":593,"y":29,"width":250,"height":60,"type":"text","text":"枚举(enum)"},
-		{"id":"54dd1a58db0aec32","x":250,"y":-446,"width":190,"height":52,"type":"text","text":"基本类型"}
+		{"id":"43d2efbff39a63bc","x":584,"y":-533,"width":196,"height":53,"type":"text","text":"数值类型"},
+		{"id":"3bfaaba3e365ec5a","x":584,"y":-394,"width":196,"height":54,"type":"text","text":"字符类型(char)"},
+		{"id":"9b7ce4a70ef719d7","x":586,"y":-181,"width":187,"height":50,"type":"text","text":"结构体"},
+		{"id":"54dd1a58db0aec32","x":250,"y":-446,"width":190,"height":52,"type":"text","text":"基本类型"},
+		{"id":"f967943495427706","x":586,"y":-280,"width":187,"height":50,"type":"text","text":"数组"},
+		{"id":"fa390a994dcd7add","x":586,"y":-74,"width":188,"height":50,"type":"text","text":"共用体(union)"},
+		{"id":"0cf78b69789afd49","x":586,"y":21,"width":187,"height":50,"type":"text","text":"枚举(enum)"},
+		{"id":"8f7343c3008328d3","x":909,"y":-533,"width":368,"height":53,"type":"text","text":"整型(short、int、long)"},
+		{"id":"871ae72434c93a17","x":909,"y":-444,"width":368,"height":50,"type":"text","text":"复数类型(包含虚数)"},
+		{"id":"987a14a0f41d8adb","x":909,"y":-640,"width":368,"height":62,"type":"text","text":"实型，覆盖R、NAN、Inf\n(float、double、long double)"}
 	],
 	"edges":[
 		{"id":"596c0340646a7803","fromNode":"8b3f13f6efe27a59","fromSide":"right","toNode":"54dd1a58db0aec32","toSide":"left"},
@@ -23,11 +23,11 @@
 		{"id":"9c159ac1d8fac40c","fromNode":"54dd1a58db0aec32","fromSide":"right","toNode":"43d2efbff39a63bc","toSide":"left"},
 		{"id":"19e640b047031d7c","fromNode":"54dd1a58db0aec32","fromSide":"right","toNode":"3bfaaba3e365ec5a","toSide":"left"},
 		{"id":"6fdb098bd6810477","fromNode":"43d2efbff39a63bc","fromSide":"right","toNode":"987a14a0f41d8adb","toSide":"left"},
-		{"id":"3f58bc560f34da45","fromNode":"987a14a0f41d8adb","fromSide":"right","toNode":"0cf6caf6ed1cbf16","toSide":"left"},
-		{"id":"7b142a79d284bb6b","fromNode":"987a14a0f41d8adb","fromSide":"right","toNode":"2c5ae856ec18b452","toSide":"left"},
 		{"id":"d2c346f35c501f98","fromNode":"f9df843c1d2dcd38","fromSide":"right","toNode":"f967943495427706","toSide":"left"},
 		{"id":"7b664ffafa1c5d08","fromNode":"f9df843c1d2dcd38","fromSide":"right","toNode":"9b7ce4a70ef719d7","toSide":"left"},
 		{"id":"9b92da5101351d3d","fromNode":"f9df843c1d2dcd38","fromSide":"right","toNode":"fa390a994dcd7add","toSide":"left"},
-		{"id":"8873e693a13f22d7","fromNode":"f9df843c1d2dcd38","fromSide":"right","toNode":"0cf78b69789afd49","toSide":"left"}
+		{"id":"8873e693a13f22d7","fromNode":"f9df843c1d2dcd38","fromSide":"right","toNode":"0cf78b69789afd49","toSide":"left"},
+		{"id":"a2d354a46171d8b4","fromNode":"43d2efbff39a63bc","fromSide":"right","toNode":"8f7343c3008328d3","toSide":"left"},
+		{"id":"7759a6549336e27b","fromNode":"43d2efbff39a63bc","fromSide":"right","toNode":"871ae72434c93a17","toSide":"left"}
 	]
 }
