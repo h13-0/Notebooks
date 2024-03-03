@@ -523,3 +523,9 @@ void *memmove(void *s1, const void *s2, size_t n);
 返回值：
 	`memmove` 函数将返回 `s1` 指针。
 
+注：
+1. 在Windows的C运行库中(`msvcrt`)， `memcpy` 实质上就是 `memmove` ，虽然微软在MSDN中依旧是按照C语言标准进行描述。
+2. 在OpenBSD系统中，如果 `memcpy` 的内存区域重叠会导致崩溃。
+3. 效率上， `memcpy` 比 `memmove` 仅少了一个分支。
+4. [Linus对这两个函数的评价](https://bugzilla.redhat.com/show_bug.cgi?id=638477#c129)(由于Adobe错误使用了 `memcpy` 从而导致在一次 `glibc` 升级后触发了一些bug)
+5. 
