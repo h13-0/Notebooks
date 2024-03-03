@@ -2,6 +2,8 @@
 	They are `Notebooks` but not `Books`, so there must be a lot of mistakes and omissions.
 
 此笔记的在线浏览网址为：[https://notebooks.h13.tech/](https://notebooks.h13.tech/).
+此笔记的Gitee仓库为：[https://gitee.com/h13/Notebooks](https://gitee.com/h13/Notebooks)
+此笔记的Github仓库为Private。
 
 ## 在线阅读
 
