@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "计算机网络/第二章 物理层/第二章 物理层.md",
+                "file": "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
                 "mode": "source",
                 "source": false
               }
@@ -182,6 +182,8 @@
   },
   "active": "8a133eb049e5865e",
   "lastOpenFiles": [
+    "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
+    "计算机网络/第二章 物理层/第二章 物理层.md",
     "Resources/Pasted image 20240303192608.png",
     "Resources/Pasted image 20240303192030.png",
     "CPP/C标准笔记/C标准学习笔记.md",
@@ -209,7 +211,6 @@
     "CPP/编译器限定实现/gcc.md",
     "CMake/CMake 常用函数.md",
     "土木常识/土木常识.md",
-    "土木常识/计算软件/SACS海工计算软件.md",
     "计算机网络/Resources/Pasted image 20240302222734.png",
     "Resources/Pasted image 20240203021517.png",
     "CPP/Resources/Pasted image 20240302155918.png",
@@ -218,7 +219,6 @@
     "计算机网络/Resources/Pasted image 20240301211723.png",
     "计算机网络/Resources/Pasted image 20240301202429.png",
     "生活常识/Resources/Pasted image 20240227005439.png",
-    "生活常识/Resources/chrome_Oas0fwGQjX.png",
     "生活常识/Resources",
     "生活常识/生物",
     "生活常识/数码",
