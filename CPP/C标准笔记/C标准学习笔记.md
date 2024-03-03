@@ -1,18 +1,14 @@
 #C-Language #编译原理 
 
+	Standards are paper. I use paper to wipe my butt every day. 
+	That's how much that paper is worth. —— Linus Torvalds.
+
 ## 目录
 ```toc
 min_depth: 1
 ```
 
 ## 笔记部分
-
-
-### 重叠内存的拷贝(memcpy、memmove)
-
-1. <font color="#c00000">不可使用</font> `memcpy` 函数<font color="#c00000">拷贝</font>源内存片和目标内存片<font color="#c00000">有重叠的内存片</font>。如果重叠，则<font color="#c00000">结果未定义</font>。
-2. 当遇到源内存和目标重叠时，应当使用memmove函数，该函数实际上会将要复制的 `n` 个字节的内存拷贝到一个新区域上，然后再将这 `n` 个字节拷贝到目标区域上。效率会降低。
-参见：[[C标准学习笔记#7 24 2 1 memcpy函数]]、[[C标准学习笔记#7 24 2 2 memmove函数]]
 
 
 
@@ -547,6 +543,14 @@ char *strcpy(char * restrict s1,
 注：
 1. `strcpy` 函数操作的字符串要以 `\0` 结尾。
 
-###### 7.24.4 
+###### 7.24.4 strncpy函数
+
+概要：
+```C
+
+```
+
+
+
 
 
