@@ -577,4 +577,16 @@ char *strcat(char * restrict s1,
 返回值：
 	`strcat` 函数将返回 `s1` 指针。
 
+###### 7.24.2.2 strncat函数
 
+概要：
+```C
+#include <string.h>  
+char *strncat(char * restrict s1, 
+	const char * restrict s2, 
+	size_t n);
+```
+
+描述：
+1. `strncat` 函数从 `s2` 指向的数组到 `s1` 指向的字符串的末尾追加不超过 `n` 个字符(空字符和跟随它的字符不被追加)。 `s2` 的初始字符覆盖 `s1` 末尾的 `null` 字符。结果总是附加一个终止空字符(因此，最终可以出现在 `s1` 指向的数组中的字符数的最大值是 `strlen (s1) + n + 1` )。
+2. 因此
