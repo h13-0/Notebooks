@@ -44,7 +44,7 @@
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -118,7 +118,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "CPP/C标准笔记/C标准学习笔记.md",
+                "file": "CPP/应试笔记与八股.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -135,7 +135,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "CPP/C标准笔记/C标准学习笔记.md",
+                "file": "CPP/应试笔记与八股.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -158,7 +158,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "CPP/C标准笔记/C标准学习笔记.md"
+                "file": "CPP/应试笔记与八股.md"
               }
             }
           }
@@ -180,10 +180,10 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "8a133eb049e5865e",
+  "active": "bc2f095ad9265bd7",
   "lastOpenFiles": [
-    "CPP/应试笔记与八股.md",
     "CPP/C标准笔记/C标准学习笔记.md",
+    "CPP/应试笔记与八股.md",
     "计算机网络/Resources/Pasted image 20240302222734.png",
     "Resources/Pasted image 20240203021517.png",
     "Readme.md",
