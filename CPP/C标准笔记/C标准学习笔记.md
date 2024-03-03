@@ -603,6 +603,8 @@ char *strncat(char * restrict s1,
 注：
 1. 库函数并不会检查目标的内存边界，因此<font color="#c00000">可能会导致溢出</font>。
 
+##### 7.24.3 比较函数
+
 
 
 
