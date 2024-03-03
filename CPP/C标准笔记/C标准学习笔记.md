@@ -528,4 +528,25 @@ void *memmove(void *s1, const void *s2, size_t n);
 2. 在OpenBSD系统中，如果 `memcpy` 的内存区域重叠会导致崩溃。
 3. 效率上， `memcpy` 比 `memmove` 仅少了一个分支。
 4. [Linus对这两个函数的评价](https://bugzilla.redhat.com/show_bug.cgi?id=638477#c129)(由于Adobe错误使用了 `memcpy` 从而导致在一次 `glibc` 升级后触发了一些bug)
-5. 
+
+###### 7.24.2.3 strcpy函数
+
+概要：
+```C
+#include <string.h>  
+char *strcpy(char * restrict s1,  
+	const char * restrict s2);
+```
+
+描述：
+	`strcpy` 函数将 `s2` 指向的字符串(包括终止空字符)复制到 `s1` 指向的数组中。<font color="#c00000">如果复制发生在重叠的对象之间，则行为是未定义的</font>。
+
+返回值：
+	`strcpy` 函数将返回 `s1` 指针。
+
+注：
+1. `strcpy` 函数操作的字符串要以 `\0` 结尾。
+
+###### 7.24.4 
+
+
