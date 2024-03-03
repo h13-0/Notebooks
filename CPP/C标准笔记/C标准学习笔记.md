@@ -491,7 +491,7 @@ end :
 
 
 
-#### 7.24 字符串句柄<string.h>
+#### 7.24 字符串库<string.h>
 
 ##### 7.24.2 拷贝函数
 
@@ -522,3 +522,4 @@ void *memmove(void *s1, const void *s2, size_t n);
 
 返回值：
 	`memmove` 函数将返回 `s1` 指针。
+
