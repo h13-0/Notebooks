@@ -547,10 +547,21 @@ char *strcpy(char * restrict s1,
 
 概要：
 ```C
-
+#include <string.h>  
+char *strncpy(char * restrict s1, 
+	const char * restrict s2, 
+	size_t n);
 ```
 
+描述：
+1. `strncpy` 函数将不超过 `n` 个字符(空字符后面的字符不复制)从 `s2` 指向的数组复制到 `s1` 指向的数组。<font color="#c00000">如果复制发生在重叠的对象之间，则行为是未定义的</font>。
+2. 如果 `s2` 指向的数组是一个比 `n` 个字符短的字符串，则空字符将附加到 `s1` 指向的数组中的副本，直到所有字符中的 `n` 个字符都写入(即后尾全为 `\0` )。
 
+返回值：
+	`strncpy` 函数将返回 `s1` 指针。
 
+##### 7.24.2 连接函数(concatenation function)
+
+###### 7.24.2.1 strcat函数
 
 
