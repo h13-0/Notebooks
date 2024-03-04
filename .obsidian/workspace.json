@@ -4,71 +4,22 @@
     "type": "split",
     "children": [
       {
-        "id": "8bb4e0edd449a179",
+        "id": "90102a931d1481e1",
         "type": "tabs",
         "children": [
           {
-            "id": "e2605194b2799686",
+            "id": "93657764d200fc52",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CPP/应试笔记与八股.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "f1cd529bb4ab96be",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "CPP/应试笔记与八股.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "bc2f095ad9265bd7",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "CPP/C标准笔记/C标准学习笔记.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "6b3054c8ae8d780d",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "CPP/C标准笔记/C标准学习笔记.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "38bee42c3c24292b",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "CPP/C标准笔记/C标准学习笔记.md",
+                "file": "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ],
-        "currentTab": 3
+        ]
       }
     ],
     "direction": "vertical"
@@ -142,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "CPP/C标准笔记/C标准学习笔记.md",
+                "file": "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -159,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "CPP/C标准笔记/C标准学习笔记.md",
+                "file": "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -182,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "CPP/C标准笔记/C标准学习笔记.md"
+                "file": "计算机网络/第三章 数据链路层/第三章 数据链路层.md"
               }
             }
           }
@@ -204,32 +155,8 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "6b3054c8ae8d780d",
+  "active": "93657764d200fc52",
   "lastOpenFiles": [
-    "CPP/应试笔记与八股.md",
-    "CPP/C标准笔记/C标准学习笔记.md",
-    "数据库系统概述/数据库系统概述.md",
-    "计算机网络/Resources/Pasted image 20240304161222.png",
-    "数据库系统概述",
-    "计算机网络/Resources/Pasted image 20240304131032.png",
-    "土木常识/Resources/Pasted image 20230415230426.png",
-    "计算机网络/第二章 物理层/第二章 物理层.md",
-    "土木常识/Resources/Pasted image 20230417112708.png",
-    "土木常识/Resources/Pasted image 20230418210304.png",
-    "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
-    "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
-    "土木常识/Resources/Pasted image 20230415215625.png",
-    "计算机网络/Resources/Pasted image 20240304150312.png",
-    "计算机网络/Resources/Pasted image 20240304150024.png",
-    "Resources/Pasted image 20240304145918.png",
-    "Resources/Pasted image 20240304145854.png",
-    "计算机网络/第一章 计算机网络体系结构/~$$OSI七层协议数据传输图.~vsdx",
-    "计算机网络/第三章 数据链路层/~$$数据链路层水平方向.~vsdx",
-    "计算机网络/第三章 数据链路层/数据链路层水平方向.vsdx",
-    "计算机网络/第三章 数据链路层/OSI七层协议数据传输图.vsdx",
-    "计算机网络/计算机网络概述.md",
-    "计算机网络体系结构.md",
-    "计算机网络/第三章 数据链路层",
     "Readme.md",
     "Others/VisualStudio/Plugins/未命名.md",
     "Others/PythonLibs/pycpraser/pycpraser.md",
@@ -247,8 +174,32 @@
     "Others/协程/协程.md",
     "Others/线程锁/线程锁与信号量.md",
     "Math/傅里叶变换.md",
+    "CPP/应试笔记与八股.md",
     "CPP/Resources/C数据类型.canvas",
     "CPP/C标准笔记/C与C++标准.md",
+    "CPP/C标准笔记/C标准学习笔记.md",
+    "CPP/C标准笔记/C++ 修饰符类型.md",
+    "CPP/编译器限定实现/gcc.md",
+    "CMake/CMake 常用函数.md",
+    "土木常识/土木常识.md",
+    "土木常识/计算软件/SACS海工计算软件.md",
+    "数据库系统概述/数据库系统概述.md",
+    "计算机网络/Resources/Pasted image 20240304161222.png",
+    "数据库系统概述",
+    "计算机网络/Resources/Pasted image 20240304131032.png",
+    "土木常识/Resources/Pasted image 20230415230426.png",
+    "土木常识/Resources/Pasted image 20230417112708.png",
+    "土木常识/Resources/Pasted image 20230418210304.png",
+    "土木常识/Resources/Pasted image 20230415215625.png",
+    "计算机网络/Resources/Pasted image 20240304150312.png",
+    "计算机网络/Resources/Pasted image 20240304150024.png",
+    "Resources/Pasted image 20240304145918.png",
+    "Resources/Pasted image 20240304145854.png",
+    "计算机网络/第一章 计算机网络体系结构/~$$OSI七层协议数据传输图.~vsdx",
+    "计算机网络/第三章 数据链路层/~$$数据链路层水平方向.~vsdx",
+    "计算机网络/第三章 数据链路层/数据链路层水平方向.vsdx",
+    "计算机网络/第三章 数据链路层/OSI七层协议数据传输图.vsdx",
+    "计算机网络/第三章 数据链路层",
     "生活常识/Resources",
     "生活常识/生物",
     "生活常识/数码",
