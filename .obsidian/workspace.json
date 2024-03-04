@@ -25,7 +25,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "计算机网络/第二章 物理层/第二章 物理层.md",
+                "file": "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
                 "mode": "source",
                 "source": false
               }
@@ -118,7 +118,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "计算机网络/第二章 物理层/第二章 物理层.md",
+                "file": "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -135,7 +135,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "计算机网络/第二章 物理层/第二章 物理层.md",
+                "file": "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -158,7 +158,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "计算机网络/第二章 物理层/第二章 物理层.md"
+                "file": "计算机网络/第三章 数据链路层/第三章 数据链路层.md"
               }
             }
           }
@@ -182,9 +182,14 @@
   },
   "active": "65aee6c9c19ceb5c",
   "lastOpenFiles": [
+    "计算机网络/计算机网络概述.md",
+    "计算机网络体系结构.md",
+    "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
+    "计算机网络/第二章 物理层/第二章 物理层.md",
+    "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
+    "计算机网络/第三章 数据链路层",
     "计算机网络/Resources/Pasted image 20240303225252.png",
     "计算机网络/Resources/Pasted image 20240303225219.png",
-    "计算机网络/第二章 物理层/第二章 物理层.md",
     "计算机网络/Resources/Pasted image 20240303225401.png",
     "计算机网络/Resources/Pasted image 20240303222609.png",
     "Readme.md",
@@ -209,9 +214,6 @@
     "CPP/C标准笔记/C与C++标准.md",
     "CPP/C标准笔记/C标准学习笔记.md",
     "CPP/C标准笔记/C++ 修饰符类型.md",
-    "CPP/编译器限定实现/gcc.md",
-    "CMake/CMake 常用函数.md",
-    "土木常识/土木常识.md",
     "计算机网络/Resources/Pasted image 20240303223223.png",
     "计算机网络/Resources/Pasted image 20240303223203.png",
     "计算机网络/Resources/Pasted image 20240303222920.png",
@@ -226,7 +228,6 @@
     "生活常识/国家标准",
     "数据结构算法",
     "Others/Obsidian/主题",
-    "Others/NAS",
-    "计算机网络/第二章 物理层"
+    "Others/NAS"
   ]
 }
