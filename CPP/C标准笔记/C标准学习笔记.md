@@ -494,6 +494,39 @@ end :
 
 ##### 7.21.6 格式化输入输出
 
+##### 7.21.7 字符输入输出函数
+
+
+###### 7.21.7.5 getc函数
+
+概要：
+```C
+#include <stdio.h>  
+int getc(FILE *stream);
+```
+
+描述：
+1. `getc` 函数等价于 `fgetc` ，是 `fgetc` 的通过宏的实现。但是如果它被当做宏来调用时，它可能不止一次操作 `stream` ，因此参数绝不应该是带有<font color="#c00000">副操作</font>的表达式。副操作例如：
+```C
+#include <stdio.h>
+#define MACRO_SQRT(x) x*x 
+
+int func_sqrt(int x) 
+{
+	return x*x;
+} 
+
+int main() {
+ int x = 10,y=10;
+ int xx,yy;
+ xx = func_sqrt(++x);
+ printf("xx=%d,x=%d\n",xx,x); yy=MACRO_SQRT(++y); printf("yy=%d,y=%d\n",yy,y); return 0; }
+
+
+```
+
+而
+
 
 
 #### 7.24 字符串库<string.h>
