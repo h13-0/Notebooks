@@ -506,7 +506,9 @@ int getc(FILE *stream);
 ```
 
 描述：
-1. `getc` 函数等价于 `fgetc` ，是 `fgetc` 的通过宏的实现。但是如果它被当做宏来调用时，它可能不止一次操作 `stream` ，因此参数绝不应该是带有<font color="#c00000">副操作</font>的表达式。副操作例如：
+1. `getc` 函数等价于 `fgetc` ，是 `fgetc` 的通过宏的实现。但是如果它被当做宏来调用时，它可能不止一次操作 `stream` ，因此参数绝不应该是带有<font color="#c00000">副操作</font>的表达式。
+
+<font color="#c00000">副操作</font>例如：
 ```C
 #include <stdio.h>
 #define MACRO_SQRT(x) x*x 
@@ -517,16 +519,39 @@ int func_sqrt(int x)
 } 
 
 int main() {
- int x = 10,y=10;
- int xx,yy;
- xx = func_sqrt(++x);
- printf("xx=%d,x=%d\n",xx,x); yy=MACRO_SQRT(++y); printf("yy=%d,y=%d\n",yy,y); return 0; }
-
-
+	int x = 10,y = 10;
+	int xx,yy;
+	xx = func_sqrt(++x);
+	printf("xx=%d,x=%d\n",xx,x);  //xx = 121
+	yy = MACRO_SQRT(++y);
+	printf("yy=%d,y=%d\n",yy,y);  //yy = (++y)*(++y) => UB; ++y就是副操作。
+	return 0;
+}
+```
+而 `getc` 和 `fgetc` 之间的关系就类似于上方程序中 `MACRO_SQRT` 和 `func_sqrt` 的关系，当出现类似于如下操作就可能出现问题：
+```C
+FILE streams[] = { ... };
+int index = 0;
+while(index < n)
+	getc(streams[index++]); //不要这样做，因为执行一次getc可能会触发多次index++
 ```
 
-而
+返回值：
+1. `getc` 函数返回由流指向的输入流中的下一个字符。如果流处于文件结束位置，则设置流的文件结束指示符，并且 `getc` 返回 `EOF`。如果发生读取错误，则设置流的错误指示符，并且 `getc` 返回 `EOF` 。
 
+###### 7.21.7.6 getchar函数
+
+概要：
+```C
+#include <stdio.h>  
+int getchar(void);
+```
+
+描述：
+1. `getchar()` 函数等价于 `getc(stdin)` 。
+
+返回值：
+1. `getchar` 函数返回 `stdin` 指向的输入流中的下一个字符。如果流处于文件结束位置，则设置流的文件结束指示符，并且 `getchar` 返回 `EOF` 。如果发生读取错误，则设置流的错误指示符，并且 `getchar` 返回 `EOF` 。
 
 
 #### 7.24 字符串库<string.h>
