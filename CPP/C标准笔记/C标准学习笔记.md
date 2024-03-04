@@ -505,13 +505,22 @@ int fgetc(FILE *stream);
 ```
 
 描述：
-1. 如果输入 `stream` 没有设置 `EOF` 指示符，并且存在下一个字符，`fgetc` 函数将获得该字符作为 `unsigned char` 转换为 `int` ，并推进该流的相关文件位置指示符(如果已定义)。
+1. 如果输入 `stream` 没有设置 `EOF` 指示符，并且存在下一个字符，`fgetc` 函数将获得该字符作为 `unsigned char` 转换为 `int` (本质还是 `char` ，只是类型变了)，并推进该流的相关文件位置指示符(如果已定义)。
 
 返回值：
 1. 如果设置了 `stream` 的 `EOF` 指示符，或者 `stream` 处于 `EOF` 位置， `fgetc` 函数将返回 `EOF` 。否则 `fgetc` 函数将返回由 `stream` 指向的输入流中的下一个字符。如果发生读取错误，则设置流的错误指示符，并返回 `EOF` 。其中，读到的 `EOF` 是由于文件到达末尾还是读取时发生错误可以使用 `feof` 或 `ferror` 函数区分。
 
 ###### 7.21.7.2 fgets函数
 
+概要：
+```C
+#include <stdio.h>  
+char *fgets(char * restrict s, int n,  
+	FILE * restrict stream);
+```
+
+描述：
+1. `fgets` 函数从流中读取至多 `n - 1` 个字符并存入 `s` 所指字符串中。在新行字符之后或文件结束之后不会读取任何其他字符(其中新行字符会被保留)。并会在字符串末尾立即添加一个 `\0` 字符。
 
 
 ###### 7.21.7.5 getc函数
@@ -539,9 +548,9 @@ int main() {
 	int x = 10,y = 10;
 	int xx,yy;
 	xx = func_sqrt(++x);
-	printf("xx=%d,x=%d\n",xx,x);  //xx = 121
+	printf("xx = %d, x = %d\n",xx,x);  //xx = 121, x = 11
 	yy = MACRO_SQRT(++y);
-	printf("yy=%d,y=%d\n",yy,y);  //yy = (++y)*(++y) => UB; ++y就是副操作。
+	printf("yy = %d, y = %d\n",yy,y);  //yy = (++y)*(++y) => UB, y = 12; ++y就是副操作。
 	return 0;
 }
 ```
