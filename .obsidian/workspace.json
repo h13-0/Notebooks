@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
+                "file": "数据结构算法/数据结构算法基础.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
+                "file": "数据结构算法/数据结构算法基础.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
+                "file": "数据结构算法/数据结构算法基础.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "计算机网络/第三章 数据链路层/第三章 数据链路层.md"
+                "file": "数据结构算法/数据结构算法基础.md"
               }
             }
           }
@@ -157,6 +157,7 @@
   },
   "active": "93657764d200fc52",
   "lastOpenFiles": [
+    "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
     "Readme.md",
     "Others/VisualStudio/Plugins/未命名.md",
     "Others/PythonLibs/pycpraser/pycpraser.md",
@@ -183,7 +184,6 @@
     "CMake/CMake 常用函数.md",
     "土木常识/土木常识.md",
     "土木常识/计算软件/SACS海工计算软件.md",
-    "数据库系统概述/数据库系统概述.md",
     "计算机网络/Resources/Pasted image 20240304161222.png",
     "数据库系统概述",
     "计算机网络/Resources/Pasted image 20240304131032.png",
