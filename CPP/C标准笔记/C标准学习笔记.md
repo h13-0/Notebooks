@@ -355,9 +355,13 @@ printf("This line is: %d\r\n", __LINE__); //此处逗号也不生效。
 ```
 3. 逗号表达式可以在带括号的表达式中使用，也可以在条件运算符的第二表达式中使用。
 ```C
-func(a, (t=3, t+2), c);  //等价于 fuc(a, 5, c);
+int a = 5;
+func(a, (t=3, t+2), c);  //等价于 fuc(5, 5, c);
 
-
+if(a, a+1 > 5)
+{
+    printf("value of `a, a+1` is 6\r\n");
+}
 ```
 
 
