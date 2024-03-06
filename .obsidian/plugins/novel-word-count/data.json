@@ -5007,19 +5007,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 5770,
+      "wordCount": 5773,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 19.233333333333334,
-      "characterCount": 14302,
-      "nonWhitespaceCharacterCount": 12376,
-      "readingTimeInMinutes": 13.338415094339624,
+      "pageCount": 19.243333333333332,
+      "characterCount": 14311,
+      "nonWhitespaceCharacterCount": 12383,
+      "readingTimeInMinutes": 13.346188679245284,
       "linkCount": 8,
       "embedCount": 0,
       "aliases": null,
       "createdDate": 1678194750833,
-      "modifiedDate": 1709717688950,
-      "sizeInBytes": 24540
+      "modifiedDate": 1709736731678,
+      "sizeInBytes": 24551
     },
     "CPP/C标准笔记/C++ 修饰符类型.md": {
       "isCountable": true,
@@ -5083,15 +5083,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 4.43,
-      "characterCount": 2297,
+      "characterCount": 2296,
       "nonWhitespaceCharacterCount": 2042,
       "readingTimeInMinutes": 2.8584150943396227,
       "linkCount": 0,
       "embedCount": 2,
       "aliases": null,
       "createdDate": 1709733222370,
-      "modifiedDate": 1709736142121,
-      "sizeInBytes": 5052
+      "modifiedDate": 1709736324244,
+      "sizeInBytes": 5051
     }
   }
 }
