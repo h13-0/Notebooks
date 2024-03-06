@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "数据结构算法/数据结构算法基础.md",
+                "file": "Math/最大公约数、最小公倍数.md",
                 "mode": "source",
                 "source": false
               }
@@ -129,7 +129,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "数据结构算法/数据结构算法基础.md",
+                "file": "Math/最大公约数、最小公倍数.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -146,7 +146,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "数据结构算法/数据结构算法基础.md",
+                "file": "Math/最大公约数、最小公倍数.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -169,7 +169,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "数据结构算法/数据结构算法基础.md"
+                "file": "Math/最大公约数、最小公倍数.md"
               }
             }
           }
@@ -193,9 +193,9 @@
   },
   "active": "93657764d200fc52",
   "lastOpenFiles": [
+    "数据结构算法/数据结构算法基础.md",
     "Math/最大公约数、最小公倍数.md",
     "CPP/C标准笔记/C标准学习笔记.md",
-    "数据结构算法/数据结构算法基础.md",
     "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
     "Math/复变函数.md",
     "CPP/应试笔记与八股.md",
