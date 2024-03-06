@@ -1,8 +1,10 @@
 {
-  "settingsVersion": "1.8.0",
-  "makeOfflineCompatible": true,
+  "settingsVersion": "1.8.1-2b",
+  "makeOfflineCompatible": false,
   "inlineAssets": false,
-  "includePluginCSS": "",
+  "includePluginCSS": [
+    "novel-word-count"
+  ],
   "includeSvelteCSS": true,
   "titleProperty": "title",
   "customHeadContentPath": "",
@@ -11,6 +13,7 @@
   "sidebarWidth": "20em",
   "minOutlineCollapse": 2,
   "startOutlineCollapsed": false,
+  "relativeOutlineLinks": false,
   "allowFoldingHeadings": true,
   "allowFoldingLists": true,
   "allowResizingSidebars": true,
@@ -18,7 +21,7 @@
   "minifyHTML": true,
   "makeNamesWebStyle": true,
   "onlyExportModified": false,
-  "deleteOldFiles": false,
+  "deleteOldFiles": true,
   "addThemeToggle": true,
   "addOutline": true,
   "addFileNav": true,
@@ -48,6 +51,15 @@
     [
       "all"
     ]
+  ],
+  "filePickerBlacklist": [
+    "(^|\\/)node_modules\\/",
+    "(^|\\/)dist\\/",
+    "(^|\\/)dist-ssr\\/",
+    "(^|\\/)\\.vscode\\/"
+  ],
+  "filePickerWhitelist": [
+    "\\.\\w+$"
   ],
   "includeThemeToggle": true,
   "includeOutline": true,
