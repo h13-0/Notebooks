@@ -603,7 +603,7 @@ int main() {
 FILE streams[] = { ... };
 int index = 0;
 while(index < n)
-	getc(streams[index++]); //不要这样做，因为执行一次getc可能会触发多次index++
+	getc(&streams[index++]); //不要这样做，因为执行一次getc可能会触发多次index++
 ```
 
 返回值：

@@ -4921,15 +4921,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 19.263333333333332,
-      "characterCount": 14343,
-      "nonWhitespaceCharacterCount": 12410,
+      "characterCount": 14344,
+      "nonWhitespaceCharacterCount": 12411,
       "readingTimeInMinutes": 13.361735849056602,
       "linkCount": 8,
       "embedCount": 0,
       "aliases": null,
       "createdDate": 1678194750833,
-      "modifiedDate": 1709792508029,
-      "sizeInBytes": 24591
+      "modifiedDate": 1709817043806,
+      "sizeInBytes": 24592
     },
     "CPP/C标准笔记/C与C++标准.md": {
       "isCountable": true,
