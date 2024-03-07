@@ -4903,15 +4903,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 23.836666666666666,
-      "characterCount": 24461,
+      "characterCount": 24458,
       "nonWhitespaceCharacterCount": 18786,
       "readingTimeInMinutes": 17.606188679245285,
       "linkCount": 11,
       "embedCount": 5,
       "aliases": null,
       "createdDate": 1706787122806,
-      "modifiedDate": 1709803638160,
-      "sizeInBytes": 36060
+      "modifiedDate": 1709803781665,
+      "sizeInBytes": 36057
     },
     "CPP/C标准笔记/C标准学习笔记.md": {
       "isCountable": true,
