@@ -37,7 +37,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CPP/C标准笔记/C标准学习笔记.md",
+                "file": "CPP/应试笔记与八股.md",
                 "mode": "source",
                 "source": false
               }
@@ -49,14 +49,14 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CPP/应试笔记与八股.md",
+                "file": "CPP/C标准笔记/C标准学习笔记.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -192,10 +192,11 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "f3a399a8e144517f",
+  "active": "12d0d310b7f07ea5",
   "lastOpenFiles": [
     "CPP/C标准笔记/C标准学习笔记.md",
     "数据结构算法/数据结构算法基础.md",
+    "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
     "CPP/应试笔记与八股.md",
     "Resources/Pasted image 20240307142115.png",
     "计算机网络/应试笔记与八股.md",
