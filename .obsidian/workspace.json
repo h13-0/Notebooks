@@ -25,7 +25,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CPP/应试笔记与八股.md",
+                "file": "数据结构算法/数据结构算法基础.md",
                 "mode": "source",
                 "source": false
               }
@@ -106,7 +106,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "CPP/应试笔记与八股.md",
+                "file": "数据结构算法/数据结构算法基础.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -123,7 +123,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "CPP/应试笔记与八股.md",
+                "file": "数据结构算法/数据结构算法基础.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -146,7 +146,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "CPP/应试笔记与八股.md"
+                "file": "数据结构算法/数据结构算法基础.md"
               }
             }
           }
@@ -170,6 +170,7 @@
   },
   "active": "fb33249a8691842d",
   "lastOpenFiles": [
+    "CPP/应试笔记与八股.md",
     "CPP/C标准笔记/C标准学习笔记.md",
     "计算机网络/应试笔记与八股.md",
     "Others/协程/协程.md",
@@ -195,7 +196,6 @@
     "Others/Obsidian/主题/禁用表格换行(保持表格原宽，并添加滚动条).md",
     "生活常识/国家标准/生活常识的国家标准.md",
     "生活常识/常见物质生产方式.md",
-    "Others/MS .NET Framework/Core and Framework.md",
     "CPP/Resources/C数据类型.canvas",
     "计算机网络/Resources/Pasted image 20240305171232.png",
     "计算机网络/Resources/Pasted image 20240305172349.png",
