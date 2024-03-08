@@ -3,8 +3,7 @@
   "makeOfflineCompatible": false,
   "inlineAssets": false,
   "includePluginCSS": [
-    "novel-word-count",
-    "code-emitter"
+    "novel-word-count"
   ],
   "includeSvelteCSS": true,
   "titleProperty": "title",
