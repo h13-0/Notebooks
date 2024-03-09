@@ -683,7 +683,7 @@ char *strcpy(char * restrict s1,
 1. `strcpy` 函数操作的字符串要以 `\0` 结尾。
 2. 库函数并不会检查目标的内存边界，因此<font color="#c00000">可能会导致溢出</font>。
 
-###### 7.24.4 strncpy函数
+###### 7.24.2.4 strncpy函数
 
 概要：
 ```C
@@ -746,6 +746,14 @@ char *strncat(char * restrict s1,
 
 ###### 7.24.4.1 memcmp函数
 
+**摘要**
+```C
+#include <string.h>  
+int memcmp(const void *s1, const void *s2, size_t n);
+```
+**描述**
+1. `memcmp` 函数将 `s1` 指向的对象的前 `n` 个字符与 `s2` 指向的对象的前 `n` 个字符进行比较。
 
-
+**返回值**
+1. `memcmp` 函数可能会返回大于、等于、或小于0的值，该函数将从 `s1` 和 `s2` 的第一个字节进行对比，直到遇见第一个不相等的字节，并返回 `s1` 的字节 减去 `s2` 的字节的值。若完全指向内容在前 `n` 字节完全相等，则返回0。
 
