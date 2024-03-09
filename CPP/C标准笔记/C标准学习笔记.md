@@ -526,6 +526,8 @@ end :
 
 #### 7.21 基本输入输出<stdio.h>
 
+##### 7.21.5 格式化输入输出
+
 ##### 7.21.6 格式化输入输出
 
 ##### 7.21.7 字符输入输出函数
@@ -660,10 +662,15 @@ int puts(const char *s);
 ```
 
 **描述**
-1. `puts` 函数将 `s` 指向的字符串写入 `stdout` 指向的流，<span style="background:#fff88f"><font color="#c00000">并将一个新行字符附加到输出</font></span>，<span style="background:#fff88f"><font color="#c00000">且不写入终止空字符</font></span> `\0` 。(一般的 `txt` 文件中也不用 `\0` 分割句子)
+1. `puts` 函数将 `s` 指向的字符串写入 `stdout` 指向的流，<span style="background:#fff88f"><font color="#c00000">并将一个新行字符附加到输出</font></span>，<span style="background:#fff88f"><font color="#c00000">且不写入终止空字符</font></span> `\0` 。
 
 **返回值**
-1. 如果发生写错误，put 函数返回 EOF; 否则返回非负值。
+1. 如果发生写错误，`puts` 函数返回 `EOF` ；否则返回非负值。
+
+注：
+1. 一般的 `txt` 文件中也不用 `\0` 分割句子，一般 `txt` 文件是指可直接阅读的文件，而 `\0` 通常不可阅读。
+
+###### 7.21.7.10
 
 
 #### 7.24 字符串库<string.h>
