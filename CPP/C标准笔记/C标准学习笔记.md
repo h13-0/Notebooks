@@ -547,9 +547,13 @@ int fclose(FILE *stream);
 
 ###### 7.21.5.2 fflush函数
 
+**概要**
+```C
+#include <stdio.h>
+int fflush(FILE *stream);
+```
 
-
-
+**描述**
 
 
 ##### 7.21.6 格式化输入输出
