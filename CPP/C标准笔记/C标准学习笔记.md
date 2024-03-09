@@ -554,7 +554,7 @@ int fflush(FILE *stream);
 ```
 
 **描述**
-1. 如果流指向一个输出流(例如 `stdout` )或更新流，其中最近的操作没有输入，则 `fflush` 函数将导致该流的任何未写数据被传送到主机环境，并写入文件；否则，行为是未定义的(例如 `fflush(stdin)` )。
+1. 如果流指向一个输出流(例如 `stdout` )或更新流，其中最近的操作没有输入，则 `fflush` 函数将导致该流的任何未写数据被传送到主机环境，并写入文件；否则，行为是未定义的(例如操作只读流 `fflush(stdin)` )。
 2. 如果 `stream` 的参数值为 `NULL` ，则 `fflush` 会刷新程序中定义的所有流。
 
 **返回值**
@@ -562,10 +562,22 @@ int fflush(FILE *stream);
 
 ###### 7.21.5.3 fopen函数
 
+**概要**
+```C
+#include <stdio.h>  
+FILE *fopen(const char * restrict filename,
+	const char * restrict mode);
+```
 
+**描述**
+1. `fopen` 函数打开名称(路径)为 `filename` 的文件，返回一个与该文件绑定的 `FILE*` 指针。
+2. `mode` 参数应当是以下字符串之一，随后将以对应的模式打开文件。<span style="background:#fff88f"><font color="#c00000">若非以下字符串则行为未定义</font></span>。
 
-
-
+| mode | 打开模式                                                                                                            |
+| ---- | --------------------------------------------------------------------------------------------------------------- |
+| "r"  | 以读取方式打开文件                                                                                                       |
+| "w"  | <font color="#c00000">覆盖</font>(即从0)<span style="background:#fff88f"><font color="#c00000">或</font></span>创建新文件 |
+| "wx" | 创建                                                                                                              |
 
 
 
