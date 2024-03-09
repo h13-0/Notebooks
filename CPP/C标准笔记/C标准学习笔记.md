@@ -625,6 +625,25 @@ int getchar(void);
 返回值：
 1. `getchar` 函数返回 `stdin` 指向的输入流中的下一个字符。如果流处于文件结束位置，则设置流的文件结束指示符，并且 `getchar` 返回 `EOF` 。如果发生读取错误，则设置流的错误指示符，并且 `getchar` 返回 `EOF` 。
 
+###### 7.21.7.7 putc函数
+
+**概要**
+```C
+#include <stdio.h>  
+int putc(int c, FILE *stream);
+```
+
+**描述**
+1. 与getc函数([[C标准学习笔记#7 21 7 5 getc函数]])相似，`putc` 函数等价于 `fputc` ，是 `fputc` 的通过宏的实现。因此参数绝不应该是带有<font color="#c00000">副操作</font>的表达式(副操作见getc章节)。
+
+**返回值**
+1. `putc` 函数返回写入的字符。如果发生写入错误，则设置流的错误指示符，随后返回 `EOF` 。
+
+###### 7.21.7.8 putchar函数
+
+
+
+
 
 #### 7.24 字符串库<string.h>
 
@@ -770,8 +789,17 @@ int strcoll(const char *s1, const char *s2);
 ```
 
 **描述**
-1. `strcoll` 函数会将 `s1` 指向的字符串与 `s2` 指向的字符串先根据语言环境(`LC_COLLATE`变量)进行重新解释，然后再进行比较。主要用于uni
+1. `strcoll` 函数会将 `s1` 指向的字符串与 `s2` 指向的字符串先根据语言环境(`LC_COLLATE`变量)进行重新解释，然后再进行比较。主要用于unicode环境。
 
+**返回值**
+1. 同 `strcmp` 。
 
 注：
 1. `strcoll` 和 `strcmp` 的区别可见讨论[https://stackoverflow.com/questions/14087062/](https://stackoverflow.com/questions/14087062/)。
+2. 执行速度自然不如 `strncmp` 。
+
+###### 7.24.4.3
+
+
+
+

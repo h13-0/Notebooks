@@ -30,9 +30,33 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "04f9398b644b2013",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "CPP/C标准笔记/C标准学习笔记.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "817252ca23c307d4",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "CPP/C标准笔记/C标准学习笔记.md",
+                "mode": "source",
+                "source": false
+              }
+            }
           }
         ],
-        "currentTab": 1
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -168,10 +192,11 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "faaf698449fa891a",
+  "active": "817252ca23c307d4",
   "lastOpenFiles": [
     "CPP/应试笔记与八股.md",
     "CPP/C标准笔记/C标准学习笔记.md",
+    "[[C标准学习笔记.md",
     "Readme.md",
     "Resources/Pasted image 20240308171937.png",
     "Others/协程/协程.md",
@@ -196,7 +221,6 @@
     "Others/PythonLibs/pycpraser/pycpraser.md",
     "Others/Obsidian/主题/禁用表格换行(保持表格原宽，并添加滚动条).md",
     "生活常识/国家标准/生活常识的国家标准.md",
-    "生活常识/常见物质生产方式.md",
     "CPP/Resources/C数据类型.canvas",
     "CPP/Resources/Pasted image 20240307142115.png",
     "Resources/Pasted image 20240308172303.png",
