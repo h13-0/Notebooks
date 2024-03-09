@@ -567,8 +567,6 @@ char *fgets(char * restrict s, int n,
 
 
 
-
-
 ###### 7.21.7.5 getc函数
 
 概要：
@@ -655,6 +653,14 @@ int putchar(int c);
 
 ###### 7.21.7.9 puts函数
 
+**概要**
+```C
+#include <stdio.h>
+int puts(const char *s);
+```
+
+**描述**
+1. `puts` 函数将 `s` 指向的字符串写入 `stdout` 指向的流，<span style="background:#fff88f"><font color="#c00000">并将一个新行字符附加到输出</font></span>，<span style="background:#fff88f"><font color="#c00000">且不写入终止空字符</font></span> `\0` 。
 
 
 
