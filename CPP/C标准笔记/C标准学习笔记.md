@@ -641,6 +641,20 @@ int putc(int c, FILE *stream);
 
 ###### 7.21.7.8 putchar函数
 
+**概要**
+```C
+#include <stdio.h>  
+int putchar(int c);
+```
+
+**描述**
+1. `putchar` 函数等价于 `putc` 函数的第二个参数为 `stdout` 的情况。
+
+**返回值**
+1. 与 `putc` 函数的第二个参数为 `stdout` 的情况相同。
+
+###### 7.21.7.9 puts函数
+
 
 
 
