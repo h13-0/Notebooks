@@ -573,12 +573,15 @@ FILE *fopen(const char * restrict filename,
 1. `fopen` 函数打开名称(路径)为 `filename` 的文件，返回一个与该文件绑定的 `FILE*` 指针。
 2. `mode` 参数应当是以下字符串之一，随后将以对应的模式打开文件。<span style="background:#fff88f"><font color="#c00000">若非以下字符串则行为未定义</font></span>。
 
-| mode | 打开模式                                                                                                            |
-| ---- | --------------------------------------------------------------------------------------------------------------- |
-| "r"  | 以读取方式打开文件                                                                                                       |
-| "w"  | <font color="#c00000">覆盖</font>(即从0)<span style="background:#fff88f"><font color="#c00000">或</font></span>创建新文件 |
-| "wx" | 创建                                                                                                              |
-
+| mode  | 打开模式                                                                                                                                                                               |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| "r"   | 以<font color="#c00000">字符读取</font>方式打开文件                                                                                                                                           |
+| "w"   | 以<font color="#c00000">字符读取</font>方式<font color="#c00000">覆盖</font>(即从0)<span style="background:#fff88f"><font color="#c00000">或</font></span>创建新文件                                |
+| "wx"  | 以<font color="#c00000">字符读取</font>方式创建新文件并写入("x"表示强制使用新文件，仅可配合"w"和"w+"使用，<span style="background:#fff88f"><font color="#c00000">若已存在该文件则操作失败，并返回NULL</font></span>，通常用此避免覆盖掉原来的文件) |
+| "a"   | 以<font color="#c00000">字符读取</font>方式追加方式打开文件，当文件存在时，会从 `EOF` 前开始追加；当文件不存在时，<span style="background:#fff88f"><font color="#c00000">会创建该文件</font></span>。                            |
+| "rb"  | 以<font color="#c00000">二进制读取</font>方式打开文件                                                                                                                                          |
+| "wb"  | 以<font color="#c00000">二进制读取</font>方式<font color="#c00000">覆盖</font>(即从0)<span style="background:#fff88f"><font color="#c00000">或</font></span>创建新文件                               |
+| "wbx" |                                                                                                                                                                                    |
 
 
 ##### 7.21.6 格式化输入输出
