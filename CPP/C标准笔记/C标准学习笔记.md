@@ -660,9 +660,10 @@ int puts(const char *s);
 ```
 
 **描述**
-1. `puts` 函数将 `s` 指向的字符串写入 `stdout` 指向的流，<span style="background:#fff88f"><font color="#c00000">并将一个新行字符附加到输出</font></span>，<span style="background:#fff88f"><font color="#c00000">且不写入终止空字符</font></span> `\0` 。
+1. `puts` 函数将 `s` 指向的字符串写入 `stdout` 指向的流，<span style="background:#fff88f"><font color="#c00000">并将一个新行字符附加到输出</font></span>，<span style="background:#fff88f"><font color="#c00000">且不写入终止空字符</font></span> `\0` 。(一般的 `txt` 文件中也不用 `\0` 分割句子)
 
-
+**返回值**
+1. 如果发生写错误，put 函数返回 EOF; 否则返回非负值。
 
 
 #### 7.24 字符串库<string.h>
