@@ -757,7 +757,7 @@ int memcmp(const void *s1, const void *s2, size_t n);
 **返回值**
 1. `memcmp` 函数可能会返回大于、等于、或小于0的值，该函数将从 `s1` 和 `s2` 的第一个字节进行对比，直到遇见第一个不相等的字节，并返回 `s1` 的字节 减去 `s2` 的字节的值。若完全指向内容在前 `n` 字节完全相等，则返回0。
 
-**注**
+**标准注**
 1. 需要注意结构体中为了内存对齐而导致的 `holes` 。
 2. 分配空间短于 `n` 的内存和 `s1` 和 `s2` 重合的内存可能会出现问题。
 
@@ -765,5 +765,13 @@ int memcmp(const void *s1, const void *s2, size_t n);
 
 **摘要**
 ```C
-
+#include <string.h>  
+int strcoll(const char *s1, const char *s2);
 ```
+
+**描述**
+1. `strcoll` 函数会将 `s1` 指向的字符串与 `s2` 指向的字符串先根据语言环境(`LC_COLLATE`变量)进行重新解释，然后再进行比较。主要用于uni
+
+
+注：
+1. `strcoll` 和 `strcmp` 的区别可见讨论[https://stackoverflow.com/questions/14087062/](https://stackoverflow.com/questions/14087062/)。
