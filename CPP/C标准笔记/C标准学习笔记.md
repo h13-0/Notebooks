@@ -590,8 +590,14 @@ FILE *fopen(const char * restrict filename,
 | "ab"                  | 以<font color="#c00000">二进制读取</font>方式追加方式打开文件，当文件存在时，会从 `EOF` 前开始追加；当文件不存在时，<span style="background:#fff88f"><font color="#c00000">会创建该文件</font></span>。                                                                                                                                                                |
 | "rb+" 或 "r+b"         | 以<font color="#c00000">二进制读取</font>方式<span style="background:#fff88f"><font color="#c00000">读取或写入文件</font></span>，<span style="background:#fff88f"><font color="#c00000">此时指针置于文件头</font></span>。                                                                                                                       |
 | "wb+" 或 "w+b"         |                                                                                                                                                                                                                                                                                                                         |
-| ""                    |                                                                                                                                                                                                                                                                                                                         |
+| "wb+x" 或 "w+bx"       |                                                                                                                                                                                                                                                                                                                         |
+| "a+b" 或 "ab+"         |                                                                                                                                                                                                                                                                                                                         |
 
+简单来说，mode主要为以下关键字的组合：
+
+| key | 作用和注意事项 |
+| --- | ------- |
+|     |         |
 
 ##### 7.21.6 格式化输入输出
 
