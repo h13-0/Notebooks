@@ -40,7 +40,7 @@
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -114,6 +114,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -130,6 +131,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -151,7 +153,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "计算机网络/第三章 数据链路层/第三章 数据链路层.md"
+              }
             }
           }
         ]
@@ -172,8 +176,10 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "faaf698449fa891a",
+  "active": "4c11cb5f15b28c7f",
   "lastOpenFiles": [
+    "计算机网络/第二章 物理层/第二章 物理层.md",
+    "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
     "土木常识/Resources/Pasted image 20230418210304.png",
     "土木常识/Resources/Pasted image 20230418202306.png",
     "土木常识/Resources/Pasted image 20230415215625.png",
@@ -184,8 +190,6 @@
     "土木常识/Resources/Pasted image 20230417160856.png",
     "土木常识/Resources/Pasted image 20230415211907.png",
     "计算机网络/Resources/Pasted image 20240131220255.png",
-    "计算机网络/Resources/Pasted image 20240203015233.png",
-    "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
     "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
     "CPP/应试笔记与八股.md",
     "CPP/C标准笔记/C标准学习笔记.md",
