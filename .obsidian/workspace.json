@@ -25,22 +25,14 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CPP/C标准笔记/C标准学习笔记.md",
+                "file": "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
                 "mode": "source",
                 "source": false
               }
             }
-          },
-          {
-            "id": "04f9398b644b2013",
-            "type": "leaf",
-            "state": {
-              "type": "graph",
-              "state": {}
-            }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -114,6 +106,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -130,6 +123,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -151,7 +145,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "计算机网络/第三章 数据链路层/第三章 数据链路层.md"
+              }
             }
           }
         ]
@@ -172,8 +168,9 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "04f9398b644b2013",
+  "active": "faaf698449fa891a",
   "lastOpenFiles": [
+    "CPP/C标准笔记/C标准学习笔记.md",
     "Others/协程/协程.md",
     "Others/线程锁/实现/线程锁 with pthread.md",
     "编译原理/编译原理.md",
@@ -199,7 +196,6 @@
     "生活常识/常见物质生产方式.md",
     "Others/MS .NET Framework/Core and Framework.md",
     "生活常识/Readme.md",
-    "生活常识/医学健康/常见病症.md",
     "CPP/Resources/C数据类型.canvas",
     "Resources/Pasted image 20240308171937.png",
     "CPP/Resources/Pasted image 20240307142115.png",
