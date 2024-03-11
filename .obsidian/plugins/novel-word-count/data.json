@@ -5115,19 +5115,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 524,
+      "wordCount": 656,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 1.7466666666666666,
-      "characterCount": 1158,
-      "nonWhitespaceCharacterCount": 1051,
-      "readingTimeInMinutes": 1.133132075471698,
+      "pageCount": 2.1866666666666665,
+      "characterCount": 1418,
+      "nonWhitespaceCharacterCount": 1296,
+      "readingTimeInMinutes": 1.4219622641509433,
       "linkCount": 0,
       "embedCount": 0,
       "aliases": null,
       "createdDate": 1710162302500,
-      "modifiedDate": 1710165780871,
-      "sizeInBytes": 2198
+      "modifiedDate": 1710166299131,
+      "sizeInBytes": 2710
     }
   }
 }
