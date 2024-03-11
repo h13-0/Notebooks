@@ -1407,19 +1407,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 36,
+      "wordCount": 76,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 0.12,
-      "characterCount": 53,
-      "nonWhitespaceCharacterCount": 44,
-      "readingTimeInMinutes": 0.072,
-      "linkCount": 0,
+      "pageCount": 0.25333333333333335,
+      "characterCount": 108,
+      "nonWhitespaceCharacterCount": 93,
+      "readingTimeInMinutes": 0.152,
+      "linkCount": 1,
       "embedCount": 0,
       "aliases": null,
       "createdDate": 1709543084846,
-      "modifiedDate": 1709543169983,
-      "sizeInBytes": 135
+      "modifiedDate": 1710162388902,
+      "sizeInBytes": 278
     },
     "数据结构算法/数据结构算法基础.md": {
       "isCountable": true,
@@ -5110,6 +5110,24 @@
       "createdDate": 1710150083416,
       "modifiedDate": 1710150083416,
       "sizeInBytes": 78785
+    },
+    "数据库系统概述/第一章 绪论/第一章 绪论.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 78,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0.26,
+      "characterCount": 185,
+      "nonWhitespaceCharacterCount": 156,
+      "readingTimeInMinutes": 0.17018867924528303,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1710162302500,
+      "modifiedDate": 1710162753384,
+      "sizeInBytes": 339
     }
   }
 }
