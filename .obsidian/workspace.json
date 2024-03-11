@@ -25,7 +25,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "数据库系统概述/第一章 绪论/第一章 绪论.md",
+                "file": "Readme.md",
                 "mode": "source",
                 "source": false
               }
@@ -114,7 +114,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "数据库系统概述/第一章 绪论/第一章 绪论.md",
+                "file": "Readme.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -131,7 +131,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "数据库系统概述/第一章 绪论/第一章 绪论.md",
+                "file": "Readme.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -154,7 +154,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "数据库系统概述/第一章 绪论/第一章 绪论.md"
+                "file": "Readme.md"
               }
             }
           }
@@ -178,7 +178,6 @@
   },
   "active": "f9c0942fc1f832fa",
   "lastOpenFiles": [
-    "计算机网络/计算机网络概述.md",
     "数据库系统概述/第一章 绪论/第一章 绪论.md",
     "Others/协程/协程.md",
     "Others/线程锁/实现/线程锁 with pthread.md",
@@ -204,6 +203,7 @@
     "生活常识/国家标准/生活常识的国家标准.md",
     "生活常识/常见物质生产方式.md",
     "Others/MS .NET Framework/Core and Framework.md",
+    "生活常识/Readme.md",
     "CPP/Resources/C数据类型.canvas",
     "数据库系统概述/第一章 绪论",
     "计算机网络/Resources/Pasted image 20240310205008.png",
