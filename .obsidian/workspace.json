@@ -23,8 +23,12 @@
             "id": "4c11cb5f15b28c7f",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
+                "mode": "source",
+                "source": false
+              }
             }
           },
           {
@@ -114,6 +118,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -130,6 +135,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -151,7 +157,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "计算机网络/第三章 数据链路层/第三章 数据链路层.md"
+              }
             }
           }
         ]
@@ -174,8 +182,9 @@
   },
   "active": "4c11cb5f15b28c7f",
   "lastOpenFiles": [
-    "Resources/Pasted image 20240311183946.png",
+    "计算机网络/第二章 物理层/第二章 物理层.md",
     "生活常识/数码/RAID技术.md",
+    "Resources/Pasted image 20240311183946.png",
     "生活常识/数码/电脑IO接口与协议.md",
     "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
     "Resources/Pasted image 20240311184046.png",
