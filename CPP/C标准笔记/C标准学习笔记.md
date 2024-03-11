@@ -3,7 +3,7 @@
 	Standards are paper. I use paper to wipe my butt every day. 
 	That's how much that paper is worth. —— Linus Torvalds.
 
-<font color="#ffffff">不要迷信标准，因为标准只是用来约束C语言使用者的。</font>
+<font color="#ffffff">不要迷信标准，标准就像法律，只是用来约束必须守法的人。</font>
 
 ## 目录
 ```toc
