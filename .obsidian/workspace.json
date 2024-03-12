@@ -13,19 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "计算机网络/计算机网络概述.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "f9c0942fc1f832fa",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Readme.md",
+                "file": "数据库系统概述/第一章 绪论/第一章 绪论.md",
                 "mode": "source",
                 "source": false
               }
@@ -35,8 +23,12 @@
             "id": "2909b3f2e26c2e75",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "计算机网络/第四章 网络层/第四章 网络层.md",
+                "mode": "source",
+                "source": false
+              }
             }
           }
         ],
@@ -114,7 +106,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Readme.md",
+                "file": "计算机网络/第四章 网络层/第四章 网络层.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -131,7 +123,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Readme.md",
+                "file": "计算机网络/第四章 网络层/第四章 网络层.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -154,7 +146,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Readme.md"
+                "file": "计算机网络/第四章 网络层/第四章 网络层.md"
               }
             }
           }
@@ -176,9 +168,11 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "f9c0942fc1f832fa",
+  "active": "2909b3f2e26c2e75",
   "lastOpenFiles": [
     "数据库系统概述/第一章 绪论/第一章 绪论.md",
+    "计算机网络/计算机网络概述.md",
+    "Readme.md",
     "Others/协程/协程.md",
     "Others/线程锁/实现/线程锁 with pthread.md",
     "编译原理/编译原理.md",
@@ -202,8 +196,6 @@
     "Others/Obsidian/主题/禁用表格换行(保持表格原宽，并添加滚动条).md",
     "生活常识/国家标准/生活常识的国家标准.md",
     "生活常识/常见物质生产方式.md",
-    "Others/MS .NET Framework/Core and Framework.md",
-    "生活常识/Readme.md",
     "CPP/Resources/C数据类型.canvas",
     "数据库系统概述/第一章 绪论",
     "计算机网络/Resources/Pasted image 20240310205008.png",
