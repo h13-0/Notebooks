@@ -93,19 +93,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 2083,
+      "wordCount": 2203,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 6.943333333333333,
-      "characterCount": 3886,
-      "nonWhitespaceCharacterCount": 3529,
-      "readingTimeInMinutes": 4.49588679245283,
+      "pageCount": 7.343333333333334,
+      "characterCount": 4372,
+      "nonWhitespaceCharacterCount": 3941,
+      "readingTimeInMinutes": 4.7749056603773585,
       "linkCount": 0,
-      "embedCount": 8,
+      "embedCount": 9,
       "aliases": null,
       "createdDate": 1710161188233,
-      "modifiedDate": 1710415758682,
-      "sizeInBytes": 8008
+      "modifiedDate": 1710416130170,
+      "sizeInBytes": 8724
     },
     "计算机网络/第二章 物理层/第二章 物理层.md": {
       "isCountable": true,
@@ -5254,6 +5254,24 @@
       "createdDate": 1710415526237,
       "modifiedDate": 1710415526237,
       "sizeInBytes": 53507
+    },
+    "Resources/Pasted image 20240314193349.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1710416029262,
+      "modifiedDate": 1710416029263,
+      "sizeInBytes": 397924
     }
   }
 }
