@@ -40,7 +40,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -114,6 +114,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "计算机网络/第四章 网络层/第四章 网络层.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -130,6 +131,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "计算机网络/第四章 网络层/第四章 网络层.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -151,7 +153,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "计算机网络/第四章 网络层/第四章 网络层.md"
+              }
             }
           }
         ]
@@ -172,21 +176,22 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "83a43a4ab1574734",
+  "active": "2909b3f2e26c2e75",
   "lastOpenFiles": [
+    "Resources/Pasted image 20240314211818.png",
+    "Resources/Pasted image 20240314211418.png",
+    "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
     "计算机网络/第四章 网络层/第四章 网络层.md",
     "计算机网络/Resources/Pasted image 20240314175906.png",
     "计算机网络/Resources/Pasted image 20240314210455.png",
     "计算机网络/Resources/Pasted image 20240314205737.png",
     "计算机网络/Resources/Pasted image 20240314193349.png",
     "计算机网络/Resources/Pasted image 20240314192526.png",
-    "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
     "数据库系统概述/第一章 绪论/第一章 绪论.md",
     "计算机网络/Resources/Pasted image 20240314191711.png",
     "计算机网络/Resources/Pasted image 20240314190134.png",
     "计算机网络/Resources/Pasted image 20240314183055.png",
     "计算机网络/Resources/Pasted image 20240314181212.png",
-    "计算机网络/Resources/Pasted image 20240314181028.png",
     "计算机网络/应试笔记与八股.md",
     "计算机网络/计算机网络概述.md",
     "Readme.md",
