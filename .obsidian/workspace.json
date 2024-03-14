@@ -23,8 +23,12 @@
             "id": "2909b3f2e26c2e75",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "计算机网络/第四章 网络层/第四章 网络层.md",
+                "mode": "source",
+                "source": false
+              }
             }
           }
         ],
@@ -102,6 +106,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "计算机网络/第四章 网络层/第四章 网络层.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,6 +123,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "计算机网络/第四章 网络层/第四章 网络层.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -139,7 +145,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "计算机网络/第四章 网络层/第四章 网络层.md"
+              }
             }
           }
         ]
@@ -162,6 +170,7 @@
   },
   "active": "2909b3f2e26c2e75",
   "lastOpenFiles": [
+    "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
     "计算机网络/第四章 网络层/第四章 网络层.md",
     "计算机网络/应试笔记与八股.md",
     "数据库系统概述/第一章 绪论/第一章 绪论.md",
@@ -187,7 +196,6 @@
     "CMake/CMake 常用函数.md",
     "Others/PythonLibs/argparse/常用操作.md",
     "Others/PythonLibs/pycpraser/pycpraser.md",
-    "Others/Obsidian/主题/禁用表格换行(保持表格原宽，并添加滚动条).md",
     "CPP/Resources/C数据类型.canvas",
     "数据库系统概述/第一章 绪论",
     "计算机网络/Resources/Pasted image 20240310205008.png",
