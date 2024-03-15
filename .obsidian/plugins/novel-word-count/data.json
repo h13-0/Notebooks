@@ -4737,19 +4737,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 7506,
+      "wordCount": 7571,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 25.02,
-      "characterCount": 25478,
-      "nonWhitespaceCharacterCount": 19694,
-      "readingTimeInMinutes": 18.459849056603773,
+      "pageCount": 25.236666666666668,
+      "characterCount": 25638,
+      "nonWhitespaceCharacterCount": 19837,
+      "readingTimeInMinutes": 18.61822641509434,
       "linkCount": 11,
       "embedCount": 5,
       "aliases": null,
       "createdDate": 1706787122806,
-      "modifiedDate": 1710492493592,
-      "sizeInBytes": 37683
+      "modifiedDate": 1710493053516,
+      "sizeInBytes": 37945
     },
     "CPP/编译器限定实现/gcc.md": {
       "isCountable": true,
@@ -5506,6 +5506,24 @@
       "createdDate": 1710475328685,
       "modifiedDate": 1710475328686,
       "sizeInBytes": 61470
+    },
+    "Resources/Pasted image 20240315165330.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1710492810514,
+      "modifiedDate": 1710492810520,
+      "sizeInBytes": 104163
     }
   }
 }
