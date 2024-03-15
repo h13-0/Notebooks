@@ -18,6 +18,18 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "cd3b379a3bfecfa4",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "CPP/C标准笔记/C标准学习笔记.md",
+                "mode": "source",
+                "source": false
+              }
+            }
           }
         ]
       }
@@ -158,12 +170,12 @@
   "active": "83a43a4ab1574734",
   "lastOpenFiles": [
     "CPP/C标准笔记/C标准学习笔记.md",
+    "CPP/应试笔记与八股.md",
     "土木常识/土木常识.md",
     "土木常识/计算软件/SACS海工计算软件.md",
     "计算机网络/第二章 物理层/第二章 物理层.md",
     "计算机网络/Resources/Pasted image 20240315113633.png",
     "计算机网络/Resources/Pasted image 20240315114807.png",
-    "CPP/应试笔记与八股.md",
     "计算机网络/Resources/Pasted image 20240315165330.png",
     "计算机网络/应试笔记与八股.md",
     "计算机网络/第四章 网络层/第四章 网络层.md",
