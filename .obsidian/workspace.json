@@ -39,8 +39,7 @@
               "state": {}
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -114,6 +113,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "计算机网络/第四章 网络层/第四章 网络层.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -130,6 +130,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "计算机网络/第四章 网络层/第四章 网络层.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -151,7 +152,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "计算机网络/第四章 网络层/第四章 网络层.md"
+              }
             }
           }
         ]
@@ -172,8 +175,9 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "9f6cb43f410012d9",
+  "active": "83a43a4ab1574734",
   "lastOpenFiles": [
+    "Resources/Pasted image 20240315215037.png",
     "计算机网络/第四章 网络层/第四章 网络层.md",
     "计算机网络/Resources/Pasted image 20240315211026.png",
     "计算机网络/第三章 数据链路层/第三章 数据链路层.md",
