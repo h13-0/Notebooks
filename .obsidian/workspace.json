@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CPP/应试笔记与八股.md",
+                "file": "Others/电子科技大学C语言笔试准备/历年笔试题目笔记.md",
                 "mode": "source",
                 "source": false
               }
@@ -105,7 +105,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "CPP/应试笔记与八股.md",
+                "file": "Others/电子科技大学C语言笔试准备/历年笔试题目笔记.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -122,7 +122,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "CPP/应试笔记与八股.md",
+                "file": "Others/电子科技大学C语言笔试准备/历年笔试题目笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -145,7 +145,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "CPP/应试笔记与八股.md"
+                "file": "Others/电子科技大学C语言笔试准备/历年笔试题目笔记.md"
               }
             }
           }
@@ -169,6 +169,11 @@
   },
   "active": "1bc8e8a1673ae0ee",
   "lastOpenFiles": [
+    "Resources/Pasted image 20240316201601.png",
+    "Resources/Pasted image 20240316201551.png",
+    "CPP/应试笔记与八股.md",
+    "Others/电子科技大学C语言笔试准备/历年笔试题目笔记.md",
+    "Others/电子科技大学C语言笔试准备",
     "计算机网络/第四章 网络层/第四章 网络层.md",
     "Others/协程/协程.md",
     "Others/线程锁/实现/线程锁 with pthread.md",
@@ -192,9 +197,6 @@
     "Others/Obsidian/主题/禁用表格换行(保持表格原宽，并添加滚动条).md",
     "生活常识/国家标准/生活常识的国家标准.md",
     "生活常识/常见物质生产方式.md",
-    "Others/MS .NET Framework/Core and Framework.md",
-    "生活常识/Readme.md",
-    "生活常识/医学健康/常见病症.md",
     "CPP/Resources/C数据类型.canvas",
     "计算机网络/Resources/Pasted image 20240315220403.png",
     "计算机网络/Resources/Pasted image 20240315220728.png",
@@ -206,7 +208,6 @@
     "计算机网络/Resources/Pasted image 20240315120208.png",
     "计算机网络/Resources/Pasted image 20240315165330.png",
     "计算机网络/Resources/Pasted image 20240314223133.png",
-    "计算机网络/Resources/Pasted image 20240315114438.png",
     "数据库系统概述/第一章 绪论",
     "计算机网络/第四章 网络层",
     "数据库系统概述",
@@ -214,7 +215,6 @@
     "计算机网络/第三章 数据链路层/~$$数据链路层水平方向.~vsdx",
     "计算机网络/第三章 数据链路层/数据链路层水平方向.vsdx",
     "计算机网络/第三章 数据链路层/OSI七层协议数据传输图.vsdx",
-    "计算机网络/第三章 数据链路层",
-    "生活常识/Resources"
+    "计算机网络/第三章 数据链路层"
   ]
 }
