@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Math/Eratasthene筛选法求素数.md",
+                "file": "Math/求质数方法.md",
                 "mode": "source",
                 "source": false
               }
@@ -117,7 +117,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Math/Eratasthene筛选法求素数.md",
+                "file": "Math/求质数方法.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -134,7 +134,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Math/Eratasthene筛选法求素数.md",
+                "file": "Math/求质数方法.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -157,7 +157,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Math/Eratasthene筛选法求素数.md"
+                "file": "Math/求质数方法.md"
               }
             }
           }
@@ -182,7 +182,7 @@
   "active": "1bc8e8a1673ae0ee",
   "lastOpenFiles": [
     "Math/最大公约数、最小公倍数.md",
-    "Math/Eratasthene筛选法求素数.md",
+    "Math/求质数方法.md",
     "Others/电子科技大学C语言笔试准备/历年笔试题目笔记.md",
     "CPP/应试笔记与八股.md",
     "计算机网络/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
