@@ -949,6 +949,7 @@ size_t strcspn(const char *s1, const char *s2);
 
 **描述**
 1. `strcspn` 函数将计算从字符串 `s1` 的第一个字符开始，最大连续不包含字符串 `s2` 中任意字符的数量(此时 `s2` 被看做一个字符集合而非字符串)。
+2. 可以把该函数理解为从 `s1` 中查找字符集 `s2` 中的字符，返回值为<font color="#c00000">第一次出现字符集中字符的字符号-1</font>。可见下方笔记示例。
 
 **返回值**
 1. `strcspn` 函数将返回从 `s1` 头部开始最大的不包含字符集合 `s2` 中任意字符的数量。
@@ -960,6 +961,28 @@ int func()
 	const char str1[] = "ABCDEF4960910";
 	const char str2[] = "013";           // 字符集合 { '0', '1', '3' }
 	int len = strcspn(str1, str2);       // 从str1的开头开始统计有多少不在集合中的字符
-	printf("len = %d", len);             // len = 10，"ABCDEF496"
+	printf("len = %d\r\n", len);         // len = 9，"ABCDEF496"长度为9
+	
+	// 另一种理解
+	if(len == strlen(str1))
+	{
+		printf("No characters found in the character set str2 in str1\r\n");
+	} else {
+		printf("The first character in the character set str2 in str1 is %c, locate at %d\r\n", str[len], len + 1);
+	}
 }
 ```
+
+##### 7.24.5.4
+
+##### 7.24.5.5
+
+##### 7.24.5.6
+
+##### 7.24.5.7 strstr函数
+
+
+
+
+
+
