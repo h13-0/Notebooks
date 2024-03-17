@@ -10,7 +10,7 @@
 min_depth: 1
 ```
 
-## 5 环境
+## 5. 环境
 
 ### 5.1 概念模型
 
@@ -99,7 +99,7 @@ TODO
 
 
 
-## 6 语言
+## 6. 语言
 
 ### 6.2 概念
 
@@ -524,7 +524,7 @@ end :
 
 
 
-## 7 库
+## 7. 库
 
 
 ### 7.21 基本输入输出<stdio.h>
@@ -753,33 +753,33 @@ int puts(const char *s);
 
 ##### 7.24.2.1 memcpy函数
 
-概要：
+**概要**
 ```C
 #include <string.h>  
 void *memcpy(void * restrict s1,  
 	const void * restrict s2, 
 	size_t n);
 ```
-描述：
-	`memcpy` 函数将 `s2` 指向的内存的 `n` 个字符复制到 `s1` 指向的内存中。<font color="#c00000">如果复制发生在重叠的对象之间，则行为是未定义的</font>。
+**描述**
+1. `memcpy` 函数将 `s2` 指向的内存的 `n` 个字符复制到 `s1` 指向的内存中。<font color="#c00000">如果复制发生在重叠的对象之间，则行为是未定义的</font>。
 
-返回值：
-	`memcpy` 函数将返回 `s1` 指针。
+**返回值**
+1. `memcpy` 函数将返回 `s1` 指针。
 
 ##### 7.24.2.2 memmove函数
 
-概要：
+**概要**
 ```C
 #include <string.h>  
 void *memmove(void *s1, const void *s2, size_t n);
 ```
-描述：
-	`memmove` 函数将 `s2` 指向的内存的 `n` 个字符复制到 `s1` 指向的内存中。复制的过程就像是将 `s2` 指向的对象中的 `n` 个字符首先复制到一个 `n` 个字符的临时数组中，这个临时数组不会与 `s1` 和 `s2` 指向的内存重叠，然后将临时数组中的 `n` 个字符复制到 `s1` 指向的内存中。
+**描述**
+1. `memmove` 函数将 `s2` 指向的内存的 `n` 个字符复制到 `s1` 指向的内存中。复制的过程就像是将 `s2` 指向的对象中的 `n` 个字符首先复制到一个 `n` 个字符的临时数组中，这个临时数组不会与 `s1` 和 `s2` 指向的内存重叠，然后将临时数组中的 `n` 个字符复制到 `s1` 指向的内存中。
 
-返回值：
-	`memmove` 函数将返回 `s1` 指针。
+**返回值**
+1. `memmove` 函数将返回 `s1` 指针。
 
-注：
+笔记注：
 1. 在Windows的C运行库中(`msvcrt`)， `memcpy` 实质上就是 `memmove` ，虽然微软在MSDN中依旧是按照C语言标准进行描述。
 2. 在OpenBSD系统中，如果 `memcpy` 的内存区域重叠会导致崩溃。
 3. 效率上， `memcpy` 比 `memmove` 仅少了一个分支。
@@ -787,26 +787,26 @@ void *memmove(void *s1, const void *s2, size_t n);
 
 ##### 7.24.2.3 strcpy函数
 
-概要：
+**概要**
 ```C
 #include <string.h>  
 char *strcpy(char * restrict s1,  
 	const char * restrict s2);
 ```
 
-描述：
+**描述**
 	`strcpy` 函数将 `s2` 指向的字符串(包括终止空字符)复制到 `s1` 指向的数组中。<font color="#c00000">如果复制发生在重叠的对象之间，则行为是未定义的</font>。
 
-返回值：
+**返回值**
 	`strcpy` 函数将返回 `s1` 指针。
 
-注：
+笔记注：
 1. `strcpy` 函数操作的字符串要以 `\0` 结尾。
 2. 库函数并不会检查目标的内存边界，因此<font color="#c00000">可能会导致溢出</font>。
 
 ##### 7.24.2.4 strncpy函数
 
-概要：
+**概要**
 ```C
 #include <string.h>  
 char *strncpy(char * restrict s1, 
@@ -814,14 +814,14 @@ char *strncpy(char * restrict s1,
 	size_t n);
 ```
 
-描述：
+**描述**
 1. `strncpy` 函数将不超过 `n` 个字符(空字符后面的字符不复制)从 `s2` 指向的数组复制到 `s1` 指向的数组。<font color="#c00000">如果复制发生在重叠的对象之间，则行为是未定义的</font>。
 2. 如果 `s2` 指向的数组是一个比 `n` 个字符短的字符串，则空字符将附加到 `s1` 指向的数组中的副本，直到所有字符中的 `n` 个字符都写入(即后尾全为 `\0` )。
 
-返回值：
+**返回值**
 	`strncpy` 函数将返回 `s1` 指针。
 
-注：
+笔记注：
 1. 库函数并不会检查目标的内存边界，因此<font color="#c00000">可能会导致溢出</font>。
 
 #### 7.24.3 连接函数(concatenation function)
@@ -846,7 +846,7 @@ char *strcat(char * restrict s1,
 
 ##### 7.24.3.2 strncat函数
 
-概要：
+**概要**
 ```C
 #include <string.h>  
 char *strncat(char * restrict s1, 
@@ -854,13 +854,13 @@ char *strncat(char * restrict s1,
 	size_t n);
 ```
 
-描述：
+**描述**
 1. `strncat` 函数从 `s2` 指向的数组到 `s1` 指向的字符串的末尾追加不超过 `n` 个字符(空字符和跟随它的字符不被追加)。 `s2` 的初始字符覆盖 `s1` 末尾的 `null` 字符。结果总是附加一个终止空字符(因此，最终可以出现在 `s1` 指向的数组中的字符数的最大值是 `strlen (s1) + n + 1` )。<font color="#c00000">如果复制发生在重叠的对象之间，则行为是未定义的</font>。
 
-返回值：
+**返回值**
 	`strcat` 函数将返回 `s1` 指针。
 
-注：
+笔记注：
 1. 库函数并不会检查目标的内存边界，因此<font color="#c00000">可能会导致溢出</font>。
 
 #### 7.24.4 比较函数
@@ -896,7 +896,7 @@ int strcoll(const char *s1, const char *s2);
 **返回值**
 1. 同 `strcmp` 。
 
-注：
+笔记注：
 1. `strcoll` 和 `strcmp` 的区别可见讨论[https://stackoverflow.com/questions/14087062/](https://stackoverflow.com/questions/14087062/)。
 2. 执行速度自然不如 `strncmp` 。
 
@@ -970,6 +970,7 @@ int func()
 	} else {
 		printf("The first character in the character set str2 in str1 is %c, locate at %d\r\n", str[len], len + 1);
 	}
+	return 0;
 }
 ```
 
@@ -981,8 +982,14 @@ int func()
 
 ##### 7.24.5.7 strstr函数
 
+**摘要**
+```C
+#include <string.h>
+char *strstr(const char *s1, const char *s2);
+```
 
-
+**描述**
+1. 
 
 
 
