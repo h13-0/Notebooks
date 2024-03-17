@@ -910,7 +910,7 @@ void *memchr(const void *s, int c, size_t n);
 **返回值**
 1. 如果找到匹配的指定字符 `c` ，则将返回 `c` 第一次出现的地址，若没有找到指定字符，则返回 `NULL` 。
 
-##### 7.24.5.2 strstr函数
+##### 7.24.5.2 strchr函数
 
 **摘要**
 ```C
@@ -919,6 +919,18 @@ char *strchr(const char *s, int c);
 ```
 
 **描述**
-1. 
+1. `strchr` 函数将从 `s` 所指字符串中找出第一个字符 `c` 出现的位置。字符串 `s` 遇到 `\0` 自动截止，字符 `c` 会被转换为 `char` 。
 
+**返回值**
+1. 如果在字符串中找到指定字符 `c` ，则返回该字符第一次出现的地址，若没有找到指定字符，则返回 `NULL` 。
 
+##### 7.24.5.3 strcspn函数
+
+**摘要**
+```C
+#include <string.h>
+size_t strcspn(const char *s1, const char *s2);
+```
+
+**描述**
+1. `strcspn` 函数将计算从字符串 `s1` 的第一个字符开始，最大的
