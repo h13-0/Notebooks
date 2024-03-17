@@ -921,7 +921,8 @@ void *memchr(const void *s, int c, size_t n);
 1. 如果找到匹配的指定字符 `c` ，则将返回 `c` 第一次出现的地址，若没有找到指定字符，则返回 `NULL` 。
 
 笔记注：
-1. 关于为什么 `memchr` 
+1. 关于为什么 `memchr` 会将 `int c` 解释为 `unsigned char` ，而 `strchr` 会将 `int c` 解释为 `char` 的讨论可见如下内容：
+	![[CPP/应试笔记与八股#2 48 为什么在C语言中，一定要用unsigned char表示byte而非signed char或char]]
 
 
 ##### 7.24.5.2 strchr函数
@@ -954,5 +955,11 @@ size_t strcspn(const char *s1, const char *s2);
 
 笔记示例：
 ```C
-
+int func()
+{
+	const char str1[] = "ABCDEF4960910";
+	const char str2[] = "013";           // 字符集合 { '0', '1', '3' }
+	int len = strcspn(str1, str2);       // 从str1的开头开始统计有多少不在集合中的字符
+	printf("len = %d", len);             // len = 10，"ABCDEF496"
+}
 ```
