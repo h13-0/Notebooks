@@ -75,19 +75,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 373,
+      "wordCount": 487,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 1.2433333333333334,
-      "characterCount": 539,
-      "nonWhitespaceCharacterCount": 470,
-      "readingTimeInMinutes": 0.774377358490566,
+      "pageCount": 1.6233333333333333,
+      "characterCount": 770,
+      "nonWhitespaceCharacterCount": 672,
+      "readingTimeInMinutes": 1.0289811320754718,
       "linkCount": 0,
-      "embedCount": 0,
+      "embedCount": 1,
       "aliases": null,
       "createdDate": 1710512146010,
-      "modifiedDate": 1710662880391,
-      "sizeInBytes": 1297
+      "modifiedDate": 1710663487139,
+      "sizeInBytes": 1752
     },
     "计算机网络/第三章 数据链路层/第三章 数据链路层.md": {
       "isCountable": true,
@@ -5668,6 +5668,24 @@
       "createdDate": 1710591361794,
       "modifiedDate": 1710591361794,
       "sizeInBytes": 64776
+    },
+    "Resources/Pasted image 20240317161802.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1710663482224,
+      "modifiedDate": 1710663482225,
+      "sizeInBytes": 46910
     }
   }
 }
