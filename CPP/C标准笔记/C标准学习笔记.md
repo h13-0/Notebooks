@@ -922,7 +922,7 @@ void *memchr(const void *s, int c, size_t n);
 
 笔记注：
 1. 关于为什么 `memchr` 会将 `int c` 解释为 `unsigned char` ，而 `strchr` 会将 `int c` 解释为 `char` 的讨论可见如下内容：
-	![[CPP/应试笔记与八股#2 48 为什么在C语言中，一定要用unsigned char表示byte而非signed char或char]]
+	![[CPP/应试笔记与八股#2 47 为什么在C语言中，一定要用unsigned char表示byte而非signed char或char]]
 
 
 ##### 7.24.5.2 strchr函数
@@ -989,7 +989,13 @@ char *strstr(const char *s1, const char *s2);
 ```
 
 **描述**
-1. 
+1. `strstr` 函数会从 `s1` 所指字符串中寻找 `s2` 字符串所指子串第一次出现的位置。上述字符串均以 `\0` 为截断。
+
+**返回值**
+1. `strstr` 函数将返回 `s1` 中第一次出现子串 `s2` 位置的指针，如果 `s1` 中没有子串 `s2` ，则返回 `NULL` 。
+2. 如果 `s2` 为零长度字符串(即 `{ '\0' }` )，则返回值为 `s1` 。
+
+
 
 
 
