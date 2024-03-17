@@ -904,4 +904,21 @@ void *memchr(const void *s, int c, size_t n);
 ```
 
 **描述**
+1. `memchr` 函数从 `s` 指向的内存的前 `n` 个字符(每个字符都被解释为 `unsigned char` ，实际上也就是前 n Byte)中定位第一个值 `c` 的内存地址( `c` 也会被解释为 `unsigned char` )。
+2. 此函数类似于从指定长度的字符串中找到第一个指定字符。
+
+**返回值**
+1. 如果找到匹配的指定字符 `c` ，则将返回 `c` 第一次出现的地址，若没有找到指定字符，则返回 `NULL` 。
+
+##### 7.24.5.2 strstr函数
+
+**摘要**
+```C
+#include <string.h>
+char *strchr(const char *s, int c);
+```
+
+**描述**
 1. 
+
+
