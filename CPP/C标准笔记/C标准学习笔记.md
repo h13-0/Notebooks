@@ -618,7 +618,7 @@ int fprintf(FILE * restrict stream,
 2. 如果给定的参数比 `format` 所需的参数少，<span style="background:#fff88f"><font color="#c00000">则行为未定义</font></span>。
 3. 如果给定的参数比 `format` 所需的参数多，则多余的表达式<font color="#c00000">也会被计算</font>，<font color="#c00000">然后被忽略</font>。
 4. `fprintf` 处理到 `format` 所指字符串的末尾字符 `\0` 后返回。
-5. 
+5. `format` 应为字符序列，普通的多字节流(除了 `%` 符)会原封不动的输出，每一个占位符都由 `%` 符引入，
 
 #### 7.21.7 字符输入输出函数
 
