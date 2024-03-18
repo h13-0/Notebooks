@@ -56,18 +56,6 @@
             }
           },
           {
-            "id": "eee6c0f03c9aa0f3",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "CPP/C标准笔记/C标准学习笔记.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
             "id": "e3a15fc987624703",
             "type": "leaf",
             "state": {
@@ -220,10 +208,6 @@
   "lastOpenFiles": [
     "CPP/C标准笔记/C标准学习笔记.md",
     "CPP/应试笔记与八股.md",
-    "计算机网络/第四章 网络层/第四章 网络层.md",
-    "计算机网络/应试笔记与八股.md",
-    "计算机网络/计算机网络应试学习.md",
-    "计算机网络/第五章 传输层/第五章 传输层.md",
     "Others/协程/协程.md",
     "Others/线程锁/实现/线程锁 with pthread.md",
     "编译原理/编译原理.md",
@@ -244,6 +228,10 @@
     "Others/PythonLibs/argparse/常用操作.md",
     "Others/PythonLibs/pycpraser/pycpraser.md",
     "Others/Obsidian/主题/禁用表格换行(保持表格原宽，并添加滚动条).md",
+    "生活常识/国家标准/生活常识的国家标准.md",
+    "生活常识/常见物质生产方式.md",
+    "Others/MS .NET Framework/Core and Framework.md",
+    "生活常识/Readme.md",
     "CPP/Resources/C数据类型.canvas",
     "计算机网络/Resources/Pasted image 20240317161802.png",
     "计算机网络/Resources/Pasted image 20240317163923.png",

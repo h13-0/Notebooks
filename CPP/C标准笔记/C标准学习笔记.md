@@ -931,8 +931,7 @@ void *memchr(const void *s, int c, size_t n);
 
 笔记注：
 1. 关于为什么 `memchr` 会将 `int c` 解释为 `unsigned char` ，而 `strchr` 会将 `int c` 解释为 `char` 的讨论可见如下内容：
-	![[CPP/应试笔记与八股#2 47 为什么在C语言中，一定要用unsigned char表示byte而非signed char或char]]
-
+	![[CPP/应试笔记与八股#2 48 为什么在C语言中，一定要用unsigned char表示byte而非signed char或char]]
 
 ##### 7.24.5.2 strchr函数
 
