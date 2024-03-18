@@ -604,6 +604,22 @@ FILE *fopen(const char * restrict filename,
 
 #### 7.21.6 格式化输入输出
 
+##### 7.21.6.1 fprintf函数
+
+**概要**
+```C
+#include <stdio.h>
+int fprintf(FILE * restrict stream,
+	const char * restrict format, ...);
+```
+
+**描述**
+1. `fprintf` 函数会将字节流按照 `format` 所指字符串中所指定的输出格式输出到 `stream` 所指向的流中。
+2. 如果给定的参数比 `format` 所需的参数少，<span style="background:#fff88f"><font color="#c00000">则行为未定义</font></span>。
+3. 如果给定的参数比 `format` 所需的参数多，则多余的表达式<font color="#c00000">也会被计算</font>，<font color="#c00000">然后被忽略</font>。
+4. `fprintf` 处理到 `format` 所指字符串的末尾字符 `\0` 后返回。
+
+
 #### 7.21.7 字符输入输出函数
 
 ##### 7.21.7.1 fgetc函数
