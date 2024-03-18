@@ -619,6 +619,7 @@ int fprintf(FILE * restrict stream,
 3. 如果给定的参数比 `format` 所需的参数多，则多余的表达式<font color="#c00000">也会被计算</font>，<font color="#c00000">然后被忽略</font>。
 4. `fprintf` 处理到 `format` 所指字符串的末尾字符 `\0` 后返回。
 5. `format` 应为字符序列，普通的多字节流(除了 `%` 符)会原封不动的输出，每一个占位符都由 `%` 符引入，
+TODO 补全翻译
 
 #### 7.21.7 字符输入输出函数
 
@@ -853,17 +854,17 @@ char *strncpy(char * restrict s1,
 
 ##### 7.24.3.1 strcat函数
 
-概要：
+**概要**
 ```C
 #include <string.h>  
 char *strcat(char * restrict s1, 
 	const char * restrict s2);
 ```
 
-描述：
+**描述**
 1. `strcat` 函数将 `s2` 指向的字符串的副本(包括终止空字符)附加到 `s1` 指向的字符串的末尾。 `s2` 的初始字符覆盖 `s1` 末尾的 `null` 字符。<font color="#c00000">如果复制发生在重叠的对象之间，则行为是未定义的</font>。
 
-返回值：
+**返回值**
 	`strcat` 函数将返回 `s1` 指针。
 
 注：
