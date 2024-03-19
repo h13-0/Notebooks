@@ -18,8 +18,17 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "74f3fe194b5aeb92",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {}
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -93,7 +102,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Others/电子科技大学C语言笔试准备/历年笔试题目笔记.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +118,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Others/电子科技大学C语言笔试准备/历年笔试题目笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -132,9 +139,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "Others/电子科技大学C语言笔试准备/历年笔试题目笔记.md"
-              }
+              "state": {}
             }
           }
         ]
@@ -155,10 +160,10 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "25e09d8c00d11973",
+  "active": "74f3fe194b5aeb92",
   "lastOpenFiles": [
-    "Math/加密解密/凯撒密码.md",
     "Others/电子科技大学C语言笔试准备/历年笔试题目笔记.md",
+    "Math/加密解密/凯撒密码.md",
     "生活常识/国家标准/生活常识的国家标准.md",
     "Math/复变函数.md",
     "Others/协程/协程.md",
