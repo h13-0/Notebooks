@@ -31,8 +31,7 @@
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -106,7 +105,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "CPP/C标准笔记/C与C++标准.md",
+                "file": "Others/电子科技大学C语言笔试准备/历年笔试题目笔记.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -123,7 +122,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "CPP/C标准笔记/C与C++标准.md",
+                "file": "Others/电子科技大学C语言笔试准备/历年笔试题目笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -146,7 +145,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "CPP/C标准笔记/C与C++标准.md"
+                "file": "Others/电子科技大学C语言笔试准备/历年笔试题目笔记.md"
               }
             }
           }
@@ -168,11 +167,11 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "c3a97fba3ef026e0",
+  "active": "fceb1a37c4d64223",
   "lastOpenFiles": [
-    "CPP/C标准笔记/C标准学习笔记.md",
-    "Others/电子科技大学C语言笔试准备/历年笔试题目笔记.md",
     "CPP/C标准笔记/C与C++标准.md",
+    "Others/电子科技大学C语言笔试准备/历年笔试题目笔记.md",
+    "CPP/C标准笔记/C标准学习笔记.md",
     "Others/电子科技大学C语言笔试准备/Resources/电子科技大学复试c题库.pdf",
     "Others/电子科技大学C语言笔试准备/Resources/电子科技大学复试c题库.tmp",
     "软件工程/软件工程应试笔记.md",
