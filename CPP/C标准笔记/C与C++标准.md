@@ -64,6 +64,7 @@ C95 的主要改动：
 最新免费草稿：[N1570](http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf)，ISO/IEC 9899:201x
 ![[n1570.pdf]]
 主要改动：
+1. 移除 `gets` 函数。
 
 特性支持表：
 
