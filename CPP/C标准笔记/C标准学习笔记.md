@@ -1033,6 +1033,15 @@ char *strstr(const char *s1, const char *s2);
 char *gets_s(char *s, rsize_t n);
 ```
 
+**运行时限制**
+1. `s` 不应当为空指针
+2. TODO
+
+**描述**
+1. `gets_s` 函数从 `stdin` 指向的流中读入最多比 `n` 少一个的字符并且存储到 `s` 指向的数组中，在新行字符(该新行字符会被丢弃)或文件结束后不会读入任何其他字符。
+2. 被丢弃的新行字符不计入读取的字符数。
+3. 在将最后一个字符读入数组后立即写入空字符。
+
 
 笔记注：
 1. C11标准正式移除 `get_s` 函数。
@@ -1053,4 +1062,10 @@ char *gets_s(char *s, rsize_t n);
 
 **摘要**
 ```C
+#include <stdio.h>
+char *gets(char *s);
 ```
+
+
+
+
