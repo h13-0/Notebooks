@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "软件工程/软件工程应试笔记.md",
+                "file": "CPP/C标准笔记/C标准学习笔记.md",
                 "mode": "source",
                 "source": false
               }
@@ -31,8 +31,7 @@
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -106,7 +105,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Others/电子科技大学C语言笔试准备/历年笔试题目笔记.md",
+                "file": "CPP/C标准笔记/C标准学习笔记.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -123,7 +122,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Others/电子科技大学C语言笔试准备/历年笔试题目笔记.md",
+                "file": "CPP/C标准笔记/C标准学习笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -146,7 +145,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Others/电子科技大学C语言笔试准备/历年笔试题目笔记.md"
+                "file": "CPP/C标准笔记/C标准学习笔记.md"
               }
             }
           }
@@ -168,13 +167,14 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "fceb1a37c4d64223",
+  "active": "35a4a450ae30fca9",
   "lastOpenFiles": [
-    "CPP/应试笔记与八股.md",
+    "Others/电子科技大学C语言笔试准备/历年笔试题目笔记.md",
+    "CPP/C标准笔记/C标准学习笔记.md",
     "软件工程/软件工程应试笔记.md",
+    "CPP/应试笔记与八股.md",
     "数据库系统概述/第一章 绪论/第一章 绪论.md",
     "软件工程",
-    "Others/电子科技大学C语言笔试准备/历年笔试题目笔记.md",
     "Math/加密解密/凯撒密码.md",
     "生活常识/国家标准/生活常识的国家标准.md",
     "Math/复变函数.md",
@@ -196,7 +196,6 @@
     "CMake/CMake 常用函数.md",
     "Others/PythonLibs/argparse/常用操作.md",
     "Others/PythonLibs/pycpraser/pycpraser.md",
-    "Others/Obsidian/主题/禁用表格换行(保持表格原宽，并添加滚动条).md",
     "CPP/Resources/C数据类型.canvas",
     "Resources/Pasted image 20240319185350.png",
     "Resources/Pasted image 20240319185335.png",

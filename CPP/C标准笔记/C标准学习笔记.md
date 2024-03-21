@@ -642,7 +642,7 @@ int fgetc(FILE *stream);
 概要：
 ```C
 #include <stdio.h>  
-char *fgets(char * restrict s, int n,  
+char *fgets(char * restrict s, int n, 
 	FILE * restrict stream);
 ```
 
