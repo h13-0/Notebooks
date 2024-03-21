@@ -30,9 +30,19 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "b8fe9cd62f78bdcd",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.5.11"
+              }
+            }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -168,7 +178,7 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "fceb1a37c4d64223",
+  "active": "b8fe9cd62f78bdcd",
   "lastOpenFiles": [
     "软件工程/软件工程应试笔记.md",
     "CPP/应试笔记与八股.md",
