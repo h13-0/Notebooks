@@ -5961,37 +5961,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 1805,
+      "wordCount": 1875,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 6.016666666666667,
-      "characterCount": 4776,
-      "nonWhitespaceCharacterCount": 3475,
-      "readingTimeInMinutes": 4.161584905660377,
+      "pageCount": 6.25,
+      "characterCount": 4947,
+      "nonWhitespaceCharacterCount": 3607,
+      "readingTimeInMinutes": 4.326415094339623,
       "linkCount": 0,
       "embedCount": 4,
       "aliases": null,
       "createdDate": 1711692146981,
-      "modifiedDate": 1711709757326,
-      "sizeInBytes": 8064
-    },
-    "计算机组成原理/Resources/Pasted image 20240329170430.png": {
-      "isCountable": false,
-      "isDirectory": false,
-      "noteCount": 0,
-      "wordCount": 0,
-      "wordCountTowardGoal": 0,
-      "wordGoal": 0,
-      "pageCount": 0,
-      "characterCount": 0,
-      "nonWhitespaceCharacterCount": 0,
-      "readingTimeInMinutes": 0,
-      "linkCount": 0,
-      "embedCount": 0,
-      "aliases": [],
-      "createdDate": 1711703070650,
-      "modifiedDate": 1711703070650,
-      "sizeInBytes": 136526
+      "modifiedDate": 1711710090580,
+      "sizeInBytes": 8355
     },
     "Others/电子科技大学C语言笔试准备/Resources/Pasted image 20240319185350.png": {
       "isCountable": false,
@@ -6029,7 +6011,25 @@
       "modifiedDate": 1711704339313,
       "sizeInBytes": 87861
     },
-    "Resources/Pasted image 20240329173142.png": {
+    "计算机组成原理/Resources/Pasted image 20240329180932.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1711706972702,
+      "modifiedDate": 1711706972703,
+      "sizeInBytes": 129690
+    },
+    "计算机组成原理/Resources/Pasted image 20240329173142.png": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
@@ -6047,25 +6047,7 @@
       "modifiedDate": 1711704702753,
       "sizeInBytes": 21957
     },
-    "Resources/Pasted image 20240329175554.png": {
-      "isCountable": false,
-      "isDirectory": false,
-      "noteCount": 0,
-      "wordCount": 0,
-      "wordCountTowardGoal": 0,
-      "wordGoal": 0,
-      "pageCount": 0,
-      "characterCount": 0,
-      "nonWhitespaceCharacterCount": 0,
-      "readingTimeInMinutes": 0,
-      "linkCount": 0,
-      "embedCount": 0,
-      "aliases": [],
-      "createdDate": 1711706154264,
-      "modifiedDate": 1711706154264,
-      "sizeInBytes": 33633
-    },
-    "Resources/Pasted image 20240329175600.png": {
+    "计算机组成原理/Resources/Pasted image 20240329175600.png": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
@@ -6083,7 +6065,7 @@
       "modifiedDate": 1711706160412,
       "sizeInBytes": 33633
     },
-    "Resources/Pasted image 20240329180301.png": {
+    "计算机组成原理/Resources/Pasted image 20240329180301.png": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
@@ -6100,24 +6082,6 @@
       "createdDate": 1711706581573,
       "modifiedDate": 1711706581573,
       "sizeInBytes": 95929
-    },
-    "Resources/Pasted image 20240329180932.png": {
-      "isCountable": false,
-      "isDirectory": false,
-      "noteCount": 0,
-      "wordCount": 0,
-      "wordCountTowardGoal": 0,
-      "wordGoal": 0,
-      "pageCount": 0,
-      "characterCount": 0,
-      "nonWhitespaceCharacterCount": 0,
-      "readingTimeInMinutes": 0,
-      "linkCount": 0,
-      "embedCount": 0,
-      "aliases": [],
-      "createdDate": 1711706972702,
-      "modifiedDate": 1711706972703,
-      "sizeInBytes": 129690
     }
   }
 }
