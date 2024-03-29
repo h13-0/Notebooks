@@ -6046,6 +6046,24 @@
       "createdDate": 1711706581573,
       "modifiedDate": 1711706581573,
       "sizeInBytes": 95929
+    },
+    "微型计算机原理与接口技术/微型计算机原理与接口技术.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0,
+      "characterCount": 1,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1711715033497,
+      "modifiedDate": 1711715041661,
+      "sizeInBytes": 1
     }
   }
 }
