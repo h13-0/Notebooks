@@ -31,8 +31,7 @@
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -106,7 +105,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "微型计算机原理与接口技术/应试笔记与八股.md",
+                "file": "微型计算机原理与接口技术/第二章 微处理器与总线/第二章 微处理器与总线.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -123,7 +122,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "微型计算机原理与接口技术/应试笔记与八股.md",
+                "file": "微型计算机原理与接口技术/第二章 微处理器与总线/第二章 微处理器与总线.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -146,7 +145,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "微型计算机原理与接口技术/应试笔记与八股.md"
+                "file": "微型计算机原理与接口技术/第二章 微处理器与总线/第二章 微处理器与总线.md"
               }
             }
           }
@@ -168,11 +167,11 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "96a3a7185b416b65",
+  "active": "47183a8c4aeaa5b3",
   "lastOpenFiles": [
+    "微型计算机原理与接口技术/应试笔记与八股.md",
     "微型计算机原理与接口技术/第二章 微处理器与总线/第二章 微处理器与总线.md",
     "Resources/Pasted image 20240331204008.png",
-    "微型计算机原理与接口技术/应试笔记与八股.md",
     "微型计算机原理与接口技术/第一章 计算机基础知识/第一章 计算机基础知识.md",
     "Resources/Pasted image 20240331200529.png",
     "Resources/Pasted image 20240331200023.png",
