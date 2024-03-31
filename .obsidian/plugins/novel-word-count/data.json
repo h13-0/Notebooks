@@ -5151,19 +5151,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 3854,
+      "wordCount": 3991,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 12.846666666666666,
-      "characterCount": 18224,
-      "nonWhitespaceCharacterCount": 10715,
-      "readingTimeInMinutes": 9.06656603773585,
+      "pageCount": 13.303333333333333,
+      "characterCount": 18622,
+      "nonWhitespaceCharacterCount": 11089,
+      "readingTimeInMinutes": 9.386679245283018,
       "linkCount": 1,
-      "embedCount": 11,
+      "embedCount": 12,
       "aliases": null,
       "createdDate": 1711718962197,
-      "modifiedDate": 1711890762117,
-      "sizeInBytes": 24994
+      "modifiedDate": 1711891307398,
+      "sizeInBytes": 25630
     },
     "微型计算机原理与接口技术/微型计算机原理与接口技术.md": {
       "isCountable": true,
@@ -6586,6 +6586,24 @@
       "createdDate": 1711890635647,
       "modifiedDate": 1711890635647,
       "sizeInBytes": 47768
+    },
+    "Resources/Pasted image 20240331212039.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1711891239315,
+      "modifiedDate": 1711891239315,
+      "sizeInBytes": 149880
     }
   }
 }
