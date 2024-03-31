@@ -5155,15 +5155,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 10.55,
-      "characterCount": 16364,
-      "nonWhitespaceCharacterCount": 8981,
+      "characterCount": 16377,
+      "nonWhitespaceCharacterCount": 8990,
       "readingTimeInMinutes": 7.465094339622642,
       "linkCount": 1,
       "embedCount": 9,
       "aliases": null,
       "createdDate": 1711718962197,
-      "modifiedDate": 1711872565599,
-      "sizeInBytes": 21888
+      "modifiedDate": 1711873271117,
+      "sizeInBytes": 21901
     },
     "微型计算机原理与接口技术/微型计算机原理与接口技术.md": {
       "isCountable": true,
