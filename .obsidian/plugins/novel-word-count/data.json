@@ -5187,19 +5187,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 446,
+      "wordCount": 799,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 1.4866666666666666,
-      "characterCount": 915,
-      "nonWhitespaceCharacterCount": 787,
-      "readingTimeInMinutes": 1.005509433962264,
-      "linkCount": 0,
-      "embedCount": 0,
+      "pageCount": 2.6633333333333336,
+      "characterCount": 1697,
+      "nonWhitespaceCharacterCount": 1473,
+      "readingTimeInMinutes": 1.814377358490566,
+      "linkCount": 1,
+      "embedCount": 1,
       "aliases": null,
       "createdDate": 1711718781031,
-      "modifiedDate": 1711875749572,
-      "sizeInBytes": 1747
+      "modifiedDate": 1711876378268,
+      "sizeInBytes": 3169
     },
     "微型计算机原理与接口技术/应试笔记与八股.md": {
       "isCountable": true,
@@ -6352,6 +6352,24 @@
       "createdDate": 1711869857763,
       "modifiedDate": 1711869857763,
       "sizeInBytes": 32419
+    },
+    "Resources/Pasted image 20240331171254.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1711876374991,
+      "modifiedDate": 1711876374992,
+      "sizeInBytes": 68346
     }
   }
 }
