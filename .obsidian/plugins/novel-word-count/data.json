@@ -2523,19 +2523,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 6601,
+      "wordCount": 6635,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 22.003333333333334,
-      "characterCount": 29345,
-      "nonWhitespaceCharacterCount": 17689,
-      "readingTimeInMinutes": 15.49701886792453,
+      "pageCount": 22.116666666666667,
+      "characterCount": 29546,
+      "nonWhitespaceCharacterCount": 17875,
+      "readingTimeInMinutes": 15.602264150943396,
       "linkCount": 1,
       "embedCount": 18,
       "aliases": null,
       "createdDate": 1711718962197,
-      "modifiedDate": 1712047080054,
-      "sizeInBytes": 40979
+      "modifiedDate": 1712047251349,
+      "sizeInBytes": 41220
     },
     "微型计算机原理与接口技术/第一章 计算机基础知识/第一章 计算机基础知识.md": {
       "isCountable": true,
@@ -6694,6 +6694,24 @@
       "createdDate": 1712045653381,
       "modifiedDate": 1712045653382,
       "sizeInBytes": 127163
+    },
+    "微型计算机原理与接口技术/第三章 指令系统/第三章 指令系统.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 33,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0.11,
+      "characterCount": 61,
+      "nonWhitespaceCharacterCount": 49,
+      "readingTimeInMinutes": 0.06954716981132075,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1712047275345,
+      "modifiedDate": 1712047381196,
+      "sizeInBytes": 123
     }
   }
 }
