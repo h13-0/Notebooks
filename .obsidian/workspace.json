@@ -4,15 +4,19 @@
     "type": "split",
     "children": [
       {
-        "id": "7d8016a6d71cbd99",
+        "id": "8203f7414ec2b6c3",
         "type": "tabs",
         "children": [
           {
-            "id": "4dce02763e54343a",
+            "id": "bd31d1f058d73c3f",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "微型计算机原理与接口技术/第二章 微处理器与总线/第二章 微处理器与总线.md",
+                "mode": "source",
+                "source": false
+              }
             }
           }
         ]
@@ -89,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "机器学习/应试笔记与八股.md",
+                "file": "微型计算机原理与接口技术/第二章 微处理器与总线/第二章 微处理器与总线.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -106,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "机器学习/应试笔记与八股.md",
+                "file": "微型计算机原理与接口技术/第二章 微处理器与总线/第二章 微处理器与总线.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -129,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "机器学习/应试笔记与八股.md"
+                "file": "微型计算机原理与接口技术/第二章 微处理器与总线/第二章 微处理器与总线.md"
               }
             }
           }
@@ -151,10 +155,10 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "7ddc64b2e3c9b5c8",
+  "active": "bd31d1f058d73c3f",
   "lastOpenFiles": [
-    "计算机网络/应试笔记与八股.md",
     "机器学习/应试笔记与八股.md",
+    "计算机网络/应试笔记与八股.md",
     "微型计算机原理与接口技术/Resources/Pasted image 20240331224942.png",
     "机器学习",
     "微型计算机原理与接口技术/应试笔记与八股.md",
