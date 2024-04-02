@@ -4,19 +4,15 @@
     "type": "split",
     "children": [
       {
-        "id": "16d2416c81d1abc0",
+        "id": "7d8016a6d71cbd99",
         "type": "tabs",
         "children": [
           {
-            "id": "7d20469ff3b540d0",
+            "id": "4dce02763e54343a",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "机器学习/应试笔记与八股.md",
-                "mode": "source",
-                "source": false
-              }
+              "type": "empty",
+              "state": {}
             }
           }
         ]
@@ -155,7 +151,7 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "7d20469ff3b540d0",
+  "active": "7ddc64b2e3c9b5c8",
   "lastOpenFiles": [
     "计算机网络/应试笔记与八股.md",
     "机器学习/应试笔记与八股.md",
