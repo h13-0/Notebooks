@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "微型计算机原理与接口技术/第三章 指令系统/第三章 指令系统.md",
+                "file": "微型计算机原理与接口技术/第二章 微处理器与总线/第二章 微处理器与总线.md",
                 "mode": "source",
                 "source": false
               }
@@ -25,13 +25,14 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "微型计算机原理与接口技术/第二章 微处理器与总线/第二章 微处理器与总线.md",
+                "file": "微型计算机原理与接口技术/第三章 指令系统/第三章 指令系统.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -167,7 +168,7 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "bd31d1f058d73c3f",
+  "active": "27d83f77bd339ffb",
   "lastOpenFiles": [
     "微型计算机原理与接口技术/第二章 微处理器与总线/第二章 微处理器与总线.md",
     "微型计算机原理与接口技术/第三章 指令系统/第三章 指令系统.md",
