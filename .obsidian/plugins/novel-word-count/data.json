@@ -5241,19 +5241,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 2259,
+      "wordCount": 2415,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 7.53,
-      "characterCount": 5800,
-      "nonWhitespaceCharacterCount": 5165,
-      "readingTimeInMinutes": 5.335622641509434,
+      "pageCount": 8.05,
+      "characterCount": 6187,
+      "nonWhitespaceCharacterCount": 5508,
+      "readingTimeInMinutes": 5.690188679245283,
       "linkCount": 1,
-      "embedCount": 4,
+      "embedCount": 5,
       "aliases": null,
       "createdDate": 1712047275345,
-      "modifiedDate": 1712404592456,
-      "sizeInBytes": 9744
+      "modifiedDate": 1712405201173,
+      "sizeInBytes": 10413
     },
     "微型计算机原理与接口技术/Resources/xYAkYLhtfo.png": {
       "isCountable": false,
@@ -6784,6 +6784,24 @@
       "createdDate": 1678194750831,
       "modifiedDate": 1706873818718,
       "sizeInBytes": 216
+    },
+    "Resources/Pasted image 20240406200550.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1712405150262,
+      "modifiedDate": 1712405150263,
+      "sizeInBytes": 38866
     }
   }
 }
