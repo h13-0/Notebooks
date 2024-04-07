@@ -25,7 +25,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "微型计算机原理与接口技术/第三章 指令系统/第三章 指令系统.md",
+                "file": "微型计算机原理与接口技术/第二章 微处理器与总线/第二章 微处理器与总线.md",
                 "mode": "source",
                 "source": false
               }
@@ -106,7 +106,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "微型计算机原理与接口技术/第三章 指令系统/第三章 指令系统.md",
+                "file": "微型计算机原理与接口技术/第二章 微处理器与总线/第二章 微处理器与总线.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -123,7 +123,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "微型计算机原理与接口技术/第三章 指令系统/第三章 指令系统.md",
+                "file": "微型计算机原理与接口技术/第二章 微处理器与总线/第二章 微处理器与总线.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -146,7 +146,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "微型计算机原理与接口技术/第三章 指令系统/第三章 指令系统.md"
+                "file": "微型计算机原理与接口技术/第二章 微处理器与总线/第二章 微处理器与总线.md"
               }
             }
           }
@@ -170,8 +170,8 @@
   },
   "active": "27d83f77bd339ffb",
   "lastOpenFiles": [
-    "微型计算机原理与接口技术/第二章 微处理器与总线/第二章 微处理器与总线.md",
     "微型计算机原理与接口技术/第三章 指令系统/第三章 指令系统.md",
+    "微型计算机原理与接口技术/第二章 微处理器与总线/第二章 微处理器与总线.md",
     "Resources/Pasted image 20240406200931.png",
     "Resources/Pasted image 20240406200715.png",
     "Resources/Pasted image 20240406200550.png",
