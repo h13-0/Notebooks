@@ -44,7 +44,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -118,7 +118,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "微型计算机原理与接口技术/应试笔记与八股.md",
+                "file": "微型计算机原理与接口技术/第三章 指令系统/第三章 指令系统.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -135,7 +135,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "微型计算机原理与接口技术/应试笔记与八股.md",
+                "file": "微型计算机原理与接口技术/第三章 指令系统/第三章 指令系统.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -158,7 +158,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "微型计算机原理与接口技术/应试笔记与八股.md"
+                "file": "微型计算机原理与接口技术/第三章 指令系统/第三章 指令系统.md"
               }
             }
           }
@@ -180,7 +180,7 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "614928624cc7f264",
+  "active": "27d83f77bd339ffb",
   "lastOpenFiles": [
     "微型计算机原理与接口技术/第一章 计算机基础知识/第一章 计算机基础知识.md",
     "微型计算机原理与接口技术/应试笔记与八股.md",
