@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "微型计算机原理与接口技术/应试笔记与八股.md",
+                "file": "Readme.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "微型计算机原理与接口技术/应试笔记与八股.md",
+                "file": "Readme.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "微型计算机原理与接口技术/应试笔记与八股.md",
+                "file": "Readme.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "微型计算机原理与接口技术/应试笔记与八股.md"
+                "file": "Readme.md"
               }
             }
           }
@@ -157,6 +157,7 @@
   },
   "active": "614928624cc7f264",
   "lastOpenFiles": [
+    "微型计算机原理与接口技术/应试笔记与八股.md",
     "STM32开发/STM32配置与API手册/STM32配置与API手册.md",
     "STM32开发/STM32开发笔记.md",
     "STM32开发/STM32配置与API手册",
@@ -181,7 +182,6 @@
     "电子技术/基本元器件",
     "电子技术",
     "微型计算机原理与接口技术/第一章 计算机基础知识/第一章 计算机基础知识.md",
-    "微型计算机原理与接口技术/应试笔记与八股.md",
     "微型计算机原理与接口技术/Resources/Pasted image 20240406200550.png",
     "微型计算机原理与接口技术/Resources/Pasted image 20240404161010.png",
     "微型计算机原理与接口技术/Resources/Pasted image 20240404160633.png",
