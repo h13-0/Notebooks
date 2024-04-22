@@ -20,7 +20,7 @@
 ### 字体
 
 本仓库使用的字体包括：
-- 思源黑体
+- [思源黑体](https://github.com/adobe-fonts/source-han-sans)(Static Super OTC)
 - [思源等宽](https://github.com/adobe-fonts/source-han-mono)
 
 
