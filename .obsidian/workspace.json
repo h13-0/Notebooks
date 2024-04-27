@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "STM32开发/STM32配置与API手册/通用配置/通用配置.md",
+                "file": "STM32开发/STM32配置与API手册/外设接口/外设接口.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "STM32开发/STM32配置与API手册/通用配置/通用配置.md",
+                "file": "STM32开发/STM32配置与API手册/外设接口/外设接口.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "STM32开发/STM32配置与API手册/通用配置/通用配置.md",
+                "file": "STM32开发/STM32配置与API手册/外设接口/外设接口.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "STM32开发/STM32配置与API手册/通用配置/通用配置.md"
+                "file": "STM32开发/STM32配置与API手册/外设接口/外设接口.md"
               }
             }
           }
@@ -157,14 +157,14 @@
   },
   "active": "614928624cc7f264",
   "lastOpenFiles": [
-    "STM32开发/STM32配置与API手册/外设接口/外设接口.md",
+    "STM32开发/STM32配置与API手册/STM32配置与API手册.md",
     "STM32开发/STM32配置与API手册/通用配置/通用配置.md",
+    "STM32开发/STM32配置与API手册/外设接口/外设接口.md",
     "Resources/stm32cubeide_3AosLnwUVi.png",
     "Resources/Pasted image 20240422224456.png",
     "Resources/stm32cubeide_FfvAsuGt5H.png",
     "STM32开发/STM32配置与API手册/通用配置",
     "Resources/javaw_I7t8h99PuJ.png",
-    "STM32开发/STM32配置与API手册/STM32配置与API手册.md",
     "STM32开发/STM32配置与API手册/外设接口",
     "Readme.md",
     "微型计算机原理与接口技术/应试笔记与八股.md",
