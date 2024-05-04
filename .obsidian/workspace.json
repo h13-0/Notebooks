@@ -77,7 +77,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 261.5
+    "width": 261.5,
+    "collapsed": true
   },
   "right": {
     "id": "989a0ed08fe1a7b2",
@@ -155,7 +156,7 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "51760e007a1683ab",
+  "active": "7ddc64b2e3c9b5c8",
   "lastOpenFiles": [
     "Resources/0003 1.png",
     "Resources/0003.png",
