@@ -11,12 +11,8 @@
             "id": "51760e007a1683ab",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
-                "mode": "source",
-                "source": false
-              }
+              "type": "graph",
+              "state": {}
             }
           }
         ]
@@ -93,7 +89,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +105,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -132,9 +126,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "机器学习/深度学习/CV/文章笔记/1989 LeNet.md"
-              }
+              "state": {}
             }
           }
         ]
@@ -157,6 +149,8 @@
   },
   "active": "51760e007a1683ab",
   "lastOpenFiles": [
+    "微型计算机原理与接口技术/Resources/Pasted image 20240329214611.png",
+    "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
     "STM32开发/Resources/stm32cubeide_FfvAsuGt5H.png",
     "STM32开发/Resources/stm32cubeide_3AosLnwUVi.png",
     "STM32开发/Resources/Pasted image 20240422224456.png",
@@ -165,7 +159,6 @@
     "机器学习/Resources/0003.png",
     "机器学习/Resources/0008.png",
     "机器学习/Resources/0003 1.png",
-    "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
     "机器学习/Resources/0005.png",
     "机器学习/应试笔记与八股.md",
     "Readme.md",
