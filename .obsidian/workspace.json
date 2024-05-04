@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "机器学习/深度学习/CV/文章笔记/LeNet.md",
+                "file": "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
                 "mode": "source",
                 "source": false
               }
@@ -77,8 +77,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 261.5,
-    "collapsed": true
+    "width": 261.5
   },
   "right": {
     "id": "989a0ed08fe1a7b2",
@@ -94,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "机器学习/深度学习/CV/文章笔记/LeNet.md",
+                "file": "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -111,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "机器学习/深度学习/CV/文章笔记/LeNet.md",
+                "file": "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -134,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "机器学习/深度学习/CV/文章笔记/LeNet.md"
+                "file": "机器学习/深度学习/CV/文章笔记/1989 LeNet.md"
               }
             }
           }
@@ -158,13 +157,18 @@
   },
   "active": "51760e007a1683ab",
   "lastOpenFiles": [
-    "Resources/0008.png",
-    "Resources/0005.png",
-    "Resources/0003 1.png",
-    "Resources/0003.png",
+    "STM32开发/Resources/stm32cubeide_FfvAsuGt5H.png",
+    "STM32开发/Resources/stm32cubeide_3AosLnwUVi.png",
+    "STM32开发/Resources/Pasted image 20240422224456.png",
+    "STM32开发/Resources/javaw_I7t8h99PuJ.png",
+    "Resources/Pasted image 20240203021517.png",
+    "机器学习/Resources/0003.png",
+    "机器学习/Resources/0008.png",
+    "机器学习/Resources/0003 1.png",
+    "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
+    "机器学习/Resources/0005.png",
     "机器学习/应试笔记与八股.md",
     "Readme.md",
-    "机器学习/深度学习/CV/文章笔记/LeNet.md",
     "机器学习/Resources/[block]lecun1989.pdf",
     "机器学习/Resources/lecun1989.pdf",
     "机器学习/Resources",
@@ -179,16 +183,10 @@
     "STM32开发/STM32开发笔记.md",
     "STM32开发/Resources/STM32中文参考手册_V10.pdf",
     "STM32开发/Resources",
-    "Resources/stm32cubeide_3AosLnwUVi.png",
-    "Resources/Pasted image 20240422224456.png",
-    "Resources/stm32cubeide_FfvAsuGt5H.png",
-    "Resources/javaw_I7t8h99PuJ.png",
     "微型计算机原理与接口技术/应试笔记与八股.md",
     "STM32开发/未命名.md",
     "Math/复变函数/第一章 复数及复平面/第一章 复数及复平面.md",
-    "Resources/Pasted image 20240203021517.png",
     "微型计算机原理与接口技术/Resources/Pasted image 20240402161413.png",
-    "微型计算机原理与接口技术/Resources/Pasted image 20240406200715.png",
     "Math/复变函数/复变函数.md",
     "计算机网络/计算机网络应试学习.md",
     "微型计算机原理与接口技术/第二章 微处理器与总线/第二章 微处理器与总线.md",

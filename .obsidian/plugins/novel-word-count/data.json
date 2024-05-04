@@ -6065,60 +6065,6 @@
       "modifiedDate": 1714302289132,
       "sizeInBytes": 14306739
     },
-    "Resources/stm32cubeide_FfvAsuGt5H.png": {
-      "isCountable": false,
-      "isDirectory": false,
-      "noteCount": 0,
-      "wordCount": 0,
-      "wordCountTowardGoal": 0,
-      "wordGoal": 0,
-      "pageCount": 0,
-      "characterCount": 0,
-      "nonWhitespaceCharacterCount": 0,
-      "readingTimeInMinutes": 0,
-      "linkCount": 0,
-      "embedCount": 0,
-      "aliases": [],
-      "createdDate": 1713797048201,
-      "modifiedDate": 1713797048205,
-      "sizeInBytes": 90310
-    },
-    "Resources/Pasted image 20240422224456.png": {
-      "isCountable": false,
-      "isDirectory": false,
-      "noteCount": 0,
-      "wordCount": 0,
-      "wordCountTowardGoal": 0,
-      "wordGoal": 0,
-      "pageCount": 0,
-      "characterCount": 0,
-      "nonWhitespaceCharacterCount": 0,
-      "readingTimeInMinutes": 0,
-      "linkCount": 0,
-      "embedCount": 0,
-      "aliases": [],
-      "createdDate": 1713797096589,
-      "modifiedDate": 1713797096593,
-      "sizeInBytes": 534738
-    },
-    "Resources/stm32cubeide_3AosLnwUVi.png": {
-      "isCountable": false,
-      "isDirectory": false,
-      "noteCount": 0,
-      "wordCount": 0,
-      "wordCountTowardGoal": 0,
-      "wordGoal": 0,
-      "pageCount": 0,
-      "characterCount": 0,
-      "nonWhitespaceCharacterCount": 0,
-      "readingTimeInMinutes": 0,
-      "linkCount": 0,
-      "embedCount": 0,
-      "aliases": [],
-      "createdDate": 1713797171759,
-      "modifiedDate": 1713797171759,
-      "sizeInBytes": 91617
-    },
     "Resources/Pasted image 20240203021517.png": {
       "isCountable": false,
       "isDirectory": false,
@@ -6136,24 +6082,6 @@
       "createdDate": 1713204230686,
       "modifiedDate": 1713204230686,
       "sizeInBytes": 198192
-    },
-    "Resources/javaw_I7t8h99PuJ.png": {
-      "isCountable": false,
-      "isDirectory": false,
-      "noteCount": 0,
-      "wordCount": 0,
-      "wordCountTowardGoal": 0,
-      "wordGoal": 0,
-      "pageCount": 0,
-      "characterCount": 0,
-      "nonWhitespaceCharacterCount": 0,
-      "readingTimeInMinutes": 0,
-      "linkCount": 0,
-      "embedCount": 0,
-      "aliases": [],
-      "createdDate": 1713794929345,
-      "modifiedDate": 1713794929345,
-      "sizeInBytes": 103697
     },
     "Readme.md": {
       "isCountable": true,
@@ -7109,25 +7037,25 @@
       "modifiedDate": 1713204230576,
       "sizeInBytes": 232
     },
-    "机器学习/深度学习/CV/文章笔记/LeNet.md": {
-      "isCountable": true,
+    "机器学习/Resources/0008.png": {
+      "isCountable": false,
       "isDirectory": false,
-      "noteCount": 1,
-      "wordCount": 1786,
+      "noteCount": 0,
+      "wordCount": 0,
       "wordCountTowardGoal": 0,
-      "wordGoal": null,
-      "pageCount": 5.953333333333333,
-      "characterCount": 3110,
-      "nonWhitespaceCharacterCount": 2953,
-      "readingTimeInMinutes": 3.8504528301886793,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
       "linkCount": 0,
-      "embedCount": 3,
-      "aliases": null,
-      "createdDate": 1714832823028,
-      "modifiedDate": 1714838833519,
-      "sizeInBytes": 6686
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1714838040417,
+      "modifiedDate": 1714838040418,
+      "sizeInBytes": 392394
     },
-    "Resources/0003.png": {
+    "机器学习/Resources/0003.png": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
@@ -7145,7 +7073,7 @@
       "modifiedDate": 1714836121823,
       "sizeInBytes": 655375
     },
-    "Resources/0003 1.png": {
+    "机器学习/Resources/0003 1.png": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
@@ -7163,7 +7091,7 @@
       "modifiedDate": 1714836124451,
       "sizeInBytes": 655375
     },
-    "Resources/0005.png": {
+    "机器学习/Resources/0005.png": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
@@ -7181,7 +7109,7 @@
       "modifiedDate": 1714837970976,
       "sizeInBytes": 279854
     },
-    "Resources/0008.png": {
+    "STM32开发/Resources/stm32cubeide_FfvAsuGt5H.png": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
@@ -7195,9 +7123,81 @@
       "linkCount": 0,
       "embedCount": 0,
       "aliases": [],
-      "createdDate": 1714838040417,
-      "modifiedDate": 1714838040418,
-      "sizeInBytes": 392394
+      "createdDate": 1713797048201,
+      "modifiedDate": 1713797048205,
+      "sizeInBytes": 90310
+    },
+    "STM32开发/Resources/Pasted image 20240422224456.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1713797096589,
+      "modifiedDate": 1713797096593,
+      "sizeInBytes": 534738
+    },
+    "STM32开发/Resources/stm32cubeide_3AosLnwUVi.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1713797171759,
+      "modifiedDate": 1713797171759,
+      "sizeInBytes": 91617
+    },
+    "STM32开发/Resources/javaw_I7t8h99PuJ.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1713794929345,
+      "modifiedDate": 1713794929345,
+      "sizeInBytes": 103697
+    },
+    "机器学习/深度学习/CV/文章笔记/1989 LeNet.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 1843,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 6.1433333333333335,
+      "characterCount": 3249,
+      "nonWhitespaceCharacterCount": 3075,
+      "readingTimeInMinutes": 3.982188679245283,
+      "linkCount": 0,
+      "embedCount": 3,
+      "aliases": null,
+      "createdDate": 1714832823028,
+      "modifiedDate": 1714839336084,
+      "sizeInBytes": 6923
     }
   }
 }
