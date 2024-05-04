@@ -157,6 +157,8 @@
   },
   "active": "51760e007a1683ab",
   "lastOpenFiles": [
+    "Resources/0003 1.png",
+    "Resources/0003.png",
     "机器学习/应试笔记与八股.md",
     "Readme.md",
     "机器学习/深度学习/CV/文章笔记/LeNet.md",
@@ -186,7 +188,6 @@
     "微型计算机原理与接口技术/Resources/Pasted image 20240406200715.png",
     "微型计算机原理与接口技术/Resources/Pasted image 20240406200931.png",
     "Math/复变函数/Resources/Pasted image 20240415014130.png",
-    "Math/复变函数/Resources/Pasted image 20240415014144.png",
     "Math/复变函数/复变函数.md",
     "计算机网络/计算机网络应试学习.md",
     "微型计算机原理与接口技术/第二章 微处理器与总线/第二章 微处理器与总线.md",
@@ -202,7 +203,6 @@
     "CPP/C标准笔记/C++ 修饰符类型.md",
     "Others/线程锁/线程锁与信号量.md",
     "Others/Obsidian/插件/Dynamic table of contents 自动目录.md",
-    "Others/Obsidian/插件/bartender 笔记md文件手动排序.md",
     "CPP/Resources/C数据类型.canvas"
   ]
 }
