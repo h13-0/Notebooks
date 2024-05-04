@@ -15,7 +15,7 @@
 	- J.S.Denker  
 	- D.Henderson  
 	- R.E.Howard  
-	- W. Hubbard  
+	- W.Hubbard  
 	- L.D.Jackel  
  - 机构：贝尔实验室，AT&T Bell Laboratories, Holmdei, NJ 07733 USA
 
@@ -77,12 +77,23 @@ H3层有30个单元，并且与H2完全连接。因此，H2与H3之间的连接�
 
 ### 4. 实验环境
 
-所有模拟均使用在SUN-4/260上运行的反向传播模拟器SN（Bottou和LeCun 1988）进行。
+<font color="#7f7f7f">所有模拟均使用在SUN-4/260上运行的反向传播模拟器SN（Bottou和LeCun 1988）进行。</font>
 
 <font color="#c00000">在每个节点上使用的非线性函数是缩放的双曲正切函数</font>。这类对称函数被认为可以加快收敛速度，尽管如果某些权重过小，学习可能会极其缓慢（LeCun 1987年）。<font color="#c00000">输出单元的目标值被选在sigmoid函数的准线性范围内</font>。<font color="#c00000">这样可以防止权重无限增长，并防止输出单元操作在sigmoid的平坦区域</font>。<font color="#c00000">输出成本函数是均方误差</font>。
 
 <span style="background:#fff88f"><font color="#c00000">在训练之前，权重使用均匀分布在</font></span> $-2.4/Fi$ <span style="background:#fff88f"><font color="#c00000">与</font></span> $2.4/Fi$ <span style="background:#fff88f"><font color="#c00000">之间的随机值进行初始化</font></span>，<span style="background:#fff88f"><font color="#c00000">其中</font></span> $Fi$ <span style="background:#fff88f"><font color="#c00000">是连接所属单元的输入数（输入量）</font></span>。这种技术倾向于保持总输入在sigmoid的操作范围内。
 
+在每次学习实验中，模式以固定顺序重复呈现。权重根据所谓的随机梯度或“在线”程序（每呈现一个单一模式后更新）进行更新，而不是“真正的”梯度程序（在更新权重之前对整个训练集进行平均）。从经验研究（由理论论证支持）来看，随机梯度的收敛速度比真正的梯度快得多，尤其是在大型、冗余的数据集上。它还找到了更加鲁棒的解。
+
+所有实验都使用了牛顿算法的一个特殊版本，该版本使用一个正的、对角线的黑塞矩阵近似（LeCun 1987年；Becker和LeCun 1988年）。这种算法并不被认为能显著提高学习速度，但它能可靠地收敛，而不需要对参数进行广泛调整。
+
+### 5. 结果
+
+
+
 
 
 ![[0005.png]]
+
+
+
