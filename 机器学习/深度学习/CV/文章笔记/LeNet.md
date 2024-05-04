@@ -20,4 +20,4 @@ Recognition`
 	- L.D.Jackel  
  - 机构：贝尔实验室，AT&T Bell Laboratories, Holmdei, NJ 07733 USA
 
-
+## 重要内容
