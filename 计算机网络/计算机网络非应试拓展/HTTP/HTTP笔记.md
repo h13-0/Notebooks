@@ -101,8 +101,10 @@ curl -X DELETE https://api.example.com/users/123
 
 #### TRACE方法
 
-`TRACE` 方法用于回显服务器收到的请求，但出于安全性考虑， `TRACE` 方法通常被禁用。
+`TRACE` 方法用于回显服务器收到的请求。<font color="#c00000">服务器回回显除了实体内容的精确副本</font>，但出于安全性考虑， `TRACE` 方法通常被禁用。
 
+
+`TRACE`
 #### CONNECT方法
 
 
