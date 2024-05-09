@@ -78,6 +78,11 @@ curl -X POST https://api.example.com/data -H "Content-Type: application/json" -d
 
 #### PUT方法
 
-
-
-
+和 `POST` 方法类似的是 `PUT` 方法也是客户端向服务器传输数据的一种方法，只是<font color="#c00000">其是幂等的方法</font>，主要用于更新或替换服务。
+其特性主要有：
+- 幂等性 如果多次执行同一个`PUT`请求，服务器上的资源状态应该和执行一次`PUT`请求时相同，这有助于防止由于网络问题导致的多次请求引发的问题。
+- 更新和替换： `PUT`方法通常用于更新现有资源或替换资源内容。如果指定的资源不存在，根据服务器配置，`PUT`请求也可能创建一个新的资源。
+例如可以使用如下的命令发送 `PUT` 请求：
+```Shell
+curl -X PUT https://api.example.com/users/123 -H "Content-Type: application/json" -d '{"name": "Zhang San", "age": 30}'
+```
