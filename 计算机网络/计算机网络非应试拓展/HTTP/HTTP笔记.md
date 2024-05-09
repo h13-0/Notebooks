@@ -44,12 +44,13 @@ HTTP目前有如下若干版本
 
 #### HEAD方法
 
-与 `GET` 方法相似的是 `HEAD` 方法也用于请求，只是 `HEAD` 只请求头部(即资源信息)，不请求资源本身。例如<font color="#c00000">可以通过</font> `HEAD` <font color="#c00000">方法获取资源的大小、修改日期等</font>。
+与 `GET` 方法相似的是 `HEAD` 方法也用于请求，只是 `HEAD` 只请求头部(即资源信息)，不请求资源本身(<font color="#c00000">服务器也不得在响应中返回消息主体</font>)。例如<font color="#c00000">可以通过</font> `HEAD` <font color="#c00000">方法获取资源的大小、修改日期等</font>。
 - 通过 `Content-Length` 获取资源大小
 - 通过 `Content-Type` 获取资源类型
 - 通过 `Last-Modified` 获取资源最后修改时间
+当然并不是所有的 `HEAD` 响应都会携带上述信息。
 例如可以通过 `HEAD` 指令获取google的logo信息：
-	![[Postman_lizTFvGLdo.png]]1
+	![[Postman_lizTFvGLdo.png]]
 
 
 
