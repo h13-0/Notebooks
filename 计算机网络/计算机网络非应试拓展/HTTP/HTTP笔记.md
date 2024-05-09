@@ -11,7 +11,7 @@
 HTTP目前有如下若干版本
 - HTTP/0.9：
 - HTTP/1.0：RFC1945
-- HTTP/1.1：[RFC2616](https://www.rfc-editor.org/rfc/rfc2616)
+- HTTP/1.1：HTTP/1.1最初与于1997年的RFC2068中发布，并于1999修订[RFC2616](https://www.rfc-editor.org/rfc/rfc2616)并成为HTTP/1.1规范。
 - 
 
 但是目前主要使用 `HTTP/1.1` 、 `HTTP/2` 以及 `HTTP/3` 三个版本。
@@ -30,9 +30,10 @@ HTTP目前有如下若干版本
 - HEAD
 - POST
 - PUT
-- DELETE 
+- DELETE
 - TRACE
 - CONNECT
+- PATCH(2010年加入HTTP/1.1)
 
 #### OPTION方法
 
@@ -86,3 +87,29 @@ curl -X POST https://api.example.com/data -H "Content-Type: application/json" -d
 ```Shell
 curl -X PUT https://api.example.com/users/123 -H "Content-Type: application/json" -d '{"name": "Zhang San", "age": 30}'
 ```
+
+#### DELETE方法
+
+`DELETE` 方法用于删除指定服务器中的指定资源，<font color="#c00000">当删除操作成功时</font>应返回 `204 No Content` 或 `200 OK` 。
+其特性主要有：
+- 幂等性： `DELETE` 方法是幂等的，意味着无论请求执行多少次，结果都应保持一致。首次 `DELETE` 请求可能会删除资源，而后续的同样请求应返回同样的结果（比如 `404 Not Found`），因为资源已经不存在。
+- 服务器控制： `DELETE` 请求的响应方式的实现取决于服务器。服务器可以直接删除资源，也可以标记为删除或移动到回收站。
+例如可以使用如下的命令发送 `DELETE` 请求：
+```Shell
+curl -X DELETE https://api.example.com/users/123
+```
+
+#### TRACE方法
+
+`TRACE` 方法用于回显服务器收到的请求，但出于安全性考虑， `TRACE` 方法通常被禁用。
+
+#### CONNECT方法
+
+
+
+
+#### PATCH方法
+
+该方法于2010年的RFC5789中被定义，并加入HTTP/1.1协议。
+
+
