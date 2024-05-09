@@ -61,10 +61,8 @@ curl -X GET https://api.example.com
 例如可以通过如下的命令发送 `HEAD` 请求：
 ```Shell
 curl -I https://api.example.com/image.png
-
+curl --head https://api.example.com/image.png # -I或者--head均可
 ```
-
-
 
 #### POST方法
 
@@ -73,3 +71,13 @@ curl -I https://api.example.com/image.png
 - 非幂等性： `POST` 方法<font color="#c00000">通常不是幂等</font>的，这意味着同一个 `POST` 请求如果被多次发送，<font color="#c00000">可能会每次都产生或改变服务器上的资源状态</font>。
 - 数据封装： <font color="#c00000">数据通过请求体发送</font>，而不是URL，这不仅<font color="#c00000">保护了数据的隐私性</font>，还<font color="#c00000">允许发送大量的数据</font>。
 - 多功能性： `POST` 请求被广泛用于各种场景，包括表单提交、通过API上传文件、或者向服务器发送应用程序数据等。
+例如可以通过如下的命令发送 `POST` 请求：
+```Shell
+curl -X POST https://api.example.com/data -H "Content-Type: application/json" -d '{"name": "Zhang San", "email": "example@example.com"}'
+```
+
+#### PUT方法
+
+
+
+
