@@ -19,5 +19,15 @@ HTTP目前有如下若干版本
 
 ## HTTP方法集
 
+### 请求方法
 
+请求方法共计如下种：
+- OPTIONS
+- GET
+- HEAD
+- POST
+- PUT
+- DELETE 
+- TRACE
+- CONNECT
 
