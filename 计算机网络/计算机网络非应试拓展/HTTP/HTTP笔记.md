@@ -16,6 +16,9 @@ HTTP目前有如下若干版本
 
 但是目前主要使用 `HTTP/1.1` 、 `HTTP/2` 以及 `HTTP/3` 三个版本。
 
+## HTTP报文结构
+
+![[第六章 应用层#^lppwjz]]
 
 ## HTTP方法集
 
@@ -41,6 +44,10 @@ HTTP目前有如下若干版本
 - 可缓存： `GET` 请求的响应通常可以被浏览器或者其他缓存机制缓存，以加快相同请求的响应速度。
 - 用在数据检索： `GET` 方法适用于请求数据检索，而不是用于像提交表单这样的操作。如果需要在请求中发送数据来更改服务器上的状态，应该使用如 `POST` 或 `PUT` 这样的方法。
 - 查询字符串：在 `GET` 请求中，发送给服务器的数据附加在URL后面，形式为查询字符串。例如，在URL `https://api.example.com/search?q=keyword` 中，查询参数`q`的值是`keyword`，用于向服务器查询关键字为"keyword"的搜索结果。
+例如可以通过如下的命令发送 `GET` 请求：
+```Shell
+curl -X GET https://api.example.com
+```
 
 #### HEAD方法
 
@@ -51,7 +58,18 @@ HTTP目前有如下若干版本
 当然并不是所有的 `HEAD` 响应都会携带上述信息。
 例如可以通过 `HEAD` 指令获取google logo的图片信息：
 	![[Postman_lizTFvGLdo.png]]
+例如可以通过如下的命令发送 `HEAD` 请求：
+```Shell
+curl -I https://api.example.com/image.png
+
+```
 
 
 
+#### POST方法
 
+`POST` 方法主要用于提交数据，可以用于提交表单、文件等。其数据放置在请求的正文中。
+其主要特性有：
+- 非幂等性： `POST` 方法<font color="#c00000">通常不是幂等</font>的，这意味着同一个 `POST` 请求如果被多次发送，<font color="#c00000">可能会每次都产生或改变服务器上的资源状态</font>。
+- 数据封装： <font color="#c00000">数据通过请求体发送</font>，而不是URL，这不仅<font color="#c00000">保护了数据的隐私性</font>，还<font color="#c00000">允许发送大量的数据</font>。
+- 多功能性： `POST` 请求被广泛用于各种场景，包括表单提交、通过API上传文件、或者向服务器发送应用程序数据等。
