@@ -22,8 +22,6 @@ HTTP目前有如下若干版本
 
 ## HTTP方法集
 
-### 请求方法
-
 请求方法共计如下种：
 - OPTIONS
 - GET
@@ -35,10 +33,10 @@ HTTP目前有如下若干版本
 - CONNECT
 - PATCH(2010年加入HTTP/1.1)
 
-#### OPTION方法
+### OPTION方法
 
 
-#### GET方法
+### GET方法
 
 `GET` 方法主要用于从服务器检索资源，这个资源可以是一个网页、图片或者是其他资源。通常来说，<font color="#c00000">HTTP的GET请求不会改变资源的状态</font>，即<span style="background:#fff88f"><font color="#c00000">通常来说</font></span><font color="#c00000">无论执行多少次都应该得到相同的结果</font>。其特性有：
 - 幂等性： `GET` 请求应该是幂等的，这意味着无论执行多少次，都应该得到相同的结果，而不会改变服务器上的资源状态。
@@ -50,7 +48,7 @@ HTTP目前有如下若干版本
 curl -X GET https://api.example.com
 ```
 
-#### HEAD方法
+### HEAD方法
 
 与 `GET` 方法相似的是 `HEAD` 方法也用于请求，只是 `HEAD` 只请求头部(即资源信息)，不请求资源本身(<font color="#c00000">服务器也不得在响应中返回消息主体</font>)。例如<font color="#c00000">可以通过</font> `HEAD` <font color="#c00000">方法获取资源的大小、修改日期等</font>。
 - 通过 `Content-Length` 获取资源大小
@@ -65,7 +63,7 @@ curl -I https://api.example.com/image.png
 curl --head https://api.example.com/image.png # -I或者--head均可
 ```
 
-#### POST方法
+### POST方法
 
 `POST` 方法主要用于提交数据，可以用于提交表单、文件等。其数据放置在请求的正文中。
 其主要特性有：
@@ -77,7 +75,7 @@ curl --head https://api.example.com/image.png # -I或者--head均可
 curl -X POST https://api.example.com/data -H "Content-Type: application/json" -d '{"name": "Zhang San", "email": "example@example.com"}'
 ```
 
-#### PUT方法
+### PUT方法
 
 和 `POST` 方法类似的是 `PUT` 方法也是客户端向服务器传输数据的一种方法，只是<font color="#c00000">其是幂等的方法</font>，主要用于更新或替换服务。
 其特性主要有：
@@ -88,7 +86,7 @@ curl -X POST https://api.example.com/data -H "Content-Type: application/json" -d
 curl -X PUT https://api.example.com/users/123 -H "Content-Type: application/json" -d '{"name": "Zhang San", "age": 30}'
 ```
 
-#### DELETE方法
+### DELETE方法
 
 `DELETE` 方法用于删除指定服务器中的指定资源，<font color="#c00000">当删除操作成功时</font>应返回 `204 No Content` 或 `200 OK` 。
 其特性主要有：
@@ -99,7 +97,7 @@ curl -X PUT https://api.example.com/users/123 -H "Content-Type: application/json
 curl -X DELETE https://api.example.com/users/123
 ```
 
-#### TRACE方法
+### TRACE方法
 
 `TRACE` 方法用于回显服务器收到的请求。<font color="#c00000">服务器回回显除了实体内容的精确副本</font>，但出于安全性考虑， `TRACE` 方法通常被禁用。
 其特性主要有：
@@ -110,15 +108,25 @@ curl -X DELETE https://api.example.com/users/123
 - 例如某钓鱼网站在其内部的脚本中让浏览器TRACE一个关键网站，然后浏览器就会带着 `Cookie` 进行 `TRACE` ，并截获浏览器回显的 `Cookie` 。
 - 在攻击者<font color="#c00000">已经可以篡改HTTP头部之后</font>，攻击者将头部中附加一些需要转义的附加JS代码，然后浏览器收到回显消息后会对JS代码转义并执行(反射性跨站脚本(XSS)攻击)。
 
-#### CONNECT方法
+### CONNECT方法
 
-`CONNECT` 方法<font color="#c00000">建立的隧道通常都是</font> `Keep-alive` <font color="#c00000">性质的</font>，随后的 `GET` 、 `POST` 等方法通过该隧道传输。 `Close` 性质的隧道
-
-
-
+`CONNECT` 方法<font color="#c00000">建立的隧道通常都是</font> `Keep-alive` <font color="#c00000">性质的</font>，随后的 `GET` 、 `POST` 等方法通过该隧道传输。 `Close` 性质的隧道不常使用，使用 `Close` 可能是出于安全考虑。
+在HTTPS中通常使用 `CONNECT` 建立一个隧道。
+其特性通常有：
+- 隧道建立： 使用 `CONNECT` 方法，客户端可以要求代理服务器为特定的服务器和端口号建立一个隧道。这个隧道允许客户端和目标服务器之间的直接通信，数据通过代理传输，但代理不会解读或修改这些数据。
+- HTTPS 通过 HTTP 代理： 在 HTTPS 请求通过 HTTP 代理服务器的情况下，`CONNECT` 方法被用来建立到目标 HTTPS 服务器的隧道。一旦隧道建立成功，客户端和服务器之间的 SSL/TLS 握手可以开始，之后的通信将被加密。
 
 #### PATCH方法
 
 该方法于2010年的RFC5789中被定义，并加入HTTP/1.1协议。
+HTTP的 `PATCH` 方法用于对资源进行部分修改。与 `PUT` 方法不同的是， `PUT` 通常用于替换目标资源的完整内容，而 `PATCH` 则是<span style="background:#fff88f"><font color="#c00000">告知服务器</font></span><font color="#c00000">更新部分参数</font>，<font color="#c00000">而非全部参数</font>。在服务器程序设计中，PUT和PATCH会被不同的函数处理，PUT通常是全局覆盖，PATCH是不分更新，不过具体的实现还是取决于具体的服务器程序。
 
+其特性主要有：
+- 非幂等性： `PATCH`方法理论上可以是幂等的，但实际上是否幂等取决于其操作的性质和实现。如果多次应用相同的`PATCH`请求导致资源达到相同的状态，则这个`PATCH`请求是幂等的。然而，如果每次应用都会基于当前状态改变资源，则可能不是幂等的。
+- 效率： 由于只需要传输需要改变的部分，而不是整个资源，PATCH请求通常比PUT请求更加高效。
+- 灵活性： `PATCH` 方法允许开发者定义部分更新的操作，这可以是添加、删除或修改资源的某些部分。
+例如可以使用如下的命令发送 `PATCH` 请求：
+```Shell
+curl -X PATCH https://api.example.com/users/123 -H "Content-Type: application/json" -d '{"email": "new.email@example.com"}' #告知服务器只更新email字段
+```
 
