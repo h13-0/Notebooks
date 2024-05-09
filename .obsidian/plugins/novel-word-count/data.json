@@ -2005,15 +2005,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 6.446666666666666,
-      "characterCount": 5215,
+      "characterCount": 5066,
       "nonWhitespaceCharacterCount": 3719,
       "readingTimeInMinutes": 4.455056603773585,
       "linkCount": 0,
-      "embedCount": 4,
+      "embedCount": 0,
       "aliases": null,
       "createdDate": 1713204230780,
-      "modifiedDate": 1713204230780,
-      "sizeInBytes": 8735
+      "modifiedDate": 1715273137853,
+      "sizeInBytes": 8586
     },
     "计算机组成原理/Resources/Pasted image 20240329180301.png": {
       "isCountable": false,
@@ -2311,15 +2311,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 0.3933333333333333,
-      "characterCount": 279,
+      "characterCount": 272,
       "nonWhitespaceCharacterCount": 260,
       "readingTimeInMinutes": 0.25018867924528304,
       "linkCount": 0,
       "embedCount": 0,
       "aliases": null,
       "createdDate": 1713204230780,
-      "modifiedDate": 1713204230780,
-      "sizeInBytes": 521
+      "modifiedDate": 1715273138287,
+      "sizeInBytes": 514
     },
     "机器学习/深度学习/CV/文章笔记/1989 LeNet.md": {
       "isCountable": true,
@@ -2545,15 +2545,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 8.73,
-      "characterCount": 6913,
+      "characterCount": 6696,
       "nonWhitespaceCharacterCount": 5937,
       "readingTimeInMinutes": 6.170905660377358,
       "linkCount": 1,
       "embedCount": 6,
       "aliases": null,
       "createdDate": 1713204230780,
-      "modifiedDate": 1713204230780,
-      "sizeInBytes": 11489
+      "modifiedDate": 1715273138817,
+      "sizeInBytes": 11272
     },
     "微型计算机原理与接口技术/微型计算机原理与接口技术.md": {
       "isCountable": true,
@@ -5857,15 +5857,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 0.58,
-      "characterCount": 331,
+      "characterCount": 310,
       "nonWhitespaceCharacterCount": 283,
       "readingTimeInMinutes": 0.3639622641509434,
       "linkCount": 0,
       "embedCount": 2,
       "aliases": null,
       "createdDate": 1713204230748,
-      "modifiedDate": 1713204230748,
-      "sizeInBytes": 695
+      "modifiedDate": 1715273139534,
+      "sizeInBytes": 674
     },
     "Resources/Pasted image 20240203021517.png": {
       "isCountable": false,
@@ -6325,15 +6325,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 0.02666666666666667,
-      "characterCount": 36,
+      "characterCount": 31,
       "nonWhitespaceCharacterCount": 25,
       "readingTimeInMinutes": 0.019547169811320757,
       "linkCount": 0,
       "embedCount": 0,
       "aliases": null,
       "createdDate": 1713204230670,
-      "modifiedDate": 1713204230670,
-      "sizeInBytes": 48
+      "modifiedDate": 1715273140399,
+      "sizeInBytes": 43
     },
     "Others/协程/协程.md": {
       "isCountable": true,
@@ -6379,15 +6379,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 0.25333333333333335,
-      "characterCount": 220,
+      "characterCount": 200,
       "nonWhitespaceCharacterCount": 171,
       "readingTimeInMinutes": 0.1821509433962264,
       "linkCount": 0,
       "embedCount": 0,
       "aliases": null,
       "createdDate": 1713204230608,
-      "modifiedDate": 1713204230608,
-      "sizeInBytes": 348
+      "modifiedDate": 1715273141144,
+      "sizeInBytes": 328
     },
     "Others/git/git常用操作.md": {
       "isCountable": true,
@@ -6667,15 +6667,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 0.54,
-      "characterCount": 667,
+      "characterCount": 625,
       "nonWhitespaceCharacterCount": 493,
       "readingTimeInMinutes": 0.46766037735849053,
       "linkCount": 0,
       "embedCount": 0,
       "aliases": null,
       "createdDate": 1713204230592,
-      "modifiedDate": 1713204230592,
-      "sizeInBytes": 851
+      "modifiedDate": 1715273142193,
+      "sizeInBytes": 809
     },
     "Math/加密解密/凯撒密码.md": {
       "isCountable": true,
@@ -6926,8 +6926,8 @@
       "embedCount": 0,
       "aliases": null,
       "createdDate": 1713204230576,
-      "modifiedDate": 1713204230576,
-      "sizeInBytes": 3211
+      "modifiedDate": 1715273147808,
+      "sizeInBytes": 3179
     },
     "CPP/编译器限定实现/gcc.md": {
       "isCountable": true,
@@ -6955,15 +6955,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 37.083333333333336,
-      "characterCount": 36793,
+      "characterCount": 35644,
       "nonWhitespaceCharacterCount": 27681,
       "readingTimeInMinutes": 26.692830188679245,
       "linkCount": 14,
       "embedCount": 3,
       "aliases": null,
       "createdDate": 1713204230592,
-      "modifiedDate": 1713204230592,
-      "sizeInBytes": 55623
+      "modifiedDate": 1715273141622,
+      "sizeInBytes": 54472
     },
     "CPP/C标准笔记/C标准学习笔记.md": {
       "isCountable": true,
@@ -6973,15 +6973,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 28.626666666666665,
-      "characterCount": 28032,
+      "characterCount": 26961,
       "nonWhitespaceCharacterCount": 20467,
       "readingTimeInMinutes": 20.102415094339623,
       "linkCount": 9,
       "embedCount": 1,
       "aliases": null,
       "createdDate": 1713204230576,
-      "modifiedDate": 1713204230576,
-      "sizeInBytes": 42902
+      "modifiedDate": 1715273142944,
+      "sizeInBytes": 41831
     },
     "CPP/C标准笔记/C与C++标准.md": {
       "isCountable": true,
@@ -6991,15 +6991,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 1.2166666666666666,
-      "characterCount": 1137,
+      "characterCount": 1054,
       "nonWhitespaceCharacterCount": 910,
       "readingTimeInMinutes": 0.8594716981132076,
       "linkCount": 1,
       "embedCount": 1,
       "aliases": null,
       "createdDate": 1713204230576,
-      "modifiedDate": 1713204230576,
-      "sizeInBytes": 1817
+      "modifiedDate": 1715273143545,
+      "sizeInBytes": 1734
     },
     "CPP/C标准笔记/C++ 修饰符类型.md": {
       "isCountable": true,
@@ -7009,15 +7009,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 1.4766666666666666,
-      "characterCount": 791,
+      "characterCount": 740,
       "nonWhitespaceCharacterCount": 640,
       "readingTimeInMinutes": 0.9409811320754716,
       "linkCount": 0,
       "embedCount": 0,
       "aliases": null,
       "createdDate": 1713204230576,
-      "modifiedDate": 1713204230576,
-      "sizeInBytes": 1674
+      "modifiedDate": 1715273142447,
+      "sizeInBytes": 1623
     },
     "计算机网络/Resources/Pasted image 20240509162240.png": {
       "isCountable": false,
@@ -7090,24 +7090,6 @@
       "createdDate": 1715244446268,
       "modifiedDate": 1715244446269,
       "sizeInBytes": 356055
-    },
-    "计算机网络/计算机网络非应试拓展/HTTP/HTTP笔记.md": {
-      "isCountable": true,
-      "isDirectory": false,
-      "noteCount": 1,
-      "wordCount": 2247,
-      "wordCountTowardGoal": 0,
-      "wordGoal": null,
-      "pageCount": 7.49,
-      "characterCount": 4921,
-      "nonWhitespaceCharacterCount": 4520,
-      "readingTimeInMinutes": 4.974641509433962,
-      "linkCount": 0,
-      "embedCount": 2,
-      "aliases": null,
-      "createdDate": 1715093699911,
-      "modifiedDate": 1715272522716,
-      "sizeInBytes": 9215
     },
     "计算机网络/基础应试学习/第二章 物理层/第二章 物理层.md": {
       "isCountable": true,
@@ -7324,6 +7306,24 @@
       "createdDate": 1715254652839,
       "modifiedDate": 1715254652840,
       "sizeInBytes": 149265
+    },
+    "计算机网络/计算机网络非应试拓展/HTTP协议/HTTP笔记.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 2283,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 7.61,
+      "characterCount": 4969,
+      "nonWhitespaceCharacterCount": 4563,
+      "readingTimeInMinutes": 5.051962264150943,
+      "linkCount": 0,
+      "embedCount": 2,
+      "aliases": null,
+      "createdDate": 1715093699911,
+      "modifiedDate": 1715273394329,
+      "sizeInBytes": 9335
     }
   }
 }

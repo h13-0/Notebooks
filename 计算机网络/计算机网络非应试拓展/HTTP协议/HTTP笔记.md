@@ -132,3 +132,7 @@ curl -X PATCH https://api.example.com/users/123 -H "Content-Type: application/js
 ```
 
 ## HTTP响应
+
+HTTP响应均按照报文结构进行，其主要依靠状态码区分结果或类型。
+状态码共计5类33种。
+
