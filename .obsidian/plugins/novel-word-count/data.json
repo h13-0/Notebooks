@@ -7095,19 +7095,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 42,
+      "wordCount": 46,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 0.14,
-      "characterCount": 208,
-      "nonWhitespaceCharacterCount": 174,
-      "readingTimeInMinutes": 0.10173584905660377,
+      "pageCount": 0.15333333333333332,
+      "characterCount": 220,
+      "nonWhitespaceCharacterCount": 183,
+      "readingTimeInMinutes": 0.11150943396226415,
       "linkCount": 0,
       "embedCount": 0,
       "aliases": null,
       "createdDate": 1715093699911,
-      "modifiedDate": 1715251630941,
-      "sizeInBytes": 282
+      "modifiedDate": 1715251641280,
+      "sizeInBytes": 300
     },
     "计算机网络/基础应试学习/第二章 物理层/第二章 物理层.md": {
       "isCountable": true,
@@ -7304,8 +7304,8 @@
       "embedCount": 0,
       "aliases": [],
       "createdDate": 1715249865565,
-      "modifiedDate": 1715249865783,
-      "sizeInBytes": 254493
+      "modifiedDate": 1715251831729,
+      "sizeInBytes": 550558
     }
   }
 }
