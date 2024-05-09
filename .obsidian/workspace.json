@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
+                "file": "计算机网络/第六章 应用层/第六章 应用层.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
+                "file": "计算机网络/第六章 应用层/第六章 应用层.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
+                "file": "计算机网络/第六章 应用层/第六章 应用层.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "机器学习/深度学习/CV/文章笔记/1989 LeNet.md"
+                "file": "计算机网络/第六章 应用层/第六章 应用层.md"
               }
             }
           }
@@ -157,11 +157,11 @@
   },
   "active": "51760e007a1683ab",
   "lastOpenFiles": [
+    "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
     "计算机网络/第六章 应用层/第六章 应用层.md",
     "前后端编程/HTTP/HTTP笔记.md",
     "前后端编程/JavaScript/JS简单入门.md",
     "前后端编程/HTTP",
-    "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
     "微型计算机原理与接口技术/Resources/Pasted image 20240329214611.png",
     "STM32开发/Resources/stm32cubeide_FfvAsuGt5H.png",
     "STM32开发/Resources/stm32cubeide_3AosLnwUVi.png",

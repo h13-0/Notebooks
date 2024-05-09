@@ -2509,15 +2509,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 8.006666666666666,
-      "characterCount": 4481,
+      "characterCount": 4480,
       "nonWhitespaceCharacterCount": 4257,
       "readingTimeInMinutes": 5.215471698113207,
       "linkCount": 0,
       "embedCount": 3,
       "aliases": null,
       "createdDate": 1714832823028,
-      "modifiedDate": 1714840507901,
-      "sizeInBytes": 9263
+      "modifiedDate": 1715240818712,
+      "sizeInBytes": 9262
     },
     "机器学习/应试笔记与八股.md": {
       "isCountable": true,
