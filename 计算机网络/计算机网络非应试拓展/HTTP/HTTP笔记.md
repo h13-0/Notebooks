@@ -112,6 +112,8 @@ curl -X DELETE https://api.example.com/users/123
 
 #### CONNECT方法
 
+`CONNECT` 方法<font color="#c00000">建立的隧道通常都是</font> `Keep-alive` <font color="#c00000">性质的</font>，随后的 `GET` 、 `POST` 等方法通过该隧道传输。 `Close` 性质的隧道
+
 
 
 
