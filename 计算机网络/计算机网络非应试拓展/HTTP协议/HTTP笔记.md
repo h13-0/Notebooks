@@ -33,9 +33,21 @@ HTTP目前有如下若干版本
 - CONNECT
 - PATCH(2010年加入HTTP/1.1)
 <font color="#c00000">而服务器响应并没有上述概念，主要通过状态码来区分</font>，详见下一章节。
+
 ### OPTION方法
 
-由于HTTP服务器不一定支持上述所有请求方法(甚至 `OPTION` 方法本身都不一定被支持)，因此需要实现一个 `OPTION` 方法查询服务器支持哪些请求方法。
+由于HTTP服务器不一定支持上述所有请求方法(甚至 `OPTION` 方法本身都不一定被支持)，因此需要实现一个 `OPTION` 方法查询服务器支持哪些请求方法，而服务器会在 `Allow` 首部字段中列出支持的方法列表。
+例如可以通过如下的命令发送 `OPTION` 请求：
+```Shell
+curl -X OPTIONS https://api.example.com/data -i
+```
+一个示例响应：
+```HTTP
+HTTP/1.1 200 OK
+Allow: OPTIONS, GET, POST, HEAD
+Content-Length: 0
+Content-Type: text/plain; charset=utf-8
+```
 
 ### GET方法
 

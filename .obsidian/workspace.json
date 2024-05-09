@@ -4,19 +4,15 @@
     "type": "split",
     "children": [
       {
-        "id": "af7b2cfcfb183791",
+        "id": "5a7077089f900f94",
         "type": "tabs",
         "children": [
           {
-            "id": "f24580963b403ee6",
+            "id": "7b58c0c8daee224c",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "计算机网络/计算机网络非应试拓展/HTTP协议/HTTP笔记.md",
-                "mode": "source",
-                "source": false
-              }
+              "type": "empty",
+              "state": {}
             }
           }
         ]
@@ -155,7 +151,7 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "f24580963b403ee6",
+  "active": "7ddc64b2e3c9b5c8",
   "lastOpenFiles": [
     "CPP/Resources/C数据类型.canvas",
     "CPP/C标准笔记/C与C++标准.md",
