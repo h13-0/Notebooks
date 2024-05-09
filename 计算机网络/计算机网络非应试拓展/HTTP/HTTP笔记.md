@@ -49,7 +49,7 @@ HTTP目前有如下若干版本
 - 通过 `Content-Type` 获取资源类型
 - 通过 `Last-Modified` 获取资源最后修改时间
 当然并不是所有的 `HEAD` 响应都会携带上述信息。
-例如可以通过 `HEAD` 指令获取google的logo信息：
+例如可以通过 `HEAD` 指令获取google logo的图片信息：
 	![[Postman_lizTFvGLdo.png]]
 
 
