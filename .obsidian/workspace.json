@@ -89,7 +89,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "计算机网络/计算机网络非应试拓展/HTTP协议/HTTP笔记.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -106,7 +105,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "计算机网络/计算机网络非应试拓展/HTTP协议/HTTP笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -129,7 +127,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "计算机网络/计算机网络非应试拓展/HTTP协议/HTTP笔记.md"
+                "file": "Others/工作实习需求分析/海康威视 2024春季招聘要求.md"
               }
             }
           }
@@ -153,6 +151,9 @@
   },
   "active": "7ddc64b2e3c9b5c8",
   "lastOpenFiles": [
+    "Others/工作实习需求分析/海康威视 2024春季招聘要求.md",
+    "Others/工作实习需求分析/Resources",
+    "Others/工作实习需求分析",
     "CPP/Resources/C数据类型.canvas",
     "CPP/C标准笔记/C与C++标准.md",
     "CPP/C标准笔记/C标准学习笔记.md",
@@ -196,8 +197,6 @@
     "机器学习/Resources/lecun1989.pdf",
     "机器学习/Resources",
     "机器学习/Resource",
-    "机器学习/新建文件夹",
-    "机器学习/深度学习/CV/文章笔记",
-    "机器学习/深度学习/CV"
+    "机器学习/新建文件夹"
   ]
 }
