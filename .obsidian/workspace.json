@@ -11,8 +11,12 @@
             "id": "7b58c0c8daee224c",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "前后端编程/基础协议/基础协议.md",
+                "mode": "source",
+                "source": false
+              }
             }
           }
         ]
@@ -89,6 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "前后端编程/基础协议/基础协议.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -105,6 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "前后端编程/基础协议/基础协议.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -127,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Others/工作实习需求分析/海康威视 2024春季招聘要求.md"
+                "file": "前后端编程/基础协议/基础协议.md"
               }
             }
           }
@@ -149,8 +155,14 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "7ddc64b2e3c9b5c8",
+  "active": "7b58c0c8daee224c",
   "lastOpenFiles": [
+    "计算机网络/计算机网络非应试拓展/HTTP协议/HTTP笔记.md",
+    "前后端编程/基础协议/基础协议.md",
+    "前后端编程/JavaScript/JS简单入门.md",
+    "前后端编程/SpringBoot/SpringBoot 基础笔记.md",
+    "前后端编程/基础协议",
+    "前后端编程/SpringBoot",
     "Others/工作实习需求分析/海康威视 2024春季招聘要求.md",
     "Others/工作实习需求分析/Resources",
     "Others/工作实习需求分析",
@@ -176,10 +188,6 @@
     "Others/Obsidian/插件/Dynamic table of contents 自动目录.md",
     "Others/Obsidian/插件/bartender 笔记md文件手动排序.md",
     "Others/VisualStudio/Plugins/未命名.md",
-    "Others/Tools/Tools.md",
-    "Others/PythonLibs/pycpraser/pycpraser.md",
-    "Others/PythonLibs/pycpraser/抽象语法树(c_ast).md",
-    "Others/PythonLibs/argparse/常用操作.md",
     "Resources/Postman_lizTFvGLdo.png",
     "计算机网络/Resources/rfc2616.pdf",
     "计算机网络/基础应试学习",
@@ -195,8 +203,6 @@
     "STM32开发/Resources/stm32cubeide_3AosLnwUVi.png",
     "机器学习/Resources/[block]lecun1989.pdf",
     "机器学习/Resources/lecun1989.pdf",
-    "机器学习/Resources",
-    "机器学习/Resource",
-    "机器学习/新建文件夹"
+    "机器学习/Resources"
   ]
 }
