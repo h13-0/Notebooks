@@ -327,19 +327,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 105,
+      "wordCount": 106,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 0.35,
-      "characterCount": 246,
-      "nonWhitespaceCharacterCount": 218,
-      "readingTimeInMinutes": 0.23660377358490564,
+      "pageCount": 0.35333333333333333,
+      "characterCount": 253,
+      "nonWhitespaceCharacterCount": 224,
+      "readingTimeInMinutes": 0.24037735849056602,
       "linkCount": 0,
       "embedCount": 0,
       "aliases": null,
       "createdDate": 1715847625475,
-      "modifiedDate": 1715847749597,
-      "sizeInBytes": 440
+      "modifiedDate": 1715937932268,
+      "sizeInBytes": 447
     },
     "计算机网络/计算机网络非应试拓展/TCP标准.md": {
       "isCountable": true,
@@ -7360,6 +7360,24 @@
       "createdDate": 1713204230576,
       "modifiedDate": 1715273142399,
       "sizeInBytes": 3557
+    },
+    "计算机网络/计算机网络非应试拓展/Cookie/Cookie.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 45,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0.15,
+      "characterCount": 176,
+      "nonWhitespaceCharacterCount": 158,
+      "readingTimeInMinutes": 0.10773584905660377,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1715937896064,
+      "modifiedDate": 1715938187761,
+      "sizeInBytes": 250
     }
   }
 }
