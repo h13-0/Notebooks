@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "计算机网络/计算机网络非应试拓展/Cookie/Cookie.md",
+                "file": "计算机网络/计算机网络非应试拓展/网络安全/CSRF攻击.md",
                 "mode": "source",
                 "source": false
               }
@@ -101,7 +101,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "计算机网络/计算机网络非应试拓展/Cookie/Cookie.md",
+                "file": "计算机网络/计算机网络非应试拓展/网络安全/CSRF攻击.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +118,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "计算机网络/计算机网络非应试拓展/Cookie/Cookie.md",
+                "file": "计算机网络/计算机网络非应试拓展/网络安全/CSRF攻击.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -141,7 +141,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "计算机网络/计算机网络非应试拓展/Cookie/Cookie.md"
+                "file": "计算机网络/计算机网络非应试拓展/网络安全/CSRF攻击.md"
               }
             }
           }
@@ -165,9 +165,11 @@
   },
   "active": "aca9d755fd3ecd2d",
   "lastOpenFiles": [
-    "计算机网络/基础应试学习/第六章 应用层/第六章 应用层.md",
     "计算机网络/计算机网络非应试拓展/HTTP协议/HTTP笔记.md",
+    "计算机网络/计算机网络非应试拓展/网络安全/CSRF攻击.md",
+    "计算机网络/计算机网络非应试拓展/网络安全",
     "计算机网络/计算机网络非应试拓展/Cookie/Cookie.md",
+    "计算机网络/基础应试学习/第六章 应用层/第六章 应用层.md",
     "计算机网络/计算机网络非应试拓展/JSON Web Token/JSON Web Token.md",
     "计算机网络/计算机网络非应试拓展/Cookie",
     "Others/MS .NET Framework/Core and Framework.md",
@@ -197,7 +199,6 @@
     "CPP/编译器限定实现/gcc.md",
     "Others/POSIX/Readme.md",
     "Others/Obsidian/主题/禁用表格换行(保持表格原宽，并添加滚动条).md",
-    "Others/Obsidian/插件/Obsidian42-BRAT 第三方插件安装器.md",
     "Resources/Postman_lizTFvGLdo.png",
     "计算机网络/Resources/rfc2616.pdf",
     "计算机网络/基础应试学习",
@@ -210,7 +211,6 @@
     "计算机网络/计算机网络非应试拓展/HTTP协议",
     "微型计算机原理与接口技术/Resources/Pasted image 20240329214611.png",
     "STM32开发/Resources/stm32cubeide_FfvAsuGt5H.png",
-    "STM32开发/Resources/stm32cubeide_3AosLnwUVi.png",
-    "机器学习/Resources/[block]lecun1989.pdf"
+    "STM32开发/Resources/stm32cubeide_3AosLnwUVi.png"
   ]
 }
