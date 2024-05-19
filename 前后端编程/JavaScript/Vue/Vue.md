@@ -27,14 +27,21 @@ TODO
 #### 事件监听(@event、v-on:event)
 
 可以通过在控件中设置监听函数的方法来监听控件的事件，例如下列代码中：
-```vue
+```html
+<!DOCTYPE html>
+<!-- ... -->
 <body>
-    <div id="app">
-		<input type="text" v-on:keydown.enter="enter_down" @keyup.enter="enter_up">
+	<div id="app">
+		<input type="text" v-on:keydown.enter="enter(true)" v-on:keyup.enter="enter(false)">
 	</div>
+</body>
+</html>
+```
+
+```vue
 	<script type="module"
-        import {createApp, reactive, ref} from "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
-        createApp({
+		import {createApp, reactive, ref} from "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+		createApp({
 			setup(){
 				const text = ref("ready")
 				
@@ -42,7 +49,10 @@ TODO
 					text.value = "enter"
 				}
 				
-				const enter_up = () => {
+				const enter = (pressed) => {
+					if(pressed) {
+						text.value = "enter"
+					} else {
 						text.value = "release"
 					}
 				}
@@ -55,7 +65,6 @@ TODO
 			}
 		}).mount("#app")
 	</script>
-</body>
-</html>
 ```
+
 就创建了一个文本输入框，并在 `enter` 键按下时
