@@ -232,3 +232,4 @@ const data = reactive({
 const text = ref("")
 ```
 
+此外， `v-model` <span style="background:#fff88f"><font color="#c00000">可以设置同步条件</font></span>，例如：
