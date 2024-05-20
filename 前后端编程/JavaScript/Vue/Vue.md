@@ -241,4 +241,5 @@ const text = ref("")
 
 使用该功能可以将变量中的字符串按照html渲染或者渲染为text
 
-
+注意：
+- <font color="#c00000">由于将变量渲染为html了，因此尽量避免XSS跨站攻击</font>
