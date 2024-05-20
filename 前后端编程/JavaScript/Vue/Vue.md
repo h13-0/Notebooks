@@ -173,14 +173,48 @@ const imgs = reactive({
 </div>
 ```
 
-或者操作键值对：
+或者读取类的键值对：
 
 ```html
-<ul v-for="(key, value) in data.dict">
-	<li>key: {{key}}, value: {{value}}</li>
+<ul v-for="(value, key, index) in data.class1">
+	<li>index: {{index}}, key: {{key}}, value: {{value}}</li>
 </ul>
 ```
 
 ```JavaScript
-
+const data = reactive({
+	class1:{
+		key1:"value1",
+		key2:"value2"
+    }
+})
 ```
+
+或者直接读取类：
+
+```html
+<ul v-for="(value, key, index) in data.class1">
+	<li>index: {{index}}, key: {{key}}, value: {{value}}</li>
+</ul>
+```
+
+```JavaScript
+const data = reactive({
+	class1:{
+		key1:"value1",
+		key2:"value2"
+    }
+})
+```
+
+当然也可以结合条件渲染进行条件显示：
+```html
+<ul v-for="(value, key, index) in data.class1">
+	<li v-if="index == 0">
+		index: {{index}}, key: {{key}}, value: {{value}}
+	</li>
+</ul>
+```
+
+
+
