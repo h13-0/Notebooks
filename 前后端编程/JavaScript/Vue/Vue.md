@@ -232,4 +232,13 @@ const data = reactive({
 const text = ref("")
 ```
 
-此外， `v-model` <span style="background:#fff88f"><font color="#c00000">可以设置同步条件</font></span>，例如：
+此外， `v-model` <span style="background:#fff88f"><font color="#c00000">可以设置同步条件或其他操作</font></span>，例如：
+- `v-model.lazy` 在控件失去焦点后同步数据
+- `v-model.number` 将输入框的值转化为数字类型
+- `v-model.trim` 去除首尾空格
+
+#### 渲染数据(v-html、v-text)
+
+使用该功能可以将变量中的字符串按照html渲染或者渲染为text
+
+
