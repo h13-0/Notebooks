@@ -223,3 +223,12 @@ const data = reactive({
 
 前文的动态属性绑定只能动态同步由 `JavaScript` 代码中导致的变量变化导致的控件属性值变化，无法将由控件属性值的变化同步到 `JavaScript` 代码中的变量变化。而双相数据绑定就解决了该问题。
 
+```html
+<input type="text" v-model="text">
+{{text}}
+```
+
+```JavaScript
+const text = ref("")
+```
+
