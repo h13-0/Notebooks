@@ -92,7 +92,47 @@ createApp({
 - <font color="#c00000">条件渲染会修改DOM树</font>而<font color="#c00000">控件隐藏不会</font>，因此不适合频繁切换元素显示状态的场景
 - 
 
-#### 动态属性绑定(v-bind)
+#### 动态属性绑定(v-bind、:)
 
-动态属性绑定是指将空间的属性绑定到一个变量上，当变量发生变化时其属性值也会跟着改变。
-例如对于非动态属性绑定
+动态属性绑定是指将空间的属性绑定到一个变量上，当变量发生变化时其属性值也会跟着改变。如果不使用动态绑定，则属性无法成功设置，例如：
+```html
+<button v-on:click="img1">img1</button>
+<button @click="img2">img2</button>
+<!--尝试将变量web.url设置为img的src属性-->
+<img src=web.url></img>
+```
+
+```JavaScript
+import {createApp, reactive, ref} from "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+createApp({
+	setup(){
+		const web = reactive({
+			title:"Sharing Space",
+				url:"https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+		})
+		
+		const img1 = () => {
+			web.url = "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+		}
+
+		const img2 = () => {
+			web.url = "https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg"
+		}
+		return {
+			web,
+			img1,
+			img2
+		}
+
+	}
+}).mount("#app")
+```
+
+则此时无法成功绑定：
+	![[chrome_S7wiFEHML1.png]]
+浏览器中的html代码为：
+	![[chrome_87TbOgybv4.png]]
+
+因此此时需要使用动态属性绑定才可以将变量值绑定到控件属性上，有以下两种写法：
+- 在前面加上`v`，即：`<img v-bind:src=web.url></img>`
+- 
