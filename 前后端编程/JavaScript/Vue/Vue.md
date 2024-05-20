@@ -193,17 +193,20 @@ const data = reactive({
 或者直接读取类：
 
 ```html
-<ul v-for="(value, key, index) in data.class1">
-	<li>index: {{index}}, key: {{key}}, value: {{value}}</li>
+<ul v-for="(value, index) in data.list">
+	<li>
+		index: {{index}}, id: {{value.id}}, text:{{value.text}}
+	</li>
 </ul>
 ```
 
 ```JavaScript
 const data = reactive({
-	class1:{
-		key1:"value1",
-		key2:"value2"
-    }
+	list:[
+		{ id:10010, text:"中国电信"},
+		{ id:10016, text:"中国联通"},
+		{ id:10086, text:"中国移动"}
+    ]
 })
 ```
 
@@ -216,5 +219,5 @@ const data = reactive({
 </ul>
 ```
 
-
+#### 双向数据绑定(v-model)
 
