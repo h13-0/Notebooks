@@ -141,11 +141,46 @@ createApp({
 
 #### 控件遍历(v-for)
 
+当有遍历数组或遍历对象的需求时，可以先建立一个容器(通常使用 `div` 标签)，然后在该容器中使用 `v-for` 进行元素的遍历与创建，例如：
 
+```html
+<div v-for="src in imgs.url">
+	<img :src="src"></img>
+</div>
+```
 
+```JavaScript
+const imgs = reactive({
+	num: 4,
+	url: [
+		"https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+		"https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg",
+		"https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg",
+		"https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg"
+	]
+})
+	return {
+		imgs
+	}
+```
 
+随后即可在 `div` 容器中遍历 `imgs.url` 数组并创建4个图像。
+当然也可以在取数组元素的同时获取该数组的 `index` ，即：
 
+```html
+<div v-for="(src, index) in imgs.url">
+	<img :src="src"></img>
+</div>
+```
 
+或者操作键值对：
 
+```html
+<ul v-for="(key, value) in data.dict">
+	<li>key: {{key}}, value: {{value}}</li>
+</ul>
+```
 
+```JavaScript
 
+```

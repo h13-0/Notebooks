@@ -18,8 +18,21 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "e7c863591a0477aa",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "前后端编程/JavaScript/Vue/Vue.md",
+                "mode": "source",
+                "source": false
+              }
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -155,7 +168,7 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "aca9d755fd3ecd2d",
+  "active": "e7c863591a0477aa",
   "lastOpenFiles": [
     "Resources/chrome_H8Xfks2sWn.png",
     "Resources/chrome_87TbOgybv4.png",
