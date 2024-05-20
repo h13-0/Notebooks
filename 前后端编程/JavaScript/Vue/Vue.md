@@ -90,7 +90,6 @@ createApp({
 
 注意：
 - <font color="#c00000">条件渲染会修改DOM树</font>而<font color="#c00000">控件隐藏不会</font>，因此不适合频繁切换元素显示状态的场景
-- 
 
 #### 动态属性绑定(v-bind、:)
 
@@ -134,5 +133,19 @@ createApp({
 	![[chrome_87TbOgybv4.png]]
 
 因此此时需要使用动态属性绑定才可以将变量值绑定到控件属性上，有以下两种写法：
-- 在前面加上`v`，即：`<img v-bind:src=web.url></img>`
-- 
+- 在前面加上 `v-bind:` ，即： `<img v-bind:src=web.url></img>`
+- 直接加 `:` ，即： `<img :src=web.url></img>`
+
+随后即可正常显示：
+	![[chrome_H8Xfks2sWn.png]]
+
+#### 控件遍历(v-for)
+
+
+
+
+
+
+
+
+

@@ -6249,19 +6249,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 573,
+      "wordCount": 593,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 1.91,
-      "characterCount": 2658,
-      "nonWhitespaceCharacterCount": 2297,
-      "readingTimeInMinutes": 1.4262264150943396,
+      "pageCount": 1.9766666666666666,
+      "characterCount": 2769,
+      "nonWhitespaceCharacterCount": 2386,
+      "readingTimeInMinutes": 1.473320754716981,
       "linkCount": 0,
-      "embedCount": 2,
+      "embedCount": 3,
       "aliases": null,
       "createdDate": 1716052661353,
-      "modifiedDate": 1716192327448,
-      "sizeInBytes": 3560
+      "modifiedDate": 1716192855877,
+      "sizeInBytes": 3709
     },
     "前后端编程/JavaScript/JS简单入门.md": {
       "isCountable": true,
@@ -7450,6 +7450,24 @@
       "createdDate": 1716192252737,
       "modifiedDate": 1716192252739,
       "sizeInBytes": 8122
+    },
+    "Resources/chrome_H8Xfks2sWn.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1716192407547,
+      "modifiedDate": 1716192407549,
+      "sizeInBytes": 1893479
     }
   }
 }
