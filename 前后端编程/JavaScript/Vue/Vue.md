@@ -239,7 +239,17 @@ const text = ref("")
 
 #### 渲染数据(v-html、v-text)
 
-使用该功能可以将变量中的字符串按照html渲染或者渲染为text
+使用该功能可以将变量中的字符串按照html渲染或者渲染为text，不过按照html渲染之后无法再使用vue特性。(TODO 待深入理解)
 
+```html
+<p v-html="html"></p>
+```
+
+```JavaScript
+const html = ref("<button>btn1</button>")
+```
+
+随后即可正常生成一个
 注意：
 - <font color="#c00000">由于将变量渲染为html了，因此尽量避免XSS跨站攻击</font>
+- 可以用于设定css布局等
