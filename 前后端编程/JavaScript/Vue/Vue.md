@@ -320,3 +320,37 @@ watch(text, (new_text, old_text) => {
 
 上一章节的监听器需要手动设置被监听的变量，自动监听器则会在其使用的<font color="#c00000">任意</font>变量发生变动时，自动执行对应函数。
 
+```html
+<input type="text" v-model.lazy="userName"><br>
+<select v-model="gender">
+	<option value="">请选择</option>
+	<option value="male">male</option>
+	<option value="female">female</option>
+	<option value="武装直升机">武装直升机</option>
+</select>
+```
+
+同样在模块化加载Vue时，需要加载 `watchEffect` 模块，此处省略。
+
+```JavaScript
+const userName = ref("")
+const gender = ref("")
+
+watchEffect(() => {
+	console.log("userName: " + userName.value)
+	console.log("gender: " + gender.value)
+})
+```
+
+进行操作时，只要自动监听器中的变量发生变化，则自动监听器会被自动触发：
+	![[chrome_bxpCUczA7f.png]]
+<font color="#c00000">注意</font>：
+1. <font color="#c00000">在自动监听器中</font>， `ref` 类型<font color="#c00000">需要用</font> `value` <font color="#c00000">取值</font>，<font color="#c00000">但是监听器中不需要</font>。
+
+
+
+
+
+
+
+
