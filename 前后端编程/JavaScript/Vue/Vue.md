@@ -186,7 +186,7 @@ const data = reactive({
 	class1:{
 		key1:"value1",
 		key2:"value2"
-    }
+	}
 })
 ```
 
@@ -206,7 +206,7 @@ const data = reactive({
 		{ id:10010, text:"中国电信"},
 		{ id:10016, text:"中国联通"},
 		{ id:10086, text:"中国移动"}
-    ]
+	]
 })
 ```
 
@@ -256,10 +256,15 @@ const html = ref("<button>btn1</button>")
 
 #### 计算属性(computed)
 
-需要注意 `comp_add` 是属性而非方法，不需要使用括号：
+计算属性相较于普通函数，其提供了一种<font color="#c00000">使用缓存避免相同数据重复计算</font>的一种方法。
+需要注意 `comp_add` 是属性而非方法，<font color="#c00000">不需要使用括号</font>：
 
-
-
+```html
+x:<input type="number" v-model.lazy:="x"><br>
+y:<input type="number" v-model.lazy:="y"><br>
+<button :click="comp_add">calc</button><br>
+Result: {{ comp_add }}
+```
 
 计算属性 `computed` 需要在模块化加载Vue时手动导入，即：
 
@@ -272,13 +277,10 @@ import {createApp, ref, computed} from "https://unpkg.com/vue@3/dist/vue.esm-bro
 ```JavaScript
 const x = ref(10)
 const y = ref(20)
-const computed_func = computed(() => {
-	
-	return x + y
+const comp_add = computed(() => {
+	console.log("Run computed func.")
+	return x.value + y.value
 })
-
-
-
 ```
 
 打开本页面及调试窗口，可以看到日志区有一条日志输出
@@ -286,4 +288,30 @@ const computed_func = computed(() => {
 反复按动 `calc` 按钮，数字保持不变，且日志区无新增日志输出，该数据不会被反复计算。
 修改x或y的数值后，日志区会新增对应日志输出，如下图所示：
 	![[chrome_DWKLIR5ecq.png]]
-但是直到该值下一次变化之前，
+但是直到该值下一次变化之前，均不会有新的日志出现，函数不会被重复计算。
+<font color="#c00000">注意</font>：
+1. 被计算的参数应当是 `ref` 或 `reactive` 等数据格式
+
+#### 监听器(watch)
+
+监听器提供了一种监听变量变化的方法，当变量发生变化时，该监听器构造时填入的监听函数会被调用。可以配合双相数据绑定使用。
+
+```html
+
+```
+
+监听器在模块化引入时，同样需要单独导入：
+
+```JavaScript
+import {createApp, ref, watch} from "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+```
+
+```JavaScript
+
+
+
+
+
+
+
+```
