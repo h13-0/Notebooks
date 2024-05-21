@@ -260,8 +260,8 @@ const html = ref("<button>btn1</button>")
 需要注意 `comp_add` 是属性而非方法，<font color="#c00000">不需要使用括号</font>：
 
 ```html
-x:<input type="number" v-model.lazy:="x"><br>
-y:<input type="number" v-model.lazy:="y"><br>
+x:<input type="number" v-model.lazy="x"><br>
+y:<input type="number" v-model.lazy="y"><br>
 <button :click="comp_add">calc</button><br>
 Result: {{ comp_add }}
 ```
@@ -297,7 +297,7 @@ const comp_add = computed(() => {
 监听器提供了一种监听变量变化的方法，当变量发生变化时，该监听器构造时填入的监听函数会被调用。可以配合双相数据绑定使用。
 
 ```html
-
+<input type="text" v-model.lazy="text">
 ```
 
 监听器在模块化引入时，同样需要单独导入：
@@ -307,11 +307,15 @@ import {createApp, ref, watch} from "https://unpkg.com/vue@3/dist/vue.esm-browse
 ```
 
 ```JavaScript
-
-
-
-
-
-
-
+const text = ref("")
+watch(text, (new_text, old_text) => {
+	console.log("text edited, new text: " + new_text)
+})
 ```
+
+随后当文本框失去焦点，触发数据同步后，该监听函数也会被执行：
+	![[chrome_tMbCDWaYIr.png]]
+
+#### 自动监听器(watchEffect)
+
+上一章节的监听器需要手动设置被监听的变量，
