@@ -15,7 +15,58 @@ Vue是JavaScript的一个开发框架，
 
 ### Vue应用
 
-#### 在普通HTML网页文件中加载
+#### 在普通HTML网页文件中加载Vue
+
+普通的HTML模板应当为：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+</body>
+</html>
+```
+
+随后应当在 `body` 中创建一个控件，设定id，并将Vue通过id挂载到该控件上。
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        
+    </div>
+
+    <script type="module">
+        import {createApp} from "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+        createApp({
+            setup(){
+                })
+
+                return {
+                }
+
+            }
+        }).mount("#app")
+    </script>
+</body>
+</html>
+```
+
+随后即可在代码段加入JavaScript代码或在id为 `app` 的 `div` 中加入控件。
+该方式的主要优点是方便理解。
+
+#### 使用Vue模板创建Vue应用
 
 
 
