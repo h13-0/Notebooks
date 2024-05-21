@@ -256,6 +256,10 @@ const html = ref("<button>btn1</button>")
 
 #### 计算属性(computed)
 
+需要注意 `comp_add` 是属性而非方法，不需要使用括号：
+
+
+
 
 计算属性 `computed` 需要在模块化加载Vue时手动导入，即：
 
@@ -276,3 +280,10 @@ const computed_func = computed(() => {
 
 
 ```
+
+打开本页面及调试窗口，可以看到日志区有一条日志输出
+	![[chrome_ZISCvbsvld.png]]
+反复按动 `calc` 按钮，数字保持不变，且日志区无新增日志输出，该数据不会被反复计算。
+修改x或y的数值后，日志区会新增对应日志输出，如下图所示：
+	![[chrome_DWKLIR5ecq.png]]
+但是直到该值下一次变化之前，
