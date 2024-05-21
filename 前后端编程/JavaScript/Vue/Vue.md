@@ -68,7 +68,23 @@ Vue是JavaScript的一个开发框架，
 
 #### 使用Vue模板创建Vue应用
 
+通常在IDE或编辑工具中会内置一个如下的Vue模板：
 
+```JavaScript
+<template>
+
+</template>
+
+<script>
+export default {
+
+}
+</script>
+
+<style>
+
+</style>
+```
 
 ### View控件
 
