@@ -253,3 +253,21 @@ const html = ref("<button>btn1</button>")
 注意：
 - <font color="#c00000">由于将变量渲染为html了，因此尽量避免XSS跨站攻击</font>
 - 可以用于设定css布局等
+
+#### 计算属性(computed)
+
+
+计算属性 `computed` 需要在模块化加载Vue时手动导入，即：
+
+```JavaScript
+import {createApp, reactive, computed} from "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+```
+
+随后即可使用 `computed` 特性，其参数应当为一个函数：
+
+```JavaScript
+const 
+
+
+
+```
