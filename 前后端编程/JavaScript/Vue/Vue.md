@@ -454,9 +454,13 @@ export default {
 在上述模板中，其主要有如下几个块：
 - `<template>` ：每个 `.vue` 文件<font color="#c00000">至多只能包含一个template块</font>，其所包含的控件会被预编译为JavaScript渲染函数。
 - `<script>` ：<font color="#c00000">除了</font> `<script setup>` <font color="#c00000">外</font>，每个 `.vue` 文件<font color="#c00000">至多只能包含一个script块</font>，该块中的脚本代码将被作为ES模块执行
+- `<style>` ：每个 `.vue` 文件<font color="#c00000">可以包含多个style块</font>，用于封装组件的样式。
+此外，还有几个常用的块：
+- `<script setup>` ：<span style="background:#fff88f"><font color="#c00000">该块中的代码会被会被预处理为该组件的</font></span> `setup` <span style="background:#fff88f"><font color="#c00000">函数</font></span>。
 
-TODO
 使用单文件组件进行开发时，<font color="#c00000">不再需要手动导入vue源</font>。
+TODO
+
 
 #### 组件与导入组件
 
