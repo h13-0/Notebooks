@@ -86,6 +86,10 @@ export default {
 </style>
 ```
 
+向：
+- `template` 中编写原先HTML中的 `<div id="app">` 的控件
+- ``
+
 ### View控件
 
 
