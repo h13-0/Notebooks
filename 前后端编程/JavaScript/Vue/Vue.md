@@ -13,7 +13,9 @@ Vue是JavaScript的一个开发框架，
 - 选项式(Vue2的风格)
 - 组合式(Vue3主推)
 
-### Vue应用
+### Vue应用形式
+
+在本章节中主要<span style="background:#fff88f"><font color="#c00000">介绍</font></span>如下两种使用Vue的方法，在章节[[Vue#基于Vue模板开发]]之前将先试用在HTML中加载Vue的方式进行学习。
 
 #### 在普通HTML网页文件中加载Vue
 
@@ -65,6 +67,7 @@ Vue是JavaScript的一个开发框架，
 
 随后即可在代码段加入JavaScript代码或在id为 `app` 的 `div` 中加入控件。
 该方式的主要优点是方便理解。
+使用该方式的开发源码应当保存为 `.html` 格式。
 
 #### 使用Vue模板创建Vue应用
 
@@ -88,7 +91,13 @@ export default {
 
 向：
 - `template` 中编写原先HTML中的 `<div id="app">` 的控件
-- ``
+- `script` 中编写原先 `setup` 中的代码
+- 
+
+随后使用 `npm run dev` 即可进行运行。
+
+在本章中主要是介绍"存在使用Vue模板进行创建Vue应用"的开发方式，<span style="background:#fff88f"><font color="#c00000">具体方式可见章节</font></span>[[Vue#基于Vue模板开发]]。
+使用该方式开发的源码应当保存为 `.vue` 格式。
 
 ### View控件
 
@@ -417,6 +426,9 @@ watchEffect(() => {
 	![[chrome_bxpCUczA7f.png]]
 <font color="#c00000">注意</font>：
 1. <font color="#c00000">在自动监听器中</font>， `ref` 类型<font color="#c00000">需要用</font> `value` <font color="#c00000">取值</font>，<font color="#c00000">但是监听器中不需要</font>。
+
+### 基于Vue模板开发
+
 
 
 
