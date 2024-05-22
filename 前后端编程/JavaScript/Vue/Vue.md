@@ -15,7 +15,7 @@ Vue是JavaScript的一个开发框架，
 
 ### Vue应用形式
 
-在本章节中主要<span style="background:#fff88f"><font color="#c00000">介绍</font></span>如下两种使用Vue的方法，在章节[[Vue#基于Vue模板开发]]之前将先试用在HTML中加载Vue的方式进行学习。
+在本章节中主要<span style="background:#fff88f"><font color="#c00000">介绍</font></span>如下两种使用Vue的方法，在章节[[Vue#单文件组件开发 vue]]之前将先试用在HTML中加载Vue的方式进行学习。
 
 #### 在普通HTML网页文件中加载Vue
 
@@ -69,7 +69,7 @@ Vue是JavaScript的一个开发框架，
 该方式的主要优点是方便理解。
 使用该方式的开发源码应当保存为 `.html` 格式。
 
-#### 使用Vue模板创建Vue应用
+#### 使用单文件组件开发vue应用
 
 通常在IDE或编辑工具中会内置一个如下的Vue模板：
 
@@ -96,7 +96,7 @@ export default {
 
 随后使用 `npm run dev` 即可进行运行。
 
-在本章中主要是介绍"存在使用Vue模板进行创建Vue应用"的开发方式，<span style="background:#fff88f"><font color="#c00000">具体方式可见章节</font></span>[[Vue#基于Vue模板开发]]。
+在本章中主要是介绍"存在使用Vue模板进行创建Vue应用"的开发方式，<span style="background:#fff88f"><font color="#c00000">具体方式可见章节</font></span>[[Vue#单文件组件开发 vue]]。
 使用该方式开发的源码应当保存为 `.vue` 格式。
 
 ### View控件
@@ -427,14 +427,14 @@ watchEffect(() => {
 <font color="#c00000">注意</font>：
 1. <font color="#c00000">在自动监听器中</font>， `ref` 类型<font color="#c00000">需要用</font> `value` <font color="#c00000">取值</font>，<font color="#c00000">但是监听器中不需要</font>。
 
-### 基于Vue模板开发
+### 单文件组件开发(.vue)
 
 在html开发方式的基础之上，Vue提供了直接使用Vue框架进行开发的方式，其所支持的特性更多，也在一定程度上减少了在html开发中的重复性的不必要的工作。其具体开发方式可见下方的[[Vue#使用Vue]]章节。
 
-#### 使用Vue模板
+#### 使用单文件组件开发
 
-
-
+TODO
+使用单文件组件进行开发时，<font color="#c00000">不再需要手动导入vue源</font>。
 
 #### 组件与导入组件
 
