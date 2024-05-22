@@ -433,6 +433,28 @@ watchEffect(() => {
 
 #### 使用单文件组件开发
 
+使用单文件组件进行开发时，应当将代码保存到后缀名为 `.vue` 的文件中，且其默认模板如下：
+
+```JavaScript
+<template>
+
+</template>
+
+<script>
+export default {
+
+}
+</script>
+
+<style>
+
+</style>
+```
+
+在上述模板中，其主要有如下几个块：
+- `<template>` ：每个 `.vue` 文件<font color="#c00000">至多只能包含一个template块</font>，其所包含的控件会被预编译为JavaScript渲染函数。
+- `<script>` ：<font color="#c00000">除了</font> `<script setup>` <font color="#c00000">外</font>，每个 `.vue` 文件<font color="#c00000">至多只能包含一个script块</font>，该块中的脚本代码将被作为ES模块执行
+
 TODO
 使用单文件组件进行开发时，<font color="#c00000">不再需要手动导入vue源</font>。
 
