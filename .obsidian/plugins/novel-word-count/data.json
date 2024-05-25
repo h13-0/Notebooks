@@ -7612,6 +7612,24 @@
       "createdDate": 1713204230576,
       "modifiedDate": 1715273142332,
       "sizeInBytes": 216
+    },
+    "生活常识/法律常识/法律常识.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 93,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0.31,
+      "characterCount": 225,
+      "nonWhitespaceCharacterCount": 197,
+      "readingTimeInMinutes": 0.2108301886792453,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1716622544315,
+      "modifiedDate": 1716622791309,
+      "sizeInBytes": 441
     }
   }
 }
