@@ -31,8 +31,7 @@
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -106,7 +105,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "计算机组成原理/常用存储器.md",
+                "file": "Linux驱动/Linux驱动.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -123,7 +122,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "计算机组成原理/常用存储器.md",
+                "file": "Linux驱动/Linux驱动.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -146,7 +145,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "计算机组成原理/常用存储器.md"
+                "file": "Linux驱动/Linux驱动.md"
               }
             }
           }
@@ -168,11 +167,11 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "69806be13e6e698c",
+  "active": "56d5207bd127a33e",
   "lastOpenFiles": [
+    "计算机组成原理/常用存储器.md",
     "计算机组成原理/常见CPU架构及其对比.md",
     "Linux驱动/Linux驱动.md",
-    "计算机组成原理/常用存储器.md",
     "计算机组成原理/Resources/msedge_PBsBaagip4.png",
     "生活常识/法律常识/法律常识.md",
     "计算机网络/应试笔记与八股.md",
