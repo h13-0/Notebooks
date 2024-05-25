@@ -7221,19 +7221,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 309,
+      "wordCount": 342,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 1.03,
-      "characterCount": 553,
-      "nonWhitespaceCharacterCount": 485,
-      "readingTimeInMinutes": 0.6658867924528301,
-      "linkCount": 1,
+      "pageCount": 1.14,
+      "characterCount": 624,
+      "nonWhitespaceCharacterCount": 545,
+      "readingTimeInMinutes": 0.7389811320754717,
+      "linkCount": 2,
       "embedCount": 0,
       "aliases": null,
       "createdDate": 1716546707525,
-      "modifiedDate": 1716626242544,
-      "sizeInBytes": 1229
+      "modifiedDate": 1716626428962,
+      "sizeInBytes": 1360
     },
     "Math/求质数方法.md": {
       "isCountable": true,
@@ -7631,7 +7631,7 @@
       "modifiedDate": 1716626253973,
       "sizeInBytes": 823
     },
-    "Resources/msedge_PBsBaagip4.png": {
+    "计算机组成原理/Resources/msedge_PBsBaagip4.png": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
@@ -7648,6 +7648,24 @@
       "createdDate": 1716626201272,
       "modifiedDate": 1716626201272,
       "sizeInBytes": 72479
+    },
+    "计算机组成原理/常用存储器.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 70,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0.23333333333333334,
+      "characterCount": 224,
+      "nonWhitespaceCharacterCount": 158,
+      "readingTimeInMinutes": 0.1701509433962264,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1716626355673,
+      "modifiedDate": 1716626691753,
+      "sizeInBytes": 332
     }
   }
 }
