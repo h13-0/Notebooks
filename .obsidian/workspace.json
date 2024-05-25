@@ -4,16 +4,28 @@
     "type": "split",
     "children": [
       {
-        "id": "38937f1aedfc75b5",
+        "id": "37f014f3351d8d57",
         "type": "tabs",
         "children": [
           {
-            "id": "21af3f2e7aa7761a",
+            "id": "56d5207bd127a33e",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "生活常识/法律常识/法律常识.md",
+                "file": "Linux驱动/Linux驱动.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "69806be13e6e698c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "计算机组成原理/常见CPU架构及其对比.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +105,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "生活常识/法律常识/法律常识.md",
+                "file": "Linux驱动/Linux驱动.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +122,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "生活常识/法律常识/法律常识.md",
+                "file": "Linux驱动/Linux驱动.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +145,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "生活常识/法律常识/法律常识.md"
+                "file": "Linux驱动/Linux驱动.md"
               }
             }
           }
@@ -155,18 +167,19 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "21af3f2e7aa7761a",
+  "active": "7ddc64b2e3c9b5c8",
   "lastOpenFiles": [
-    "计算机组成原理/常见CPU架构及其对比.md",
+    "Resources/msedge_PBsBaagip4.png",
     "生活常识/法律常识/法律常识.md",
-    "生活常识/法律常识",
-    "计算机组成原理/计算机组成原理应试学习.md",
     "Linux驱动/Linux驱动.md",
+    "计算机网络/应试笔记与八股.md",
+    "计算机组成原理/计算机组成原理应试学习.md",
+    "计算机组成原理/常见CPU架构及其对比.md",
+    "生活常识/法律常识",
     "前后端编程/Resources/Postman_lizTFvGLdo.png",
     "Resources/Pasted image 20240203021517.png",
     "计算机组成原理/Resources/msedge_xQyvK1ZPQi.png",
     "Resources/msedge_xQyvK1ZPQi 1.png",
-    "计算机网络/应试笔记与八股.md",
     "前后端编程/JavaScript/Vue/Vue.md",
     "Linux驱动",
     "Others/协程/协程.md",
@@ -188,7 +201,6 @@
     "计算机网络/基础应试学习/第六章 应用层/第六章 应用层.md",
     "计算机网络/基础应试学习/第二章 物理层/第二章 物理层.md",
     "计算机网络/基础应试学习/第三章 数据链路层/第三章 数据链路层.md",
-    "软件工程/软件工程应试笔记.md",
     "CPP/Resources/C数据类型.canvas",
     "前后端编程/Resources/chrome_87TbOgybv4.png",
     "前后端编程/Resources/chrome_ZISCvbsvld.png",

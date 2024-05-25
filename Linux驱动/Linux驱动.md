@@ -1,5 +1,5 @@
 ---
-number headings: first-level 2, max 6, 1.1
+number headings: auto, first-level 2, max 6, 1.1
 ---
 #嵌入式
 
@@ -23,7 +23,7 @@ Linux将设备分为了如下三个大类：
 
 ### 2.2 处理器
 
-#### 通用处理器
+#### 2.2.1 通用处理器
 
 当前的通用处理器主要采用了冯诺依曼架构和哈佛架构两种架构形式，其对应的常见的CPU系列有：
 - 冯诺依曼架构：Intel、ARM7、MIPS

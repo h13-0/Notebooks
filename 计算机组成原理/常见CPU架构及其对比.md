@@ -29,7 +29,10 @@ number headings: first-level 2, max 6, 1.1
 
 1. 哈佛架构将<font color="#c00000">程序和数据存储器独立存储</font>，因此程序的<font color="#c00000">指令和数据可以有不同的数据宽度</font>。
 2. <font color="#c00000">指令存储器</font>、<font color="#c00000">数据存储器</font>到CPU之间<font color="#c00000">均有一条独立的总线</font>，分别叫"<span style="background:#fff88f"><font color="#c00000">程序总线</font></span>"、"<span style="background:#fff88f"><font color="#c00000">数据总线</font></span>"，有较高的执行效率。
-3. <span style="background:#fff88f"><font color="#c00000">改进的哈佛架构</font></span>：将上述的"<span style="background:#fff88f"><font color="#c00000">程序总线</font></span>"、"<span style="background:#fff88f"><font color="#c00000">数据总线</font></span>"改进为"<span style="background:#fff88f"><font color="#c00000">地址总线</font></span>"、"<span style="background:#fff88f"><font color="#c00000">数据总线</font></span>"，并
+3. <span style="background:#fff88f"><font color="#c00000">改进的哈佛架构</font></span>：将上述的"<span style="background:#fff88f"><font color="#c00000">程序总线</font></span>"、"<span style="background:#fff88f"><font color="#c00000">数据总线</font></span>"改进为"<span style="background:#fff88f"><font color="#c00000">地址总线</font></span>"、"<span style="background:#fff88f"><font color="#c00000">数据总线</font></span>"，并使用这两个总线分别连接到程序存储器和数据存储器，并分时复用，如下图所示。
+	![[msedge_PBsBaagip4.png]]
+
+
 
 
 
