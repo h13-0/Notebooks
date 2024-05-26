@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux驱动/Linux驱动.md",
+                "file": "Linux驱动开发/Linux驱动开发笔记.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Linux驱动/Linux驱动.md",
+                "file": "Linux驱动开发/Linux驱动开发笔记.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Linux驱动/Linux驱动.md",
+                "file": "Linux驱动开发/Linux驱动开发笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux驱动/Linux驱动.md"
+                "file": "Linux驱动开发/Linux驱动开发笔记.md"
               }
             }
           }
@@ -161,7 +161,7 @@
     "CPP/编译器限定实现/gcc.md",
     "计算机组成原理/常用存储器.md",
     "CPP/C标准笔记/C++ 修饰符类型.md",
-    "Linux驱动/Linux驱动.md",
+    "Linux驱动开发/Linux驱动开发笔记.md",
     "计算机组成原理/常见CPU架构及其对比.md",
     "计算机组成原理/Resources/msedge_PBsBaagip4.png",
     "生活常识/法律常识/法律常识.md",
@@ -172,7 +172,7 @@
     "Resources/Pasted image 20240203021517.png",
     "计算机组成原理/Resources/msedge_xQyvK1ZPQi.png",
     "Resources/msedge_xQyvK1ZPQi 1.png",
-    "Linux驱动",
+    "Linux驱动开发",
     "Others/协程/协程.md",
     "Others/线程锁/实现/线程锁 with pthread.md",
     "生活常识/数码/RAID技术.md",

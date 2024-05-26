@@ -7613,24 +7613,6 @@
       "modifiedDate": 1715273142447,
       "sizeInBytes": 1623
     },
-    "Linux驱动/Linux驱动.md": {
-      "isCountable": true,
-      "isDirectory": false,
-      "noteCount": 1,
-      "wordCount": 583,
-      "wordCountTowardGoal": 0,
-      "wordGoal": null,
-      "pageCount": 1.9433333333333334,
-      "characterCount": 1094,
-      "nonWhitespaceCharacterCount": 947,
-      "readingTimeInMinutes": 1.2812830188679245,
-      "linkCount": 2,
-      "embedCount": 0,
-      "aliases": null,
-      "createdDate": 1716546707525,
-      "modifiedDate": 1716710349447,
-      "sizeInBytes": 2254
-    },
     "CMake/CMake 常用函数.md": {
       "isCountable": true,
       "isDirectory": false,
@@ -7666,6 +7648,24 @@
       "createdDate": 1713204230576,
       "modifiedDate": 1715273142332,
       "sizeInBytes": 216
+    },
+    "Linux驱动开发/Linux驱动开发笔记.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 636,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 2.12,
+      "characterCount": 1272,
+      "nonWhitespaceCharacterCount": 1095,
+      "readingTimeInMinutes": 1.417433962264151,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1716546707525,
+      "modifiedDate": 1716710599420,
+      "sizeInBytes": 2452
     }
   }
 }
