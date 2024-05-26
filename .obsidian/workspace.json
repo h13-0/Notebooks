@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "前后端编程/JavaScript/Vue/Vue.md",
+                "file": "Linux驱动/Linux驱动.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "前后端编程/JavaScript/Vue/Vue.md",
+                "file": "Linux驱动/Linux驱动.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "前后端编程/JavaScript/Vue/Vue.md",
+                "file": "Linux驱动/Linux驱动.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "前后端编程/JavaScript/Vue/Vue.md"
+                "file": "Linux驱动/Linux驱动.md"
               }
             }
           }
@@ -157,6 +157,7 @@
   },
   "active": "69806be13e6e698c",
   "lastOpenFiles": [
+    "前后端编程/JavaScript/Vue/Vue.md",
     "CPP/编译器限定实现/gcc.md",
     "计算机组成原理/常用存储器.md",
     "CPP/C标准笔记/C++ 修饰符类型.md",
@@ -171,7 +172,6 @@
     "Resources/Pasted image 20240203021517.png",
     "计算机组成原理/Resources/msedge_xQyvK1ZPQi.png",
     "Resources/msedge_xQyvK1ZPQi 1.png",
-    "前后端编程/JavaScript/Vue/Vue.md",
     "Linux驱动",
     "Others/协程/协程.md",
     "Others/线程锁/实现/线程锁 with pthread.md",
