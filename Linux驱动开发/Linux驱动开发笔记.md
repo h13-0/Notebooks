@@ -73,15 +73,21 @@ module_init(init_func);
 ```
 2. 模块卸载函数
 ```C
-
+static void __exit exit_function(void)
+{
+	// ...模块卸载，释放资源
+}
+// 指定模块卸载函数
+module_exit(exit_function);
 ```
 4. 模块许可证声明
-5. 模块参数
-6. 模块导出符号
-7. 模块作者信息等
+
+6. 模块参数
+7. 模块导出符号
+8. 模块作者信息等
 
 其他常用特性：
-1. 定义只在初始化阶段就需要的数据，该数据：
+1. 定义只在初始化阶段就需要的数据：
 ```C
 static int var_name __initdata = 0;
 ```
