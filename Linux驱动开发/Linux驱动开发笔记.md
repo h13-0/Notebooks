@@ -61,6 +61,15 @@ Linux内核模块的加载与卸载：
 
 一个Linux内核模块应当具有且实现以下几个组成部分：
 1. 模块加载函数<font color="#c00000">(必须)</font>
+2. 模块卸载函数<font color="#c00000">(必须)</font>
+3. 模块许可证声明
+4. 模块参数
+5. 模块导出符号
+6. 模块作者信息
+
+#### 4.2.1 模块加载函数
+
+
 ```C
 static int __init init_func(void)
 {
@@ -71,7 +80,10 @@ static int __init init_func(void)
 // 指定初始化函数
 module_init(init_func);
 ```
-2. 模块卸载函数<font color="#c00000">(必须)</font>
+
+
+#### 4.2.2 模块卸载函数
+
 ```C
 static void __exit exit_function(void)
 {
@@ -80,13 +92,35 @@ static void __exit exit_function(void)
 // 指定模块卸载函数
 module_exit(exit_function);
 ```
-3. 模块许可证声明
-```C
 
+#### 4.2.3 模块许可证声明
+
+```C
+MODULE_LICENSE("GPL v2")
 ```
-1. 模块参数
-2. 模块导出符号
-3. 模块作者信息等
+
+
+
+#### 4.2.4 模块参数
+
+模块在加载时可以传入一些命令行参数，其主要通过如下方式进行定义与加载：
+```C
+// 相当于缺省参数
+static int port = 8080;
+// module_param(参数名, 参数类型， 读/写权限)
+module_param(port, int, S_IRUGO);
+```
+可选的
+```Shell
+insmod var=value
+```
+
+
+#### 4.2.5 模块导出符号
+
+
+#### 4.2.6 模块作者信息
+
 
 其他常用特性：
 1. 定义只在初始化阶段就需要的数据：
