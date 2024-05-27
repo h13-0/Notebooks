@@ -60,7 +60,7 @@ Linux内核模块的加载与卸载：
 ### 4.2 Linux内核模块程序结构
 
 一个Linux内核模块应当具有且实现以下几个组成部分：
-1. 模块加载函数
+1. 模块加载函数<font color="#c00000">(必须)</font>
 ```C
 static int __init init_func(void)
 {
@@ -71,7 +71,7 @@ static int __init init_func(void)
 // 指定初始化函数
 module_init(init_func);
 ```
-2. 模块卸载函数
+2. 模块卸载函数<font color="#c00000">(必须)</font>
 ```C
 static void __exit exit_function(void)
 {
@@ -80,11 +80,13 @@ static void __exit exit_function(void)
 // 指定模块卸载函数
 module_exit(exit_function);
 ```
-4. 模块许可证声明
+3. 模块许可证声明
+```C
 
-6. 模块参数
-7. 模块导出符号
-8. 模块作者信息等
+```
+1. 模块参数
+2. 模块导出符号
+3. 模块作者信息等
 
 其他常用特性：
 1. 定义只在初始化阶段就需要的数据：
