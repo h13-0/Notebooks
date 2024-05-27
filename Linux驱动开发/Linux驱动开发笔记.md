@@ -81,7 +81,7 @@ module_init(init_func);
 7. 模块作者信息等
 
 其他常用特性：
-1. 定义只在初始化阶段就需要的数据：
+1. 定义只在初始化阶段就需要的数据，该数据：
 ```C
 static int var_name __initdata = 0;
 ```
