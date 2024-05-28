@@ -69,7 +69,6 @@ Linux内核模块的加载与卸载：
 
 #### 4.2.1 模块加载函数
 
-
 ```C
 static int __init init_func(void)
 {
@@ -80,7 +79,6 @@ static int __init init_func(void)
 // 指定初始化函数
 module_init(init_func);
 ```
-
 
 #### 4.2.2 模块卸载函数
 
@@ -93,37 +91,71 @@ static void __exit exit_function(void)
 module_exit(exit_function);
 ```
 
-#### 4.2.3 模块许可证声明
-
-```C
-MODULE_LICENSE("GPL v2")
-```
-
-
-
-#### 4.2.4 模块参数
+#### 4.2.3 模块参数
 
 模块在加载时可以传入一些命令行参数，其主要通过如下方式进行定义与加载：
+
 ```C
 // 相当于缺省参数
 static int port = 8080;
 // module_param(参数名, 参数类型， 读/写权限)
 module_param(port, int, S_IRUGO);
 ```
-可选的
+
+在加载时可以通过如下命令指定模块参数：
+
 ```Shell
-insmod var=value
+insmod var=value #例如：insmod port=80
 ```
 
+#### 4.2.4 模块导出符号
 
-#### 4.2.5 模块导出符号
+```C
+int add_int(int a, int b)
+{
+	return a + b;
+}
+// 导出符号
+EXPORT_SYMBOL(add_int);
 
+int add_int_gpl(int a, int b)
+{
+	return a + b;
+}
+// 导出包含GPL许可证的符号
+EXPORT_SYMBOL_GPL(add_int);
+```
 
-#### 4.2.6 模块作者信息
+#### 4.2.5 模块常用信息
 
+模块许可证声明：
 
-其他常用特性：
-1. 定义只在初始化阶段就需要的数据：
+```C
+MODULE_LICENSE("GPL v2");
+```
+
+模块作者信息：
+
+```C
+MODULE_AUTHOR("xxtech");
+```
+
+模块描述：
+
+```C
+MODULE_DESCRIPTION("...");
+```
+
+模块版本：
+
+```C
+MODULE_VERSION("V1.0");
+```
+
+#### 4.2.6 其他常用特性
+
+定义只在初始化阶段就需要的数据：
+
 ```C
 static int var_name __initdata = 0;
 ```
