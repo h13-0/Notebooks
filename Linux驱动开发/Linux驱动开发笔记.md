@@ -226,8 +226,43 @@ obj-m += xxx.o
 因此可以直接在 `lib` 目录下直接建立一个新文件 `hello_module.c` ，并编写如下代码：
 
 ```C
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/printk.h>
 
+static int __init hello_module_init(void)
+{
+    printk("Hello module inited.");
+    return 0;
+}
+
+static void __exit hello_module_exit(void)
+{
+    printk("Hello module exited.");
+}
+
+module_init(hello_module_init);
+module_exit(hello_module_exit);
+MODULE_LICENSE("GPL v2");
+MODULE_AUTHOR("h13");
+MODULE_DESCRIPTION("hello word module.");
+MODULE_VERSION("V1.0");
 ```
+
+并在  `lib/Makefile` 的末尾增加如下代码：
+
+```Makefile
+# Hello world module
+obj-m += hello_module.o
+```
+
+回到linux代码根目录，执行：
+
+```Shell
+make -j8 #8线程
+```
+
+即可得到
 
 ##### 4.2.7.2 字符驱动模块示例
 
