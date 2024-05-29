@@ -211,6 +211,23 @@ obj-$(CONFIG_TEST_LKM) += test_module.o
 经过搜索发现， `CONFIG_TEST_LKM` 在如下几个文件中被定义为 `m` ：
 - `tools/testing/selftests/kmod/config`
 - `tools/testing/selftests/splice/config`
+也就是在一定条件下，上述Makefile中的指令会变成：
+
+```Makefile
+obj-m += test_module.o
+```
+
+因此当需要编译自己的内核模块时，可以直接在Makefile中添加如下代码：
+
+```Makefile
+obj-m += xxx.o
+```
+
+因此可以直接在 `lib` 目录下直接建立一个新文件 `hello_module.c` ，并编写如下代码：
+
+```C
+
+```
 
 ##### 4.2.7.2 字符驱动模块示例
 
