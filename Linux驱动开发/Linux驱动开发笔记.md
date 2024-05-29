@@ -170,7 +170,46 @@ static int var_name __initdata = 0;
 
 #### 4.2.7 简单模块示例
 
-##### 4.2.7.1 普通模块示例
+在为内核编写模块时，<span style="background:#fff88f"><font color="#c00000">一定要选择与目标系统相匹配的内核源码</font></span>，否则生成的模块无法使用。
+
+##### 4.2.7.1 拉取当前系统内核源码
+
+###### 4.2.7.1.1 Ubuntu
+
+Ubuntu可以使用 `apt` 和 `git` 两种方式获取源码。在获取源码之前，需要获取当前系统信息：
+
+```Shell
+uname -a
+```
+
+```
+Linux h13-VMware-Virtual-Platform 6.8.0-31-generic #31-Ubuntu SMP PREEMPT_DYNAMIC Sat Apr 20 00:40:06 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux
+```
+
+随后可以使用 `apt list` 查看当前系统使用的内核：
+
+```Shell
+sudo apt list | grep linux-generic*
+```
+
+```
+linux-generic-hwe-24.04-edge/noble 6.8.0-31.31 amd64
+linux-generic-hwe-24.04/noble,now 6.8.0-31.31 amd64 [installed]
+linux-generic/noble 6.8.0-31.31 amd64
+```
+
+上述结果指明目前使用的内核为 `linux-generic-hwe-24.04/noble,now 6.8.0-31.31 amd64` 。
+
+<span style="background:#fff88f"><font color="#c00000">随后可以直接使用apt下载源码</font></span>，<font color="#c00000">该指令会直接将源码下载并解压到当前目录</font>
+
+```Shell
+apt-get source linux-image-$(uname -r)
+```
+
+
+
+
+##### 4.2.7.2 普通模块示例
 
 本实例为一个基础普通模块的示例。
 Linux已经在 `lib/test_module.c` 放置了一个基础的Hello World模块，其主要代码如下：
@@ -268,7 +307,8 @@ make -j8 #8线程
 使用 `modinfo hello_module.ko` 查看模块信息：
 
 ```Shell
-filename:       /home/h13/linux_driver_development/current_machine/noble/lib/hello_module.ko
+# modinfo hello_module.ko
+filename:       .../hello_module.ko
 version:        V1.0
 description:    hello word module.
 author:         h13
@@ -279,11 +319,10 @@ retpoline:      Y
 intree:         Y
 name:           hello_module
 vermagic:       6.8.4+ SMP preempt mod_unload modversions
-
 ```
 
 
-##### 4.2.7.2 字符驱动模块示例
+##### 4.2.7.3 字符驱动模块示例
 
 
 
