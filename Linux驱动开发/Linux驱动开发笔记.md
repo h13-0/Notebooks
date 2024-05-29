@@ -264,6 +264,25 @@ make -j8 #8线程
 
 即可在 `lib` 路径下得到 `hello_module.ko` ，使用
 
+
+使用 `modinfo hello_module.ko` 查看模块信息：
+
+```Shell
+filename:       /home/h13/linux_driver_development/current_machine/noble/lib/hello_module.ko
+version:        V1.0
+description:    hello word module.
+author:         h13
+license:        GPL v2
+srcversion:     C6A36BCF3E2045DD1DE8E30
+depends:
+retpoline:      Y
+intree:         Y
+name:           hello_module
+vermagic:       6.8.4+ SMP preempt mod_unload modversions
+
+```
+
+
 ##### 4.2.7.2 字符驱动模块示例
 
 
