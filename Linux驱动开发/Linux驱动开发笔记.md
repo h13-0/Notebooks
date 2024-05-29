@@ -208,7 +208,9 @@ MODULE_LICENSE("GPL");
 obj-$(CONFIG_TEST_LKM) += test_module.o
 ```
 
-经过搜索发现， `CONFIG_TEST_LKM` 
+经过搜索发现， `CONFIG_TEST_LKM` 在如下几个文件中被定义为 `m` ：
+- `tools/testing/selftests/kmod/config`
+- `tools/testing/selftests/splice/config`
 
 ##### 4.2.7.2 字符驱动模块示例
 
