@@ -173,17 +173,49 @@ static int var_name __initdata = 0;
 ##### 4.2.7.1 普通模块示例
 
 本实例为一个基础普通模块的示例。
+Linux已经在 `lib/test_module.c` 放置了一个基础的Hello World模块，其主要代码如下：
 
+```C
+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/printk.h>
 
+static int __init test_module_init(void)
+{
+	pr_warn("Hello, world\n");
 
+	return 0;
+}
+
+module_init(test_module_init);
+
+static void __exit test_module_exit(void)
+{
+	pr_warn("Goodbye\n");
+}
+
+module_exit(test_module_exit);
+
+MODULE_AUTHOR("Kees Cook <keescook@chromium.org>");
+MODULE_LICENSE("GPL");
+```
+
+并在 `lib/Makefile` 中已经添加了如下代码：
+
+```Makefile
+obj-$(CONFIG_TEST_LKM) += test_module.o
+```
+
+经过搜索发现， `CONFIG_TEST_LKM` 
 
 ##### 4.2.7.2 字符驱动模块示例
 
 
 
 本示例为一个字符设备驱动模块的Hello World示例。
-1. 进入 `/drivers/char` 目录，创建名为 `hello_world.c` 源文件：
+1. 进入 `drivers/char` 目录，创建名为 `hello_world.c` 源文件：
 ```C
 #include <linux/init.h>
 #include <linux/module.h>
