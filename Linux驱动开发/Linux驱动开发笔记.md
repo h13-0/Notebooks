@@ -262,7 +262,7 @@ obj-m += hello_module.o
 make -j8 #8线程
 ```
 
-即可得到
+即可在 `lib` 路径下得到 `hello_module.ko` ，使用
 
 ##### 4.2.7.2 字符驱动模块示例
 
