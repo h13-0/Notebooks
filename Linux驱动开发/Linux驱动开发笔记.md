@@ -415,8 +415,13 @@ make LOCALVERSION= include/config/kernel.release
 综上，当官方提供的内核源代码版本与实际内核不符时，应当：
 1. 修改根目录的 `Makefile` 中的版本号。
 2. 定义 `LOCALVERSION` 为空，或删除 `scripts/setlocalversion` 中的加号。
-修改后的
+修改后的vermagic信息为：
 
+```Shell
+vermagic:       6.8.0-31-generic SMP preempt mod_unload modversions
+```
+
+与系统中已加载的模块信息一致，但是此时加载仍然报错，使用 `dmesg | grep module` 查看错误信息 
 
 ##### 4.2.7.3 字符驱动模块示例
 
