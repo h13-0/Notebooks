@@ -208,6 +208,8 @@ mkdir noble
 git remote add origin https://git.launchpad.net/~canonical-kernel/ubuntu/+source/linux-intel/+git/noble
 # 只clone目标版本
 git fetch --depth 1 origin 7fdb45c9bbbc95a3300b4d8de3f751f4c05c98e2
+# 将工作目录切换到目标commit的内容
+git checkout FETCH_HEAD
 ```
 
 <font color="#c00000">只做内核驱动/模块开发建议使用后者</font>，完整clone速度过慢。
