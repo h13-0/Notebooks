@@ -192,7 +192,15 @@ Ubuntu所使用的内核源码仓库页面为：[https://kernel.ubuntu.com/git/]
 从上述页面中：
 1. 找到当前ubuntu系统的codename及其对应架构的仓库
 2. 从历史版本中找到当前内核版本
-后即可拉取仓库并回退到目标版本。
+随后可以考虑：
+- 完整clone再回退版本
+- 只clone目标版本
+一般建议使用后者，完整clone速度过慢，其方法为： `git clone source #tag`
+例如只想clone上述版本的内核源码，可以直接使用：
+
+```Shell
+git clone https://git.launchpad.net/~canonical-kernel/ubuntu/+source/linux-intel/+git/noble #7fdb45c9bbbc95a3300b4d8de3f751f4c05c98e2
+```
 
 ##### 4.2.7.2 普通模块示例
 
