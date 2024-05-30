@@ -403,6 +403,18 @@ EXTRAVERSION = -31-generic
 NAME = Hurr durr I'ma ninja sloth
 ```
 
+最后的 `+` 号出现条件为：
+- 上次tag之后，<font color="#c00000">代码有所改动</font>
+- <font color="#c00000">并且</font>未定义 `LOCALVERSION` 
+因此直接定义 `LOCALVERSION` 为空即可。
+
+```Bash
+make LOCALVERSION= include/config/kernel.release
+```
+
+综上，当官方提供的内核源代码版本与实际内核不符时，应当：
+1. 修改根目录的 `Makefile` 中的版本号。
+2. 定义 `LOCALVERSION` 为空。
 
 ##### 4.2.7.3 字符驱动模块示例
 
