@@ -328,6 +328,23 @@ name:           hello_module
 vermagic:       6.8.1+ SMP preempt mod_unload modversions
 ```
 
+明显地发现<font color="#c00000"><font color="#c00000">即使在下载时内核源码版本匹配</font></font>，<font color="#c00000">但是编译出来的模块的vermagic仍不匹配</font>。
+因此应当直接修改所下载的内核源码中 `include/linux/vermagic.h` 文件的 `vermagic` 定义。首先使用 `lsmod` 列出当前内核已加载的模块，并随便选取一个
+
+```Shell
+vermagic:       6.8.0-31-generic SMP preempt mod_unload modversions
+```
+
+```C
+#define VERMAGIC_STRING                                                 \
+        UTS_RELEASE " "                                                 \
+        MODULE_VERMAGIC_SMP MODULE_VERMAGIC_PREEMPT                     \
+        MODULE_VERMAGIC_MODULE_UNLOAD MODULE_VERMAGIC_MODVERSIONS       \
+        MODULE_ARCH_VERMAGIC                                            \
+        MODULE_RANDSTRUCT
+
+```
+
 
 ##### 4.2.7.3 字符驱动模块示例
 
