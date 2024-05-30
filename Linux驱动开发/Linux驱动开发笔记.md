@@ -456,7 +456,49 @@ make modules-install
 make install
 ```
 
+随后重启，<span style="background:#fff88f"><font color="#c00000">开启一个新的终端</font></span>监视 `printk` 信息：
 
+```Shell
+cat /proc/kmsg
+```
+
+在原终端加载模块：
+
+```Shell
+insmod hello_module.ko
+```
+
+无报错，且监视终端会输出日志：
+
+```Shell
+[   85.532987] Hello module inited.
+```
+
+使用 `lsmod` 也可以正常获取模块信息
+
+```Shell
+lsmod | grep hello
+```
+
+```Shell
+hello_module           12288  0
+```
+
+
+
+
+此时会有一个警告，是由于没有签名造成的：
+
+```Shell
+dmesg | grep hello
+[   85.531743] hello_module: module verification failed: signature and/or required key missing - tainting kernel
+```
+
+可以选择在 `Makefile` 文件中添加如下配置，关闭强制签名。
+
+```Makefile
+CONFIG_MODULE_SIG=n
+```
 
 ##### 4.2.7.3 字符驱动模块示例
 
