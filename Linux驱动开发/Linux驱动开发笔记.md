@@ -181,9 +181,28 @@ static int var_name __initdata = 0;
 Ubuntu可以使用 `apt` 和 `git` 两种方式获取源码。
 
 **使用apt获取源码**：
-直接搜索linux内核，并找出当前使用的内核
+直接搜索linux内核，并找出当前使用的内核包名
 
+```Shell
+sudo apt search linux-image
+```
 
+返回结果为：
+
+```Shell
+Sorting... Done
+Full Text Search... Done
+linux-image-generic-hwe-24.04/noble,now 6.8.0-31.31 amd64 [installed,automatic]
+  Generic Linux kernel image
+```
+
+则直接使用apt下载上述内核包的源码即可。
+
+```Shell
+apt-get install linux-source-6.8.0
+```
+
+该内核源码会被下载到 `/usr/src` 目录，复制并解压即可。
 
 **使用git获取源码**：
 在获取源码之前，需要获取当前系统信息：
