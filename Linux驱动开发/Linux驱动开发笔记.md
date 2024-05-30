@@ -329,20 +329,78 @@ vermagic:       6.8.1+ SMP preempt mod_unload modversions
 ```
 
 明显地发现<font color="#c00000"><font color="#c00000">即使在下载时内核源码版本匹配</font></font>，<font color="#c00000">但是编译出来的模块的vermagic仍不匹配</font>。
-因此应当直接修改所下载的内核源码中 `include/linux/vermagic.h` 文件的 `vermagic` 定义。首先使用 `lsmod` 列出当前内核已加载的模块，并随便选取一个
+因此应当直接修改所下载的内核源码中 `include/linux/vermagic.h` 文件的 `vermagic` 定义。首先使用 `lsmod` 列出当前内核已加载的模块，并随便选取一个已加载的模块使用 `modinfo` 查看其模块信息：
 
 ```Shell
 vermagic:       6.8.0-31-generic SMP preempt mod_unload modversions
 ```
 
+然后查看 `include/linux/vermagic.h` 中的相关定义。
+
 ```C
+/* Simply sanity version stamp for modules. */
+#ifdef CONFIG_SMP
+#define MODULE_VERMAGIC_SMP "SMP "
+#else
+#define MODULE_VERMAGIC_SMP ""
+#endif
+#ifdef CONFIG_PREEMPT_BUILD
+#define MODULE_VERMAGIC_PREEMPT "preempt "
+#elif defined(CONFIG_PREEMPT_RT)
+#define MODULE_VERMAGIC_PREEMPT "preempt_rt "
+#else
+#define MODULE_VERMAGIC_PREEMPT ""
+#endif
+#ifdef CONFIG_MODULE_UNLOAD
+#define MODULE_VERMAGIC_MODULE_UNLOAD "mod_unload "
+#else
+#define MODULE_VERMAGIC_MODULE_UNLOAD ""
+#endif
+#ifdef CONFIG_MODVERSIONS
+#define MODULE_VERMAGIC_MODVERSIONS "modversions "
+#else
+#define MODULE_VERMAGIC_MODVERSIONS ""
+#endif
+#ifdef RANDSTRUCT
+#include <generated/randstruct_hash.h>
+#define MODULE_RANDSTRUCT "RANDSTRUCT_" RANDSTRUCT_HASHED_SEED
+#else
+#define MODULE_RANDSTRUCT
+#endif
+
 #define VERMAGIC_STRING                                                 \
         UTS_RELEASE " "                                                 \
         MODULE_VERMAGIC_SMP MODULE_VERMAGIC_PREEMPT                     \
         MODULE_VERMAGIC_MODULE_UNLOAD MODULE_VERMAGIC_MODVERSIONS       \
         MODULE_ARCH_VERMAGIC                                            \
         MODULE_RANDSTRUCT
+```
 
+发现是 `UTS_RELEASE` 字段不匹配，其定义与 `generated/utsrelease.h` 中，是自动生成的头文件。
+回到linux内核源代码根目录的 `Makefile` 文件，定位到两段关键代码：
+
+```Makefile
+VERSION = 6
+PATCHLEVEL = 8
+SUBLEVEL = 1
+EXTRAVERSION =
+NAME = Hurr durr I'ma ninja sloth
+```
+
+```Makefile
+# Read KERNELRELEASE from include/config/kernel.release (if it exists)
+KERNELRELEASE = $(call read-file, include/config/kernel.release)
+KERNELVERSION = $(VERSION)$(if $(PATCHLEVEL),.$(PATCHLEVEL)$(if $(SUBLEVEL),.$(SUBLEVEL)))$(EXTRAVERSION)
+```
+
+可发现将修改第一段的内核版本号即可，修改后如下。
+
+```Makefile
+VERSION = 6
+PATCHLEVEL = 8
+SUBLEVEL = 0
+EXTRAVERSION = -31-generic
+NAME = Hurr durr I'ma ninja sloth
 ```
 
 
