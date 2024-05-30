@@ -134,6 +134,8 @@ int add_int_gpl(int a, int b)
 EXPORT_SYMBOL_GPL(add_int);
 ```
 
+注意：使用 `EXPORT_SYMBOL_GPL` 导出的符号不可以被非GPL模块引用。
+
 #### 4.2.5 模块常用信息
 
 模块许可证声明：
@@ -450,3 +452,33 @@ MODULE_LICENSE("GPL");
 
 
 ```
+
+## 5 Linux文件系统与设备文件
+
+### 5.1 Linux基本文件操作
+
+
+
+### 5.2 Linux文件系统
+
+### 5.3 Linux文件系统目录结构
+
+Linux文件系统的目录结构如下：
+- `/bin` ：包含了基本命令，例如 `ls` 、 `cp` 、 `mkdir` 等
+- `/sbin` ：包含了系统命令，例如 `ifconfig` 、 `modprobe` 等
+- `/dev` ：设备文件的挂载目录
+- `/etc` ：配置文件的存放目录
+- `/lib` ：库文件目录
+- `/mnt` ：存储设备的挂载点
+- `/opt` ：可选应用软件的安装目录
+- `/proc` ：
+
+
+
+
+
+
+
+
+
+
