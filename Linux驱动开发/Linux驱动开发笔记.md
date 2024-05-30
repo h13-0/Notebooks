@@ -178,7 +178,15 @@ static int var_name __initdata = 0;
 
 ###### 4.2.7.1.1 Ubuntu
 
-Ubuntu可以使用 `apt` 和 `git` 两种方式获取源码。在获取源码之前，需要获取当前系统信息：
+Ubuntu可以使用 `apt` 和 `git` 两种方式获取源码。
+
+**使用apt获取源码**：
+直接搜索linux内核，并找出当前使用的内核
+
+
+
+**使用git获取源码**：
+在获取源码之前，需要获取当前系统信息：
 
 ```Shell
 uname -a
