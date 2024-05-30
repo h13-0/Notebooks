@@ -200,11 +200,10 @@ linux-generic/noble 6.8.0-31.31 amd64
 
 上述结果指明目前使用的内核为 `linux-generic-hwe-24.04/noble,now 6.8.0-31.31 amd64` 。
 
-<span style="background:#fff88f"><font color="#c00000">随后可以直接使用apt下载源码</font></span>，<font color="#c00000">该指令会直接将源码下载并解压到当前目录</font>
+Ubuntu所使用的内核源码仓库页面为：[https://kernel.ubuntu.com/git/](https://kernel.ubuntu.com/git/)
+从上述页面
 
-```Shell
-apt-get source linux-image-$(uname -r)
-```
+
 
 
 
