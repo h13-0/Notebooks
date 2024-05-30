@@ -196,13 +196,24 @@ Ubuntu所使用的内核源码仓库页面为：[https://kernel.ubuntu.com/git/]
 2. 从历史版本中找到当前内核版本
 随后可以考虑：
 - 完整clone再回退版本
-- 只clone目标版本
-一般建议使用后者，完整clone速度过慢，其方法为： `git clone source #tag`
-例如只想clone上述版本的内核源码，可以直接使用：
-
 ```Shell
-git clone https://git.launchpad.net/~canonical-kernel/ubuntu/+source/linux-intel/+git/noble #7fdb45c9bbbc95a3300b4d8de3f751f4c05c98e2
+git clone https://git.launchpad.net/~canonical-kernel/ubuntu/+source/linux-intel/+git/noble
+git checkout 7fdb45c9bbbc95a3300b4d8de3f751f4c05c98e2
 ```
+- <span style="background:#fff88f"><font color="#c00000">只clone目标版本</font></span>
+```Shell
+# 先创建目录
+mkdir noble
+# 连接到git仓库
+git remote add origin https://git.launchpad.net/~canonical-kernel/ubuntu/+source/linux-intel/+git/noble
+# 只clone目标版本
+git fetch --depth 1 origin 7fdb45c9bbbc95a3300b4d8de3f751f4c05c98e2
+```
+
+<font color="#c00000">只做内核驱动/模块开发建议使用后者</font>，完整clone速度过慢。
+以上述命令为例，截止2024年05月30日：
+- 完整clone共计10192670个object
+- 只clone目标版本共计88631个object。
 
 ##### 4.2.7.2 普通模块示例
 
