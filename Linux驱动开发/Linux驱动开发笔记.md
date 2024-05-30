@@ -414,7 +414,7 @@ make LOCALVERSION= include/config/kernel.release
 
 综上，当官方提供的内核源代码版本与实际内核不符时，应当：
 1. 修改根目录的 `Makefile` 中的版本号。
-2. 定义 `LOCALVERSION` 为空。
+2. 定义 `LOCALVERSION` 为空，或删除 `scripts/setlocalversion` 中的加号。
 
 ##### 4.2.7.3 字符驱动模块示例
 
