@@ -186,27 +186,13 @@ uname -a
 Linux h13-VMware-Virtual-Platform 6.8.0-31-generic #31-Ubuntu SMP PREEMPT_DYNAMIC Sat Apr 20 00:40:06 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux
 ```
 
-随后可以使用 `apt list` 查看当前系统使用的内核：
-
-```Shell
-sudo apt list | grep linux-generic*
-```
-
-```
-linux-generic-hwe-24.04-edge/noble 6.8.0-31.31 amd64
-linux-generic-hwe-24.04/noble,now 6.8.0-31.31 amd64 [installed]
-linux-generic/noble 6.8.0-31.31 amd64
-```
-
-上述结果指明目前使用的内核为 `linux-generic-hwe-24.04/noble,now 6.8.0-31.31 amd64` 。
+上述结果指明目前使用的内核版本为 `6.8.0-31-generic` 。
 
 Ubuntu所使用的内核源码仓库页面为：[https://kernel.ubuntu.com/git/](https://kernel.ubuntu.com/git/)
-从上述页面
-
-
-
-
-
+从上述页面中：
+1. 找到当前ubuntu系统的codename及其对应架构的仓库
+2. 从历史版本中找到当前内核版本
+后即可拉取仓库并回退到目标版本。
 
 ##### 4.2.7.2 普通模块示例
 
