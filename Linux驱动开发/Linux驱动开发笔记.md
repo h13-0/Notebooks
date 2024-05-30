@@ -315,7 +315,7 @@ make -j8 #8线程
 
 ```Shell
 # modinfo hello_module.ko
-filename:       .../hello_module.ko
+filename:       .../lib/hello_module.ko
 version:        V1.0
 description:    hello word module.
 author:         h13
@@ -325,7 +325,7 @@ depends:
 retpoline:      Y
 intree:         Y
 name:           hello_module
-vermagic:       6.8.4+ SMP preempt mod_unload modversions
+vermagic:       6.8.1+ SMP preempt mod_unload modversions
 ```
 
 
