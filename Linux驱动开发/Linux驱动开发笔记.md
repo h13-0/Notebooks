@@ -231,6 +231,8 @@ git checkout 7fdb45c9bbbc95a3300b4d8de3f751f4c05c98e2
 ```Shell
 # 先创建目录
 mkdir noble
+# 初始化git仓库
+git init
 # 连接到git仓库
 git remote add origin https://git.launchpad.net/~canonical-kernel/ubuntu/+source/linux-intel/+git/noble
 # 只clone目标版本
