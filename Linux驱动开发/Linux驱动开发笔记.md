@@ -566,12 +566,11 @@ int main(int argc, char** argv)
 编译后在命令行中指定串口即可运行
 
 ```Shell
-
-
+gcc test.c -o test
+./test /dev/ttyUSB0
 ```
 
-
-上述代码会读取命令行中所制定的
+上述代码会读取命令行中所指定的串口 `/dev/ttyUSB0` 传回的二进制数据，并将其二进制打印出来
 
 ### 5.2 Linux文件系统
 
