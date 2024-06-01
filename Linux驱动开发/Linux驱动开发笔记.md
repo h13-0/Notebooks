@@ -524,7 +524,7 @@ CONFIG_MODULE_SIG=n
 
 
 但是对于一些设备文件，其通常也可以在完成一些配置之后，使用 `fread` 等操作进行读取或写入设备。
-例如对于普通串口设备，其可以先使用如下命令配置串口的波特率信息：
+例如对于普通串口设备，其可以先使用如下命令<font color="#c00000">配置串口信息</font>：
 
 ```Shell
 stty -F /dev/ttyUSB0 115200 raw
@@ -546,21 +546,21 @@ int main(int argc, char** argv)
     // Serial port file needs to be specified.
     if(argc <= 1)
         return -1;
-	
+    
     // Try to open file.
     FILE* serial = fopen(argv[1], "rb");
     if(!serial)
         return -2;
-	
-    char buffer[64] = { 0 };
+    
+    unsigned char buffer[64] = { 0 };
     while(1) {
         int size = fread(buffer, 1, 64, serial);
         for(int i = 0; i < size; i++)
-	        printf("%X", buffer[i]);
+            printf("0x%02X\r\n", buffer[i]);
     }
-	
     return 0;
 }
+
 ```
 
 编译后在命令行中指定串口即可运行
@@ -570,7 +570,7 @@ gcc test.c -o test
 ./test /dev/ttyUSB0
 ```
 
-上述代码会读取命令行中所指定的串口 `/dev/ttyUSB0` 传回的二进制数据，并将其二进制打印出来
+上述代码会读取命令行中所指定的串口 `/dev/ttyUSB0` 传回的二进制数据，并将其二进制打印出来。
 
 ### 5.2 Linux文件系统
 
@@ -596,8 +596,8 @@ Linux文件系统的目录结构如下：
 	![[msedge_aH7KpZznqO.png]]
 	![[msedge_tknHA5FLRe.png]]
 
-在使用
-
+例如在上一章节中使用 `fread` 读取串口文件时，VFS就负责调用串口对应的驱动函数而非普通的文件系统函数。
+在一般的驱动程序设计中，通常需要关心 `file` 和 `node` 两个结构体。
 
 
 
