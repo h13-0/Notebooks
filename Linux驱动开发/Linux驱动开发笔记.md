@@ -306,13 +306,13 @@ obj-m += xxx.o
 
 static int __init hello_module_init(void)
 {
-    printk("Hello module inited.");
+    printk("Hello module inited.\n");
     return 0;
 }
 
 static void __exit hello_module_exit(void)
 {
-    printk("Hello module exited.");
+    printk("Hello module exited.\n");
 }
 
 module_init(hello_module_init);
@@ -323,7 +323,8 @@ MODULE_DESCRIPTION("hello word module.");
 MODULE_VERSION("V1.0");
 ```
 
-并在  `lib/Makefile` 的末尾增加如下代码：
+<font color="#c00000">注意</font> `printk` <font color="#c00000">需要以</font> `\n` <font color="#c00000">结尾，否则不会及时刷新</font>。
+在  `lib/Makefile` 的末尾增加如下代码：
 
 ```Makefile
 # Hello world module
@@ -484,10 +485,19 @@ lsmod | grep hello
 hello_module           12288  0
 ```
 
+卸载mod也可以正常输出日志
 
+```Shell
+rmmod hello_module
+```
 
+```Shell
+[  411.289281] Hello module exited.
+```
 
-此时会有一个警告，是由于没有签名造成的：
+再次使用 `lsmod | grep hellod` 则无结果。
+
+若抓取日志，会发现一个警告，是由于没有签名造成的：
 
 ```Shell
 dmesg | grep hello
