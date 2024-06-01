@@ -536,11 +536,42 @@ stty -F /dev/ttyUSB0 115200 raw
 cat /dev/ttyUSB0
 ```
 
-读取串口设备发送来的信息。同理，在完成配置后，也可以直接使用C语言对该串口进行读写操作：
+读取串口设备发送来的信息。同理，<font color="#c00000">在完成配置后</font>，也可以直接使用C语言对该串口进行读写操作：
 
 ```C
+#include <stdio.h>
+
+int main(int argc, char** argv)
+{
+    // Serial port file needs to be specified.
+    if(argc <= 1)
+        return -1;
+	
+    // Try to open file.
+    FILE* serial = fopen(argv[1], "rb");
+    if(!serial)
+        return -2;
+	
+    char buffer[64] = { 0 };
+    while(1) {
+        int size = fread(buffer, 1, 64, serial);
+        for(int i = 0; i < size; i++)
+	        printf("%X", buffer[i]);
+    }
+	
+    return 0;
+}
+```
+
+编译后在命令行中指定串口即可运行
+
+```Shell
+
 
 ```
+
+
+上述代码会读取命令行中所制定的
 
 ### 5.2 Linux文件系统
 
