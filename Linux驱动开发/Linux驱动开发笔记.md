@@ -102,7 +102,14 @@ Linux内核模块的加载与卸载：
 
 由于Linux内核模块是直接以内核模式运行的，因此可以出于安全考虑，在编译Linux内核时，禁用加载模块功能。
 
-### 4.2 Linux内核模块程序结构
+### 4.2 Linux内核的额外注意事项
+
+相比于普通的应用程序开发，Linux内核的开发需要额外注意以下几点：
+1. <font color="#c00000">所有资源必须在模块卸载函数中手动释放</font>，操作系统不会帮内核模块管理资源。
+2. 模块加载函数需要尽量快速的执行。
+3. Linux内核模块代码必须是可重入的，因为他可能会被多个程序调用，会被同时在多个上下文中执行。
+
+### 4.3 Linux内核模块程序结构
 
 一个Linux内核模块应当具有且实现以下几个组成部分：
 1. 模块加载函数<font color="#c00000">(必须)</font>
@@ -112,7 +119,7 @@ Linux内核模块的加载与卸载：
 5. 模块导出符号(可选)
 6. 模块作者信息(可选)
 
-#### 4.2.1 模块加载函数
+#### 4.3.1 模块加载函数
 
 ```C
 static int __init init_func(void)
@@ -125,7 +132,7 @@ static int __init init_func(void)
 module_init(init_func);
 ```
 
-#### 4.2.2 模块卸载函数
+#### 4.3.2 模块卸载函数
 
 ```C
 static void __exit exit_function(void)
@@ -136,7 +143,7 @@ static void __exit exit_function(void)
 module_exit(exit_function);
 ```
 
-#### 4.2.3 模块参数
+#### 4.3.3 模块参数
 
 模块在加载时可以传入一些命令行参数，其主要通过如下方式进行定义与加载：
 
@@ -153,7 +160,7 @@ module_param(port, int, S_IRUGO);
 insmod var=value #例如：insmod port=80
 ```
 
-#### 4.2.4 模块导出符号
+#### 4.3.4 模块导出符号
 
 ```C
 int add_int(int a, int b)
@@ -173,7 +180,7 @@ EXPORT_SYMBOL_GPL(add_int);
 
 注意：使用 `EXPORT_SYMBOL_GPL` 导出的符号不可以被非GPL模块引用。
 
-#### 4.2.5 模块常用信息
+#### 4.3.5 模块常用信息
 
 模块许可证声明：
 
@@ -199,7 +206,7 @@ MODULE_DESCRIPTION("...");
 MODULE_VERSION("V1.0");
 ```
 
-#### 4.2.6 其他常用特性
+#### 4.3.6 其他常用特性
 
 定义只在初始化阶段就需要的数据：
 
@@ -207,13 +214,13 @@ MODULE_VERSION("V1.0");
 static int var_name __initdata = 0;
 ```
 
-#### 4.2.7 简单模块示例
+#### 4.3.7 简单模块示例
 
 在为内核编写模块时，<span style="background:#fff88f"><font color="#c00000">一定要选择与目标系统相匹配的内核源码</font></span>，否则生成的模块无法使用。
 
-##### 4.2.7.1 拉取当前系统内核源码
+##### 4.3.7.1 拉取当前系统内核源码
 
-###### 4.2.7.1.1 Ubuntu
+###### 4.3.7.1.1 Ubuntu
 
 Ubuntu可以使用 `apt` 和 `git` 两种方式获取源码。
 
@@ -283,7 +290,7 @@ git checkout FETCH_HEAD
 - 完整clone共计10192670个object
 - 只clone目标版本共计88631个object。
 
-##### 4.2.7.2 普通模块示例
+##### 4.3.7.2 普通模块示例
 
 本实例为一个基础普通模块的示例。
 Linux已经在 `lib/test_module.c` 放置了一个基础的Hello World模块，其主要代码如下：
@@ -549,7 +556,7 @@ dmesg | grep hello
 CONFIG_MODULE_SIG=n
 ```
 
-##### 4.2.7.3 字符驱动模块示例
+##### 4.3.7.3 字符驱动模块示例
 
 
 
