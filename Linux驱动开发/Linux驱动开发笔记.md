@@ -134,6 +134,8 @@ static int __init init_func(void)
 module_init(init_func);
 ```
 
+模块的加载函数中通常会遇到错误，在遇到错误后
+
 #### 4.3.2 模块卸载函数
 
 ```C
@@ -144,6 +146,8 @@ static void __exit exit_function(void)
 // 指定模块卸载函数
 module_exit(exit_function);
 ```
+
+<font color="#c00000">如果未定义模块卸载函数，则内核不允许卸载该模块。</font>
 
 #### 4.3.3 模块参数
 
@@ -215,6 +219,8 @@ MODULE_VERSION("V1.0");
 ```C
 static int var_name __initdata = 0;
 ```
+
+上述 `__initdata` 和模块加载函数的 `__init` 都标识<font color="#c00000">在内核被加载完毕后</font>，<font color="#c00000">其所定义的变量或函数会被从内存中扔掉</font>。
 
 #### 4.3.7 简单模块示例
 
