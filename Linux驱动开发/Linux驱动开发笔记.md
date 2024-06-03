@@ -231,6 +231,11 @@ MODULE_DESCRIPTION("...");
 MODULE_VERSION("V1.0");
 ```
 
+模块别名：
+```C
+MODULE_ALIAS("...");
+```
+
 #### 4.3.6 其他常用特性
 
 1. 定义只在初始化阶段就需要的数据：
@@ -240,6 +245,7 @@ static int var_name __initdata = 0;
 ```
 
 上述 `__initdata` 和模块加载函数的 `__init` 都标识<font color="#c00000">在内核被加载完毕后</font>，<font color="#c00000">其所定义的变量或函数会被从内存中扔掉</font>。
+2. 与上一条相似的是，内核中也有 `__exitdata` 与 `__exit` 。上述四个特性均会被放置到特殊ELF端。
 
 #### 4.3.7 简单模块示例
 
