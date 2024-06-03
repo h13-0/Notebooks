@@ -12,7 +12,15 @@ number headings: auto, first-level 2, max 6, 1.1
 ```toc
 ```
 
-## 1 Linux设备驱动
+## 1 Linux基础
+
+### 1.1 Linux版本编号规则
+
+Linux版本编号规则为：
+
+TODO
+其中：
+- 
 
 
 ## 2 驱动设计的硬件基础
@@ -88,6 +96,8 @@ Linux的组件可以选择编译进Linux内核或者编译为Linux内核模块�
 Linux内核模块的加载与卸载：
 - Linux内核的加载使用 `insmod` 命令
 - Linux内核的卸载使用 `rmmod` 命令
+
+由于Linux内核模块是直接以内核模式运行的，因此可以出于安全考虑，在编译Linux内核时，禁用加载模块功能。
 
 ### 4.2 Linux内核模块程序结构
 
