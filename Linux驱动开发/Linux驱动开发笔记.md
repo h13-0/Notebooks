@@ -158,9 +158,14 @@ module_exit(exit_function);
 ```C
 // 相当于缺省参数
 static int port = 8080;
-// module_param(参数名, 参数类型， 读/写权限)
+// module_param(name, type, perm)
 module_param(port, int, S_IRUGO);
 ```
+
+在 `module_param` 函数中：
+- `perm` 为访问许可配置：
+	- `S_IRUGO` 表示任何人都可以读取该参数
+	- `S_IRUGO|S_IWUSR` 表示root用户可以修改该参数。<font color="#c00000">但是当参数发生修改时</font>，<font color="#c00000">内核不会通知内核模块参数被修改</font>，因此<font color="#c00000">通常</font>不使用。
 
 在加载时可以通过如下命令指定模块参数：
 
@@ -175,9 +180,10 @@ insmod var=value #例如：insmod port=80
 - `int`
 - `long`
 - `short`
-- `uint`
+- `uint` ：关联unsigned int，u表示无符号。
 - `ulong`
 - `ushort`
+- <font color="#c00000">及上述类型对应的数组形式</font>，使用 `module_param_array` 进行参数接收。
 
 #### 4.3.4 模块导出符号
 
@@ -227,7 +233,7 @@ MODULE_VERSION("V1.0");
 
 #### 4.3.6 其他常用特性
 
-定义只在初始化阶段就需要的数据：
+1. 定义只在初始化阶段就需要的数据：
 
 ```C
 static int var_name __initdata = 0;
@@ -589,6 +595,15 @@ CONFIG_MODULE_SIG=n
 obj-m += test_module.o
 module-objs += file1.o file2.o ...
 ```
+
+#### 4.4.2 内核态驱动与用户态驱动
+
+用户态驱动的缺点：
+1. 用户态驱动不可使用中断。但是部分架构上有对应的解决方案，例如IA32的 `vm86` 。
+2. 只有通过 `mmap` 映射 `/dev/mem` 才可以直接访问物理内存，但是这需要root权限。
+3. 只有使用 
+
+
 
 ## 5 Linux文件系统与设备文件
 
