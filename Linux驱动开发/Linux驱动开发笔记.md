@@ -134,7 +134,9 @@ static int __init init_func(void)
 module_init(init_func);
 ```
 
-模块的加载函数中通常会遇到错误，在遇到错误后
+注意：
+- 模块的加载函数中通常会遇到错误，在遇到错误后，<font color="#c00000">应当停止后续的加载并释放已经加载的内存</font>。在这里通常使用 `goto` 语句实现，也可以编写统一的 `cleanup` 函数检查资源是否被成功分配并释放资源(<font color="#c00000">推荐后者</font>)。一般 `cleanup` 函数不会被注册为卸载函数，因此<font color="#c00000">不能被标记为</font> `__exit` 。
+- 错误码应当使用 `<linux/errno.h>` 中的错误码，这样方便用户使用 `perror` 之类的函数将错误转换为有意义的字符串。
 
 #### 4.3.2 模块卸载函数
 
@@ -165,6 +167,17 @@ module_param(port, int, S_IRUGO);
 ```Shell
 insmod var=value #例如：insmod port=80
 ```
+
+内核模块支持的加载参数列表如下：
+- `bool`
+- `invbool` ：<font color="#c00000">关联int型</font>，反转bool值，输入为 `true` 则传入为 `false` 。
+- `charp` ：<font color="#c00000">关联char*</font>，<font color="#c00000">内核会为用户提供的字符串分配内存并设置指针</font>。
+- `int`
+- `long`
+- `short`
+- `uint`
+- `ulong`
+- `ushort`
 
 #### 4.3.4 模块导出符号
 
