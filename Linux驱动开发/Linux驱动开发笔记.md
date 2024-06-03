@@ -17,10 +17,13 @@ number headings: auto, first-level 2, max 6, 1.1
 ### 1.1 Linux版本编号规则
 
 Linux版本编号规则为：
+```
+VERSION.PATCHLEVEL.SUBLEVEL[-EXTRAVERSION]
+```
 
-TODO
 其中：
-- 
+- PATCHLEVEL有奇偶数之分，偶数是用于发行的稳定版本，奇数是开发过程中的快照版本
+TODO
 
 
 ## 2 驱动设计的硬件基础
