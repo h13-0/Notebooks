@@ -1,7 +1,7 @@
 ---
 number headings: auto, first-level 2, max 6, 1.1
 ---
-#嵌入式
+#嵌入式 #Linux驱动开发
 
 主要参考：
 - LINUX设备驱动程序（第三版），Jonathan Corbet，Alessandro Rubini，Greg Kroah-Hartman著；魏永明，耿岳，钟书毅译。
@@ -562,8 +562,14 @@ CONFIG_MODULE_SIG=n
 
 ### 4.4 内核模块补充
 
-#### 多文件编程
+#### 4.4.1 多文件编程
 
+当内核模块 `test_module.ko` 由多个源文件 `file1.c` 、 `file2.c` 、 `...`  构成时，Makefile中可以如下编写：
+
+```Makefile
+obj-m += test_module.o
+module-objs += file1.o file2.o ...
+```
 
 ## 5 Linux文件系统与设备文件
 
