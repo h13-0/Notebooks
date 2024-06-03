@@ -625,7 +625,9 @@ module-objs += file1.o file2.o ...
 ### 5.1 主设备号和次设备号
 
 在 `/dev` 目录下执行 `ls -l` ，可以得到如下结果：
+
 ```Shell
+...
 drwxrwxrwt   2 root root          40 Jun  4 01:31 shm/
 crw-------   1 root root     10, 231 Jun  4 01:31 snapshot
 drwxr-xr-x   3 root root         200 Jun  4 01:31 snd/
@@ -637,7 +639,41 @@ crw-rw-rw-   1 root tty       5,   0 Jun  4 01:35 tty
 crw--w----   1 root tty       4,   0 Jun  4 01:31 tty0
 crw--w----   1 root tty       4,   1 Jun  4 01:31 tty1
 crw--w----   1 root tty       4,  10 Jun  4 01:31 tty10
+...
 ```
+
+在上述结果的各列对应关系如下：
+
+```Shell
+| 权限     | 文件数 | 所有者 | 用户组 | 文件大小或设备数 | 修改日期     | 文件名 |
+drwxrwxrwt   2      root    root          40         Jun  4 01:31 shm/
+crw-------   1      root    root     10, 231         Jun  4 01:31 snapshot
+```
+
+在上述栏目中，列 `文件大小或设备数` 在文件类型不同时其意义也不同：
+- 对于普通文件，其显示的是文件大小
+- 对于<font color="#c00000">设备文件</font>，其显示的是 `主设备号, 次设备号`
+在Linux系统中，大多数情况下，<font color="#c00000">主设备号相同的设备使用相同的驱动程序</font>。主次设备号可以用于标识一个设备，同时在Linux内核中，也可以通过次设备号获取对应设备的直接指针。
+
+### 5.2 设备编号的内部表达
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
