@@ -536,7 +536,8 @@ make modules-install
 make install
 ```
 
-随后重启，<span style="background:#fff88f"><font color="#c00000">开启一个新的终端</font></span>监视 `printk` 信息：
+随后重启，通常不建议卸载原内核，当内核配置出错无法启动后，可以在引导处切换内核。
+<span style="background:#fff88f"><font color="#c00000">开启一个新的终端</font></span>监视 `printk` 信息：
 
 ```Shell
 cat /proc/kmsg
@@ -619,9 +620,34 @@ module-objs += file1.o file2.o ...
 5. <font color="#c00000">一旦用户态驱动被换出磁盘，其响应速度会极其慢</font>。使用特权用户的 `mlock` 或许可以缓解，但是用户态驱动通常会链接多个库，需要占用多个page。
 6. 用户空间无法完成重要设备的驱动，例如网络设备和块设备。
 
-## 5 Linux文件系统与设备文件
+## 5 简易的字符设备驱动程序
 
-### 5.1 Linux基本文件操作
+### 5.1 主设备号和次设备号
+
+在 `/dev` 目录下执行 `ls -l` ，可以得到如下结果：
+```Shell
+drwxrwxrwt   2 root root          40 Jun  4 01:31 shm/
+crw-------   1 root root     10, 231 Jun  4 01:31 snapshot
+drwxr-xr-x   3 root root         200 Jun  4 01:31 snd/
+brw-rw----+  1 root cdrom    11,   0 Jun  4 01:31 sr0
+lrwxrwxrwx   1 root root          15 Jun  4 01:31 stderr -> /proc/self/fd/2
+lrwxrwxrwx   1 root root          15 Jun  4 01:31 stdin -> /proc/self/fd/0
+lrwxrwxrwx   1 root root          15 Jun  4 01:31 stdout -> /proc/self/fd/1
+crw-rw-rw-   1 root tty       5,   0 Jun  4 01:35 tty
+crw--w----   1 root tty       4,   0 Jun  4 01:31 tty0
+crw--w----   1 root tty       4,   1 Jun  4 01:31 tty1
+crw--w----   1 root tty       4,  10 Jun  4 01:31 tty10
+```
+
+
+
+
+
+
+
+## 6 Linux文件系统与设备文件
+
+### 6.1 Linux基本文件操作
 
 对于一个普通文件，其通常有打开、TODO
 
@@ -675,9 +701,9 @@ gcc test.c -o test
 
 上述代码会读取命令行中所指定的串口 `/dev/ttyUSB0` 传回的二进制数据，并将其二进制打印出来。
 
-### 5.2 Linux文件系统
+### 6.2 Linux文件系统
 
-#### 5.2.1 Linux文件系统目录结构
+#### 6.2.1 Linux文件系统目录结构
 
 Linux文件系统的目录结构如下：
 - `/bin` ：包含了基本命令，例如 `ls` 、 `cp` 、 `mkdir` 等。
@@ -693,7 +719,7 @@ Linux文件系统的目录结构如下：
 - `/var` ：用于存放经常变化的文件，例如日志等(位于 `/var/log` )。
 - `/sys` ：
 
-#### 5.2.2 Linux文件系统结构
+#### 6.2.2 Linux文件系统结构
 
 正如大多数操作系统那样，应用程序和各文件系统(如Ext、FAT、NTFS)之间需要有一层虚拟文件系统(VFS)隔离。但是在Linux中许多设备也会被挂载为 `/dev` 目录下的一个文件，因此Linux的VFS还有调用转发设备驱动函数的功能，如下图所示。
 	![[msedge_aH7KpZznqO.png]]
@@ -702,10 +728,9 @@ Linux文件系统的目录结构如下：
 例如在上一章节中使用 `fread` 读取串口文件时，VFS就负责调用串口对应的驱动函数而非普通的文件系统函数。
 在
 
-#### 5.2.3 devfs
+#### 6.2.3 devfs
 
 
-## 
 
 
 
