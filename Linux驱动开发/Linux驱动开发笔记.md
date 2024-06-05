@@ -723,7 +723,7 @@ static inline int register_chrdev(unsigned int major, const char *name,
 void unregister_chrdev_region(dev_t from, unsigned count)
 ```
 
-### 5.4 绑定文件操作
+### 5.4 绑定文件操作(file_operations结构)
 
 如上述章节所述， `struct file_operations` 用于建立文件操作和驱动程序操作的连接，该数据结构的定义如下(Linux 6.10版本)：
 
@@ -798,7 +798,57 @@ struct file_operations {
 |                     |                                  |                     |                                                                                                                                                                                                                     |
 注：
 1. 当指定的函数为 `NULL` 时，则会告诉内核该设备不支持对应操作，当用户调用时会抛出错误。
-2. 
+
+### 5.5 file结构
+
+注意本章节所述的 `file` 类型与C标准库的 `FILE` 类型无任何关联。`file` 是内核提供的一个数据结构，不会暴露给用户态程序。而 `FILE` 是C语言标准库中所定义的，不会出现在内核态的代码中。
+在内核中，`struct file` 指针通常被称为 `file` 或 `filep` 。`struct file` 数据结构的定义如下：
+
+```C
+struct file {
+	union {
+		/* fput() uses task work when closing and freeing file (default). */
+		struct callback_head 	f_task_work;
+		/* fput() must use workqueue (most kernel threads). */
+		struct llist_node	f_llist;
+		unsigned int 		f_iocb_flags;
+	};
+
+	/*
+	 * Protects f_ep, f_flags.
+	 * Must not be taken from IRQ context.
+	 */
+	spinlock_t		f_lock;
+	fmode_t			f_mode;
+	atomic_long_t		f_count;
+	struct mutex		f_pos_lock;
+	loff_t			f_pos;
+	unsigned int		f_flags;
+	struct fown_struct	f_owner;
+	const struct cred	*f_cred;
+	struct file_ra_state	f_ra;
+	struct path		f_path;
+	struct inode		*f_inode;	/* cached value */
+	const struct file_operations	*f_op;
+
+	u64			f_version;
+#ifdef CONFIG_SECURITY
+	void			*f_security;
+#endif
+	/* needed for tty driver, and maybe others */
+	void			*private_data;
+
+#ifdef CONFIG_EPOLL
+	/* Used by fs/eventpoll.c to link all the hooks to this file */
+	struct hlist_head	*f_ep;
+#endif /* #ifdef CONFIG_EPOLL */
+	struct address_space	*f_mapping;
+	errseq_t		f_wb_err;
+	errseq_t		f_sb_err; /* for syncfs */
+} __randomize_layout
+```
+
+
 
 
 
