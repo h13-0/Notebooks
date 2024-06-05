@@ -18,17 +18,8 @@
                 "source": false
               }
             }
-          },
-          {
-            "id": "72e820a749fd23cf",
-            "type": "leaf",
-            "state": {
-              "type": "graph",
-              "state": {}
-            }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -102,6 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "Linux驱动开发/Linux驱动开发笔记.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,6 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "Linux驱动开发/Linux驱动开发笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -139,7 +132,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "Linux驱动开发/Linux驱动开发笔记.md"
+              }
             }
           }
         ]
@@ -160,7 +155,7 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "72e820a749fd23cf",
+  "active": "69806be13e6e698c",
   "lastOpenFiles": [
     "Linux驱动开发/Linux驱动开发笔记.md",
     "STM32开发/Resources/stm32cubeide_FfvAsuGt5H.png",
