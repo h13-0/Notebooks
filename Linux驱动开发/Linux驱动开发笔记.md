@@ -657,7 +657,16 @@ crw-------   1      root    root     10, 231         Jun  4 01:31 snapshot
 
 ### 5.2 设备编号的内部表达
 
-在Linux 2.6.0到最新的Linux 6.10中， `dev_t` 被定义为一个
+在Linux 2.6.0到最新的Linux 6.10中， `dev_t` 被定义为一个 `u32` 类型，其：
+- 前12位用于表示主设备号
+- 后20位用于表示从设备号
+本质位运算，因此Linux也提供了对应的宏方便开发者转换：
+
+```C
+dev_t dev = MKDEV(major, minor);
+int major = MAJOR(dev);
+int minor = MINOR(dev);
+```
 
 
 
