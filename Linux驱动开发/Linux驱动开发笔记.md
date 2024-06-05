@@ -679,7 +679,9 @@ int minor = MINOR(dev);
 其主要的API有如下两个
 
 ```C
-// 该API也可以用作动态分配，见下一章节。
+// 该函数会在指定的主设备号下注册一个从设备，此时要求主设备号大于0。
+// 设备信息为该函数的第二、三个参数。
+// 该函数也可以用于动态分配设备号，见下一章节。
 static inline int register_chrdev(unsigned int major, const char *name,
 								 const struct file_operations *fops)
 ```
