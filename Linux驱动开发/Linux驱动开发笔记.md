@@ -675,12 +675,6 @@ crw-------   1      root    root     10, 231         Jun  4 01:31 snapshot
 
 
 
-
-
-
-
-
-
 ## 6 Linux文件系统与设备文件
 
 ### 6.1 Linux基本文件操作
