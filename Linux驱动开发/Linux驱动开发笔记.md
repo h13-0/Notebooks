@@ -692,11 +692,15 @@ static inline int register_chrdev(unsigned int major, const char *name,
 								 const struct file_operations *fops)
 ```
 
-#### 5.3.2 动态分配设备号
+上述函数的 `struct file_operations` 用于建立文件操作和驱动程序操作的连接的。具体可见
 
+#### 5.3.2 动态分配设备号(推荐)
+
+为了考虑驱动在多台设备上的兼容性，避免冲突，应当优先考虑动态分配设备号。
 
 ```C
 // 该函数会从baseminor开始，向dev所指主设备下连续注册count个设备
+// baseminor通常为0
 int alloc_chrdev_region(dev_t *dev, unsigned baseminor, unsigned count,
 			const char *name)
 ```
@@ -711,9 +715,16 @@ static inline int register_chrdev(unsigned int major, const char *name,
 ```
 
 
+#### 5.3.3 释放设备编号
+
+对于上述的所有分配设备编号的方法，均可以使用如下的函数进行释放： 
+
+```C
+void unregister_chrdev_region(dev_t from, unsigned count)
+```
 
 
-
+### 5.4 绑定文件操作
 
 
 
