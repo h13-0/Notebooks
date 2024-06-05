@@ -709,7 +709,7 @@ static inline int register_chrdev(unsigned int major, const char *name,
 
 #### 5.3.2 动态分配设备号(推荐)
 
-动态分配不需要指定主设备号，根据 `Documentation/admin-guide/devices.txt` 中的说明，<font color="#c00000">动态分配的主设备号会从254开始向下分配直到234，分配完毕后再从511开始向下分配直到384</font>。
+动态分配不需要指定主设备号，根据 `Documentation/admin-guide/devices.txt` 中的说明，<font color="#c00000">对于字符设备而言</font>，<font color="#c00000">动态分配的主设备号会从254开始向下分配直到234，分配完毕后再从511开始向下分配直到384</font>。
 
 为了考虑驱动在多台设备上的兼容性，避免冲突，应当优先考虑动态分配设备号。
 
