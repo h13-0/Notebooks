@@ -737,7 +737,7 @@ static inline int register_chrdev(unsigned int major, const char *name,
 void unregister_chrdev_region(dev_t from, unsigned count)
 ```
 
-### 5.4 绑定文件操作(file_operations结构)
+### 5.4 绑定文件操作(file_operations 数据结构)
 
 如上述章节所述， `struct file_operations` 用于建立文件操作和驱动程序操作的连接，该数据结构的定义如下(Linux 6.10版本)：
 
