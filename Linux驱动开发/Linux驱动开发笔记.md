@@ -679,17 +679,36 @@ int minor = MINOR(dev);
 其主要的API有如下两个
 
 ```C
+// 该函数会从from下的从设备号作为起始从设备号，向from所指的主设备下连续申请count个设备
+int register_chrdev_region(dev_t from, unsigned count, const char *name)
+```
+
+```C
 // 该函数会在指定的主设备号下注册一个从设备，此时要求主设备号大于0。
 // 设备信息为该函数的第二、三个参数。
+// 在此种用法下，函数的成功返回值为0，失败为负值。
 // 该函数也可以用于动态分配设备号，见下一章节。
 static inline int register_chrdev(unsigned int major, const char *name,
 								 const struct file_operations *fops)
 ```
 
+#### 5.3.2 动态分配设备号
 
 
+```C
+// 该函数会从baseminor开始，向dev所指主设备下连续注册count个设备
+int alloc_chrdev_region(dev_t *dev, unsigned baseminor, unsigned count,
+			const char *name)
+```
 
-
+```C
+// 该函数会自动，此时要求主设备号等于0。
+// 设备信息为该函数的第二、三个参数。
+// 在此种用法下，函数的成功返回值为0，失败为负值。
+// 该函数也可以用于动态分配设备号，见下一章节。
+static inline int register_chrdev(unsigned int major, const char *name,
+								 const struct file_operations *fops)
+```
 
 
 
