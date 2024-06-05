@@ -674,9 +674,15 @@ int minor = MINOR(dev);
 
 #### 5.3.1 静态分配设备号
 
-静态分配设备号的前提是要知道哪些设备号可用时，再去指定想要申请的设备号。
-查询空闲设备号可以去 `/proc/devices` 目录下查看未使用的设备号。
+静态分配设备号的<font color="#c00000">前提是要知道哪些设备号可用</font>，再去指定想要申请的设备号。
+查询空闲设备号需要读取 `/proc/devices` 文件未使用的设备号。
+其主要的API有如下两个
 
+```C
+// 该API也可以用作动态分配，见下一章节。
+static inline int register_chrdev(unsigned int major, const char *name,
+								 const struct file_operations *fops)
+```
 
 
 
