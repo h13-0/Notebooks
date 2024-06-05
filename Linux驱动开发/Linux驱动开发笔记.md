@@ -878,98 +878,18 @@ unsigned int iminor(struct inode *inode);
 unsigned int imajor(struct inode *inode);
 ```
 
-### 5.7 字符设备的分配、
+### 5.7 字符设备的分配、注册与回收
 
-
-
-
-
-
-## 6 Linux文件系统与设备文件
-
-### 6.1 Linux基本文件操作
-
-对于一个普通文件，其通常有打开、TODO
-
-
-但是对于一些设备文件，其通常也可以在完成一些配置之后，使用 `fread` 等操作进行读取或写入设备。
-例如对于普通串口设备，其可以先使用如下命令<font color="#c00000">配置串口信息</font>：
-
-```Shell
-stty -F /dev/ttyUSB0 115200 raw
-```
-
-随后可以直接在命令行中使用：
-
-```Shell
-cat /dev/ttyUSB0
-```
-
-读取串口设备发送来的信息。同理，<font color="#c00000">在完成配置后</font>，也可以直接使用C语言对该串口进行读写操作：
+通常来说(但不绝对)，注册一个字符设备需要完成<font color="#c00000">申请结构体空间</font>、配置结构体、注册设备、反注册设备、<font color="#c00000">回收空间</font>几个任务。一个典型的基本字符设备代码如下所示：
 
 ```C
-#include <stdio.h>
 
-int main(int argc, char** argv)
-{
-    // Serial port file needs to be specified.
-    if(argc <= 1)
-        return -1;
-    
-    // Try to open file.
-    FILE* serial = fopen(argv[1], "rb");
-    if(!serial)
-        return -2;
-    
-    unsigned char buffer[64] = { 0 };
-    while(1) {
-        int size = fread(buffer, 1, 64, serial);
-        for(int i = 0; i < size; i++)
-            printf("0x%02X\r\n", buffer[i]);
-    }
-    return 0;
-}
+
+
+
+
 
 ```
-
-编译后在命令行中指定串口即可运行
-
-```Shell
-gcc test.c -o test
-./test /dev/ttyUSB0
-```
-
-上述代码会读取命令行中所指定的串口 `/dev/ttyUSB0` 传回的二进制数据，并将其二进制打印出来。
-
-### 6.2 Linux文件系统
-
-#### 6.2.1 Linux文件系统目录结构
-
-Linux文件系统的目录结构如下：
-- `/bin` ：包含了基本命令，例如 `ls` 、 `cp` 、 `mkdir` 等。
-- `/sbin` ：包含了系统命令，例如 `ifconfig` 、 `modprobe` 等。
-- `/dev` ：设备文件的挂载目录。
-- `/etc` ：配置文件的存放目录。
-- `/lib` ：库文件目录。
-- `/mnt` ：存储设备的挂载点。
-- `/opt` ：可选应用软件的安装目录。
-- `/proc` ：存放一些系统信息及进程信息。该目录并非实际位于文件系统中，<font color="#c00000">其位于内存中</font>。
-- `/tmp` ：缓存目录。
-- `/usr` ：用户目录
-- `/var` ：用于存放经常变化的文件，例如日志等(位于 `/var/log` )。
-- `/sys` ：
-
-#### 6.2.2 Linux文件系统结构
-
-正如大多数操作系统那样，应用程序和各文件系统(如Ext、FAT、NTFS)之间需要有一层虚拟文件系统(VFS)隔离。但是在Linux中许多设备也会被挂载为 `/dev` 目录下的一个文件，因此Linux的VFS还有调用转发设备驱动函数的功能，如下图所示。
-	![[msedge_aH7KpZznqO.png]]
-	![[msedge_tknHA5FLRe.png]]
-
-例如在上一章节中使用 `fread` 读取串口文件时，VFS就负责调用串口对应的驱动函数而非普通的文件系统函数。
-在
-
-#### 6.2.3 devfs
-
 
 
 
