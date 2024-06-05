@@ -668,6 +668,8 @@ int major = MAJOR(dev);
 int minor = MINOR(dev);
 ```
 
+在Linux 2.5系列的修改中，设备编号从原先的8+8=16位变成了如今的32位。
+
 ### 5.3 分配和释放设备编号
 
 分配设备号主要有两种方式，分别为静态分配和动态分配。
@@ -862,7 +864,21 @@ struct file {
 
 ### 5.6 inode 数据结构
 
-`inode` 即Linux的混合索引分配的节点，不过设备文件通常不需要关心混合索引分配的文件系统管理相关的内容(电科爱考)。
+`inode` 即Linux的混合索引分配的节点，不过设备文件通常不需要关心混合索引分配的文件系统管理相关的内容(电科爱考)，因此需要关注的成员主要有如下两个：
+
+| <center>成员</center> | <center>可否为空</center> | <center>备注</center> | <center>成员作用</center>      |
+| ------------------- | --------------------- | ------------------- | -------------------------- |
+| `i_rdev`            |                       |                     | 包含了上述的 `dev_t` 可以用于存储设备号等。 |
+| `i_cdev`            |                       |                     | 字符设备的 `struct cdev` 类型。    |
+
+由于Linux在2.5系列中修改了 `dev_t` 的位数，因此出于可移植性考虑，<font color="#c00000">建议使用如下的接口获取设备号</font>(而不是先获取 `dev_t` 再获取设备号)：
+
+```C
+unsigned int iminor(struct inode *inode);
+unsigned int imajor(struct inode *inode);
+```
+
+### 5.7 字符设备的分配、
 
 
 
