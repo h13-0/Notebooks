@@ -657,7 +657,7 @@ crw-------   1      root    root     10, 231         Jun  4 01:31 snapshot
 
 ### 5.2 设备编号的内部表达
 
-
+在Linux 2.6.0到最新的Linux 6.10中， `dev_t` 被定义为一个
 
 
 
