@@ -978,7 +978,32 @@ ssize_t (*write) (struct file *, const char __user *, size_t, loff_t *);
 ```
 
 需要注意的是：
-1. `char __user *` 是<span style="background:#fff88f"><font color="#c00000">用户空间的指针，在内核代码中永远不要直接操作它们</font></span>，原因如下：
+1. `char __user *` 是<span style="background:#fff88f"><font color="#c00000">用户空间的指针，在内核代码中<b>永远不要</b>直接操作它们</font></span>，原因如下：
 	- 用户空间是分页的，<font color="#c00000">表面上连续的内存空间在实际上却不连续</font>
 	- <font color="#c00000">用户空间的内存可能会被换出外存</font>，<font color="#c00000">此时目标内存地址甚至可能不在内存</font>
-	- 
+	- 用户空间的应用可能是恶意应用，直接引用对应的内存空间可能会间接访问后门
+	- <font color="#c00000">用户传来的地址可能是无效地址</font>
+	<font color="#c00000">因此应当使用专用的函数来访问对应的内存空间</font>。
+2. `loff_t *` TODO
+
+更多的内存管理相关内容可见章节
+
+## 6 内核调试技术
+
+
+
+
+## 7 并发和竞态
+
+
+## 8 高级字符设备驱动程序
+
+
+## 9 时间、延迟及延缓操作
+
+
+## 10 分配内存
+
+
+
+
