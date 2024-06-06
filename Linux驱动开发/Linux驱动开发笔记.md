@@ -892,7 +892,48 @@ unsigned int imajor(struct inode *inode);
 
 ### 5.7 字符设备的分配、注册与回收
 
-通常来说(但不绝对)，注册一个字符设备需要完成<font color="#c00000">申请结构体空间</font>、配置结构体、注册设备、反注册设备、<font color="#c00000">回收空间</font>几个任务。
+通常来说(但不绝对)，注册一个字符设备需要完成<font color="#c00000">申请结构体空间</font>、配置结构体、注册设备、反注册设备、<font color="#c00000">回收空间</font>几个任务。注意错误处理和资源回收即可。
+如下是一个简单的字符设备模块的加载和卸载函数：
+
+```C
+static int __init mpipe_init(void)
+{
+    int ret = 0;
+
+    // allocate char dev region.
+    ret = alloc_chrdev_region(&dev, 0, 1, "mpipe");
+    if(ret)
+        goto failed;
+
+    // allocate cdev
+    if((cdev = cdev_alloc()) == NULL)
+        goto cdev_alloc_failed;
+
+    cdev->ops = &fops;
+    cdev->owner = THIS_MODULE;
+    cdev_init(cdev, &fops);
+
+cdev_add_failed:
+    cdev_del(cdev);
+
+cdev_alloc_failed:
+    unregister_chrdev_region(dev, 1);
+
+failed:
+    return ret;
+}
+
+static void __exit mpipe_exit(void)
+{
+    cdev_del(cdev);
+    unregister_chrdev_region(dev, 1);
+}
+```
+
+
+
+
+
 如下是一个简单的字符设备的代码，其功能是实现两个进程之间的管道通信，程序基本设定如下：
 1. 仅支持2个进程访问，超过2个时拒绝打开pipe文件。
 2. 无鉴权。
