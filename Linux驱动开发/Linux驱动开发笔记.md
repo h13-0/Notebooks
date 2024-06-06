@@ -914,14 +914,8 @@ unsigned int imajor(struct inode *inode);
 1. 使用 `cdev_init` 初始化静态分配的结构体时，结构体的 `kobj_type` 会被注册为<font color="#c00000">静态分配类型</font>，并指定release函数为 `cdev_default_release` 。
 2. 使用 `cdev_alloc` 为指针分配内存时， `kobj_type` 会被注册为<font color="#c00000">动态分配类型</font>，并指定release函数为 `cdev_dynamic_release` 。
 3. 因此无论静态还是动态分配，都可以用 `cdev_del` 解除注册，<font color="#c00000">且无需担心动态内存回收问题</font>。
-4. 使用 `cdev_del` 解除注册后，<font color="#c00000">设备不一定会被立即移除</font>，内核会等待用户停止使用该设备后才会移除。但是使用 `cdev_del` <font color="#c00000">解除注册后，内核模块不应当再调用该模块</font>。
-
-
-
-
-
-
-如下是一个简单的字符设备模块的加载和卸载函数：
+4. 使用 `cdev_del` 解除注册后，<font color="#c00000">设备不一定会被立即移除</font>，<font color="#c00000">内核会等待用户停止使用该设备后才会移除</font>。但是使用 `cdev_del` <font color="#c00000">解除注册后，内核模块不应当再调用该模块</font>。
+综上，可编写如下的字符设备模块的加载和卸载函数：
 
 ```C
 static int __init mpipe_init(void)
@@ -939,6 +933,11 @@ static int __init mpipe_init(void)
 
     cdev->ops = &fops;
     cdev->owner = THIS_MODULE;
+
+    // register a character device.
+    ret = cdev_add(cdev, dev, 1);
+    if(ret)
+        goto cdev_add_failed;
 
 cdev_add_failed:
     cdev_del(cdev);
