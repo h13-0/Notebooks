@@ -903,12 +903,18 @@ unsigned int imajor(struct inode *inode);
 	1. 静态定义 `cdev_t` 结构体
 	2. 使用 `cdev_init` 初始化该结构体，同时指定 `file_operations`
 	3. 配置 `owner`
+	4. 使用 `cdev_add` 添加字符设备
 - 动态分配，动态分配和管理内存：
 	1. 定义 `cdev_t*` 指针
 	2. 使用 `cdev_alloc` 分配内存空间，<span style="background:#fff88f"><font color="#c00000">此时无需再使用</font></span> `cdev_init` 初始化
 	3. 配置 `cdev` 的 `file_operations`
 	4. 配置 `owner`
-
+	5. 使用 `cdev_add` 添加字符设备
+在字符设备的回收时，同一使用 `cdev_del` 即可解除注册并可能回收内存。但是需要额外注意以下几点：
+1. 使用 `cdev_init` 初始化静态分配的结构体时，结构体的 `kobj_type` 会被注册为<font color="#c00000">静态分配类型</font>，并指定release函数为 `cdev_default_release` 。
+2. 使用 `cdev_alloc` 为指针分配内存时， `kobj_type` 会被注册为<font color="#c00000">动态分配类型</font>，并指定release函数为 `cdev_dynamic_release` 。
+3. 因此无论静态还是动态分配，都可以用 `cdev_del` 解除注册，<font color="#c00000">且无需担心动态内存回收问题</font>。
+4. 使用 `cdev_del` 解除注册后，<font color="#c00000">设备不一定会被立即移除</font>，内核会等待用户停止使用该设备后才会移除。但是使用 `cdev_del` <font color="#c00000">解除注册后，内核模块不应当再调用该模块</font>。
 
 
 
