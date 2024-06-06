@@ -987,7 +987,10 @@ ssize_t (*write) (struct file *, const char __user *, size_t, loff_t *);
 	<font color="#c00000">因此应当使用专用的函数来访问对应的内存空间</font>。
 2. `loff_t *` TODO
 
-更多的内存管理相关内容可见章节
+更多的内存管理相关内容将在后续章节讲述。
+
+
+
 
 ## 6 内核调试技术
 
@@ -1003,7 +1006,7 @@ ssize_t (*write) (struct file *, const char __user *, size_t, loff_t *);
 ## 9 时间、延迟及延缓操作
 
 
-## 10 分配内存
+## 10 内存分配
 
 
 
