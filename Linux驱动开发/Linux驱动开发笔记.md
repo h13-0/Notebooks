@@ -898,12 +898,20 @@ unsigned int imajor(struct inode *inode);
 ### 5.7 字符设备的分配、注册与回收
 
 通常来说(但不绝对)，注册一个字符设备需要完成<font color="#c00000">申请结构体空间</font>、配置结构体、注册设备、反注册设备、<font color="#c00000">回收空间</font>几个任务。注意错误处理和资源回收即可。
-需要注意的是字符设备使用的 `cdev_t` 应当使用 `cdev_alloc` 进行分配空间， `cdev_t` 的操作流程如下：
-1. 定义 `cdev_t*` 指针
-2. 使用 `cdev_alloc` 分配内存空间
-3. 配置 `cdev` 的 `file_operations`
-4. 配置 `owner`
-5. 使用 `cdev_init` 
+需要注意的是字符设备使用的 `cdev_t` 有两种内存分配方式：
+- 静态分配，直接静态定义 `cdev_t` 结构体：
+	1. 静态定义 `cdev_t` 结构体
+	2. 使用 `cdev_init` 初始化该结构体，同时指定 `file_operations`
+	3. 配置 `owner`
+- 动态分配，动态分配和管理内存：
+	1. 定义 `cdev_t*` 指针
+	2. 使用 `cdev_alloc` 分配内存空间，<span style="background:#fff88f"><font color="#c00000">此时无需再使用</font></span> `cdev_init` 初始化
+	3. 配置 `cdev` 的 `file_operations`
+	4. 配置 `owner`
+
+
+
+
 
 
 
@@ -925,7 +933,6 @@ static int __init mpipe_init(void)
 
     cdev->ops = &fops;
     cdev->owner = THIS_MODULE;
-    cdev_init(cdev, &fops);
 
 cdev_add_failed:
     cdev_del(cdev);
