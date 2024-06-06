@@ -964,8 +964,21 @@ open应当完成如下任务：
 3. 在必要时更新 `file_operations` 中的指针
 4. 在必要时向 `filep` 中填写应当存放在 `private_data` 中的数据
 
+对应地，release应当完成如下任务：
+1. 清除在 `filep` 中寄存的数据
+2. 关闭设备
 
+### 5.9 read和write方法
 
+read和write方法的函数指针如下所示：
 
+```C
+ssize_t (*read) (struct file *, char __user *, size_t, loff_t *);
+ssize_t (*write) (struct file *, const char __user *, size_t, loff_t *);
+```
 
-
+需要注意的是：
+1. `char __user *` 是<span style="background:#fff88f"><font color="#c00000">用户空间的指针，在内核代码中永远不要直接操作它们</font></span>，原因如下：
+	- 用户空间是分页的，<font color="#c00000">表面上连续的内存空间在实际上却不连续</font>
+	- <font color="#c00000">用户空间的内存可能会被换出外存</font>，<font color="#c00000">此时目标内存地址甚至可能不在内存</font>
+	- 
