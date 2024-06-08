@@ -985,9 +985,10 @@ ssize_t (*write) (struct file *, const char __user *, size_t, loff_t *);
 	- 用户空间的应用可能是恶意应用，直接引用对应的内存空间可能会间接访问后门
 	- <font color="#c00000">用户传来的地址可能是无效地址</font>
 	<font color="#c00000">因此应当使用专用的函数来访问对应的内存空间</font>。
+	更多的内存管理相关内容将在后续章节讲述。
 2. `loff_t *` TODO
 
-更多的内存管理相关内容将在后续章节讲述。
+在read和write操作成功完成时，应当更新 `*offp` 所表示的文件位置。
 
 
 
