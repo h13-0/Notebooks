@@ -1025,11 +1025,13 @@ ssize_t (*readv) (struct file *, const struct iovec *, unsigned long, loff_t *);
 ssize_t (*writev) (struct file *, const struct iovec *, unsigned long, loff_t *);
 ```
 
-<font color="#c00000">在Linux 2.6.19中已经删除</font>。
+<font color="#c00000">上述支持在Linux 2.6.19中已经删除</font>。
 
 ## 6 内核调试技术
 
+### 6.1 内核的调试技术支持
 
+内核中集成了很多可选的调试技术支持。这些调试技术或多或少的都会对内核的运行速度有所影响，因此通常发行版的Linux一般不会开启这些支持，这也是
 
 
 ## 7 并发和竞态
