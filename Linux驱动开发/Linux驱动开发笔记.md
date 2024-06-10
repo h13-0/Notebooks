@@ -1015,7 +1015,8 @@ write和read方法的返回值及其注意事项相似。
 
 ### 5.10 readv和writev方法
 
-
+在Linux中已对用户态提供了readv和writev两个批量读写的api。内核驱动可以自行选择是否实现批量版本的读写方法。若内核驱动不实现该方法，则readv和writev会自动<span style="background:#fff88f"><font color="#c00000">在用户态多次调用</font></span>对应的read和write方法进行实现。<font color="#c00000">随之带来的问题就是执行一次readv或writev会多次切换CPU状态</font>。
+而对于用户而言，使用readv、writev而不是read
 
 
 
