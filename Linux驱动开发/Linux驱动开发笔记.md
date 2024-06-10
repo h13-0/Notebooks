@@ -435,7 +435,10 @@ name:           hello_module
 vermagic:       6.8.1+ SMP preempt mod_unload modversions
 ```
 
-明显地发现<font color="#c00000"><font color="#c00000">即使在下载时内核源码版本匹配</font></font>，<font color="#c00000">但是编译出来的模块的vermagic仍不匹配</font>。
+
+###### 4.3.7.2.1 尝试修改vermagic(不推荐)
+
+在上述结果中可以明显地发现<font color="#c00000"><font color="#c00000">即使在下载时内核源码版本匹配</font></font>，<font color="#c00000">但是编译出来的模块的vermagic仍不匹配</font>。
 因此应当直接修改所下载的内核源码中 `include/linux/vermagic.h` 文件的 `vermagic` 定义。首先使用 `lsmod` 列出当前内核已加载的模块，并随便选取一个已加载的模块使用 `modinfo` 查看其模块信息：
 
 ```Shell
@@ -528,7 +531,14 @@ make LOCALVERSION= include/config/kernel.release
 vermagic:       6.8.0-31-generic SMP preempt mod_unload modversions
 ```
 
-与系统中已加载的模块信息一致，但是此时加载仍然报错则证明内核源代码不匹，应当考虑编译安装当前有源代码的内核：
+与系统中已加载的模块信息一致，但是此时加载仍然报错则证明内核源代码不匹，应当考虑编译安装当前有源代码的内核。
+
+
+###### 4.3.7.2.2 自行编译并安装内核(推荐)
+
+通常建议在学习开发Linux内核模块/驱动时使用自己的内核，除了方便版本匹配以外，还有更多的原因：
+	![[Linux驱动开发笔记#^daooag]]
+直接在内核源代码目录下执行：
 
 ```Shell
 make modules
@@ -537,6 +547,9 @@ make install
 ```
 
 随后重启，通常不建议卸载原内核，当内核配置出错无法启动后，可以在引导处切换内核。
+
+###### 4.3.7.2.3 测试内核模块
+
 <span style="background:#fff88f"><font color="#c00000">开启一个新的终端</font></span>监视 `printk` 信息：
 
 ```Shell
@@ -1031,7 +1044,11 @@ ssize_t (*writev) (struct file *, const struct iovec *, unsigned long, loff_t *)
 
 ### 6.1 内核的调试技术支持
 
-内核中集成了很多可选的调试技术支持。这些调试技术或多或少的都会对内核的运行速度有所影响，因此通常发行版的Linux一般不会开启这些支持，这也是
+内核中集成了很多可选的调试技术支持。这些调试技术或多或少的都会对内核的运行速度有所影响，因此<font color="#c00000">通常发行版的Linux一般不会开启这些支持</font>，这也是推荐使用自行编译的内核而非发行版内核的一个原因。 ^daooag
+
+内核中可选的调试选项如下：
+
+
 
 
 ## 7 并发和竞态

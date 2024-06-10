@@ -18,8 +18,21 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "6d4ab75ebd8aa253",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Linux驱动开发/Linux驱动开发笔记.md",
+                "mode": "source",
+                "source": false
+              }
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -155,7 +168,7 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "cd3b5907b4973a4b",
+  "active": "6d4ab75ebd8aa253",
   "lastOpenFiles": [
     "Linux驱动开发/Linux驱动开发笔记.md",
     "微型计算机原理与接口技术/Resources/Pasted image 20240331171437.png",
