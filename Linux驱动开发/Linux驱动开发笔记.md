@@ -984,13 +984,16 @@ ssize_t (*write) (struct file *, const char __user *, size_t, loff_t *);
 	- <font color="#c00000">用户空间的内存可能会被换出外存</font>，<font color="#c00000">此时目标内存地址甚至可能不在内存</font>
 	- 用户空间的应用可能是恶意应用，直接引用对应的内存空间可能会间接访问后门
 	- <font color="#c00000">用户传来的地址可能是无效地址</font>
-	<font color="#c00000">因此应当使用专用的函数来访问对应的内存空间</font>。
+	<font color="#c00000">因此应当使用专用的函数来访问对应的内存空间</font>(见下方的两个copy方法)。
 	更多的内存管理相关内容将在后续章节讲述。
-2. `loff_t *` TODO
+2. `loff_t *` 是长偏移类型的偏移量，是<font color="#c00000">在文件中的偏移量</font>，因此与内存中常用的 `ssize_t` 不同。
+3. 在read和write操作成功完成时，应当更新 `*offp` 所表示的文件位置。
 
-在read和write操作成功完成时，应当更新 `*offp` 所表示的文件位置。
+内核和用户之间的copy方法如下：
 
-
+```C
+unsigned long 
+```
 
 
 ## 6 内核调试技术
