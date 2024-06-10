@@ -1088,11 +1088,20 @@ void sema_init(struct semaphore *sem, int val);
 
 该函数中的 `val` 为该信号量的初始值。
 
-#### 7.1.2 互斥锁的初始化
+#### 7.1.2 互斥锁的静态初始化
 
-互斥锁
+互斥锁可以按照如下的方式使用静态<font color="#c00000">定义</font>：
 
+```C
+#include <asm/semaphore.h>
 
+// 定义初始值为1的互斥量，即mutex
+DECLARE_MUTEX(name);
+// 定义初始值为0的互斥量，在获取该互斥量之前必须先显式的解锁
+DECLARE_MUTEX_LOCK(name);
+```
+
+由于该宏的实际用途为定义，但命名却使用了 `DECLARE` ，因此在Linux 2.6.36之后就删除了该接口。
 
 
 ## 8 高级字符设备驱动程序
