@@ -1125,7 +1125,7 @@ int down_trylock(struct semaphore *sem);
 ```
 
 函数 `down` 会阻塞等待直至成功获取到对应的互斥量，且<font color="#c00000">该操作不允许被用户空间中断</font>。
-函数 `down_interruptible` 也会互斥等待，但是<font color="#c00000">允许等待该信号量的操作被用户空间程序中断</font>。
+函数 `down_interruptible` 也会互斥等待，但是<font color="#c00000">允许等待该信号量的操作被用户空间程序中断</font>。<font color="#c00000">在其因用户空间的程序中断的时候该函数的返回值为非零值</font>，<font color="#c00000">且此时内核程序并未获得该互斥量</font>。
 
 在非必要情况下应当使用允许中断的版本
 
