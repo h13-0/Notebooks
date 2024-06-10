@@ -18,21 +18,8 @@
                 "source": false
               }
             }
-          },
-          {
-            "id": "6d4ab75ebd8aa253",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Linux驱动开发/Linux驱动开发笔记.md",
-                "mode": "source",
-                "source": false
-              }
-            }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -168,8 +155,10 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "6d4ab75ebd8aa253",
+  "active": "cd3b5907b4973a4b",
   "lastOpenFiles": [
+    "Readme.md",
+    "Linux驱动开发/Linux驱动开发笔记.md",
     "Others/协程/协程.md",
     "Others/线程锁/实现/线程锁 with pthread.md",
     "生活常识/数码/RAID技术.md",
@@ -194,8 +183,6 @@
     "计算机组成原理/计算机组成原理应试学习.md",
     "生活常识/数码/电脑IO接口与协议.md",
     "生活常识/医学健康/常见病症.md",
-    "生活常识/医学健康/常用药剂.md",
-    "生活常识/常见物质生产方式.md",
     "CPP/Resources/C数据类型.canvas",
     "微型计算机原理与接口技术/Resources/Pasted image 20240331171437.png",
     "Resources/msedge_aH7KpZznqO.png",
