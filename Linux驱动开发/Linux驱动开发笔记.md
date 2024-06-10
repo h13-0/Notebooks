@@ -1016,11 +1016,28 @@ write和read方法的返回值及其注意事项相似。
 ### 5.10 readv和writev方法
 
 在Linux中已对用户态提供了readv和writev两个批量读写的api。内核驱动可以自行选择是否实现批量版本的读写方法。若内核驱动不实现该方法，则readv和writev会自动<span style="background:#fff88f"><font color="#c00000">在用户态多次调用</font></span>对应的read和write方法进行实现。<font color="#c00000">随之带来的问题就是执行一次readv或writev会多次切换CPU状态</font>。
-而对于用户而言，使用readv、writev而不是read
+而对于用户而言，使用readv、writev而不是read、write的主要原因是前者可以<font color="#c00000">批量复制位于不连续内存空间</font>上的数据。
 
 
 
+在Linux 6.10中
 
+```C
+struct kiocb {  
+        struct file           *ki_filp;  
+        loff_t               ki_pos;  
+        void (*ki_complete)(struct kiocb *iocb, long ret);  
+        void                 *private;  
+        int                  ki_flags;  
+        u16                  ki_ioprio; /* See linux/ioprio.h */  
+        union {  
+               /*  
+                * Only used for async buffered reads, where it denotes the                * page waitqueue associated with completing the read. Valid                * IFF IOCB_WAITQ is set.                */               struct wait_page_queue *ki_waitq;  
+               /*  
+                * Can be used for O_DIRECT IO, where the completion handling                * is punted back to the issuer of the IO. May only be set                * if IOCB_DIO_CALLER_COMP is set by the issuer, and the issuer                * must then check for presence of this handler when ki_complete                * is invoked. The data passed in to this handler must be                * assigned to ->private when dio_complete is assigned.                */               ssize_t (*dio_complete)(void *data);  
+        };  
+};
+```
 
 
 
