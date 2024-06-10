@@ -1046,8 +1046,8 @@ ssize_t (*writev) (struct file *, const struct iovec *, unsigned long, loff_t *)
 
 内核中集成了很多可选的调试技术支持。这些调试技术或多或少的都会对内核的运行速度有所影响，因此<font color="#c00000">通常发行版的Linux一般不会开启这些支持</font>，这也是推荐使用自行编译的内核而非发行版内核的一个原因。 ^daooag
 
-内核中可选的调试选项如下：
-
+内核中的调试选项都在 `menuconfig` 下的 `Kernel hacking` 中，可选的调试选项如下：
+- 
 
 
 
