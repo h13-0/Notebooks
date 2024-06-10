@@ -1103,6 +1103,31 @@ DECLARE_MUTEX_LOCK(name);
 
 由于该宏的实际用途为定义，但命名却使用了 `DECLARE` ，因此在Linux 2.6.36之后就删除了该接口。
 
+#### 7.1.3 互斥锁的动态初始化
+
+同样的，Linux也提供了互斥锁动态初始化的方法：
+
+```C
+void init_MUTEX(struct semaphore *sem);
+void init_MUTEX_LOCKED(struct semaphore *sem);
+```
+
+不过这两个函数也在之后的版本被移除。
+
+#### 7.1.4 互斥锁的操作
+
+互斥锁本质就是信号量的增加与减少。互斥锁的减少可以使用如下的函数：
+
+```C
+void down(struct semaphore *sem);
+int down_interruptible(struct semaphore *sem);
+int down_trylock(struct semaphore *sem);
+```
+
+函数 `down` 会阻塞等待直至成功获取到对应的互斥量，且<font color="#c00000">该操作不允许被用户空间中断</font>。
+函数 `down_interruptible` 也会互斥等待，但是<font color="#c00000">允许等待该信号量的操作被用户空间程序中断</font>。
+
+在非必要情况下应当使用允许中断的版本
 
 ## 8 高级字符设备驱动程序
 
