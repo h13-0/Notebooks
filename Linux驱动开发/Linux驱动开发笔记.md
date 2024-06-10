@@ -1003,9 +1003,25 @@ unsigned long copy_from_user(void *to, const void __user *from, unsigned long co
 
 read方法的返回值应符合如下几种情况：
 1. 当返回值大于0时，其含义为从字符设备读取到的字节数，该值不能大于 `count` 。
+	1. 当返回值等于 `count` 时表示读取成功。
+	2. 当返回值小于 `count` 时，<span style="background:#fff88f"><font color="#c00000">在部分情况下程序可能会重复执行read</font></span>直到凑够 `count` ，例如使用标准库的 `fread` 读取设备文件就会<font color="#c00000">自动执行此流程</font>。
 2. 当返回值为0时，表示读取到文件末尾。
-3. 当返回值小于0时，
+3. 当返回值小于0时，其用于表示错误。错误值定义于 `<linux/errno.h>`
+此外，read方法也可以实现阻塞读取方式。
+
 #### 5.9.2 write方法返回值
+
+write和read方法的返回值及其注意事项相似。
+
+### 5.10 readv和writev方法
+
+
+
+
+
+
+
+
 
 
 
