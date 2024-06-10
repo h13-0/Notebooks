@@ -988,12 +988,26 @@ ssize_t (*write) (struct file *, const char __user *, size_t, loff_t *);
 	更多的内存管理相关内容将在后续章节讲述。
 2. `loff_t *` 是长偏移类型的偏移量，是<font color="#c00000">在文件中的偏移量</font>，因此与内存中常用的 `ssize_t` 不同。
 3. 在read和write操作成功完成时，应当更新 `*offp` 所表示的文件位置。
+4. read和write方法的返回值规定见下方两个子章节。
 
 内核和用户之间的copy方法如下：
 
 ```C
-unsigned long 
+unsigned long copy_to_user(void __user *to, const void *from, unsigned long count);
+unsigned long copy_from_user(void *to, const void __user *from, unsigned long count);
 ```
+
+上述两个函数在Linux 6.10中均由汇编实现。
+
+#### 5.9.1 read方法返回值
+
+read方法的返回值应符合如下几种情况：
+1. 当返回值大于0时，其含义为从字符设备读取到的字节数，该值不能大于 `count` 。
+2. 当返回值为0时，表示读取到文件末尾。
+3. 当返回值小于0时，
+#### 5.9.2 write方法返回值
+
+
 
 
 ## 6 内核调试技术
