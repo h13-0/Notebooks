@@ -1181,7 +1181,7 @@ void complete_all(struct completion *c);
 
 #### 7.1.7 自旋锁
 
-在用户态，自旋锁主要用于避免快速上锁/释放锁的场景下线程进入阻塞状态后，由调度算法切换获得处理机所需要的较长时间。而无论内核态还是用户态，<span style="background:#fff88f"><font color="#c00000">自旋锁是都用于避免被阻塞休眠的</font></span>。<font color="#c00000">在内核中，有些工作不能进入阻塞状态，例如中断处理程序等</font>。
+在用户态，自旋锁主要用于避免快速上锁/释放锁的场景下线程进入阻塞状态后，因调度算法导致进程再次获得处理机所需要的较长时间。而无论内核态还是用户态，<span style="background:#fff88f"><font color="#c00000">自旋锁是都用于避免被阻塞休眠的</font></span>。<font color="#c00000">在内核中，有些工作不能进入阻塞状态，例如中断处理程序等</font>。
 自旋锁的头文件位于 `<linux/spinlock.h>` ，用法如下：
 
 ```C
@@ -1192,17 +1192,27 @@ spinlock_t lock = SPIN_LOCK_UNLOCKED;
 void spin_lock_init(spinlock_t *lock);
 ```
 
+<font color="#c00000">自旋锁只是在申请和等待锁时不会被休眠</font>，<span style="background:#fff88f"><font color="#c00000">但是自旋锁并不负责保护临界区代码不会被休眠</font></span>。<span style="background:#fff88f"><font color="#c00000">并且在使用自旋锁时应当避免代码被休眠</font></span>，<font color="#c00000">否则极有可能引发死锁并引起内核崩溃</font>，<u>例如在中断服务函数中使用了一个自旋锁，但是该锁被其他进程持有，且该进程被中断服务抢占CPU时间，导致中断永远无法结束，进程也永远无法获得CPU时间从而导致死锁</u>。
+
+但是避免休眠很难做到，例如：
+- 使用常见的可能休眠的函数导致休眠
+	- `copy_form_user`
+	- `kmalloc`
+- <font color="#c00000">被高优先级进程抢占处理器时间</font>
+- 触发处理器中断
+等，因此需要做如下的额外处理：
+1. <font color="#c00000">避免使用任何的可能导致休眠的函数</font>
+2. <font color="#c00000">使用自旋锁时应当关闭中断</font>
+3. <font color="#c00000">尽可能的减少持有该锁的时间</font>
+
+因此自旋锁的操作除了如下的两个基础API：
+
 ```C
 void spin_lock(spinlock_t *lock);
 void spin_unlock(spinlock_t *lock);
 ```
 
-<font color="#c00000">自旋锁只是在申请和等待锁时不会被休眠</font>，<span style="background:#fff88f"><font color="#c00000">但是自旋锁并不负责保护临界区代码不会被休眠</font></span>。并且在使用
-
-
-
-
-
+以外，还
 ## 8 高级字符设备驱动程序
 
 
