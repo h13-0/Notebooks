@@ -1227,9 +1227,10 @@ void spin_unlock_bh(spinlock_t *lock);
 ```
 
 其中：
-- `spin_lock_irqsave` 会在获得自旋锁之前禁止中断，先前的状态会被保存于 `flags` 中
-- `spin_lock_irq` 
+- `spin_lock_irqsave` 会在获得自旋锁之前禁止中断，先前的状态会被保存于 `flags` 中。<font color="#c00000">该函数是宏函数</font>，因此 `flags` <font color="#c00000">会被修改</font>。其本质调用为 `flags = _raw_spin_lock_irqsave(lock);` 
+- `spin_lock_irq` <font color="#c00000">和上述函数的实际调用一致</font>，只是忽略了需要保存的 `flags` 。
 - `spin_lock_bh` 会关闭所有软件中断，但不会关闭硬中断。
+- `spin_unlock_irqsave` 可以将由 `spin_lock_irqsave` 保存的 `flags` 恢复。
 
 还有非阻塞式的函数：
 
@@ -1239,6 +1240,16 @@ int spin_trylock_bh(spinlock_t *lock);
 ```
 
 上述函数在成功获得自旋锁时会返回0，其他情况为非0。
+
+#### 7.1.8 自旋读写锁
+
+
+
+
+
+
+
+
 
 ## 8 高级字符设备驱动程序
 
