@@ -1129,6 +1129,7 @@ int down_trylock(struct semaphore *sem);
 函数 `down_trylock` 则永远不会休眠，成功获得互斥资源时返回值为0，其他情况为非0。
 
 互斥资源操作时，在非必要情况下应当使用允许中断的版本。
+<span style="background:#fff88f"><font color="#c00000">注意上述的中断指的是可否被用户中断，而不是可否被阻塞休眠</font></span>。<font color="#c00000">不可休眠的是自旋锁</font>。
 
 互斥锁的增加直接使用如下函数即可：
 
@@ -1196,7 +1197,7 @@ void spin_lock(spinlock_t *lock);
 void spin_unlock(spinlock_t *lock);
 ```
 
-
+<font color="#c00000">自旋锁只是在申请和等待锁时不会被休眠</font>，<span style="background:#fff88f"><font color="#c00000">但是自旋锁并不负责保护临界区代码不会被休眠</font></span>。并且在使用
 
 
 
