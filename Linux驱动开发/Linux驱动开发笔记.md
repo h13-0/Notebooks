@@ -1212,7 +1212,34 @@ void spin_lock(spinlock_t *lock);
 void spin_unlock(spinlock_t *lock);
 ```
 
-以外，还
+以外，还有相较高级一些的API：
+
+```C
+// 获得自旋锁的函数
+void spin_lock_irqsave(spinlock_t *lock, unsigned long long flags);
+void spin_lock_irq(spinlock_t *lock);
+void spin_lock_bh(spinlock_t *lock);
+
+// 释放自旋锁的函数
+void spin_unlock_irqsave(spinlock_t *lock, unsigned long long flags);
+void spin_unlock_irq(spinlock_t *lock);
+void spin_unlock_bh(spinlock_t *lock);
+```
+
+其中：
+- `spin_lock_irqsave` 会在获得自旋锁之前禁止中断，先前的状态会被保存于 `flags` 中
+- `spin_lock_irq` 
+- `spin_lock_bh` 会关闭所有软件中断，但不会关闭硬中断。
+
+还有非阻塞式的函数：
+
+```C
+int spin_trylock(spinlock_t *lock);
+int spin_trylock_bh(spinlock_t *lock);
+```
+
+上述函数在成功获得自旋锁时会返回0，其他情况为非0。
+
 ## 8 高级字符设备驱动程序
 
 
