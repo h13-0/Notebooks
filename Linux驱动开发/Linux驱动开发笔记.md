@@ -1157,7 +1157,9 @@ void downgrade_write(struct rw_semaphore *sem);
 
 其中， `downgrade_write` 是<font color="#c00000">将写者降级为读者</font>。
 
+#### 7.1.6 completion事件
 
+在内核编程时常用的一个设计方法是在别的线程初始化某个活动，原线程会等待该活动结束后才会继续执行后续任务。尽管使用信号量就可以解决这个需求
 
 
 
