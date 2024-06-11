@@ -1155,7 +1155,7 @@ void up_write(struct rw_semaphore *sem);
 void downgrade_write(struct rw_semaphore *sem);
 ```
 
-
+其中， `downgrade_write` 是<font color="#c00000">将写者降级为读者</font>。
 
 
 
