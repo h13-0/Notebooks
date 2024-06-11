@@ -157,10 +157,11 @@
   },
   "active": "cd3b5907b4973a4b",
   "lastOpenFiles": [
+    "Readme.md",
+    "Linux驱动开发/Linux驱动开发笔记.md",
     "Others/POSIX/Resources/10031-2017.pdf",
     "Others/POSIX/Readme.md",
     "Others/线程锁/线程锁与信号量.md",
-    "Linux驱动开发/Linux驱动开发笔记.md",
     "Others/协程/协程.md",
     "Others/线程锁/实现/线程锁 with pthread.md",
     "生活常识/数码/RAID技术.md",
