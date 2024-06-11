@@ -1136,6 +1136,15 @@ int down_trylock(struct semaphore *sem);
 void up(struct semaphore *sem);
 ```
 
+#### 7.1.5 读写锁
+
+读写锁与普通的信号量有些不同，因此其需要使用头文件 `<linux/rwsem.h>` 
+
+
+
+
+
+
 
 ## 8 高级字符设备驱动程序
 
