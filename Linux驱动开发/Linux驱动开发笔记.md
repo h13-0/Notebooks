@@ -3,9 +3,9 @@ number headings: auto, first-level 2, max 6, 1.1
 ---
 #嵌入式 #Linux驱动开发
 
-主要参考：
+参考书籍：
 - LINUX设备驱动程序（第三版），Jonathan Corbet，Alessandro Rubini，Greg Kroah-Hartman著；魏永明，耿岳，钟书毅译。
-进行学习。是入门学习笔记。
+本笔记为入门学习笔记。
 
 # 目录
 
