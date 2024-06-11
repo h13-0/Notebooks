@@ -1243,9 +1243,24 @@ int spin_trylock_bh(spinlock_t *lock);
 
 #### 7.1.8 自旋读写锁
 
+自旋读写锁的头文件依旧位于 `<linux/spinlock.h>` ，其常用方法如下：
+
+```C
+// 静态初始化
+rwlock_t lock = RE_LOCK_UNLOCKED;
+
+// 动态初始化
+rwlock_t lock;
+rwlock_init(&lock);
+```
+
+```C
 
 
 
+
+
+```
 
 
 
