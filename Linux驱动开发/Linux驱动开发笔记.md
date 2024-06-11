@@ -1159,7 +1159,28 @@ void downgrade_write(struct rw_semaphore *sem);
 
 #### 7.1.6 completion事件
 
-在内核编程时常用的一个设计方法是在别的线程初始化某个活动，原线程会等待该活动结束后才会继续执行后续任务。尽管使用信号量就可以解决这个需求
+在内核编程时常用的一个设计方法是在别的线程初始化某个活动，原线程会等待该活动结束后才会继续执行后续任务。尽管使用信号量就可以解决这个需求，但是内核也提供了更好的解决方案，即completion接口，头文件为 `<linux/completion.h>` ，用法如下：
+
+```C
+// 静态初始化
+DECLARE_COMPLETION(my_completion);
+
+// 动态初始化
+struct completion my_completion;
+init_completion(&my_completion);
+```
+
+随后可以如下使用：
+
+```C
+void wait_for_completion(struct completion *c);
+void complete(struct completion *c);
+void complete_all(struct completion *c);
+```
+
+#### 7.1.7 自旋锁
+
+在用户态，自旋锁主要用于避免快速上锁/释放锁的场景下线程进入阻塞状态后，由调度算法切换
 
 
 
