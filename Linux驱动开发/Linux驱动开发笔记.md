@@ -1180,7 +1180,25 @@ void complete_all(struct completion *c);
 
 #### 7.1.7 自旋锁
 
-在用户态，自旋锁主要用于避免快速上锁/释放锁的场景下线程进入阻塞状态后，由调度算法切换
+在用户态，自旋锁主要用于避免快速上锁/释放锁的场景下线程进入阻塞状态后，由调度算法切换获得处理机所需要的较长时间。而无论内核态还是用户态，<span style="background:#fff88f"><font color="#c00000">自旋锁是都用于避免被阻塞休眠的</font></span>。<font color="#c00000">在内核中，有些工作不能进入阻塞状态，例如中断处理程序等</font>。
+自旋锁的头文件位于 `<linux/spinlock.h>` ，用法如下：
+
+```C
+// 静态初始化
+spinlock_t lock = SPIN_LOCK_UNLOCKED;
+
+// 动态初始化
+void spin_lock_init(spinlock_t *lock);
+```
+
+```C
+void spin_lock(spinlock_t *lock);
+void spin_unlock(spinlock_t *lock);
+```
+
+
+
+
 
 
 
