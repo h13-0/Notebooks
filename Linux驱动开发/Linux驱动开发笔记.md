@@ -1255,12 +1255,40 @@ rwlock_init(&lock);
 ```
 
 ```C
-
-
-
-
-
+void read_lock(rwlock_t *lock);
+void read_lock_irqsave(rwlock_t *lock, unsigned long flags);
+void read_lock_irq(rwlock_t *lock);
+void read_lock_bh(rwlock_t *lock);
 ```
+
+```C
+void read_unlock(rwlock_t *lock);
+void read_unlock_irqsave(rwlock_t *lock, unsigned long flags);
+void read_unlock_irq(rwlock_t *lock);
+void read_unlock_bh(rwlock_t *lock);
+```
+
+```C
+void write_lock(rwlock_t *lock);
+void write_lock_irqsave(rwlock_t *lock, unsigned long flags);
+void write_lock_irq(rwlock_t *lock);
+void write_lock_bh(rwlock_t *lock);
+int write_trylock(rwlock_t *lock);
+```
+
+```C
+void write_unlock(rwlock_t *lock);
+void write_unlock_irqsave(rwlock_t *lock, unsigned long flags);
+void write_unlock_irq(rwlock_t *lock);
+void write_unlock_bh(rwlock_t *lock);
+```
+
+#### 7.1.9 互斥锁的常见问题
+
+上述并未提及递归锁。
+
+
+
 
 
 
