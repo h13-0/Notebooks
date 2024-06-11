@@ -1138,7 +1138,22 @@ void up(struct semaphore *sem);
 
 #### 7.1.5 读写锁
 
-读写锁与普通的信号量有些不同，因此其需要使用头文件 `<linux/rwsem.h>` 
+读写锁与普通的信号量有些不同，因此其需要使用头文件 `<linux/rwsem.h>` ，其初始化方法与操作方法如下：
+
+```C
+void init_rwsem(struct rw_semaphore *sem);
+
+// 读者API
+void down_read(struct rw_semaphore *sem);
+int down_read_trylock(struct rw_semaphore *sem);
+void up_read(struct rw_semaphore *sem);
+
+// 写者API
+void down_write(struct rw_semaphore *sem);
+int down_write_trylock(struct rw_semaphore *sem);
+void up_write(struct rw_semaphore *sem);
+void downgrade_write(struct rw_semaphore *sem);
+```
 
 
 
