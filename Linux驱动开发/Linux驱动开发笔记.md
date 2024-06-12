@@ -1,7 +1,7 @@
 ---
 number headings: auto, first-level 2, max 6, 1.1
 ---
-#嵌入式 #Linux驱动开发
+#嵌入式 #Linux驱动开发 #操作系统
 
 参考书籍：
 - LINUX设备驱动程序（第三版），Jonathan Corbet，Alessandro Rubini，Greg Kroah-Hartman著；魏永明，耿岳，钟书毅译。
@@ -1309,12 +1309,10 @@ void write_unlock_bh(rwlock_t *lock);
 
 ### 7.4 并发管理的优化
 
-#### 7.4.1 使用非锁算法
+#### 7.4.1 使用原子变量或非锁方法
 
-
-
-
-
+例如若要实现一个如下图所示的循环缓冲区，可以使用读写锁，仅使用原子变量表示读写index，并使用该原子index做到[[Berstein条件]]即可。
+	![[msedge_Mbwk30DDuN.png]]
 
 
 
