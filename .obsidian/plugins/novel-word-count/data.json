@@ -7442,15 +7442,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 40.723333333333336,
-      "characterCount": 45542,
-      "nonWhitespaceCharacterCount": 33960,
+      "characterCount": 45541,
+      "nonWhitespaceCharacterCount": 33959,
       "readingTimeInMinutes": 29.09852830188679,
       "linkCount": 4,
       "embedCount": 2,
       "aliases": null,
       "createdDate": 1716546707525,
-      "modifiedDate": 1718191149684,
-      "sizeInBytes": 66190
+      "modifiedDate": 1718191261499,
+      "sizeInBytes": 66189
     },
     "CPP/编译器限定实现/gcc.md": {
       "isCountable": true,
