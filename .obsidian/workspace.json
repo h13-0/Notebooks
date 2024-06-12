@@ -8,18 +8,6 @@
         "type": "tabs",
         "children": [
           {
-            "id": "1212181e641fbae9",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "操作系统/课外补充/Berstein条件.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
             "id": "5eca1e37dec9f29c",
             "type": "leaf",
             "state": {
@@ -105,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "操作系统/课外补充/Berstein条件.md",
+                "file": "Linux驱动开发/Linux驱动开发笔记.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -122,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "操作系统/课外补充/Berstein条件.md",
+                "file": "Linux驱动开发/Linux驱动开发笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -145,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "操作系统/课外补充/Berstein条件.md"
+                "file": "Linux驱动开发/Linux驱动开发笔记.md"
               }
             }
           }
@@ -167,10 +155,10 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "1212181e641fbae9",
+  "active": "5eca1e37dec9f29c",
   "lastOpenFiles": [
-    "Linux驱动开发/Linux驱动开发笔记.md",
     "操作系统/课外补充/Berstein条件.md",
+    "Linux驱动开发/Linux驱动开发笔记.md",
     "操作系统/课外补充",
     "操作系统",
     "Resources/msedge_Mbwk30DDuN.png",

@@ -1313,7 +1313,26 @@ void write_unlock_bh(rwlock_t *lock);
 
 例如若要实现一个如下图所示的循环缓冲区，可以使用读写锁，仅使用原子变量表示读写index，并使用该原子index做到[[Berstein条件]]即可。
 	![[msedge_Mbwk30DDuN.png]]
+而原子操作对应的头文件为 `<asm/atomic.h>` ，常见的操作方法如下：
 
+```C
+// 设置初始值
+void atomic_set(atomic_t *v, int i);
+// 可用于但不仅用于静态初始化
+atomic_t v = ATOMIC_INIT(0);
+// 读取
+int atomic_read(atomic_t *v);
+// 加减运算
+void atomic_add(int i, atomic_t *v);
+void atomic_sub(int i, atomic_t *v);
+// 自增自减
+void atomic_inc(atomic_t *v);
+void atomic_dec(atomic_t *v);
+
+
+
+
+```
 
 
 
