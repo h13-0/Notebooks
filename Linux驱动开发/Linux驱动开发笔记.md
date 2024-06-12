@@ -1328,10 +1328,18 @@ void atomic_sub(int i, atomic_t *v);
 // 自增自减
 void atomic_inc(atomic_t *v);
 void atomic_dec(atomic_t *v);
-
-
-
-
+// 带判定是否为0的减法及自增自减方法，返回值仅有0或1，与 atomic_*_and_return 方法不同
+// (注意不存在加法函数，即不存在 `atomic_add_and_test` 方法)
+int atomic_inc_and_test(atomic_t *v);
+int atomic_dec_and_test(atomic_t *v);
+int atomic_sub_and_test(int i, atomic_t *v);
+// 执行加法并判定是否为负，返回值仅有0或1
+int atomic_add_negative(int i, atomic_t *v);
+// 执行自增自减或加减并返回结果，与 atomic_*_and_test 不同
+int atomic_add_return(int i, atomic_t *v);
+int atomic_sub_return(int i, atomic_t *v);
+int atomic_inc_return(atomic_t *v);
+int atomic_dec_return(atomic_t *v);
 ```
 
 
