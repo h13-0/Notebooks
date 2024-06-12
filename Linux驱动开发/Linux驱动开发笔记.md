@@ -1342,7 +1342,26 @@ int atomic_inc_return(atomic_t *v);
 int atomic_dec_return(atomic_t *v);
 ```
 
-此外，内核还提供了一组<font color="#c00000">原子位操作</font>，可以用于<font color="#c00000">操作非原子变量</font>。这些原子位操作速度非常快，在架构支持的情况下仅需要一个机器指令就可以完成，则这些平台进行此类操作的时候就可以不关闭中断。
+此外，内核还提供了一组<font color="#c00000">原子位操作</font>，可以用于<font color="#c00000">操作非原子变量</font>。这些原子位操作速度非常快，在架构支持的情况下仅需要一个机器指令就可以完成，则这些平台进行此类操作的时候就可以不关闭中断。但是其实现也高度依赖于具体平台，用于表述目标位的 `nr` 参数通常为 `int` ，但是有时会被定义为 `unsigned long` ；要修改的元素通常用 `unsigned long *` 来做指针，但在一些平台中会被定义为 `void*` 。其主要的API如下：
+
+```C
+void set_bit(nr, void* addr);
+void clear_bit(nr, void* addr);
+void change_bit(nr, void* addr);
+test_bit(nr, void* addr);
+int test_and_set_bit(nr, void* addr);
+int test_and_clear_bit(nr, void* addr);
+int test_and_change_bit(nr, void* addr);
+```
+
+通常来说并不建议使用原子位操作，而建议改用自旋锁进行操作。
+
+#### 7.4.2 seqlock
+
+
+
+
+
 
 
 ## 8 高级字符设备驱动程序
