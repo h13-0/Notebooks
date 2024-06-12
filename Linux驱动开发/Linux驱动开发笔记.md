@@ -1356,9 +1356,9 @@ int test_and_change_bit(nr, void* addr);
 
 通常来说并不建议使用原子位操作，而建议改用自旋锁进行操作。
 
-#### 7.4.2 seqlock
+#### 7.4.2 顺序锁(seqlock)
 
-
+seqlock与信号量不同，其不需要任何阻塞操作。
 
 
 
