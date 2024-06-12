@@ -1359,7 +1359,30 @@ int test_and_change_bit(nr, void* addr);
 #### 7.4.2 顺序锁(seqlock)
 
 seqlock与信号量不同，其不需要任何阻塞操作。
+seqlock的使用与原理如下：
 
+```C
+int seq = 0;
+
+void reader()
+{
+	int value = 0;
+	// 等待进入临界区，进入临界区条件为seq为偶数
+	while((seq_old = seq) % 2 == 0);
+	// 进入临界区
+	do {
+		if()
+		value = Read();
+	} while()
+	
+}
+
+void writer()
+{
+
+}
+
+```
 
 
 
