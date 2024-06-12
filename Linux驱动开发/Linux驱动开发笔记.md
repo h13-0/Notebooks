@@ -1358,7 +1358,7 @@ int test_and_change_bit(nr, void* addr);
 
 #### 7.4.2 顺序锁(seqlock)
 
-seqlock与信号量不同，其不需要任何阻塞操作。
+seqlock与信号量不同，其不需要任何阻塞操作。其通常用于处理读者写者问题，但是<font color="#c00000">只能解决仅有一个写者的情况</font>。
 seqlock的使用与原理如下：
 
 ```C
@@ -1368,19 +1368,61 @@ void reader()
 {
 	int value = 0;
 	// 等待进入临界区，进入临界区条件为seq为偶数
-	while((seq_old = seq) % 2 == 0);
+	while(seq % 2 == 0);
 	// 进入临界区
 	do {
-		if()
+		if(seq_old != seq)
+			seq_old = seq;
 		value = Read();
-	} while()
-	
+	} while(seq_old != seq);
 }
 
 void writer()
 {
-
+	seq ++;
+	write();
+	seq ++;
 }
+```
+
+在上述原理中，写者：
+1. 进入临界区之前将seq++，使此时seq为奇数。
+2. 写入数据。
+3. <font color="#c00000">再次seq++</font>，使seq值为偶数并且与原先seq值不重复。
+读者：
+1. 进入临界区之前判定顺序锁的值是否为偶数，不为偶数时等待写者离开(此时写者占有互斥资源)
+2. 顺序锁为偶数，进入临界区，并在读取操作前备份seq值
+3. 读取数据
+4. <font color="#c00000">校验seq是否被更改</font>，若被更改则证明在此期间写者已修改数据，原数据失效，需要重新读取。
+
+seqlock的头文件位于 `<linux/seqlock.h>` ，使用方法如下：
+初始化：
+
+```C
+// 静态初始化
+seqlock_t lock = SEQLOCK_UNLOCKED;
+// 动态初始化
+seqlock_t lock;
+seqlock_init(&lock);
+```
+
+执行读取任务：
+
+```C
+int reader()
+{
+	unsigned int seq = 0;
+	do {
+		seq = read_seqbegin(&lock);
+		// Do sth...
+		read();
+	} while read_seqretry(&lock, seq);
+}
+```
+
+执行写入任务直接使用如下
+
+```C
 
 ```
 
@@ -1393,8 +1435,4 @@ void writer()
 ## 9 时间、延迟及延缓操作
 
 
-## 10 内存分配
-
-
-
-
+## 10
