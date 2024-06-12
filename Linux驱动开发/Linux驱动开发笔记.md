@@ -1395,6 +1395,8 @@ void writer()
 3. 读取数据
 4. <font color="#c00000">校验seq是否被更改</font>，若被更改则证明在此期间写者已修改数据，原数据失效，需要重新读取。
 
+<span style="background:#fff88f"><font color="#c00000">注意：不要用seqlock保护一个指针，因为指针在writer里面很可能会被修改为NULL等一旦访问就会触发错误的值</font></span>。
+
 seqlock的头文件位于 `<linux/seqlock.h>` ，使用方法如下：
 初始化：
 
@@ -1413,6 +1415,7 @@ int reader()
 {
 	unsigned int seq = 0;
 	do {
+		// 下一句可能会进行自旋操作，直到写者退出
 		seq = read_seqbegin(&lock);
 		// Do sth...
 		read();
@@ -1420,11 +1423,35 @@ int reader()
 }
 ```
 
-执行写入任务直接使用如下
+上述代码中的 `read_seqbegin` 、 `read_seqretry` 分别可以换成如下的任意版本：
 
 ```C
-
+unsigned int read_seqbegin_irqsave(seqlock_t *lock, unsigned long flags);
 ```
+
+```C
+int read_seqretry_irqrestore(seqlock_t *lock, unsigned long flags);
+```
+
+执行写入任务直接使用如下API即可
+
+```C
+void write_seqlock(seqlock_t *lock);
+void write_sequnlock(seqlock_t *lock);
+
+void write_seqlock_irqsave(seqlock_t *lock, unsigned long flags);
+void write_seqlock_irq(seqlock_t *lock);
+void write_seqlock_bh(seqlock_t *lock);
+
+void write_sequnlock_irqrestore(seqlock_t *lock, unsigned long flags);
+void write_sequnlock_irq(seqlock_t *lock);
+void write_sequnlock_bh(seqlock_t *lock);
+```
+
+#### 7.4.3 RCU方法(读取-复制-更新方法)
+
+RCU方法是一个高级的互斥机制，尽管它很少的被用于驱动程序设计中。
+
 
 
 
@@ -1435,4 +1462,8 @@ int reader()
 ## 9 时间、延迟及延缓操作
 
 
-## 10
+## 10 内存分配
+
+
+
+
