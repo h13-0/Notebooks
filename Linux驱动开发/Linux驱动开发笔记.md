@@ -1549,7 +1549,8 @@ int (*ioctl)(struct inode *inode, struct file *filep, unsigned int cmd, unsigned
 按照规则，ioctl的cmd并不能随意编号，<span style="background:#fff88f"><font color="#c00000">一个基本原则是命令号应当在整个系统范围内唯一</font></span>。该原则的设定主要有如下考虑：
 - <font color="#c00000">避免用户态程序误操作其他设备</font>：若没有该原则，假设用户态同时打开了多个设备，其对设备A的某一cmd进行操作时误选中设备B进行操作，而设备B也有与cmd相对应的命令。则在这种情况下，对设备B的误操作并不会抛出 `-EINVAL` 错误，从而导致错误未被有效暴露。
 
-Linux的cmd命令编号原则应参考 ``
+Linux的cmd命令编号原则应参考 `Documentation/userspace-api/ioctl/ioctl-number.rst` ，除了上述规则外，还应当遵守的规则有：
+- 
 
 
 
