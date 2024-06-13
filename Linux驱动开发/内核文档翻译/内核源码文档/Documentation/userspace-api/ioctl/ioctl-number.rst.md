@@ -14,6 +14,24 @@
 | _IOWR | an  | ioctl with both write and read parameters.                                |
 上述的 `read` 和 `write` 应当像普通系统调用的命名规则一样，针对用户态视角来进行设计，而不是内核态视角。例如名为 `SET_FOO` 的cmd应当选用 `_IOW` ，<font color="#c00000">因为其数据是从用户空间传向内核空间的</font>(<font color="#c00000">copy_from_user</font>)、该指令以用户视角是写入，以内核视角是读取。而名为 `GET_FOO` 的cmd应当选用 `_IOR` ，因为其数据流向为内核空间到用户空间。
 
+`_IO` 、 `_IOW` 、 `_IOR` 或 `_IOWR` 的第一个参数是下方表格中的识别字母或数字。由于司机人数众多，许多司机与其他司机共用一个部分字母。
+.([1](ioctl-number.rst#^q5ti6p))
+## 补充
 
-
+1. 在 `<asm-generic/ioctl.h>` 中，这类宏的定义为： ^q5ti6p
+```C
+/*
+ * Used to create numbers.
+ *
+ * NOTE: _IOW means userland is writing and kernel is reading. _IOR
+ * means userland is reading and kernel is writing.
+ */
+#define _IO(type,nr)		_IOC(_IOC_NONE,(type),(nr),0)
+#define _IOR(type,nr,size)	_IOC(_IOC_READ,(type),(nr),(_IOC_TYPECHECK(size)))
+#define _IOW(type,nr,size)	_IOC(_IOC_WRITE,(type),(nr),(_IOC_TYPECHECK(size)))
+#define _IOWR(type,nr,size)	_IOC(_IOC_READ|_IOC_WRITE,(type),(nr),(_IOC_TYPECHECK(size)))
+#define _IOR_BAD(type,nr,size)	_IOC(_IOC_READ,(type),(nr),sizeof(size))
+#define _IOW_BAD(type,nr,size)	_IOC(_IOC_WRITE,(type),(nr),sizeof(size))
+#define _IOWR_BAD(type,nr,size)	_IOC(_IOC_READ|_IOC_WRITE,(type),(nr),sizeof(size))
+```
 
