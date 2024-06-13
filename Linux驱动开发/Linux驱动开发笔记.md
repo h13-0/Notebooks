@@ -1478,7 +1478,16 @@ void call_rcu(struct rcu_head* head, void(*func)(void *arg), void *arg);
 
 ## 8 高级字符设备驱动程序
 
-### ioctl
+### 8.1 ioctl
+
+在第5章讲解了如何编写或实现用户对设备的读取或写入请求，但是在真实的设备中往往还有例如弹出设备、修改波特率等非普通读写操作。而这些方法往往使用ioctl作为操作接口。
+在用户空间中， `ioctl` 的函数原型如下：
+
+```C
+int ioctl(int fd, unsigned long cmd, ...);
+```
+
+
 
 
 
