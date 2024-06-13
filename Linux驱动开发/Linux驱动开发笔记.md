@@ -1495,21 +1495,21 @@ int ioctl(int fd, unsigned long cmd, ...);
 在Linux 2.6.35及以前，内核的 `ioctl` 接口同时被定义为如下的接口：
 
 ```C
-int (*ioctl)(struct inode *, struct file *, unsigned int, unsigned long);
-long (*unlocked_ioctl) (struct file *, unsigned int, unsigned long);
-long (*compat_ioctl) (struct file *, unsigned int, unsigned long);
+int (*ioctl)(struct inode *inode, struct file *filep, unsigned int cmd, unsigned long arg);
+long (*unlocked_ioctl) (struct file *, unsigned int cmd, unsigned long arg);
+long (*compat_ioctl) (struct file *, unsigned int cmd, unsigned long arg);
 ```
 
 在Linux 2.6.36及之后，内核的ioctl<font color="#c00000">仅保留</font>了如下的接口：
 
 ```C
-long (*unlocked_ioctl) (struct file *, unsigned int, unsigned long);
-long (*compat_ioctl) (struct file *, unsigned int, unsigned long);
+long (*unlocked_ioctl) (struct file *, unsigned int cmd, unsigned long arg);
+long (*compat_ioctl) (struct file *, unsigned int cmd, unsigned long arg);
 ```
 
 而在内核态，需要注意的是：
 - 用户态的 `ioctl` <font color="#c00000">至多支持3个参数</font>，这样也和内核态的接口定义做到了匹配
-- <span style="background:#fff88f"><font color="#c00000">但是用户态支持2个参数的调用</font></span>，在2个参数的调用时，<font color="#c00000">内核态收到的第三个参数是未定义的</font>。
+- <span style="background:#fff88f"><font color="#c00000">但是用户态支持2个参数的调用</font></span>，<font color="#c00000">在2个参数的调用时</font>，<span style="background:#fff88f"><font color="#c00000">内核态收到的第三个参数是未定义的</font></span>。
 
 虽然老的 `ioctl` 接口已不再使用，但是还是要先从老的版本开始讲起。
 
@@ -1518,12 +1518,12 @@ long (*compat_ioctl) (struct file *, unsigned int, unsigned long);
 如上文所述， `ioctl` 的接口定义如下：
 
 ```C
-int (*ioctl)(struct inode *, struct file *, unsigned int, unsigned long);
+int (*ioctl)(struct inode *inode, struct file *filep, unsigned int cmd, unsigned long arg);
 ```
 
 上述接口中的参数：
 - `struct inode *` 和 `struct file *` 的定义与用法和[[Linux驱动开发笔记#5 8 open和release方法]]中的一致，内核负责将用户态的 `ioctl` 中指定的 `fd` 转化为这两个数据结构。
-- `cmd` 则和用户态中传入的对应参数完全保持一致，而在用户态和内核态对该参数含义的约定也应当保持一致，通常用对应的头文件来实现。而内核态对 `cmd` 参数的处理通常可以使用 `switch` 方法。
+- `cmd` 则和用户态中传入的对应参数完全保持一致，而在用户态和内核态对该参数含义的约定也应当保持一致，通常用对应的头文件来实现。而内核态对 `cmd` 参数的处理通常可以使用 `switch` 方法。至于 `cmd` 参数的<span style="background:#fff88f"><font color="#c00000">命令编号原则</font></span>可见章节[[Linux驱动开发笔记#8 1 3 cmd命令编号原则]]。
 
 而返回值也应当从 `<linux/errno.h>` 中选值返回，常用的值如下：
 - `-EINVAL` ：`cmd` 指定的命令非法
@@ -1531,6 +1531,20 @@ int (*ioctl)(struct inode *, struct file *, unsigned int, unsigned long);
 
 
 
+
+
+
+
+
+而老的接口
+
+
+#### 8.1.2 unlocked_ioctl和compat_ioctl(Linux 2.6.36及以后)
+
+
+
+
+#### 8.1.3 cmd命令编号原则
 
 
 
