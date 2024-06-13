@@ -1488,6 +1488,10 @@ int ioctl(int fd, unsigned long cmd, ...);
 ```
 
 尽管在用户空间，该API的参数被定义为可变参数，但是在内核中并非如此。
+查阅资料并分析可知，用户态的 `ioctl` 参数要求为：
+- `ioctl` <span style="background:#fff88f"><font color="#c00000">至多支持3个参数</font></span>，因此可变参数的引用并没有引入更多的参数支持
+- 但是 `ioctl` <font color="#c00000">支持2个参数的调用</font>，这也是使用可变参数的原因
+
 在Linux 2.6.35及以前，内核的 `ioctl` 接口同时被定义为如下的接口：
 
 ```C
@@ -1502,6 +1506,10 @@ long (*compat_ioctl) (struct file *, unsigned int, unsigned long);
 long (*unlocked_ioctl) (struct file *, unsigned int, unsigned long);
 long (*compat_ioctl) (struct file *, unsigned int, unsigned long);
 ```
+
+而在内核态，需要注意的是：
+- 用户态的 `ioctl` <font color="#c00000">至多支持3个参数</font>，这样也和内核态的接口定义做到了匹配
+- <span style="background:#fff88f"><font color="#c00000">但是用户态支持2个参数的调用</font></span>，在2个参数的调用时，<font color="#c00000">内核态收到的第三个参数是未定义的</font>。
 
 虽然老的 `ioctl` 接口已不再使用，但是还是要先从老的版本开始讲起。
 
