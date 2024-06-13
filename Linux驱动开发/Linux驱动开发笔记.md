@@ -1478,6 +1478,30 @@ void call_rcu(struct rcu_head* head, void(*func)(void *arg), void *arg);
 
 ## 8 高级字符设备驱动程序
 
+### ioctl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## 9 时间、延迟及延缓操作
 
