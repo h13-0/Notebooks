@@ -1550,16 +1550,7 @@ int (*ioctl)(struct inode *inode, struct file *filep, unsigned int cmd, unsigned
 - <font color="#c00000">避免用户态程序误操作其他设备</font>：若没有该原则，假设用户态同时打开了多个设备，其对设备A的某一cmd进行操作时误选中设备B进行操作，而设备B也有与cmd相对应的命令。则在这种情况下，对设备B的误操作并不会抛出 `-EINVAL` 错误，从而导致错误未被有效暴露。
 - 更多考虑可见：[[ioctl-number.rst#^kt29rl]]
 
-Linux的cmd命令编号原则应参考 `Documentation/userspace-api/ioctl/ioctl-number.rst` ，除了上述规则外，还应当遵守的规则有：
-- 
-
-
-
-
-
-
-
-
+Linux的cmd命令编号原则应参考 `Documentation/userspace-api/ioctl/ioctl-number.rst` (翻译可见[[ioctl-number.rst]])。在定义cmd编号时，应当在头文件中参考上述规则使用 `_IO(type,nr)` 、 `_IOR(type,nr,size)` 、 `_IOWR(type,nr,size)` 等宏进行定义。
 
 ## 9 时间、延迟及延缓操作
 
