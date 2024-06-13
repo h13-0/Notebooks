@@ -1513,9 +1513,12 @@ long (*compat_ioctl) (struct file *, unsigned int, unsigned long);
 int (*ioctl)(struct inode *, struct file *, unsigned int, unsigned long);
 ```
 
-上述接口中的参数 `struct inode *` 和 `struct file *` 
+上述接口中的参数：
+- `struct inode *` 和 `struct file *` 的定义与用法和[[Linux驱动开发笔记#5 8 open和release方法]]中的一致，内核负责将用户态的 `ioctl` 中指定的 `fd` 转化为这两个数据结构。
+- `cmd` 则和用户态中传入的对应参数完全保持一致，而在用户态和内核态对该参数含义的约定也应当保持一致，通常用对应的头文件来实现。而内核态对 `cmd` 参数的处理通常可以使用 `switch` 方法。
 
-
+而返回值也应当从 `<linux/errno.h>` 中选值返回，常用的值如下：
+- 
 
 
 
