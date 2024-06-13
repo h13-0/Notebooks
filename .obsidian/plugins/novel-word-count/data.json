@@ -7672,19 +7672,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 89,
+      "wordCount": 117,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 0.2966666666666667,
-      "characterCount": 137,
-      "nonWhitespaceCharacterCount": 119,
-      "readingTimeInMinutes": 0.18332075471698112,
+      "pageCount": 0.39,
+      "characterCount": 173,
+      "nonWhitespaceCharacterCount": 151,
+      "readingTimeInMinutes": 0.23932075471698114,
       "linkCount": 0,
       "embedCount": 0,
       "aliases": null,
       "createdDate": 1718269334605,
-      "modifiedDate": 1718269690766,
-      "sizeInBytes": 319
+      "modifiedDate": 1718270561066,
+      "sizeInBytes": 415
     },
     "Linux驱动开发/Resources/msedge_Mbwk30DDuN.png": {
       "isCountable": false,
@@ -7708,19 +7708,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 44,
+      "wordCount": 78,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 0.14666666666666667,
-      "characterCount": 107,
-      "nonWhitespaceCharacterCount": 86,
-      "readingTimeInMinutes": 0.09864150943396226,
+      "pageCount": 0.26,
+      "characterCount": 496,
+      "nonWhitespaceCharacterCount": 329,
+      "readingTimeInMinutes": 0.21984905660377357,
       "linkCount": 0,
       "embedCount": 0,
       "aliases": null,
       "createdDate": 1718269703977,
-      "modifiedDate": 1718270251334,
-      "sizeInBytes": 189
+      "modifiedDate": 1718270892297,
+      "sizeInBytes": 584
     }
   }
 }
