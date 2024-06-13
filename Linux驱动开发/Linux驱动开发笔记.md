@@ -1487,9 +1487,21 @@ void call_rcu(struct rcu_head* head, void(*func)(void *arg), void *arg);
 int ioctl(int fd, unsigned long cmd, ...);
 ```
 
-尽管在用户空间，该API的参数被定义为可变参数，而在第五章的 `file_options`
+尽管在用户空间，该API的参数被定义为可变参数，但是在内核中并非如此。
+在Linux 2.6.35及以前，内核的 `ioctl` 接口同时被定义为如下的接口：
 
+```C
+int (*ioctl)(struct inode *, struct file *, unsigned int, unsigned long);
+long (*unlocked_ioctl) (struct file *, unsigned int, unsigned long);
+long (*compat_ioctl) (struct file *, unsigned int, unsigned long);
+```
 
+在Linux 2.6.36及之后，内核的ioctl<font color="#c00000">仅保留</font>了如下的接口：
+
+```C
+long (*unlocked_ioctl) (struct file *, unsigned int, unsigned long);
+long (*compat_ioctl) (struct file *, unsigned int, unsigned long);
+```
 
 
 
