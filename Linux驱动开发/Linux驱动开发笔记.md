@@ -1552,6 +1552,18 @@ int (*ioctl)(struct inode *inode, struct file *filep, unsigned int cmd, unsigned
 
 Linux的cmd命令编号原则应参考 `Documentation/userspace-api/ioctl/ioctl-number.rst` (翻译可见[[ioctl-number.rst]])。在定义cmd编号时，应当在头文件中参考上述规则使用 `_IO(type,nr)` 、 `_IOR(type,nr,size)` 、 `_IOWR(type,nr,size)` 等宏进行定义。
 
+
+
+
+
+
+
+
+
+
+
+
+
 ## 9 时间、延迟及延缓操作
 
 

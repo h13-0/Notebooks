@@ -7298,15 +7298,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 45.14666666666667,
-      "characterCount": 48818,
+      "characterCount": 48830,
       "nonWhitespaceCharacterCount": 36962,
       "readingTimeInMinutes": 32.1551320754717,
       "linkCount": 8,
       "embedCount": 2,
       "aliases": null,
       "createdDate": 1716546707525,
-      "modifiedDate": 1718276391649,
-      "sizeInBytes": 71824
+      "modifiedDate": 1718286646821,
+      "sizeInBytes": 71836
     },
     "Math/最大公约数、最小公倍数.md": {
       "isCountable": true,
