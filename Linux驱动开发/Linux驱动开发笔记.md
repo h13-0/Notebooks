@@ -1487,7 +1487,7 @@ void call_rcu(struct rcu_head* head, void(*func)(void *arg), void *arg);
 int ioctl(int fd, unsigned long cmd, ...);
 ```
 
-
+尽管在用户空间，该API的参数被定义为可变参数，
 
 
 
