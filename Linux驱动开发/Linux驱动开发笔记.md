@@ -1507,9 +1507,13 @@ long (*compat_ioctl) (struct file *, unsigned int, unsigned long);
 
 #### 8.1.1 ioctl接口(Linux 2.6.35及以前)
 
+如上文所述， `ioctl` 的接口定义如下：
 
+```C
+int (*ioctl)(struct inode *, struct file *, unsigned int, unsigned long);
+```
 
-
+上述接口中的参数 `struct inode *` 和 `struct file *` 
 
 
 
