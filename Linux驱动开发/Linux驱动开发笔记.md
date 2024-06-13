@@ -1503,7 +1503,9 @@ long (*unlocked_ioctl) (struct file *, unsigned int, unsigned long);
 long (*compat_ioctl) (struct file *, unsigned int, unsigned long);
 ```
 
+虽然老的 `ioctl` 接口已不再使用，但是还是要先从老的版本开始讲起。
 
+#### 8.1.1 ioctl接口(Linux 2.6.35及以前)
 
 
 
