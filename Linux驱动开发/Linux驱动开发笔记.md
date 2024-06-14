@@ -1619,8 +1619,8 @@ Linux的cmd命令编号原则应参考 `Documentation/userspace-api/ioctl/ioctl-
 - `FIOCLEX` ：设备执行时关闭标志，<font color="#c00000">F</font>ile <font color="#c00000">io</font>ctl <font color="#c00000">cl</font>ose on <font color="#c00000">ex</font>ec。设置了这个标志后，<span style="background:#fff88f"><font color="#c00000">当进程退出</font></span>(即执行 `exec()` 系统调用)<span style="background:#fff88f"><font color="#c00000">时</font></span>，<span style="background:#fff88f"><font color="#c00000">自动关闭该文件</font></span>。
 - `FIONCLEX` ：清除设备执行时关闭标志，主要用于撤销上述命令。
 - `FIOASYNC` ：
-- `FIOQSIZE`
-- `FIONBIO`
+- `FIOQSIZE` ：该命令在操作普通文件时会返回文件或目录的大小，但是用于操作设备时会返回 `-ENOTTY` 错误。
+- `FIONBIO` ：
 
 
 
