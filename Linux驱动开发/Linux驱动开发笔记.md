@@ -1610,6 +1610,24 @@ Linux的cmd命令编号原则应参考 `Documentation/userspace-api/ioctl/ioctl-
 
 ##### 8.1.3.2 预定义命令
 
+除了自己在ioctl的接受函数里预定义的命令以外，Linux还内置了一些通用的预定义命令。<span style="background:#fff88f"><font color="#c00000">这些命令会被Linux系统截断，并不会传递到内核驱动中</font></span>。且应当注意自己的cmd命令编号不应当与系统的预定义命令冲突或重复。
+预定义命令主要可以分为如下三组：
+- 可用于任何文件(包括普通文件、设备、FIFO和socket)的命令
+- 只用于普通文件的命令
+- 特定于文件系统的命令
+通常来说，设备驱动的开发人员应当注意第一组预处理命令，这些命令的 `type` 都是 `T` 。这些命令主要有：
+- `FIOCLEX` ：设备执行时关闭标志，<font color="#c00000">F</font>ile <font color="#c00000">io</font>ctl <font color="#c00000">cl</font>ose on <font color="#c00000">ex</font>ec。设置了这个标志后，<span style="background:#fff88f"><font color="#c00000">当进程退出</font></span>(即执行 `exec()` 系统调用)<span style="background:#fff88f"><font color="#c00000">时</font></span>，<span style="background:#fff88f"><font color="#c00000">自动关闭该文件</font></span>。
+- `FIONCLEX` ：清除设备执行时关闭标志，主要用于撤销上述命令。
+- `FIOASYNC` ：
+- `FIOQSIZE`
+- `FIONBIO`
+
+
+
+
+
+
+
 
 
 
