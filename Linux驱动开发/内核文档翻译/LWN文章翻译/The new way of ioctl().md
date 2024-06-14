@@ -27,7 +27,6 @@ long (*compat_ioctl) (struct file *filp, unsigned int cmd,
                         unsigned long arg);
 ```
 
-如果该方法存在，每当一个32位进程在64位系统上调用 `ioctl()` 时，它将被调用(不使用BKL)。然后，该方法应执行必要的操作，将参数转换为本地数据类型并执行请求。如果未提供 `compat_ioctl()` ，将如以前一样使用旧的转换机制。可以测试 `HAVE_COMPAT_IOCTL` 宏，以判断在任何给定的内核上是否可用该机制。
+如果该方法存在，每当一个32位进程在64位系统上调用 `ioctl()` 时，它将被调用(不使用BKL)。然后，该方法应执行必要的操作，将参数转换为本地数据类型并执行请求。如果未提供 `compat_ioctl()` ，将如以前一样使用旧的转换机制。可以测试 `HAVE_COMPAT_IOCTL` 宏，以判断在任何给定的内核上是否可以使用该机制。
 
-
-
+`compat_ioctl()` 方法可能会逐渐下沉到一些子系统中。例如，Andi Kleen 已经发布了补丁，向 `block_device_operations` 和 `scsi_host_template` 结构添加新的 `compat_ioctl()` 方法，尽管在撰写本文时这些补丁尚未被合并。

@@ -1550,11 +1550,7 @@ ioctl是Linux 2.6.35及以前所使用的接口，但是其往往会遇到在不
 	![[Linux驱动开发笔记#2 2 1 1 不同架构处理器下的数据类型大小]]
 对于32位Linux系统，其只能运行32位的驱动程序和32位的用户态程序，因此ioctl可以很好的工作。而对于64位系统，其上可以运行32为的用户态程序，此时32位程序传来的 `unsigned long` 就是4Byte的整数类型，此时再传递给内核态驱动程序就可能出现错误。
 
-此外，更大的问题在于老的ioctl方法是由内核的大内核锁(BKL)实现互斥的，驱动在ioctl中较长的占用处理器则会导致无关
-
-
-
-为了解决此问题，在Linux 2.6.36及以后的 `ioctl` 被替换为了 `unlocked_ioctl` 和 `compat_ioctl` 。
+此外，<span style="background:#fff88f"><font color="#c00000">更大的问题</font></span>在于<font color="#c00000">老的ioctl方法是由内核的大内核锁(BKL)实现并发控制的</font>，驱动在ioctl中较长的占用处理器则会导致无关的进程会被该ioctl产生较长时间的系统调用延迟()。为了解决此问题([[The new way of ioctl()]])，Linux在2.6.11开始引入了 `unlocked_ioctl` 和 `compat_ioctl` ，并在Linux 2.6.36彻底删除了 `ioctl` 接口。
 
 #### 8.1.2 unlocked_ioctl和compat_ioctl(Linux 2.6.36及以后)
 
@@ -1571,9 +1567,11 @@ ioctl是Linux 2.6.35及以前所使用的接口，但是其往往会遇到在不
 1. <font color="#c00000">在32位系统上调用ioctl，对应的实现也是</font> `unlocked_ioctl` 只是位宽不一样。
 2. 在这两个接口中：
 	- `compat_ioctl` 意味"兼容性的ioctl"
-	- `unlocked_ioctl` 意味"<font color="#c00000">解锁的ioctl</font>"，
+	- `unlocked_ioctl` 意味"<font color="#c00000">解锁的ioctl</font>"，<font color="#c00000">此函数不会为内核施加大内核锁</font>，且此时需要驱动程序管理自己的互斥锁。
 
-#### 8.1.3 cmd命令编号原则
+#### 8.1.3 cmd命令编号
+
+##### 8.1.3.1 cmd命令编号的基本原则
 
 按照规则，ioctl的cmd并不能随意编号，<span style="background:#fff88f"><font color="#c00000">一个基本原则是命令号应当在整个系统范围内唯一</font></span>。该原则的设定主要有如下考虑：
 - <font color="#c00000">避免用户态程序误操作其他设备</font>：若没有该原则，假设用户态同时打开了多个设备，其对设备A的某一cmd进行操作时误选中设备B进行操作，而设备B也有与cmd相对应的命令。则在这种情况下，对设备B的误操作并不会抛出 `-EINVAL` 错误，从而导致错误未被有效暴露。
@@ -1610,7 +1608,7 @@ Linux的cmd命令编号原则应参考 `Documentation/userspace-api/ioctl/ioctl-
 - `_IOC_NR(nr)`
 - `_IOC_SIZE(nr)`
 
-
+##### 8.1.3.2 预定义命令
 
 
 
