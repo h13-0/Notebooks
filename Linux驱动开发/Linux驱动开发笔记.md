@@ -1541,7 +1541,6 @@ int (*ioctl)(struct inode *inode, struct file *filep, unsigned int cmd, unsigned
 - `cmd` 则和用户态中传入的对应参数完全保持一致，而在用户态和内核态对该参数含义的约定也应当保持一致，通常用对应的头文件来实现。而内核态对 `cmd` 参数的处理通常可以使用 `switch` 方法。至于 `cmd` 参数的<span style="background:#fff88f"><font color="#c00000">命令编号原则</font></span>可见章节[[Linux驱动开发笔记#8 1 3 cmd命令编号原则]]。
 
 而返回值也应当从 `<linux/errno.h>` 中选值返回，常用的值如下：
-- `-EINVAL` ：`cmd` 指定的命令非法(Linux实际中常用)
 - `-ENOTTY` ：POSIX标准规定的指定的命令非法的返回值
 
 <span style="background:#fff88f"><font color="#c00000">注意：老的ioctl会在获得大内核锁(BKL)的条件下运行，所以应当尽快处理并返回</font></span>。
@@ -1618,10 +1617,13 @@ Linux的cmd命令编号原则应参考 `Documentation/userspace-api/ioctl/ioctl-
 通常来说，设备驱动的开发人员应当注意第一组预处理命令，这些命令的 `type` 都是 `T` 。这些命令主要有：
 - `FIOCLEX` ：设备执行时关闭标志，<font color="#c00000">F</font>ile <font color="#c00000">io</font>ctl <font color="#c00000">cl</font>ose on <font color="#c00000">ex</font>ec。设置了这个标志后，<span style="background:#fff88f"><font color="#c00000">当进程退出</font></span>(即执行 `exec()` 系统调用)<span style="background:#fff88f"><font color="#c00000">时</font></span>，<span style="background:#fff88f"><font color="#c00000">自动关闭该文件</font></span>。
 - `FIONCLEX` ：清除设备执行时关闭标志，主要用于撤销上述命令。
-- `FIOASYNC` ：
+- `FIOASYNC` ：使能或关闭socket的异步模式。
 - `FIOQSIZE` ：该命令在操作普通文件时会返回文件或目录的大小，但是用于操作设备时会返回 `-ENOTTY` 错误。
-- `FIONBIO` ：
+- `FIONBIO` ：允许或禁止一个文件(通常是Socket)的非阻塞模式。不过修改该标志位的方法通常是用 `fnctl` 使用 `F_SETFL` 命令完成。
 
+#### 8.1.4 ioctl传参
+
+在ioctl传参时，应当注意传递的是实际参数还是指针。传递普通参数时正常实现即可，当传递指针时应当
 
 
 
