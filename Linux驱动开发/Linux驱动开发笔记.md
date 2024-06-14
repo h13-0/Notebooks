@@ -1544,6 +1544,8 @@ int (*ioctl)(struct inode *inode, struct file *filep, unsigned int cmd, unsigned
 - `-EINVAL` ：`cmd` 指定的命令非法(Linux实际中常用)
 - `-ENOTTY` ：POSIX标准规定的指定的命令非法的返回值
 
+<span style="background:#fff88f"><font color="#c00000">注意：老的ioctl会在获得大内核锁(BKL)的条件下运行，所以应当尽快处理并返回</font></span>。
+
 ioctl是Linux 2.6.35及以前所使用的接口，但是其往往会遇到在不同位数下，`unsigned long` 数据大小不同的情况：
 	![[Linux驱动开发笔记#2 2 1 1 不同架构处理器下的数据类型大小]]
 对于32位Linux系统，其只能运行32位的驱动程序和32位的用户态程序，因此ioctl可以很好的工作。而对于64位系统，其上可以运行32为的用户态程序，此时32位程序传来的 `unsigned long` 就是4Byte的整数类型，此时再传递给内核态驱动程序就可能出现错误。
@@ -1555,12 +1557,16 @@ ioctl是Linux 2.6.35及以前所使用的接口，但是其往往会遇到在不
 
 | 用户和内核位数关系       | ioct实际调用接口       | 理应的内核实现                                                                      |
 | --------------- | ---------------- | ---------------------------------------------------------------------------- |
-| 32位用户态调用32位内核驱动 |                  |                                                                              |
+| 32位用户态调用32位内核驱动 |                  | `int32_t (*unlocked_ioctl) (struct file *, unsigned int cmd, uint32_t arg);` |
 | 64位用户态调用32位内核驱动 | 不存在此种情况          |                                                                              |
 | 64位用户态调用64位内核驱动 | `unlocked_ioctl` | `int64_t (*unlocked_ioctl) (struct file *, unsigned int cmd, uint64_t arg);` |
 | 32位用户态调用64位内核驱动 | `compat_ioctl`   | `int32_t (*compat_ioctl) (struct file *, unsigned int cmd, uint32_t arg);`   |
 
-而
+几个注意点：
+1. <font color="#c00000">在32位系统上调用ioctl，对应的实现也是</font> `unlocked_ioctl` 只是位宽不一样。
+2. 在这两个接口中：
+	- `compat_ioctl` 意味"兼容性的ioctl"
+	- `unlocked_ioctl` 意味"<font color="#c00000">解锁的ioctl</font>"，
 
 #### 8.1.3 cmd命令编号原则
 
