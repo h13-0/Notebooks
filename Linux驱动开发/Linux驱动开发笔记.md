@@ -1552,10 +1552,28 @@ int (*ioctl)(struct inode *inode, struct file *filep, unsigned int cmd, unsigned
 
 Linux的cmd命令编号原则应参考 `Documentation/userspace-api/ioctl/ioctl-number.rst` (翻译可见[[ioctl-number.rst]])。在定义cmd编号时，应当在头文件中参考上述规则使用 `_IO(type,nr)` 、 `_IOR(type,nr,size)` 、 `_IOWR(type,nr,size)` 等宏进行定义。
 
+上述参数中：
+- `type` 应当填写该设备所拥有的类型序号，可能多个设备共用一个 `type` ，并按照 `nr` 的范围划分，可见[[ioctl-number.rst]]
+- `nr` 应当在该设备所拥有的 `type` 的 `nr` 子区间内顺序递增
+- `size` <span style="background:#fff88f"><font color="#c00000">不应当填写具体的size值，直接填写类型即可</font></span>
+(奇怪的命名)
 
+使用示例如下(`cifs_ioctl.h`)：
 
-
-
+```C
+#define CIFS_IOCTL_MAGIC         0xCF  
+#define CIFS_IOC_COPYCHUNK_FILE  _IOW(CIFS_IOCTL_MAGIC, 3, int)  
+#define CIFS_IOC_SET_INTEGRITY   _IO(CIFS_IOCTL_MAGIC, 4)  
+#define CIFS_IOC_GET_MNT_INFO    _IOR(CIFS_IOCTL_MAGIC, 5, struct smb_mnt_fs_info)  
+#define CIFS_ENUMERATE_SNAPSHOTS _IOR(CIFS_IOCTL_MAGIC, 6, struct smb_snapshot_array)  
+#define CIFS_QUERY_INFO          _IOWR(CIFS_IOCTL_MAGIC, 7, struct smb_query_info)  
+#define CIFS_DUMP_KEY            _IOWR(CIFS_IOCTL_MAGIC, 8, struct smb3_key_debug_info) 
+#define CIFS_IOC_NOTIFY          _IOW(CIFS_IOCTL_MAGIC, 9, struct smb3_notify)  
+#define CIFS_DUMP_FULL_KEY       _IOWR(CIFS_IOCTL_MAGIC, 10, struct smb3_full_key_debug_info)  
+#define CIFS_IOC_NOTIFY_INFO     _IOWR(CIFS_IOCTL_MAGIC, 11, struct smb3_notify_info)  
+#define CIFS_IOC_GET_TCON_INFO   _IOR(CIFS_IOCTL_MAGIC, 12, struct smb_mnt_tcon_info)  
+#define CIFS_IOC_SHUTDOWN        _IOR('X', 125, __u32)
+```
 
 
 
