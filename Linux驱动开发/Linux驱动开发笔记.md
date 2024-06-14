@@ -1575,7 +1575,8 @@ Linux的cmd命令编号原则应参考 `Documentation/userspace-api/ioctl/ioctl-
 #define CIFS_IOC_SHUTDOWN        _IOR('X', 125, __u32)
 ```
 
-
+而对于上述的"编码宏"，Linux也提供了对应的"解码宏"：
+- 
 
 
 
