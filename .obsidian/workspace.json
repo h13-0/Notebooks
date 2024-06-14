@@ -25,13 +25,14 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux驱动开发/内核文档翻译/内核源码文档/Documentation/userspace-api/ioctl/ioctl-number.rst.md",
+                "file": "Linux驱动开发/Linux驱动开发笔记.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -105,7 +106,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Linux驱动开发/内核文档翻译/LWN文章翻译/The new way of ioctl().md",
+                "file": "Linux驱动开发/Linux驱动开发笔记.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -122,7 +123,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Linux驱动开发/内核文档翻译/LWN文章翻译/The new way of ioctl().md",
+                "file": "Linux驱动开发/Linux驱动开发笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -145,7 +146,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux驱动开发/内核文档翻译/LWN文章翻译/The new way of ioctl().md"
+                "file": "Linux驱动开发/Linux驱动开发笔记.md"
               }
             }
           }
@@ -167,7 +168,7 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "5eca1e37dec9f29c",
+  "active": "293f27ef2258078f",
   "lastOpenFiles": [
     "Linux驱动开发/内核文档翻译/内核源码文档/Documentation/userspace-api/ioctl/ioctl-number.rst.md",
     "Linux驱动开发/内核文档翻译/LWN文章翻译/The new way of ioctl().md",

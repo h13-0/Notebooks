@@ -1549,6 +1549,11 @@ int (*ioctl)(struct inode *inode, struct file *filep, unsigned int cmd, unsigned
 ioctl是Linux 2.6.35及以前所使用的接口，但是其往往会遇到在不同位数下，`unsigned long` 数据大小不同的情况：
 	![[Linux驱动开发笔记#2 2 1 1 不同架构处理器下的数据类型大小]]
 对于32位Linux系统，其只能运行32位的驱动程序和32位的用户态程序，因此ioctl可以很好的工作。而对于64位系统，其上可以运行32为的用户态程序，此时32位程序传来的 `unsigned long` 就是4Byte的整数类型，此时再传递给内核态驱动程序就可能出现错误。
+
+此外，更大的问题在于老的ioctl方法是由内核的大内核锁(BKL)实现互斥的，驱动在ioctl中较长的占用处理器则会导致无关
+
+
+
 为了解决此问题，在Linux 2.6.36及以后的 `ioctl` 被替换为了 `unlocked_ioctl` 和 `compat_ioctl` 。
 
 #### 8.1.2 unlocked_ioctl和compat_ioctl(Linux 2.6.36及以后)

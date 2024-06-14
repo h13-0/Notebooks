@@ -17,3 +17,17 @@
 long (*unlocked_ioctl) (struct file *filp, unsigned int cmd, 
                         unsigned long arg);
 ```
+
+如果一个驱动程序或文件系统提供了 `unlocked_ioctl()` 方法，该方法将优先于旧的 `ioctl()` 方法被调用。这两个方法的区别在于不提供 `inode` 参数(该参数可以通过 `filp->f_dentry->d_inode` 获取)，并且在调用之前不会获取BKL。所有新代码应编写自己的锁机制，并使用 `unlocked_ioctl()` 。旧代码应在时间允许的情况下进行转换。对于必须在多个内核上运行的代码，有一个新的 `HAVE_UNLOCKED_IOCTL` 宏，可以通过测试该宏来判断是否可用较新的方法。
+
+Michael的Patch又增加了另外一个操作：
+
+```C
+long (*compat_ioctl) (struct file *filp, unsigned int cmd, 
+                        unsigned long arg);
+```
+
+如果该方法存在，每当一个32位进程在64位系统上调用 `ioctl()` 时，它将被调用(不使用BKL)。然后，该方法应执行必要的操作，将参数转换为本地数据类型并执行请求。如果未提供 `compat_ioctl()` ，将如以前一样使用旧的转换机制。可以测试 `HAVE_COMPAT_IOCTL` 宏，以判断在任何给定的内核上是否可用该机制。
+
+
+
