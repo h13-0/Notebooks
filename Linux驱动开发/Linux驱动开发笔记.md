@@ -1623,10 +1623,15 @@ Linux的cmd命令编号原则应参考 `Documentation/userspace-api/ioctl/ioctl-
 
 #### 8.1.4 ioctl传参
 
-在ioctl传参时，应当注意传递的是实际参数还是指针。传递普通参数时正常实现即可，当传递指针时应当
+在ioctl传参时，应当注意传递的是实际参数还是指针。传递普通参数时正常实现即可，当传递指针时应当注意该用户空间的指针是否合法，其方法主要分为如下几类：
+1. 传输大批量的内存数据时，使用 `copy_from_user` 或 `copy_to_user` 即可。
+2. 传输小批量数据时，使用如下函数进行：
 
+```C
+int access_ok(int type, const void *addr, unsigned long size);
+```
 
-
+其中， `type` 可以选择 `VERIFY_READ` 或 `VERIFY_WRITE` ，参数 `addr` 指用户空间地址，参数 `size` 指要传输的字节数。注意， `VERIFY_WRITE` 是 `VERIFY_READ` 的超集。 `access_ok` 将返回0或1。
 
 
 
