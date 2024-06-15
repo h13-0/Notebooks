@@ -1632,7 +1632,9 @@ int access_ok(int type, const void *addr, unsigned long size);
 ```
 
 其中， `type` 可以选择 `VERIFY_READ` 或 `VERIFY_WRITE` ，参数 `addr` 指用户空间地址，参数 `size` 指要传输的字节数。注意， `VERIFY_WRITE` 是 `VERIFY_READ` 的超集。 `access_ok` 将返回0或1。
-
+注意：
+- `access_ok` <font color="#c00000">只负责检验该内存地址是否位于进程对应有权限访问的区域内</font>
+- 大部分代码并不需要使用 `access_ok` 进行访问，因为Linux为常用的1、2、4、8字节类型提供了一组专用的参数传递函数(定义于 `<asm/uaccess.h>` 中)
 
 
 
