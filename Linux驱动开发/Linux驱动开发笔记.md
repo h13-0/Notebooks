@@ -1632,15 +1632,21 @@ int access_ok(int type, const void *addr, unsigned long size);
 ```
 
 其中， `type` 可以选择 `VERIFY_READ` 或 `VERIFY_WRITE` ，参数 `addr` 指用户空间地址，参数 `size` 指要传输的字节数。注意， `VERIFY_WRITE` 是 `VERIFY_READ` 的超集。 `access_ok` 将返回0或1。
-随后即可使用 `<asm/uaccess.h>` 中的<font color="#c00000">无需检查的</font>宏函数进行传输()：
-- `__put_user(x, ptr)` ： `x` 
-- `__get_user(x, ptr)` 
+随后即可使用 `<asm/uaccess.h>` 中的<font color="#c00000">无需检查的</font>宏函数进行传输(预处理时展开)：
+- `__put_user(x, ptr)` ： `x` 为内核态数据、 `ptr` 为用户指针
+- `__get_user(x, ptr)` ： `x` 为内核态数据、 `ptr` 为用户指针
 注意：
 - `access_ok` <font color="#c00000">只负责检验该内存地址是否位于进程对应有权限访问的区域内</font>
 - 在使用 `access_ok` 后可以使用Linux为常用的1、2、4、8字节类型提供的，尽管大部分代码并不需要使用 `access_ok` 进行访问。
-3. 直接使用含可访问检查的宏函数：
-	- `put_user(x, ptr)`
-	- `get_user(x, ptr)`
+3. 直接使用<font color="#c00000">含可访问检查</font>(已内置无需再次 `access_ok` )的宏函数(预处理时展开)：
+	- `put_user(x, ptr)` ： `x` 为内核态数据、 `ptr` 为用户指针
+	- `get_user(x, ptr)` ： `x` 为内核态数据、 `ptr` 为用户指针
+
+<span style="background:#fff88f"><font color="#c00000">注意：2和3仅可用于sizeof为1、2、4、8字节大小的参数传递，其他类型无法使用</font></span>。
+<span style="background:#fff88f"><font color="#c00000">宏函数内置的sizeof是对用户空间的指针所指对象大小进行计算</font></span>(即 `sizeof(*(ptr))` )
+
+#### 8.1.5 权限与操作
+
 
 
 
