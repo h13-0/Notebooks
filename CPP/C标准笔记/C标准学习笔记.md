@@ -3,8 +3,6 @@
 	Standards are paper. I use paper to wipe my butt every day. 
 	That's how much that paper is worth. —— Linus Torvalds.
 
-<font color="#ffffff">不要迷信标准，标准就像法律，只约束必须守法的人。</font>
-
 ## 目录
 ```toc
 min_depth: 1
@@ -64,17 +62,23 @@ TODO: 检查空字符 `\0` 和空格字符` ` 是否有理解错误
 ###### 5.1.2.2.1 托管环境下的程序启动
 
 程序启动时所被调用的函数为`main`，其声明可以是：
+
 ```C
 int main(void)
 ```
+
 或：
+
 ```C
 int main(int argc, char *argv[])
 ```
+
 或上一形式的等效形式：
+
 ```C
 int main(int argc, char **argv)
 ```
+
 或其他类型的由托管环境锁指定的声明。
 参数的名字并不重要，但为了方便起见以上述命名进行表述：
 
