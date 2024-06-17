@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "327de1952de29802",
+        "id": "67a06c40e30a950b",
         "type": "tabs",
         "children": [
           {
-            "id": "293f27ef2258078f",
+            "id": "819fa41a9c1c9a19",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CPP/C标准笔记/C标准学习笔记.md",
+                "file": "嵌入式基础/接口技术/I2C/I2C总线标准.md",
                 "mode": "source",
                 "source": false
               }
@@ -77,7 +77,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 261.5
+    "width": 319.5
   },
   "right": {
     "id": "989a0ed08fe1a7b2",
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "CPP/C标准笔记/C标准学习笔记.md",
+                "file": "嵌入式基础/接口技术/I2C/I2C总线标准.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "CPP/C标准笔记/C标准学习笔记.md",
+                "file": "嵌入式基础/接口技术/I2C/I2C总线标准.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "CPP/C标准笔记/C标准学习笔记.md"
+                "file": "嵌入式基础/接口技术/I2C/I2C总线标准.md"
               }
             }
           }
@@ -155,10 +155,15 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "293f27ef2258078f",
+  "active": "819fa41a9c1c9a19",
   "lastOpenFiles": [
-    "CPP/应试笔记与八股.md",
+    "嵌入式基础/嵌入式基础.md",
+    "嵌入式基础/接口技术/I2C/I2C总线标准.md",
+    "嵌入式基础/接口技术/I2C",
+    "嵌入式基础/接口技术",
+    "嵌入式基础",
     "CPP/C标准笔记/C标准学习笔记.md",
+    "CPP/应试笔记与八股.md",
     "Linux驱动开发/Linux驱动开发笔记.md",
     "Others/Obsidian/Markdown与html语法拓展/html常用语法拓展.md",
     "CMake/CMake 常用函数.md",
@@ -183,8 +188,6 @@
     "Linux驱动开发/内核文档翻译/Readme.md",
     "Linux驱动开发/内核文档翻译/LWN文章翻译",
     "Others/协程/协程.md",
-    "Others/线程锁/实现/线程锁 with pthread.md",
-    "生活常识/数码/RAID技术.md",
     "Resources/Pasted image 20240203021517.png",
     "Resources/WeChat_HcbX72eRbT.png",
     "Linux驱动开发/内核文档翻译/内核源码文档/Documentation/userspace-api/ioctl",
@@ -194,9 +197,6 @@
     "Linux驱动开发/内核文档翻译/内核源码文档/Documentation",
     "Linux驱动开发/内核文档翻译/内核源码文档",
     "Linux驱动开发/内核文档翻译",
-    "操作系统/课外补充",
-    "操作系统",
-    "Others/POSIX/Resources/10031-2017.pdf",
     "微型计算机原理与接口技术/Resources/Pasted image 20240331171437.png",
     "Resources/msedge_aH7KpZznqO.png",
     "CPP/Resources/Pasted image 20240302155918.png",
