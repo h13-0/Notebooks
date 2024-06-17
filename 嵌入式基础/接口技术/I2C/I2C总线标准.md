@@ -23,3 +23,6 @@ I2C是指Inter-Integrated Circuit，由飞利浦公司制定，其协议标准�
 ## 3 I2C总线协议
 
 ### 3.1 标准模式、快速
+
+
+
