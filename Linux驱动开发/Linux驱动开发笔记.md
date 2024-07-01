@@ -1383,7 +1383,7 @@ void reader()
 {
 	int value = 0;
 	// 等待进入临界区，进入临界区条件为seq为偶数
-	while(seq % 2 == 0);
+	while(seq % 2);
 	// 进入临界区
 	do {
 		if(seq_old != seq)

@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CPP/C标准笔记/C标准学习笔记.md",
+                "file": "Linux驱动开发/Linux驱动开发笔记.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "CPP/C标准笔记/C标准学习笔记.md",
+                "file": "Linux驱动开发/Linux驱动开发笔记.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "CPP/C标准笔记/C标准学习笔记.md",
+                "file": "Linux驱动开发/Linux驱动开发笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "CPP/C标准笔记/C标准学习笔记.md"
+                "file": "Linux驱动开发/Linux驱动开发笔记.md"
               }
             }
           }
@@ -157,9 +157,9 @@
   },
   "active": "bf5beacadb6ae5aa",
   "lastOpenFiles": [
+    "CPP/C标准笔记/C标准学习笔记.md",
     "Linux驱动开发/Linux驱动开发笔记.md",
     "CPP/应试笔记与八股.md",
-    "CPP/C标准笔记/C标准学习笔记.md",
     "CPP/C标准笔记/C与C++标准.md",
     "嵌入式基础/接口技术/I2C/I2C总线标准.md",
     "嵌入式基础/嵌入式基础.md",
