@@ -18,8 +18,19 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "820a846825f2e732",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.6.5"
+              }
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -155,7 +166,7 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "bf5beacadb6ae5aa",
+  "active": "820a846825f2e732",
   "lastOpenFiles": [
     "CPP/C标准笔记/C标准学习笔记.md",
     "Linux驱动开发/Linux驱动开发笔记.md",
