@@ -1663,7 +1663,9 @@ int capable(int capability);
 
 对于不满足权限的请求可以返回 `-EPREM` 。
 
+### 8.2 非ioctl类设备控制
 
+并非所有的设备都需要使用
 
 
 
