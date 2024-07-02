@@ -1652,7 +1652,18 @@ int access_ok(int type, const void *addr, unsigned long size);
 - `CAP_DAC_OVERRIDE` ：
 - `CAP_NET_ADMIN` ：执行网络管理任务的权限，例如配置网络接口
 - `CAP_SYS_MODULE` ：载入或者卸载内核模块的权限
-- 
+- `CAP_SYS_RAWIO` ：执行裸IO的权限，例如直接使用I2C或者USB通信
+- `CAP_SYS_ADMIN` ：
+- `CAP_SYS_TTY_CONFIG` ：执行tty配置任务的权限
+在内核驱动中，可以使用 `<sys/sched.h>` 中的如下API检查是否有对应权限：
+
+```C
+int capable(int capability);
+```
+
+对于不满足权限的请求可以返回 `-EPREM` 。
+
+
 
 
 
