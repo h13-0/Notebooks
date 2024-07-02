@@ -1647,8 +1647,12 @@ int access_ok(int type, const void *addr, unsigned long size);
 
 #### 8.1.5 权限与操作
 
-
-
+在驱动程序中，对设备的操作也应当分为不同的权限等级，例如读取硬盘、写入硬盘以及格式化硬盘本就不应当是同一组权限。而在Linux中也内置了一些权限，例如在 `<linux/capability.h>`
+中预先定义了如下一些可能常用的权限：
+- `CAP_DAC_OVERRIDE` ：
+- `CAP_NET_ADMIN` ：执行网络管理任务的权限，例如配置网络接口
+- `CAP_SYS_MODULE` ：载入或者卸载内核模块的权限
+- 
 
 
 
