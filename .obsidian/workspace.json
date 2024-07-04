@@ -11,9 +11,11 @@
             "id": "bf5beacadb6ae5aa",
             "type": "leaf",
             "state": {
-              "type": "image",
+              "type": "markdown",
               "state": {
-                "file": "机器学习/Resources/0008.png"
+                "file": "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
+                "mode": "source",
+                "source": false
               }
             }
           }
@@ -91,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "机器学习/Resources/0008.png",
+                "file": "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -108,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "机器学习/Resources/0008.png",
+                "file": "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -131,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "机器学习/Resources/0008.png"
+                "file": "机器学习/深度学习/CV/文章笔记/1989 LeNet.md"
               }
             }
           }
@@ -153,8 +155,9 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "7ddc64b2e3c9b5c8",
+  "active": "bf5beacadb6ae5aa",
   "lastOpenFiles": [
+    "机器学习/Resources/0008.png",
     "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
     "Linux驱动开发/Linux驱动开发笔记.md",
     "CPP/C标准笔记/C标准学习笔记.md",
@@ -184,7 +187,6 @@
     "操作系统/课外补充/Berstein条件.md",
     "Linux驱动开发/内核文档翻译/内核源码文档/Documentation/userspace-api/ioctl/ioctl-number.rst.md",
     "Linux驱动开发/内核文档翻译/LWN文章翻译/The new way of ioctl().md",
-    "Linux驱动开发/内核文档翻译/Readme.md",
     "Linux驱动开发/内核文档翻译/LWN文章翻译",
     "Resources/Pasted image 20240203021517.png",
     "Resources/WeChat_HcbX72eRbT.png",
