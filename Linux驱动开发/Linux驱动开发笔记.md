@@ -1696,10 +1696,11 @@ echo "90" > /dev/servo0
 // 静态定义
 DECLARE_WAIT_QUEUE_HEAD(name);
 
-// d
-
+// 动态定义
+wait_queue_head_t q_head;
+init_waitqueue_head(&q_head);
 ```
-
+2. 
 
 
 
