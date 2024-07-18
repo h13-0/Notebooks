@@ -13,7 +13,19 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux驱动开发/Linux驱动开发笔记.md",
+                "file": "机器学习/深度学习/CV/文章笔记/2021 SA-NET(Shuffle Attention).md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "b7dfde1a7ca3ec86",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +105,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Linux驱动开发/Linux驱动开发笔记.md",
+                "file": "机器学习/深度学习/CV/文章笔记/2021 SA-NET(Shuffle Attention).md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +122,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Linux驱动开发/Linux驱动开发笔记.md",
+                "file": "机器学习/深度学习/CV/文章笔记/2021 SA-NET(Shuffle Attention).md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +145,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux驱动开发/Linux驱动开发笔记.md"
+                "file": "机器学习/深度学习/CV/文章笔记/2021 SA-NET(Shuffle Attention).md"
               }
             }
           }
@@ -158,8 +170,12 @@
   "active": "bf5beacadb6ae5aa",
   "lastOpenFiles": [
     "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
-    "机器学习/Resources/0008.png",
+    "机器学习/深度学习/CV/文章笔记/2021 SA-NET(Shuffle Attention).md",
     "Linux驱动开发/Linux驱动开发笔记.md",
+    "机器学习/Resources/git_ignored/SA-NET2021.pdf",
+    "机器学习/Resources/git_ignored/SA-NET.pdf",
+    "机器学习/Resources/git_ignored/2102.00240v1.pdf",
+    "机器学习/Resources/0008.png",
     "CPP/C标准笔记/C标准学习笔记.md",
     "CPP/应试笔记与八股.md",
     "CPP/C标准笔记/C与C++标准.md",
@@ -194,9 +210,6 @@
     "Linux驱动开发/Resources/msedge_Mbwk30DDuN.png",
     "Linux驱动开发/Resources",
     "Linux驱动开发/内核文档翻译/内核源码文档/Documentation/userspace-api",
-    "Linux驱动开发/内核文档翻译/内核源码文档/Documentation",
-    "Linux驱动开发/内核文档翻译/内核源码文档",
-    "Linux驱动开发/内核文档翻译",
     "微型计算机原理与接口技术/Resources/Pasted image 20240331171437.png",
     "Resources/msedge_aH7KpZznqO.png",
     "CPP/Resources/Pasted image 20240302155918.png",

@@ -8,7 +8,7 @@
 ## 文章信息
 
 - 文章原名：`Backpropagation Applied to Handwritten Zip Code Recognition` 
-- 文章连接：[https://ieeexplore.ieee.org/document/6795724](https://ieeexplore.ieee.org/document/6795724)(Sci-Hub有)
+- 文章链接：[https://ieeexplore.ieee.org/document/6795724](https://ieeexplore.ieee.org/document/6795724)(Sci-Hub有)
 - 作者信息：
 	- Y.LeCun
 	- B.Boser  
