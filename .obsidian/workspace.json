@@ -4,28 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "5d1b32220f2d04eb",
+        "id": "c9f14340b2532957",
         "type": "tabs",
         "children": [
           {
-            "id": "bf5beacadb6ae5aa",
+            "id": "a7e091302bba3113",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "机器学习/深度学习/CV/文章笔记/2021 SA-NET(Shuffle Attention).md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "b7dfde1a7ca3ec86",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
+                "file": "机器学习/深度学习/CV/文章笔记/2024 Mamba YOLO.md",
                 "mode": "source",
                 "source": false
               }
@@ -105,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "机器学习/深度学习/CV/文章笔记/2021 SA-NET(Shuffle Attention).md",
+                "file": "机器学习/深度学习/CV/文章笔记/2024 Mamba YOLO.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -122,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "机器学习/深度学习/CV/文章笔记/2021 SA-NET(Shuffle Attention).md",
+                "file": "机器学习/深度学习/CV/文章笔记/2024 Mamba YOLO.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -145,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "机器学习/深度学习/CV/文章笔记/2021 SA-NET(Shuffle Attention).md"
+                "file": "机器学习/深度学习/CV/文章笔记/2024 Mamba YOLO.md"
               }
             }
           }
@@ -167,11 +155,16 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "bf5beacadb6ae5aa",
+  "active": "a7e091302bba3113",
   "lastOpenFiles": [
-    "Resources/0003.jpg",
     "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
     "机器学习/深度学习/CV/文章笔记/2021 SA-NET(Shuffle Attention).md",
+    "机器学习/深度学习/CV/文章笔记/2024 Mamba YOLO.md",
+    "机器学习/深度学习/CV/文章笔记/未命名",
+    "机器学习/Resources/git_ignored/Mamba_YOLO2024.pdf",
+    "机器学习/Resources/git_ignored/Mamba_YOLO20.pdf",
+    "机器学习/Resources/git_ignored/2406.05835v1.pdf",
+    "Resources/0003.jpg",
     "Linux驱动开发/Linux驱动开发笔记.md",
     "机器学习/Resources/git_ignored/SA-NET2021.pdf",
     "机器学习/Resources/git_ignored/SA-NET.pdf",
@@ -203,18 +196,13 @@
     "计算机网络/基础应试学习/第三章 数据链路层/第三章 数据链路层.md",
     "操作系统/课外补充/Berstein条件.md",
     "Linux驱动开发/内核文档翻译/内核源码文档/Documentation/userspace-api/ioctl/ioctl-number.rst.md",
-    "Linux驱动开发/内核文档翻译/LWN文章翻译",
     "Resources/Pasted image 20240203021517.png",
     "Resources/WeChat_HcbX72eRbT.png",
-    "Linux驱动开发/内核文档翻译/内核源码文档/Documentation/userspace-api/ioctl",
     "Linux驱动开发/Resources/msedge_Mbwk30DDuN.png",
-    "Linux驱动开发/Resources",
-    "Linux驱动开发/内核文档翻译/内核源码文档/Documentation/userspace-api",
     "微型计算机原理与接口技术/Resources/Pasted image 20240331171437.png",
     "Resources/msedge_aH7KpZznqO.png",
     "CPP/Resources/Pasted image 20240302155918.png",
     "Resources/msedge_tknHA5FLRe.png",
-    "机器学习/Resources/0003.png",
-    "STM32开发/Resources/stm32cubeide_FfvAsuGt5H.png"
+    "机器学习/Resources/0003.png"
   ]
 }
