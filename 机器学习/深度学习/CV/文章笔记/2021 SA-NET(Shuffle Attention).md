@@ -31,4 +31,4 @@ Shuffle Unit<font color="#c00000">保证输入和输出的维度相同</font>，
 <center>图2：SA模块的概述。</center>
 <center>它采用“通道分割”并行处理每组的子特征。对于通道注意力分支，使用<font color="#9bbb59">GAP</font>生成<font color="#9bbb59">通道统计数据</font>，然后使用一对参数对通道向量进行缩放和移位。对于空间注意力分支，采用<a href="url"><font color="#9bbb59">Group Norm</font></a>生成空间统计数据，然后创建类似于通道分支的紧凑特征。然后将这两个分支连接起来。之后，所有子特征都被聚合，最后我们利用“<font color="#9bbb59">通道洗牌</font>”操作符来实现不同子特征之间的信息通信。</center>
 
-
+#### 3.1 特征分组(Feature Grouping)
