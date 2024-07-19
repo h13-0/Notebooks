@@ -34,4 +34,4 @@ Shuffle Unit<font color="#c00000">保证输入和输出的维度相同</font>，
 #### 3.1 特征分组(Feature Grouping)
 
 假设输入的特诊图(Feature map，通常由卷积操作得到)的尺寸为 $C\times H\times W$ ，则特征图：$$X\in \mathbb{R}^{C \times H \times W}$$
-随后将C划分为G组(G通常为32或64)，则对于其中的通道分量：$$X=[X_1, X_2, \dots, X_G], $$
+随后将C划分为G组(G通常为32或64)，则对于其中的通道分量：$$X=[X_1, X_2, \dots, X_G], X_k\in \mathbb{R}^{C/G\times H\times W}$$
