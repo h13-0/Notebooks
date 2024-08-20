@@ -34,14 +34,14 @@ pr_debug(msg)
 
 ## 应用
 
-在 `drivers/i2c/i2c-core.c` 中可见如下应用：
+在 `drivers/i2c/i2c-core-base.c` 中可见如下应用：
 
 ```C
 #define pr_fmt(fmt) "i2c-core: " fmt
 
 ...
 
-pr_info("%s enter.\n", __func__);
+pr_err("adapter '%s': no algo supplied!\n", adap->name);
 ```
 
 ## 原理
