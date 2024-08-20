@@ -29,8 +29,7 @@ pr_debug(msg)
 ```
 
 注：
-1. 上述为<font color="#c00000">常用</font>使用方式，也就是说可以利用该宏实现任何想要的输出格式。
-2. 由于实现原理所限, 该宏
+1. 上述为<font color="#c00000">常用</font>使用方式，也就是说可以利用该宏实现任何想要的输出格式, 例如加入 `__LINE__` 等宏变量。
 
 ## 应用
 
@@ -46,5 +45,41 @@ pr_err("adapter '%s': no algo supplied!\n", adap->name);
 
 ## 原理
 
-上述提到的给内核开发者使用的 `pr_level` 的若干API被定义在 `printk.h` 中, 
+上述提到的给内核开发者使用的 `pr_level` 的若干API被定义在 `include/linux/printk.h` 中, 具体如下：
+
+```C
+...
+#ifndef pr_fmt
+#define pr_fmt(fmt) fmt
+#endif
+
+...
+#define printk(fmt, ...) printk_index_wrap(_printk, fmt, ##__VA_ARGS__)
+#define printk_deferred(fmt, ...)					\
+	printk_index_wrap(_printk_deferred, fmt, ##__VA_ARGS__)
+
+#define pr_emerg(fmt, ...) \
+	printk(KERN_EMERG pr_fmt(fmt), ##__VA_ARGS__)
+
+#define pr_alert(fmt, ...) \
+	printk(KERN_ALERT pr_fmt(fmt), ##__VA_ARGS__)
+
+#define pr_crit(fmt, ...) \
+	printk(KERN_CRIT pr_fmt(fmt), ##__VA_ARGS__)
+
+#define pr_err(fmt, ...) \
+	printk(KERN_ERR pr_fmt(fmt), ##__VA_ARGS__)
+
+#define pr_warn(fmt, ...) \
+	printk(KERN_WARNING pr_fmt(fmt), ##__VA_ARGS__)
+
+#define pr_notice(fmt, ...) \
+	printk(KERN_NOTICE pr_fmt(fmt), ##__VA_ARGS__)
+
+#define pr_info(fmt, ...) \
+	printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+
+#define pr_cont(fmt, ...) \
+	printk(KERN_CONT fmt, ##__VA_ARGS__)
+```
 
