@@ -31,7 +31,8 @@
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -105,7 +106,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Linux驱动开发/Linux驱动开发笔记.md",
+                "file": "Linux驱动开发/MISC/pr_fmt应用及原理解析.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -122,7 +123,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Linux驱动开发/Linux驱动开发笔记.md",
+                "file": "Linux驱动开发/MISC/pr_fmt应用及原理解析.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -145,7 +146,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux驱动开发/Linux驱动开发笔记.md"
+                "file": "Linux驱动开发/MISC/pr_fmt应用及原理解析.md"
               }
             }
           }
@@ -167,10 +168,10 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "a7e091302bba3113",
+  "active": "54a44efde62d7e88",
   "lastOpenFiles": [
-    "Linux驱动开发/MISC/pr_fmt应用及原理解析.md",
     "Linux驱动开发/Linux驱动开发笔记.md",
+    "Linux驱动开发/MISC/pr_fmt应用及原理解析.md",
     "Linux驱动开发/内核文档翻译/内核源码文档/Documentation/userspace-api/ioctl/ioctl-number.rst.md",
     "Linux驱动开发/MISC",
     "Linux驱动开发/内核模块/版本依赖.md",
