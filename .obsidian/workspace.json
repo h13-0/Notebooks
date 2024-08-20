@@ -18,6 +18,18 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "54a44efde62d7e88",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Linux驱动开发/MISC/pr_fmt应用及原理解析.md",
+                "mode": "source",
+                "source": false
+              }
+            }
           }
         ]
       }
@@ -157,6 +169,11 @@
   },
   "active": "a7e091302bba3113",
   "lastOpenFiles": [
+    "Linux驱动开发/MISC/pr_fmt应用及原理解析.md",
+    "Linux驱动开发/Linux驱动开发笔记.md",
+    "Linux驱动开发/内核文档翻译/内核源码文档/Documentation/userspace-api/ioctl/ioctl-number.rst.md",
+    "Linux驱动开发/MISC",
+    "Linux驱动开发/内核模块/版本依赖.md",
     "机器学习/深度学习/CV/文章笔记/2021 SA-NET(Shuffle Attention).md",
     "机器学习/深度学习/CV/文章笔记/2024 Mamba YOLO.md",
     "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
@@ -165,7 +182,6 @@
     "机器学习/Resources/git_ignored/Mamba_YOLO20.pdf",
     "机器学习/Resources/git_ignored/2406.05835v1.pdf",
     "Resources/0003.jpg",
-    "Linux驱动开发/Linux驱动开发笔记.md",
     "机器学习/Resources/git_ignored/SA-NET2021.pdf",
     "机器学习/Resources/git_ignored/SA-NET.pdf",
     "机器学习/Resources/git_ignored/2102.00240v1.pdf",
@@ -177,7 +193,6 @@
     "嵌入式基础/嵌入式基础.md",
     "嵌入式基础/接口技术/I2C",
     "嵌入式基础/接口技术",
-    "嵌入式基础",
     "Others/Obsidian/Markdown与html语法拓展/html常用语法拓展.md",
     "CMake/CMake 常用函数.md",
     "CPP/C标准笔记/C++ 修饰符类型.md",
@@ -193,9 +208,6 @@
     "生活常识/法律常识/法律常识.md",
     "CPP/编译器限定实现/gcc.md",
     "Readme.md",
-    "计算机网络/基础应试学习/第三章 数据链路层/第三章 数据链路层.md",
-    "操作系统/课外补充/Berstein条件.md",
-    "Linux驱动开发/内核文档翻译/内核源码文档/Documentation/userspace-api/ioctl/ioctl-number.rst.md",
     "Resources/Pasted image 20240203021517.png",
     "Resources/WeChat_HcbX72eRbT.png",
     "Linux驱动开发/Resources/msedge_Mbwk30DDuN.png",

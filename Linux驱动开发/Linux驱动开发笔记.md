@@ -450,6 +450,8 @@ name:           hello_module
 vermagic:       6.8.1+ SMP preempt mod_unload modversions
 ```
 
+注：
+1. 关于代码中的 `pr_fmt(fmt)` ：[[pr_fmt应用及原理解析]]
 
 ###### 4.3.7.2.1 尝试修改vermagic(不推荐)
 
