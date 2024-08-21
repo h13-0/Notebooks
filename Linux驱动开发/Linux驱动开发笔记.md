@@ -1705,20 +1705,20 @@ init_waitqueue_head(&q_head);
 2. 休眠指令，注意该休眠指令<font color="#c00000">实际上为宏函数</font>：
 ```C
 // 休眠API(注意都是宏函数)
+
 /**
- * @brief:休眠直到condition为true
- *
+ * @brief: 休眠直到condition为true
+ * @note: 每次wq_head被唤醒都会被执行并判定condition
  */
 wait_event(wq_head, condition)
 
 /**
- * @brief:
- *
+ * @brief: 休眠直到condition为true，支持系统被挂起期间冻结
  */
 wait_event_freezable(wq_head, condition)
 
 /**
- * @brief:休眠直到condition为true，或者超时(以jiffy表示)时中断休眠。
+ * @brief: 休眠直到condition为true，或者超时(以jiffy表示)时中断休眠。
  * @return:
  *     - 当超时后condition为true返回0
  *     - 当超时后condition为false返回1
@@ -1727,14 +1727,14 @@ wait_event_freezable(wq_head, condition)
 wait_event_timeout(wq_head, condition, timeout)
 
 /**
- * @brief:休眠直到condition为true。在执行等待前和后，cmd1和cmd2会分别被执行
+ * @brief: 休眠直到condition为true。在执行等待前和后，cmd1和cmd2会分别被执行
  * @return:
  *     - 当其被信号打断时返回值为非零
  */
 wait_event_cmd(wq_head, condition, cmd1, cmd2)
 
 /**
- * @brief:休眠直到condition为true，或者被信号中断休眠。当其被信号打断时返回值为非零。
+ * @brief: 休眠直到condition为true，或者被信号中断休眠。当其被信号打断时返回值为非零。
  * @return:
  *     - 当其被信号打断时返回值为非零
  */
@@ -1742,7 +1742,15 @@ wait_event_interruptible(wq_head, condition)
 ```
 注：
 - 上述 `condition` 是一个<font color="#c00000">不带副作用</font>的 `bool` 表达式，<span style="background:#fff88f"><font color="#c00000">该表达式可能会被多次求值</font></span>。
+3. 唤醒指令。休眠和唤醒通常伴随出现。
+```C
 
+	
+
+
+
+
+```
 
 
 
