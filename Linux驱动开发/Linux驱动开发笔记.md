@@ -1751,6 +1751,11 @@ wake_up(x)
 wake_up_interruptible(x)
 ```
 
+### 8.4 非阻塞IO
+
+除了阻塞IO之外，Linux支持用户程序以非阻塞IO打开/操作设备。其
+
+
 
 
 ## 9 时间、延迟及延缓操作
