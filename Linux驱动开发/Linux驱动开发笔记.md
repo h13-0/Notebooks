@@ -1744,12 +1744,11 @@ wait_event_interruptible(wq_head, condition)
 - 上述 `condition` 是一个<font color="#c00000">不带副作用</font>的 `bool` 表达式，<span style="background:#fff88f"><font color="#c00000">该表达式可能会被多次求值</font></span>。
 3. 唤醒指令。休眠和唤醒通常伴随出现。
 ```C
+// wake_up会唤醒所有等在queue上的线程
+wake_up(x)
 
-	
-
-
-
-
+// wake_up_interruptible只会唤醒可中断休眠的线程
+wake_up_interruptible(x)
 ```
 
 
