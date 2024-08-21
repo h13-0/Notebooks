@@ -1753,9 +1753,15 @@ wake_up_interruptible(x)
 
 ### 8.4 非阻塞IO
 
-除了阻塞IO之外，Linux支持用户程序以非阻塞IO打开/操作设备。其
+除了阻塞IO之外，Linux支持用户程序以非阻塞IO打开/操作设备。
+选择是否为非阻塞IO需要<span style="background:#fff88f"><font color="#c00000">且仅能</font></span>在 `f_open` 阶段进行设置。
 
+```C
+// 只读、非阻塞
+fd = open("path"，O_RDONLY | O_NONBLOCK)
+```
 
+随后在内核模块中的
 
 
 ## 9 时间、延迟及延缓操作
