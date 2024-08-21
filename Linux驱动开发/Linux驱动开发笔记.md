@@ -1693,7 +1693,7 @@ echo "90" > /dev/servo0
 #### 8.3.2 阻塞与休眠
 
 在Linux中的头文件 `<linux/wait.h>` 中提供了阻塞与休眠相关的API，其较为重要的使用方法如下：
-1. 休眠和唤醒通常通过等待队列来实现，可以通过如下的方法静态或动态的定义一个等待队列：
+1. <font color="#c00000">休眠和唤醒</font>通常通过等待队列来实现，可以通过如下的方法静态或动态的定义一个等待队列：
 ```C
 // 静态定义
 DECLARE_WAIT_QUEUE_HEAD(name);
@@ -1702,7 +1702,11 @@ DECLARE_WAIT_QUEUE_HEAD(name);
 wait_queue_head_t q_head;
 init_waitqueue_head(&q_head);
 ```
-2. 
+2. 既然是"<font color="#c00000">休眠和唤醒</font>"，那在工程中，既需要休眠也需要唤醒。
+```C
+// 休眠API
+
+```
 
 
 
