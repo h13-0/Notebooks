@@ -1711,6 +1711,7 @@ wait_event(wq_head, condition)
 wait_event_freezable(wq_head, condition)
 wait_event_timeout(wq_head, condition, timeout)
 wait_event_cmd(wq_head, condition, cmd1, cmd2)
+// 休眠直到condition为true，且期间可以被信号中断休眠。当其被信号打断时返回值为非零。
 wait_event_interruptible(wq_head, condition)
 ```
 注：
