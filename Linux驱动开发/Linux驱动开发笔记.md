@@ -1702,10 +1702,15 @@ DECLARE_WAIT_QUEUE_HEAD(name);
 wait_queue_head_t q_head;
 init_waitqueue_head(&q_head);
 ```
-2. 既然是"<font color="#c00000">休眠和唤醒</font>"，那在工程中，既需要休眠也需要唤醒。
+2. 休眠指令，注意该休眠指令<font color="#c00000">实际上为宏函数</font>：
 ```C
-// 休眠API
-
+// 休眠API(注意都是宏函数)
+// 
+wait_event(wq_head, condition)
+wait_event_freezable(wq_head, condition)
+wait_event_timeout(wq_head, condition, timeout)
+wait_event_cmd(wq_head, condition, cmd1, cmd2)
+wait_event_interruptible(wq_head, condition)
 ```
 
 
