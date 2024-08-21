@@ -1705,13 +1705,39 @@ init_waitqueue_head(&q_head);
 2. 休眠指令，注意该休眠指令<font color="#c00000">实际上为宏函数</font>：
 ```C
 // 休眠API(注意都是宏函数)
-// 休眠直到condition为true
+/**
+ * @brief:休眠直到condition为true
+ *
+ */
 wait_event(wq_head, condition)
-// 
+
+/**
+ * @brief:
+ *
+ */
 wait_event_freezable(wq_head, condition)
+
+/**
+ * @brief:休眠直到condition为true，或者超时(以jiffy表示)时中断休眠。
+ * @return:
+ *     - 当超时后condition为true返回0
+ *     - 当超时后condition为false返回1
+ *     - 超时前condition为true则返回剩余jiffy数(大于等于1)
+ */
 wait_event_timeout(wq_head, condition, timeout)
+
+/**
+ * @brief:休眠直到condition为true。在执行等待前和后，cmd1和cmd2会分别被执行
+ * @return:
+ *     - 当其被信号打断时返回值为非零
+ */
 wait_event_cmd(wq_head, condition, cmd1, cmd2)
-// 休眠直到condition为true，且期间可以被信号中断休眠。当其被信号打断时返回值为非零。
+
+/**
+ * @brief:休眠直到condition为true，或者被信号中断休眠。当其被信号打断时返回值为非零。
+ * @return:
+ *     - 当其被信号打断时返回值为非零
+ */
 wait_event_interruptible(wq_head, condition)
 ```
 注：
