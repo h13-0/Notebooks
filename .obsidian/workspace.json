@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Readme.md",
+                "file": "Linux驱动开发/Linux驱动开发笔记.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Readme.md",
+                "file": "Linux驱动开发/Linux驱动开发笔记.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Readme.md",
+                "file": "Linux驱动开发/Linux驱动开发笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Readme.md"
+                "file": "Linux驱动开发/Linux驱动开发笔记.md"
               }
             }
           }
@@ -157,6 +157,7 @@
   },
   "active": "a7e091302bba3113",
   "lastOpenFiles": [
+    "Readme.md",
     "Linux驱动开发/Linux驱动开发笔记.md",
     "Linux驱动开发/MISC/pr_fmt应用及原理解析.md",
     "Linux驱动开发/内核文档翻译/内核源码文档/Documentation/userspace-api/ioctl/ioctl-number.rst.md",
@@ -195,7 +196,6 @@
     "计算机组成原理/常见CPU架构及其对比.md",
     "生活常识/法律常识/法律常识.md",
     "CPP/编译器限定实现/gcc.md",
-    "Readme.md",
     "Resources/Pasted image 20240203021517.png",
     "Resources/WeChat_HcbX72eRbT.png",
     "Linux驱动开发/Resources/msedge_Mbwk30DDuN.png",
