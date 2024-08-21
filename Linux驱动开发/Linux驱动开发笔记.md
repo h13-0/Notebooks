@@ -928,7 +928,7 @@ unsigned int imajor(struct inode *inode);
 
 ### 5.7 字符设备的分配、注册与回收
 
-通常来说(但不绝对)，注册一个字符设备需要完成<font color="#c00000">申请结构体空间</font>、配置结构体、注册设备、反注册设备、<font color="#c00000">回收空间</font>几个任务。注意错误处理和资源回收即可。字符设备需要使用
+通常来说(但不绝对)，注册一个字符设备需要完成<font color="#c00000">申请结构体空间</font>、配置结构体、注册设备、反注册设备、<font color="#c00000">回收空间</font>几个任务。注意错误处理和资源回收即可。字符设备需要使用 `cdev_t` ，其定义于 `<linux/cdev.h>` 中。
 需要注意的是字符设备使用的 `cdev_t` 有两种内存分配方式：
 - 静态分配，直接静态定义 `cdev_t` 结构体：
 	1. 静态定义 `cdev_t` 结构体
@@ -959,19 +959,19 @@ static int __init mpipe_init(void)
         goto failed;
 
     // allocate cdev
-    if((cdev = cdev_alloc()) == NULL)
+    if((_cdev = cdev_alloc()) == NULL)
         goto cdev_alloc_failed;
 
-    cdev->ops = &fops;
-    cdev->owner = THIS_MODULE;
+    _cdev->ops = &fops;
+    _cdev->owner = THIS_MODULE;
 
     // register a character device.
-    ret = cdev_add(cdev, dev, 1);
+    ret = cdev_add(_cdev, dev, 1);
     if(ret)
         goto cdev_add_failed;
 
 cdev_add_failed:
-    cdev_del(cdev);
+    cdev_del(_cdev);
 
 cdev_alloc_failed:
     unregister_chrdev_region(dev, 1);
@@ -982,7 +982,7 @@ failed:
 
 static void __exit mpipe_exit(void)
 {
-    cdev_del(cdev);
+    cdev_del(_cdev);
     unregister_chrdev_region(dev, 1);
 }
 ```
