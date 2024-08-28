@@ -1761,34 +1761,8 @@ wake_up_interruptible(x)
 fd = open("path"，O_RDONLY | O_NONBLOCK)
 ```
 
-随后在内核模块中的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-当应用程序请求的操作无法执行时，通常返回 `-EAGAIN` (try it again)。
+随后在内核模块中的后续操作时就应当根据是否定义了该非阻塞标志实现不同的行为。例如当应用程序请求的操作无法执行时，通常返回 `-EAGAIN` (try it again)。
 只有 `read` 、 `write` 和 `open` 文件操作会收非阻塞标志的影响。
-
-
-
 
 
 ## 9 时间、延迟及延缓操作
