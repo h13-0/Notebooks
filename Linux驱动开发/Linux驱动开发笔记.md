@@ -1766,9 +1766,17 @@ fd = open("path"，O_RDONLY | O_NONBLOCK)
 
 ### 8.5 高级休眠
 
+章节[[Linux驱动开发笔记#8 3 2 阻塞与休眠]]中所使用的 `wait_queue_head_t` 的定义如下：
 
+```C
+struct wait_queue_head {  
+        spinlock_t            lock;  
+        struct list_head       head;  
+};  
+typedef struct wait_queue_head wait_queue_head_t;
+```
 
-
+其是由一个自旋锁和链表组成。
 
 
 ## 9 时间、延迟及延缓操作
