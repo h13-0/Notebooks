@@ -7906,19 +7906,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 184,
+      "wordCount": 207,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 0.6133333333333333,
-      "characterCount": 370,
-      "nonWhitespaceCharacterCount": 329,
-      "readingTimeInMinutes": 0.4052452830188679,
+      "pageCount": 0.69,
+      "characterCount": 394,
+      "nonWhitespaceCharacterCount": 353,
+      "readingTimeInMinutes": 0.4512452830188679,
       "linkCount": 0,
       "embedCount": 0,
       "aliases": null,
       "createdDate": 1726840963796,
-      "modifiedDate": 1726841551627,
-      "sizeInBytes": 776
+      "modifiedDate": 1726841558195,
+      "sizeInBytes": 848
     }
   }
 }
