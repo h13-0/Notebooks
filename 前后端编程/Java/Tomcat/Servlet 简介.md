@@ -25,7 +25,17 @@ Servlet(Server applet)是一个技术标准，由Sun公司定义的一套动态�
 
 Servlet容器(通常为Tomcat)在接收到http请求后，其会使用如下的流程将请求转化为Servlet所规定的对象，交由实现了Servlet Service的APP完成请求内容的生成。
 其工作内容主要如下：
-1. 容器在接收到http请求后，容器会将http请求转换为 `HttpServletRequest` 对象，该对象中包含了http请求中的
+1. 容器在接收到http请求后，容器会将http请求转换为 `HttpServletRequest` 对象，该对象中包含了http请求中的所有信息(例如http请求头和请求体)。
+2. 容器在创建 `HttpServletRequest` 对象的<span style="background:#fff88f"><font color="#c00000">同时会创建</font></span>一个 `HttpServletResponse` 对象，用于承装需要响应给客户端的信息，该对象会被转换为http的响应报文。该对象包含http响应行、响应头和响应体。
+3. 随后容器会根据请求的路径找到响应该请求的Servlet，并将Servlet实例化，调用Servlet实现的service方法，同时将 `HttpServletRequest` 和 `HttpServletResponse` 对象引用传递给service方法。
 
 ![[1681699577344.png]]
+
+## 4 Servlet 代码Demo
+
+如上一章节所述，Servlet是一套接口，因此需要定义一个class来实现这套接口。该接口要求实现 `service` 方法，其参数为：
+```java
+service(HttpServletRequest request, HttpServletResponse response)
+```
+
 
