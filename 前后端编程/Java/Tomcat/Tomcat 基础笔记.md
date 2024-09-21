@@ -34,12 +34,23 @@ number headings: auto, first-level 2, max 6, 1.1
 - `websocket`：
 - `index.html`：\[非必要文件\]，通常为默认页面。默认液面也可以是 `index.htm` 、 `index.jsp` 等。
 
-阅读上述内容可知，<font color="#c00000">一个Tomcat App不一定需要Java代码或者JavaScript代码</font>。建立如下的文件结构并填充适当的内容：
+阅读上述内容可知，<font color="#c00000">一个Tomcat App不一定需要Java代码或者JavaScript代码</font>。因此，创建目录 `webapps/test` 并向 `webapps/test/index.html` 中填充如下代码：
 
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>test</title>
+</head>
+<body>
+    Hello World.
+</body>
+</html>
+```
 
+即可完成一个最基础的Tomcat App，访问效果如下：
 
-
-
-
+![[chrome_IJ4YQL8og4.png]]
 
 
