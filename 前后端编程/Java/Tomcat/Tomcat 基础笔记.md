@@ -18,7 +18,7 @@ number headings: auto, first-level 2, max 6, 1.1
 
 打开Tomcat的安装目录下的 `webapps/examples` 文件夹，可以看到目录结构如下：
 ![[explorer_tz7cgDnjEk.png]]
-除了上述目录之外，常见目录及其用途为：
+除了上述目录之外，常见目录<font color="#c00000">及其子目录</font>的用途为：
 - `jsp`：
 - `META-INF`：
 - `servlets`：
