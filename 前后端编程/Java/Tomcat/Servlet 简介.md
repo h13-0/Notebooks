@@ -23,7 +23,9 @@ Servlet(Server applet)是一个技术标准，由Sun公司定义的一套动态�
 
 ## 3 Servlet基本流程
 
+Servlet容器(通常为Tomcat)在接收到http请求后，其会使用如下的流程将请求转化为Servlet所规定的对象，交由实现了Servlet Service的APP完成请求内容的生成。
+其工作内容主要如下：
+1. 容器在接收到http请求后，容器会将http请求转换为 `HttpServletRequest` 对象，该对象中包含了http请求中的
 
-
-
+![[1681699577344.png]]
 
