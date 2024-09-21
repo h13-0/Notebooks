@@ -23,9 +23,23 @@ number headings: auto, first-level 2, max 6, 1.1
 - `META-INF`：
 - `servlets`：
 - `static`：\[非必要目录\]，存放静态资源的目录，例如 `*.jpg` 、 `*.css` 等。
-- `WEB-INF`：\[<font color="#c00000">必要目录</font>\]，受保护的资源目录，即浏览器通过url无法访问的目录。
-	- `classes`：\[常见目录\]，src下源代码、配置文件，编译后会出现在该目录下。如果该web项目不包含Java代码则不会出现该目录。
-	- `lib`：\[常见目录\]，项目依赖的jar编译后会出现在该目录。如果web项目不依赖任何jar则不会出现该目录。
+	- `img`
+	- `js`
+	- `css`
+	- ...
+- `WEB-INF`：\[<font color="#c00000">必要目录</font>\]，<span style="background:#fff88f"><font color="#c00000">受保护的资源目录，即浏览器通过url无法访问的目录</font></span>。
+	- `classes`：\[常见目录\]，src下源代码、配置文件，编译后会出现在该目录下。如果该web项目<u>不包含Java代码则不会出现该目录</u>。
+	- `lib`：\[常见目录\]，项目依赖的jar编译后会出现在该目录。如果web项目<u>不依赖任何jar则不会出现该目录</u>。
 	- `web.xml`：\[常见文件\]，Web项目的配置文件。在较新版本中不存在该文件。
 - `websocket`：
-- `index.html`：\[非必要文件\]，
+- `index.html`：\[非必要文件\]，通常为默认页面。默认液面也可以是 `index.htm` 、 `index.jsp` 等。
+
+阅读上述内容可知，<font color="#c00000">一个Tomcat App不一定需要Java代码或者JavaScript代码</font>。建立如下的文件结构并填充适当的内容：
+
+
+
+
+
+
+
+
