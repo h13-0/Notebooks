@@ -7,7 +7,7 @@
     "postProcess": true,
     "displayProgress": true,
     "inlineHTML": false,
-    "exportPath": "",
+    "exportPath": "C:\\Users\\h13\\Documents\\GitHub\\Notebooks-html\\Notebooks",
     "filesToExport": [],
     "addBodyClasses": true,
     "addMathjaxStyles": true,
@@ -177,7 +177,7 @@
   "titleProperty": "title",
   "onlyExportModified": false,
   "deleteOldFiles": true,
-  "exportPreset": "website",
+  "exportPreset": "online",
   "openAfterExport": false,
   "filePickerBlacklist": [
     "(^|\\/)node_modules\\/",
