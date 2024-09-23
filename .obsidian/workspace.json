@@ -137,12 +137,12 @@
               }
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
-    "width": 318.5,
-    "collapsed": true
+    "width": 318.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -155,7 +155,7 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "9a954c4a74c54d48",
+  "active": "1bc30e82fd7b9190",
   "lastOpenFiles": [
     "Readme.md",
     "CPP/C2CPP/C2CPP.md",
