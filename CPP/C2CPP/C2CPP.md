@@ -71,14 +71,93 @@ ReturnType operator${符号}(params...)
 假设我们需要对如下的虚数类实现其加法运算：
 
 ```CPP
+class Complex {
+private:
+	double real;
+	double image;
 
+public:
+	Complex(double real, double image);
+	std::string to_string(void);
+};
+
+Complex::Complex(double real, double image)
+{
+	this->real = real;
+	this->image = image;
+}
+
+std::string Complex::to_string(void)
+{
+	using namespace std;
+
+	string symbol = "";
+	image >= 0 ? symbol = "+" : symbol = "-";
+
+	string str = std::format("{}{}{}i\r\n", real, symbol, fabs(image));
+	return str;
+}
 ```
 
 ###### 2.1.2.5.1 成员函数实现
 
+基于上述类，可以依
+
 ###### 2.1.2.5.2 友元函数实现
 
+同样的，可以基于上述类和友元函数实现全局函数定义，方法如下：
 
+```CPP
+class Complex {
+private:
+	double real;
+	double image;
+
+public:
+	Complex(double real, double image);
+	std::string to_string(void);
+	friend Complex operator+(const Complex& comp1, const Complex& comp2);
+};
+
+Complex::Complex(double real, double image)
+{
+	this->real = real;
+	this->image = image;
+}
+
+std::string Complex::to_string(void)
+{
+	using namespace std;
+
+	string symbol = "";
+	image >= 0 ? symbol = "+" : symbol = "-";
+
+	string str = std::format("{}{}{}i\r\n", real, symbol, fabs(image));
+	return str;
+}
+
+Complex operator+(const Complex& comp1, const Complex& comp2)
+{
+	return Complex(comp1.real + comp2.real, comp1.image + comp2.image);
+}
+```
+
+##### 2.1.2.6 运算符的隐式和显式调用
+
+直接使用对若干个对象进行运算就是运算符的隐式调用，例如：
+
+```CPP
+Complex comp1 = Complex(1, -1);
+Complex comp2 = Complex(-2, 3);
+
+Complex comp_sum = comp1 + comp2;
+```
+
+而除了显示调用以外，还有如下的隐式调用方式：
+
+```CPP
+
+```
 
 ## 3 新增基本类型
 
