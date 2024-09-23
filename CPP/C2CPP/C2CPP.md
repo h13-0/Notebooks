@@ -42,7 +42,7 @@ ReturnType operator${符号}(params...)
 }
 ```
 
-`${符号}` 为需要重载的运算符。
+`${符号}` 为需要重载的运算符，<font color="#c00000">前后可以加空格</font>。
 
 ##### 2.1.2.4 可重载和不可重载的运算符
 
@@ -105,7 +105,7 @@ std::string Complex::to_string(void)
 
 ###### 2.1.2.5.2 友元函数实现
 
-同样的，可以基于上述类和友元函数实现全局函数定义，方法如下：
+同样的，可以基于上述类和友元函数实现全局函数定义的运算符 `+` 的重载，方法如下：
 
 ```CPP
 class Complex {
@@ -147,8 +147,8 @@ Complex operator+(const Complex& comp1, const Complex& comp2)
 直接使用对若干个对象进行运算就是运算符的隐式调用，例如：
 
 ```CPP
-Complex comp1 = Complex(1, -1);
-Complex comp2 = Complex(-2, 3);
+Complex comp1(1, -1);
+Complex comp2(-2, 3);
 
 Complex comp_sum = comp1 + comp2;
 ```
@@ -156,7 +156,10 @@ Complex comp_sum = comp1 + comp2;
 而除了显示调用以外，还有如下的隐式调用方式：
 
 ```CPP
+Complex comp1(1, -1);
+Complex comp2(-2, 3);
 
+Complex comp_sum = operator+(comp1, comp2);
 ```
 
 ## 3 新增基本类型
