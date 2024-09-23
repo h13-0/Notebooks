@@ -99,13 +99,9 @@ std::string Complex::to_string(void)
 }
 ```
 
-###### 2.1.2.5.1 成员函数实现
+###### 2.1.2.5.1 友元函数实现
 
-基于上述类，可以依
-
-###### 2.1.2.5.2 友元函数实现
-
-同样的，可以基于上述类和友元函数实现全局函数定义的运算符 `+` 的重载，方法如下：
+基于上述类，可以基于上述类和友元函数实现全局函数定义的运算符 `+` 的重载，Demo如下：
 
 ```CPP
 class Complex {
@@ -142,6 +138,32 @@ Complex operator+(const Complex& comp1, const Complex& comp2)
 }
 ```
 
+###### 2.1.2.5.2 成员函数实现
+
+<span style="background:#fff88f"><font color="#c00000">与上述友元函数的运算符重载不同的是，成员函数实现的运算符重载不再需要额外传递一次自身。即成员函数实现的运算符重载会比友元函数少一个函数参数。</font></span>
+<font color="#c00000">如果需要重载的运算符为双目运算符，则只需要设置一个参数作为右侧运算量。</font>
+<font color="#c00000">如果需要重载的运算符为单目运算符，则不需要另外设置参数，使用自身进行运算即可。</font>
+
+因此，可以基于上述类和成员函数实现运算符 `==` 的重载，Demo如下：
+
+```CPP
+class Complex {
+private:
+	double real;
+	double image;
+
+public:
+	Complex(double real, double image);
+	std::string to_string(void);
+	bool operator==(const Complex& comp);
+};
+
+bool Complex::operator==(const Complex& comp)
+{
+	return (this->real == comp.real && this->image == comp.image);
+}
+```
+
 ##### 2.1.2.6 运算符的隐式和显式调用
 
 直接使用对若干个对象进行运算就是运算符的隐式调用，例如：
@@ -159,6 +181,7 @@ Complex comp_sum = comp1 + comp2;
 Complex comp1(1, -1);
 Complex comp2(-2, 3);
 
+// 仅
 Complex comp_sum = operator+(comp1, comp2);
 ```
 
