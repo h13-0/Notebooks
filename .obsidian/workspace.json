@@ -77,7 +77,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 319.5
+    "width": 277.5
   },
   "right": {
     "id": "989a0ed08fe1a7b2",
@@ -155,7 +155,7 @@
       "webpage-html-export:Export Vault to HTML": false
     }
   },
-  "active": "1bc30e82fd7b9190",
+  "active": "7ddc64b2e3c9b5c8",
   "lastOpenFiles": [
     "Readme.md",
     "CPP/C2CPP/C2CPP.md",

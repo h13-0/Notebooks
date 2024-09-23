@@ -181,9 +181,13 @@ Complex comp_sum = comp1 + comp2;
 Complex comp1(1, -1);
 Complex comp2(-2, 3);
 
-// 仅
+// 全局函数重载的显示调用方式：
 Complex comp_sum = operator+(comp1, comp2);
+// 成员函数重载的显示调用方式
+comp1.operator==(comp2);
 ```
+
+<span style="background:#fff88f"><font color="#c00000">需要注意的是，函数重载的方式不同，其对应的显示调用方式也不同。</font></span>
 
 ## 3 新增基本类型
 
