@@ -9,8 +9,6 @@ number headings: auto, first-level 2, max 6, 1.1
 ```toc
 ```
 
-
-
 ## 2 新增基本特性
 
 ### 2.1 面向对象
@@ -21,27 +19,34 @@ number headings: auto, first-level 2, max 6, 1.1
 
 #### 2.1.2 重载运算符
 
-在C++中，运算符重载是一种形式的多态，允许开发者为已有的运算符赋予自定义的行为。运算符重载的实质是函数重载。重载运算符可以是成员函数或全局函数，但必须至少有一个操作数是用户定义的类型。
-重载运算符的规则：
+##### 2.1.2.1 基本定义
+
+在C++中，运算符重载是一种形式的多态，允许开发者为已有的运算符赋予自定义的行为。运算符重载的实质是函数重载。重载运算符可以是<font color="#c00000">成员函数</font><span style="background:#fff88f"><font color="#c00000">或</font></span><font color="#c00000">全局函数(友元函数)</font>，但必须至少有一个操作数是用户定义的类型。
+
+##### 2.1.2.2 运算符重载规则
+
 1. <span style="background:#fff88f"><font color="#c00000">不可定义新的运算符</font></span>。
 2. <span style="background:#fff88f"><font color="#c00000">不可修改现有运算符的操作数数量</font></span>。
 3. **不可改变操作数的求值顺序**。
 4. <span style="background:#fff88f"><font color="#c00000">某些运算符不能被重载</font></span>，如 `.` 、 `::` 、 `?:` 和 `sizeof` 。
 5. <span style="background:#fff88f"><font color="#c00000">大多数运算符可以被重载</font></span>，但有一些特例如赋值运算符 `=` ，应该通常作为类的成员函数来重载。
-6. 
+6. 定义后的运算符功能应与其原先目的相同或相似。
 
-
-函数重载的定义方式：
+##### 2.1.2.3 运算符重载的定义方式
 
 ```CPP
-ReturnType operator ${符号} (params...)
+ReturnType operator${符号}(params...)
 {
 	// Do sth...
 	return ...;
 }
 ```
 
-`${符号}` 为需要重载的运算符。<font color="#c00000">可以重载的</font>运算符有：
+`${符号}` 为需要重载的运算符。
+
+##### 2.1.2.4 可重载和不可重载的运算符
+
+<font color="#c00000">可以重载的</font>运算符有：
 
 | <center>运算符类别</center> | <center>运算符</center>                  |
 | ---------------------- | ------------------------------------- |
@@ -60,6 +65,9 @@ ReturnType operator ${符号} (params...)
 3. 域操作运算符： `::`
 4. 条件运算符： `? :`
 5. 空间计算运算符： `sizeof`
+
+##### 2.1.2.5 重载运算符Demo
+
 
 
 
