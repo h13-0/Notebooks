@@ -60,6 +60,8 @@ number headings: auto, first-level 2, max 6, 1.1
 #### 2.2.1 打包为war包
 
 
+随后Tomcat会自动解压war包。
+
 #### 2.2.2 配置并安装到其他目录
 
 进入Tomcat文件夹，进入 `conf/Catalina/localhost` 文件夹，创建 `${app_name}.xml` 文件(其中 `${app_name}` 为APP的名称)，并填写如下内容：
@@ -71,4 +73,8 @@ number headings: auto, first-level 2, max 6, 1.1
 -->
 <Content path="/${app_name}" docBase="${path}" />
 ```
+
+### 2.3 Tomcat常用配置
+
+
 
