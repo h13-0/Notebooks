@@ -35,16 +35,52 @@ Servlet容器(通常为Tomcat)在接收到http请求后，其会使用如下的�
 
 ![[1681699577344.png]]
 
-## 5 Servlet 代码Demo
+## 5 Servlet Demo
 
-如上一章节所述，Servlet是一套接口，因此需要定义一个class来实现这套接口。该接口要求实现 `service` 方法，其参数为：
+### 5.1 在Java中实现Servlet的服务内容
+
+如上一章节所述，Servlet是一套接口，因此需要定义一个class来实现这套接口。该接口要求实现 `service` 方法，原型为：
 ```java
-service(HttpServletRequest request, HttpServletResponse response)
+protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
 ```
+
 `service` 方法主要需要实现的工作内容为：
+0. 创建一个类，实现 `Servlet` 接口或者继承 `HttpServlet` 或完成其他实现接口的方式。
 1. 从 `request` 中获取http请求的所有参数及信息。
 2. 根据参数生成对应的响应数据。
 3. 将响应数据放入 `response` 对象中。
+随后可得到简单的Servlet类，其代码如下：
+
+```Java
+package indi.h13.servlet;  
+  
+import jakarta.servlet.ServletException;  
+import jakarta.servlet.http.HttpServlet;  
+import jakarta.servlet.http.HttpServletRequest;  
+import jakarta.servlet.http.HttpServletResponse;  
+  
+import java.io.IOException;  
+  
+public class UserServlet extends HttpServlet {  
+    @Override  
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {  
+        String username = req.getParameter("username");  
+        if("root".equals(username)) {  
+            resp.getWriter().println("username is root");  
+        } else {  
+            resp.getWriter().println("username is not root");  
+        }  
+    }  
+}
+```
+
+### 5.2 映射和配置Servlet的请求路径
+
+在完成了Servlet接口的实现后，需要让Tomcat将对应请求转发到该实现中。
+
+
+#### 5.2.1 使用
+随后需要在 `WEB-INF/web.xml` 中映射Servlet的请求路径：
 
 
 
