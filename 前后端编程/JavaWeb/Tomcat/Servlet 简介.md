@@ -84,12 +84,23 @@ public class UserServlet extends HttpServlet {
 随后需要在 `WEB-INF/web.xml` 中映射Servlet的请求路径，其需要在 `web-app` 块下添加如下代码：
 
 ```xml
-
-
-
-
-
-
+<!--  
+1. 配置Servlet类，其配置项及其含义为：  
+        servlet-name: 用于关联请求的映射路径  
+        servlet-class: 完成该请求所需要实例化的Servlet类  
+-->  
+<servlet>  
+    <servlet-name>userServlet</servlet-name>  
+    <servlet-class>indi.h13.servlet.UserServlet</servlet-class>  
+</servlet>  
+  
+<!--  
+2. 配置和完成请求路径和servlet-name之间的映射。  
+-->  
+<servlet-mapping>  
+    <servlet-name>userServlet</servlet-name>  
+    <url-pattern>/isRoot</url-pattern>  
+</servlet-mapping>
 ```
 
 
