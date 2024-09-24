@@ -76,5 +76,12 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ### 2.3 Tomcat常用配置
 
+#### 2.3.1 配置网页的访问账户和密码
+
+例如直接访问Tomcat自带demo的 `http://localhost:8080/manager/html` 时，会有如下提示：
+
+![[chrome_meFwaexx5d.png]]
+
+在默认情况下，Tomcat访问 `manager/html` 
 
 
