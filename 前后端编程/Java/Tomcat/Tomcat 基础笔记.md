@@ -49,7 +49,7 @@ number headings: auto, first-level 2, max 6, 1.1
 </html>
 ```
 
-即可完成一个最基础的Tomcat App，访问效果如下：
+即可完成一个最基础的静态Tomcat App，访问效果如下：
 
 ![[chrome_IJ4YQL8og4.png]]
 
