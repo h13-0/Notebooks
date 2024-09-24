@@ -62,5 +62,13 @@ number headings: auto, first-level 2, max 6, 1.1
 
 #### 2.2.2 配置并安装到其他目录
 
-进入Tomcat文件夹，进入 `conf/Catalina/localhost` 文件夹，创建 `${app_name}$.xml` 文件(其中 `${app_name}` 为APP的名称)，
+进入Tomcat文件夹，进入 `conf/Catalina/localhost` 文件夹，创建 `${app_name}.xml` 文件(其中 `${app_name}` 为APP的名称)，并填写如下内容：
+
+```xml
+<!--
+	path: 项目的上下文路径，即 `http://hostname/path` 的路径
+	docBase: 项目在磁盘中的实际路径
+-->
+<Content path="/${app_name}" docBase="${path}" />
+```
 
