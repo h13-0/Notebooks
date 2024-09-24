@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "前后端编程/Java/Tomcat/Tomcat 基础笔记.md",
+                "file": "前后端编程/Java/Tomcat/Servlet 简介.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "前后端编程/Java/Tomcat/Tomcat 基础笔记.md",
+                "file": "前后端编程/Java/Tomcat/Servlet 简介.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "前后端编程/Java/Tomcat/Tomcat 基础笔记.md",
+                "file": "前后端编程/Java/Tomcat/Servlet 简介.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "前后端编程/Java/Tomcat/Tomcat 基础笔记.md"
+                "file": "前后端编程/Java/Tomcat/Servlet 简介.md"
               }
             }
           }
@@ -157,9 +157,11 @@
   },
   "active": "9a954c4a74c54d48",
   "lastOpenFiles": [
-    "Resources/chrome_1XTies2qnt.png",
-    "前后端编程/Resources/chrome_meFwaexx5d.png",
     "前后端编程/Java/Tomcat/Tomcat 基础笔记.md",
+    "前后端编程/Resources/chrome_1XTies2qnt.png",
+    "前后端编程/Resources/idea64_lN8sQgvqgG.png",
+    "前后端编程/Resources/idea64_KB8AYBflpV.png",
+    "前后端编程/Resources/chrome_meFwaexx5d.png",
     "前后端编程/Java/Tomcat/Servlet 简介.md",
     "CPP/C2CPP/C2CPP.md",
     "Readme.md",
@@ -200,9 +202,6 @@
     "机器学习/Resources/git_ignored/Mamba_YOLO20.pdf",
     "机器学习/Resources/git_ignored/2406.05835v1.pdf",
     "机器学习/Resources/git_ignored/SA-NET2021.pdf",
-    "机器学习/Resources/0008.png",
-    "Resources/WeChat_HcbX72eRbT.png",
-    "Linux驱动开发/Resources/msedge_Mbwk30DDuN.png",
-    "微型计算机原理与接口技术/Resources/Pasted image 20240331171437.png"
+    "机器学习/Resources/0008.png"
   ]
 }

@@ -8,13 +8,12 @@ number headings: auto, first-level 2, max 6, 1.1
 ```toc
 ```
 
-## 2 Tomcat简介
+## 2 Tomcat
+
+### 2.1 Tomcat 简介
 
 
-
-
-
-### 2.1 Tomcat WebAPP结构
+### 2.2 Tomcat WebAPP结构
 
 打开Tomcat的安装目录下的 `webapps/examples` 文件夹，可以看到目录结构如下：
 ![[explorer_tz7cgDnjEk.png]]
@@ -53,16 +52,9 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ![[chrome_IJ4YQL8og4.png]]
 
-### 2.2 Tomcat App打包与部署
+### 2.3 Tomcat App打包与部署
 
-除了上述的直接部署以外，Tomcat还有打包为 `*.war` 包的形式进行部署。
-
-#### 2.2.1 打包为war包
-
-
-随后Tomcat会自动解压war包。
-
-#### 2.2.2 配置并安装到其他目录
+#### 2.3.1 部署到其他目录
 
 进入Tomcat文件夹，进入 `conf/Catalina/localhost` 文件夹，创建 `${app_name}.xml` 文件(其中 `${app_name}` 为APP的名称)，并填写如下内容：
 
@@ -74,9 +66,27 @@ number headings: auto, first-level 2, max 6, 1.1
 <Content path="/${app_name}" docBase="${path}" />
 ```
 
-### 2.3 Tomcat常用配置
+#### 2.3.2 打包为war包并部署
 
-#### 2.3.1 配置网页的访问账户和密码
+除了上述的直接部署以外，Tomcat还有打包为 `*.war` 包的形式进行部署。
+在IDEA软件中进行简单配置即可将项目打包为war包，步骤如下：
+1. `File` -> `Project Structure` -> `Project Settings` -> `Artifacts`
+2. 添加 `Web Application: Archive` 并选定模块即可。
+![[idea64_lN8sQgvqgG.png]]
+3. 编译，即在 `out` 路径下会出现war包
+![[idea64_KB8AYBflpV.png]]
+
+随后将生成的war包保存到Tomcat的 `webapps/ROOT` 文件夹下，在 `conf/server.xml` 的 `Host` 块中添加如下代码即可部署：
+
+```xml
+<Context path="/${app_name}" docBase="${TomcatPath}/ROOT/xx.war" reloadable="true"></Context>
+```
+
+随后Tomcat在启动时会自动解压该war包。
+
+### 2.4 Tomcat常用配置
+
+#### 2.4.1 配置网页的访问账户和密码
 
 例如直接访问Tomcat自带demo的 `http://localhost:8080/manager/html` 时，会有如下提示：
 
