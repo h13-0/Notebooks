@@ -53,4 +53,14 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ![[chrome_IJ4YQL8og4.png]]
 
+### 2.2 Tomcat App打包与部署
+
+除了上述的直接部署以外，Tomcat还有打包为 `*.war` 包的形式进行部署。
+
+#### 2.2.1 打包为war包
+
+
+#### 2.2.2 配置并安装到其他目录
+
+进入Tomcat文件夹，进入 `conf/Catalina/localhost` 文件夹，创建 `${app_name}$.xml` 文件(其中 `${app_name}` 为APP的名称)，
 
