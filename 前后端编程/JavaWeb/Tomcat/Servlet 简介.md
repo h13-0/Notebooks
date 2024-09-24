@@ -76,11 +76,21 @@ public class UserServlet extends HttpServlet {
 
 ### 5.2 映射和配置Servlet的请求路径
 
-在完成了Servlet接口的实现后，需要让Tomcat将对应请求转发到该实现中。
+在完成了Servlet接口的实现后，需要让Tomcat将对应请求转发到对应的Servlet实例中。
+建立映射有如下两种方式，通常采用第二种注解的方式。
+
+#### 5.2.1 修改配置文件
+
+随后需要在 `WEB-INF/web.xml` 中映射Servlet的请求路径，其需要在 `web-app` 块下添加如下代码：
+
+```xml
 
 
-#### 5.2.1 使用
-随后需要在 `WEB-INF/web.xml` 中映射Servlet的请求路径：
+
+
+
+
+```
 
 
 
