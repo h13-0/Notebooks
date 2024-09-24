@@ -6628,19 +6628,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 513,
+      "wordCount": 574,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 1.71,
-      "characterCount": 1642,
-      "nonWhitespaceCharacterCount": 1467,
-      "readingTimeInMinutes": 1.2104528301886792,
+      "pageCount": 1.9133333333333333,
+      "characterCount": 2104,
+      "nonWhitespaceCharacterCount": 1885,
+      "readingTimeInMinutes": 1.378566037735849,
       "linkCount": 0,
-      "embedCount": 3,
+      "embedCount": 4,
       "aliases": null,
       "createdDate": 1725873229377,
-      "modifiedDate": 1727163665443,
-      "sizeInBytes": 2622
+      "modifiedDate": 1727164012867,
+      "sizeInBytes": 3160
     },
     "前后端编程/Java/Tomcat/Servlet 简介.md": {
       "isCountable": true,
@@ -8027,6 +8027,24 @@
       "createdDate": 1727163250710,
       "modifiedDate": 1727163250715,
       "sizeInBytes": 44504
+    },
+    "Resources/chrome_1XTies2qnt.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1727164004072,
+      "modifiedDate": 1727164004073,
+      "sizeInBytes": 217924
     }
   }
 }

@@ -82,6 +82,18 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ![[chrome_meFwaexx5d.png]]
 
-在默认情况下，Tomcat访问 `manager/html` 
+在默认情况下，Tomcat并未预置访问 `manager/html` 所需要的用户，因此需要在 `conf/tomcat-users.xml` 中的 `tomcat-users` 区块内部配置如下内容：
 
+```xml
+  <role rolename="admin-gui"/>
+  <role rolename="admin-script"/>
+  <role rolename="manager-gui"/>
+  <role rolename="manager-script"/>
+  <role rolename="manager-jmx"/>
+  <role rolename="manager-status"/>
+  <user username="admin" password="admin" roles="admin-gui, admin-script, manager-gui, manager-script, manager-jmx, manager-status"/>
+```
 
+随后即可成功访问：
+
+![[chrome_1XTies2qnt.png]]
