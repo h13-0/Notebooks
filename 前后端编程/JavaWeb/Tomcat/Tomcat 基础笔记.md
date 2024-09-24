@@ -54,7 +54,11 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ### 2.3 Tomcat App打包与部署
 
-#### 2.3.1 部署到其他目录
+#### 2.3.1 Tomcat Demo
+
+Tomcat Demo见[[Servlet 简介|Servlet]]章节。
+
+#### 2.3.2 部署到其他目录
 
 进入Tomcat文件夹，进入 `conf/Catalina/localhost` 文件夹，创建 `${app_name}.xml` 文件(其中 `${app_name}` 为APP的名称)，并填写如下内容：
 
@@ -66,7 +70,7 @@ number headings: auto, first-level 2, max 6, 1.1
 <Content path="/${app_name}" docBase="${path}" />
 ```
 
-#### 2.3.2 打包为war包并部署
+#### 2.3.3 打包为war包并部署
 
 除了上述的直接部署以外，Tomcat还有打包为 `*.war` 包的形式进行部署。
 在IDEA软件中进行简单配置即可将项目打包为war包，步骤如下：
