@@ -127,6 +127,7 @@ public class UserServlet extends HttpServlet {
     }  
 }
 ```
+(记得写斜线 `/` )
 
 ### 5.3 测试与HTTP请求
 
