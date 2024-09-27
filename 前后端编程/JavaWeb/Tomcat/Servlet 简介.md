@@ -131,3 +131,5 @@ public class UserServlet extends HttpServlet {
 在启动Tomcat App之后，使用Postman发送如下请求，即可验证上述实现成功运行。
 
 ![[Postman_KuLBO6HN6d.png]]
+
+## 6 Servlet
