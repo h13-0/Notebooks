@@ -294,6 +294,13 @@ responce.setHeader("Content-Type", "image/jpeg");
 
 则会把所有后缀为 `.txt` 的请求均映射到对应接口。<span style="background:#fff88f"><font color="#c00000">但是需要注意</font></span> `*.txt` <span style="background:#fff88f"><font color="#c00000">前面不可加</font></span> `/` ，因为 `/*` 会导致歧义。
 
+### 7.2 配置Servlet的生命周期
+
+本子章节应当阅读完[[Servlet 简介#8 2 1 Servlet默认情况下的生命周期]]后再进行学习。
+
+
+
+
 ## 8 Servlet的生命周期
 
 ### 8.1 Servlet生命周期相关方法的定义或重写
@@ -348,11 +355,47 @@ public class ServletLifeCycle extends HttpServlet {
 }
 ```
 
-### 8.2 Servlet的生命周期
+### 8.2 Servlet的生命周期及其控制
 
-编译并执行，会发现：
+#### 8.2.1 Servlet默认情况下的生命周期
+
+编译并执行，会发现<font color="#c00000">在默认情况下</font>：
 1. 实例化和初始化会在该服务第一次被请求时调用，顺序是先构造后初始化。
 2. `service` 方法会在每一次被请求时调用。
 3. `destory` 方法仅会在Tomcat退出时调用。
 
 同时，Servlet为了能够同时响应和服务多个客户端，<span style="background:#fff88f"><font color="#c00000">Servlet将被存放于堆中</font></span>，而非各个线程的栈中。<span style="background:#fff88f"><font color="#c00000">而</font></span> `service` <span style="background:#fff88f"><font color="#c00000">方法会在每个线程的栈中执行</font></span>。
+
+<span style="background:#fff88f"><font color="#c00000">因此类的成员变量会被多个线程和客户共享</font></span>，<span style="background:#fff88f"><font color="#c00000">而</font></span> `service` <span style="background:#fff88f"><font color="#c00000">方法中的变量则只会被每个线程或客户独占</font></span>。因此Servlet的类内对象应当注意并发控制，<u><span style="background:#fff88f"><font color="#c00000">同时强烈不建议使用可写变量(即仅使用只读变量)</font></span></u>。
+
+#### 8.2.2 将Servlet配置为Tomcat启动时即实例化
+
+在上一章节中提到，Servlet在默认情况下会在该服务第一次被请求时实例化。而若需要在Tomcat启动时就实例化则需要按照如下方式配置：
+
+##### 注解方式配置
+
+```Java
+
+```
+
+
+
+`web.xml` 配置方式：在 `servlet` 块中添加 `load-on-startup` 属性，并将该属性配置为一个正整数即可(默认值为 `-1` )。 ^9o4isg
+
+```xml
+<servlet>  
+    <servlet-name>userServlet</servlet-name>  
+    <servlet-class>indi.h13.servlet.UserServlet</servlet-class>  
+	<!-- 配置启动时实例化 -->
+	<load-on-startup>1</load-on-startup>
+</servlet>  
+
+<servlet-mapping>  
+    <servlet-name>userServlet</servlet-name>  
+    <url-pattern>/isRoot/</url-pattern>  
+</servlet-mapping>
+```
+
+
+
+
