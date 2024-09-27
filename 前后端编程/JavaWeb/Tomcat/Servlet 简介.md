@@ -127,7 +127,11 @@ public class UserServlet extends HttpServlet {
     }  
 }
 ```
-(记得写斜线 `/` )
+
+注意点：
+1. 记得写斜线 `/` ，不然启动会报错
+2. 上述注解的默认参数名为 `value` 或 `urlPatterns` (这两个参数名互为别名，等价)，即 `@WebServlet(value="/isRoot")` 与上述等价。
+3. <font color="#c00000">上述参数名的类型为数组类型</font>，<span style="background:#fff88f"><font color="#c00000">因此支持直接定义多个映射路径</font></span>：`@WebServlet(value={ "/isRoot", "isRootV1", "isRootV2" })` (大部分情况并无此需求)
 
 ### 5.3 测试与HTTP请求
 
@@ -289,3 +293,5 @@ responce.setHeader("Content-Type", "image/jpeg");
 ```
 
 则会把所有后缀为 `.txt` 的请求均映射到对应接口。<span style="background:#fff88f"><font color="#c00000">但是需要注意</font></span> `*.txt` <span style="background:#fff88f"><font color="#c00000">前面不可加</font></span> `/` ，因为 `/*` 会导致歧义。
+
+## 8 Servlet的生命周期
