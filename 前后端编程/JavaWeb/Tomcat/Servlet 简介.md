@@ -295,3 +295,17 @@ responce.setHeader("Content-Type", "image/jpeg");
 则会把所有后缀为 `.txt` 的请求均映射到对应接口。<span style="background:#fff88f"><font color="#c00000">但是需要注意</font></span> `*.txt` <span style="background:#fff88f"><font color="#c00000">前面不可加</font></span> `/` ，因为 `/*` 会导致歧义。
 
 ## 8 Servlet的生命周期
+
+Servlet的生命大致有如下若干阶段：
+1. 实例化阶段，由构造器调用，可定义于构造方法。
+2. 初始化阶段，定义于 `Servlet.init` 方法。
+3. 接受请求并服务阶段，定义于 `Servlet.service` 方法。
+4. 销毁阶段，定义于 `Servlet.destory` 方法。
+上述各方法的定义方式如下：
+
+```Java
+
+
+
+
+```
