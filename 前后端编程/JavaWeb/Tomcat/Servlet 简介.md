@@ -81,6 +81,8 @@ public class UserServlet extends HttpServlet {
 
 #### 5.2.1 修改配置文件方式
 
+##### 5.2.1.1 基础使用
+
 随后需要在 `WEB-INF/web.xml` 中映射Servlet的请求路径，其需要在 `web-app` 块下添加如下代码：
 
 ```xml
@@ -102,6 +104,12 @@ public class UserServlet extends HttpServlet {
     <url-pattern>/isRoot</url-pattern>  
 </servlet-mapping>
 ```
+
+##### 5.2.1.2 拓展
+
+在上述代码中，Tomcat完成了如下工作：
+1. 通过指定的 `url-pattern` 找到了响应该url的 `servlet`
+1. 一个Servlet
 
 #### 5.2.2 注解方式
 
