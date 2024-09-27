@@ -296,6 +296,8 @@ responce.setHeader("Content-Type", "image/jpeg");
 
 ## 8 Servlet的生命周期
 
+### 8.1 Servlet生命周期相关方法的定义或重写
+
 Servlet的生命大致有如下若干阶段：
 1. 实例化阶段，由构造器调用，可定义于构造方法。
 2. 初始化阶段，定义于 `Servlet.init` 方法。
@@ -304,8 +306,53 @@ Servlet的生命大致有如下若干阶段：
 上述各方法的定义方式如下：
 
 ```Java
-
-
-
-
+@WebServlet("/ServletLifeCycleTest")  
+public class ServletLifeCycle extends HttpServlet {  
+    /**  
+     * @brief 重写实例化方法  
+     */  
+    public ServletLifeCycle() {  
+        System.out.println("ServletLifeCycle obj created.");  
+    }  
+  
+    /**  
+     * @brief 重写初始化方法  
+     * @throws ServletException  
+     * @note 注意需要重写的是无参数的 `init` 方法  
+     */  
+    @Override  
+    public void init() throws ServletException {  
+        super.init();  
+        System.out.println("ServletLifeCycle obj inited.");  
+    }  
+  
+    /**  
+     * @brief 重写service方法  
+     * @param req  
+     * @param resp  
+     * @throws ServletException  
+     * @throws IOException  
+     */    @Override  
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {  
+        System.out.println("ServletLifeCycle.service() has been executed.");  
+    }  
+  
+    /**  
+     * @brief 重写销毁方法  
+     */  
+    @Override  
+    public void destroy() {  
+        super.destroy();  
+        System.out.println("ServletLifeCycle obj has been destroyed.");  
+    }  
+}
 ```
+
+### 8.2 Servlet的生命周期
+
+编译并执行，会发现：
+1. 实例化和初始化会在该服务第一次被请求时调用，顺序是先构造后初始化。
+2. `service` 方法会在每一次被请求时调用。
+3. `destory` 方法仅会在Tomcat退出时调用。
+
+同时，Servlet为了能够同时响应和服务多个客户端，<span style="background:#fff88f"><font color="#c00000">Servlet将被存放于堆中</font></span>，而非各个线程的栈中。<span style="background:#fff88f"><font color="#c00000">而</font></span> `service` <span style="background:#fff88f"><font color="#c00000">方法会在每个线程的栈中执行</font></span>。
