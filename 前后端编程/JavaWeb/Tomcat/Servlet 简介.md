@@ -103,6 +103,8 @@ public class UserServlet extends HttpServlet {
 </servlet-mapping>
 ```
 
+更多特性详见[[Servlet 简介#7 1 url-pattern的相关写法]]。
+
 #### 5.2.2 注解方式
 
 使用注解方式进行映射配置要求：
@@ -169,10 +171,14 @@ responce.setHeader("Content-Type", "image/jpeg");
 
 ## 7 web.xml的详细讲解
 
-### 7.1 
+### 7.1 url-pattern的相关特性
 
+#### 7.1.1 url-pattern的多对一精确匹配
 
-在上述代码中，Tomcat完成了如下工作：
+在前述章节中介绍了如下的url-pattern配置方法：
+![[Servlet 简介#5 2 1 修改配置文件方式]]
+
+而在上述代码中，Tomcat完成了如下工作：
 1. 通过指定的 `url-pattern` 找到了响应该url的 `servlet-name`
 2. 使用 `servlet-name` 找到了响应该请求需要实例化的类( `servlet-class` )
 
@@ -227,3 +233,9 @@ responce.setHeader("Content-Type", "image/jpeg");
 <span style="background:#fff88f"><font color="#c00000">综上，基本规则如下</font></span>：
 1. 一个 `servlet-name` 可以对应多个 `url-pattern` ，反之不可。
 2. 一个 `servlet` 标签可以对应多个 `servlet-mapping` ，反之不可。
+
+#### 7.1.2 url-pattern的多对一模糊匹配
+
+
+
+
