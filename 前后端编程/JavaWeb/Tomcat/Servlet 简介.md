@@ -132,4 +132,6 @@ public class UserServlet extends HttpServlet {
 
 ![[Postman_KuLBO6HN6d.png]]
 
-## 6 Servlet
+## 6 Servlet库的引入
+
+Servlet APP的开发依赖于jar库，具体的库为 `servlet-api.jar` ，存放于Tomcat的 `lib\` 下。在开发
