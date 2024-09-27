@@ -255,5 +255,36 @@ responce.setHeader("Content-Type", "image/jpeg");
 ```
 
 则会匹配 `/isRoot/` 下除了 `*.jsp` 的所有路径，即：
--[] 
+- `localhost/isRoot/aaa` -> 可被匹配
+- `localhost/isRoot/aaa.jsp` -> <font color="#c00000">不可匹配</font>
 
+而：
+
+```xml
+<servlet>  
+    <servlet-name>userServlet</servlet-name>  
+    <servlet-class>indi.h13.servlet.UserServlet</servlet-class>  
+</servlet>  
+
+<servlet-mapping>  
+    <servlet-name>userServlet</servlet-name>  
+    <url-pattern>/isRoot/*</url-pattern>  
+</servlet-mapping>
+```
+
+则会同时匹配 `localhost/isRoot/aaa` 和 `localhost/isRoot/aaa.jsp` 。
+<span style="background:#fff88f"><font color="#c00000">同样的，模糊匹配也可以用于模糊匹配固定的后缀路径</font></span>：
+
+```xml
+<servlet>  
+    <servlet-name>userServlet</servlet-name>  
+    <servlet-class>indi.h13.servlet.UserServlet</servlet-class>  
+</servlet>  
+
+<servlet-mapping>  
+    <servlet-name>userServlet</servlet-name>  
+    <url-pattern>*.txt</url-pattern>  
+</servlet-mapping>
+```
+
+则会把所有后缀为 `.txt` 的请求均映射到对应接口。<span style="background:#fff88f"><font color="#c00000">但是需要注意</font></span> `*.txt` <span style="background:#fff88f"><font color="#c00000">前面不可加</font></span> `/` ，因为 `/*` 会导致歧义。
