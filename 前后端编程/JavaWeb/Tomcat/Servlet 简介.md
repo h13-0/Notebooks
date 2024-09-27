@@ -79,7 +79,7 @@ public class UserServlet extends HttpServlet {
 在完成了Servlet接口的实现后，需要让Tomcat将对应请求转发到对应的Servlet实例中。
 建立映射有如下两种方式，通常采用第二种注解的方式。
 
-#### 5.2.1 修改配置文件
+#### 5.2.1 修改配置文件方式
 
 随后需要在 `WEB-INF/web.xml` 中映射Servlet的请求路径，其需要在 `web-app` 块下添加如下代码：
 
@@ -103,11 +103,31 @@ public class UserServlet extends HttpServlet {
 </servlet-mapping>
 ```
 
+#### 5.2.2 注解方式
 
+使用注解方式进行映射配置要求：
+- Tomcat版本大于等于7.0
+- Servlet版本大于等于3.0
+随后只需要在接口类前使用如下的注解即可完成映射：
 
+```Java
+@WebServlet("/isRoot")
+```
 
+即：
 
+```Java
+@WebServlet("/isRoot")
+public class UserServlet extends HttpServlet {  
+    @Override  
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {  
+	    // ...
+    }  
+}
+```
 
+### 5.3 测试与HTTP请求
 
+在启动Tomcat App之后，使用Postman发送如下请求，即可验证上述实现成功运行。
 
-
+![[Postman_KuLBO6HN6d.png]]
