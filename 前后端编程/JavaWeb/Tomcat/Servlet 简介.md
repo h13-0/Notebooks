@@ -236,6 +236,24 @@ responce.setHeader("Content-Type", "image/jpeg");
 
 #### 7.1.2 url-pattern的多对一模糊匹配
 
+模糊匹配主要有如下两种规则：
+1. `/` ：匹配全部，但是不包含jsp文件
+2. `/*` ：匹配全部，包含jsp文件
 
+例如：
 
+```xml
+<servlet>  
+    <servlet-name>userServlet</servlet-name>  
+    <servlet-class>indi.h13.servlet.UserServlet</servlet-class>  
+</servlet>  
+
+<servlet-mapping>  
+    <servlet-name>userServlet</servlet-name>  
+    <url-pattern>/isRoot/</url-pattern>  
+</servlet-mapping>
+```
+
+则会匹配 `/isRoot/` 下除了 `*.jsp` 的所有路径，即：
+-[] 
 
