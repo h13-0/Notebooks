@@ -132,6 +132,21 @@ public class UserServlet extends HttpServlet {
 
 ![[Postman_KuLBO6HN6d.png]]
 
-## 6 Servlet库的引入
+### 5.4 \[附加\]Servlet库的引入
 
-Servlet APP的开发依赖于jar库，具体的库为 `servlet-api.jar` ，存放于Tomcat的 `lib\` 下。在开发
+Servlet APP的开发依赖于jar库，具体的库为 `servlet-api.jar` ，存放于Tomcat的 `lib\` 下。
+在使用IDEA开发时，引入Tomcat Server时就已经引入对应的jar包。而手动引入jar包的方式和普通开发一致。
+
+![[idea64_bQp8ojUQcR.png]]
+
+而在项目依赖中可以可看到Tomcat的作用域为 `provided` ，<span style="background:#fff88f"><font color="#c00000">其含义为编译时不携带该依赖</font></span>(部署时已提供)。
+
+![[idea64_SuSeW5L51D.png]]
+
+
+
+
+
+
+
+
