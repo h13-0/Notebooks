@@ -143,10 +143,27 @@ Servlet APP的开发依赖于jar库，具体的库为 `servlet-api.jar` ，存�
 
 ![[idea64_SuSeW5L51D.png]]
 
+## 6 Servlet常用API
 
+### 6.1 设置HTTP Header
 
+HTTP Header中常见的属性有：
+- 通过 `Content-Length` 获取资源大小
+- 通过 `Content-Type` 获取资源类型，<span style="background:#fff88f"><font color="#c00000">应当为MIME格式</font></span>
+- 通过 `Last-Modified` 获取资源最后修改时间
 
+而在Servlet中可以使用如下的方法设置HTTP Header：
 
+```Java
+responce.setHeader("key", "value");
+```
 
+例如：
+
+```Java
+responce.setHeader("Content-Type", "image/jpeg");
+```
+
+<span style="background:#fff88f"><font color="#c00000">而在基于Tomcat的SpringBoot中也是这样配置的</font></span>。
 
 
