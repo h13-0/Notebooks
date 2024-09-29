@@ -373,10 +373,6 @@ public class ServletLifeCycle extends HttpServlet {
 ##### 8.2.2.1 在web.xml中配置
 
 `web.xml` 配置方式：在 `servlet` 块中添加 `load-on-startup` 属性，并将该属性配置为一个正整数即可(默认值为 `-1` ，意味着延迟加载)。
-注意：
-1. <span style="background:#fff88f"><font color="#c00000">该正整数是在Servlet中实例化的顺序</font></span>。
-2. 当出现相同整数的类，则Servlet会自动协调被实例化的顺序。
-3. 该正整数不需要连续，例如该属性只有1、2、4、6，则也会被正常按顺序执行(本质是sort)。
 
 ```xml
 <servlet>  
@@ -394,15 +390,28 @@ public class ServletLifeCycle extends HttpServlet {
 
 ##### 8.2.2.2 注解方式配置
 
-在 `@WebServlet()` 中添加 `LoadOnStartup` 属性，即：
+在 `@WebServlet()` 中添加 `loadOnStartup` 属性，即：
 
 ```Java
 // 基础配置
-@WebServlet(LoadOnStartup = 1);
+@WebServlet(loadOnStartup = 1);
 
 // 多属性配置
-@WebServlet(value="/isRoot", LoadOnStartup = 1);
+@WebServlet(value="/isRoot", loadOnStartup = 1);
 ```
 
+##### 8.2.2.3 关于load-on-startup的取值
+
+关于 `load-on-startup` 的取值：
+1. `load-on-startup` 的默认值为 `-1` ，意味着延迟加载。即第一次被调用时加载。
+2. <span style="background:#fff88f"><font color="#c00000">该正整数是在Servlet中实例化的顺序</font></span>。
+3. 当出现相同整数的类，则Servlet会自动协调被实例化的顺序。
+4. 该正整数不需要连续，例如该属性只有1、2、4、6，则也会被正常按顺序执行(本质是sort)。
+5. Tomcat中已经被占用的值有：
+	- 1
+	- 3
+	- 4(可选)
+	- 5(可选)
+	<font color="#c00000">因此建议自定义序号时，应当从大于5的值开始</font>(不过一般不会出现问题)。
 
 
