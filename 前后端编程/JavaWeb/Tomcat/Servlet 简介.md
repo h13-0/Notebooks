@@ -297,9 +297,7 @@ responce.setHeader("Content-Type", "image/jpeg");
 ### 7.2 配置Servlet的生命周期
 
 本子章节应当阅读完[[Servlet 简介#8 2 1 Servlet默认情况下的生命周期]]后再进行学习。
-
-
-
+![[Servlet 简介#8 2 2 2 在web xml中配置]]
 
 ## 8 Servlet的生命周期
 
@@ -372,15 +370,15 @@ public class ServletLifeCycle extends HttpServlet {
 
 在上一章节中提到，Servlet在默认情况下会在该服务第一次被请求时实例化。而若需要在Tomcat启动时就实例化则需要按照如下方式配置：
 
-##### 注解方式配置
+##### 8.2.2.1 注解方式配置
 
 ```Java
 
 ```
 
+##### 8.2.2.2 在web.xml中配置
 
-
-`web.xml` 配置方式：在 `servlet` 块中添加 `load-on-startup` 属性，并将该属性配置为一个正整数即可(默认值为 `-1` )。 ^9o4isg
+`web.xml` 配置方式：在 `servlet` 块中添加 `load-on-startup` 属性，并将该属性配置为一个正整数即可(默认值为 `-1` )。
 
 ```xml
 <servlet>  
