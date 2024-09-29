@@ -297,7 +297,7 @@ responce.setHeader("Content-Type", "image/jpeg");
 ### 7.2 配置Servlet的生命周期
 
 本子章节应当阅读完[[Servlet 简介#8 2 1 Servlet默认情况下的生命周期]]后再进行学习。
-![[Servlet 简介#8 2 2 2 在web xml中配置]]
+![[Servlet 简介#8 2 2 1 在web xml中配置]]
 
 ## 8 Servlet的生命周期
 
@@ -370,21 +370,19 @@ public class ServletLifeCycle extends HttpServlet {
 
 在上一章节中提到，Servlet在默认情况下会在该服务第一次被请求时实例化。而若需要在Tomcat启动时就实例化则需要按照如下方式配置：
 
-##### 8.2.2.1 注解方式配置
+##### 8.2.2.1 在web.xml中配置
 
-```Java
-
-```
-
-##### 8.2.2.2 在web.xml中配置
-
-`web.xml` 配置方式：在 `servlet` 块中添加 `load-on-startup` 属性，并将该属性配置为一个正整数即可(默认值为 `-1` )。
+`web.xml` 配置方式：在 `servlet` 块中添加 `load-on-startup` 属性，并将该属性配置为一个正整数即可(默认值为 `-1` ，意味着延迟加载)。
+注意：
+1. <span style="background:#fff88f"><font color="#c00000">该正整数是在Servlet中实例化的顺序</font></span>。
+2. 当出现相同整数的类，则Servlet会自动协调被实例化的顺序。
+3. 该正整数不需要连续，例如该属性只有1、2、4、6，则也会被正常按顺序执行(本质是sort)。
 
 ```xml
 <servlet>  
     <servlet-name>userServlet</servlet-name>  
     <servlet-class>indi.h13.servlet.UserServlet</servlet-class>  
-	<!-- 配置启动时实例化 -->
+	<!-- 配置启动时实例化，1表示第一个被实例化 -->
 	<load-on-startup>1</load-on-startup>
 </servlet>  
 
@@ -394,6 +392,17 @@ public class ServletLifeCycle extends HttpServlet {
 </servlet-mapping>
 ```
 
+##### 8.2.2.2 注解方式配置
+
+在 `@WebServlet()` 中添加 `LoadOnStartup` 属性，即：
+
+```Java
+// 基础配置
+@WebServlet(LoadOnStartup = 1);
+
+// 多属性配置
+@WebServlet(value="/isRoot", LoadOnStartup = 1);
+```
 
 
 
