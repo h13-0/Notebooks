@@ -446,3 +446,8 @@ public class ServletLifeCycle extends HttpServlet {
 2. 若没有能够相应该请求的servlet，则 `DefaultServlet` 会去查找该Servlet App下的静态资源路径并转发。
 
 需要注意的是，当后续使用 `SpringMVC` 进行开发时，该 `DefaultServlet` 不再生效。如果有需求需要重新配置并使能 `DefaultServlet` (往往会在非前后端分离的项目中出现该需求)。
+
+## 10 Servlet的继承结构
+
+Tomcat的Servlet提供的若干接口有如下的继承结构：
+- HttpServlet
