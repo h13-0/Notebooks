@@ -414,7 +414,7 @@ public class ServletLifeCycle extends HttpServlet {
 	- 5(可选)
 	<font color="#c00000">因此建议自定义序号时，应当从大于5的值开始</font>(不过一般不会出现问题)。
 
-## 9 default servlet
+## 9 DefaultServlet
 
 查看Tomcat根目录下的 `\conf\web.xml` ，可以看到一个名为default的servlet的相关配置：
 
@@ -440,4 +440,9 @@ public class ServletLifeCycle extends HttpServlet {
     </servlet-mapping>
 ```
 
-其 `url-pattern` 可以匹配所有非 `*.jsp` 路径
+其 `url-pattern` 可以匹配所有非 `*.jsp` 路径。
+当请求发生时，其工作逻辑为：
+1. Tomcat会将各请求路径与所有已实现的 `servlet-mapping` 进行匹配并转发。
+2. 若没有能够相应该请求的servlet，则 `DefaultServlet` 会去查找该Servlet App下的静态资源路径并转发。
+
+需要注意的是，当后续使用 `SpringMVC` 进行开发时，该 `DefaultServlet` 不再生效。如果有需求需要重新配置并使能 `DefaultServlet` (往往会在非前后端分离的项目中出现该需求)。
