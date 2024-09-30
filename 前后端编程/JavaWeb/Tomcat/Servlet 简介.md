@@ -414,4 +414,30 @@ public class ServletLifeCycle extends HttpServlet {
 	- 5(可选)
 	<font color="#c00000">因此建议自定义序号时，应当从大于5的值开始</font>(不过一般不会出现问题)。
 
+## 9 default servlet
 
+查看Tomcat根目录下的 `\conf\web.xml` ，可以看到一个名为default的servlet的相关配置：
+
+```xml
+    <servlet>
+        <servlet-name>default</servlet-name>
+        <servlet-class>org.apache.catalina.servlets.DefaultServlet</servlet-class>
+        <init-param>
+            <param-name>debug</param-name>
+            <param-value>0</param-value>
+        </init-param>
+        <init-param>
+            <param-name>listings</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <!-- The mapping for the default servlet -->
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+```
+
+其 `url-pattern` 可以匹配所有非 `*.jsp` 路径
