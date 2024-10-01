@@ -76,19 +76,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 1173,
+      "wordCount": 1315,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 3.91,
-      "characterCount": 3010,
-      "nonWhitespaceCharacterCount": 2611,
-      "readingTimeInMinutes": 2.665245283018868,
+      "pageCount": 4.383333333333334,
+      "characterCount": 3441,
+      "nonWhitespaceCharacterCount": 2961,
+      "readingTimeInMinutes": 3.00422641509434,
       "linkCount": 0,
       "embedCount": 0,
       "aliases": null,
       "createdDate": 1727015346272,
-      "modifiedDate": 1727773047320,
-      "sizeInBytes": 5202
+      "modifiedDate": 1727773318460,
+      "sizeInBytes": 5867
     },
     "计算机网络/基础应试学习/第六章 应用层/第六章 应用层.md": {
       "isCountable": true,
@@ -7812,24 +7812,6 @@
       "modifiedDate": 1727686767655,
       "sizeInBytes": 0
     },
-    "Java/Java语言基础/未命名.md": {
-      "isCountable": true,
-      "isDirectory": false,
-      "noteCount": 1,
-      "wordCount": 0,
-      "wordCountTowardGoal": 0,
-      "wordGoal": null,
-      "pageCount": 0,
-      "characterCount": 0,
-      "nonWhitespaceCharacterCount": 0,
-      "readingTimeInMinutes": 0,
-      "linkCount": 0,
-      "embedCount": 0,
-      "aliases": null,
-      "createdDate": 1727686832541,
-      "modifiedDate": 1727686832541,
-      "sizeInBytes": 0
-    },
     "Math/最大公约数、最小公倍数.md": {
       "isCountable": true,
       "isDirectory": false,
@@ -8207,6 +8189,24 @@
       "createdDate": 1713204230576,
       "modifiedDate": 1715273142332,
       "sizeInBytes": 216
+    },
+    "Java/Java语言基础/Java语言基础.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 42,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0.14,
+      "characterCount": 99,
+      "nonWhitespaceCharacterCount": 68,
+      "readingTimeInMinutes": 0.09464150943396225,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1727686832541,
+      "modifiedDate": 1727773645941,
+      "sizeInBytes": 227
     }
   }
 }
