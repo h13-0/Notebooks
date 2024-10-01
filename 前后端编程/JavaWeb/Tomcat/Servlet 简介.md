@@ -635,7 +635,8 @@ public void service(ServletRequest req, ServletResponse res) throws ServletExcep
 	1. Servlet被Tomcat调用 `public void service(ServletRequest req, ServletResponse res)` 方法。
 	2. 在该方法中会将 `ServletRequest` 和 `ServletResponse` 分别<font color="#c00000">强制转换</font>为 `HttpServletRequest` 和 `HttpServletResponse` 类型(<font color="#c00000">因为前者是后者的父类</font>)。
 	3. 随后调用 `protected void service(HttpServletRequest req, HttpServletResponse resp)` 方法。
-
+- `protected void service(HttpServletRequest req, HttpServletResponse resp)` 方法的主要功能为：
+	- 
 
 ## 11 ServletConfig
 
