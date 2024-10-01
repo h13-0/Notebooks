@@ -554,7 +554,12 @@ public void init() throws ServletException {
 }  
 ```
 
-而含参的 `init(ServletConfig config)` 的本质就是转存参数，然后调用无参版本初始化。
+而含参的 `public void init(ServletConfig config)` 的本质就是转存参数，然后调用无参版本初始化(即 `public void init()` )。
+
+<span style="background:#fff88f"><font color="#c00000">需要注意的是，当开发者通过GenericServlet实现Servlet时，应当优先考虑重写无参版本的初始化方法</font></span>。因为：
+0. 含参版本的初始化通常由Tomcat调用，在Tomcat初始化该类时会将配置文件中设置的参数传递进去。
+1. 而 `GenericServlet` 实现的含参初始化已经完成参数拷贝的工作(存入 `this.config` )，随后并调用无参的初始化。
+2. 若用户选择重写含参初始化时，需要手动完成存入 `this.config` 的工作，而后续或从前的版本是否仍使用的是 `this.config` 这个变量并无强制性规定，可能随版本而发生改变。
 
 
 
