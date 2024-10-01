@@ -452,4 +452,5 @@ public class ServletLifeCycle extends HttpServlet {
 Tomcat的Servlet提供的若干开发接口有如下的继承结构：
 - 抽象类 `HttpServlet` 拓展了 `GenericServlet` ：
 	- 抽象类 `GenericServlet` 实现了 `Servlet` 、 `ServletConfig` 、 `Serializable` 等接口。
-		- 
+		- `Servlet` 接口定义了如下的方法：
+			- ``
