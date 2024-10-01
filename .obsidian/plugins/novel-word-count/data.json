@@ -6514,19 +6514,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 4181,
+      "wordCount": 4222,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 13.936666666666667,
-      "characterCount": 19446,
-      "nonWhitespaceCharacterCount": 16153,
-      "readingTimeInMinutes": 10.220716981132075,
+      "pageCount": 14.073333333333334,
+      "characterCount": 19625,
+      "nonWhitespaceCharacterCount": 16314,
+      "readingTimeInMinutes": 10.324,
       "linkCount": 6,
-      "embedCount": 6,
+      "embedCount": 7,
       "aliases": null,
       "createdDate": 1726840963796,
-      "modifiedDate": 1727801250380,
-      "sizeInBytes": 26280,
+      "modifiedDate": 1727802510428,
+      "sizeInBytes": 26525,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -8252,6 +8252,24 @@
       "createdDate": 1713204230576,
       "modifiedDate": 1715273142332,
       "sizeInBytes": 216
+    },
+    "前后端编程/Resources/0001.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1727802106150,
+      "modifiedDate": 1727802106150,
+      "sizeInBytes": 129726
     }
   }
 }

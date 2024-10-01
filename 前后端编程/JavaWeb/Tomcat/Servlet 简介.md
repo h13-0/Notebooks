@@ -478,6 +478,8 @@ Tomcat的Servlet提供的若干开发接口有如下的继承结构：
 
 其继承关系图解如下图所示：
 
+![[0001.png]]
+
 ### 10.2 GenericServlet的实现详解
 
 如上一章节所述，抽象类 `GenericServlet` 实现了 `Servlet` 、 `ServletConfig` 、 `Serializable` 等接口的<font color="#c00000">大部分</font>方法(除了 `service` 方法)。<font color="#c00000">本类侧重于除了Service方法以外的方法的处理</font>。
@@ -638,8 +640,12 @@ public void service(ServletRequest req, ServletResponse res) throws ServletExcep
 	2. 在该方法中会将 `ServletRequest` 和 `ServletResponse` 分别<font color="#c00000">强制转换</font>为 `HttpServletRequest` 和 `HttpServletResponse` 类型(<font color="#c00000">因为前者是后者的父类</font>)。
 	3. 随后调用 `protected void service(HttpServletRequest req, HttpServletResponse resp)` 方法。
 - 关于 `protected void service(HttpServletRequest req, HttpServletResponse resp)` 方法：
-	- <font color="#c00000">当基于HttpServlet开发Servlet时，需要重载的方法就是该方法</font>。
+	- <font color="#c00000">前文Demo中基于HttpServlet开发Servlet时，需要重载的方法就是该方法</font>。
 	- 因此HttpServlet自带的service方法在某种意义上算是一个Demo或一个default方法。
+
+因此若需要基于 `HttpServlet` 进行开发时，<span style="background:#fff88f"><font color="#c00000">通常有两种选择</font></span>：
+1. 重写 `service` 方法
+2. 重写 `doGet` 、 `doPost` ...方法。
 
 ## 11 ServletConfig
 
