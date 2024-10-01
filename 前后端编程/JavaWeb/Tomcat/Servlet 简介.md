@@ -449,15 +449,25 @@ public class ServletLifeCycle extends HttpServlet {
 
 ## 10 Servlet的继承结构
 
+### 10.1 Servlet的大致继承结构
+
 Tomcat的Servlet提供的若干开发接口有如下的继承结构：
 - 抽象类 `HttpServlet` 拓展了 `GenericServlet` ：
 	- 抽象类 `GenericServlet` 实现了 `Servlet` 、 `ServletConfig` 、 `Serializable` 等接口。
 		- `Servlet` 接口定义了如下的方法：
 			- `void init(ServletConfig var1) throws ServletException;`
+				- 初始化方法
+				- 在Tomcat构造完成后由Tomcat调用，传入的参数是 `ServletConfig` 对象。详见[[Servlet 简介#11 ServletConfig]]
 			- `ServletConfig getServletConfig();`
+				- 获取 `ServletConfig` 对象的方法。
+				- 详见[[Servlet 简介#11 ServletConfig]]
 			- `void service(ServletRequest var1, ServletResponse var2) throws ServletException, IOException;`
+				- 接收用户请求并提供服务的方法。
 			- `String getServletInfo();`
+				- 返回Servlet字符串形式的描述信息的方法。
 			- `void destroy();`
+				- 销毁方法。
+				- 在 `Servlet` 对象被回收前，由Tomcat调用。用于做资源的释放工作。
 		- `ServletConfig` 接口定义了如下的方法：
 			- `String getServletName();`
 			- `String getServletName();`
@@ -465,4 +475,73 @@ Tomcat的Servlet提供的若干开发接口有如下的继承结构：
 			- `Enumeration<String> getInitParameterNames();`
 		- `Serializable` 接口为序列化接口，其没有任何方法或者字段，只是用于标识可序列化的语义。<font color="#c00000">序列化是将对象状态转换为可保持或传输的格式的过程</font>。与序列化相对的是反序列化，它将流转换为对象。<font color="#c00000">这两个过程结合起来，可以轻松地存储和传输数据</font>。
 在开发Servlet App时，可以选择直接继承 `HttpServlet` ，也可以选择直接实现 `Servlet` 接口。不过当选择后者时，需要手动实现 `Servlet` 接口中的每一个方法1。所以通常选择继承 `HttpServlet` 或 `GenericServlet` 。
+
+### 10.2 GenericServlet的实现详解
+
+如上一章节所述，抽象类 `GenericServlet` 实现了 `Servlet` 、 `ServletConfig` 、 `Serializable` 等接口。
+该抽象类的参考代码如下：
+
+```Java
+public abstract class GenericServlet implements Servlet, ServletConfig, Serializable {  
+    private static final long serialVersionUID = 1L;  
+    private transient ServletConfig config;  
+  
+    public GenericServlet() {  
+    }  
+  
+    public void destroy() {  
+    }  
+  
+    public String getInitParameter(String name) {  
+        return this.getServletConfig().getInitParameter(name);  
+    }  
+  
+    public Enumeration<String> getInitParameterNames() {  
+        return this.getServletConfig().getInitParameterNames();  
+    }  
+  
+    public ServletConfig getServletConfig() {  
+        return this.config;  
+    }  
+  
+    public ServletContext getServletContext() {  
+        return this.getServletConfig().getServletContext();  
+    }  
+  
+    public String getServletInfo() {  
+        return "";  
+    }  
+  
+    public void init(ServletConfig config) throws ServletException {  
+        this.config = config;  
+        this.init();  
+    }  
+  
+    public void init() throws ServletException {  
+    }  
+  
+    public void log(String message) {  
+        ServletContext var10000 = this.getServletContext();  
+        String var10001 = this.getServletName();  
+        var10000.log(var10001 + ": " + message);  
+    }  
+  
+    public void log(String message, Throwable t) {  
+        this.getServletContext().log(this.getServletName() + ": " + message, t);  
+    }  
+  
+    public abstract void service(ServletRequest var1, ServletResponse var2) throws ServletException, IOException;  
+  
+    public String getServletName() {  
+        return this.config.getServletName();  
+    }  
+}
+```
+
+在上述代码中：
+- `public void destroy()`
+- ``
+
+## 11 ServletConfig
+
 
