@@ -476,6 +476,8 @@ Tomcat的Servlet提供的若干开发接口有如下的继承结构：
 		- `Serializable` 接口为序列化接口，其没有任何方法或者字段，只是用于标识可序列化的语义。<font color="#c00000">序列化是将对象状态转换为可保持或传输的格式的过程</font>。与序列化相对的是反序列化，它将流转换为对象。<font color="#c00000">这两个过程结合起来，可以轻松地存储和传输数据</font>。
 在开发Servlet App时，可以选择直接继承 `HttpServlet` ，也可以选择直接实现 `Servlet` 接口。不过当选择后者时，需要手动实现 `Servlet` 接口中的每一个方法1。所以通常选择继承 `HttpServlet` 或 `GenericServlet` 。
 
+其继承关系图解如下图所示：
+
 ### 10.2 GenericServlet的实现详解
 
 如上一章节所述，抽象类 `GenericServlet` 实现了 `Servlet` 、 `ServletConfig` 、 `Serializable` 等接口的<font color="#c00000">大部分</font>方法(除了 `service` 方法)。<font color="#c00000">本类侧重于除了Service方法以外的方法的处理</font>。
@@ -635,8 +637,9 @@ public void service(ServletRequest req, ServletResponse res) throws ServletExcep
 	1. Servlet被Tomcat调用 `public void service(ServletRequest req, ServletResponse res)` 方法。
 	2. 在该方法中会将 `ServletRequest` 和 `ServletResponse` 分别<font color="#c00000">强制转换</font>为 `HttpServletRequest` 和 `HttpServletResponse` 类型(<font color="#c00000">因为前者是后者的父类</font>)。
 	3. 随后调用 `protected void service(HttpServletRequest req, HttpServletResponse resp)` 方法。
-- `protected void service(HttpServletRequest req, HttpServletResponse resp)` 方法的主要功能为：
-	- 
+- 关于 `protected void service(HttpServletRequest req, HttpServletResponse resp)` 方法：
+	- <font color="#c00000">当基于HttpServlet开发Servlet时，需要重载的方法就是该方法</font>。
+	- 因此HttpServlet自带的service方法在某种意义上算是一个Demo或一个default方法。
 
 ## 11 ServletConfig
 
