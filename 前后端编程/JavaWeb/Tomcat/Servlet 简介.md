@@ -542,6 +542,21 @@ public abstract class GenericServlet implements Servlet, ServletConfig, Serializ
 - `public void destroy()`
 - `public void init()`
 方法<font color="#c00000">将对应接口定义的方法实现为了一个空方法</font>，<font color="#c00000">这种实现方式叫做平庸实现</font>。
+并且在上述代码中有两个 `init` 实现：
+
+```Java
+public void init(ServletConfig config) throws ServletException {  
+    this.config = config;  
+    this.init();  
+}  
+
+public void init() throws ServletException {  
+}  
+```
+
+而含参的 `init(ServletConfig config)` 的本质就是转存参数，然后调用无参版本初始化。
+
+
 
 ## 11 ServletConfig
 
