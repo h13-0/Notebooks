@@ -478,7 +478,7 @@ Tomcat的Servlet提供的若干开发接口有如下的继承结构：
 
 ### 10.2 GenericServlet的实现详解
 
-如上一章节所述，抽象类 `GenericServlet` 实现了 `Servlet` 、 `ServletConfig` 、 `Serializable` 等接口。
+如上一章节所述，抽象类 `GenericServlet` 实现了 `Servlet` 、 `ServletConfig` 、 `Serializable` 等接口的<font color="#c00000">大部分</font>方法(除了 `service` 方法)。<font color="#c00000">本类侧重于除了Service方法以外的方法的处理</font>。
 该抽象类的参考代码如下：
 
 ```Java
@@ -560,6 +560,14 @@ public void init() throws ServletException {
 0. 含参版本的初始化通常由Tomcat调用，在Tomcat初始化该类时会将配置文件中设置的参数传递进去。
 1. 而 `GenericServlet` 实现的含参初始化已经完成参数拷贝的工作(存入 `this.config` )，随后并调用无参的初始化。
 2. 若用户选择重写含参初始化时，需要手动完成存入 `this.config` 的工作，而后续或从前的版本是否仍使用的是 `this.config` 这个变量并无强制性规定，可能随版本而发生改变。
+
+此外， `GenericServlet` 仍未具体实现 `service` 方法，因此该类本质也是一个抽象类。
+
+### 10.3 HttpServlet的实现详解
+
+虽然在 `GenericServlet` 中只剩 `service` 方法就已经完全实现 `Servlet` 接口中所有的方法，但是 `HttpServlet` <font color="#c00000">依旧是一个抽象类</font>，在该类中侧重于 `service` 方法的处理。
+
+
 
 
 
