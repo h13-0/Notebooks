@@ -453,4 +453,16 @@ Tomcat的Servlet提供的若干开发接口有如下的继承结构：
 - 抽象类 `HttpServlet` 拓展了 `GenericServlet` ：
 	- 抽象类 `GenericServlet` 实现了 `Servlet` 、 `ServletConfig` 、 `Serializable` 等接口。
 		- `Servlet` 接口定义了如下的方法：
-			- ``
+			- `void init(ServletConfig var1) throws ServletException;`
+			- `ServletConfig getServletConfig();`
+			- `void service(ServletRequest var1, ServletResponse var2) throws ServletException, IOException;`
+			- `String getServletInfo();`
+			- `void destroy();`
+		- `ServletConfig` 接口定义了如下的方法：
+			- `String getServletName();`
+			- `String getServletName();`
+			- `String getInitParameter(String var1);`
+			- `Enumeration<String> getInitParameterNames();`
+		- `Serializable` 接口为序列化接口，其没有任何方法或者字段，只是用于标识可序列化的语义。<font color="#c00000">序列化是将对象状态转换为可保持或传输的格式的过程</font>。与序列化相对的是反序列化，它将流转换为对象。<font color="#c00000">这两个过程结合起来，可以轻松地存储和传输数据</font>。
+在开发Servlet App时，可以选择直接继承 `HttpServlet` ，也可以选择直接实现 `Servlet` 接口。不过当选择后者时，需要手动实现 `Servlet` 接口中的每一个方法1。所以通常选择继承 `HttpServlet` 或 `GenericServlet` 。
+
