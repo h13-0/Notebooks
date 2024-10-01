@@ -540,7 +540,8 @@ public abstract class GenericServlet implements Servlet, ServletConfig, Serializ
 
 在上述代码中：
 - `public void destroy()`
-- ``
+- `public void init()`
+方法<font color="#c00000">将对应接口定义的方法实现为了一个空方法</font>，<font color="#c00000">这种实现方式叫做平庸实现</font>。
 
 ## 11 ServletConfig
 
