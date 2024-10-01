@@ -567,8 +567,74 @@ public void init() throws ServletException {
 
 虽然在 `GenericServlet` 中只剩 `service` 方法就已经完全实现 `Servlet` 接口中所有的方法，但是 `HttpServlet` <font color="#c00000">依旧是一个抽象类</font>，在该类中侧重于 `service` 方法的处理。
 
+查看源码可以看到 `HttpServlet` 中共计实现了如下两个名为 `service` 的方法：
 
+```Java
+protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {  
+    String method = req.getMethod();  
+    long lastModified;  
+    if (method.equals("GET")) {  
+        lastModified = this.getLastModified(req);  
+        if (lastModified == -1L) {  
+            this.doGet(req, resp);  
+        } else {  
+            long ifModifiedSince;  
+            try {  
+                ifModifiedSince = req.getDateHeader("If-Modified-Since");  
+            } catch (IllegalArgumentException var9) {  
+                ifModifiedSince = -1L;  
+            }  
+  
+            if (ifModifiedSince < lastModified / 1000L * 1000L) {  
+                this.maybeSetLastModified(resp, lastModified);  
+                this.doGet(req, resp);  
+            } else {  
+                resp.setStatus(304);  
+            }  
+        }  
+    } else if (method.equals("HEAD")) {  
+        lastModified = this.getLastModified(req);  
+        this.maybeSetLastModified(resp, lastModified);  
+        this.doHead(req, resp);  
+    } else if (method.equals("POST")) {  
+        this.doPost(req, resp);  
+    } else if (method.equals("PUT")) {  
+        this.doPut(req, resp);  
+    } else if (method.equals("DELETE")) {  
+        this.doDelete(req, resp);  
+    } else if (method.equals("OPTIONS")) {  
+        this.doOptions(req, resp);  
+    } else if (method.equals("TRACE")) {  
+        this.doTrace(req, resp);  
+    } else {  
+        String errMsg = lStrings.getString("http.method_not_implemented");  
+        Object[] errArgs = new Object[]{method};  
+        errMsg = MessageFormat.format(errMsg, errArgs);  
+        resp.sendError(501, errMsg);  
+    }  
+  
+}
 
+public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {  
+    HttpServletRequest request;  
+    HttpServletResponse response;  
+    try {  
+        request = (HttpServletRequest)req;  
+        response = (HttpServletResponse)res;  
+    } catch (ClassCastException var6) {  
+        throw new ServletException(lStrings.getString("http.non_http"));  
+    }  
+  
+    this.service(request, response);  
+}
+```
+
+需要注意的是：
+- <font color="#c00000">第一个</font>属性为protected的service方法的参数类型为<font color="#c00000">HttpServletRequest</font>和<font color="#c00000">HttpServletResponse</font>；而<font color="#c00000">第二个</font>属性为public的service方法的参数类型为<font color="#c00000">ServletRequest</font>和<font color="#c00000">ServletResponse</font>。
+- 其调用逻辑为：
+	1. Servlet被Tomcat调用 `public void service(ServletRequest req, ServletResponse res)` 方法。
+	2. 在该方法中会将 `ServletRequest` 和 `ServletResponse` 分别<font color="#c00000">强制转换</font>为 `HttpServletRequest` 和 `HttpServletResponse` 类型(<font color="#c00000">因为前者是后者的父类</font>)。
+	3. 随后调用 `protected void service(HttpServletRequest req, HttpServletResponse resp)` 方法。
 
 
 ## 11 ServletConfig
