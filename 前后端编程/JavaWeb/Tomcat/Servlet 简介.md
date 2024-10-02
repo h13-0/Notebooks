@@ -649,4 +649,32 @@ public void service(ServletRequest req, ServletResponse res) throws ServletExcep
 
 ## 11 ServletConfig
 
+### 11.1 使用web.xml配置Servlet初始化参数
 
+在使用 `web.xml` 配置初始化参数时，应当将参数填写到 `servlet` 块中，示例如下：
+
+```xml
+<!--  
+1. 配置Servlet类，其配置项及其含义为：  
+        servlet-name: 用于关联请求的映射路径  
+        servlet-class: 完成该请求所需要实例化的Servlet类  
+-->  
+<servlet>  
+    <servlet-name>userServlet</servlet-name>  
+    <servlet-class>indi.h13.servlet.UserServlet</servlet-class>  
+	<!-- -->
+	<init-param>
+		<param-name>key</param-name>
+		<param-value>value</param-value>
+	</init-param>
+</servlet>  
+  
+<!--  
+2. 配置和完成请求路径和servlet-name之间的映射。  
+-->  
+<servlet-mapping>  
+    <servlet-name>userServlet</servlet-name>  
+    <url-pattern>/isRoot</url-pattern>  
+</servlet-mapping>
+
+```
