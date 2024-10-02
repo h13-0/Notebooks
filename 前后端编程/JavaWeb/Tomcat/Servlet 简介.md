@@ -729,10 +729,29 @@ ServletContext基础知识：
 
 #### 11.2.1 使用web.xml配置ServletContext对象
 
-ServletContext的配置信息可以直接在 `web.xml` 中配置，
+ServletContext存储于 `web.xml` 中，<span style="background:#fff88f"><font color="#c00000">无论该App是否有Servlet</font></span>，<span style="background:#fff88f"><font color="#c00000">该对象均会被生成</font></span>。该对象使用 `<context-param>` 块，该块直接存储于 `<web-app>` 块下，与 `<servlet>` 块平级：
 
 ```xml
+<?xml version="1.0" encoding="UTF-8"?>  
+<web-app ...>
 
+	<!-- 配置ServletContext的参数 -->
+	<context-param>
+		<param-name>username</param-name>
+		<param-value>root</param-value>
+	</context-param>
+
+</web-app>
+```
+
+当在Java中使用该对象时应使用如下代码：
+
+```Java
+// 方法1：在Servlet类中直接获取ServletContext对象
+ServletContext servletContext = getServletContext();
+
+// 方法2：通过ServletConfig获取ServletContext对象
+ServletContext servletContext = getServletConfig.getServletContext();
 
 
 ```
