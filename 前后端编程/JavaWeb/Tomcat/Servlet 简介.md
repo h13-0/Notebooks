@@ -647,9 +647,10 @@ public void service(ServletRequest req, ServletResponse res) throws ServletExcep
 1. 重写 `service` 方法
 2. 重写 `doGet` 、 `doPost` ...方法。
 
-## 11 ServletConfig
+## 11 ServletConfig和ServletContext
 
-### 11.1 使用web.xml配置Servlet初始化参数
+### 11.1 ServletConfig配置参数
+#### 11.1.1 使用web.xml配置Servlet初始化参数
 
 在使用 `web.xml` 配置初始化参数时，应当将参数填写到 `servlet` 块中，示例如下：
 
@@ -680,7 +681,7 @@ public void service(ServletRequest req, ServletResponse res) throws ServletExcep
 
 随后上述配置参数会被Tomcat转换成一个 `ServletConfig` 对象，该对象会被传递给 `Servlet` 接口所规定的 `void init(ServletConfig var1) throws ServletException;` 方法。若程序的Servlet继承自 `GenericServlet` 对象，则在运行时可以使用 `getServletConfig` 方法获取配置参数。
 
-### 11.2 使用注解配置Servlet初始化参数
+#### 11.1.2 使用注解配置Servlet初始化参数
 
 使用注解方式配置Servlet初始化参数可以直接在Servlet实现类前使用如下方法：
 
@@ -693,7 +694,7 @@ public void service(ServletRequest req, ServletResponse res) throws ServletExcep
 
 至于同时在一个 `WebServlet` 注解中同时配置多个配置项的方法可以参照前文的章节。
 
-### 11.3 使用Servlet初始化参数
+#### 11.1.3 使用Servlet初始化参数
 
 当使用上述配置时，在程序中使用如下方法即可获得初始化参数：
 
@@ -718,5 +719,8 @@ while(initParameterNames.hasMoreElements()) {
 }
 ```
 
+### 11.2 使用ServletContext为所有Servlet提供配置参数
 
-
+ServletContext基础知识：
+- ServletContext可以叫做 "上下文对象" 或者 "应用域对象"。
+- 容器会为每一个Servlet App创建一个独立且唯一的
