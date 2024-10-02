@@ -687,8 +687,28 @@ public void service(ServletRequest req, ServletResponse res) throws ServletExcep
 
 ### 11.3 使用Servlet初始化参数
 
-当使用上述配置
+当使用上述配置时，在程序中使用如下方法即可获得初始化参数：
 
+```Java
+String value = getServletConfig().getInitParameter("key");
+```
+
+即可获得初始化参数。
+此外， `ServletConfig` 对象还有获取所有已配置的配置项名称的方法：
+
+```Java
+// 获取配置项
+ServletConfig servletConfig = getServletConfig();
+
+// 获取参数名的迭代器(枚举)
+Enumeration<String> initParameterNames = servletConfig.getInitParameterNames();
+
+// 迭代遍历配置项名称
+while(initParameterNames.hasMoreElements()) {
+	String keyName = initParameterNames.nextElements();
+	String value = servletConfig.getInitParameter("key");
+}
+```
 
 
 
