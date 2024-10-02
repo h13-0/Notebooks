@@ -723,4 +723,16 @@ while(initParameterNames.hasMoreElements()) {
 
 ServletContext基础知识：
 - ServletContext可以叫做 "上下文对象" 或者 "应用域对象"。
-- 容器会为每一个Servlet App创建一个独立且唯一的
+- 容器会为每一个Servlet App创建一个独立且<font color="#c00000">唯一的</font>ServletContext对象，<font color="#c00000">即每个App有且仅有一个ServletContext对象</font>。
+- ServletContext对象会被所有的Servlet所共享。
+- ServletContext对象可以为所有Servlet提供初始配置参数。
+
+#### 11.2.1 使用web.xml配置ServletContext对象
+
+ServletContext的配置信息可以直接在 `web.xml` 中配置，
+
+```xml
+
+
+
+```
