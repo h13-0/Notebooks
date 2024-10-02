@@ -682,8 +682,16 @@ public void service(ServletRequest req, ServletResponse res) throws ServletExcep
 
 ### 11.2 使用注解配置Servlet初始化参数
 
+使用注解方式配置Servlet初始化参数可以直接在Servlet实现类前使用如下方法：
 
+```Java
+// 基础配置
+@WebServlet(
+	initParams = {@WebInitParam(name = "key", value = "value")}
+);
+```
 
+至于同时在一个 `WebServlet` 注解中同时配置多个配置项的方法可以参照前文的章节。
 
 ### 11.3 使用Servlet初始化参数
 
