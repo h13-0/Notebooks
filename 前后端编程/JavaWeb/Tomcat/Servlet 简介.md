@@ -662,7 +662,7 @@ public void service(ServletRequest req, ServletResponse res) throws ServletExcep
 <servlet>  
     <servlet-name>userServlet</servlet-name>  
     <servlet-class>indi.h13.servlet.UserServlet</servlet-class>  
-	<!-- -->
+	<!-- 设置Servlet的初始化参数 -->
 	<init-param>
 		<param-name>key</param-name>
 		<param-value>value</param-value>
@@ -676,5 +676,19 @@ public void service(ServletRequest req, ServletResponse res) throws ServletExcep
     <servlet-name>userServlet</servlet-name>  
     <url-pattern>/isRoot</url-pattern>  
 </servlet-mapping>
-
 ```
+
+随后上述配置参数会被Tomcat转换成一个 `ServletConfig` 对象，该对象会被传递给 `Servlet` 接口所规定的 `void init(ServletConfig var1) throws ServletException;` 方法。若程序的Servlet继承自 `GenericServlet` 对象，则在运行时可以使用 `getServletConfig` 方法获取配置参数。
+
+### 11.2 使用注解配置Servlet初始化参数
+
+
+
+
+### 11.3 使用Servlet初始化参数
+
+当使用上述配置
+
+
+
+
