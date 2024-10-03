@@ -1,5 +1,15 @@
+---
+number headings: auto, first-level 2, max 6, 1.1
+---
 #Java 
 
-## 目录
+## 1 目录
+
+```toc
+```
+
+## 2 Mevan简介
+
+
 
 
