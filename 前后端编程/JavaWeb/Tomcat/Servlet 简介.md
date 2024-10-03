@@ -745,7 +745,7 @@ ServletContext存储于 `web.xml` 中，<span style="background:#fff88f"><font c
 ```
 
 当在Java中使用该对象时应使用如下代码：
-
+1. 获取ServletContext对象：
 ```Java
 // 方法1：在Servlet类中直接获取ServletContext对象
 ServletContext servletContext = getServletContext();
@@ -753,5 +753,11 @@ ServletContext servletContext = getServletContext();
 // 方法2：通过ServletConfig获取ServletContext对象
 ServletContext servletContext = getServletConfig.getServletContext();
 
-
+// 方法3：通过HttpServletRequest获取ServletContext对象
+ServletContext servletContext = req.getServletContext();
+```
+2. 获取初始化参数，注意<font color="#c00000">可以通过ServletContext获取InitParameter</font>：
+```Java
+// 获取InitParameter
+String value = servletContext.getInitParameter("key");
 ```
