@@ -81,11 +81,22 @@ Mevan相比于普通的工程项目，其还需要额外配置一组属性，这
 
 #### 3.3.1 直接使用IDE创建Java EE工程
 
-
+直接使用IDE创建Java EE工程的具体方式取决于具体的IDE，其中，在IDEA下的操作步骤如下：
+1. 安装插件 `JBLJavaToWeb` 。
+	![[idea64_hdyM53TwBe.png]]
+2. 先创建普通Java SE工程。
+3. 在该工程右键选择 `JBLJavaToWeb` 即可。
+	![[sEShHZ6AGM.png]]
 
 #### 3.3.2 手动基于Java SE补全工程
 
-手动基于Java SE补全工程只需要补全对应文件即可，例如若需要使用Java EE创建
+手动基于Java SE补全工程只需要补全对应文件即可，例如若需要使用Java EE创建WebApp(Servlet)，则只需要：
+1. 在 `src/main` 文件夹下补充 `webapp/WEB-INF` 目录并补充 `web.xml` 文件。
+2. 在 `pom.xml` 中将打包方式改为 `war` 。
+3. 重新加载Mevan即可。
+
+
+
 
 
 
