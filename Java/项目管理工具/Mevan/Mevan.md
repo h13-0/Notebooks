@@ -33,7 +33,7 @@ Mevan相比于普通的工程项目，其还需要额外配置一组属性，这
 	- `war` ：打包为JavaWeb工程
 	- `pom` ：标识不会打包，通常用于当成做继承的父工程
 
-### 3.2 使用Mevan构建Java EE工程
+### 3.2 使用Mevan构建Java SE工程
 
 在IDE中创建新工程(或者Module)时选择使用Mevan构建即可，注意需要指定 `GroupID` 和 `ArtifactID` 即可：
 
@@ -73,7 +73,11 @@ Mevan相比于普通的工程项目，其还需要额外配置一组属性，这
     <packaging>jar</packaging>
 ```
 
-### 3.3 使用Mevan构建Java SE工程
+### 3.3 使用Mevan构建Java EE工程
+
+
+
+
 
 
 

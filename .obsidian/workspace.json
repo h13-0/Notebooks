@@ -13,6 +13,18 @@
             "state": {
               "type": "markdown",
               "state": {
+                "file": "Java/Java语言基础/Java语言基础.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "2a8ec44e302d84bb",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
                 "file": "Java/项目管理工具/Mevan/Mevan.md",
                 "mode": "source",
                 "source": false
@@ -93,7 +105,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Java/项目管理工具/Mevan/Mevan.md",
+                "file": "Java/Java语言基础/Java语言基础.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +122,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Java/项目管理工具/Mevan/Mevan.md",
+                "file": "Java/Java语言基础/Java语言基础.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +145,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Java/项目管理工具/Mevan/Mevan.md"
+                "file": "Java/Java语言基础/Java语言基础.md"
               }
             }
           }
@@ -156,12 +168,13 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "1bc30e82fd7b9190",
+  "active": "1bd3a9b0b21ab479",
   "lastOpenFiles": [
+    "Java/项目管理工具/Mevan/Mevan.md",
+    "Java/Java语言基础/Java语言基础.md",
     "Java/Resources",
     "Java/Resources/idea64_On9moKqDbO.png",
     "前后端编程/SpringBoot/SpringBoot 基础笔记.md",
-    "Java/项目管理工具/Mevan/Mevan.md",
     "前后端编程/JavaWeb/Readme.md",
     "前后端编程/Readme.md",
     "Java/项目管理工具/Mevan",
@@ -203,7 +216,6 @@
     "CPP/C2CPP",
     "面相对象的程序设计",
     "前后端编程/JavaWeb/Tomcat",
-    "前后端编程/JavaWeb",
-    "Linux驱动开发/MISC"
+    "前后端编程/JavaWeb"
   ]
 }
