@@ -236,8 +236,19 @@ flowchart LR
 1. <font color="#c00000">谁短谁优先</font>：引用路径谁短就引用谁。例如上图会<font color="#c00000">引入依赖库C的1.0.0版本</font>。
 2. <font color="#c00000">谁上谁优先</font>：由于在 `pom.xml` 的 `dependencies` 中哪个依赖靠上就引用哪个。例如上图会<font color="#c00000">引入依赖库G的1.2.0版本</font>。
 
-## 5 Java项目编译流程与Mevan常用命令
+## 5 Java项目构建流程与Mevan常用命令
 
+Java项目构建流程为：
+1. 清理
+2. 编译
+3. 测试
+4. 报告
+5. 打包
+6. 部署
 
-
+与上述流程对应的Mevan命令为：
+1. `mvn clean`
+2. `mvn compile`
+3. `mvn test`
+4. 
 
