@@ -119,9 +119,41 @@ Mevan相比于普通的工程项目，其还需要额外配置一组属性，这
 </project>
 ```
 
+而当需要使用Mevan管理依赖时则需要在 `project` 块中添加并形成如下内容：
 
+```xml
+<?xml version="1.0" encoding="UTF-8"?>  
+<project xmlns="http://maven.apache.org/POM/4.0.0"  
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">  
+    <modelVersion>4.0.0</modelVersion>  
+  
+    <groupId>indi.h13</groupId>  
+    <artifactId>maven-javase-project-01</artifactId>  
+    <version>1.0-SNAPSHOT</version>  
+    <packaging>jar</packaging>
+  
+    <properties> 
+	    <maven.compiler.source>22</maven.compiler.source>  
+        <maven.compiler.target>22</maven.compiler.target>  
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
+    </properties>  
 
+<dependencies>  
 
+	<dependency>    
+		<groupId></groupId>    
+		<artifactId></artifactId>    
+		<version></version>  
+	</dependency>  
+	
+</dependencies>
+
+</project>
+```
+
+正如上文配置，每一个依赖均需要 `GAVP` 属性，但是 `version` 属性可以省略。
+而每个依赖所需要的 `GAVP` 属性可以去mevan仓库官网 https://mvnrepository.com 搜索
 
 
 
