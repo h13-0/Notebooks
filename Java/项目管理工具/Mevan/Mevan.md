@@ -242,7 +242,7 @@ Java项目构建流程为：
 1. 清理
 2. 编译
 3. 测试
-4. 报告
+4. 报告(主要汇总并输出项目的依赖信息)
 5. 打包
 6. 部署
 
@@ -250,5 +250,8 @@ Java项目构建流程为：
 1. `mvn clean`
 2. `mvn compile`
 3. `mvn test`
-4. 
+4. `mvn site`
+5. `mvn package`
+6. `mvn install`
+7. `mvn deploy`
 
