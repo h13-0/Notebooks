@@ -12,7 +12,7 @@ number headings: auto, first-level 2, max 6, 1.1
 
 Mevan是一个Java的项目构建与管理工具，可以自动化安装依赖，构建、打包和发布项目。
 
-## 3 使用Mevan创建并管理项目
+## 3 使用Mevan创建项目
 
 ### 3.1 项目名及项目版本管理
 
@@ -95,7 +95,29 @@ Mevan相比于普通的工程项目，其还需要额外配置一组属性，这
 2. 在 `pom.xml` 中将打包方式改为 `war` 。
 3. 重新加载Mevan即可。
 
+## 4 使用Mevan进行项目依赖管理
 
+在完成章节[[Mevan#3 2 使用Mevan构建Java SE工程]]的配置后，所形成的 `pom.xml` 代码如下：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>  
+<project xmlns="http://maven.apache.org/POM/4.0.0"  
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">  
+    <modelVersion>4.0.0</modelVersion>  
+  
+    <groupId>indi.h13</groupId>  
+    <artifactId>maven-javase-project-01</artifactId>  
+    <version>1.0-SNAPSHOT</version>  
+    <packaging>jar</packaging>
+  
+    <properties> 
+	    <maven.compiler.source>22</maven.compiler.source>  
+        <maven.compiler.target>22</maven.compiler.target>  
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
+    </properties>  
+</project>
+```
 
 
 
