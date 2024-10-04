@@ -97,6 +97,8 @@ Mevan相比于普通的工程项目，其还需要额外配置一组属性，这
 
 ## 4 使用Mevan进行项目依赖管理
 
+### 4.1 添加依赖
+
 在完成章节[[Mevan#3 2 使用Mevan构建Java SE工程]]的配置后，所形成的 `pom.xml` 代码如下：
 
 ```xml
@@ -159,14 +161,54 @@ Mevan相比于普通的工程项目，其还需要额外配置一组属性，这
 </project>
 ```
 
-正如上文配置，每一个依赖均需要 `GAVP` 属性，但是 `version` 属性可以省略、使用特殊值(<span style="background:#fff88f"><font color="#c00000">但是并不推荐这样做</font></span>)，特殊值有：
-- `LATEST` ：表示最新的版本，包括开发中的快照(snapshot)版本。
-- `RELEASE` ：表示最新的稳定版本，但是不包括快照版本。
-(从Maven2.1开始，`LATEST` 和 `RELEASE` <font color="#c00000">已经被标记为不推荐使用</font>，并在Maven3中<span style="background:#fff88f"><font color="#c00000">强烈不推荐使用</font></span>，<span style="background:#fff88f"><font color="#c00000">并且会在未来版本中移除</font></span>)。
-
-<font color="#c00000">当然，也可以将版本信息配置为一个版本区间</font>，例如 `<version>[3.0,3.9]</version>` 表示支持使用3.0到3.9版本中的任意一个(不过该特性也需要谨慎使用)。
+正如上文配置，每一个依赖均需要 `GAVP` 属性，但是 `version` 属性可以省略(<span style="background:#fff88f"><font color="#c00000">不推荐</font></span>)、使用特殊值(<span style="background:#fff88f"><font color="#c00000">不推荐</font></span>)、引用版本变量(<span style="background:#fff88f"><font color="#c00000">常用</font></span>)、使用版本区间等。详见下一章节。
 
 而每个依赖所需要的 `GAVP` 属性可以去mevan仓库官网 https://mvnrepository.com 搜索。也可以使用 `mevan-search` 插件进行搜索和复制配置信息。
 在完成 `pom.xml` 的修改之后刷新mevan即可。
+
+### 4.2 依赖的版本管理
+
+正如上一章节所述，版本信息的配置方式有如下几种：
+- 省略
+- 特殊值，特殊值有：
+	- `LATEST` ：表示最新的版本，包括开发中的快照(snapshot)版本。
+	- `RELEASE` ：表示最新的稳定版本，但是不包括快照版本。
+	(从Maven2.1开始，`LATEST` 和 `RELEASE` <font color="#c00000">已经被标记为不推荐使用</font>，并在Maven3中<span style="background:#fff88f"><font color="#c00000">强烈不推荐使用</font></span>，<span style="background:#fff88f"><font color="#c00000">并且会在未来版本中移除</font></span>)。
+- 使用版本区间：
+	例如 `<version>[3.0,3.9]</version>` 表示支持使用3.0到3.9版本中的任意一个(不过该特性也需要谨慎使用)。
+- 引用版本变量：
+	例如可以直接在 `pom.xml` 中的 `properties` 块中定义依赖的版本变量，例如：
+	```xml
+	<properties> 
+		<maven.compiler.source>22</maven.compiler.source>  
+	    <maven.compiler.target>22</maven.compiler.target>  
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
+		<!-- 声明jackson版本变量 -->
+		<!-- 命名的标签建议使用两层及以上 -->
+		<jackson.version>2.18.0</jackson.version>
+    </properties>  
+	```
+	随后在定义 `dependency` 时使用该变量即可：
+	```xml
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+	<dependency>
+	    <groupId>com.fasterxml.jackson.core</groupId>
+	    <artifactId>jackson-core</artifactId>
+	    <version>${jackson.version}</version>
+	</dependency>
+
+	<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+	<dependency>
+	    <groupId>com.fasterxml.jackson.core</groupId>
+	    <artifactId>jackson-databind</artifactId>
+	    <version>${jackson.version}</version>
+	</dependency>
+	```
+
+### 4.3 依赖的作用域管理
+
+在
+
+
 
 
