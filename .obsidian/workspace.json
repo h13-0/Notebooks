@@ -23,12 +23,8 @@
             "id": "2a8ec44e302d84bb",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Java/Java语言基础/Java语言基础.md",
-                "mode": "source",
-                "source": false
-              }
+              "type": "graph",
+              "state": {}
             }
           }
         ]
@@ -171,10 +167,10 @@
   "active": "1bd3a9b0b21ab479",
   "lastOpenFiles": [
     "Java/Java语言基础/Java语言基础.md",
+    "Java/项目管理工具/Mevan/Mevan.md",
     "Java/Resources/sEShHZ6AGM.png",
     "Java/Resources/idea64_hdyM53TwBe.png",
     "Resources/Pasted image 20240203021517.png",
-    "Java/项目管理工具/Mevan/Mevan.md",
     "Java/Resources",
     "Java/Resources/idea64_On9moKqDbO.png",
     "前后端编程/SpringBoot/SpringBoot 基础笔记.md",

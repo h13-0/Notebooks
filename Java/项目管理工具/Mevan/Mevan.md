@@ -208,11 +208,19 @@ Mevan相比于普通的工程项目，其还需要额外配置一组属性，这
 ### 4.3 依赖的作用域管理
 
 在 `dependency` 块中可以添加一个 `scope` 属性用于限定依赖的作用域，其可选项有：
-- `compile` ：<font color="#c00000">默认值</font>，在打包和运行时都会被生效，即 `compile` = `main` + `test` 。
-- `main` ：
-- `test` ：仅在测试中生效
+- `compile` ：<font color="#c00000">默认值</font>，在编辑、打包和运行时都会被生效。
+- `main` ：仅在主程序中使用。
+- `test` ：仅在测试中生效。
 - `runtime` ：仅在运行时有效，在打包和运行时使用，例如 `mysql` 的驱动。
-- `provided` ：仅在
+- `provided` ：仅在 `main` 和 `test` 中会被使用，打包和运行时不会使用(与上一项相反)，例如 `servlet` ，Tomcat本身提供了 `servlet` ，因此打包时不会将该依赖打包进去。
+
+### 4.4 依赖传递和依赖冲突
+
+
+
+
+
+
 
 
 
