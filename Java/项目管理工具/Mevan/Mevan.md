@@ -75,11 +75,17 @@ Mevan相比于普通的工程项目，其还需要额外配置一组属性，这
 
 ### 3.3 使用Mevan构建Java EE工程
 
+正如[[Java语言基础#2 1 Java SE、EE、ME的区别和联系]]所述，Java EE是基于Java SE的拓展，因此使用Mevan构建Java EE工程有两种方式：
+1. 直接使用IDE创建Java EE工程
+2. 手动基于Java SE补全工程
+
+#### 3.3.1 直接使用IDE创建Java EE工程
 
 
 
+#### 3.3.2 手动基于Java SE补全工程
 
-
+手动基于Java SE补全工程只需要补全对应文件即可，例如若需要使用Java EE创建
 
 
 

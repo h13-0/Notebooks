@@ -16,7 +16,19 @@ number headings: auto, first-level 2, max 6, 1.1
 
 #### 2.1.1 Java SE
 
-Java SE的全程是Java Standard Edition，
+Java SE的全称是Java Standard Edition，
+
+
+
+
+#### 2.1.2 Java EE
+
+Java EE的全称是Java Enterprise Edition，定位是Java的企业版，应用于企业级分布式应用程序。其主要包含的拓展有：
+- Servlet和JSP：用于开发动态网页和处理 HTTP 请求。
+- EJB(Enterprise JavaBeans)：用于处理企业级业务逻辑。
+- JPA(Java Persistence API)：用于数据持久化，简化与数据库的交互。
+- JMS(Java Message Service)：提供消息中间件，支持消息队列。
+- JAX-RS和JAX-WS：用于开发Web服务。
 
 
 ### 2.2 JDK、JRE、JVM的区别和联系
