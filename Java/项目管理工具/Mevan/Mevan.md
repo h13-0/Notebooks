@@ -1,7 +1,7 @@
 ---
 number headings: auto, first-level 2, max 6, 1.1
 ---
-#Java 
+#Java #Mevan
 
 ## 1 目录
 
@@ -35,7 +35,43 @@ Mevan相比于普通的工程项目，其还需要额外配置一组属性，这
 
 ### 3.2 使用Mevan构建Java EE工程
 
+在IDE中创建新工程(或者Module)时选择使用Mevan构建即可，注意需要指定 `GroupID` 和 `ArtifactID` 即可：
 
+![[idea64_On9moKqDbO.png]]
+
+随后该项目下会出现：
+1. 一个 `src` 文件夹用于存放Java代码
+2. 一个 `pom.xml` 存放Mevan配置信息。
+
+`pom.xml` 的默认配置信息如下：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>  
+<project xmlns="http://maven.apache.org/POM/4.0.0"  
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">  
+    <modelVersion>4.0.0</modelVersion>  
+  
+    <groupId>indi.h13</groupId>  
+    <artifactId>maven-javase-project-01</artifactId>  
+    <version>1.0-SNAPSHOT</version>  
+  
+    <properties> 
+	    <maven.compiler.source>22</maven.compiler.source>  
+        <maven.compiler.target>22</maven.compiler.target>  
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
+    </properties>  
+</project>
+```
+
+可以在上述配置文件中修改 `GroupID` 、 `ArtifactID` 和 `Version` 等项目信息。而在上述的默认配置中，并未提供 `Packaging` 信息，因此 `pom.xml` 中的项目信息可以做如下修改：
+
+```xml
+    <groupId>indi.h13</groupId>  
+    <artifactId>maven-javase-project-01</artifactId>  
+    <version>1.0.0</version>  
+    <packaging>jar</packaging>
+```
 
 ### 3.3 使用Mevan构建Java SE工程
 
