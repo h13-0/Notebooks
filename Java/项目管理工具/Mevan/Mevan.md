@@ -141,19 +141,32 @@ Mevan相比于普通的工程项目，其还需要额外配置一组属性，这
 
 <dependencies>  
 
-	<dependency>    
-		<groupId></groupId>    
-		<artifactId></artifactId>    
-		<version></version>  
-	</dependency>  
+	<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+	<dependency>
+	    <groupId>com.fasterxml.jackson.core</groupId>
+	    <artifactId>jackson-core</artifactId>
+	    <version>2.18.0</version>
+	</dependency>
+
+	<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+	<dependency>
+	    <groupId>com.fasterxml.jackson.core</groupId>
+	    <artifactId>jackson-databind</artifactId>
+	</dependency>
 	
 </dependencies>
 
 </project>
 ```
 
-正如上文配置，每一个依赖均需要 `GAVP` 属性，但是 `version` 属性可以省略。
-而每个依赖所需要的 `GAVP` 属性可以去mevan仓库官网 https://mvnrepository.com 搜索
+正如上文配置，每一个依赖均需要 `GAVP` 属性，但是 `version` 属性可以省略、使用特殊值(<span style="background:#fff88f"><font color="#c00000">但是并不推荐这样做</font></span>)，特殊值有：
+- `LATEST` ：表示最新的版本，包括开发中的快照(snapshot)版本。
+- `RELEASE` ：表示最新的稳定版本，但是不包括快照版本。
+(从Maven2.1开始，`LATEST` 和 `RELEASE` <font color="#c00000">已经被标记为不推荐使用</font>，并在Maven3中<span style="background:#fff88f"><font color="#c00000">强烈不推荐使用</font></span>，<span style="background:#fff88f"><font color="#c00000">并且会在未来版本中移除</font></span>)。
 
+<font color="#c00000">当然，也可以将版本信息配置为一个版本区间</font>，例如 `<version>[3.0,3.9]</version>` 表示支持使用3.0到3.9版本中的任意一个(不过该特性也需要谨慎使用)。
+
+而每个依赖所需要的 `GAVP` 属性可以去mevan仓库官网 https://mvnrepository.com 搜索。也可以使用 `mevan-search` 插件进行搜索和复制配置信息。
+在完成 `pom.xml` 的修改之后刷新mevan即可。
 
 
