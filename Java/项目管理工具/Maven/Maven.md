@@ -260,10 +260,11 @@ Java项目构建流程为：
 
 Maven的继承通常用于将大项目拆分为若干个小项目后，在父项目中统一管理各子项目的依赖信息。
 通常的做法是：
-1. 在父工程的 `project` 块下，引入 `dependenciesManagement` 块。
-2. 将各 `dependency` 块在其中引入并指定版本。
-3. 在子工程的 `project` 块下，使用 `parent` 标签指定父工程的GAV信息。
-4. 
+1. 将父工程的打包方式设置为 `pom` 。
+2. 在父工程的 `project` 块下，引入 `dependenciesManagement` 块。
+3. 将各 `dependency` 块在其中引入并指定版本。
+4. 在子工程的 `project` 块下，使用 `parent` 标签指定父工程的GAV信息。
+5. 在子工程的 `project` 块。
 
 以下方的工程结构图为例，
 
@@ -271,11 +272,13 @@ Maven的继承通常用于将大项目拆分为若干个小项目后，在父项
 flowchart TB
     A[父工程<br>indi.h13.sharingspace] --> B[indi.h13.sharingspace.user]
     A[父工程<br>indi.h13.sharingspace] --> C[indi.h13.sharingspace.media]
-	B --> D[jackson-core<br>2.18.0]
-	C --> D[jackson-core<br>2.18.0]
+	B --> D[auth0<br>3.19.2]
+	B --> E[jackson-core<br>2.18.0]
+	C --> E[jackson-core<br>2.18.0]
+	C --> F[projectlombok<br>1.18.30]
 ```
 
-则对应的父工程 `pom.xml` 如下：
+则对应的父工程 `pom.xml` 可以如下编写：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>  
@@ -287,7 +290,53 @@ flowchart TB
     <groupId>indi.h13</groupId>  
     <artifactId>sharingspace</artifactId>  
     <version>1.0.0</version>  
-    <packaging>war</packaging>
+    <packaging>pom</packaging>
+  
+    <properties> 
+	    <maven.compiler.source>22</maven.compiler.source>  
+        <maven.compiler.target>22</maven.compiler.target>  
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
+    </properties>  
+
+	<!--  -->
+	<dependenciesManagement>
+		<dependency>  
+		    <groupId>com.auth0</groupId>  
+		    <artifactId>java-jwt</artifactId>  
+		    <version>3.19.2</version>  
+		</dependency>
+
+		<dependency>  
+		    <groupId>com.fasterxml.jackson.core</groupId>  
+		    <artifactId>jackson-core</artifactId>  
+		    <version>2.18.0</version>  
+		</dependency>
+		  
+		<dependency>  
+		    <groupId>org.projectlombok</groupId>  
+		    <artifactId>lombok</artifactId>  
+		    <version>1.18.30</version>  
+		    <optional>true</optional>  
+		</dependency>  
+	</dependenciesManagement>
+
+</project>
+```
+
+随后在子工程(以 `indi.h13.sharingspace.user` 为例)的 `pom.xml` 中可以如下配置：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>  
+<project xmlns="http://maven.apache.org/POM/4.0.0"  
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">  
+    <modelVersion>4.0.0</modelVersion>  
+  
+	<parent>
+		<groupId>com.fasterxml.jackson.core</groupId>  
+	    <artifactId>jackson-core</artifactId>  
+	    <version>2.18.0</version>  
+	</parent>
   
     <properties> 
 	    <maven.compiler.source>22</maven.compiler.source>  
@@ -297,15 +346,11 @@ flowchart TB
 
 
 
-
-
-
 </project>
 ```
 
 
 ### 6.2 Maven工程的聚合特性
-
 
 
 
