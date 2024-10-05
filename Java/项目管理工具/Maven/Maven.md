@@ -179,30 +179,29 @@ Maven相比于普通的工程项目，其还需要额外配置一组属性，这
 - 引用版本变量：
 	例如可以直接在 `pom.xml` 中的 `properties` 块中定义依赖的版本变量，例如：
 	```xml
-	<properties> 
-		<maven.compiler.source>22</maven.compiler.source>  
-	    <maven.compiler.target>22</maven.compiler.target>  
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
-		<!-- 声明jackson版本变量 -->
-		<!-- 命名的标签建议使用两层及以上 -->
-		<jackson.version>2.18.0</jackson.version>
-    </properties>  
+<properties> 
+	<maven.compiler.source>22</maven.compiler.source>  
+    <maven.compiler.target>22</maven.compiler.target>  
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
+	<!-- 声明jackson版本变量 -->
+	<!-- 命名的标签建议使用两层及以上 -->
+	<jackson.version>2.18.0</jackson.version>
+</properties>  
 	```
 	随后在定义 `dependency` 时使用该变量即可：
 	```xml
-		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
-	<dependency>
-	    <groupId>com.fasterxml.jackson.core</groupId>
-	    <artifactId>jackson-core</artifactId>
-	    <version>${jackson.version}</version>
-	</dependency>
-
-	<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
-	<dependency>
-	    <groupId>com.fasterxml.jackson.core</groupId>
-	    <artifactId>jackson-databind</artifactId>
-	    <version>${jackson.version}</version>
-	</dependency>
+<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-core</artifactId>
+    <version>${jackson.version}</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>${jackson.version}</version>
+</dependency>
 	```
 
 ### 4.3 依赖的作用域管理
@@ -259,7 +258,11 @@ Java项目构建流程为：
 
 ### 6.1 Maven工程的继承关系
 
-Maven的继承通常用于
+Maven的继承通常用于将大项目拆分为若干个小项目后，在父项目中统一管理各子项目的依赖信息。
+通常的做法是：
+1. 在父工程的 `project` 块下，引入 `dependenciesManagement` 块。
+2. 将各 `dependency` 块在其中引入并指定版本。
+3. 在子工程
 
 
 
