@@ -20,6 +20,6 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ## 4 SSM框架概述
 
-
+SSM框架指的是由Spring、Spring MVC、MyBatis三个组件构成的框架。
 
 
