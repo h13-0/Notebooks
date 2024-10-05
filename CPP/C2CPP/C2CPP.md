@@ -189,7 +189,7 @@ comp1.operator==(comp2);
 
 <span style="background:#fff88f"><font color="#c00000">需要注意的是，函数重载的方式不同，其对应的显示调用方式也不同。</font></span>
 
-## 3 新增基本类型
+## 3 新增基本类型(不含STL)
 
 ### 3.1 string类
 
@@ -211,7 +211,7 @@ string可以作为struct的成员，其size计算符合内存对齐等要求。
 |                          |                            |                     |
 |                          |                            |                     |
 
-### 3.2 STL
+## 4 STL
 
 STL全名为Standard Template Library，意为标准模板库或泛型库，是C++中的一个重要组件。其主要包含如下组件：
 - 容器(Containers)
@@ -220,7 +220,7 @@ STL全名为Standard Template Library，意为标准模板库或泛型库，是C
 - 函数对象(Function Objects)
 - 适配器(Adapters)
 
-#### 3.2.1 STL容器
+### 4.1 STL容器
 
 STL容器主要有如下三类：
 1. 序列容器
@@ -238,8 +238,13 @@ STL容器主要有如下三类：
 	3. `std::unordered_map`
 	4. `std::unordered_multimap`
 
-##### 3.2.1.1 vector
+#### 4.1.1 vector
 
+`std::vector` 是C++的动态大小的数组实现，其元素被顺序存储，因此其可以被迭代器和引索顺序访问。其会自动扩展其所需要的内存空间，并且通常其所占用的内存比同大小的静态数组要多。其空间的动态分配仅会发生在其所保留的额外空间耗尽时触发。
 
+##### 4.1.1.1 常用操作的时间复杂度
 
-
+<span style="background:#fff88f"><font color="#c00000">vector的常用操作的时间复杂度</font></span>：
+- 随机访问：$O(1)$
+- 在末尾插入或删除元素：$O(1)$
+- 
