@@ -298,7 +298,8 @@ flowchart TB
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
     </properties>  
 
-	<!--  -->
+	<!-- 使用dependenciesManagement声明版本信息，但不导入 -->
+	<!-- 该版本信息可以被子工程继承 -->
 	<dependenciesManagement>
 		<dependency>  
 		    <groupId>com.auth0</groupId>  
@@ -316,7 +317,6 @@ flowchart TB
 		    <groupId>org.projectlombok</groupId>  
 		    <artifactId>lombok</artifactId>  
 		    <version>1.18.30</version>  
-		    <optional>true</optional>  
 		</dependency>  
 	</dependenciesManagement>
 
@@ -331,29 +331,56 @@ flowchart TB
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">  
     <modelVersion>4.0.0</modelVersion>  
-  
+
+	<!-- 使用parent标签来继承父工程 -->
 	<parent>
-		<groupId>com.fasterxml.jackson.core</groupId>  
-	    <artifactId>jackson-core</artifactId>  
-	    <version>2.18.0</version>  
+		<groupId>indi.h13</groupId>  
+	    <artifactId>sharingspace</artifactId>  
+	    <version>1.0.0</version>  
 	</parent>
-  
+
+	<artifactId>user</artifactId>  
+
     <properties> 
 	    <maven.compiler.source>22</maven.compiler.source>  
         <maven.compiler.target>22</maven.compiler.target>  
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
     </properties>  
 
+	<!-- 使用dependencies导入依赖 -->
+	<!-- 所有受本pom影响的工程均会被导入该块中的依赖 -->
+	<dependencies>
+		<!-- 不用指定版本号!!! -->
+		<dependency>  
+		    <groupId>com.auth0</groupId>  
+		    <artifactId>java-jwt</artifactId>   
+		</dependency>
 
+		<dependency>  
+		    <groupId>com.fasterxml.jackson.core</groupId>  
+		    <artifactId>jackson-core</artifactId>  
+		</dependency>
+		  
+		<dependency>  
+		    <groupId>org.projectlombok</groupId>  
+		    <artifactId>lombok</artifactId>  
+		</dependency>  
+	</dependencies>
 
 </project>
 ```
 
+需要额外注意的是：
+1. <font color="#c00000">如果子工程中也重新定义一个版本信息，则子工程的版本信息会覆盖父工程中声明的版本信息</font>。
 
 ### 6.2 Maven工程的聚合特性
 
 
 
+
+
+
+在上文中的子模块中已经配置了 `parent` 属性，但是该属性无法满足上述的父工程的统一管理
 
 
 
