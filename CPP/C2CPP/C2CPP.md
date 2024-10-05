@@ -213,9 +213,32 @@ string可以作为struct的成员，其size计算符合内存对齐等要求。
 
 ### 3.2 STL
 
-STL全名为Standard Template Library，意味标准模板库或泛型库。
+STL全名为Standard Template Library，意为标准模板库或泛型库，是C++中的一个重要组件。其主要包含如下组件：
+- 容器(Containers)
+- 算法(Algorithms)
+- 迭代器(iterators)
+- 函数对象(Function Objects)
+- 适配器(Adapters)
 
-#### 3.2.1 vector
+#### 3.2.1 STL容器
+
+STL容器主要有如下三类：
+1. 序列容器
+	1. `std::vector`
+	2. `std::deque`
+	3. `std::list`
+2. 关联容器
+	1. `std::set`
+	2. `std::multiset`
+	3. `std::map`
+	4. `std::multimap`
+3. 无序容器
+	1. `std::unordered_set`
+	2. `std::unordered_multiset`
+	3. `std::unordered_map`
+	4. `std::unordered_multimap`
+
+##### 3.2.1.1 vector
 
 
 
