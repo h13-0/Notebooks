@@ -1,22 +1,22 @@
 ---
 number headings: auto, first-level 2, max 6, 1.1
 ---
-#Java #Mevan
+#Java #Maven
 
 ## 1 目录
 
 ```toc
 ```
 
-## 2 Mevan简介
+## 2 Maven简介
 
-Mevan是一个Java的项目构建与管理工具，可以自动化安装依赖，构建、打包和发布项目。
+Maven是一个Java的项目构建与管理工具，可以自动化安装依赖，构建、打包和发布项目。
 
-## 3 使用Mevan创建项目
+## 3 使用Maven创建项目
 
 ### 3.1 项目名及项目版本管理
 
-Mevan相比于普通的工程项目，其还需要额外配置一组属性，这组属性被称为 `GAVP` 属性，其具体为：
+Maven相比于普通的工程项目，其还需要额外配置一组属性，这组属性被称为 `GAVP` 属性，其具体为：
 - `GroupID` ：<span style="background:#fff88f"><font color="#c00000">组织标识</font></span>，通常最多不超过四级，格式为 `${组织属性}.${组织名}.${业务线}.[${子业务线}]`
 	- 组织属性通常有如下可选选项：
 		- `indi` ：个体项目，指个人发起，但非自己独自完成的项目，可公开或私有项目，copyright主要属于发起者。
@@ -28,20 +28,20 @@ Mevan相比于普通的工程项目，其还需要额外配置一组属性，这
 	- 子业务线为可选字段。
 - `ArtifactID` ：一般为项目名或模块名，或者 `${项目名}-${模块名}` ，命名前可以去仓库中心搜索一下避免重复。
 - `Version` ：版本号，<u>推荐</u>格式为 `${主版本号}.${次版本号}.${Patch号}` 。
-- `Packaging` ：<font color="#c00000">可选属性</font>，拥有默认值。其含义为Mevan工程的打包方式，其值只有如下三种：
+- `Packaging` ：<font color="#c00000">可选属性</font>，拥有默认值。其含义为Maven工程的打包方式，其值只有如下三种：
 	- `jar` ：<font color="#c00000">默认值</font>，打包为 `*.jar` 文件
 	- `war` ：打包为JavaWeb工程
 	- `pom` ：标识不会打包，通常用于当成做继承的父工程
 
-### 3.2 使用Mevan构建Java SE工程
+### 3.2 使用Maven构建Java SE工程
 
-在IDE中创建新工程(或者Module)时选择使用Mevan构建即可，注意需要指定 `GroupID` 和 `ArtifactID` 即可：
+在IDE中创建新工程(或者Module)时选择使用Maven构建即可，注意需要指定 `GroupID` 和 `ArtifactID` 即可：
 
 ![[idea64_On9moKqDbO.png]]
 
 随后该项目下会出现：
 1. 一个 `src` 文件夹用于存放Java代码
-2. 一个 `pom.xml` 存放Mevan配置信息。
+2. 一个 `pom.xml` 存放Maven配置信息。
 
 `pom.xml` 的默认配置信息如下：
 
@@ -73,9 +73,9 @@ Mevan相比于普通的工程项目，其还需要额外配置一组属性，这
     <packaging>jar</packaging>
 ```
 
-### 3.3 使用Mevan构建Java EE工程
+### 3.3 使用Maven构建Java EE工程
 
-正如[[Java语言基础#2 1 Java SE、EE、ME的区别和联系]]所述，Java EE是基于Java SE的拓展，因此使用Mevan构建Java EE工程有两种方式：
+正如[[Java语言基础#2 1 Java SE、EE、ME的区别和联系]]所述，Java EE是基于Java SE的拓展，因此使用Maven构建Java EE工程有两种方式：
 1. 直接使用IDE创建Java EE工程
 2. 手动基于Java SE补全工程
 
@@ -93,13 +93,13 @@ Mevan相比于普通的工程项目，其还需要额外配置一组属性，这
 手动基于Java SE补全工程只需要补全对应文件即可，例如若需要使用Java EE创建WebApp(Servlet)，则只需要：
 1. 在 `src/main` 文件夹下补充 `webapp/WEB-INF` 目录并补充 `web.xml` 文件。
 2. 在 `pom.xml` 中将打包方式改为 `war` 。
-3. 重新加载Mevan即可。
+3. 重新加载Maven即可。
 
-## 4 使用Mevan进行项目依赖管理
+## 4 使用Maven进行项目依赖管理
 
 ### 4.1 添加依赖
 
-在完成章节[[Mevan#3 2 使用Mevan构建Java SE工程]]的配置后，所形成的 `pom.xml` 代码如下：
+在完成章节[[Maven#3 2 使用Maven构建Java SE工程]]的配置后，所形成的 `pom.xml` 代码如下：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>  
@@ -121,7 +121,7 @@ Mevan相比于普通的工程项目，其还需要额外配置一组属性，这
 </project>
 ```
 
-而当需要使用Mevan管理依赖时则需要在 `project` 块中添加并形成如下内容：
+而当需要使用Maven管理依赖时则需要在 `project` 块中添加并形成如下内容：
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>  
@@ -163,8 +163,8 @@ Mevan相比于普通的工程项目，其还需要额外配置一组属性，这
 
 正如上文配置，每一个依赖均需要 `GAVP` 属性，但是 `version` 属性可以省略(<span style="background:#fff88f"><font color="#c00000">不推荐</font></span>)、使用特殊值(<span style="background:#fff88f"><font color="#c00000">不推荐</font></span>)、引用版本变量(<span style="background:#fff88f"><font color="#c00000">常用</font></span>)、使用版本区间等。详见下一章节。
 
-而每个依赖所需要的 `GAVP` 属性可以去mevan仓库官网 https://mvnrepository.com 搜索。也可以使用 `mevan-search` 插件进行搜索和复制配置信息。
-在完成 `pom.xml` 的修改之后刷新mevan即可。
+而每个依赖所需要的 `GAVP` 属性可以去Maven仓库官网 https://mvnrepository.com 搜索。也可以使用 `Maven-search` 插件进行搜索和复制配置信息。
+在完成 `pom.xml` 的修改之后刷新Maven即可。
 
 ### 4.2 依赖的版本管理
 
@@ -231,12 +231,12 @@ flowchart LR
     H --> J[依赖库G，版本1.0.5]
 ```
 
-则Mevan会自动根据依赖传递导入依赖库A、B、C、D...。
-但是关于依赖库D、G的版本问题，Mevan则按照如下顺序判定(先判定1再判定2)：
+则Maven会自动根据依赖传递导入依赖库A、B、C、D...。
+但是关于依赖库D、G的版本问题，Maven则按照如下顺序判定(先判定1再判定2)：
 1. <font color="#c00000">谁短谁优先</font>：引用路径谁短就引用谁。例如上图会<font color="#c00000">引入依赖库C的1.0.0版本</font>。
 2. <font color="#c00000">谁上谁优先</font>：由于在 `pom.xml` 的 `dependencies` 中哪个依赖靠上就引用哪个。例如上图会<font color="#c00000">引入依赖库G的1.2.0版本</font>。
 
-## 5 Java项目构建流程与Mevan常用命令
+## 5 Java项目构建流程与Maven常用命令
 
 Java项目构建流程为：
 1. 清理
@@ -246,7 +246,7 @@ Java项目构建流程为：
 5. 打包
 6. 部署
 
-与上述流程对应的Mevan命令为：
+与上述流程对应的Maven命令为：
 1. `mvn clean`
 2. `mvn compile`
 3. `mvn test`
@@ -254,4 +254,22 @@ Java项目构建流程为：
 5. `mvn package`
 6. `mvn install`
 7. `mvn deploy`
+
+## 6 Maven的继承和聚合特性
+
+### 6.1 Maven工程的继承关系
+
+Maven的继承通常用于
+
+
+
+### 6.2 Maven工程的聚合特性
+
+
+
+
+
+
+
+
 
