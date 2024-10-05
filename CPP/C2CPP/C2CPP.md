@@ -249,3 +249,12 @@ STL容器主要有如下三类：
 - 在末尾插入或删除元素：平均$O(1)$
 - 在末尾的倒数第n个位置插入或删除元素：$O(n)$
 
+##### 4.1.1.2 模板类型
+
+<font color="#c00000">vector中的模板类型需要满足如下要求</font>：
+- 可以拷贝赋值
+- 可以拷贝构造
+
+但是需要注意<span style="background:#fff88f"><font color="#c00000">慎用bool类型作为vector的元素</font></span>，除非明确地要使用 `vector<bool>` 的特性。
+
+
