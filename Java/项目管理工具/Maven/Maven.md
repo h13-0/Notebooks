@@ -270,8 +270,8 @@ Maven的继承通常用于将大项目拆分为若干个小项目后，在父项
 
 ```mermaid
 flowchart TB
-    A[父工程<br>indi.h13.sharingspace] --> B[indi.h13.sharingspace.user]
-    A[父工程<br>indi.h13.sharingspace] --> C[indi.h13.sharingspace.media]
+    A[父工程<br>indi.h13.sharingspace] --> B[indi.h13.sharingspace:user]
+    A[父工程<br>indi.h13.sharingspace] --> C[indi.h13.sharingspace:media]
 	B --> D[auth0<br>3.19.2]
 	B --> E[jackson-core<br>2.18.0]
 	C --> E[jackson-core<br>2.18.0]
@@ -375,14 +375,54 @@ flowchart TB
 
 ### 6.2 Maven工程的聚合特性
 
+Maven中聚合的概念是指将多个项目组合回一个父项目中，并可以通过父工程的项目构建命令统一构建子工程。
+而在上文中的子模块中已经配置了 `parent` 属性，但是该属性无法满足上述的父工程的统一管理功能，还需要在父工程的 `pom.xml` 中添加 `modules` 属性。修改后的代码如下：
 
+```xml
+<?xml version="1.0" encoding="UTF-8"?>  
+<project xmlns="http://maven.apache.org/POM/4.0.0"  
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">  
+    <modelVersion>4.0.0</modelVersion>  
+  
+    <groupId>indi.h13</groupId>  
+    <artifactId>sharingspace</artifactId>  
+    <version>1.0.0</version>  
+    <packaging>pom</packaging>
 
+	<!-- 将需要统一管理的模块的artifactID写入下方modules中 -->
+	<modules>
+		<module>user</module>
+		<module>media</module>
+	</modules>
 
+    <properties> 
+	    <maven.compiler.source>22</maven.compiler.source>  
+        <maven.compiler.target>22</maven.compiler.target>  
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
+    </properties>  
 
+	<!-- 使用dependenciesManagement声明版本信息，但不导入 -->
+	<!-- 该版本信息可以被子工程继承 -->
+	<dependenciesManagement>
+		<dependency>  
+		    <groupId>com.auth0</groupId>  
+		    <artifactId>java-jwt</artifactId>  
+		    <version>3.19.2</version>  
+		</dependency>
 
-在上文中的子模块中已经配置了 `parent` 属性，但是该属性无法满足上述的父工程的统一管理
+		<dependency>  
+		    <groupId>com.fasterxml.jackson.core</groupId>  
+		    <artifactId>jackson-core</artifactId>  
+		    <version>2.18.0</version>  
+		</dependency>
+		  
+		<dependency>  
+		    <groupId>org.projectlombok</groupId>  
+		    <artifactId>lombok</artifactId>  
+		    <version>1.18.30</version>  
+		</dependency>  
+	</dependenciesManagement>
 
-
-
-
-
+</project>
+```
