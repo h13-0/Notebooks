@@ -262,8 +262,46 @@ Maven的继承通常用于将大项目拆分为若干个小项目后，在父项
 通常的做法是：
 1. 在父工程的 `project` 块下，引入 `dependenciesManagement` 块。
 2. 将各 `dependency` 块在其中引入并指定版本。
-3. 在子工程
+3. 在子工程的 `project` 块下，使用 `parent` 标签指定父工程的GAV信息。
+4. 
 
+以下方的工程结构图为例，
+
+```mermaid
+flowchart TB
+    A[父工程<br>indi.h13.sharingspace] --> B[indi.h13.sharingspace.user]
+    A[父工程<br>indi.h13.sharingspace] --> C[indi.h13.sharingspace.media]
+	B --> D[jackson-core<br>2.18.0]
+	C --> D[jackson-core<br>2.18.0]
+```
+
+则对应的父工程 `pom.xml` 如下：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>  
+<project xmlns="http://maven.apache.org/POM/4.0.0"  
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">  
+    <modelVersion>4.0.0</modelVersion>  
+  
+    <groupId>indi.h13</groupId>  
+    <artifactId>sharingspace</artifactId>  
+    <version>1.0.0</version>  
+    <packaging>war</packaging>
+  
+    <properties> 
+	    <maven.compiler.source>22</maven.compiler.source>  
+        <maven.compiler.target>22</maven.compiler.target>  
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
+    </properties>  
+
+
+
+
+
+
+</project>
+```
 
 
 ### 6.2 Maven工程的聚合特性
