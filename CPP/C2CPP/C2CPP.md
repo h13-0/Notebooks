@@ -211,6 +211,12 @@ string可以作为struct的成员，其size计算符合内存对齐等要求。
 |                          |                            |                     |
 |                          |                            |                     |
 
+### 3.2 STL
+
+STL全名为Standard Template Library，意味标准模板库或泛型库。
+
+#### 3.2.1 vector
 
 
-### 3.2 
+
+
