@@ -149,9 +149,17 @@
                 "file": "面相对象的程序设计/面相对象的程序设计.md"
               }
             }
+          },
+          {
+            "id": "d976f59277efb42c",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {}
+            }
           }
         ],
-        "currentTab": 3
+        "currentTab": 4
       }
     ],
     "direction": "horizontal",
@@ -171,8 +179,8 @@
   },
   "active": "429a9a0858b2dc11",
   "lastOpenFiles": [
-    "CPP/C2CPP/C2CPP.md",
     "面相对象的程序设计/面相对象的程序设计.md",
+    "CPP/C2CPP/C2CPP.md",
     "Java/项目管理工具/Mevan/Mevan.md",
     "前后端编程/SpringBoot/SpringBoot 基础笔记.md",
     "Java/Java语言基础/Java语言基础.md",
