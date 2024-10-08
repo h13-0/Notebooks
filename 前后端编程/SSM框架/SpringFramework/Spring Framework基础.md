@@ -48,7 +48,7 @@ number headings: auto, first-level 2, max 6, 1.1
 1. `xml` 配置方式
 2. 注解配置方式
 3. java类配置方式
-具体的方式可见
+具体的方式可见[[Spring Framework基础#3 3 IoC控制反转与DI依赖注入]]。
 
 ### 3.2 Spring IoC容器接口及其实现类
 
@@ -69,4 +69,9 @@ number headings: auto, first-level 2, max 6, 1.1
 - <font color="#9bbb59">IoC</font>、<font color="#9bbb59">Inversion of Control</font>、<font color="#9bbb59">控制反转</font>：
 	控制反转指的是在Spring中，类的控制权不再由开发者所编写的代码所有，而是直接归Spring IoC容器所有。在IoC容器中，
 - <font color="#9bbb59">DI</font>、<font color="#9bbb59">Dependency injection</font>、<font color="#9bbb59">依赖注入</font>：
-	在使用容器创建对象时
+	在使用容器创建或使用组件时，往往会遇到依赖和参数传递的问题。而依赖注入就提供了将依赖关系在容器内部进行处理的解决方式。
+
+
+
+
+
