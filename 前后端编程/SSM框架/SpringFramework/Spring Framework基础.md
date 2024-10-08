@@ -22,6 +22,10 @@ number headings: auto, first-level 2, max 6, 1.1
 - 与Spring全家桶的其他框架进行整合交互
 而Spring要求的组件称为 `Spring Bean` ，其是在[[Java Bean]]要求的基础上进行规定的。
 
+|     | <center>[[Java Bean]]</center> | <center>Spring Bean</center>                                                                                                       |
+| --- | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
+| 要求  | 任何符合要求的类都可以称之为Java Bean。       | Spring Bean是在Spring容器中被实例化、管理和维护的对象。<br><font color="#c00000">一个Bean可以是任何普通的Java对象</font>，例如 POJO、Service、Respository、Controller等。 |
+
 ### 3.1 IoC控制反转与组件
 
 通常来说Spring项目由如下三层组成：

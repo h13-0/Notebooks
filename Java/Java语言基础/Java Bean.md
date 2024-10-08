@@ -22,7 +22,7 @@ Java，从logo来理解是一杯咖啡：
 
 从语法上，任何符合Java Bean要求的对象都可以称之为Java Bean。而其本质只是Java的一个特殊的类的规范而已。
 
-一个标准的Java Bean需要实现如下规范：
+一个标准的Java Bean需要遵守如下规范：
 1. 实现序列化( `Java.io.Serializable` 接口)。
 2. 是一个公共类。
 3. 类中必须实现一个无参构造函数。
