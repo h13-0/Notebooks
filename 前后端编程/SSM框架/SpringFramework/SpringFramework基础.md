@@ -8,7 +8,11 @@ number headings: auto, first-level 2, max 6, 1.1
 ```toc
 ```
 
-## 2 IoC控制反转与DI依赖注入
+## 2 SpringFramework框架简介
+
+![[SSM框架概述#4 1 Spring Framework框架简介]]
+
+## 3 IoC控制反转与DI依赖注入
 
 Spring Framework
 
