@@ -39,4 +39,13 @@ SSM框架指的是由Spring、Spring MVC、MyBatis三个组件构成的框架。
 
 ### 4.1 Spring Framework框架简介
 
+Spring Framework共计含有20多个子模块，其框架图如下图所示：
+
+![[Pasted image 20241008164128.png]]
+
+其主要功能有：
+- Core Container：核心容器，在 Spring 环境下使用任何功能都必须基于 IOC 容器。
+- AOP、Aspects：提供了面向切面编程。
+- TX：声明式事务管理
+- Spring MVC：提供了面向Web应用程序的集成功能。
 
