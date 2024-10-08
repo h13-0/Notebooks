@@ -8152,19 +8152,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 150,
+      "wordCount": 261,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 0.5,
-      "characterCount": 334,
-      "nonWhitespaceCharacterCount": 279,
-      "readingTimeInMinutes": 0.34966037735849054,
+      "pageCount": 0.87,
+      "characterCount": 578,
+      "nonWhitespaceCharacterCount": 493,
+      "readingTimeInMinutes": 0.6071320754716981,
       "linkCount": 0,
-      "embedCount": 0,
+      "embedCount": 1,
       "aliases": null,
       "createdDate": 1728294611651,
-      "modifiedDate": 1728388060067,
-      "sizeInBytes": 654,
+      "modifiedDate": 1728389324827,
+      "sizeInBytes": 1102,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -8430,7 +8430,7 @@
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
     },
-    "Resources/Pasted image 20241008172103.png": {
+    "前后端编程/Resources/Pasted image 20241008172103.png": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
@@ -8448,7 +8448,7 @@
       "modifiedDate": 1728379263750,
       "sizeInBytes": 25597
     },
-    "Resources/Pasted image 20241008172108.png": {
+    "前后端编程/Resources/Pasted image 20241008172108.png": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
@@ -8465,6 +8465,24 @@
       "createdDate": 1728379268326,
       "modifiedDate": 1728379268327,
       "sizeInBytes": 25597
+    },
+    "Java/Resources/Pasted image 20241008200221.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1728388941431,
+      "modifiedDate": 1728388941431,
+      "sizeInBytes": 31732
     }
   }
 }
