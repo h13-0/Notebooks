@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Java/Java语言基础/Java Bean.md",
+                "file": "前后端编程/SSM框架/SSM框架概述.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Java/Java语言基础/Java Bean.md",
+                "file": "前后端编程/SSM框架/SSM框架概述.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Java/Java语言基础/Java Bean.md",
+                "file": "前后端编程/SSM框架/SSM框架概述.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Java/Java语言基础/Java Bean.md"
+                "file": "前后端编程/SSM框架/SSM框架概述.md"
               }
             }
           },
@@ -166,15 +166,15 @@
   },
   "active": "1bd3a9b0b21ab479",
   "lastOpenFiles": [
-    "面相对象的程序设计/面相对象的程序设计.md",
-    "Java/Java语言基础/Java Bean.md",
+    "前后端编程/SSM框架/SpringFramework/SpringFramework.md",
     "前后端编程/SSM框架/SSM框架概述.md",
+    "Java/Java语言基础/Java Bean.md",
+    "面相对象的程序设计/面相对象的程序设计.md",
     "前后端编程/Readme.md",
     "计算机网络/基础应试学习/第五章 传输层/第五章 传输层.md",
     "Java/项目管理工具/Maven/Maven.md",
     "Java/Java语言基础/Java语言基础.md",
     "前后端编程/SSM框架/SpringBoot/SpringBoot 基础笔记.md",
-    "前后端编程/SSM框架/Spring/Spring.md",
     "计算机网络/基础应试学习/第三章 数据链路层/第三章 数据链路层.md",
     "计算机网络/基础应试学习/第四章 网络层/第四章 网络层.md",
     "计算机网络/应试笔记与八股.md",
@@ -184,7 +184,7 @@
     "Jav.md",
     "CPP/C2CPP/C2CPP.md",
     "前后端编程/SSM框架",
-    "前后端编程/SSM框架/Spring",
+    "前后端编程/SSM框架/SpringFramework",
     "前后端编程/JavaWeb/Tomcat/Servlet 简介.md",
     "Java/Resources/sEShHZ6AGM.png",
     "Java/Resources/idea64_hdyM53TwBe.png",
