@@ -270,10 +270,10 @@ Maven的继承通常用于将大项目拆分为若干个小项目后，在父项
 
 ```mermaid
 flowchart TB
-    A[父工程<br>indi.h13.sharingspace] --> B[indi.h13.sharingspace:user]
-    A[父工程<br>indi.h13.sharingspace] --> C[indi.h13.sharingspace:media]
-	B --> D[auth0<br>3.19.2]
-	B --> E[jackson-core<br>2.18.0]
+    A[父工程<br>indi.h13.sharingspace] --> B[indi.h13.sharingspace:user]
+    A[父工程<br>indi.h13.sharingspace] --> C[indi.h13.sharingspace:media]
+    B --> D[auth0<br>3.19.2]
+    B --> E[jackson-core<br>2.18.0]
 	C --> E[jackson-core<br>2.18.0]
 	C --> F[projectlombok<br>1.18.30]
 ```

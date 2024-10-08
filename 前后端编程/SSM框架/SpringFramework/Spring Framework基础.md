@@ -22,8 +22,18 @@ number headings: auto, first-level 2, max 6, 1.1
 - 与Spring全家桶的其他框架进行整合交互
 而Spring要求的组件称为 `Spring Bean` ，其是在[[Java Bean]]要求的基础上进行规定的。
 
+### 3.1 IoC控制反转与组件
 
-### 3.1 
+通常来说Spring项目由如下三层组成：
+
+```mermaid
+flowchart LR
+	A[浏览器请求] --> B[控制层组件<br>Controller]
+	B --> C[业务逻辑层组件<br>Service]
+	C --> D[持久化层组件<br>Mapper、DAO]
+	D --> E[数据库]
+```
+
 
 
 
