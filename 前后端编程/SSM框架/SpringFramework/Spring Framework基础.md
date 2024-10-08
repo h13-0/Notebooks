@@ -32,7 +32,20 @@ number headings: auto, first-level 2, max 6, 1.1
 | --- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 要求  | 任何符合要求的类都可以称之为Java Bean。       | <font color="#c00000">Spring Bean是在Spring IoC容器中被实例化、管理和维护的对象</font>。<br><font color="#c00000">一个Bean可以是任何普通的Java对象</font>，例如 POJO、Service、Respository、Controller等。 |
 
-### 3.1 IoC控制反转与组件
+### 3.1 Spring IoC容器接口及其实现类
+
+在Spring中， `org.springframework.beans.factory` 包中定义了Spring IoC容器接口 `BeanFactory` 。在这个接口的定义下，Spring还提供了：
+
+| <center>类型名</center>                 | <center>简介</center>                                                                          |
+| ------------------------------------ | -------------------------------------------------------------------------------------------- |
+| `ClassPathXmlApplicationContext`     | 通过读取类路径下(src下)的xml格式的配置文件创建IoC容器对象，即：<br>1. 配置方式为xml<br>2. xml文件在类路径下<br>时使用此接口。             |
+| `FileSystemXmlApplicationContext`    | \[不常用\]通过文件系统路径下(其他路径)读取xml格式的配置文件创建IoC容器对象，即：<br>1. 配置方式为xml<br>2.xml文件在系统中的其他路径<br>时使用此接口。 |
+| `AnnotationConfigApplicationContext` | 通过读取Java配置类创建IoC容器对象，即：<br>1. 配置文件使用的是Java类<br>时使用此接口。                                       |
+| `WebApplicationContext`              | 专门为Web应用准备，基于Web环境创建IoC容器对象，<br>并将对象引入存入ServletContext域中，即：<br>1. 当前项目为Web项目<br>时使用此接口。      |
+
+等常用接口，这些接口都是 `BeanFactory` 的拓展，提供了更多的特性和功能(即上述表格中"简介"的功能)。
+
+### 3.2 IoC控制反转与组件
 
 通常来说Spring项目由如下三层组成：
 
@@ -49,21 +62,4 @@ number headings: auto, first-level 2, max 6, 1.1
 1. `xml` 配置方式
 2. 注解配置方式
 3. java类配置方式
-
-### 3.2 Spring IoC容器接口及其实现类
-
-在Spring中， `org.springframework.beans.factory` 包中定义了Spring IoC容器接口 `BeanFactory` 。在这个接口的定义下，Spring还提供了：
-
-| 类型名                                  | 简介                                                        |
-| ------------------------------------ | --------------------------------------------------------- |
-| `ClassPathXmlApplicationContext`     | 通过读取类路径下(src下)的xml格式的配置文件创建IoC容器对象                        |
-| `FileSystemXmlApplicationContext`    | 通过文件系统路径(其他路径)读取xml格式的配置文件创建IoC容器对象                       |
-| `AnnotationConfigApplicationContext` | 通过读取Java配置类创建IoC容器对象                                      |
-| `WebApplicationContext`              | 专门为Web应用准备，基于Web环境创建IoC容器对象，<br>并将对象引入存入ServletContext域中。 |
-
-等常用接口。
-
-
-
-
 
