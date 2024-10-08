@@ -23,8 +23,10 @@ number headings: auto, first-level 2, max 6, 1.1
 而Spring要求的组件称为 `Spring Bean` ，其是在[[Java Bean]]要求的基础上进行规定的。
 
 在Spring文档中， `Spring Bean` 被如下定义：
-1. 
 
+	In Spring, the objects that form the backbone of your application and that are managed by the Spring IoC container are called beans. A bean is an object that is instantiated, assembled, and otherwise managed by a Spring IoC container.
+
+即：<font color="#c00000">构成应用程序主干并由Spring IoC容器管理的对象称为bean</font>。
 
 |     | <center>[[Java Bean]]</center> | <center>Spring Bean</center>                                                                                                                                        |
 | --- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -47,5 +49,21 @@ number headings: auto, first-level 2, max 6, 1.1
 1. `xml` 配置方式
 2. 注解配置方式
 3. java类配置方式
+
+### 3.2 Spring IoC容器接口及其实现类
+
+在Spring中， `org.springframework.beans.factory` 包中定义了Spring IoC容器接口 `BeanFactory` 。在这个接口的定义下，Spring还提供了：
+
+| 类型名                                  | 简介                                                        |
+| ------------------------------------ | --------------------------------------------------------- |
+| `ClassPathXmlApplicationContext`     | 通过读取类路径下(src下)的xml格式的配置文件创建IoC容器对象                        |
+| `FileSystemXmlApplicationContext`    | 通过文件系统路径(其他路径)读取xml格式的配置文件创建IoC容器对象                       |
+| `AnnotationConfigApplicationContext` | 通过读取Java配置类创建IoC容器对象                                      |
+| `WebApplicationContext`              | 专门为Web应用准备，基于Web环境创建IoC容器对象，<br>并将对象引入存入ServletContext域中。 |
+
+等常用接口。
+
+
+
 
 
