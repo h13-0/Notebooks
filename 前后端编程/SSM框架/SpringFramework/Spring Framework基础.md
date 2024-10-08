@@ -45,7 +45,7 @@ number headings: auto, first-level 2, max 6, 1.1
 每一层都由组件构成，并且这些组件必须被放入Spring容器中才能使用一些由Spring提供的特性。而各层之间存在的有依赖关系，例如控制层在接收到请求后，会逐层调用业务逻辑层、持久化层后才能响应该请求。
 
 而Spring可以管理并负责这些组件之间的依赖并完成装配。但是依赖信息需要由程序员按照如下三种方式之一来配置：
-1. `xml` 配置方式
+1. [[Spring Framework基础#3 3 1 使用xml配置组件及其依赖信息|xml配置方式]]
 2. 注解配置方式
 3. java类配置方式
 具体的方式可见[[Spring Framework基础#3 3 IoC控制反转与DI依赖注入]]。
@@ -70,6 +70,13 @@ number headings: auto, first-level 2, max 6, 1.1
 	控制反转指的是在Spring中，类的控制权不再由开发者所编写的代码所有，而是直接归Spring IoC容器所有。在IoC容器中，
 - <font color="#9bbb59">DI</font>、<font color="#9bbb59">Dependency injection</font>、<font color="#9bbb59">依赖注入</font>：
 	在使用容器创建或使用组件时，往往会遇到依赖和参数传递的问题。而依赖注入就提供了将依赖关系在容器内部进行处理的解决方式。
+
+而在使用IoC容器管理组件时，需要执行如下的步骤：
+1. 通过 配置文件 <font color="#c00000">或</font> 注解 <font color="#c00000">或</font> 配置类 的方式表述需要容器管理的组件，以及组件之间的依赖关系。
+2. 通过IoC容器接口实例化一个IoC容器对象(使用[[Spring Framework基础#3 2 Spring IoC容器接口及其实现类|IoC容器接口及其实现类]])。
+3. 在Java代码中获取IoC容器中的组件并使用。
+
+#### 3.3.1 使用xml配置组件及其依赖信息
 
 
 
