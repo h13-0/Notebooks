@@ -26,7 +26,7 @@ SSM框架指的是由Spring、Spring MVC、MyBatis三个组件构成的框架。
 - 狭义的Spring：Spring Framework。
 	- 其所提供的功能有：
 		- IoC控制反转与DI依赖注入(Inversion of Control、Dependency injection)
-		- AOP面相切面编程
+		- AOP面相切面编程(Aspect-Oriented Programming)
 		- TX事务管理(Transaction Management)
 		- MVC框架(Model、View、Controller)
 - 广义的Spring：Spring技术栈，即Spring全家桶。

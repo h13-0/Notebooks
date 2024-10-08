@@ -31,8 +31,7 @@
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -106,7 +105,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "前后端编程/SSM框架/SpringFramework/Spring Framework基础.md",
+                "file": "前后端编程/SSM框架/SSM框架概述.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -123,7 +122,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "前后端编程/SSM框架/SpringFramework/Spring Framework基础.md",
+                "file": "前后端编程/SSM框架/SSM框架概述.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -146,7 +145,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "前后端编程/SSM框架/SpringFramework/Spring Framework基础.md"
+                "file": "前后端编程/SSM框架/SSM框架概述.md"
               }
             }
           },
@@ -177,10 +176,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "aa869dc011b6582f",
+  "active": "1bd3a9b0b21ab479",
   "lastOpenFiles": [
-    "前后端编程/SSM框架/SSM框架概述.md",
     "前后端编程/SSM框架/SpringFramework/Spring Framework基础.md",
+    "前后端编程/SSM框架/SSM框架概述.md",
     "前后端编程/Resources/Pasted image 20241008164128.png",
     "Java/Java语言基础/Java Bean.md",
     "面相对象的程序设计/面相对象的程序设计.md",
