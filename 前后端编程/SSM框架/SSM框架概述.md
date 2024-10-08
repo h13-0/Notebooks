@@ -24,5 +24,16 @@ SSM框架指的是由Spring、Spring MVC、MyBatis三个组件构成的框架。
 
 上述的Spring指的是Spring Framework。而Spring通常有狭义和广义的含义：
 - 狭义的Spring：Spring Framework。
+	- 其所提供的功能有：
+		- IoC控制反转与DI依赖注入
+		- AOP面相切面编程
+		- TX事务管理(Transaction Management)
+		- MVC框架(Model、View、Controller)
 - 广义的Spring：Spring技术栈，即Spring全家桶。
+	- Spring全家桶包含：
+		- SpringBoot
+		- SpringData
+		- SpringCloud
+		- SpringSecurity
+		- ...
 
