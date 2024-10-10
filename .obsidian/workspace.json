@@ -11,11 +11,9 @@
             "id": "1bd3a9b0b21ab479",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "image",
               "state": {
-                "file": "前后端编程/SSM框架/SSM框架概述.md",
-                "mode": "source",
-                "source": false
+                "file": "Resources/Pasted image 20240203021517.png"
               }
             }
           },
@@ -67,8 +65,7 @@
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -142,7 +139,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Java/Java语言基础/Java Bean.md",
+                "file": "Resources/Pasted image 20240203021517.png",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -159,7 +156,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Java/Java语言基础/Java Bean.md",
+                "file": "Resources/Pasted image 20240203021517.png",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -182,7 +179,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Java/Java语言基础/Java Bean.md"
+                "file": "Resources/Pasted image 20240203021517.png"
               }
             }
           },
@@ -213,13 +210,13 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "b6687b0699ed0976",
+  "active": "1bd3a9b0b21ab479",
   "lastOpenFiles": [
     "面相对象的程序设计/面相对象的程序设计.md",
-    "前后端编程/SSM框架/SpringFramework/Spring Framework基础.md",
     "前后端编程/SSM框架/SSM框架概述.md",
-    "Java/项目管理工具/Maven/Maven.md",
     "Java/Java语言基础/Java Bean.md",
+    "前后端编程/SSM框架/SpringFramework/Spring Framework基础.md",
+    "Java/项目管理工具/Maven/Maven.md",
     "Java/Resources/Pasted image 20241008200221.png",
     "前后端编程/Resources/Pasted image 20241008172108.png",
     "前后端编程/Resources/Pasted image 20241008172103.png",
