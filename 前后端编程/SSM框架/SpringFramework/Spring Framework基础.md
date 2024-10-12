@@ -78,7 +78,7 @@ number headings: auto, first-level 2, max 6, 1.1
 
 #### 3.3.1 使用xml配置组件及其依赖信息
 
-
+在工程中引入Spring相关的组件后，非社区板的IDEA就可以直接在 `resource` 目录下创建
 
 
 
