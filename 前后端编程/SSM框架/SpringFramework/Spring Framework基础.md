@@ -154,11 +154,14 @@ number headings: auto, first-level 2, max 6, 1.1
 flowchart TB
 	A[客户端请求] -.-> B[UserController]
 	B --> C[UserService]
-	C --> D[UserMapper]
+	C --> D[UserMapper<br>参数：dbUserName, dbPassword]
 	D -.-> E[(Database)]
 ```
 
-则上图的依赖关系为上一级依赖下一级，即 `Controller` 的正常执行需要 `Service` 提供的支持， `Service` 的正常执行需要 `Mapper` 的支持。因此 `Controller` 依赖于实例化的 `Service` ， `Service` 依赖于...
+则上图的依赖关系为上一级依赖下一级，即：
+- `UserController` 依赖 `UserService`
+- `UserService` 依赖 `UserMapper`
+- `UserMapper` 需要指定若干参数
 
 而上述的依赖关系可以通过DI依赖注入完成，依赖注入有如下几种方法：
 1. 构造函数传参
@@ -176,9 +179,9 @@ UserMapper：
 package indi.h13.mappers;  
   
 public class UserMapper {  
-    public UserMapper(String) {  
-        System.out.println("Created a UserMapperusing a constructor with parameter ");  
-    }  
+	public UserMapper(String dbUserName, String dbPassword) {  
+	    System.out.println("Created a UserMapper using a constructor with dbUserName " + dbUserName + ", dbPassword " + dbPassword);  
+	}
 }
 ```
 
