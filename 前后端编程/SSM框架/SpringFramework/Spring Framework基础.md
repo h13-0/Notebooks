@@ -280,8 +280,8 @@ public class UserController {
 和上一小节中使用xml完成实例化相同，通常在 `resources` 文件夹下创建一个Spring Config模板文件，并向其中添加若干可选配置语句即可。
 可选的配置语句有：
 1. 添加注解生效包
-2. 排除指定组件
-3. 指定扫描组件
+2. 排除指定注解
+3. 指定扫描注解
 Demo如下：
 
 ```xml
