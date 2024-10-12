@@ -168,7 +168,46 @@ flowchart TB
 1. `UserMapper` 注入到 `UserService` 时使用的是构造函数传参。
 2. `UserService` 注入到 `UserController` 时使用的是 `setter` 接口。
 
+并且给定Java代码如下：
 
+UserMapper：
+
+```Java
+package indi.h13.mappers;  
+  
+public class UserMapper {  
+    public UserMapper() {  
+        System.out.println("Instantiate UserMapper through the parameterless constructor.");  
+    }  
+}
+```
+
+UserService：
+
+```Java
+package indi.h13.services;  
+  
+public class UserService {  
+	private UserMapper mapper;
+    public UserService(UserMapper mapper){ 
+	    this.mapper = mapper;
+    }  
+}
+```
+
+UserController：
+
+```Java
+package indi.h13.services;  
+  
+public class UserController {  
+	private UserService service;
+    public UserService(){ }  
+    public
+}
+
+
+```
 
 ##### 3.3.2.1 使用xml完成DI依赖注入
 
