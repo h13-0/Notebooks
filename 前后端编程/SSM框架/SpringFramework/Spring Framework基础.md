@@ -168,9 +168,11 @@ flowchart TB
 1. `UserMapper` 注入到 `UserService` 时使用的是构造函数传参。
 2. `UserService` 注入到 `UserController` 时使用的是 `setter` 接口。
 
+
+
 ##### 3.3.2.1 使用xml完成DI依赖注入
 
-在章节[[Spring Framework基础#3 3 1 1 使用xml完成IoC容器中组件的实例化|使用IoC完成容器中组件的实例化]]中给出了实例化的若干方法。在这些方法的基之上
+在章节[[Spring Framework基础#3 3 1 1 使用xml完成IoC容器中组件的实例化|使用IoC完成容器中组件的实例化]]中给出了实例化的若干方法。在这些方法的基础之上
 
 
 
