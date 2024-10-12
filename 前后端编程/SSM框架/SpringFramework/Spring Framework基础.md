@@ -270,7 +270,23 @@ public class UserController {
 
 上述章节介绍了在IoC中注册组件和管理组件的方式，本章节将具体讲解IoC容器的创建和使用。
 
+```Java
+// 创建容器  
+this.context = new ClassPathXmlApplicationContext("spring-01.xml");  
 
+// 方式1[不推荐]：使用 `beanId` 获取，返回值类型为Object，需要使用强制类型转换操作对象。  
+Object userMapperBean = this.context.getBean("userMapper");  
+UserMapper userMapper = (UserMapper)userMapperBean;  
+  
+// 方式2[推荐]：使用 `beanId` 获取，同时指定类型  
+// 此时不需要强转  
+userMapper = this.context.getBean("userMapper", UserMapper.class);  
+  
+// 方式3：只使用类型获取，此时注意：  
+// 1. 此方法只支持单例，即同一个类型在容器中只有一个Bean。否则运行时出错(NoUniqueBeanDefinitionException)  
+// 2. 当使用父类或接口作为类型去获取时，也可以正常获取(只要 bean instanceof A.class == true即可，且整个项目中该父类只有一个实例)  
+userMapper = this.context.getBean(UserMapper.class);
+```
 
 
 
