@@ -77,7 +77,73 @@ number headings: auto, first-level 2, max 6, 1.1
 2. 通过IoC容器接口实例化一个IoC容器对象(使用[[Spring Framework基础#3 2 Spring IoC容器接口及其实现类|IoC容器接口及其实现类]])。
 3. 在Java代码中获取IoC容器中的组件并使用。
 
+仿照Spring框架中的三层组件分层，可以先假设一个如下的组件依赖情况：
+
+```mermaid
+flowchart TB
+	A[客户端请求] -.-> B[UserController]
+	B --> C[UserService]
+	C --> D[UserMapper<br>参数：dbUserName, dbPassword]
+	D -.-> E[(Database)]
+```
+
+则上图的依赖关系为上一级依赖下一级，即：
+- `UserController` 依赖 `UserService`
+- `UserService` 依赖 `UserMapper`
+- `UserMapper` 需要指定若干参数
+
+而上述的依赖关系可以通过DI依赖注入完成，依赖注入有如下几种方法：
+1. 构造函数传参
+2. `setter` 方法传参
+
+在后续子章节中，均假设：
+1. `UserMapper` 注入到 `UserService` 时使用的是构造函数传参。
+2. `UserService` 注入到 `UserController` 时使用的是 `setter` 接口。
+
+并且给定Java代码如下：
+
+`UserMapper.java`：
+
+```Java
+package indi.h13.mappers;  
+  
+public class UserMapper {  
+	public UserMapper(String dbUserName, String dbPassword) {  
+	    System.out.println("Created a UserMapper using a constructor with dbUserName " + dbUserName + ", dbPassword " + dbPassword);  
+	}
+}
+```
+
+`UserService.java`：
+
+```Java
+package indi.h13.services;  
+import indi.h13.mappers.UserMapper; 
+  
+public class UserService {  
+	private UserMapper mapper;
+    public UserService(UserMapper mapper){ 
+	    this.mapper = mapper;
+    }  
+}
+```
+
+`UserController.java`：
+
+```Java
+package indi.h13.controllers;  
+import indi.h13.services.UserService;  
+import lombok.Setter;  
+  
+@Setter  
+public class UserController {  
+    private UserService service;  
+    public UserController() {}  
+}
+```
+
 #### 3.3.1 IoC容器中组件的实例化
+
 ##### 3.3.1.1 使用xml完成IoC容器中组件的实例化
 
 在工程中引入Spring相关的组件后，非社区板的IDEA就可以直接在 `resource` 目录下创建IoC组件的配置模板：
@@ -158,16 +224,59 @@ xml文件放置于resources文件夹后，经过编译后均会出现在 `target
 
 IoC为组件提供的注解有：
 
-| <center>注解</center> | <center>含义及用途</center>                                                                                |
-| ------------------- | ----------------------------------------------------------------------------------------------------- |
-| `@Component`        | 该注解用于描述Spring中的组件。它是一个泛化的概念，仅仅表示容器中的一个组件（Bean），并且可以作用在应用的任何层次，例如 Service 层、Dao 层等。 使用时只需将该注解标注在相应类上即可 |
-| `@Repository`       |                                                                                                       |
-| `@Service`          |                                                                                                       |
-| `@Controller`       |                                                                                                       |
+| <center>注解</center> | <center>含义及用途</center>                                                                                                                                                   |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `@Component`        | 该注解用于描述Spring中的组件。<br><span style="background:#fff88f"><font color="#c00000">Spring中的任意组件均可使用该注解</font></span>，包括但不限于Spring三层架构中的任意一层。<br>在非三层架构的组件开发中常用。<br>该注解用于标注于类上。 |
+| `@Repository`       | 功能与 `@Component` 没有任何区别。<br>但是在程序可读性上用于向程序员表示该组件属于数据访问层。                                                                                                                 |
+| `@Service`          | 功能与 `@Component` 没有任何区别。<br>但是在程序可读性上用于向程序员表示该组件属于业务逻辑层。                                                                                                                 |
+| `@Controller`       | 功能与 `@Component` 没有任何区别。<br>但是在程序可读性上用于向程序员表示该组件属于控制层。                                                                                                                   |
 
+因此，上述三个实例Java类用注解实例化的示例为：
 
+`UserMapper.java`：
 
+```Java
+package indi.h13.mappers;  
 
+@Repository
+public class UserMapper {  
+	public UserMapper(String dbUserName, String dbPassword) {  
+	    System.out.println("Created a UserMapper using a constructor with dbUserName " + dbUserName + ", dbPassword " + dbPassword);  
+	}
+}
+```
+
+`UserService.java`：
+
+```Java
+package indi.h13.services;  
+import indi.h13.mappers.UserMapper; 
+
+@Service
+public class UserService {  
+	private UserMapper mapper;
+    public UserService(UserMapper mapper){ 
+	    this.mapper = mapper;
+    }  
+}
+```
+
+`UserController.java`：
+
+```Java
+package indi.h13.controllers;  
+import indi.h13.services.UserService;  
+import lombok.Setter;  
+  
+@Setter  
+@Controller // 等效于 <bean id="" class="indi.h13.controllers.UserController"
+public class UserController {  
+    private UserService service;  
+    public UserController() {}  
+}
+```
+
+随后
 
 
 
@@ -177,70 +286,6 @@ IoC为组件提供的注解有：
 
 #### 3.3.2 IoC容器中的DI依赖注入
 
-仿照Spring框架中的组件分层，可以先假设一个如下的组件依赖情况：
-
-```mermaid
-flowchart TB
-	A[客户端请求] -.-> B[UserController]
-	B --> C[UserService]
-	C --> D[UserMapper<br>参数：dbUserName, dbPassword]
-	D -.-> E[(Database)]
-```
-
-则上图的依赖关系为上一级依赖下一级，即：
-- `UserController` 依赖 `UserService`
-- `UserService` 依赖 `UserMapper`
-- `UserMapper` 需要指定若干参数
-
-而上述的依赖关系可以通过DI依赖注入完成，依赖注入有如下几种方法：
-1. 构造函数传参
-2. `setter` 方法传参
-
-在后续子章节中，均假设：
-1. `UserMapper` 注入到 `UserService` 时使用的是构造函数传参。
-2. `UserService` 注入到 `UserController` 时使用的是 `setter` 接口。
-
-并且给定Java代码如下：
-
-UserMapper：
-
-```Java
-package indi.h13.mappers;  
-  
-public class UserMapper {  
-	public UserMapper(String dbUserName, String dbPassword) {  
-	    System.out.println("Created a UserMapper using a constructor with dbUserName " + dbUserName + ", dbPassword " + dbPassword);  
-	}
-}
-```
-
-UserService：
-
-```Java
-package indi.h13.services;  
-import indi.h13.mappers.UserMapper; 
-  
-public class UserService {  
-	private UserMapper mapper;
-    public UserService(UserMapper mapper){ 
-	    this.mapper = mapper;
-    }  
-}
-```
-
-UserController：
-
-```Java
-package indi.h13.controllers;  
-import indi.h13.services.UserService;  
-import lombok.Setter;  
-  
-@Setter  
-public class UserController {  
-    private UserService service;  
-    public UserController() {}  
-}
-```
 
 ##### 3.3.2.1 使用xml完成DI依赖注入
 
