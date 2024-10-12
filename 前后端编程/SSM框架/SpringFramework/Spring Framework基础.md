@@ -176,8 +176,8 @@ UserMapper：
 package indi.h13.mappers;  
   
 public class UserMapper {  
-    public UserMapper() {  
-        System.out.println("Instantiate UserMapper through the parameterless constructor.");  
+    public UserMapper(String) {  
+        System.out.println("Created a UserMapperusing a constructor with parameter ");  
     }  
 }
 ```
@@ -186,6 +186,7 @@ UserService：
 
 ```Java
 package indi.h13.services;  
+import indi.h13.services.UserMapper; 
   
 public class UserService {  
 	private UserMapper mapper;
@@ -198,20 +199,24 @@ public class UserService {
 UserController：
 
 ```Java
-package indi.h13.services;  
+package indi.h13.controllers;  
+import indi.h13.services.UserService;  
+import lombok.Setter;  
   
+@Setter  
 public class UserController {  
-	private UserService service;
-    public UserService(){ }  
-    public
+    private UserService service;  
+    public UserController() {}  
 }
-
-
 ```
 
 ##### 3.3.2.1 使用xml完成DI依赖注入
 
-在章节[[Spring Framework基础#3 3 1 1 使用xml完成IoC容器中组件的实例化|使用IoC完成容器中组件的实例化]]中给出了实例化的若干方法。在这些方法的基础之上
+在章节[[Spring Framework基础#3 3 1 1 使用xml完成IoC容器中组件的实例化|使用IoC完成容器中组件的实例化]]中给出了实例化的若干方法。在这些方法的基础之上完成了如下的两种DI依赖注入方式：
+
+
+
+
 
 
 
