@@ -189,7 +189,7 @@ UserService：
 
 ```Java
 package indi.h13.services;  
-import indi.h13.services.UserMapper; 
+import indi.h13.mappers.UserMapper; 
   
 public class UserService {  
 	private UserMapper mapper;

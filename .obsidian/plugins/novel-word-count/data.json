@@ -6536,15 +6536,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 6.17,
-      "characterCount": 7073,
-      "nonWhitespaceCharacterCount": 5732,
+      "characterCount": 7072,
+      "nonWhitespaceCharacterCount": 5731,
       "readingTimeInMinutes": 4.395471698113207,
       "linkCount": 6,
       "embedCount": 3,
       "aliases": null,
       "createdDate": 1728133649657,
-      "modifiedDate": 1728721609709,
-      "sizeInBytes": 10261,
+      "modifiedDate": 1728722137501,
+      "sizeInBytes": 10260,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
