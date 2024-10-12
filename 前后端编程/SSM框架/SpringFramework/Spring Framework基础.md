@@ -148,11 +148,37 @@ number headings: auto, first-level 2, max 6, 1.1
 
 #### 3.3.2 IoC容器中的DI依赖注入
 
-仿照Spring框架中的组件分层，可以先假设一个如下的组件依赖情况(从上到下表示)：
+仿照Spring框架中的组件分层，可以先假设一个如下的组件依赖情况：
 
 ```mermaid
 flowchart TB
-	A[UserController] --> B[UserService]
-	B --> C[UserMapper]
-	C --> D[(Database)]
+	A[客户端请求] -.-> B[UserController]
+	B --> C[UserService]
+	C --> D[UserMapper]
+	D -.-> E[(Database)]
 ```
+
+则上图的依赖关系为上一级依赖下一级，即 `Controller` 的正常执行需要 `Service` 提供的支持， `Service` 的正常执行需要 `Mapper` 的支持。因此 `Controller` 依赖于实例化的 `Service` ， `Service` 依赖于...
+
+而上述的依赖关系可以通过DI依赖注入完成，依赖注入有如下几种方法：
+1. 构造函数传参
+2. `setter` 方法传参
+
+在后续子章节中，均假设：
+1. `UserMapper` 注入到 `UserService` 时使用的是构造函数传参。
+2. `UserService` 注入到 `UserController` 时使用的是 `setter` 接口。
+
+##### 3.3.2.1 使用xml完成DI依赖注入
+
+在章节[[Spring Framework基础#3 3 1 1 使用xml完成IoC容器中组件的实例化|使用IoC完成容器中组件的实例化]]中给出了实例化的若干方法。在这些方法的基之上
+
+
+
+
+
+
+
+
+
+
+
