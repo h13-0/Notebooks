@@ -50,7 +50,7 @@ number headings: auto, first-level 2, max 6, 1.1
 3. java类配置方式
 具体的方式可见[[Spring Framework基础#3 3 IoC控制反转与DI依赖注入]]。
 
-### 3.2 Spring IoC容器接口及其实现类
+### 3.2 Spring IoC容器接口及其实现类介绍
 
 在Spring中， `org.springframework.beans.factory` 包中定义了Spring IoC容器接口 `BeanFactory` 。在这个接口的定义下，Spring还提供了：
 
@@ -62,6 +62,7 @@ number headings: auto, first-level 2, max 6, 1.1
 | `WebApplicationContext`              | 专门为Web应用准备，基于Web环境创建IoC容器对象，<br>并将对象引入存入ServletContext域中，即：<br>1. 当前项目为Web项目<br>时使用此接口。      |
 
 等常用接口，这些接口都是 `BeanFactory` 的拓展，提供了更多的特性和功能(即上述表格中"简介"的功能)。
+本章节只做简单介绍，具体实现可见章节[[Spring Framework基础#3.4 Spring IoC容器创建和使用|Spring IoC容器创建和使用]]。
 
 ### 3.3 IoC控制反转、IoC容器，以及DI依赖注入
 
@@ -93,6 +94,8 @@ number headings: auto, first-level 2, max 6, 1.1
 
 </beans>
 ```
+
+<font color="#c00000">xml文件名可以随意命名</font>，因为<font color="#c00000">还需要调用对应的接口指定xml路径</font>才能让Spring完成IoC组件实例化。具体见章节[[Spring Framework基础#3 4 Spring IoC容器创建和使用|Spring IoC容器创建和使用]]。
 
 随后在 `beans` 块中完成各bean的实例化配置即可。
 实例化配置有如下几种方法：
@@ -215,7 +218,58 @@ public class UserController {
 
 ##### 3.3.2.1 使用xml完成DI依赖注入
 
-在章节[[Spring Framework基础#3 3 1 1 使用xml完成IoC容器中组件的实例化|使用IoC完成容器中组件的实例化]]中给出了实例化的若干方法。在这些方法的基础之上完成了如下的两种DI依赖注入方式：
+在章节[[Spring Framework基础#3 3 1 1 使用xml完成IoC容器中组件的实例化|使用IoC完成容器中组件的实例化]]中给出了实例化的若干方法。在这些方法的基础之上完成了如下的两种DI依赖注入方式及其若干实现方法：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">  
+  
+    <bean id="userMapper" class="indi.h13.mappers.UserMapper">  
+        <!--  
+            构造函数注入，方式一：直接顺序填写参数  
+            value为直接引用值。不管实际使用的是什么类型，在xml中均要配置为字符串。  
+            ref为引用其他的spring bean。  
+        -->  
+        <constructor-arg value="root"/> <!-- dbUserName = "root" -->  
+        <constructor-arg value="pswd"/> <!-- dbPassword = "pswd" -->  
+    </bean>  
+  
+    <bean id="userService" class="indi.h13.services.UserService">  
+        <!--  
+            构造函数注入，方式二[推荐]：指定参数名称并给定值  
+            value为直接引用值。不管实际使用的是什么类型，在xml中均要配置为字符串。  
+            ref为引用其他的spring bean。  
+        -->  
+        <constructor-arg name="mapper" ref="userMapper"/>  
+    </bean>  
+
+    <bean id="userMapper2" class="indi.h13.mappers.UserMapper">  
+        <!--  
+            构造函数注入，方式三：指定参数角标并赋值
+        -->  
+        <constructor-arg index="0" value="root"/> <!-- dbUserName = "root" -->  
+        <constructor-arg index="1" value="pswd"/> <!-- dbPassword = "pswd" --> 
+    </bean>  
+
+    <bean id="userController" class="indi.h13.controllers.UserController">  
+        <!--  
+	        setter接口注入[重要]：使用setter接口注入。此时使用property标签  
+            name为setter实际操作的私有变量的名称  
+        -->  
+        <property name="service" ref="userService"/>  
+    </bean>
+</beans>
+```
+
+
+
+### 3.4 Spring IoC容器创建和使用
+
+上述章节介绍了在IoC中注册组件和管理组件的方式，本章节将具体讲解IoC容器的创建和使用。
+
+
 
 
 
