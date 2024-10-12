@@ -269,20 +269,29 @@ import indi.h13.services.UserService;
 import lombok.Setter;  
   
 @Setter  
-@Controller // 等效于 <bean id="" class="indi.h13.controllers.UserController"
+@Controller // 等效于 <bean id="userController" class="indi.h13.controllers.UserController"
 public class UserController {  
     private UserService service;  
     public UserController() {}  
 }
 ```
 
-随后
+随后执行第二步，配置注解生效包。配置注解生效包需要在xml文件中进行。
+和上一小节中使用xml完成实例化相同，通常在 `resources` 文件夹下创建一个Spring Config模板文件，并向其中添加若干可选配置语句即可。
+可选的配置语句有：
+1. 添加注解生效包
+2. 排除指定组件
+3. 指定扫描组件
+Demo如下：
+
+```xml
 
 
 
 
 
 
+```
 
 #### 3.3.2 IoC容器中的DI依赖注入
 
