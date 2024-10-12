@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Java/项目管理工具/Maven/Maven.md",
+                "file": "Java/Java语言基础/Java语言基础.md",
                 "mode": "source",
                 "source": false
               }
@@ -43,8 +43,7 @@
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -118,7 +117,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "前后端编程/SSM框架/SpringFramework/Spring Framework基础.md",
+                "file": "Java/Java语言基础/Java语言基础.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -135,7 +134,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "前后端编程/SSM框架/SpringFramework/Spring Framework基础.md",
+                "file": "Java/Java语言基础/Java语言基础.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -158,7 +157,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "前后端编程/SSM框架/SpringFramework/Spring Framework基础.md"
+                "file": "Java/Java语言基础/Java语言基础.md"
               }
             }
           },
@@ -189,18 +188,18 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "1f1a928b94727f82",
+  "active": "8ccd3068855ea6f1",
   "lastOpenFiles": [
+    "Java/Java语言基础/Java Bean.md",
+    "Java/项目管理工具/Maven/Maven.md",
+    "前后端编程/SSM框架/SpringFramework/Spring Framework基础.md",
+    "前后端编程/SSM框架/SSM框架概述.md",
     "前后端编程/JavaWeb/Tomcat/Servlet 简介.md",
     "面相对象的程序设计/面相对象的程序设计.md",
-    "前后端编程/SSM框架/SpringFramework/Spring Framework基础.md",
     "前后端编程/Resources/idea64_CfddUw9WFr.png",
-    "Java/项目管理工具/Maven/Maven.md",
-    "Java/Java语言基础/Java Bean.md",
     "Java/Java语言基础/Java语言基础.md",
     "前后端编程/JavaWeb/Tomcat/Tomcat 基础笔记.md",
     "Resources/Pasted image 20240203021517.png",
-    "前后端编程/SSM框架/SSM框架概述.md",
     "Java/Resources/Pasted image 20241008200221.png",
     "前后端编程/Resources/Pasted image 20241008172108.png",
     "前后端编程/Resources/Pasted image 20241008172103.png",
