@@ -63,7 +63,7 @@ number headings: auto, first-level 2, max 6, 1.1
 
 等常用接口，这些接口都是 `BeanFactory` 的拓展，提供了更多的特性和功能(即上述表格中"简介"的功能)。
 
-### 3.3 IoC控制反转与DI依赖注入
+### 3.3 IoC控制反转、IoC容器，以及DI依赖注入
 
 基本概念：
 - <font color="#9bbb59">IoC</font>、<font color="#9bbb59">Inversion of Control</font>、<font color="#9bbb59">控制反转</font>：
@@ -76,9 +76,83 @@ number headings: auto, first-level 2, max 6, 1.1
 2. 通过IoC容器接口实例化一个IoC容器对象(使用[[Spring Framework基础#3 2 Spring IoC容器接口及其实现类|IoC容器接口及其实现类]])。
 3. 在Java代码中获取IoC容器中的组件并使用。
 
-#### 3.3.1 使用xml配置组件及其依赖信息
+#### 3.3.1 IoC容器中组件的实例化
+##### 3.3.1.1 使用xml完成IoC容器中组件的实例化
 
-在工程中引入Spring相关的组件后，非社区板的IDEA就可以直接在 `resource` 目录下创建
+在工程中引入Spring相关的组件后，非社区板的IDEA就可以直接在 `resource` 目录下创建IoC组件的配置模板：
 
+![[idea64_CfddUw9WFr.png]]
 
+若没有该选项，则可以直接使用如下的基本模板：
 
+```xml
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">  
+
+</beans>
+```
+
+随后在 `beans` 块中完成各bean的实例化配置即可。
+实例化配置有如下几种方法：
+1. 使用无参构造函数实例化
+2. 使用静态工厂类(静态方法)实例化
+3. 基于实例工厂方法(非静态方法)实例化
+
+对应的实例化demo如下：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">  
+  
+    <!--  
+        1. 使用无参构造函数实例化组件  
+            等效伪代码为：  
+                UserMapper userMapper1 = UserMapper();  
+            id为组件标识，要求唯一  
+            class为组价的全限定符  
+    -->  
+    <bean id="userMapper1" class="indi.h13.mappers.UserMapper"/>  
+  
+    <!--  
+        一个类可以被实例化为多个不同id的组件  
+    -->  
+    <bean id="userMapper2" class="indi.h13.mappers.UserMapper"/>  
+  
+    <!--  
+        2. 使用静态工厂类(静态方法)实例化组件  
+            等效伪代码为：  
+                UserService userService1 = UserService.createUserService();  
+            id为组件标识，要求唯一  
+            class为组价的全限定符  
+            factory-method为静态实例化方法  
+    -->  
+    <bean id="userService1" class="indi.h13.services.UserService" factory-method="createUserService"/>  
+  
+    <!--  
+        3. 基于实例工厂方法(非静态方法)实例化  
+            需要先创建一个能生成该类的对象，随后用该对象生成目标对象。            等效伪代码为：  
+                ServiceLocator serviceLocator = new ServiceLocator();                UserService userService2 = serviceLocator.createUserService();  
+            id为Bean标识，要求唯一  
+            factory-bean为生成该方法的Bean的id  
+            factory-method为实例化该类的方法  
+    -->  
+    <bean id="serviceLocator" class="indi.h13.ServiceLocator" />  
+    <bean id="userService2" factory-bean="serviceLocator" factory-method="createUserService" />  
+  
+</beans>
+```
+
+#### 3.3.2 IoC容器中的DI依赖注入
+
+仿照Spring框架中的组件分层，可以先假设一个如下的组件依赖情况(从上到下表示)：
+
+```mermaid
+flowchart TB
+	A[UserController] --> B[UserService]
+	B --> C[UserMapper]
+	C --> D[(Database)]
+```
