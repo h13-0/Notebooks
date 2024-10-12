@@ -233,18 +233,41 @@ IoC为组件提供的注解有：
 
 因此，上述三个实例Java类用注解实例化的示例为：
 
+`UserController.java`：
+
+```Java
+package indi.h13.controllers;  
+import indi.h13.services.UserService;  
+import lombok.Setter;  
+  
+@Setter  
+@Controller
+public class UserController {  
+    private UserService service;  
+    public UserController() {}  
+}
+```
+
+注：
+- 上述情况下的 `@Controller` 注解等效于xml配置 `<bean id="userController" class="indi.h13.controllers.UserController />"`
+- 其<font color="#c00000">默认Bean id为类首字母小写的写法</font>，即 `userController` ，<font color="#c00000">修改方式可见下例</font>。
+
 `UserMapper.java`：
 
 ```Java
 package indi.h13.mappers;  
 
-@Repository
+@Repository(value="userMapper01")
 public class UserMapper {  
 	public UserMapper(String dbUserName, String dbPassword) {  
 	    System.out.println("Created a UserMapper using a constructor with dbUserName " + dbUserName + ", dbPassword " + dbPassword);  
 	}
 }
 ```
+
+注：
+- <span style="background:#fff88f"><font color="#c00000">注解中的value属性用于修改Bean id</font></span>，修改为 `userMapper01`
+- 单参数时可以省略为 `@Repository("userMapper01")`
 
 `UserService.java`：
 
@@ -258,21 +281,6 @@ public class UserService {
     public UserService(UserMapper mapper){ 
 	    this.mapper = mapper;
     }  
-}
-```
-
-`UserController.java`：
-
-```Java
-package indi.h13.controllers;  
-import indi.h13.services.UserService;  
-import lombok.Setter;  
-  
-@Setter  
-@Controller // 等效于 <bean id="userController" class="indi.h13.controllers.UserController"
-public class UserController {  
-    private UserService service;  
-    public UserController() {}  
 }
 ```
 
@@ -312,7 +320,6 @@ Demo如下：
 ```
 
 #### 3.3.2 IoC容器中的DI依赖注入
-
 
 ##### 3.3.2.1 使用xml完成DI依赖注入
 
@@ -360,6 +367,13 @@ Demo如下：
     </bean>
 </beans>
 ```
+
+##### 3.3.2.2 使用注解完成依赖注入
+
+
+
+
+
 
 
 
