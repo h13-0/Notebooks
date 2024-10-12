@@ -280,17 +280,35 @@ public class UserController {
 和上一小节中使用xml完成实例化相同，通常在 `resources` 文件夹下创建一个Spring Config模板文件，并向其中添加若干可选配置语句即可。
 可选的配置语句有：
 1. 添加注解生效包
-2. 排除指定注解
-3. 指定扫描注解
+2. <font color="#c00000">添加</font>指定包下<font color="#c00000">除了指定注解以外的所有注解</font>
+3. <font color="#c00000">只添加</font>指定包下的<font color="#c00000">指定注解</font>
 Demo如下：
 
 ```xml
-
-
-
-
-
-
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+       xmlns:context="http://www.springframework.org/schema/context"  
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">  
+  
+    <!-- 以下Demo为独立Demo，根据需求选用一个即可 -->  
+    <!-- Demo 1: 扫描包indi.h13下所有关于组件的注解 -->  
+    <context:component-scan base-package="indi.h13"/>  
+  
+    <!-- Demo 2: 扫描包indi.h13下除了Service以外的注解 -->  
+    <context:component-scan base-package="indi.h13">  
+        <!-- 屏蔽Service注解 -->  
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>  
+    </context:component-scan>  
+  
+    <!-- Demo 3: 扫描包indi.h13下所有Controller注解(只要Controller) -->  
+    <!-- 注意多了个 use-default-filters 属性!!! -->  
+    <context:component-scan base-package="indi.h13" use-default-filters="false">  
+        <!-- 只扫描(保留)Controller注解 -->  
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>  
+    </context:component-scan>  
+  
+</beans>
 ```
 
 #### 3.3.2 IoC容器中的DI依赖注入
