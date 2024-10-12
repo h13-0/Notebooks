@@ -95,7 +95,7 @@ number headings: auto, first-level 2, max 6, 1.1
 </beans>
 ```
 
-xml文件放置于resources文件夹后，经过编译
+xml文件放置于resources文件夹后，经过编译后均会出现在 `target/classes` 文件夹下。
 <font color="#c00000">xml文件名可以随意命名</font>，因为<font color="#c00000">还需要调用对应的接口指定xml路径</font>才能让Spring完成IoC组件实例化。具体见章节[[Spring Framework基础#3 4 Spring IoC容器创建和使用|Spring IoC容器创建和使用]]。
 
 随后在 `beans` 块中完成各bean的实例化配置即可。
