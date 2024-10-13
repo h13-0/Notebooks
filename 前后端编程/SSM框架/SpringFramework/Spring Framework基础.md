@@ -396,7 +396,7 @@ public class UserController {
 	- 方法的形参上。<font color="#c00000">可直接完成setter方法的依赖注入</font>。
 	- 类的一个字段上。
 	- 注解上
-- 可以配置
+- <font color="#c00000">可以配置是否是佛系装配</font>。即找不到满足要求的组件时跳过装配。不过该方法不常用也不推荐使用。
 - <font color="#c00000">注解实现依赖注入的工作流程</font>：
 ```mermaid
 flowchart TB
@@ -405,7 +405,7 @@ flowchart TB
 	C -- Bean唯一 ---> G[执行装配]
 	C -- Bean不唯一 ---> E[尝试根据Bean ID查找]
 	C -- 没有该类型的Bean ---> H{检查是否强制装配<br>详见下} 
-	E --> F{尝试使用BeanID搜索}
+	E --> F{尝试使用BeanID搜索<br>搜索时使用注解标注的变量/参数名}
 	F -- 找到对应的Bean ---> G[执行装配]
 	F -- 找不到对应的Bean ---> H
 	H -- 强制装配 ---> I[抛出运行时错误]
@@ -450,6 +450,7 @@ public class UserController {
 
 注：
 - 上述例子中设置了 `required=false` ，<font color="#c00000">找不到满足要求的组件时可以跳过</font>。
+- <span style="background:#fff88f"><font color="#c00000">如果不指定该属性，则默认为强制装配</font></span>。
 
 `UserMapper.java`：
 
@@ -472,6 +473,29 @@ public class UserMapper {
 
 `@Qualifier` 注解的特性有：
 - 直接使用BeanID进行查找装配
+本注解可以用于多实例的容器，在多实例时可以指定Bean ID来进行装配。不过不常用。
+
+假设组件 `UserMapper` 的Bean ID为 `userMapper1` 和 `userMapper2` ，则可以通过使用 `@Qualifier` 指定ID的方式来进行指定装配。
+
+`UserService.java`：
+
+```Java
+package indi.h13.services;  
+import indi.h13.mappers.UserMapper; 
+
+@Service
+public class UserService {  
+	private UserMapper mapper;
+	@Qualifier()
+    public UserService(UserMapper userMapper){ 
+	    this.mapper = mapper;
+    }  
+}
+```
+
+注：
+- `@Autowired`
+
 
 
 ### 3.4 Spring IoC容器创建和使用
