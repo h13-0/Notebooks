@@ -95,10 +95,13 @@ flowchart TB
 而上述的依赖关系可以通过DI依赖注入完成，依赖注入有如下几种方法：
 1. 构造函数传参
 2. `setter` 方法传参
+3. 使用注解自动装配
 
 在后续子章节中，均假设：
 1. `UserMapper` 注入到 `UserService` 时使用的是构造函数传参。
-2. `UserService` 注入到 `UserController` 时使用的是 `setter` 接口。
+2. `UserService` 注入到 `UserController` 时：
+	1. 在xml方式的示例中使用的是 `setter` 接口。
+	2. 在注解方式的实例中使用的是注解自动装配。
 
 并且给定Java代码如下：
 
@@ -133,9 +136,7 @@ public class UserService {
 ```Java
 package indi.h13.controllers;  
 import indi.h13.services.UserService;  
-import lombok.Setter;  
   
-@Setter  
 public class UserController {  
     private UserService service;  
     public UserController() {}  
@@ -238,9 +239,7 @@ IoC为组件提供的注解有：
 ```Java
 package indi.h13.controllers;  
 import indi.h13.services.UserService;  
-import lombok.Setter;  
-  
-@Setter  
+
 @Controller
 public class UserController {  
     private UserService service;  
@@ -368,9 +367,26 @@ Demo如下：
 </beans>
 ```
 
+需要注意的是，上述例子中的最后一种使用setter接口的方法需要实现setter方法：
+
+`UserController.java`：
+
+```Java
+package indi.h13.controllers;  
+import indi.h13.services.UserService;  
+import lombok.Setter;  
+
+@Setter
+public class UserController {  
+    private UserService service;  
+    public UserController() {}  
+}
+```
+
 ##### 3.3.2.2 使用注解完成依赖注入
 
-
+使用注解完成依赖注入时，应当使用 `@Autowired` 注解，该注解的特性有：
+- 
 
 
 
