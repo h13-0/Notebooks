@@ -607,7 +607,7 @@ context.setConfigLocations("spring-01.xml");
 context.refresh();
 ```
 
-#### 3.4.2 操作IoC容器
+#### 3.4.2 操作IoC容器及组件
 
 ##### 3.4.2.1 获取容器中的组件
 
@@ -626,7 +626,9 @@ userMapper = context.getBean("userMapper", UserMapper.class);
 userMapper = context.getBean(UserMapper.class);
 ```
 
+##### 3.4.2.2 组件周期方法
 
+在ioc容器中，<font color="#c00000">"组件周期方法"的"周期"特指"声明周期"</font>，而非
 
 
 
