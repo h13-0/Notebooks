@@ -385,7 +385,7 @@ public class UserController {
 
 ##### 3.3.2.2 使用注解完成依赖注入
 
-使用注解完成依赖注入时，可以使用 `@Autowired` 注解和 `@Qualifier` 注解，其各种特性如后续子章节所述。
+使用注解完成依赖注入时，可以使用 `@Autowired` 注解、 `@Qualifier` 注解和 `@Resource` 注解，其各种特性如后续子章节所述。
 
 ###### 3.3.2.2.1 使用Autowired进行装配
 
@@ -486,7 +486,7 @@ import indi.h13.mappers.UserMapper;
 @Service
 public class UserService {  
 	private UserMapper mapper;
-	@Qualifier()
+	@Qualifier(value="userMapper1")
     public UserService(UserMapper userMapper){ 
 	    this.mapper = mapper;
     }  
@@ -494,7 +494,34 @@ public class UserService {
 ```
 
 注：
-- `@Autowired`
+- `@Autowired` 在多例模式下，也可以通过搜索属性/参数名的方式搜索对应的BeanID，即下方代码也可以实现上述效果：
+	```Java
+package indi.h13.services;  
+import indi.h13.mappers.UserMapper; 
+
+@Service
+public class UserService {  
+	private UserMapper mapper;
+	// 下方注解会先搜索UserMapper类的组件
+	// 若找到多例，则根据userMapper1这个参数名来搜索BeanID
+	@Autowired
+    public UserService(UserMapper userMapper1){ 
+	    this.mapper = mapper;
+    }  
+}
+	```
+
+###### 3.3.2.2.3 使用Resource注解先匹配类型后尝试ID装配
+
+`@Resource` 注解是由Java定义的一种规范，由Spring实现的注解。该注解的功能是先使用Autowire进行尝试装配，若失败后再尝试使用Qualifier装配的一种注解。
+功能逻辑如下：
+
+```mermaid
+flowchart TB
+	A["@Resource(name=''xx'')"] --> B[尝试使用@Autowired装配]
+
+
+```
 
 
 
