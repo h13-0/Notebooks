@@ -385,9 +385,41 @@ public class UserController {
 
 ##### 3.3.2.2 使用注解完成依赖注入
 
-使用注解完成依赖注入时，可以使用 `@Autowired` 注解、 `@Qualifier` 注解和 `@Resource` 注解，其各种特性如后续子章节所述。
+与xml配置中一样，使用注解的依赖注入也可以分为引用类型装配和值类型装配。
+值类型的装配使用注解：
+- `@Value`
+使用注解完成依赖注入时，可以使用：
+- `@Autowired` 注解
+- `@Qualifier` 注解
+- `@Resource` 注解
+其各种特性如后续子章节所述。
 
-###### 3.3.2.2.1 使用Autowired进行装配
+###### 3.3.2.2.1 使用Value进行值类型装配
+
+在父章节中的例子中，`UserMapper.java` 需要指定数据库用户名和密码，在使用注解完成依赖注入时可以按照如下的方式处理：
+
+方式一，直接给定值(不常用，和直接代码里面写死没太大差异)：
+
+```Java
+package indi.h13.mappers;  
+
+@Repository(value="userMapper01")
+public class UserMapper {  
+	@Value()
+	public UserMapper(String dbUserName, String dbPassword) {  
+	    System.out.println("Created a UserMapper using a constructor with dbUserName " + dbUserName + ", dbPassword " + dbPassword);  
+	}
+}
+```
+
+注：
+
+
+方式二，引用配置文件
+
+
+
+###### 3.3.2.2.2 使用Autowired进行引用类型装配
 
 `@Autowired` 注解的特性有：
 - 该注解可以被加到：
@@ -452,24 +484,7 @@ public class UserController {
 - 上述例子中设置了 `required=false` ，<font color="#c00000">找不到满足要求的组件时可以跳过</font>。
 - <span style="background:#fff88f"><font color="#c00000">如果不指定该属性，则默认为强制装配</font></span>。
 
-`UserMapper.java`：
-
-```Java
-package indi.h13.mappers;  
-
-@Repository(value="userMapper01")
-public class UserMapper {  
-	public UserMapper(String dbUserName, String dbPassword) {  
-	    System.out.println("Created a UserMapper using a constructor with dbUserName " + dbUserName + ", dbPassword " + dbPassword);  
-	}
-}
-```
-
-注：
-
-
-
-###### 3.3.2.2.2 使用Qualifier指定BeanID进行装配
+###### 3.3.2.2.3 使用Qualifier指定BeanID进行引用类型装配
 
 `@Qualifier` 注解的特性有：
 - 直接使用BeanID进行查找装配
@@ -511,19 +526,19 @@ public class UserService {
 }
 	```
 
-###### 3.3.2.2.3 使用Resource注解先匹配类型后尝试ID装配
+###### 3.3.2.2.4 使用Resource注解先匹配类型后尝试ID进行引用类型装配
 
 `@Resource` 注解是由Java定义的一种规范，由Spring实现的注解。该注解的功能是先使用Autowire进行尝试装配，若失败后再尝试使用Qualifier装配的一种注解。
 功能逻辑如下：
 
 ```mermaid
 flowchart TB
-	A["@Resource(name=''xx'')"] --> B[尝试使用@Autowired装配]
-
-
+	A["@Resource(name=xx)"] --> B{尝试使用@Autowired装配}
+	B -- 匹配成功 --> C[装配成功]
+	B -- 匹配失败 --> D{"尝试使用@Qualifier(name=xx)装配"}
+	D -- 匹配成功 --> C[装配成功]
+	D -- 匹配失败 --> E[装配失败、运行时错误]
 ```
-
-
 
 ### 3.4 Spring IoC容器创建和使用
 
