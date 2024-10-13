@@ -385,7 +385,13 @@ public class UserController {
 
 ##### 3.3.2.2 使用注解完成依赖注入
 
-使用注解完成依赖注入时，应当使用 `@Autowired` 注解，该注解的特性有：
+使用注解完成依赖注入时，可以使用 `@Autowired` 注解和 `@Qualifier` 注解，其各种特性如后续子章节所述。
+
+
+
+###### 3.3.2.2.1 使用Autowired进行装配
+
+`@Autowired` 注解的特性有：
 - 该注解可以被加到：
 	- 构造函数上。<font color="#c00000">可直接完成构造函数传参方式的依赖注入</font>。
 	- 类的某个方法上
@@ -393,14 +399,24 @@ public class UserController {
 	- 类的一个字段上。
 	- 注解上
 - <font color="#c00000">注解实现依赖注入的工作流程</font>：
-
 ```mermaid
 flowchart TB
 	A[运行时启动装配] --> B[检测需要注入的依赖类型]
-	B --> C{判定属于该类型的bean是否唯一}
-	C -- Bean唯一-> D[执行装配]
+	B --> C{判定属于该类型的<br>bean是否唯一}
+	C -- Bean唯一 ---> G[执行装配]
+	C -- Bean不唯一 ---> E[尝试根据Bean ID查找]
+	C -- 没有该类型的Bean ---> H[抛出运行时错误] 
+	E --> F{尝试使用BeanID搜索}
+	F -- 找到对应的Bean ---> G[执行装配]
+	F -- 找不到对应的Bean ---> H
 ```
 - <span style="background:#fff88f"><font color="#c00000">使用该注解不需要提供setter方法，并且在实际工程中应当使用此方法</font></span>
+
+###### 3.3.2.2.2 使用Qualifier指定BeanID进行装配
+
+`Qualifier` 注解的特性有：
+- 直接使用BeanID进行查找装配
+
 
 ### 3.4 Spring IoC容器创建和使用
 
