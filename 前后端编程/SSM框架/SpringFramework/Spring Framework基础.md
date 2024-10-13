@@ -415,8 +415,20 @@ public class UserMapper {
 注：
 
 
-方式二，引用配置文件
+<span style="background:#fff88f"><font color="#c00000">方式二，引用配置文件(推荐)</font></span>：
 
+配置文件可以存放于 `resources` 文件夹下，在SpringConfig的xml配置文件中添加 `context:property-placeholder` 块即可完成配置，示例如下：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">  
+
+	<context:property>
+
+</beans>
+```
 
 
 ###### 3.3.2.2.2 使用Autowired进行引用类型装配
