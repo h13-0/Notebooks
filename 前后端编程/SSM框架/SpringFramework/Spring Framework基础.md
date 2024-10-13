@@ -634,19 +634,38 @@ userMapper = context.getBean(UserMapper.class);
 2. 填充属性：根据配置文件或注解，注入 Bean 的属性。
 3. Bean ID的赋予：如果Bean实现了 `BeanNameAware` 接口，Spring 容器将调用 `setBeanName` 方法传递Bean ID。
 4. Bean Factory的赋予：如果Bean实现了 `BeanFactoryAware` 或 `ApplicationContextAware` 接口，Spring容器将调用 `setBeanFactory` 或 `setApplicationContext` 方法传递当前的应用上下文。
-5. 前置处理：Bean的前置处理器（`BeanPostProcessor` 的实现）的 `postProcessBeforeInitialization` 方法被调用。
+5. 前置处理：Bean的前置处理器(`BeanPostProcessor` 的实现)的 `postProcessBeforeInitialization` 方法被调用。
 6. 初始化：如果Bean实现了 `InitializingBean` 接口，调用 `afterPropertiesSet` 方法。另外，如果Bean的定义包含 `init-method`，该方法也会被调用。
-7. 后置处理：Bean的后置处理器（`BeanPostProcessor` 的实现）的 `postProcessAfterInitialization` 方法被调用。
+7. 后置处理：Bean的后置处理器(`BeanPostProcessor` 的实现)的 `postProcessAfterInitialization` 方法被调用。
 8. 使用：在经历上述阶段后，此时Bean可以正常工作了，直到容器关闭。
 9. 销毁：如果Bean实现了 `DisposableBean` 接口，调用 `destroy` 方法。如果 Bean 的定义包含 `destroy-method`，该方法也会被调用。
 
-在上述阶段中，
+IoC容器为上述生命周期的几乎所有阶段中提供了配置组件周期方法的回调，也有许多种实现或注册的方式，具体见各子章节。
 
+###### 3.4.2.2.1 xml配置组件周期
 
+使用SpringConfig可以配置如下两个生命周期的方法回调：
+- 初始化方法
+- 销毁方法
+不过此方法过于复杂，仅作为了解。
 
+配置初始化方法的Demo：
+1. 在类中定义一个初始化方法，命名随意：
+```Java
+package indi.h13.controllers;  
+import indi.h13.services.UserService;  
 
-
-
+public class UserController {  
+    public UserController() {}  
+    public void init() {  
+        System.out.println("UserController inited.");  
+    }  
+}
+```
+2. 在xml中注册Bean时添加 `init-method` 块，并指向该初始化方法。
+```xml
+<bean id="userController" class="indi.h13.controllers.UserController" init-method="init" />
+```
 
 
 
