@@ -425,10 +425,12 @@ public class UserMapper {
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">  
 
-	<context:property>
-
+	<context:property-placeholder location="classpath:jdbc.properties"/>
+	
 </beans>
 ```
+
+上述示例中， `jdbc.properties` 为配置文件名，且通常使用此名称。
 
 
 ###### 3.3.2.2.2 使用Autowired进行引用类型装配
