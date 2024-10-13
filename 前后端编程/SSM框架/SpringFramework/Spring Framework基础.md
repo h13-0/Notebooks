@@ -405,9 +405,13 @@ package indi.h13.mappers;
 
 @Repository(value="userMapper01")
 public class UserMapper {  
-	@Value()
-	public UserMapper(String dbUserName, String dbPassword) {  
-	    System.out.println("Created a UserMapper using a constructor with dbUserName " + dbUserName + ", dbPassword " + dbPassword);  
+	@Value("root")
+	private String dbUserName;
+	@Value("pswd")
+	private String dbPassword;
+
+	public UserMapper() {  
+	    System.out.println("Created a UserMapper using a constructor with dbUserName " + this.dbUserName + ", dbPassword " + this.dbPassword);  
 	}
 }
 ```
@@ -434,10 +438,30 @@ public class UserMapper {
 随后可以在上述文件中写入如下配置，即可使用 `Value` 注解读取并注入依赖：
 
 ```
+jdbc.username=root
+jdbc.password=pswd
 ```
 
+随后使用如下的注解即可完成注入：
 
+```Java
+package indi.h13.mappers;  
 
+@Repository(value="userMapper01")
+public class UserMapper {  
+	@Value("${jdbc.username:admin}")
+	private String dbUserName;
+	@Value("${jdbc.password}")
+	private String dbPassword;
+
+	public UserMapper() {  
+	    System.out.println("Created a UserMapper using a constructor with dbUserName " + this.dbUserName + ", dbPassword " + this.dbPassword);  
+	}
+}
+```
+
+注：
+- `@Value("${jdbc.username:admin}")` 表示若配置文件中不含 `jdbc.username` 项，则填入默认值 `admin` 。
 
 ###### 3.3.2.2.2 使用Autowired进行引用类型装配
 
