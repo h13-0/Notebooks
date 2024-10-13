@@ -628,9 +628,19 @@ userMapper = context.getBean(UserMapper.class);
 
 ##### 3.4.2.2 组件周期方法
 
-在ioc容器中，<font color="#c00000">"组件周期方法"的"周期"特指"声明周期"</font>，而非
+在ioc容器中，<font color="#c00000">"组件周期方法"的"周期"特指"声明周期"</font>，而非"定时或重复发生的周期"。
+而Spring Bean的生命周期主要有如下几个阶段：
+1. 实例化：创建Bean的实例。
+2. 填充属性：根据配置文件或注解，注入 Bean 的属性。
+3. Bean ID的赋予：如果Bean实现了 `BeanNameAware` 接口，Spring 容器将调用 `setBeanName` 方法传递Bean ID。
+4. Bean Factory的赋予：如果Bean实现了 `BeanFactoryAware` 或 `ApplicationContextAware` 接口，Spring容器将调用 `setBeanFactory` 或 `setApplicationContext` 方法传递当前的应用上下文。
+5. 前置处理：Bean的前置处理器（`BeanPostProcessor` 的实现）的 `postProcessBeforeInitialization` 方法被调用。
+6. 初始化：如果Bean实现了 `InitializingBean` 接口，调用 `afterPropertiesSet` 方法。另外，如果Bean的定义包含 `init-method`，该方法也会被调用。
+7. 后置处理：Bean的后置处理器（`BeanPostProcessor` 的实现）的 `postProcessAfterInitialization` 方法被调用。
+8. 使用：在经历上述阶段后，此时Bean可以正常工作了，直到容器关闭。
+9. 销毁：如果Bean实现了 `DisposableBean` 接口，调用 `destroy` 方法。如果 Bean 的定义包含 `destroy-method`，该方法也会被调用。
 
-
+在上述阶段中，
 
 
 
