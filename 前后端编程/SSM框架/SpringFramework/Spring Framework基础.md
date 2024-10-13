@@ -642,9 +642,9 @@ userMapper = context.getBean(UserMapper.class);
 
 IoC容器为上述生命周期的几乎所有阶段中提供了配置组件周期方法的回调，也有许多种实现或注册的方式，具体见各子章节。
 
-###### 3.4.2.2.1 xml配置组件周期
+###### 3.4.2.2.1 xml配置组件周期声明周期方法的回调
 
-使用SpringConfig可以配置如下两个生命周期的方法回调：
+使用SpringConfig可以配置如下两个生命周期方法的回调：
 - 初始化方法
 - 销毁方法
 不过此方法过于复杂，仅作为了解。
@@ -662,12 +662,56 @@ public class UserController {
     }  
 }
 ```
-2. 在xml中注册Bean时添加 `init-method` 块，并指向该初始化方法。
+2. 在xml中注册Bean时添加 `init-method` 属性，并指向该初始化方法。
 ```xml
 <bean id="userController" class="indi.h13.controllers.UserController" init-method="init" />
 ```
 
+此外，添加 `destroy-method` 属性也可以注册销毁方法。
 
+###### 3.4.2.2.2 通过实现接口来配置生命周期方法的回调
 
+在上述生命周期的若干声明周期中，分别可以通过如下方法完成方法回调的配置：
+1. Bean ID赋予时回调：
+	1. 实现 `BeanNameAware` 接口
+	2. 在 `setBeanName` 方法接收Bean ID
+2. Bean Factory的赋予时回调：
+	1. 实现 `BeanFactoryAware` 或 `ApplicationContextAware` 接口
+	2. 在 `setBeanFactory` 或 `setApplicationContext` 方法接收当前的应用上下文
+3. 前置处理时回调：
+	1. 实现 `BeanPostProcessor` 接口
+	2. 通过 `postProcessBeforeInitialization` 方法接收回调
+4. <font color="#c00000">初始化时回调</font>：
+	1. 实现 `InitializingBean` 接口
+	2. 通过 `afterPropertiesSet` 接收回调
+5. 后置处理时回调：
+	1. 实现 `BeanPostProcessor` 接口
+	2. 通过 `postProcessAfterInitialization` 方法接收回调
+6. <font color="#c00000">销毁时回调</font>：
+	1. Bean实现 `DisposableBean` 接口
+	2. 通过 `destroy` 接收回调
 
+Demo如下：
+
+```Java
+package indi.h13.controllers;  
+import indi.h13.services.UserService;  
+import org.springframework.beans.factory.DisposableBean;  
+import org.springframework.beans.factory.InitializingBean;  
+  
+public class UserController implements InitializingBean, DisposableBean {  
+    private UserService service;  
+    public UserController() {}  
+  
+    @Override  
+    public void afterPropertiesSet() throws Exception {  
+        System.out.println("UserController inited.");  
+    }  
+  
+    @Override  
+    public void destroy() throws Exception {  
+        System.out.println("UserController destoried.");  
+    }  
+}
+```
 
