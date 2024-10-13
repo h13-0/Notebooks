@@ -386,8 +386,19 @@ public class UserController {
 ##### 3.3.2.2 使用注解完成依赖注入
 
 使用注解完成依赖注入时，应当使用 `@Autowired` 注解，该注解的特性有：
-- 
-
+- 该注解可以被加到：
+	- 构造函数上。<font color="#c00000">可直接完成构造函数传参方式的依赖注入</font>。
+	- 类的某个方法上
+	- 方法的形参上。<font color="#c00000">可直接完成setter方法的依赖注入</font>。
+	- 类的一个字段上。
+	- 注解上
+- <font color="#c00000">注解实现依赖注入的工作流程</font>：
+```mermaid
+flowchart TB
+	A[运行时启动装配] --> B[检测需要注入的依赖类型]
+	B --> C<>
+```
+- <span style="background:#fff88f"><font color="#c00000">使用该注解不需要提供setter方法，并且在实际工程中应当使用此方法</font></span>
 
 
 
