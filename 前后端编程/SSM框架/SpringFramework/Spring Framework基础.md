@@ -387,8 +387,6 @@ public class UserController {
 
 使用注解完成依赖注入时，可以使用 `@Autowired` 注解和 `@Qualifier` 注解，其各种特性如后续子章节所述。
 
-
-
 ###### 3.3.2.2.1 使用Autowired进行装配
 
 `@Autowired` 注解的特性有：
@@ -398,6 +396,7 @@ public class UserController {
 	- 方法的形参上。<font color="#c00000">可直接完成setter方法的依赖注入</font>。
 	- 类的一个字段上。
 	- 注解上
+- 可以配置
 - <font color="#c00000">注解实现依赖注入的工作流程</font>：
 ```mermaid
 flowchart TB
@@ -405,16 +404,73 @@ flowchart TB
 	B --> C{判定属于该类型的<br>bean是否唯一}
 	C -- Bean唯一 ---> G[执行装配]
 	C -- Bean不唯一 ---> E[尝试根据Bean ID查找]
-	C -- 没有该类型的Bean ---> H[抛出运行时错误] 
+	C -- 没有该类型的Bean ---> H{检查是否强制装配<br>详见下} 
 	E --> F{尝试使用BeanID搜索}
 	F -- 找到对应的Bean ---> G[执行装配]
 	F -- 找不到对应的Bean ---> H
+	H -- 强制装配 ---> I[抛出运行时错误]
+	H -- 佛系装配 ---> J[跳过装配]
 ```
 - <span style="background:#fff88f"><font color="#c00000">使用该注解不需要提供setter方法，并且在实际工程中应当使用此方法</font></span>
 
+使用Demo为：
+
+`UserService.java`：
+
+```Java
+package indi.h13.services;  
+import indi.h13.mappers.UserMapper; 
+
+@Service
+public class UserService {  
+	private UserMapper mapper;
+	@Autowired
+    public UserService(UserMapper userMapper){ 
+	    this.mapper = mapper;
+    }  
+}
+```
+
+注：
+- 上述例子直接根据 `UserMapper` 类型寻找组件并装配
+
+`UserController.java`：
+
+```Java
+package indi.h13.controllers;  
+import indi.h13.services.UserService;  
+
+@Controller
+public class UserController {  
+	@Autowired(required=false)
+    private UserService service;  
+    public UserController() {}  
+}
+```
+
+注：
+- 上述例子中设置了 `required=false` ，<font color="#c00000">找不到满足要求的组件时可以跳过</font>。
+
+`UserMapper.java`：
+
+```Java
+package indi.h13.mappers;  
+
+@Repository(value="userMapper01")
+public class UserMapper {  
+	public UserMapper(String dbUserName, String dbPassword) {  
+	    System.out.println("Created a UserMapper using a constructor with dbUserName " + dbUserName + ", dbPassword " + dbPassword);  
+	}
+}
+```
+
+注：
+
+
+
 ###### 3.3.2.2.2 使用Qualifier指定BeanID进行装配
 
-`Qualifier` 注解的特性有：
+`@Qualifier` 注解的特性有：
 - 直接使用BeanID进行查找装配
 
 
