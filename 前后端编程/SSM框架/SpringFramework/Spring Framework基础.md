@@ -393,16 +393,14 @@ public class UserController {
 	- 类的一个字段上。
 	- 注解上
 - <font color="#c00000">注解实现依赖注入的工作流程</font>：
+
 ```mermaid
 flowchart TB
 	A[运行时启动装配] --> B[检测需要注入的依赖类型]
-	B --> C<>
+	B --> C{判定属于该类型的bean是否唯一}
+	C -- Bean唯一-> D[执行装配]
 ```
 - <span style="background:#fff88f"><font color="#c00000">使用该注解不需要提供setter方法，并且在实际工程中应当使用此方法</font></span>
-
-
-
-
 
 ### 3.4 Spring IoC容器创建和使用
 
