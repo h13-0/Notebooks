@@ -715,3 +715,7 @@ public class UserController implements InitializingBean, DisposableBean {
 }
 ```
 
+#### 3.4.3 组件作用域
+
+
+
