@@ -602,17 +602,6 @@ Spring组件作用域主要有如下几种：
 6. Websocket，Websocket会话模式
 通常来说使用的都是单例模式。
 
-#### 3.3.4 使用工厂模式FactoryBean封装复杂Bean
-
-考虑一个场景，现在工程需要一个负责对接数据库读写的组件，该组件的实例化需要如下步骤：
-1. 创建一个SQL Session的构造工具的对象
-2. 读取配置文件，并获取数据库相关的配置信息
-3. 
-
-
-
-
-
 ### 3.4 Spring IoC容器创建和使用
 
 上述章节介绍了在IoC中注册组件和管理组件的方式，本章节将具体讲解IoC容器的创建和使用。
@@ -743,4 +732,19 @@ public class UserController implements InitializingBean, DisposableBean {
     }  
 }
 ```
+
+### 3.5 使用工厂模式FactoryBean封装复杂Bean
+
+考虑一个场景，现在工程需要一个负责对接数据库读写的组件，该组件的实例化需要如下步骤：
+1. 创建一个SQL Session的<font color="#c00000">构造工具的构造器</font>( `new SqlSessionFactoryBuilder` )
+2. 构造用于读取配置文件的输入流( `stream = getResourceAsStream("xx")` )
+3. 使用步骤1中的构造工具的构造器来<font color="#c00000">构造构造工具</font>SQL Session( `SqlSessionFactoryBuilder.builder(stream)` )
+4. 使用构造工具构造SQL Session(`SqlSessionFactory.openSession()`)
+在上述过程中共计创建了4个对象，且均不满足Spring Bean要求。
+若使用普通的Spring Bean来封装也可以满足该组件的基本需求，即：
+1. 使用[[Spring Framework基础#3 4 2 2 组件周期方法|组件周期方法]]重写init和destroy方法完成初始化和销毁流程
+2. 
+
+
+
 
