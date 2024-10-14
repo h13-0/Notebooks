@@ -584,6 +584,22 @@ flowchart TB
 	D -- 匹配失败 --> E[装配失败、运行时错误]
 ```
 
+#### 3.3.3 组件作用域
+
+<font color="#c00000">Spring的组件作用域是指在IoC容器中被创建、存活以及被访问的规则</font>。
+Spring组件作用域主要有如下几种：
+1. <font color="#c00000">Singleton，单例模式</font>：
+	- 本模式为Spring的默认作用域
+	- 在单例模式下，一个IoC容器中一个组件只会有一个实例
+2. Prototype，原型模式：
+	- 每次：
+		- 使用IoC容器进行 `getBean()` 时(见：[[Spring Framework基础#3 4 2 1 获取容器中的组件|获取容器中的组件]])
+	- 时都会创建一个新的实例
+1. Request，请求模式
+2. Session，会话模式
+3. Application，应用模式
+4. Websocket，Websocket会话模式
+
 ### 3.4 Spring IoC容器创建和使用
 
 上述章节介绍了在IoC中注册组件和管理组件的方式，本章节将具体讲解IoC容器的创建和使用。
@@ -714,8 +730,4 @@ public class UserController implements InitializingBean, DisposableBean {
     }  
 }
 ```
-
-#### 3.4.3 组件作用域
-
-
 
