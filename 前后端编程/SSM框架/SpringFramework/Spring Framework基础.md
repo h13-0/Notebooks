@@ -741,6 +741,14 @@ public class UserController implements InitializingBean, DisposableBean {
 3. 使用步骤1中的构造工具的构造器来<font color="#c00000">构造构造工具</font>SQL Session( `SqlSessionFactoryBuilder.builder(stream)` )
 4. 使用构造工具构造SQL Session(`SqlSessionFactory.openSession()`)
 在上述过程中共计创建了4个对象，且均不满足Spring Bean要求。
-上述需求也可以使用普通Spring Bean的[[Spring Framework基础#3 4 2 2 组件周期方法|组件周期方法]]重写init和destroy方法完成初始化和销毁流程，<font color="#c00000">但是当逻辑足够复杂时，通常需要额外创建一个辅助构造类来构造这个对象</font>。、
+上述需求也可以使用普通Spring Bean的[[Spring Framework基础#3 4 2 2 组件周期方法|组件周期方法]]重写init和destroy方法完成初始化和销毁流程，<font color="#c00000">但是当逻辑足够复杂时，通常需要额外创建一个辅助构造类来构造这个对象，从而隐藏逻辑，简化应用操作</font>。本章节的FactoryBean接口即用于实现该需求。
+
+上述的例子 `SqlSession` 相对复杂，因此其套了两层构造来实现。假设现在有一个新的目标对象 `WebSession` ，则可以考虑实现一个 `WebSessionFactory` 的构造器工具来构造这个 `WebSession` 对象。
+
+注：
+- 注意区分 `FactoryBean` 和 `BeanFactory` 。
+
+
+
 
 
