@@ -591,14 +591,16 @@ Spring组件作用域主要有如下几种：
 1. <font color="#c00000">Singleton，单例模式</font>：
 	- 本模式为Spring的默认作用域
 	- 在单例模式下，一个IoC容器中一个组件只会有一个实例
-2. Prototype，原型模式：
+2. <font color="#c00000">Prototype，原型模式</font>：
 	- 每次：
 		- 使用IoC容器进行 `getBean()` 时(见：[[Spring Framework基础#3 4 2 1 获取容器中的组件|获取容器中的组件]])
+		- 或每次注入依赖时
 	- 时都会创建一个新的实例
-1. Request，请求模式
-2. Session，会话模式
-3. Application，应用模式
-4. Websocket，Websocket会话模式
+3. Request，请求模式
+4. Session，会话模式
+5. Application，应用模式
+6. Websocket，Websocket会话模式
+通常来说使用的都是单例模式。
 
 ### 3.4 Spring IoC容器创建和使用
 
