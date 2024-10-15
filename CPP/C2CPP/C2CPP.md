@@ -3,7 +3,6 @@ number headings: auto, first-level 2, max 6, 1.1
 ---
 #C-Language #CPP-Language
 
-
 ## 1 目录
 
 ```toc
@@ -224,9 +223,10 @@ STL全名为Standard Template Library，意为标准模板库或泛型库，是C
 
 STL容器主要有如下三类：
 1. 序列容器
-	1. `std::vector`
-	2. `std::deque`
-	3. `std::list`
+	1. `std::array`
+	2. `std::vector`
+	3. `std::deque`
+	4. `std::list`
 2. 关联容器
 	1. `std::set`
 	2. `std::multiset`
@@ -238,18 +238,19 @@ STL容器主要有如下三类：
 	3. `std::unordered_map`
 	4. `std::unordered_multimap`
 
-#### 4.1.1 vector
+#### 4.1.1 array
+#### 4.1.2 vector
 
 `std::vector` 是C++的动态大小的数组实现，其元素被顺序存储，因此其可以被迭代器和引索顺序访问。其会自动扩展其所需要的内存空间，并且通常其所占用的内存比同大小的静态数组要多。其空间的动态分配仅会发生在其所保留的额外空间耗尽时触发。
 
-##### 4.1.1.1 常用操作的时间复杂度
+##### 4.1.2.1 常用操作的时间复杂度
 
 <font color="#c00000">vector的常用操作的时间复杂度</font>：
 - 随机访问：$O(1)$
 - 在末尾插入或删除元素：平均$O(1)$
 - 在末尾的倒数第n个位置插入或删除元素：$O(n)$
 
-##### 4.1.1.2 模板类型
+##### 4.1.2.2 模板类型
 
 <font color="#c00000">vector中的模板类型需要满足如下要求</font>：
 - 可以拷贝赋值
@@ -257,7 +258,11 @@ STL容器主要有如下三类：
 
 但是需要注意<span style="background:#fff88f"><font color="#c00000">慎用bool类型作为vector的元素</font></span>，除非明确地要使用 `vector<bool>` 的特性。
 
-##### 4.1.1.3 常用方法
+##### 4.1.2.3 常用方法
+
+| 方法  | 含义  | 备注  |
+| --- | --- | --- |
+|     |     |     |
 
 
 
