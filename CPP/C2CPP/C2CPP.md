@@ -257,4 +257,7 @@ STL容器主要有如下三类：
 
 但是需要注意<span style="background:#fff88f"><font color="#c00000">慎用bool类型作为vector的元素</font></span>，除非明确地要使用 `vector<bool>` 的特性。
 
+##### 4.1.1.3 常用方法
+
+
 
