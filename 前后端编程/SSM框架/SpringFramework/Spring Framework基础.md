@@ -709,7 +709,11 @@ public class JavaConfiguration {
 
 ###### 3.3.4.2.1 @Bean详解
 
-@Bean是Spring中的一种用于直接生成Bean组件的注解，<font color="#c00000">其最标准的使用方式是定义于@Configuration所注解的配置类中</font>。
+@Bean是Spring中的一种用于直接生成Bean组件的注解，<font color="#c00000">其最标准的使用方式是定义于@Configuration所注解的配置类中</font>。其拥有如下的配置参数：
+- `name` & `value`：指定Bean ID。缺省时生成的组件ID与方法名相同。
+- `initMethod` & `destroyMethod`：指定初始化和销毁方法。默认时调用Bean类型的初始化和销毁方法。
+- `autowireCandidate`：是否允许该组件被其他组件引用或修改。
+@Bean生成的组件也可以使用后续章节中的注解修改组件作用域的方法。
 
 #### 3.3.5 组件作用域
 
