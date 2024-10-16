@@ -715,6 +715,41 @@ public class JavaConfiguration {
 - `autowireCandidate`：是否允许该组件被其他组件引用或修改。
 @Bean生成的组件也可以使用后续章节中的注解修改组件作用域的方法。
 
+##### 3.3.4.3 使用Import注解合并多个配置类
+
+@Import注解的作用就是将一个配置类导入到另一个配置类中，其效果等效于将多个配置类合并为一个配置类。
+
+Demo：
+
+```Java
+@ComponentScan(value = { "indi.h13.package1", "indi.h13.package2", ...})
+@PropertySource(value = "classpath:jdbc.properties")
+@Configuration
+public class JavaConfiguration1 {
+}
+```
+
+```Java
+@ComponentScan(value = { "indi.h13.package3", "indi.h13.package4", ...})
+@PropertySource(value = "classpath:jdbc.properties")
+@Configuration
+public class JavaConfiguration2 {
+}
+```
+
+随后可以使用@Import注解将 `JavaConfiguration2` 合并进 `JavaConfiguration1` ：
+
+```Java
+@Import(JavaConfiguration2.class)
+@ComponentScan(value = { "indi.h13.package1", "indi.h13.package2", ...})
+@PropertySource(value = "classpath:jdbc.properties")
+@Configuration
+public class JavaConfiguration1 {
+}
+```
+
+然后在创建IoC容器时指定 `JavaConfiguration1` 即可创建容器。创建IoC容器的具体操作见后续章节。
+
 #### 3.3.5 组件作用域
 
 <font color="#c00000">Spring的组件作用域是指在IoC容器中被创建、存活以及被访问的规则</font>。
@@ -899,6 +934,12 @@ public class UserController implements InitializingBean, DisposableBean {
 
 注：
 - 注意区分 `FactoryBean` 和 `BeanFactory` 。
+
+## 4 AOP面相切面开发
+
+
+
+
 
 
 
