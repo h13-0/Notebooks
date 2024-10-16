@@ -584,8 +584,43 @@ flowchart TB
 #### 3.3.3 引入第三方Bean组件
 
 引入第三方Bean组件也是开发中常用的一个需求或实现方式，而第三方的Bean组件在装配的时候也需要指定Bean ID，并且往往也需要DI依赖注入。
-这里以引入druid连接池 `com.alibaba.druid` 为例，完成以下
+这里以引入druid连接池 `com.alibaba.druid` 为例，完成以下内容：
+1. 将 `com.alibaba.druid.pool.DruidDataSource` 实例化为Bean ID为 `dataSource` 的组件。
+2. 将：
+	- `url`：存放于 `jdbc.properties` 中的 `jdbc.url` 中。
+	- `driverClassName`：存放于 `jdbc.properties` 中的 `jdbc.driver` 中。
+	- `username`：存放于 `jdbc.properties` 中的 `jdbc.username` 中。
+	- `password`：存放于 `jdbc.properties` 中的 `jdbc.password` 中。
+	注入组件
+则xml配置和注解配置方式分别如子章节所述。
 
+##### 3.3.3.1 使用xml引入第三方Bean组件
+
+在SpringConfig中完成如下内容：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">  
+
+	<context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">  
+	    <property name="url" value="{jdbc.url}" />
+	    <property name="driverClassName" value="{jdbc.driver}" />
+	    <property name="username" value="{jdbc.username}" />
+	    <property name="password" value="{jdbc.password}" />
+    </bean>  
+    
+</beans>
+```
+
+即可实现引入第三方组件。
+
+##### 3.3.3.2 使用注解引入第三方Bean组件
+
+本章节的方法涉及注解配置类，详见
 
 #### 3.3.4 使用配置类代替注解开发中的xml操作
 
@@ -595,6 +630,8 @@ flowchart TB
 2. 配置包扫描配置注解( `@ComponentScan` )
 3. 配置外部配置文件注解( `@PropertySource` )
 4. 声明依赖的第三方Bean组件
+
+##### 3.3.4.1 使用
 
 Demo如下：
 
@@ -622,6 +659,11 @@ public class JavaConfiguration {
 	
 </beans>
 ```
+
+##### 3.3.4.2 使用注解配置类引入第三方Bean
+
+
+
 
 #### 3.3.5 组件作用域
 
