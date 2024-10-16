@@ -584,7 +584,25 @@ flowchart TB
 	D -- 匹配失败 --> E[装配失败、运行时错误]
 ```
 
-#### 3.3.3 使用
+#### 3.3.3 使用配置类代替注解开发中的xml操作
+
+在上述使用注解进行组件实例化和依赖注入时，都需要对xml进行配置，指定组件扫描和设置外部配置文件。而配置类就是用于替代xml操作的一种方法。
+通常的操作是创建一个 `config` 包，编写 `JavaConfiguration` 类(类名包名随意)，具体操作为：
+1. 为 `JavaConfiguration` 类添加 `@Configuration` 注解、
+2. 配置包扫描配置注解( `@ComponentScan` )
+3. 配置外部配置文件注解( `@PropertySource` )
+
+Demo如下：
+
+```Java
+// 配置包扫描注解，`value = ` 可以省略
+@ComponentScan(value = { "indi.h13.package1", "indi.h13.package2", ...})
+// 配置配置文件名注解
+@PropertySource(value = "classpath:jdbc.properties")
+
+```
+
+
 
 #### 3.3.4 组件作用域
 
