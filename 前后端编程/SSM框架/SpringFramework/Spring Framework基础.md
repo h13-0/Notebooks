@@ -584,7 +584,7 @@ flowchart TB
 #### 3.3.3 引入第三方Bean组件
 
 引入第三方Bean组件也是开发中常用的一个需求或实现方式，而第三方的Bean组件在装配的时候也需要指定Bean ID，并且往往也需要DI依赖注入。
-这里以引入druid连接池 `com.alibaba.druid` 为例，完成以下内容：
+这里以引入druid连接池 `com.alibaba.druid` 为例，完成以下内容： 
 1. 将 `com.alibaba.druid.pool.DruidDataSource` 实例化为Bean ID为 `dataSource` 的组件。
 2. 将：
 	- `url`：存放于 `jdbc.properties` 中的 `jdbc.url` 中。
@@ -620,7 +620,8 @@ flowchart TB
 
 ##### 3.3.3.2 使用注解引入第三方Bean组件
 
-本章节的方法涉及注解配置类，详见
+本章节的方法涉及注解配置类，详见：
+![[Spring Framework基础#3 3 4 2 使用注解配置类引入第三方Bean]]
 
 #### 3.3.4 使用配置类代替注解开发中的xml操作
 
@@ -631,7 +632,7 @@ flowchart TB
 3. 配置外部配置文件注解( `@PropertySource` )
 4. 声明依赖的第三方Bean组件
 
-##### 3.3.4.1 使用
+##### 3.3.4.1 使用注解配置类完成包扫描配置和外部配置文件配置
 
 Demo如下：
 
@@ -662,8 +663,42 @@ public class JavaConfiguration {
 
 ##### 3.3.4.2 使用注解配置类引入第三方Bean
 
+本章节中注解配置类的基本假设同[[Spring Framework基础#3 3 3 引入第三方Bean组件|引入第三方Bean组件]]。
+为满足上述要求，则应在上一子章节的注解配置类中添加如下代码和 `@Bean` 注解：
 
+```Java
+// 配置包扫描注解，`value = ` 可以省略
+@ComponentScan(value = { "indi.h13.package1", "indi.h13.package2", ...})
+// 配置配置文件名注解，`value = ` 可以省略
+@PropertySource(value = "classpath:jdbc.properties")
+@Configuration
+public class JavaConfiguration {
 
+	@Value("{jdbc.url}")
+	private String url;
+	@Value("{jdbc.driver}")
+	private String driver;
+	@Value("{jdbc.username}")
+	private String username;
+	@Value("{jdbc.password}")
+	private String password;
+	
+	@Bean
+	public DruidDataSource dataSource() {
+		DruidDataSource dataSource = new DruidDataSource();
+		dataSource.setUrl(this.url);
+		dataSource.setDriverClassName(this.driver);
+		dataSource.setUsername(this.username);
+		dataSource.setPassword(this.password);
+		return dataSource;
+	}
+}
+```
+
+注：
+- @Bean生成的组件ID与方法名相同
+- @Bean生成的组件类型与方法的返回类型相同
+- @Bean注解会自动生成组件并组装
 
 #### 3.3.5 组件作用域
 
