@@ -416,9 +416,6 @@ public class UserMapper {
 }
 ```
 
-注：
-
-
 <span style="background:#fff88f"><font color="#c00000">方式二，引用配置文件(推荐)</font></span>：
 
 配置文件可以存放于 `resources` 文件夹下，在SpringConfig的xml配置文件中添加 `context:property-placeholder` 块即可完成配置，示例如下：
@@ -584,13 +581,20 @@ flowchart TB
 	D -- 匹配失败 --> E[装配失败、运行时错误]
 ```
 
-#### 3.3.3 使用配置类代替注解开发中的xml操作
+#### 3.3.3 引入第三方Bean组件
+
+引入第三方Bean组件也是开发中常用的一个需求或实现方式，而第三方的Bean组件在装配的时候也需要指定Bean ID，并且往往也需要DI依赖注入。
+这里以引入druid连接池 `com.alibaba.druid` 为例，完成以下
+
+
+#### 3.3.4 使用配置类代替注解开发中的xml操作
 
 在上述使用注解进行组件实例化和依赖注入时，都需要对xml进行配置，指定组件扫描和设置外部配置文件。而配置类就是用于替代xml操作的一种方法。
 通常的操作是创建一个 `config` 包，编写 `JavaConfiguration` 类(<font color="#c00000">类名包名随意，在IoC容器创建时引用即可</font>)，具体操作为：
 1. 为 `JavaConfiguration` 类添加 `@Configuration` 注解、
 2. 配置包扫描配置注解( `@ComponentScan` )
 3. 配置外部配置文件注解( `@PropertySource` )
+4. 声明依赖的第三方Bean组件
 
 Demo如下：
 
@@ -619,7 +623,7 @@ public class JavaConfiguration {
 </beans>
 ```
 
-#### 3.3.4 组件作用域
+#### 3.3.5 组件作用域
 
 <font color="#c00000">Spring的组件作用域是指在IoC容器中被创建、存活以及被访问的规则</font>。
 Spring组件作用域主要有如下几种：
