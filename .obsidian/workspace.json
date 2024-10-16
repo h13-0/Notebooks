@@ -35,12 +35,8 @@
             "id": "a8b9af7babb1fef5",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "数据结构算法/必背算法/树和图/二叉树的遍历.md",
-                "mode": "source",
-                "source": false
-              }
+              "type": "graph",
+              "state": {}
             }
           }
         ],
@@ -200,8 +196,9 @@
   },
   "active": "1f1a928b94727f82",
   "lastOpenFiles": [
-    "数据结构算法/数据结构算法基础.md",
     "数据结构算法/必背算法/树和图/二叉树的遍历.md",
+    "前后端编程/SSM框架/SpringFramework/Spring Framework基础.md",
+    "数据结构算法/数据结构算法基础.md",
     "数据结构算法/必背算法/链表/反转链表.md",
     "数据结构算法/必背算法/树和图",
     "前后端编程/JavaWeb/Tomcat/Servlet 简介.md",
@@ -212,7 +209,6 @@
     "CPP/应试笔记与八股.md",
     "CPP/C标准笔记/C标准学习笔记.md",
     "CPP/C标准笔记/C与C++标准.md",
-    "前后端编程/SSM框架/SpringFramework/Spring Framework基础.md",
     "Java/Java语言基础/Java语言基础.md",
     "计算机网络/基础应试学习/第五章 传输层/第五章 传输层.md",
     "面相对象的程序设计/面相对象的程序设计.md",
