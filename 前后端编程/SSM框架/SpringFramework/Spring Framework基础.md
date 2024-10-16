@@ -587,7 +587,7 @@ flowchart TB
 #### 3.3.3 使用配置类代替注解开发中的xml操作
 
 在上述使用注解进行组件实例化和依赖注入时，都需要对xml进行配置，指定组件扫描和设置外部配置文件。而配置类就是用于替代xml操作的一种方法。
-通常的操作是创建一个 `config` 包，编写 `JavaConfiguration` 类(类名包名随意)，具体操作为：
+通常的操作是创建一个 `config` 包，编写 `JavaConfiguration` 类(<font color="#c00000">类名包名随意，在IoC容器创建时引用即可</font>)，具体操作为：
 1. 为 `JavaConfiguration` 类添加 `@Configuration` 注解、
 2. 配置包扫描配置注解( `@ComponentScan` )
 3. 配置外部配置文件注解( `@PropertySource` )
@@ -597,12 +597,27 @@ Demo如下：
 ```Java
 // 配置包扫描注解，`value = ` 可以省略
 @ComponentScan(value = { "indi.h13.package1", "indi.h13.package2", ...})
-// 配置配置文件名注解
+// 配置配置文件名注解，`value = ` 可以省略
 @PropertySource(value = "classpath:jdbc.properties")
-
+@Configuration
+public class JavaConfiguration {
+}
 ```
 
+此时的配置类与如下的xml等效：
 
+```xml
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">  
+
+    <context:component-scan base-package="indi.h13.package1"/>  
+    <context:component-scan base-package="indi.h13.package2"/>  
+	<context:property-placeholder location="classpath:jdbc.properties"/>
+	
+</beans>
+```
 
 #### 3.3.4 组件作用域
 
@@ -632,16 +647,37 @@ Spring组件作用域主要有如下几种：
 
 ![[Spring Framework基础#3 2 Spring IoC容器接口及其实现类介绍]]
 
-在本章主要给出如下几种实例化容器的方法：
+在本章主要给出如子章节所述的几种实例化容器的方法。
+
+##### 3.4.1.1 读取xml配置文件实例化IoC容器
+
+下方提供了两种读取xml配置文件实例化IoC容器的方法：
+1. 直接指定类路径下的xml文件名实例化
+2. 先创建容器，随后指定配置文件并刷新
+其中方法1更常用，但是方法2也需要了解，因为在Spring框架中使用的是本方法
 
 ```Java
-// 1. [推荐]直接指定类路径下的xml文件名实例化
+// 1. [重要]直接指定类路径下的xml文件名实例化
 ApplicationContext context = new ClassPathXmlApplicationContext("spring-01.xml");
 
 // 2. [了解]先创建容器，随后指定配置文件并刷新
 // 在Spring框架中使用的是本方法
 ApplicationContext context = new ClassPathXmlApplicationContext();
 context.setConfigLocations("spring-01.xml");
+context.refresh();
+```
+
+##### 3.4.1.2 \[推荐\]使用配置类实例化IoC容器
+
+下方也提供了两种使用配置类实例化IoC容器的方法，重点是第一种。
+
+```Java
+// 1. [重要]使用配置类实例化容器
+ApplicationContext context = new AnnotationConfigApplicationContext(JavaConfiguration.class);
+
+// 2. [了解]先创建容器，随后指定配置类并刷新
+ApplicationContext context = new AnnotationConfigApplicationContext();
+context.register(JavaConfiguration.class);
 context.refresh();
 ```
 
