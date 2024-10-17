@@ -952,10 +952,55 @@ public class UserController implements InitializingBean, DisposableBean {
 
 #### 4.1.1 静态代理
 
-静态代理就是指直接通过实现代理类的方式完成添加切面与增加切面功能的方式。这种方式的代理类在编译前就已经被明确定义，且通常需要程序员手动完成。因此在这里静态代理仅会给出一个静态代理的demo并思考其所存在的问题。
+静态代理就是指直接通过实现代理类的方式完成添加切面与增加切面功能的方式。<font color="#c00000">这种方式的代理类在编译前就已经被明确定义</font>，且通常需要程序员手动完成。因此在这里静态代理仅会给出一个静态代理的demo并思考其所存在的问题。
 
+```Java
+// 定义服务接口
+public interface IService {
+    void serve();
+}
 
+// 实现服务接口的具体类
+public class Service implements IService {
+    @Override
+    public void serve() {
+        System.out.println("Serving...");
+    }
+}
 
+// 代理类，也实现IService接口
+public class ServiceProxy implements IService {
+    private IService service; // 内部持有一个IService的引用，通常是目标对象
+
+    public ServiceProxy(IService service) {
+        this.service = service;
+    }
+
+    @Override
+    public void serve() {
+        System.out.println("Before serving"); // 添加额外的逻辑
+        service.serve(); // 调用原服务方法
+        System.out.println("After serving"); // 添加额外的逻辑
+    }
+}
+
+public class Controller {
+	@Autowired
+	private IService serviceProxy;
+
+	@GetMapping("/controller")
+	public void controller(HttpServletRequest request, HttpServletResponse response) {
+		serviceProxy.serve();
+	}
+}
+```
+
+在上述静态代理的Demo中，其本质就是定义一个代理类，并在代理类中的同名方法劫持并封装为新的同名代理方法，并在后续程序中使用代理类完成面向切面编程。
+但是上述代码存在的问题是代理类和代理方法需要手动生成，并且较为麻烦。而动态代理解决了这一问题。
+
+#### 4.1.2 动态代理
+
+动态代理就是不需要程序员手动实现、在编译中自动生成代理类的编程方式。
 
 
 
