@@ -943,7 +943,7 @@ public class UserController implements InitializingBean, DisposableBean {
 1. 在执行用户请求之前执行token校验
 2. 批量记录某些函数或者方法被传入的参数，以及这些方法处理的结果(即日志)
 
-### 4.1 静态代理与动态代理
+### 4.1 静态代理与动态代理的基本概念
 
 如上所述，面向切面编程主要是通过代理劫持某个函数调用，并为其增加和劫持若干切面，完成切面处业务逻辑的一种程序设计模式。
 这种代理通常有两种实现方式：
@@ -986,6 +986,7 @@ public class ServiceProxy implements IService {
 
 public class Controller {
 	@Autowired
+	// ServiceProxy和Service本质并不是同一个类，因此需要使用接口类型接值
 	private IService serviceProxy;
 
 	@GetMapping("/controller")
@@ -1005,13 +1006,17 @@ public class Controller {
 常用的动态代理实现方式有两种：
 1. JDK动态代理：本方法由JDK原生实现，其特性和要求为：
 	1. 被代理的<font color="#c00000">目标类必须实现一个接口</font>
-	2. 代理对象会和目标对象有同样的接口，但是并不是同一个类(和上述的静态代理本质一致)，也无直接继承关系。
+	2. 代理对象会和目标对象有同样的接口，但是并不是同一个类(和上述的静态代理本质一致)，也无直接继承关系。<font color="#c00000">因此参数接收时应当使用接口作为类型</font>。
 	3. 该方法由JDK原生生成，不需要额外导入包
 2. cglib动态代理：
 	1. 被代理的<font color="#c00000">目标类不需要实现接口</font>
 	2. 通过被代理的目标类生成并实现一个新类
-	3. 该包被融入到spring下，不需要额外导入包
+	3. 该包被融入到SpringFramework下，不需要额外导入包
 
 通常来说，有接口的使用JDK，无接口的使用cglib。
 
+#### 4.1.3 AOP与OOP
 
+OOP是指面向对象编程，AOP
+
+### 4.2 
