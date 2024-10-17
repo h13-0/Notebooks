@@ -1019,4 +1019,4 @@ public class Controller {
 
 OOP是指面向对象编程，AOP是指面向切面编程。AOP本质基于OOP，且是对OOP编程思路的一种补充。OOP是针对父类与子类的纵向编程思路，AOP是若干基于同一父类(父接口)的子类之间的纵向封装关系。
 
-### 4.2 
+### 4.2 Spring AOP的
