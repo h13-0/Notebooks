@@ -48,21 +48,9 @@
               "icon": "lucide-file",
               "title": "第六章 应用层"
             }
-          },
-          {
-            "id": "8ee53a4055bd6aad",
-            "type": "leaf",
-            "state": {
-              "type": "release-notes",
-              "state": {
-                "currentVersion": "1.7.4"
-              },
-              "icon": "lucide-file",
-              "title": "Release Notes 1.7.4"
-            }
           }
         ],
-        "currentTab": 3
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -144,7 +132,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Java/Java语言基础/Java语言基础.md",
+                "file": "前后端编程/SSM框架/SpringFramework/Spring Framework基础.md",
                 "collapseAll": true,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -154,7 +142,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Java语言基础 的反向链接列表"
+              "title": "Spring Framework基础 的反向链接列表"
             }
           },
           {
@@ -163,12 +151,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Java/Java语言基础/Java语言基础.md",
+                "file": "前后端编程/SSM框架/SpringFramework/Spring Framework基础.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Java语言基础 的出链列表"
+              "title": "Spring Framework基础 的出链列表"
             }
           },
           {
@@ -190,10 +178,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Java/Java语言基础/Java语言基础.md"
+                "file": "前后端编程/SSM框架/SpringFramework/Spring Framework基础.md"
               },
               "icon": "lucide-list",
-              "title": "Java语言基础 的大纲"
+              "title": "Spring Framework基础 的大纲"
             }
           },
           {
@@ -236,8 +224,9 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "8ee53a4055bd6aad",
+  "active": "1f1a928b94727f82",
   "lastOpenFiles": [
+    "计算机网络/基础应试学习/第六章 应用层/第六章 应用层.md",
     "前后端编程/SSM框架/SpringFramework/Spring Framework基础.md",
     "数据结构算法/必背算法/树和图/二叉树的遍历.md",
     "数据结构算法/数据结构算法基础.md",
@@ -272,7 +261,6 @@
     "计算机网络/应试笔记与八股.md",
     "计算机网络/计算机网络非应试拓展/TCP标准.md",
     "JavaWeb系列.md",
-    "Jav.md",
     "前后端编程/SSM框架",
     "前后端编程/SSM框架/SpringFramework",
     "Java/Resources/sEShHZ6AGM.png",

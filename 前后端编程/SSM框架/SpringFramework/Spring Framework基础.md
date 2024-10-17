@@ -935,8 +935,15 @@ public class UserController implements InitializingBean, DisposableBean {
 注：
 - 注意区分 `FactoryBean` 和 `BeanFactory` 。
 
-## 4 AOP面相切面开发
+## 4 AOP面相切面编程
 
+面向切面编程(Aspect-Oriented Programming，简称 AOP)，正如其名所述，<font color="#c00000">其主要功能是</font><u><span style="background:#fff88f"><font color="#c00000">通过代理</font></span></u><font color="#c00000">劫持某个函数调用或者方法调用，并在这个方法调用之前或者之后去增加一个切面，并在这个切面中加入自己的业务逻辑</font>。
+
+几个常见的业务场景：
+1. 在执行用户请求之前执行token校验
+2. 批量记录某些函数或者方法被传入的参数，以及这些方法处理的结果(即日志)
+
+### 4.1 静态代理与动态代理
 
 
 
