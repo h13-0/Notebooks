@@ -1143,6 +1143,7 @@ public class LogAdvance {
 	- 第二个 `*` 表示匹配该包下的所有类
 	- 第三个 `*` 表示匹配所有方法
 	- `(..)` 表示忽略方法参数
+	- 具体可见章节[[Spring Framework基础#4 3 4 切点表达式|切点表达式]]。
 
 步骤3，补全注解，以加入容器和配置切面：
 主要需要注意以下内容：
@@ -1258,8 +1259,35 @@ public class LogAdvance {
 		value = "execution(* indi.h13.ssserver.service.impl.*.*(..))",
 		returning = result
 	)
-	public void afterReturning() {
-		System.out.println("@After ...");
+	public void afterReturning(Object result) {
+		// ...
 	}
 }
 ```
+
+##### 4.3.3.3 获取方法异常对象
+
+<span style="background:#fff88f"><font color="#c00000">获取方法异常对象<u>仅能</u>在@AfterThrowing增强中才可以获取</font></span>。
+具体步骤如下：
+1. <font color="#c00000">在@AfterThrowing的通知方法中</font>增加一个 `Throwable throwable` 。
+2. 配置 `throwing` 为 `throwable` ：
+	1. 注解方式为： `@AfterThrowing(value = "...", throwing = throwable)`
+具体Demo如下：
+
+```Java
+@Component
+@Aspect
+public class LogAdvance {
+	@AfterThrowing(
+		value = "execution(* indi.h13.ssserver.service.impl.*.*(..))",
+		throwing = throwable
+	)
+	public void afterThrowing(Throwable throwable) {
+		System.out.println("@AfterThrowing ...");
+	}
+}
+```
+
+#### 4.3.4 切点表达式
+
+
