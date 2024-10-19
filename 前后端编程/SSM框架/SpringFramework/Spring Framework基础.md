@@ -1038,7 +1038,7 @@ OOP是指面向对象编程，AOP是指面向切面编程。AOP本质基于OOP�
 4. 后置通知(`@After`)：
 	<font color="#c00000">无论目标方法是否成功执行均会被调用</font>的通知
 5. 环绕通知(`@Around`)：
-	就是不自带 `try...catch...finally` 逻辑了，把接口丢给你让你自己执行。具体可见[[Spring Framework基础#4 3 5 环绕通知|环绕通知]]。
+	就是不自带 `try...catch...finally` 逻辑了，把接口丢给你让你自己执行。具体可见[[Spring Framework基础#4 3 4 环绕通知|环绕通知]]。
 
 <font color="#9bbb59">连接点</font>：
 	被代理拦截到的点，是一个逻辑概念
@@ -1070,7 +1070,7 @@ OOP是指面向对象编程，AOP是指面向切面编程。AOP本质基于OOP�
 4. 后置通知(`@After`)：
 	<font color="#c00000">无论目标方法是否成功执行均会被调用</font>的通知
 5. 环绕通知(`@Around`)：
-	就是不自带 `try...catch...finally` 逻辑了，把接口丢给你让你自己执行。具体可见[[Spring Framework基础#4 3 5 环绕通知|环绕通知]]。
+	就是不自带 `try...catch...finally` 逻辑了，把接口丢给你让你自己执行。具体可见[[Spring Framework基础#4 3 4 环绕通知|环绕通知]]。
 
 其调用逻辑如下方伪代码所示：
 
@@ -1199,69 +1199,14 @@ public class JavaConfiguration {
 }
 ```
 
-#### 4.3.2 使用xml完成AOP配置
-
-基本不用，了解即可。
-步骤：
-1. 先准备一个增强类
-```Java
-public class LogAdvance {
-
-	public void before() {
-		System.out.println("@Before ...");
-	}
-
-	public void after() {
-		System.out.println("@After ...");
-	}
-
-	public void afterThrowing() {
-		System.out.println("@AfterThrowing ...");
-	}
-}
-```
-2. 注册组件
-```xml
-<?xml version="1.0" encoding="UTF-8"?>  
-<beans xmlns="http://www.springframework.org/schema/beans"  
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
-       xmlns:context="http://www.springframework.org/schema/context"  
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">  
-  
-    <!-- 1. 注册组件 -->  
-	<bean id="logAdvance" class="indi.h13.advances.LogAdvance"/>  
-</beans>
-```
-3. 注册切面标签，声明切点
-```xml
-<?xml version="1.0" encoding="UTF-8"?>  
-<beans xmlns="http://www.springframework.org/schema/beans"  
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
-       xmlns:context="http://www.springframework.org/schema/context"  
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">  
-  
-    <!-- 1. 注册组件 -->  
-	<bean id="logAdvance" class="indi.h13.advances.LogAdvance"/>  
-
-	<!-- 2. 切面标签，声明切点 -->
-	<aop:config>
-		<!-- 2.1 声明切点标签 -->
-		<aop:pointcut id="pc" expression="execution(* indi.h13.ssserver.service.impl.*.*(..))" />
-
-		<!-- 2.2 声明切点标签 -->
-	</aop:config>
-
-</beans>
-```
-
-#### 4.3.3 获取通知节点信息
+#### 4.3.2 获取通知节点信息
 
 在完成上述章节的通知方法定义后，会直接面对如下需求：
 1. 获取目标方法信息(方法名、参数、访问修饰符、所属类...)
 2. 获取方法返回值
 3. 捕捉异常对象
 
-##### 4.3.3.1 获取目标方法信息
+##### 4.3.2.1 获取目标方法信息
 
 <span style="background:#fff88f"><font color="#c00000">获取目标方法信息是在任何一个增强方法中都可以执行的</font></span>。
 具体步骤是：
@@ -1294,7 +1239,7 @@ public class LogAdvance {
 }
 ```
 
-##### 4.3.3.2 获取方法返回值
+##### 4.3.2.2 获取方法返回值
 
 <span style="background:#fff88f"><font color="#c00000">获取方法返回值<u>仅能</u>在@AfterReturning增强中才可以获取</font></span>。
 具体步骤如下：
@@ -1317,7 +1262,7 @@ public class LogAdvance {
 }
 ```
 
-##### 4.3.3.3 获取方法异常对象
+##### 4.3.2.3 获取方法异常对象
 
 <span style="background:#fff88f"><font color="#c00000">获取方法异常对象<u>仅能</u>在@AfterThrowing增强中才可以获取</font></span>。
 具体步骤如下：
@@ -1340,9 +1285,9 @@ public class LogAdvance {
 }
 ```
 
-#### 4.3.4 切点表达式
+#### 4.3.3 切点表达式
 
-##### 4.3.4.1 切点表达式的基本语法
+##### 4.3.3.1 切点表达式的基本语法
 
 切点表达式的基本结构为：
 ![[Pasted image 20241019194134.png]]
@@ -1361,14 +1306,14 @@ public class LogAdvance {
 		- `(..int)` 表示以int结尾，开头有没有无所谓
 		- `(String, int)` 等表示具体参数
 
-##### 4.3.4.2 切点表达式的提取和复用
+##### 4.3.3.2 切点表达式的提取和复用
 
 通常来说，在一个工程中会有多个通知方法被插入到同一个切点表达式所限定的一类切点中(例如上述章节的Demo中多次使用表达式 `"execution(* indi.h13.ssserver.service.impl.*.*(..))"` )。为了避免重复编写，统一管理，就有了切点表达式的提取和复用。
 复用方式有如下几种：
 1. 同一类内提取
 2. 在一个项目中，全局内统一提取并维护
 
-###### 4.3.4.2.1 同一类内提取和复用
+###### 4.3.3.2.1 同一类内提取和复用
 
 Demo如下：
 
@@ -1397,7 +1342,7 @@ public class LogAdvance {
 }
 ```
 
-###### 4.3.4.2.2 全局内同一提取和维护
+###### 4.3.3.2.2 全局内同一提取和维护
 
 通常考虑创建一个单独维护切点的类，统一维护切点。通常放置于 `pointcuts` 包中。
 
@@ -1440,7 +1385,7 @@ public class LogAdvance {
 }
 ```
 
-#### 4.3.5 环绕通知
+#### 4.3.4 环绕通知
 
 前面四个通知类型是基于 `try { } catct { } finally { }` 结构进行的，而环绕通知是不自带这些基本结构，把句柄丢给环绕通知方法，让开发者在环绕通知方法内自行调用随意切片的一种设计。
 
@@ -1468,7 +1413,7 @@ public class LogAroundAdvance {
 }
 ```
 
-#### 4.3.6 切面优先级
+#### 4.3.5 切面优先级
 
 无论对同一个组件方法添加了多少个增强代码，不同切面之间的优先级是固定的，即：
 1. 执行@Before
@@ -1547,4 +1492,73 @@ public class Advance2 {
 
 
 
+
+#### 4.3.6 使用xml完成AOP配置
+
+基本不用，了解即可。
+步骤：
+1. 先准备一个增强类
+```Java
+public class LogAdvance {
+
+	public void before() {
+		System.out.println("@Before ...");
+	}
+
+	public void after() {
+		System.out.println("@After ...");
+	}
+
+	@AfterThrowing(
+		value = "execution(* indi.h13.ssserver.service.impl.*.*(..))",
+		throwing = throwable
+	)
+	public void afterThrowing(Throwable throwable) {
+		System.out.println("@AfterThrowing ...");
+	}
+}
+```
+2. 注册组件
+```xml
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+       xmlns:context="http://www.springframework.org/schema/context"  
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">  
+  
+    <!-- 1. 注册组件 -->  
+	<bean id="logAdvance" class="indi.h13.advances.LogAdvance"/>  
+</beans>
+```
+3. 注册切面标签，声明切点
+```xml
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+       xmlns:context="http://www.springframework.org/schema/context"  
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">  
+  
+    <!-- 1. 注册组件 -->  
+	<bean id="logAdvance" class="indi.h13.advances.LogAdvance"/>  
+
+	<!-- 2. 声明切点标签、引用增强对象 -->
+	<!-- 等效于@Aspect注解 -->
+	<aop:config>
+		<!-- 2.1 声明切点标签 -->
+		<!-- 等效于@Pointcut注解及其切点类 -->
+		<aop:pointcut id="pc" expression="execution(* indi.h13.ssserver.service.impl.*.*(..))" />
+
+		<!-- 2.2 引用增强对象 -->
+		<!-- 等效于@Order注解 -->
+		<aop:aspect ref="logAdvance" order="7">
+			<!-- 等效于@Before注解 -->
+			<aop:before method="before" pointcut-ref="pc"/>
+			
+			<!-- 也可以选择不引用切点 -->
+			<!-- 等效于@AfterThrowing(value="",throwing="throwable")注解 -->
+			<aop:after-throwing method="afterThrowing" pointcut="execution(* indi.h13.ssserver.service.impl.*.*(..))" throwing="throwable"/>
+		</aop:aspect>
+	</aop:config>
+</beans>
+```
 
