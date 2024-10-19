@@ -1029,15 +1029,15 @@ OOP是指面向对象编程，AOP是指面向切面编程。AOP本质基于OOP�
 	通知是指调用通知方法的这个动作
 
 <span style="background:#fff88f"><font color="#c00000">通知主要有如下几种类型</font></span>：
-1. 前置通知：
+1. 前置通知(`@Before`)：
 	目标方法被<font color="#c00000">调用之前</font>的通知
-2. 返回通知：
+2. 返回通知(`@AfterReturning`)：
 	目标方法被<font color="#c00000">正常执行完毕后</font>的通知(出现异常时不通知)
-3. 异常通知：
+3. 异常通知(`@AfterThrowing`)：
 	目标方法<font color="#c00000">发生异常时</font>的通知
-4. 后置通知：
+4. 后置通知(`@After`)：
 	<font color="#c00000">无论目标方法是否成功执行均会被调用</font>的通知
-5. 环绕通知：
+5. 环绕通知(`@Around`)：
 	
 
 <font color="#9bbb59">连接点</font>：
@@ -1058,6 +1058,30 @@ OOP是指面向对象编程，AOP是指面向切面编程。AOP本质基于OOP�
 <font color="#9bbb59">织入</font>：
 	切点被配置的动作
 
+#### 4.2.1 通知类型及其连接点
 
+如上一章节所述，通知主要有以下五种类型：
+1. 前置通知(`@Before`)：
+	目标方法被<font color="#c00000">调用之前</font>的通知
+2. 返回通知(`@AfterReturning`)：
+	目标方法被<font color="#c00000">正常执行完毕后</font>的通知(出现异常时不通知)
+3. 异常通知(`@AfterThrowing`)：
+	目标方法<font color="#c00000">发生异常时</font>的通知
+4. 后置通知(`@After`)：
+	<font color="#c00000">无论目标方法是否成功执行均会被调用</font>的通知
+5. 环绕通知(`@Around`)：
 
+其调用逻辑如下方伪代码所示：
+
+```Java
+try {
+	@Before
+	method();
+	@AfterReturning
+} catch {
+	@AfterThrowing
+} finally {
+	@After
+}
+```
 
