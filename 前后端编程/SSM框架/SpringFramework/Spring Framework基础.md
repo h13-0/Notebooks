@@ -1097,14 +1097,26 @@ try {
 5. 开启Aspect注解支持
 
 步骤1，定义通知方法：
-
-按照需求定义方法即可，通常
+按照需求定义方法即可，通常会将类名命名为 `${功能}Advance` ，并放置于 `advance` 包下，例如增加日志功能：
 
 ```Java
+@Component
+@Aspect
+public class LogAdvance {
+	@Before("execution(* indi.h13.ssserver.service.impl.*.*(..))")
+	public void before() {
+		System.out.println("@Before ...");
+	}
 
-
-
-
+	@After("execution(* indi.h13.ssserver.service.impl.*.*(..))")
+	public void after() {
+		System.out.println("@After ...");
+	}
+	@AfterThrowing("execution(* indi.h13.ssserver.service.impl.*.*(..))")
+	public void afterThrowing() {
+		System.out.println("@AfterThrowing ...");
+	}
+}
 ```
 
 步骤2：
@@ -1117,14 +1129,14 @@ try {
 
 
 
-步骤4：
-
+步骤4，补全注解，以加入容器和配置切面：
+主要需要注意以下内容：
+1. 是否在配置文件或配置类中增加了 `advance` 包。
+2. 
 
 
 步骤5，开启Aspect注解支持：
-
-直接在SpringConfig中添加 `<aop:aspectj-autoproxy />` 即可：
-
+1. 对于使用xml进行配置的，直接在SpringConfig中添加 `<aop:aspectj-autoproxy />` 即可：
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>  
 <beans xmlns="http://www.springframework.org/schema/beans"  
@@ -1132,7 +1144,22 @@ try {
        xmlns:context="http://www.springframework.org/schema/context"  
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">  
   
-    <!-- 开启Aspect注解支持 -->  
+    <!-- 开启Aspectj注解支持 -->  
 	<aop:aspectj-autoproxy />
 </beans>
 ```
+2. 对于使用配置类进行配置的，需要在配置类前额外增加一个 `@EnableAspectJAutoProxy` 注解即可：
+```Java
+// 配置包扫描注解，`value = ` 可以省略
+@ComponentScan(value = {...})
+// 配置配置文件名注解，`value = ` 可以省略
+@PropertySource(value = ...)
+@Configuration
+@EnableAspectJAutoProxy
+public class JavaConfiguration {
+}
+```
+
+
+
+
