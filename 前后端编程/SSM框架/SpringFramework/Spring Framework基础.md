@@ -1201,7 +1201,58 @@ public class JavaConfiguration {
 
 #### 4.3.2 使用xml完成AOP配置
 
-基本不用，略。
+基本不用，了解即可。
+步骤：
+1. 先准备一个增强类
+```Java
+public class LogAdvance {
+
+	public void before() {
+		System.out.println("@Before ...");
+	}
+
+	public void after() {
+		System.out.println("@After ...");
+	}
+
+	public void afterThrowing() {
+		System.out.println("@AfterThrowing ...");
+	}
+}
+```
+2. 注册组件
+```xml
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+       xmlns:context="http://www.springframework.org/schema/context"  
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">  
+  
+    <!-- 1. 注册组件 -->  
+	<bean id="logAdvance" class="indi.h13.advances.LogAdvance"/>  
+</beans>
+```
+3. 注册切面标签，声明切点
+```xml
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+       xmlns:context="http://www.springframework.org/schema/context"  
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">  
+  
+    <!-- 1. 注册组件 -->  
+	<bean id="logAdvance" class="indi.h13.advances.LogAdvance"/>  
+
+	<!-- 2. 切面标签，声明切点 -->
+	<aop:config>
+		<!-- 2.1 声明切点标签 -->
+		<aop:pointcut id="pc" expression="execution(* indi.h13.ssserver.service.impl.*.*(..))" />
+
+		<!-- 2.2 声明切点标签 -->
+	</aop:config>
+
+</beans>
+```
 
 #### 4.3.3 获取通知节点信息
 
@@ -1436,7 +1487,7 @@ public class LogAroundAdvance {
 @Component
 @Aspect
 @Order(10)
-public class LogAdvance {
+public class Advance1 {
 
 	// 在类外时使用方法名的全限定符
 	@Before("indi.h13.pointcuts.LogPointCut.serviceImplPc()")
@@ -1461,7 +1512,7 @@ public class LogAdvance {
 @Component
 @Aspect
 @Order(7)
-public class LogAdvance {
+public class Advance2 {
 
 	// 在类外时使用方法名的全限定符
 	@Before("indi.h13.pointcuts.LogPointCut.serviceImplPc()")
@@ -1483,3 +1534,17 @@ public class LogAdvance {
 
 注：
 - `@Order` <font color="#c00000">被省略时默认为int类型的最大值</font>，即优先级最低
+- 上述切面的执行顺序为：
+	1. `Advavce2.before()`
+	2. `Advavce1.before()`
+	3. `method()`
+	4. `Advavce1.after()`
+	5. `Advavce2.after()`
+- 一种应用场景：
+	![[Pasted image 20241019234925.png]]
+
+
+
+
+
+
