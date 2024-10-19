@@ -1311,5 +1311,81 @@ public class LogAdvance {
 
 ##### 4.3.4.2 切点表达式的提取和复用
 
-通常来说，在一个工程中会有多个通知方法被插入到同一个切点表达式所限定的一类切点中(例如上述章节的Demo中多次使用表达式 `"execution(* indi.h13.ssserver.service.impl.*.*(..))"` )。为了避免重复编写，统一
+通常来说，在一个工程中会有多个通知方法被插入到同一个切点表达式所限定的一类切点中(例如上述章节的Demo中多次使用表达式 `"execution(* indi.h13.ssserver.service.impl.*.*(..))"` )。为了避免重复编写，统一管理，就有了切点表达式的提取和复用。
+复用方式有如下几种：
+1. 同一类内提取
+2. 在一个项目中，全局内统一提取并维护
+
+###### 4.3.4.2.1 同一类内提取和复用
+
+Demo如下：
+
+```Java
+@Component
+@Aspect
+public class LogAdvance {
+	@Pointcut("execution(* indi.h13.ssserver.service.impl.*.*(..))")
+	public void pc() { }
+
+	// 同一类内可以直接指定方法名
+	@Before("pc()")
+	public void before() {
+		System.out.println("@Before ...");
+	}
+
+	@After("pc()")
+	public void after() {
+		System.out.println("@After ...");
+	}
+	
+	@AfterThrowing("pc()")
+	public void afterThrowing() {
+		System.out.println("@AfterThrowing ...");
+	}
+}
+```
+
+###### 4.3.4.2.2 全局内同一提取和维护
+
+通常考虑创建一个单独维护切点的类，统一维护切点。通常放置于 `pointcuts` 包中。
+
+```Java
+package indi.h13.pointcuts;  
+
+@Component
+public class LogPointCut {
+	@Pointcut("execution(* indi.h13.ssserver.service.impl.*.*(..))")
+	public void serviceImplPc() { }
+}
+```
+
+注：
+1. 需要将该类加入IoC容器中。
+2. 需要配置注解扫描包。
+
+随后在增强类中使用即可：
+
+```Java
+@Component
+@Aspect
+public class LogAdvance {
+
+	// 在类外时使用方法名的全限定符
+	@Before("indi.h13.pointcuts.LogPointCut.serviceImplPc()")
+	public void before() {
+		System.out.println("@Before ...");
+	}
+
+	@After("indi.h13.pointcuts.LogPointCut.serviceImplPc()")
+	public void after() {
+		System.out.println("@After ...");
+	}
+	
+	@AfterThrowing("indi.h13.pointcuts.LogPointCut.serviceImplPc()")
+	public void afterThrowing() {
+		System.out.println("@AfterThrowing ...");
+	}
+}
+```
+
 
