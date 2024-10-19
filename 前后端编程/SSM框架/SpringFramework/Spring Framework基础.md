@@ -1013,7 +1013,7 @@ public class Controller {
 	2. 通过被代理的目标类生成并实现一个新类
 	3. 该包被融入到SpringFramework下，不需要额外导入包
 
-通常来说，有接口的使用JDK，无接口的使用cglib。
+通常来说，有接口的使用JDK，无接口的使用cglib。但是往往不需要额外注意这些，因为Spring AOP会自动处理这些。<font color="#c00000">实际使用时直接使用Spring AOP即可</font>。
 
 #### 4.1.3 AOP与OOP
 
@@ -1085,3 +1085,54 @@ try {
 }
 ```
 
+### 4.3 使用Spring AOP完成面向切面编程
+
+#### 4.3.1 使用注解方式完成面向切面编程
+
+使用注解方式进行面相切面编程的步骤主要如下：
+1. 定义通知方法
+2. 使用注解配置和选中这些目标方法
+3. 配置切点表达式
+4. 补全注解，以加入容器和配置切面
+5. 开启Aspect注解支持
+
+步骤1，定义通知方法：
+
+按照需求定义方法即可，通常
+
+```Java
+
+
+
+
+```
+
+步骤2：
+
+
+
+
+
+步骤3：
+
+
+
+步骤4：
+
+
+
+步骤5，开启Aspect注解支持：
+
+直接在SpringConfig中添加 `<aop:aspectj-autoproxy />` 即可：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+       xmlns:context="http://www.springframework.org/schema/context"  
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">  
+  
+    <!-- 开启Aspect注解支持 -->  
+	<aop:aspectj-autoproxy />
+</beans>
+```
