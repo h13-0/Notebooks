@@ -1091,14 +1091,64 @@ try {
 
 使用注解方式进行面相切面编程的步骤主要如下：
 1. 定义通知方法
-2. 使用注解配置和选中这些目标方法
-3. 配置切点表达式
-4. 补全注解，以加入容器和配置切面
-5. 开启Aspect注解支持
+2. 使用注解配置，配置切点表达式
+3. 补全注解，以加入容器和配置切面
+4. 开启Aspect注解支持
 
 步骤1，定义通知方法：
 按照需求定义方法即可，通常会将类名命名为 `${功能}Advance` ，并放置于 `advance` 包下，例如增加日志功能：
 
+```Java
+public class LogAdvance {
+
+	public void before() {
+		System.out.println("@Before ...");
+	}
+
+	public void after() {
+		System.out.println("@After ...");
+	}
+
+	public void afterThrowing() {
+		System.out.println("@AfterThrowing ...");
+	}
+}
+```
+
+步骤2，使用注解配置和选中这些目标方法：
+
+```Java
+public class LogAdvance {
+	@Before("execution(* indi.h13.ssserver.service.impl.*.*(..))")
+	public void before() {
+		System.out.println("@Before ...");
+	}
+
+	@After("execution(* indi.h13.ssserver.service.impl.*.*(..))")
+	public void after() {
+		System.out.println("@After ...");
+	}
+	@AfterThrowing("execution(* indi.h13.ssserver.service.impl.*.*(..))")
+	public void afterThrowing() {
+		System.out.println("@AfterThrowing ...");
+	}
+}
+```
+
+注：
+- `"execution(* indi.h13.ssserver.service.impl.*.*(..))"` 中的：
+	- 第一个 `*` 表示忽略方法返回值类型
+	- `indi.h13.ssserver.service.impl` 为包名
+	- 第二个 `*` 表示匹配该包下的所有类
+	- 第三个 `*` 表示匹配所有方法
+	- `(..)` 表示忽略方法参数
+
+步骤3，补全注解，以加入容器和配置切面：
+主要需要注意以下内容：
+1. <span style="background:#fff88f"><font color="#c00000">为该增强类增加以下两个注解</font></span>：
+	1. `@Aspect` 表示该类是个切面
+	2. `@Component` 将其放置于IoC容器中
+	即：
 ```Java
 @Component
 @Aspect
@@ -1118,24 +1168,9 @@ public class LogAdvance {
 	}
 }
 ```
+2. 是否在配置文件或配置类中选择扫描 `advance` 包。
 
-步骤2：
-
-
-
-
-
-步骤3：
-
-
-
-步骤4，补全注解，以加入容器和配置切面：
-主要需要注意以下内容：
-1. 是否在配置文件或配置类中增加了 `advance` 包。
-2. 
-
-
-步骤5，开启Aspect注解支持：
+步骤4，开启Aspect注解支持：
 1. 对于使用xml进行配置的，直接在SpringConfig中添加 `<aop:aspectj-autoproxy />` 即可：
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>  
