@@ -1038,7 +1038,7 @@ OOP是指面向对象编程，AOP是指面向切面编程。AOP本质基于OOP�
 4. 后置通知(`@After`)：
 	<font color="#c00000">无论目标方法是否成功执行均会被调用</font>的通知
 5. 环绕通知(`@Around`)：
-	
+	就是不自带 `try...catch...finally` 逻辑了，把接口丢给你让你自己执行。具体可见[[Spring Framework基础#4 3 5 环绕通知|环绕通知]]。
 
 <font color="#9bbb59">连接点</font>：
 	被代理拦截到的点，是一个逻辑概念
@@ -1070,7 +1070,7 @@ OOP是指面向对象编程，AOP是指面向切面编程。AOP本质基于OOP�
 4. 后置通知(`@After`)：
 	<font color="#c00000">无论目标方法是否成功执行均会被调用</font>的通知
 5. 环绕通知(`@Around`)：
-	就是不自带 `try...catch...finally` 逻辑了，把接口丢给你让你自己执行。
+	就是不自带 `try...catch...finally` 逻辑了，把接口丢给你让你自己执行。具体可见[[Spring Framework基础#4 3 5 环绕通知|环绕通知]]。
 
 其调用逻辑如下方伪代码所示：
 
@@ -1391,6 +1391,30 @@ public class LogAdvance {
 
 #### 4.3.5 环绕通知
 
+前面四个通知类型是基于 `try { } catct { } finally { }` 结构进行的，而环绕通知是不自带这些基本结构，把句柄丢给环绕通知方法，让开发者在环绕通知方法内自行调用随意切片的一种设计。
 
+```Java
+public class LogAroundAdvance {
+	@Around("execution(* indi.h13.ssserver.service.impl.*.*(..))")
+	public Object transaction(ProceedingJoinPoint joinPoint) {
+		Object result;
+		// Do anything...
+		try {
+			// Do anything...
+			// Even without calling the objective function...
+			result = joinPoint.proceed(joinPoint.getArgs());
+			// Do anything...
+		} catch (Throwable t) {
+			// Do anything...
+			throw t;
+		} finally {
+			// Do anything...
+		}
+		
+		// Do anything...
+		return result;
+	}
+}
+```
 
-
+#### 
