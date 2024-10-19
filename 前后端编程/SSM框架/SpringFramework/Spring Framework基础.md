@@ -1562,3 +1562,11 @@ public class LogAdvance {
 </beans>
 ```
 
+## 5 TX声明式事务
+
+
+
+
+
+
+
