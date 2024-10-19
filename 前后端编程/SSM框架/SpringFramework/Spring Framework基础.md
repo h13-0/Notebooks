@@ -1417,4 +1417,69 @@ public class LogAroundAdvance {
 }
 ```
 
-#### 
+#### 4.3.6 切面优先级
+
+无论对同一个组件方法添加了多少个增强代码，不同切面之间的优先级是固定的，即：
+1. 执行@Before
+2. 执行@AfterReturning <font color="#c00000">或</font> @AfterThrowing
+3. 执行@After
+总体执行逻辑是和 `try catch` 一致的包裹结构：
+	![[Pasted image 20241019234230.png]]
+
+
+但是同一切面内的不同增强方法之间可以使用 `@Order(value)` 设置优先级，<span style="background:#fff88f"><font color="#c00000">value值越低的越靠外执行</font></span>，即：
+- value值低的前置切面( `@Before` )比value值高的<font color="#c00000">前置切面先执行</font>
+- value值低的后置切面( `@Before` )比value值高的<font color="#c00000">后置切面后执行</font>
+假设下方的代码：
+
+```Java
+@Component
+@Aspect
+@Order(10)
+public class LogAdvance {
+
+	// 在类外时使用方法名的全限定符
+	@Before("indi.h13.pointcuts.LogPointCut.serviceImplPc()")
+	public void before() {
+		System.out.println("@Before ...");
+	}
+
+	@After("indi.h13.pointcuts.LogPointCut.serviceImplPc()")
+	public void after() {
+		System.out.println("@After ...");
+	}
+	
+	@AfterThrowing("indi.h13.pointcuts.LogPointCut.serviceImplPc()")
+	public void afterThrowing() {
+		System.out.println("@AfterThrowing ...");
+	}
+}
+```
+
+
+```Java
+@Component
+@Aspect
+@Order(7)
+public class LogAdvance {
+
+	// 在类外时使用方法名的全限定符
+	@Before("indi.h13.pointcuts.LogPointCut.serviceImplPc()")
+	public void before() {
+		System.out.println("@Before ...");
+	}
+
+	@After("indi.h13.pointcuts.LogPointCut.serviceImplPc()")
+	public void after() {
+		System.out.println("@After ...");
+	}
+	
+	@AfterThrowing("indi.h13.pointcuts.LogPointCut.serviceImplPc()")
+	public void afterThrowing() {
+		System.out.println("@AfterThrowing ...");
+	}
+}
+```
+
+注：
+- `@Order` <font color="#c00000">被省略时默认为int类型的最大值</font>，即优先级最低
