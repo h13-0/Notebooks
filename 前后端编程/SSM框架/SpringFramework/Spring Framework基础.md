@@ -1128,6 +1128,7 @@ public class LogAdvance {
 	public void after() {
 		System.out.println("@After ...");
 	}
+	
 	@AfterThrowing("execution(* indi.h13.ssserver.service.impl.*.*(..))")
 	public void afterThrowing() {
 		System.out.println("@AfterThrowing ...");
@@ -1162,6 +1163,7 @@ public class LogAdvance {
 	public void after() {
 		System.out.println("@After ...");
 	}
+	
 	@AfterThrowing("execution(* indi.h13.ssserver.service.impl.*.*(..))")
 	public void afterThrowing() {
 		System.out.println("@AfterThrowing ...");
@@ -1209,8 +1211,55 @@ public class JavaConfiguration {
 ##### 4.3.3.1 获取目标方法信息
 
 <span style="background:#fff88f"><font color="#c00000">获取目标方法信息是在任何一个增强方法中都可以执行的</font></span>。
+具体步骤是：
+1. 在通知方法中添加 `JoinPoint` 类的对象。
+2. 随后使用 `JoinPoint` 对象即可获取目标方法信息。
+Demo如下：
 
+```Java
+@Component
+@Aspect
+public class LogAdvance {
+	@Before("execution(* indi.h13.ssserver.service.impl.*.*(..))")
+	public void before(JoinPoint joinPoint) {
+		// 1. 获取所属类的简称
+		System.out.println("Class name: " + joinPoint.getTarget().getClass().getSimpleName());
+		
+		// 2. 获取所属类的全称
+		System.out.println("Class name: " + joinPoint.getTarget().getClass().getName());
+
+		// 3. 获取方法名
+		System.out.println("Function name: " + joinPoint.getSignature().getName());
+
+		// 4. 获取参数
+		Object args[] = joinPoint.getArgs();
+
+		// 5. 获取访问修饰符
+		int modifiers = joinPoint.getSignature().getModifiers();
+		System.out.println("Function modifiers: " + Modifier.toString(modifiers));
+	}
+}
+```
 
 ##### 4.3.3.2 获取方法返回值
 
-<font color="#c00000">获取方法返回值<u>仅能</u>在@AfterReturning增强中才可以获取</font>。
+<span style="background:#fff88f"><font color="#c00000">获取方法返回值<u>仅能</u>在@AfterReturning增强中才可以获取</font></span>。
+具体步骤如下：
+1. <font color="#c00000">在@AfterReturning的通知方法中</font>增加一个 `Object result` 。
+2. 配置 `returning` 为 `result` ：
+	1. 注解方式为： `@AfterReturning(value="...", returning=result)` 
+具体Demo为：
+
+```Java
+@Component
+@Aspect
+public class LogAdvance {
+	@AfterReturning(
+		value = "execution(* indi.h13.ssserver.service.impl.*.*(..))",
+		returning = result
+	)
+	public void afterReturning() {
+		System.out.println("@After ...");
+	}
+}
+```
