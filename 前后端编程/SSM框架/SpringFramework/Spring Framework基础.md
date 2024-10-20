@@ -1763,6 +1763,19 @@ public classs UserService {
 
 #### 5.2.6 事务传播行为
 
+现在一个事务内调用了两个方法，一个是业务方法，另外一个也是业务方法。
+考虑如下的情况：
+
+```Java
+@Transactional
+public void doResponse() {
+	transactionA();
+	transactionB();
+}
+```
+
+并且假设事务 `transactionB` 执行时一定会失败，那么 `transactionA` 的执行结果会被回退吗？
+
 
 
 
