@@ -1595,7 +1595,7 @@ public void regist(String userName, String email, String phoneNumber) {
 3. 尝试请求3，成功则继续，失败则fallback，撤销请求1、2
 4. 尝试请求4，成功则继续，失败则fallback，撤销请求1、2、3
 5. ...
-而Spring为了解决上述fallback时较为麻烦的问题(实现精确的超时)，<u>还需要手动完成撤销调用的方法</u>，给出了事务管理的一个框架(事务管理器)。
+而Spring为了解决上述fallback时较为麻烦的问题(<font color="#c00000">实现精确的超时回滚更是麻烦</font>)，<u>还需要手动完成撤销调用的方法</u>，给出了事务管理的一个框架(事务管理器)。
 这个框架在项目中往往仅在数据库操作时使用，也就是项目中只需要一个事务管理器实例(不过也有多例的情况)。
 事务管理器的使用步骤：
 1. 选择一个合适的事务管理器实现加入到IoC容器中
@@ -1706,6 +1706,31 @@ public classs UserService {
 
 #### 5.2.3 超时限制
 
+在注解中增加 `timeout=t` 即可，单位为秒，类型为整数。默认值为-1，即永不超时。
+当超时时抛出 `TransactionTimeOutException` 异常。
+
+```Java
+public classs UserService {
+	// 用户注册操作
+	@Transactional(readOnly = true, timeout = 1)
+	public void getUserInfo(int targetUid) {
+		UserVo userVo = new UserVo();
+		// BeanUtils.copyProperties(userService.getById(uid), userVo);
+		userVo.userName = userMapper.getUserName();
+		userVo.avatarId = userMapper.getAvatarId();
+		...
+	}
+}
+```
+
+<font color="#c00000">需要注意的是，由于timeout自带默认值-1，因此若在类上标注了timeout，而在方法上因为其他方式又重新标注了一次Transactional注解，</font><span style="background:#fff88f"><font color="#c00000">则此时的timeout会以方法上的注解为准</font></span>。
+即此种情况下：
+- <font color="#c00000">若类上未标注timeout参数</font>，<span style="background:#fff88f"><font color="#c00000">则timeout=-1，无限时长</font></span>
+- 标定指定值的timeout后，以后续标定值为准
+
+#### 5.2.4 可选回滚
+
+如上述章节所述，事务内部发生异常时事务管理器会自动进行回滚
 
 
 
