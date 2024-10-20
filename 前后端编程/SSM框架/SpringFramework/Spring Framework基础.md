@@ -1575,26 +1575,62 @@ public void regist(String userName, String email, String phoneNumber) {
 		user.updateEmail(email);
 		user.updatePhoneNumber(phoneNumber);
 	} catch (Exception e) {
-		if(e instanceof IncorrectInvalidUserNameException) {
-			
-		}
-		
-		if(e instanceof IncorrectPhoneNumberException) {
+		if(e instanceof InvalidUserNameException) {
+			userMapper.deregistration(userName);
+		} else if(e instanceof IncorrectEmailException) {
+			user.clearEmail();
+		} else if(e instanceof IncorrectPhoneNumberException) {
 			user.clearPhoneNumber();
 		}
-		
 	}
 }
 ```
 
-
-
-许多业务逻辑的大体流程都是相似的，正如AOP依照 `try..catch` 结构定义了四个切面一样，在Spring中也定义了若干事务操作及其框架。
-
-
-
-
-
+可以发现这种连续的，且有先后要求的请求出现fallback时的逻辑较为复杂(尽管注册用户的时候一般不需要这么做)，但是总体来说许多业务都可能用得到如下逻辑：
+1. 尝试请求1，成功则继续，失败则取消操作1
+2. 尝试请求2，成功则继续，失败则fallback，撤销请求1
+3. 尝试请求3，成功则继续，失败则fallback，撤销请求1、2
+4. 尝试请求4，成功则继续，失败则fallback，撤销请求1、2、3
+5. ...
+而Spring为了解决上述fallback时较为麻烦的问题，给出了事务管理的一个框架(事务管理器)。
+这个框架在项目中往往仅在数据库操作时使用，也就是项目中只需要一个实物管理器实例(不过也有多例的情况)。
 事务管理器的使用步骤：
 1. 选择一个合适的事务管理器实现加入到IoC容器中
 2. 指定对应的方法添加到事务
+
+先以单例的数据库操作事务为例，可以将上述的代码进行如下的实现：
+1. 在配置类中选择jdbc
+```Java
+@Configuration
+@ComponenScan("indi.h13")
+@PropertySource(value = "classpath:jdbc.properties")
+@EnableTransactionManagement
+public class DataSourceConfig {
+    // 实例化DruidDataSource，略
+    @Bean
+    public DataSource dataSource(...) { }
+
+    /**
+     * 实例化JdbcTemplate对象,需要使用ioc中的DataSource
+     * @param dataSource
+     * @return
+     */
+    @Bean
+    public JdbcTemplate jdbcTemplate(DataSource dataSource){
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        jdbcTemplate.setDataSource(dataSource);
+        return jdbcTemplate;
+    }
+    
+    /**
+     * 装配事务管理实现对象
+     * @param dataSource
+     * @return
+     */
+    @Bean
+    public TransactionManager transactionManager(DataSource dataSource){
+        return new DataSourceTransactionManager(dataSource);
+    }
+}
+```
+
