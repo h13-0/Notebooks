@@ -1567,21 +1567,24 @@ public class LogAdvance {
 考虑如下的一个业务逻辑：
 
 ```Java
-// 一个简单的充值逻辑，返回值表示操作成功与否
-public bool charging(int uid, PaymentMethod paymentMethod, TargetAccount targetAccount, int amount) {
-
-	// 1. 先检查UID是否合法
-	if(!userMapper.checkUidExists(uid)) {
-		return false;
+// 用户注册操作
+public void regist(String userName, String email, String phoneNumber) {
+	try {
+		User user = userMapper.createNewUser();
+		user.updateUserName(userName);
+		user.updateEmail(email);
+		user.updatePhoneNumber(phoneNumber);
+	} catch (Exception e) {
+		if(e instanceof IncorrectInvalidUserNameException) {
+			
+		}
+		
+		if(e instanceof IncorrectPhoneNumberException) {
+			user.clearPhoneNumber();
+		}
+		
 	}
-
-	// 2. 检查
-
-
 }
-
-
-
 ```
 
 
