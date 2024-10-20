@@ -1592,14 +1592,14 @@ public void regist(String userName, String email, String phoneNumber) {
 3. 尝试请求3，成功则继续，失败则fallback，撤销请求1、2
 4. 尝试请求4，成功则继续，失败则fallback，撤销请求1、2、3
 5. ...
-而Spring为了解决上述fallback时较为麻烦的问题，给出了事务管理的一个框架(事务管理器)。
+而Spring为了解决上述fallback时较为麻烦的问题，<u>还需要手动完成撤销调用的方法</u>，给出了事务管理的一个框架(事务管理器)。
 这个框架在项目中往往仅在数据库操作时使用，也就是项目中只需要一个实物管理器实例(不过也有多例的情况)。
 事务管理器的使用步骤：
 1. 选择一个合适的事务管理器实现加入到IoC容器中
 2. 指定对应的方法添加到事务
 
 先以单例的数据库操作事务为例，可以将上述的代码进行如下的实现：
-1. 在配置类中选择jdbc
+1. 确定选用jdbc操作数据库，实例化Druid连接池、jdbcTemplate，<font color="#c00000">以及选用DataSourceTransactionManager管理JDBC事务</font>
 ```Java
 @Configuration
 @ComponenScan("indi.h13")
@@ -1611,9 +1611,7 @@ public class DataSourceConfig {
     public DataSource dataSource(...) { }
 
     /**
-     * 实例化JdbcTemplate对象,需要使用ioc中的DataSource
-     * @param dataSource
-     * @return
+     * 实例化JdbcTemplate对象，并在UserMapper中用于数据库操作
      */
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource){
@@ -1624,8 +1622,6 @@ public class DataSourceConfig {
     
     /**
      * 装配事务管理实现对象
-     * @param dataSource
-     * @return
      */
     @Bean
     public TransactionManager transactionManager(DataSource dataSource){
@@ -1633,4 +1629,33 @@ public class DataSourceConfig {
     }
 }
 ```
+2. 在Mapper层实现对应数据库操作，完成UserMapper的编写
+3. 在Service层使用实物直接，选定需要管理的数据库操作事务：
+```Java
+public classs UserService {
+	// 用户注册操作
+	@Transactional
+	public void regist(String userName, String email, String phoneNumber) {
+	}
+}
+```
+4. 在数据库操作事务中只需要去操作数据库，不需要担心fallback问题(框架代为实现fallback)：
+```Java
+public classs UserService {
+	// 用户注册操作
+	@Transactional
+	public void regist(String userName, String email, String phoneNumber) {
+		User user = userMapper.createNewUser();
+		user.updateUserName(userName);
+		user.updateEmail(email);
+		user.updatePhoneNumber(phoneNumber);
+	}
+}
+```
+此时就已经实现了fallback操作，当其中某一步发生异常时，数据库就会自动回滚到全部请求开始之前的状况。
+
+注意点：
+1. `@Transactional` <font color="#c00000">可以标注到类前，也可以标注到方法前。当标注到类前时，其下所有方法均为事务方法</font>。
+2. `@Transactional` 
+
 
