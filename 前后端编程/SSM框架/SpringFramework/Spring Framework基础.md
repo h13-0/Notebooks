@@ -1776,7 +1776,7 @@ public void doResponse() {
 
 并且假设事务 `transactionB` 执行时一定会失败，并思考 `transactionA` 的执行结果是否会被回退、以及回退与否是否可以选择。
 
-而事务传播行为就是用于设定 `transactionA` 是否会被 `transactionB` 影响的一个特性，该选项通过注解中的 `propagation` 属性进行设置，其有如下两个选项：
+而事务传播行为就是用于设定 `transactionA` 是否会被 `transactionB` 影响的一个特性，该选项通过注解中的 `propagation` 属性进行设置，其通常使用如下两个选项：
 - `Propagation.REQUIRED` ：默认值，表示：
 	- 若该事务被调用时有事务上下文，则该事务在原先事务的上下文中执行
 	- 若该事务被调用时没有事务上下文，则创建新的事物上下文
@@ -1784,6 +1784,8 @@ public void doResponse() {
 	- <font color="#c00000">无论该事务被调用时有没有事务上下文，都会创建一个全新的事务上下文用于执行该事务</font>。
 	- <font color="#c00000">该事务执行时会挂起原先的事务上下文</font>(如果存在的话)
 	- 该事务执行完毕后，<font color="#c00000">销毁为这个事务创建的新事务上下文，并恢复原事务上下文</font>(如果存在的话)
+(当然还有更多的选项)
+
 接下来考虑如下的调用过程：
 1. 事务1，属性为Propagation.REQUIRED
 2. 事务2，属性为Propagation.REQUIRES_NEW
@@ -1807,5 +1809,8 @@ public void doResponse() {
 3. <font color="#c00000">若事务3触发回滚</font>，<font color="#c00000">则事务1会被回滚</font>，<font color="#c00000">但是事务2不会受影响</font>
 4. 若事务4触发回滚，则事务1、2、3都不会受影响
 
+通常来说，子事务一般使用 `Propagation.REQUIRED` 设置事务传播行为，而父事务可以选择使用 `try catch` 来捕获子事务的异常，达到可控回滚。
 
-
+总体来说，当前子事务期望前置事务回滚与否可以通过 `propagation` 进行设置，而子事务是否期望被后置事务回滚也是通过 `propagation` 设置。
+而父事务可以通过 `try catch` 来强行控制回滚与否。
+通常来说该考点会在面试时考察，实际使用中多数为默认回滚。
