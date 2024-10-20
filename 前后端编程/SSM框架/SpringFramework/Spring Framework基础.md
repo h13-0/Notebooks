@@ -1774,12 +1774,14 @@ public void doResponse() {
 }
 ```
 
-并且假设事务 `transactionB` 执行时一定会失败，那么 `transactionA` 的执行结果会被回退吗？
+并且假设事务 `transactionB` 执行时一定会失败，并思考 `transactionA` 的执行结果是否会被回退、以及回退与否是否可以选择。
 
-
-
-
-
+而事务传播行为就是用于设定 `transactionA` 是否会被 `transactionB` 影响的一个特性，该选项通过注解中的 `propagation` 属性进行设置，其有如下两个选项：
+- `Propagation.REQUIRED` ：默认值，表示：
+	- 若该事务被调用时有事务上下文，则该事务在原先事务的上下文中执行
+	- 若该事务被调用时没有事务上下文，则创建新的事物上下文
+- `Propagation.REQUIRES_NEW` ：表示：
+	- 无论该事务被调用时有没有事务上下文，都会创建一个全新的事务上下文用于执行该事务
 
 
 
