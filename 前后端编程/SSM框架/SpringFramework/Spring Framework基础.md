@@ -1749,5 +1749,24 @@ public classs UserService {
 而对于上述三个并发问题，并不是在所有场景中都需要完全避免上述三个问题，有些问题是可以接受的。对应的四个隔离级别分别为：
 1. 读未提交：允许读未提交的数据
 2. 读提交：不允许读未提交的数据
-3. 可重复读：
+3. 可重复读：保证在同一事务中两次读取到的数据是一致的
+4. 串行化：完全禁止并发，避免上述问题
+
+<font color="#c00000">Spring中的默认隔离级别为可重复读</font>，但是推荐修改为读提交，这样性能会好一些。
+
+具体的设置方法是在注解中设置 `isolation` 属性，可选项分别是：
+- `Isolation.DEFAULT` ：可重复读
+- `Isolation.READ_UNCOMMITTED` 
+- `Isolation.READ_COMMITTED` 
+- `Isolation.REPEATABLE_READ` 
+- `Isolation.SERIALIZABLE` 
+
+#### 5.2.6 事务传播行为
+
+
+
+
+
+
+
 
