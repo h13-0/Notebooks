@@ -1564,8 +1564,30 @@ public class LogAdvance {
 
 ## 5 TX声明式事务
 
+考虑如下的一个业务逻辑：
+
+```Java
+// 一个简单的充值逻辑，返回值表示操作成功与否
+public bool charging(int uid, PaymentMethod paymentMethod, TargetAccount targetAccount, int amount) {
+
+	// 1. 先检查UID是否合法
+	if(!userMapper.checkUidExists(uid)) {
+		return false;
+	}
+
+	// 2. 检查
+
+
+}
+
+
+
+```
+
+
+
 许多业务逻辑的大体流程都是相似的，正如AOP依照 `try..catch` 结构定义了四个切面一样，在Spring中也定义了若干事务操作及其框架。
-以读写数据库为例，
+
 
 
 
