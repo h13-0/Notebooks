@@ -1595,7 +1595,12 @@ public void regist(String userName, String email, String phoneNumber) {
 3. 尝试请求3，成功则继续，失败则fallback，撤销请求1、2
 4. 尝试请求4，成功则继续，失败则fallback，撤销请求1、2、3
 5. ...
-而Spring为了解决上述fallback时较为麻烦的问题(<font color="#c00000">实现精确的超时回滚更是麻烦</font>)，<u>还需要手动完成撤销调用的方法</u>，给出了事务管理的一个框架(事务管理器)。
+可以发现，复杂逻辑的fallback
+
+此外，再考虑一个场景：
+- 假设 `regist` 正在依次执行上述四个操作的同时，还有其他的组件也在操作目标用户的数据。那如何解决并行化问题？
+
+而Spring为了解决上述若干问题，给出了事务管理的一个框架(事务管理器)。
 这个框架在项目中往往仅在数据库操作时使用，也就是项目中只需要一个事务管理器实例(不过也有多例的情况)。
 事务管理器的使用步骤：
 1. 选择一个合适的事务管理器实现加入到IoC容器中
@@ -1730,7 +1735,13 @@ public classs UserService {
 
 #### 5.2.4 可选回滚
 
-如上述章节所述，事务内部发生异常时事务管理器会自动进行回滚
+如上述章节所述，事务内部发生异常时事务管理器会自动进行回滚。<span style="background:#fff88f"><font color="#c00000">但是默认时并不是所有异常都会出发回滚！默认时触发RuntimeException时才会进行回滚。</font></span>
+而注解中可以使用 `rollbackFor=<? extends Throwable>[]` 来指定需要回滚的异常，例如 `rollbackFor=Throwable.class` 。
+此外，还可以用 `noRollbackFor` 来取消特定异常的回滚。`noRollbackFor` 在 `rollbackFor` 后判定。
+
+#### 5.2.5 事务隔离级别
+
+
 
 
 
