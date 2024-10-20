@@ -1781,7 +1781,31 @@ public void doResponse() {
 	- 若该事务被调用时有事务上下文，则该事务在原先事务的上下文中执行
 	- 若该事务被调用时没有事务上下文，则创建新的事物上下文
 - `Propagation.REQUIRES_NEW` ：表示：
-	- 无论该事务被调用时有没有事务上下文，都会创建一个全新的事务上下文用于执行该事务
+	- <font color="#c00000">无论该事务被调用时有没有事务上下文，都会创建一个全新的事务上下文用于执行该事务</font>。
+	- <font color="#c00000">该事务执行时会挂起原先的事务上下文</font>(如果存在的话)
+	- 该事务执行完毕后，<font color="#c00000">销毁为这个事务创建的新事务上下文，并恢复原事务上下文</font>(如果存在的话)
+接下来考虑如下的调用过程：
+1. 事务1，属性为Propagation.REQUIRED
+2. 事务2，属性为Propagation.REQUIRES_NEW
+3. 事务3，属性为Propagation.REQUIRED
+4. 事务4，属性为Propagation.REQUIRES_NEW
+<font color="#c00000">那么</font>：
+1. 事务1被调用，属性为Propagation.REQUIRED：
+	- 此时不存在事务上下文，创建事务上下文1
+2. 事务2被调用，属性为Propagation.REQUIRES_NEW
+	- 此时挂起事务上下文1，创建事务上下文2，并在2中执行事务2
+	- 事务2执行完毕后，销毁事务上下文2，恢复事务上下文1
+3. 事务3被调用，属性为Propagation.REQUIRED
+	- 在事务上下文1中执行
+4. 事务4被调用，属性为Propagation.REQUIRES_NEW
+	- 此时挂起事务上下文1，创建事务上下文3，并在2中执行事务4
+	- 事务4执行完毕后，销毁事务上下文3，恢复事务上下文1
+
+此时，若
+1. 事务1触发回滚，事务1会被回滚
+2. <font color="#c00000">若事务2触发回滚</font>，<font color="#c00000">则事务1不会受到影响</font>，<span style="background:#fff88f"><font color="#c00000">事务3也会继续推进</font></span>
+3. <font color="#c00000">若事务3触发回滚</font>，<font color="#c00000">则事务1会被回滚</font>，<font color="#c00000">但是事务2不会受影响</font>
+4. 若事务4触发回滚，则事务1、2、3都不会受影响
 
 
 
