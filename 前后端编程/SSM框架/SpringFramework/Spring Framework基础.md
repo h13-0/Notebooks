@@ -1564,6 +1564,8 @@ public class LogAdvance {
 
 ## 5 TX声明式事务
 
+### 5.1 实物所解决的问题及其Demo
+
 考虑如下的一个业务逻辑：
 
 ```Java
@@ -1656,6 +1658,44 @@ public classs UserService {
 
 注意点：
 1. `@Transactional` <font color="#c00000">可以标注到类前，也可以标注到方法前。当标注到类前时，其下所有方法均为事务方法</font>。
-2. `@Transactional` 
+2. <font color="#c00000">因为大多数项目只需要一个事务管理器(通常是去管理数据库)，因此</font> `@Transactional` <font color="#c00000">会自动指定项目中唯一的</font> `TransactionManager` 。
+3. <font color="#c00000">当项目中有多个事务管理器时，可以在注解内指定对应的事务管理器的组件名来指定对应的管理器。</font>例如： `@Transactional(transactionManager="transactionManager")` 。
 
+### 5.2 事务管理的更多特性
+
+#### 5.2.1 (多事务管理器时)选定特定的事务管理器完成实物
+
+在注解内指定Bean ID即可，即：
+
+```Java
+public classs UserService {
+	// 用户注册操作
+	@Transactional(transactionManager="transactionManager")
+	public void regist(String userName, String email, String phoneNumber) {
+		User user = userMapper.createNewUser();
+		user.updateUserName(userName);
+		user.updateEmail(email);
+		user.updatePhoneNumber(phoneNumber);
+	}
+}
+```
+
+#### 5.2.2 只读模式
+
+一般来说进行只读事务操作时，也不太需要事务管理器进行fallback。<font color="#c00000">但是使用事务管理器可以保证该事务中只有只读事务</font>。<font color="#c00000">开启只读模式后如果有写入操作则会抛出异常</font>。
+此时在注解中增加 `readOnly = true` 即可：
+
+```Java
+public classs UserService {
+	// 用户注册操作
+	@Transactional(readOnly = true)
+	public void getUserInfo(int targetUid) {
+		UserVo userVo = new UserVo();
+		// BeanUtils.copyProperties(userService.getById(uid), userVo);
+		userVo.userName = userMapper.getUserName();
+		userVo.avatarId = userMapper.getAvatarId();
+		...
+	}
+}
+```
 
