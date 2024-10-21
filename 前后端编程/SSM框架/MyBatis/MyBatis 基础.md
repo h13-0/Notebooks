@@ -10,7 +10,7 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ## 2 MyBatis简介
 
-
+MyBatis是基于JDBCD的一个对象关系映射(ORM，Object-Relational Mapping)的一个框架，其主要用于将数据库
 
 ## 3 
 
