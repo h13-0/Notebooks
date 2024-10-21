@@ -38,7 +38,10 @@ public interface UserMapper {
     User findUserById(Integer uid);
 }
 ```
+3. 将实现上述业务逻辑代码的SQL语句存放于Mapper xml下。通常命名为 `UserMapper.xml` ：
+```xml
 
+```
 
 ## 3 
 
