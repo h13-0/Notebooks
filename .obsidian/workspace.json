@@ -41,7 +41,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CPP/应试笔记与八股.md",
+                "file": "嵌入式基础/应试笔记与八股.md",
                 "mode": "source",
                 "source": false
               },
@@ -64,7 +64,7 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -192,10 +192,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "面相对象的程序设计/面相对象的程序设计.md"
+                "file": "嵌入式基础/应试笔记与八股.md"
               },
               "icon": "lucide-list",
-              "title": "面相对象的程序设计 的大纲"
+              "title": "应试笔记与八股 的大纲"
             }
           },
           {
@@ -238,12 +238,12 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "86ef760af5bffb35",
+  "active": "1d8335d9f365b93a",
   "lastOpenFiles": [
-    "CPP/应试笔记与八股.md",
-    "嵌入式基础/接口技术/I2C/I2C总线标准.md",
     "面相对象的程序设计/面相对象的程序设计.md",
     "嵌入式基础/应试笔记与八股.md",
+    "CPP/应试笔记与八股.md",
+    "嵌入式基础/接口技术/I2C/I2C总线标准.md",
     "CPP/Resources/n1570.pdf",
     "嵌入式基础/嵌入式基础.md",
     "Readme.md",
