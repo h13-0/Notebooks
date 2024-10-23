@@ -19,7 +19,9 @@ I2C是指Inter-Integrated Circuit，由飞利浦公司制定，其协议标准�
 
 ## 2 I2C总线特性
 
-### 2.1 SDA与SCL电平变化顺序
+### 2.1 传输的基本环节
+
+#### 2.1.1 SDA与SCL电平变化顺序的基本要求
 
 在I2C协议中，SDA与SCL电平变化顺序主要有以下两种模式：
 1. 在<font color="#c00000">传输普通数据</font>时，SCL会周期性的输出高电平脉冲，<font color="#c00000">并且在SCL保持为高电平时</font>，<span style="background:#fff88f"><font color="#c00000">SDA不可发生电平变化</font></span>。
@@ -28,9 +30,7 @@ I2C是指Inter-Integrated Circuit，由飞利浦公司制定，其协议标准�
 	1. 当发送开始信号时，SCL保持高电平，同时SDA由高变低。
 	2. 当发送停止信号时，SCL保持高电平，同时SDA由低变高。
 
-### 2.2 基本时序
-
-#### 2.2.1 开始信号及I2C空闲状态
+#### 2.1.2 开始信号及I2C空闲状态
 
 在开始信号发生之前，<font color="#c00000">SDA和SCL均要保持在高电平</font>，<span style="background:#fff88f"><font color="#c00000">此时I2C为空闲状态</font></span>。
 
@@ -38,7 +38,18 @@ I2C是指Inter-Integrated Circuit，由飞利浦公司制定，其协议标准�
 
 随后SCL保持高电平，SDA变低，发出开始信号。
 
-#### 2.2.2 
+#### 2.1.3 通用八位数据传输以及ACK/NACK
+
+![[chrome_cV6snQc7tc.png]]
+1. 在通用八位数据传输时，SDA先到达目标电平，随后SCL发送一个高电平脉冲。在此环节内，SDA高电平表示1，低电平表示0。
+2. 重复8次完成一个Byte发送后，还需要额外的一位
+<font color="#c00000">地址数据和普通八位数据均用此方法传输</font>。
+<span style="background:#fff88f"><font color="#c00000">数据先发送高位再发送低位</font></span>。
+
+#### 2.1.4 应答要求
+
+
+
 
 
 ## 3 I2C总线协议
