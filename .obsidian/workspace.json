@@ -62,9 +62,23 @@
               "icon": "lucide-file",
               "title": "应试笔记与八股"
             }
+          },
+          {
+            "id": "52864f10cba1f401",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "嵌入式基础/接口技术/I2C/I2C总线标准.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "I2C总线标准"
+            }
           }
         ],
-        "currentTab": 2
+        "currentTab": 4
       }
     ],
     "direction": "vertical"
@@ -192,10 +206,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "嵌入式基础/应试笔记与八股.md"
+                "file": "嵌入式基础/接口技术/I2C/I2C总线标准.md"
               },
               "icon": "lucide-list",
-              "title": "应试笔记与八股 的大纲"
+              "title": "I2C总线标准 的大纲"
             }
           },
           {
@@ -238,12 +252,14 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "6d836f3f24ad6143",
+  "active": "52864f10cba1f401",
   "lastOpenFiles": [
-    "CPP/应试笔记与八股.md",
     "嵌入式基础/应试笔记与八股.md",
-    "计算机网络/应试笔记与八股.md",
+    "CPP/应试笔记与八股.md",
+    "CPP/C2CPP/C2CPP.md",
     "嵌入式基础/接口技术/串口/串口总线标准.md",
+    "计算机网络/基础应试学习/第二章 物理层/第二章 物理层.md",
+    "计算机网络/应试笔记与八股.md",
     "计算机网络/基础应试学习/第三章 数据链路层/第三章 数据链路层.md",
     "嵌入式基础/Resources/Pasted image 20241023220901.png",
     "Resources/Pasted image 20240203021517.png",
@@ -278,11 +294,9 @@
     "数据结构算法/必背算法/未命名.md",
     "数据结构算法/必背算法/链表",
     "数据结构算法/必背算法",
-    "CPP/C2CPP/C2CPP.md",
     "CPP/C标准笔记/C标准学习笔记.md",
     "CPP/C标准笔记/C与C++标准.md",
     "计算机网络/基础应试学习/第五章 传输层/第五章 传输层.md",
-    "Java/项目管理工具/Maven/Maven.md",
     "前后端编程/SSM框架",
     "前后端编程/SSM框架/SpringFramework",
     "Java/Resources",
