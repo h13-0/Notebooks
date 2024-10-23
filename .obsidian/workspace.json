@@ -78,7 +78,7 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -206,10 +206,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "嵌入式基础/接口技术/I2C/I2C总线标准.md"
+                "file": "嵌入式基础/应试笔记与八股.md"
               },
               "icon": "lucide-list",
-              "title": "I2C总线标准 的大纲"
+              "title": "应试笔记与八股 的大纲"
             }
           },
           {
@@ -252,18 +252,18 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "52864f10cba1f401",
+  "active": "6d836f3f24ad6143",
   "lastOpenFiles": [
+    "嵌入式基础/接口技术/串口/串口总线标准.md",
     "嵌入式基础/应试笔记与八股.md",
     "CPP/应试笔记与八股.md",
+    "嵌入式基础/接口技术/I2C/I2C总线标准.md",
     "CPP/C2CPP/C2CPP.md",
-    "嵌入式基础/接口技术/串口/串口总线标准.md",
     "计算机网络/基础应试学习/第二章 物理层/第二章 物理层.md",
     "计算机网络/应试笔记与八股.md",
     "计算机网络/基础应试学习/第三章 数据链路层/第三章 数据链路层.md",
     "嵌入式基础/Resources/Pasted image 20241023220901.png",
     "Resources/Pasted image 20240203021517.png",
-    "嵌入式基础/接口技术/I2C/I2C总线标准.md",
     "嵌入式基础/Resources/chrome_0AcPoCxqum.png",
     "嵌入式基础/Resources/chrome_QPPGptJUqj.png",
     "嵌入式基础/Resources/chrome_cV6snQc7tc.png",
