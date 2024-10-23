@@ -8659,19 +8659,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 444,
+      "wordCount": 675,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 1.48,
-      "characterCount": 1438,
-      "nonWhitespaceCharacterCount": 1328,
-      "readingTimeInMinutes": 0.9979622641509434,
+      "pageCount": 2.25,
+      "characterCount": 2012,
+      "nonWhitespaceCharacterCount": 1866,
+      "readingTimeInMinutes": 1.520264150943396,
       "linkCount": 0,
-      "embedCount": 0,
+      "embedCount": 1,
       "aliases": null,
       "createdDate": 1729690706332,
-      "modifiedDate": 1729692451866,
-      "sizeInBytes": 2331,
+      "modifiedDate": 1729693007072,
+      "sizeInBytes": 3329,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -8729,6 +8729,24 @@
       "createdDate": 1729678624515,
       "modifiedDate": 1729678624516,
       "sizeInBytes": 64736
+    },
+    "嵌入式基础/Resources/Pasted image 20241023220901.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1729692541241,
+      "modifiedDate": 1729692541242,
+      "sizeInBytes": 27460
     }
   }
 }
