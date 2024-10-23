@@ -8655,7 +8655,28 @@
       "modifiedDate": 1729677286347,
       "sizeInBytes": 27001
     },
-    "Resources/chrome_QPPGptJUqj.png": {
+    "嵌入式基础/接口技术/串口/串口总线标准.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 214,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0.7133333333333334,
+      "characterCount": 385,
+      "nonWhitespaceCharacterCount": 343,
+      "readingTimeInMinutes": 0.45637735849056604,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1729690706332,
+      "modifiedDate": 1729691721101,
+      "sizeInBytes": 873,
+      "frontmatter": {
+        "number headings": "auto, first-level 2, max 6, 1.1"
+      }
+    },
+    "嵌入式基础/Resources/chrome_QPPGptJUqj.png": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
@@ -8673,25 +8694,7 @@
       "modifiedDate": 1729677539894,
       "sizeInBytes": 28333
     },
-    "Resources/chrome_cV6snQc7tc.png": {
-      "isCountable": false,
-      "isDirectory": false,
-      "noteCount": 0,
-      "wordCount": 0,
-      "wordCountTowardGoal": 0,
-      "wordGoal": 0,
-      "pageCount": 0,
-      "characterCount": 0,
-      "nonWhitespaceCharacterCount": 0,
-      "readingTimeInMinutes": 0,
-      "linkCount": 0,
-      "embedCount": 0,
-      "aliases": [],
-      "createdDate": 1729678624515,
-      "modifiedDate": 1729678624516,
-      "sizeInBytes": 64736
-    },
-    "Resources/chrome_0AcPoCxqum.png": {
+    "嵌入式基础/Resources/chrome_0AcPoCxqum.png": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
@@ -8709,26 +8712,23 @@
       "modifiedDate": 1729689074299,
       "sizeInBytes": 41896
     },
-    "嵌入式基础/接口技术/串口/串口总线标准.md": {
-      "isCountable": true,
+    "嵌入式基础/Resources/chrome_cV6snQc7tc.png": {
+      "isCountable": false,
       "isDirectory": false,
-      "noteCount": 1,
-      "wordCount": 24,
+      "noteCount": 0,
+      "wordCount": 0,
       "wordCountTowardGoal": 0,
-      "wordGoal": null,
-      "pageCount": 0.08,
-      "characterCount": 110,
-      "nonWhitespaceCharacterCount": 78,
-      "readingTimeInMinutes": 0.06218867924528302,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
       "linkCount": 0,
       "embedCount": 0,
-      "aliases": null,
-      "createdDate": 1729690706332,
-      "modifiedDate": 1729691029910,
-      "sizeInBytes": 204,
-      "frontmatter": {
-        "number headings": "auto, first-level 2, max 6, 1.1"
-      }
+      "aliases": [],
+      "createdDate": 1729678624515,
+      "modifiedDate": 1729678624516,
+      "sizeInBytes": 64736
     }
   }
 }
