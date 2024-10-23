@@ -3142,19 +3142,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 219,
+      "wordCount": 379,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 0.73,
-      "characterCount": 746,
-      "nonWhitespaceCharacterCount": 670,
-      "readingTimeInMinutes": 0.5231320754716982,
+      "pageCount": 1.2633333333333334,
+      "characterCount": 1307,
+      "nonWhitespaceCharacterCount": 1210,
+      "readingTimeInMinutes": 0.9105283018867925,
       "linkCount": 0,
-      "embedCount": 1,
+      "embedCount": 2,
       "aliases": null,
       "createdDate": 1718613845421,
-      "modifiedDate": 1729677497036,
-      "sizeInBytes": 1178,
+      "modifiedDate": 1729678058809,
+      "sizeInBytes": 2017,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -8654,6 +8654,24 @@
       "createdDate": 1729677286347,
       "modifiedDate": 1729677286347,
       "sizeInBytes": 27001
+    },
+    "Resources/chrome_QPPGptJUqj.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1729677539893,
+      "modifiedDate": 1729677539894,
+      "sizeInBytes": 28333
     }
   }
 }
