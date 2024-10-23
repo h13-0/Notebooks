@@ -8747,6 +8747,27 @@
       "createdDate": 1729692541241,
       "modifiedDate": 1729692541242,
       "sizeInBytes": 27460
+    },
+    "嵌入式基础/软件层技术/应用层通信协议/Modbus.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 6,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0.02,
+      "characterCount": 30,
+      "nonWhitespaceCharacterCount": 19,
+      "readingTimeInMinutes": 0.013773584905660378,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1729696078252,
+      "modifiedDate": 1729696109608,
+      "sizeInBytes": 96,
+      "frontmatter": {
+        "number headings": "auto, first-level 2, max 6, 1.1"
+      }
     }
   }
 }
