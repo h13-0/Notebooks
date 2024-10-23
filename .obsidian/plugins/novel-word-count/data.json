@@ -8708,6 +8708,27 @@
       "createdDate": 1729689074299,
       "modifiedDate": 1729689074299,
       "sizeInBytes": 41896
+    },
+    "嵌入式基础/接口技术/串口/串口总线标准.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 24,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0.08,
+      "characterCount": 110,
+      "nonWhitespaceCharacterCount": 78,
+      "readingTimeInMinutes": 0.06218867924528302,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1729690706332,
+      "modifiedDate": 1729691029910,
+      "sizeInBytes": 204,
+      "frontmatter": {
+        "number headings": "auto, first-level 2, max 6, 1.1"
+      }
     }
   }
 }

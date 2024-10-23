@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "嵌入式基础/应试笔记与八股.md",
+                "file": "嵌入式基础/接口技术/串口/串口总线标准.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "应试笔记与八股"
+              "title": "串口总线标准"
             }
           }
         ],
@@ -164,10 +164,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "嵌入式基础/应试笔记与八股.md"
+                "file": "嵌入式基础/接口技术/串口/串口总线标准.md"
               },
               "icon": "lucide-list",
-              "title": "应试笔记与八股 的大纲"
+              "title": "串口总线标准 的大纲"
             }
           },
           {
@@ -212,10 +212,12 @@
   },
   "active": "86ef760af5bffb35",
   "lastOpenFiles": [
+    "嵌入式基础/接口技术/I2C/I2C总线标准.md",
+    "嵌入式基础/接口技术/串口/串口总线标准.md",
+    "嵌入式基础/应试笔记与八股.md",
+    "嵌入式基础/接口技术/串口",
     "嵌入式基础/嵌入式基础.md",
     "面相对象的程序设计/面相对象的程序设计.md",
-    "嵌入式基础/接口技术/I2C/I2C总线标准.md",
-    "嵌入式基础/应试笔记与八股.md",
     "CPP/应试笔记与八股.md",
     "Resources/chrome_0AcPoCxqum.png",
     "Resources/chrome_cV6snQc7tc.png",
@@ -256,7 +258,6 @@
     "前后端编程/SSM框架",
     "前后端编程/SSM框架/SpringFramework",
     "Java/Resources",
-    "Java/项目管理工具/Maven",
     "CPP/Resources/C数据类型.canvas"
   ]
 }
