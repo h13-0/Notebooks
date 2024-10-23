@@ -77,8 +77,7 @@
               "title": "I2C总线标准"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -206,10 +205,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "计算机网络/基础应试学习/第三章 数据链路层/第三章 数据链路层.md"
+                "file": "嵌入式基础/软件层技术/应用层通信协议/Modbus.md"
               },
               "icon": "lucide-list",
-              "title": "第三章 数据链路层 的大纲"
+              "title": "Modbus 的大纲"
             }
           },
           {
@@ -252,13 +251,13 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "19361b825cd7795d",
+  "active": "d70564078a632275",
   "lastOpenFiles": [
+    "计算机网络/基础应试学习/第三章 数据链路层/第三章 数据链路层.md",
     "嵌入式基础/软件层技术/应用层通信协议/Modbus.md",
     "嵌入式基础/接口技术/串口/串口总线标准.md",
     "嵌入式基础/软件层技术/应用层通信协议",
     "嵌入式基础/软件层技术",
-    "计算机网络/基础应试学习/第三章 数据链路层/第三章 数据链路层.md",
     "嵌入式基础/应试笔记与八股.md",
     "CPP/应试笔记与八股.md",
     "嵌入式基础/接口技术/I2C/I2C总线标准.md",
