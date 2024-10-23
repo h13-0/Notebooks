@@ -21,6 +21,8 @@ I2C是指Inter-Integrated Circuit，由飞利浦公司制定，其协议标准�
 
 ### 2.1 传输的基本环节
 
+本章节仅为传输的若干
+
 #### 2.1.1 SDA与SCL电平变化顺序的基本要求
 
 在I2C协议中，SDA与SCL电平变化顺序主要有以下两种模式：
@@ -49,7 +51,12 @@ I2C是指Inter-Integrated Circuit，由飞利浦公司制定，其协议标准�
 
 #### 2.1.4 应答要求
 
-以八位
+应答信号的发送时机如上一章节所述，此处不再赘述。
+应答信号一共两种：
+1. ACK应答信号：此时数据接收方会将SDA控制为低电平，表示<span style="background:#fff88f">"<font color="#c00000">数据接收成功，并且期待接收下一字节</font>"</span>
+2. NACK应答信号：此时数据接收方会将SDA控制为高电平，表示<span style="background:#fff88f">"<font color="#c00000">不再接收更多数据</font>"</span>。
+
+
 
 
 
