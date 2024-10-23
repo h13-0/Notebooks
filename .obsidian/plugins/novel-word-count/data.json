@@ -3142,19 +3142,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 745,
+      "wordCount": 862,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 2.4833333333333334,
-      "characterCount": 2105,
-      "nonWhitespaceCharacterCount": 1969,
-      "readingTimeInMinutes": 1.7241132075471697,
+      "pageCount": 2.8733333333333335,
+      "characterCount": 2267,
+      "nonWhitespaceCharacterCount": 2125,
+      "readingTimeInMinutes": 1.9652075471698112,
       "linkCount": 0,
-      "embedCount": 3,
+      "embedCount": 4,
       "aliases": null,
       "createdDate": 1718613845421,
-      "modifiedDate": 1729680570580,
-      "sizeInBytes": 3503,
+      "modifiedDate": 1729689305720,
+      "sizeInBytes": 3907,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -8690,6 +8690,24 @@
       "createdDate": 1729678624515,
       "modifiedDate": 1729678624516,
       "sizeInBytes": 64736
+    },
+    "Resources/chrome_0AcPoCxqum.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1729689074299,
+      "modifiedDate": 1729689074299,
+      "sizeInBytes": 41896
     }
   }
 }
