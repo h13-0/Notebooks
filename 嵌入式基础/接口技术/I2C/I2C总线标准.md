@@ -42,13 +42,14 @@ I2C是指Inter-Integrated Circuit，由飞利浦公司制定，其协议标准�
 
 ![[chrome_cV6snQc7tc.png]]
 1. 在通用八位数据传输时，SDA先到达目标电平，随后SCL发送一个高电平脉冲。在此环节内，SDA高电平表示1，低电平表示0。
-2. 重复8次完成一个Byte发送后，还需要额外的一位
+2. 重复8次完成一个Byte发送后，<font color="#c00000">数据发送方会释放数据总线</font>，<font color="#c00000">数据接收方会</font>在下一个SCL周期到来前将SDA的电平控制到ACK/NACK的目标电平。
+3. 上述两步共计9个SCL脉冲完成了一个通用八位数据传输。ACK/NACK具体见下一同级章节。
 <font color="#c00000">地址数据和普通八位数据均用此方法传输</font>。
 <span style="background:#fff88f"><font color="#c00000">数据先发送高位再发送低位</font></span>。
 
 #### 2.1.4 应答要求
 
-
+以八位
 
 
 
