@@ -8,9 +8,12 @@ number headings: auto, first-level 2, max 6, 1.1
 ```toc
 ```
 
-## 2 概述
+## 2 Modbus概述
 
-
+Modbus有如下三种协议：
+- Modbus ASCII
+- Modbus RTU
+- Modbus TCP
 Modbus协议规定，使用Modbus的设备必须支持Modbus RTU，且默认为Modbus RTU，因此大多数设备使用的均为Modbus RTU。
 
 

@@ -22,6 +22,20 @@
             }
           },
           {
+            "id": "715a0790d412aa34",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "嵌入式基础/接口技术/串口/串口总线标准.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "串口总线标准"
+            }
+          },
+          {
             "id": "19361b825cd7795d",
             "type": "leaf",
             "state": {
@@ -77,7 +91,8 @@
               "title": "I2C总线标准"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -205,10 +220,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "嵌入式基础/软件层技术/应用层通信协议/Modbus.md"
+                "file": "嵌入式基础/接口技术/串口/串口总线标准.md"
               },
               "icon": "lucide-list",
-              "title": "Outline of Modbus"
+              "title": "Outline of 串口总线标准"
             }
           },
           {
@@ -251,14 +266,16 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "d70564078a632275",
+  "active": "715a0790d412aa34",
   "lastOpenFiles": [
-    "计算机网络/基础应试学习/第三章 数据链路层/第三章 数据链路层.md",
     "嵌入式基础/软件层技术/应用层通信协议/Modbus.md",
     "嵌入式基础/接口技术/串口/串口总线标准.md",
+    "嵌入式基础/应试笔记与八股.md",
+    "嵌入式基础/接口技术/SPI",
+    "嵌入式基础/嵌入式基础.md",
+    "计算机网络/基础应试学习/第三章 数据链路层/第三章 数据链路层.md",
     "嵌入式基础/软件层技术/应用层通信协议",
     "嵌入式基础/软件层技术",
-    "嵌入式基础/应试笔记与八股.md",
     "CPP/应试笔记与八股.md",
     "嵌入式基础/接口技术/I2C/I2C总线标准.md",
     "CPP/C2CPP/C2CPP.md",
@@ -270,7 +287,6 @@
     "嵌入式基础/Resources/chrome_QPPGptJUqj.png",
     "嵌入式基础/Resources/chrome_cV6snQc7tc.png",
     "嵌入式基础/接口技术/串口",
-    "嵌入式基础/嵌入式基础.md",
     "面相对象的程序设计/面相对象的程序设计.md",
     "Resources/chrome_cV6snQc7tc 1.png",
     "嵌入式基础/Resources/chrome_y7APMtSvm8.png",
@@ -297,8 +313,6 @@
     "数据结构算法/必背算法/链表",
     "数据结构算法/必背算法",
     "CPP/C标准笔记/C标准学习笔记.md",
-    "CPP/C标准笔记/C与C++标准.md",
-    "前后端编程/SSM框架",
     "CPP/Resources/C数据类型.canvas"
   ]
 }
