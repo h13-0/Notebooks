@@ -52,7 +52,11 @@ Modbus功能码用于指定主设备请求从设备执行的特定操作。每�
 ###### 2.1.1.1.1 数据读写功能码
 
 Modbus中预先定义了一些数据结构，比如：
-- 线圈 `coils` ：1个bit的bool数据，通常表示 `TRUE/FALSE` 、 `ON/OFF`
+- 线圈寄存器( `coils` )：1个bit的寄存器，通常表示 `TRUE/FALSE` 、 `ON/OFF` 等。
+- 离散输入寄存器( `Discrete Inputs` )：1个bit的只读寄存器
+- 保持寄存器( `AO` )：
+- 输入寄存器( `AI` )：
+- 
 
 
 
