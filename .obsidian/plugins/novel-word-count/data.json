@@ -8381,15 +8381,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 38.98,
-      "characterCount": 37151,
+      "characterCount": 38385,
       "nonWhitespaceCharacterCount": 28926,
       "readingTimeInMinutes": 28.047207547169812,
       "linkCount": 14,
       "embedCount": 4,
       "aliases": null,
-      "createdDate": 1713204230592,
-      "modifiedDate": 1729693521245,
-      "sizeInBytes": 56941,
+      "createdDate": 1718604440000,
+      "modifiedDate": 1729750060004,
+      "sizeInBytes": 58177,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
