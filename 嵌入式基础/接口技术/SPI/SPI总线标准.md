@@ -18,9 +18,9 @@ SPI，即Serial Peripheral interface，即串行外围设备接口。其最早�
 - SCK(CLK)：时钟信号
 - $\overline{\text{SS}}$(CS)：片选信号，<font color="#c00000">注意低电平为使能</font>。
 在此之上，为了适应不同的需求和场景，SPI还衍生出了如下的变体：
-- Quad SPI：四线制数据线，每一个方向都有4根并行传输的线路，可以一次传输4bit。
-- Dual SPI：两线制数据线，每一个方向都有2根并行传输的线路，可以一次传输2bit。
 - 3-wire SPI：三线SPI
+- Dual SPI：两线制数据线，每一个方向都有2根并行传输的线路，可以一次传输2bit。
+- Quad SPI：四线制数据线，每一个方向都有4根并行传输的线路，可以一次传输4bit。
 
 初版SPI协议的规范定义于[M68HC11系列的Datasheet](https://www.nxp.com/docs/en/data-sheet/M68HC11E.pdf)的Chapter 8上(但是看这个没什么用)。
 
@@ -51,8 +51,21 @@ SPI，即Serial Peripheral interface，即串行外围设备接口。其最早�
 
 ### 3.2 SPI拓展与变种
 
+#### 3.2.1 缺线SPI
+
+缺线SPI是指只使用MOSI或MISO的SPI，其通常是缺少MISO，用于单向通信的设备模型(例如显示屏等)。这也是最常用的SPI变种。
+
+#### 3.2.2 3-wire SPI
+
+3-wire SPI是指只使用一根电气线路分时复用给MOSI和MISO的一种方式。其可以使用标准四线SPI配合一些外围电路修改而成。程序中需要注意分时复用。
+
+#### 3.2.3 Dual SPI
 
 
+
+#### 3.2.4 Quad SPI
+
+Quad SPI
 
 ### 3.3 总线特性汇总
 
