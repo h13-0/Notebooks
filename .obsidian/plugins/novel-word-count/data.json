@@ -3940,19 +3940,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 4930,
+      "wordCount": 5069,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 16.433333333333334,
-      "characterCount": 7487,
-      "nonWhitespaceCharacterCount": 6877,
-      "readingTimeInMinutes": 10.601358490566037,
+      "pageCount": 16.89666666666667,
+      "characterCount": 7689,
+      "nonWhitespaceCharacterCount": 7060,
+      "readingTimeInMinutes": 10.895320754716982,
       "linkCount": 0,
       "embedCount": 1,
       "aliases": null,
       "createdDate": 1729602126714,
-      "modifiedDate": 1729863742032,
-      "sizeInBytes": 17251,
+      "modifiedDate": 1729866273165,
+      "sizeInBytes": 17725,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -3998,24 +3998,6 @@
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
-    },
-    "嵌入式基础/嵌入式基础.md": {
-      "isCountable": true,
-      "isDirectory": false,
-      "noteCount": 1,
-      "wordCount": 3,
-      "wordCountTowardGoal": 0,
-      "wordGoal": null,
-      "pageCount": 0.01,
-      "characterCount": 5,
-      "nonWhitespaceCharacterCount": 4,
-      "readingTimeInMinutes": 0.006,
-      "linkCount": 0,
-      "embedCount": 0,
-      "aliases": null,
-      "createdDate": 1718613823622,
-      "modifiedDate": 1718613832850,
-      "sizeInBytes": 11
     },
     "嵌入式基础/Resources/Pasted image 20241023220901.png": {
       "isCountable": false,
@@ -8826,24 +8808,6 @@
       "modifiedDate": 1729860687503,
       "sizeInBytes": 328553
     },
-    "CPP/Resources/~$$内存布局图.~vsdx": {
-      "isCountable": false,
-      "isDirectory": false,
-      "noteCount": 0,
-      "wordCount": 0,
-      "wordCountTowardGoal": 0,
-      "wordGoal": 0,
-      "pageCount": 0,
-      "characterCount": 0,
-      "nonWhitespaceCharacterCount": 0,
-      "readingTimeInMinutes": 0,
-      "linkCount": 0,
-      "embedCount": 0,
-      "aliases": [],
-      "createdDate": 1729864786192,
-      "modifiedDate": 1729864786193,
-      "sizeInBytes": 4096
-    },
     "CPP/Resources/Pasted image 20241025220147.png": {
       "isCountable": false,
       "isDirectory": false,
@@ -8861,6 +8825,24 @@
       "createdDate": 1729864907991,
       "modifiedDate": 1729864907991,
       "sizeInBytes": 48579
+    },
+    "嵌入式基础/Readme.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 19,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0.06333333333333334,
+      "characterCount": 25,
+      "nonWhitespaceCharacterCount": 21,
+      "readingTimeInMinutes": 0.038,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1718613823622,
+      "modifiedDate": 1729866014449,
+      "sizeInBytes": 65
     }
   }
 }

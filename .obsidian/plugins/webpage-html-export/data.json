@@ -8,7 +8,9 @@
     "displayProgress": true,
     "inlineHTML": false,
     "exportPath": "C:\\Users\\h13\\Documents\\GitHub\\Notebooks-html\\Notebooks",
-    "filesToExport": [],
+    "filesToExport": [
+      "all"
+    ],
     "addBodyClasses": true,
     "addMathjaxStyles": true,
     "addHeadTag": true,
