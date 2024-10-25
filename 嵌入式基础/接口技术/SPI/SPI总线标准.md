@@ -57,7 +57,7 @@ SPI，即Serial Peripheral interface，即串行外围设备接口。其最早�
 
 #### 3.2.2 3-wire SPI
 
-3-wire SPI是指只使用一根电气线路分时复用给MOSI和MISO的一种方式。其可以使用标准四线SPI配合一些外围电路修改而成。程序中需要注意分时复用。
+由于SPI所处的工作逻辑限制，<font color="#c00000">尽管标准SPI是全双工电路</font>，<span style="background:#fff88f"><font color="#c00000">但是往往读写交替运行</font></span>。3-wire SPI是指只使用一根电气线路分时复用给MOSI和MISO的一种方式，在保证基本不影响性能的情况下节约了电气连接。其可以使用标准四线SPI配合一些外围电路修改而成。程序中需要注意分时复用。
 
 #### 3.2.3 Dual SPI
 
@@ -70,11 +70,12 @@ Quad SPI通常简称QSPI，基于3-wire SPI进行改进，使用四个MISO和MOS
 ### 3.3 总线特性汇总
 
 SPI支持的特性如下：
-- 标准SPI全双工(但是往往交替传输信号)，
+- <font color="#c00000">标准SPI是全双工</font>(但是往往交替传输信号)，<font color="#c00000">变种的三种SPI是半双工</font>。
 
 SPI不支持的特性如下：
 - 没有流控制
 - 没有应答机制
+- <font color="#c00000">不支持从机主动发送数据，需要外部IO通知主机查询</font>。
 
 
 
