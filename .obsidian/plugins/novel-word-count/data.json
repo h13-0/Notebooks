@@ -8809,24 +8809,24 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 494,
+      "wordCount": 642,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 1.6466666666666667,
-      "characterCount": 1055,
-      "nonWhitespaceCharacterCount": 952,
-      "readingTimeInMinutes": 1.1139245283018868,
+      "pageCount": 2.14,
+      "characterCount": 1256,
+      "nonWhitespaceCharacterCount": 1137,
+      "readingTimeInMinutes": 1.4365283018867925,
       "linkCount": 0,
       "embedCount": 1,
       "aliases": null,
       "createdDate": 1729858034902,
-      "modifiedDate": 1729861030696,
-      "sizeInBytes": 2039,
+      "modifiedDate": 1729861343160,
+      "sizeInBytes": 2528,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
     },
-    "Resources/SPI_CPOL_CPHA.jpeg": {
+    "嵌入式基础/Resources/SPI_CPOL_CPHA.jpeg": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
