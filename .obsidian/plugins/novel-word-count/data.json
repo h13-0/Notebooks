@@ -8809,22 +8809,40 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 363,
+      "wordCount": 494,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 1.21,
-      "characterCount": 765,
-      "nonWhitespaceCharacterCount": 687,
-      "readingTimeInMinutes": 0.8111320754716981,
+      "pageCount": 1.6466666666666667,
+      "characterCount": 1055,
+      "nonWhitespaceCharacterCount": 952,
+      "readingTimeInMinutes": 1.1139245283018868,
       "linkCount": 0,
-      "embedCount": 0,
+      "embedCount": 1,
       "aliases": null,
       "createdDate": 1729858034902,
-      "modifiedDate": 1729860284761,
-      "sizeInBytes": 1513,
+      "modifiedDate": 1729861030696,
+      "sizeInBytes": 2039,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
+    },
+    "Resources/SPI_CPOL_CPHA.jpeg": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1729860687503,
+      "modifiedDate": 1729860687503,
+      "sizeInBytes": 328553
     }
   }
 }
