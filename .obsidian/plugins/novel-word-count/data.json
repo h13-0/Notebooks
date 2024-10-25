@@ -3965,15 +3965,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 2.6633333333333336,
-      "characterCount": 2318,
+      "characterCount": 2256,
       "nonWhitespaceCharacterCount": 2091,
       "readingTimeInMinutes": 1.8055094339622642,
       "linkCount": 0,
       "embedCount": 2,
       "aliases": null,
       "createdDate": 1729690706332,
-      "modifiedDate": 1729829783684,
-      "sizeInBytes": 3863,
+      "modifiedDate": 1729858034924,
+      "sizeInBytes": 3799,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -8784,28 +8784,10 @@
       "embedCount": 0,
       "aliases": [],
       "createdDate": 1729850309450,
-      "modifiedDate": 1729857195811,
-      "sizeInBytes": 24759
+      "modifiedDate": 1729858011965,
+      "sizeInBytes": 24761
     },
-    "CPP/Resources/~$$内存布局图.~vsdx": {
-      "isCountable": false,
-      "isDirectory": false,
-      "noteCount": 0,
-      "wordCount": 0,
-      "wordCountTowardGoal": 0,
-      "wordGoal": 0,
-      "pageCount": 0,
-      "characterCount": 0,
-      "nonWhitespaceCharacterCount": 0,
-      "readingTimeInMinutes": 0,
-      "linkCount": 0,
-      "embedCount": 0,
-      "aliases": [],
-      "createdDate": 1729856909390,
-      "modifiedDate": 1729856909391,
-      "sizeInBytes": 4096
-    },
-    "Resources/Pasted image 20241025195334.png": {
+    "嵌入式基础/Resources/Pasted image 20241025195334.png": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
@@ -8822,6 +8804,27 @@
       "createdDate": 1729857214836,
       "modifiedDate": 1729857214836,
       "sizeInBytes": 46475
+    },
+    "嵌入式基础/接口技术/SPI/SPI总线标准.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 99,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0.33,
+      "characterCount": 216,
+      "nonWhitespaceCharacterCount": 167,
+      "readingTimeInMinutes": 0.22460377358490569,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1729858034902,
+      "modifiedDate": 1729858558874,
+      "sizeInBytes": 452,
+      "frontmatter": {
+        "number headings": "auto, first-level 2, max 6, 1.1"
+      }
     }
   }
 }
