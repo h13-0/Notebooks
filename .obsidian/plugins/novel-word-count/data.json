@@ -8768,6 +8768,42 @@
       "createdDate": 1713204230576,
       "modifiedDate": 1715273142332,
       "sizeInBytes": 216
+    },
+    "CPP/Resources/内存布局图.vsdx": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1729850309450,
+      "modifiedDate": 1729850309844,
+      "sizeInBytes": 24820
+    },
+    "CPP/Resources/~$$内存布局图.~vsdx": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1729850309847,
+      "modifiedDate": 1729850309849,
+      "sizeInBytes": 4096
     }
   }
 }
