@@ -103,7 +103,7 @@
                 "sortOrder": "alphabetical"
               },
               "icon": "lucide-search",
-              "title": "Search"
+              "title": "搜索"
             }
           },
           {
@@ -240,20 +240,22 @@
   },
   "active": "e9bcf5cb876b6961",
   "lastOpenFiles": [
+    "CPP/Resources/Pasted image 20241025220147.png",
+    "CPP/Resources/Pasted image 20240307142115.png",
+    "嵌入式基础/Resources/Pasted image 20241023220901.png",
+    "嵌入式基础/Resources/Pasted image 20241025195334.png",
+    "CPP/Resources/Pasted image 20240302173838.png",
+    "Resources/Pasted image 20240203021517.png",
+    "CPP/应试笔记与八股.md",
+    "CPP/Resources/~$$内存布局图.~vsdx",
     "嵌入式基础/应试笔记与八股.md",
     "嵌入式基础/接口技术/SPI/SPI总线标准.md",
     "嵌入式基础/接口技术/I2C/I2C总线标准.md",
     "嵌入式基础/嵌入式基础.md",
     "嵌入式基础/Resources/SPI_CPOL_CPHA.jpeg",
-    "嵌入式基础/Resources/Pasted image 20241025195334.png",
-    "Resources/Pasted image 20240203021517.png",
     "嵌入式基础/接口技术/SPI",
     "嵌入式基础/接口技术/未命名.canvas",
-    "CPP/Resources/Pasted image 20240307142115.png",
-    "CPP/Resources/Pasted image 20240302173838.png",
-    "CPP/应试笔记与八股.md",
     "CPP/Resources/Pasted image 20241025175924.png",
-    "CPP/Resources/~$$内存布局图.~vsdx",
     "Readme.md",
     "CPP/Resources/内存布局图.vsdx",
     "嵌入式基础/软件层技术/应用层通信协议/Modbus.md",
@@ -265,10 +267,8 @@
     "CPP/C2CPP/C2CPP.md",
     "计算机网络/基础应试学习/第二章 物理层/第二章 物理层.md",
     "计算机网络/应试笔记与八股.md",
-    "嵌入式基础/Resources/Pasted image 20241023220901.png",
     "嵌入式基础/Resources/chrome_0AcPoCxqum.png",
     "嵌入式基础/Resources/chrome_QPPGptJUqj.png",
-    "嵌入式基础/Resources/chrome_cV6snQc7tc.png",
     "嵌入式基础/接口技术/串口",
     "面相对象的程序设计/面相对象的程序设计.md",
     "嵌入式基础/Resources",
