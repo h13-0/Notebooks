@@ -18,9 +18,9 @@ SPI，即Serial Peripheral interface，即串行外围设备接口。其最早�
 - SCK(CLK)：时钟信号
 - $\overline{\text{SS}}$(CS)：片选信号，<font color="#c00000">注意低电平为使能</font>。
 在此之上，为了适应不同的需求和场景，SPI还衍生出了如下的变体：
-- 3-wire SPI：三线SPI
-- Dual SPI：两线制数据线，每一个方向都有2根并行传输的线路，可以一次传输2bit。
-- Quad SPI：四线制数据线，每一个方向都有4根并行传输的线路，可以一次传输4bit。
+- 3-wire SPI：<font color="#c00000">将MISO和MOSI合并成一根电气线路</font>(称作SDA)，<span style="background:#fff88f"><font color="#c00000">为半双工通信</font></span>。
+- Dual SPI：在3-wire SPI的基础上，又增加了一个MISO和MOSI共用的电路，并称为IO0和IO1，<span style="background:#fff88f"><font color="#c00000">为半双工通信</font></span>。
+- Quad SPI：在3-wire SPI的基础上，使用4根MISO和MOSI复用的电气线路，<span style="background:#fff88f"><font color="#c00000">为半双工通信</font></span>。
 
 初版SPI协议的规范定义于[M68HC11系列的Datasheet](https://www.nxp.com/docs/en/data-sheet/M68HC11E.pdf)的Chapter 8上(但是看这个没什么用)。
 
@@ -61,16 +61,16 @@ SPI，即Serial Peripheral interface，即串行外围设备接口。其最早�
 
 #### 3.2.3 Dual SPI
 
-
+Dual SPI基于3-wire SPI进行改进，又增加了一个MISO和MOSI复用的电气线路，称为IO0和IO1，一次可以传输2bit数据。<font color="#c00000">为半双工通信协议</font>。
 
 #### 3.2.4 Quad SPI
 
-Quad SPI
+Quad SPI通常简称QSPI，基于3-wire SPI进行改进，使用四个MISO和MOSI复用的电气线路，称为IO0、IO1、IO2、IO3，一次可以传输4bit数据。<font color="#c00000">为半双工通信协议</font>。
 
 ### 3.3 总线特性汇总
 
 SPI支持的特性如下：
-- 全双工
+- 标准SPI全双工(但是往往交替传输信号)，
 
 SPI不支持的特性如下：
 - 没有流控制
