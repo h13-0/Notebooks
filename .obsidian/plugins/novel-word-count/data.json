@@ -8590,19 +8590,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 11901,
+      "wordCount": 11937,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 39.67,
-      "characterCount": 37697,
-      "nonWhitespaceCharacterCount": 29429,
-      "readingTimeInMinutes": 28.512641509433962,
+      "pageCount": 39.79,
+      "characterCount": 37983,
+      "nonWhitespaceCharacterCount": 29711,
+      "readingTimeInMinutes": 28.61301886792453,
       "linkCount": 14,
       "embedCount": 5,
       "aliases": null,
       "createdDate": 1713204230592,
-      "modifiedDate": 1729850821209,
-      "sizeInBytes": 57877,
+      "modifiedDate": 1729857352021,
+      "sizeInBytes": 58213,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -8784,10 +8784,10 @@
       "embedCount": 0,
       "aliases": [],
       "createdDate": 1729850309450,
-      "modifiedDate": 1729850368882,
-      "sizeInBytes": 24746
+      "modifiedDate": 1729857195811,
+      "sizeInBytes": 24759
     },
-    "CPP/Resources/Pasted image 20241025175924.png": {
+    "CPP/Resources/~$$内存布局图.~vsdx": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
@@ -8801,9 +8801,27 @@
       "linkCount": 0,
       "embedCount": 0,
       "aliases": [],
-      "createdDate": 1729850364403,
-      "modifiedDate": 1729850364404,
-      "sizeInBytes": 44411
+      "createdDate": 1729856909390,
+      "modifiedDate": 1729856909391,
+      "sizeInBytes": 4096
+    },
+    "Resources/Pasted image 20241025195334.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1729857214836,
+      "modifiedDate": 1729857214836,
+      "sizeInBytes": 46475
     }
   }
 }
