@@ -55,7 +55,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CPP/应试笔记与八股.md",
+                "file": "嵌入式基础/应试笔记与八股.md",
                 "mode": "source",
                 "source": false
               },
@@ -86,7 +86,7 @@
                 "sortOrder": "custom"
               },
               "icon": "lucide-folder-closed",
-              "title": "Files"
+              "title": "文件列表"
             }
           },
           {
@@ -113,7 +113,7 @@
               "type": "starred",
               "state": {},
               "icon": "lucide-file",
-              "title": "Plugin no longer active"
+              "title": "插件不再活动"
             }
           },
           {
@@ -192,10 +192,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "CPP/应试笔记与八股.md"
+                "file": "嵌入式基础/应试笔记与八股.md"
               },
               "icon": "lucide-list",
-              "title": "Outline of 应试笔记与八股"
+              "title": "应试笔记与八股 的大纲"
             }
           },
           {
@@ -227,11 +227,11 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:Open quick switcher": false,
-      "graph:Open graph view": false,
-      "canvas:Create new canvas": false,
-      "command-palette:Open command palette": false,
-      "audio-recorder:Start/stop recording": false,
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "command-palette:打开命令面板": false,
+      "audio-recorder:开始/结束录音": false,
       "obsidian-git:Open Git source control": false,
       "obsidian42-brat:BRAT": false,
       "webpage-html-export:Export Vault to HTML": false,
@@ -240,11 +240,11 @@
   },
   "active": "e9bcf5cb876b6961",
   "lastOpenFiles": [
+    "CPP/应试笔记与八股.md",
     "计算机网络/应试笔记与八股.md",
     "嵌入式基础/应试笔记与八股.md",
     "嵌入式基础/Readme.md",
     "嵌入式基础/Resources/SPI_CPOL_CPHA.jpeg",
-    "CPP/应试笔记与八股.md",
     "CPP/C2CPP/C2CPP.md",
     "数据结构算法/数据结构算法基础.md",
     "数据结构算法/必背算法/链表/反转链表.md",
