@@ -55,7 +55,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "嵌入式基础/应试笔记与八股.md",
+                "file": "CPP/应试笔记与八股.md",
                 "mode": "source",
                 "source": false
               },
@@ -192,7 +192,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "嵌入式基础/应试笔记与八股.md"
+                "file": "CPP/应试笔记与八股.md"
               },
               "icon": "lucide-list",
               "title": "Outline of 应试笔记与八股"
@@ -240,9 +240,10 @@
   },
   "active": "e9bcf5cb876b6961",
   "lastOpenFiles": [
+    "计算机网络/应试笔记与八股.md",
+    "嵌入式基础/应试笔记与八股.md",
     "嵌入式基础/Readme.md",
     "嵌入式基础/Resources/SPI_CPOL_CPHA.jpeg",
-    "嵌入式基础/应试笔记与八股.md",
     "CPP/应试笔记与八股.md",
     "CPP/C2CPP/C2CPP.md",
     "数据结构算法/数据结构算法基础.md",
@@ -273,7 +274,6 @@
     "嵌入式基础/软件层技术/应用层通信协议",
     "嵌入式基础/软件层技术",
     "计算机网络/基础应试学习/第二章 物理层/第二章 物理层.md",
-    "计算机网络/应试笔记与八股.md",
     "嵌入式基础/Resources/chrome_0AcPoCxqum.png",
     "嵌入式基础/Resources/chrome_QPPGptJUqj.png",
     "嵌入式基础/接口技术/串口",
