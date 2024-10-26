@@ -8397,20 +8397,23 @@
     "CPP/应试笔记与八股.md": {
       "isCountable": true,
       "isDirectory": false,
-      "noteCount": 0,
-      "wordCount": 0,
+      "noteCount": 1,
+      "wordCount": 12260,
       "wordCountTowardGoal": 0,
-      "wordGoal": 0,
-      "pageCount": 0,
-      "characterCount": 0,
-      "nonWhitespaceCharacterCount": 0,
-      "readingTimeInMinutes": 0,
-      "linkCount": 0,
-      "embedCount": 0,
-      "aliases": [],
-      "createdDate": 1713204230592,
-      "modifiedDate": 1729865722876,
-      "sizeInBytes": 60257
+      "wordGoal": null,
+      "pageCount": 40.86666666666667,
+      "characterCount": 40690,
+      "nonWhitespaceCharacterCount": 30500,
+      "readingTimeInMinutes": 29.326415094339623,
+      "linkCount": 14,
+      "embedCount": 5,
+      "aliases": null,
+      "createdDate": 1718604440000,
+      "modifiedDate": 1729922431584,
+      "sizeInBytes": 61526,
+      "frontmatter": {
+        "number headings": "auto, first-level 2, max 6, 1.1"
+      }
     },
     "CPP/Resources/内存布局图.vsdx": {
       "isCountable": false,
