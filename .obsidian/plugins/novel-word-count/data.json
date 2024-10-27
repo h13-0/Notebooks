@@ -4021,19 +4021,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 513,
+      "wordCount": 742,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 1.71,
-      "characterCount": 956,
-      "nonWhitespaceCharacterCount": 863,
-      "readingTimeInMinutes": 1.1466037735849057,
+      "pageCount": 2.473333333333333,
+      "characterCount": 1444,
+      "nonWhitespaceCharacterCount": 1321,
+      "readingTimeInMinutes": 1.6773207547169813,
       "linkCount": 0,
       "embedCount": 2,
       "aliases": null,
       "createdDate": 1730043105135,
-      "modifiedDate": 1730044562283,
-      "sizeInBytes": 1994,
+      "modifiedDate": 1730045263625,
+      "sizeInBytes": 2882,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -9027,25 +9027,7 @@
       "modifiedDate": 1730044396604,
       "sizeInBytes": 24981
     },
-    "嵌入式基础/Resources/CAN总线协议-V2.0（中文）.pdf": {
-      "isCountable": false,
-      "isDirectory": false,
-      "noteCount": 0,
-      "wordCount": 0,
-      "wordCountTowardGoal": 0,
-      "wordGoal": 0,
-      "pageCount": 0,
-      "characterCount": 0,
-      "nonWhitespaceCharacterCount": 0,
-      "readingTimeInMinutes": 0,
-      "linkCount": 0,
-      "embedCount": 0,
-      "aliases": [],
-      "createdDate": 1712563856303,
-      "modifiedDate": 1711095398242,
-      "sizeInBytes": 643750
-    },
-    "嵌入式基础/Resources/CAN总线协议-V2.0（英文）.pdf": {
+    "嵌入式基础/Resources/git_ignored/CAN总线协议-V2.0（英文）.pdf": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
@@ -9062,6 +9044,24 @@
       "createdDate": 1712563856303,
       "modifiedDate": 1665800048492,
       "sizeInBytes": 343290
+    },
+    "嵌入式基础/Resources/git_ignored/CAN总线协议-V2.0（中文）.pdf": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1712563856303,
+      "modifiedDate": 1711095398242,
+      "sizeInBytes": 643750
     }
   }
 }
