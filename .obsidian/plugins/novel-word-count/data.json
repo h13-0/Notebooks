@@ -3940,19 +3940,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 1103,
+      "wordCount": 1172,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 3.6766666666666667,
-      "characterCount": 2664,
-      "nonWhitespaceCharacterCount": 2478,
-      "readingTimeInMinutes": 2.521698113207547,
+      "pageCount": 3.9066666666666667,
+      "characterCount": 2883,
+      "nonWhitespaceCharacterCount": 2685,
+      "readingTimeInMinutes": 2.6863018867924526,
       "linkCount": 0,
-      "embedCount": 3,
+      "embedCount": 4,
       "aliases": null,
       "createdDate": 1718613845421,
-      "modifiedDate": 1730036735326,
-      "sizeInBytes": 4720,
+      "modifiedDate": 1730037514843,
+      "sizeInBytes": 5057,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -4014,7 +4014,7 @@
       "embedCount": 2,
       "aliases": null,
       "createdDate": 1729602126714,
-      "modifiedDate": 1730036632986,
+      "modifiedDate": 1730037533811,
       "sizeInBytes": 24609,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
@@ -8843,6 +8843,24 @@
       "createdDate": 1713204230576,
       "modifiedDate": 1715273142332,
       "sizeInBytes": 216
+    },
+    "Resources/Pasted image 20241027215645.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1730037405711,
+      "modifiedDate": 1730037405712,
+      "sizeInBytes": 32525
     }
   }
 }
