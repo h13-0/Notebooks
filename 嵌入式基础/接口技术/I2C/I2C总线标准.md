@@ -27,6 +27,7 @@ I2C总线的电气特性被规定为：
 2. <font color="#c00000">SDA和SCL均有一个10K的上拉电阻</font>。
 这样设计的好处是当总线上出现电平冲突时，不会有短路情况出现。
 且需要注意，<font color="#c00000">I2C与大多数通信协议一样</font>，<font color="#c00000">当其需要传输逻辑 "1" 时</font>，<span style="background:#fff88f"><font color="#c00000">其GPIO其实什么都不需要做</font></span>(此时GPIO悬空，被上拉电阻拉高)。
+该规定使得I2C总线有"线与"特性，即<font color="#c00000">总线上只要有一个设备发出逻辑"0"，则总线上的数据就会被定义为逻辑"0"</font>。
 
 ![[Pasted image 20241027215645.png]]
 
