@@ -241,7 +241,7 @@ CAN总线将每一个位所占用的时间划分为如下的时段：
 2. 传播时间段(PTS)，可以自行指定为1~8Tq。<font color="#c00000">用于吸收网络的物理延迟</font>，为网络的物理延迟的两倍。
 3. 相位缓冲段1(PBS1)，可以自行指定为1~8Tq。<font color="#c00000">PBS1和PBS2用于调节采样点所在的相位</font>。
 4. 相位缓冲段2(PBS2)，可以自行指定为2~8Tq
-上述时间单位Tq定义为最小时间单位(Time Quantum)。
+上述时间单位Tq定义为最小时间单位(Time Quantum)。<span style="background:#fff88f"><font color="#c00000">上述时间段长度参数在CAN配置时预设调节，不可进行动态调节</font></span>。用于动态调节周期长度的参数是<font color="#9bbb59">再同步补偿宽度</font>(<font color="#9bbb59">SJW</font>)，<font color="#c00000">会在运行时</font>的再同步阶段<font color="#c00000">用于动态调节PBS1和PBS2的长度</font>，即SJW约定了PBS的调节限幅。
 而采样时间被规定在PBS1和PBS2之间：
 	![[msedge_DKr92AqMFz.png]]
 注：
@@ -260,3 +260,13 @@ CAN总线将每一个位所占用的时间划分为如下的时段：
 #### 4.2.3 再同步
 
 正如父章节所述，<font color="#c00000">再同步的核心思想是以正常数据位的跳变沿为参考，当发生微小偏差时，则缩短或延长单次的采样间隔</font>，<font color="#c00000">其用于解决时钟累计误差</font>。
+
+再同步机制使得每当检测出边沿时，根据SJW值通过加长PBS1段，或缩短PBS2段，以调整同步。但如果发生了超出SJW值的误差时，最大调整量不能超过SJW值。
+
+![[msedge_Orq0YvKSMY.png]]
+
+### 4.3 波特率计算
+
+$波特率=\frac{1}{一个数据位的时长}=\frac{1}{T_{SS}+T_{PTS}+T_{PBS1}+T_{PBS2}}$
+
+
