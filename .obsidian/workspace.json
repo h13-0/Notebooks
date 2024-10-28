@@ -11,10 +11,14 @@
             "id": "abbc9fbb5e199357",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "嵌入式基础/接口技术/CAN/CAN总线协议标准.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "新标签页"
+              "title": "CAN总线协议标准"
             }
           }
         ]
@@ -144,9 +148,11 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {},
+              "state": {
+                "file": "嵌入式基础/接口技术/CAN/CAN总线协议标准.md"
+              },
               "icon": "lucide-list",
-              "title": "大纲"
+              "title": "CAN总线协议标准 的大纲"
             }
           },
           {
@@ -189,7 +195,7 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "7ddc64b2e3c9b5c8",
+  "active": "abbc9fbb5e199357",
   "lastOpenFiles": [
     "自动控制",
     "嵌入式基础/接口技术/I2C/I2C总线标准.md",
