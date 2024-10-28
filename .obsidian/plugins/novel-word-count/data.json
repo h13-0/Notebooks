@@ -3949,19 +3949,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 3597,
+      "wordCount": 3638,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 11.99,
-      "characterCount": 12679,
-      "nonWhitespaceCharacterCount": 8049,
-      "readingTimeInMinutes": 8.17833962264151,
+      "pageCount": 12.126666666666667,
+      "characterCount": 12785,
+      "nonWhitespaceCharacterCount": 8151,
+      "readingTimeInMinutes": 8.269207547169811,
       "linkCount": 0,
-      "embedCount": 12,
+      "embedCount": 13,
       "aliases": null,
       "createdDate": 1730043105135,
-      "modifiedDate": 1730115786318,
-      "sizeInBytes": 19297,
+      "modifiedDate": 1730124626500,
+      "sizeInBytes": 19483,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -9242,6 +9242,24 @@
       "createdDate": 1730114511080,
       "modifiedDate": 1730114511081,
       "sizeInBytes": 358845
+    },
+    "Resources/msedge_DKr92AqMFz.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1730124453168,
+      "modifiedDate": 1730124453168,
+      "sizeInBytes": 83127
     }
   }
 }
