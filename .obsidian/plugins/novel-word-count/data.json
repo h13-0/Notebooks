@@ -7441,19 +7441,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 830,
+      "wordCount": 911,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 2.7666666666666666,
-      "characterCount": 1729,
-      "nonWhitespaceCharacterCount": 1582,
-      "readingTimeInMinutes": 1.8905660377358489,
+      "pageCount": 3.0366666666666666,
+      "characterCount": 2168,
+      "nonWhitespaceCharacterCount": 1883,
+      "readingTimeInMinutes": 2.1110943396226416,
       "linkCount": 0,
-      "embedCount": 3,
+      "embedCount": 4,
       "aliases": null,
       "createdDate": 1730043105135,
-      "modifiedDate": 1730101808667,
-      "sizeInBytes": 3313,
+      "modifiedDate": 1730102494874,
+      "sizeInBytes": 3852,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -9080,6 +9080,24 @@
       "createdDate": 1730101807636,
       "modifiedDate": 1730101807637,
       "sizeInBytes": 237091
+    },
+    "Resources/Pasted image 20241028155230.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1730101950017,
+      "modifiedDate": 1730101950017,
+      "sizeInBytes": 16331
     }
   }
 }
