@@ -26,6 +26,7 @@ I2C总线的电气特性被规定为：
 1. <span style="background:#fff88f"><font color="#c00000">SDA和SCL均为开漏模式</font></span>。
 2. <font color="#c00000">SDA和SCL均有一个10K的上拉电阻</font>。
 这样设计的好处是当总线上出现电平冲突时，不会有短路情况出现。
+且需要注意，I2C与大多数通信协议一样，当其需要传输 "1" 时，其GPIO其实什么都不需要
 
 ![[Pasted image 20241027215645.png]]
 
