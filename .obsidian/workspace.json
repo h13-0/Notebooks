@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "7aa58b360269816d",
+        "id": "39c929cf14f5e20c",
         "type": "tabs",
         "children": [
           {
-            "id": "abbc9fbb5e199357",
+            "id": "a951988ee889bd75",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "嵌入式基础/接口技术/CAN/CAN总线协议标准.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "CAN总线协议标准"
+              "title": "新标签页"
             }
           }
         ]
@@ -195,8 +191,9 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "abbc9fbb5e199357",
+  "active": "7ddc64b2e3c9b5c8",
   "lastOpenFiles": [
+    "嵌入式基础/接口技术/USB",
     "自动控制",
     "嵌入式基础/接口技术/I2C/I2C总线标准.md",
     "计算机网络/基础应试学习/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
@@ -224,7 +221,6 @@
     "嵌入式基础/Resources/CAN总线协议-V2.0（英文）.pdf",
     "嵌入式基础/Resources/CAN总线协议-V2.0（中文）.pdf",
     "嵌入式基础/CAN总线协议-V2.0（英文）.pdf",
-    "嵌入式基础/CAN总线协议-V2.0（中文）.pdf",
     "计算机网络/应试笔记与八股.md",
     "计算机网络/基础应试学习/计算机网络应试学习.md",
     "CPP/应试笔记与八股.md",
