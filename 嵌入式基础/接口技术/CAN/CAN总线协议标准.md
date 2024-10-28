@@ -11,7 +11,9 @@ number headings: auto, first-level 2, max 6, 1.1
 ## 2 CAN总线简介
 
 CAN总线全称为Controller Area Network Bus，即控制器局域网总线。其由BOSCH公司制定和开发，其主要应用于汽车、工业控制等嵌入式领域。其最主要的特征是可靠性、易拓展性。
-CAN总线协议主要规定了OSI/ISO七层网络协议中的数据链路层和物理层。
+CAN总线协议主要涵盖了OSI/ISO七层网络协议中的<u>传输层</u>、<u>数据链路层</u>和<u>物理层</u>。
+
+![[msedge_pbUwS3eDtV.png]]
 
 其特性主要有：
 1. 其传输线路为差分线路，使用 `CAN_H` 和 `CAN_L` 两根差分线路，电气连接较为简洁，抗干扰性较高。
@@ -45,7 +47,7 @@ CAN总线协议主要规定了OSI/ISO七层网络协议中的数据链路层和�
 
 #### 3.1.2 高速CAN总线数据编码规定
 
-
+和大多数通信协议一样，<font color="#c00000">当其需要传输逻辑 "1" 时</font>，<span style="background:#fff88f"><font color="#c00000">其GPIO其实什么都不需要做</font></span>，此时 $CAN\_H - CAN\_L = 0$ 。此时的电平又被称为 "隐形电平" 。
 
 
 
