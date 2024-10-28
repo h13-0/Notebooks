@@ -3949,19 +3949,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 4079,
+      "wordCount": 4361,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 13.596666666666666,
-      "characterCount": 13868,
-      "nonWhitespaceCharacterCount": 9196,
-      "readingTimeInMinutes": 9.246981132075472,
+      "pageCount": 14.536666666666667,
+      "characterCount": 14277,
+      "nonWhitespaceCharacterCount": 9569,
+      "readingTimeInMinutes": 9.846452830188678,
       "linkCount": 0,
       "embedCount": 16,
       "aliases": null,
       "createdDate": 1730043105135,
-      "modifiedDate": 1730125815998,
-      "sizeInBytes": 21402,
+      "modifiedDate": 1730126428370,
+      "sizeInBytes": 22375,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -8415,24 +8415,6 @@
       "modifiedDate": 1715273142297,
       "sizeInBytes": 1243
     },
-    "Resources/msedge_N6LCmysPVx.png": {
-      "isCountable": false,
-      "isDirectory": false,
-      "noteCount": 0,
-      "wordCount": 0,
-      "wordCountTowardGoal": 0,
-      "wordGoal": 0,
-      "pageCount": 0,
-      "characterCount": 0,
-      "nonWhitespaceCharacterCount": 0,
-      "readingTimeInMinutes": 0,
-      "linkCount": 0,
-      "embedCount": 0,
-      "aliases": [],
-      "createdDate": 1730107457063,
-      "modifiedDate": 1730107457063,
-      "sizeInBytes": 62834
-    },
     "Resources/Pasted image 20240203021517.png": {
       "isCountable": false,
       "isDirectory": false,
@@ -8450,42 +8432,6 @@
       "createdDate": 1713204230686,
       "modifiedDate": 1713204230686,
       "sizeInBytes": 198192
-    },
-    "Resources/msedge_u6Gbc7hz8U.png": {
-      "isCountable": false,
-      "isDirectory": false,
-      "noteCount": 0,
-      "wordCount": 0,
-      "wordCountTowardGoal": 0,
-      "wordGoal": 0,
-      "pageCount": 0,
-      "characterCount": 0,
-      "nonWhitespaceCharacterCount": 0,
-      "readingTimeInMinutes": 0,
-      "linkCount": 0,
-      "embedCount": 0,
-      "aliases": [],
-      "createdDate": 1730107983486,
-      "modifiedDate": 1730107983487,
-      "sizeInBytes": 45717
-    },
-    "Resources/msedge_BNLcx9M5VX.png": {
-      "isCountable": false,
-      "isDirectory": false,
-      "noteCount": 0,
-      "wordCount": 0,
-      "wordCountTowardGoal": 0,
-      "wordGoal": 0,
-      "pageCount": 0,
-      "characterCount": 0,
-      "nonWhitespaceCharacterCount": 0,
-      "readingTimeInMinutes": 0,
-      "linkCount": 0,
-      "embedCount": 0,
-      "aliases": [],
-      "createdDate": 1730108142730,
-      "modifiedDate": 1730108142731,
-      "sizeInBytes": 54405
     },
     "Math/最大公约数、最小公倍数.md": {
       "isCountable": true,
@@ -9225,7 +9171,7 @@
       "modifiedDate": 1711692289632,
       "sizeInBytes": 1906878
     },
-    "Resources/Pasted image 20241028192151.png": {
+    "嵌入式基础/Resources/msedge_u6Gbc7hz8U.png": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
@@ -9239,11 +9185,29 @@
       "linkCount": 0,
       "embedCount": 0,
       "aliases": [],
-      "createdDate": 1730114511080,
-      "modifiedDate": 1730114511081,
-      "sizeInBytes": 358845
+      "createdDate": 1730107983486,
+      "modifiedDate": 1730107983487,
+      "sizeInBytes": 45717
     },
-    "Resources/msedge_DKr92AqMFz.png": {
+    "嵌入式基础/Resources/msedge_BNLcx9M5VX.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1730108142730,
+      "modifiedDate": 1730108142731,
+      "sizeInBytes": 54405
+    },
+    "嵌入式基础/Resources/msedge_DKr92AqMFz.png": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
@@ -9261,7 +9225,43 @@
       "modifiedDate": 1730124453168,
       "sizeInBytes": 83127
     },
-    "Resources/msedge_suqwKyUVFD.png": {
+    "嵌入式基础/Resources/msedge_N6LCmysPVx.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1730107457063,
+      "modifiedDate": 1730107457063,
+      "sizeInBytes": 62834
+    },
+    "嵌入式基础/Resources/msedge_Orq0YvKSMY.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1730125335041,
+      "modifiedDate": 1730125335041,
+      "sizeInBytes": 173518
+    },
+    "嵌入式基础/Resources/msedge_suqwKyUVFD.png": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
@@ -9279,7 +9279,7 @@
       "modifiedDate": 1730124913487,
       "sizeInBytes": 75568
     },
-    "Resources/Pasted image 20241028221910.png": {
+    "嵌入式基础/Resources/Pasted image 20241028221910.png": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
@@ -9297,7 +9297,7 @@
       "modifiedDate": 1730125150963,
       "sizeInBytes": 19755
     },
-    "Resources/msedge_Orq0YvKSMY.png": {
+    "嵌入式基础/Resources/Pasted image 20241028192151.png": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
@@ -9311,9 +9311,9 @@
       "linkCount": 0,
       "embedCount": 0,
       "aliases": [],
-      "createdDate": 1730125335041,
-      "modifiedDate": 1730125335041,
-      "sizeInBytes": 173518
+      "createdDate": 1730114511080,
+      "modifiedDate": 1730114511081,
+      "sizeInBytes": 358845
     }
   }
 }
