@@ -76,11 +76,11 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 
 ### 2.2 基本概念
 
-#### 2.2.1 示例机
+#### 2.2.1 示例机及设备树编写
 
 假设给定的机器有如下属性：
 - 由 "Acme" 制造，命名为 "Coyote's Revenge"。
-- 单核32位CPU
+- 双核 Cortex-A9 CPU
 - 映射到内存上的外设有：
 	- 两个串口(serial)，基地址分别为：
 		- `0x101F1000`
@@ -93,6 +93,49 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 		- I2C控制器，基地址为 `0x10160000` ，并外挂如下设备：
 			- DS1338 RTC时钟，I2C地址为 `0x58`
 		- 64MB NOR Flash，基地址为 `0x30000000`
-- 256MB的SDRAM，基地址为 `0`
-- 
+- 256MB的SDRAM，基地址为 `0` 
+
+则可以按照如下字章节的步骤进行编写设备树。
+
+##### 2.2.1.1 指定系统的名称
+
+在根节点上添加子节点 `compatible` ，<font color="#c00000">要求格式为</font> `<manufacturer>,<model>` ：
+
+```dts
+/dts-v1/;
+
+/ {
+    compatible = "acme,coyotes-revenge";
+};
+```
+
+<span style="background:#fff88f"><font color="#c00000">该属性名务必正确填写</font></span>，因为操作系统会用该值决定如何在计算机上运行。
+
+##### 2.2.1.2 CPUs
+
+
+```
+/dts-v1/;
+
+/ {
+    compatible = "acme,coyotes-revenge";
+
+    cpus {
+        cpu@0 {
+            compatible = "arm,cortex-a9";
+        };
+        cpu@1 {
+            compatible = "arm,cortex-a9";
+        };
+    };
+};
+```
+
+CPU的 `compatible` 填写格式也必须为 `<manufacturer>,<model>` ，该值会指向正确的CPU架构。
+
+上述示例中出现了 `cpu@0` ，其命名规则为 `<name>[@<unit-address>]` ，具体规则如下：
+1. `<name>` 为一个简单字符串，长度最大为31字符。<font color="#c00000">通常节点是根据它所代表的设备类型来命名的</font>。
+2. 当节点使用地址描述设备时，则应当包括 `unit-address` 。通常单元地址是用于访问设备的主地址，并列在节点 `reg` 的属性中。`reg` 属性可见后文。
+3. 同级节点必须有唯一的( `<name>[@<unit-address>]` 格式的)名称，地址不同的设备
+
 
