@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "FreeRTOS/FreeRTOS原理探析/未命名.md",
+                "file": "FreeRTOS/FreeRTOS原理探析/多任务与调度.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "未命名"
+              "title": "多任务与调度"
             }
           },
           {
@@ -163,10 +163,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "FreeRTOS/FreeRTOS原理探析/未命名.md"
+                "file": "FreeRTOS/FreeRTOS原理探析/多任务与调度.md"
               },
               "icon": "lucide-list",
-              "title": "未命名 的大纲"
+              "title": "多任务与调度 的大纲"
             }
           },
           {
@@ -212,7 +212,7 @@
   "active": "a951988ee889bd75",
   "lastOpenFiles": [
     "FreeRTOS/Readme.md",
-    "FreeRTOS/FreeRTOS原理探析/未命名.md",
+    "FreeRTOS/FreeRTOS原理探析/多任务与调度.md",
     "FreeRTOS/FreeRTOS原理探析",
     "嵌入式基础/接口技术/Readme.md",
     "FreeRTOS",
