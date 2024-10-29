@@ -22,4 +22,42 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 
 
 
+## 2 设备树的使用
 
+### 2.1 基本数据格式
+
+如下是一个简单的设备树示例：
+
+```dts
+/dts-v1/;
+
+/ {
+    node1 {
+        a-string-property = "A string";
+        a-string-list-property = "first string", "second string";
+        // hex is implied in byte arrays. no '0x' prefix is required
+        a-byte-data-property = [01 23 34 56];
+        child-node1 {
+            first-child-property;
+            second-child-property = <1>;
+            a-string-property = "Hello, world";
+        };
+        child-node2 {
+        };
+    };
+    node2 {
+        an-empty-property;
+        a-cell-property = <1 2 3 4>; /* each number (cell) is a uint32 */
+        child-node1 {
+        };
+    };
+};
+```
+
+上述的设备树中：
+- `/` 表示根节点，其后的花括号内定义了两个子节点 `node1` 和 `node2` 。
+	- `node1` 节点中提供了若干 `key-value` 式的键值对：
+		- `a-string-property` ：一个字符串类型的键值对，值为 `A string` 。
+		- `a-string-list-property` ：一个由字符串组成的数组。
+		- `a-byte-data-property` ：
+	- `node2` 节点
