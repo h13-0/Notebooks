@@ -66,10 +66,33 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 
 而在设备树中支持的数据类型有：
 
-| <center>数据类型</center> | <center>表示方式</center> | <center>Demo</center>                                       | <center>Value</center>      |
-| --------------------- | --------------------- | ----------------------------------------------------------- | --------------------------- |
-| 文本字符串                 | 双引号包围                 | `a-string-property = "A string";`                           | `A string`                  |
-| 文本字符串构成的数组            | 逗号分割                  | `a-string-list-property = "first string", "second string";` | 略                           |
-| `uint32_t` 构成的数组      | 使用 `<>` 包围，空格分割       | `second-child-property = <1 0xbeef>;`                       | `{ 1, 48879 }`              |
-| 二进制构成的数组              | 使用 `[]` 包围，空格分割       | `a-byte-data-property = [01 23 34 56];`                     | `{ 0x01, 0x23, 0x34, 0x56}` |
-| 混合数据                  | 逗号分割                  |                                                             |                             |
+| <center>数据类型</center> | <center>表示方式</center> | <center>Demo</center>                                               | <center>Value</center>      |
+| --------------------- | --------------------- | ------------------------------------------------------------------- | --------------------------- |
+| 文本字符串                 | 双引号包围                 | `a-string-property = "A string";`                                   | `A string`                  |
+| 文本字符串构成的数组            | 逗号分割                  | `a-string-list-property = "first string", "second string";`         | 略                           |
+| `uint32_t` 构成的数组      | 使用 `<>` 包围，空格分割       | `second-child-property = <1 0xbeef>;`                               | `{ 1, 48879 }`              |
+| 二进制构成的数组              | 使用 `[]` 包围，空格分割       | `a-byte-data-property = [01 23 34 56];`                             | `{ 0x01, 0x23, 0x34, 0x56}` |
+| 混合数据                  | 逗号分割                  | `mixed-property = "a string", [0x01 0x23 0x45 0x67], <0x12345678>;` |                             |
+
+### 2.2 基本概念
+
+#### 2.2.1 示例机
+
+假设给定的机器有如下属性：
+- 由 "Acme" 制造，命名为 "Coyote's Revenge"。
+- 单核32位CPU
+- 映射到内存上的外设有：
+	- 两个串口(serial)，基地址分别为：
+		- `0x101F1000`
+		- `0x101F2000`
+	- GPIO控制器，基地址为 `0x101F3000` 
+	- SPI总线控制器，基地址为 `0x10170000` ，并且外挂有如下设备：
+		- 带有SS引脚的MMC插槽，SS引脚为 `GPIO#1`
+	- 外部总线桥，并附带如下设备：
+		- SMC SMC91111以太网设备，基地址为 `0x10100000`
+		- I2C控制器，基地址为 `0x10160000` ，并外挂如下设备：
+			- DS1338 RTC时钟，I2C地址为 `0x58`
+		- 64MB NOR Flash，基地址为 `0x30000000`
+- 256MB的SDRAM，基地址为 `0`
+- 
+
