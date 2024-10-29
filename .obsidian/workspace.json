@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "FreeRTOS/FreeRTOS原理探析/多任务与调度.md",
+                "file": "FreeRTOS/FreeRTOS应用/多任务与调度.md",
                 "mode": "source",
                 "source": false
               },
@@ -163,7 +163,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "FreeRTOS/FreeRTOS原理探析/多任务与调度.md"
+                "file": "FreeRTOS/FreeRTOS应用/多任务与调度.md"
               },
               "icon": "lucide-list",
               "title": "多任务与调度 的大纲"
@@ -211,10 +211,10 @@
   },
   "active": "a951988ee889bd75",
   "lastOpenFiles": [
-    "嵌入式基础/接口技术/CAN/CAN总线协议标准.md",
-    "FreeRTOS/FreeRTOS原理探析/多任务与调度.md",
     "FreeRTOS/Readme.md",
-    "FreeRTOS/FreeRTOS原理探析",
+    "FreeRTOS/FreeRTOS应用/多任务与调度.md",
+    "嵌入式基础/接口技术/CAN/CAN总线协议标准.md",
+    "FreeRTOS/FreeRTOS应用",
     "嵌入式基础/接口技术/Readme.md",
     "FreeRTOS",
     "嵌入式基础/Readme.md",
