@@ -9390,23 +9390,26 @@
       "modifiedDate": 1715273142332,
       "sizeInBytes": 216
     },
-    "Linux驱动开发/Linux设备树/Readme.md": {
+    "Linux驱动开发/Linux设备树/Device Tree Reference学习笔记.md": {
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 0,
+      "wordCount": 109,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 0,
-      "characterCount": 1,
-      "nonWhitespaceCharacterCount": 0,
-      "readingTimeInMinutes": 0,
+      "pageCount": 0.36333333333333334,
+      "characterCount": 289,
+      "nonWhitespaceCharacterCount": 252,
+      "readingTimeInMinutes": 0.23928301886792452,
       "linkCount": 0,
       "embedCount": 0,
       "aliases": null,
-      "createdDate": 1730213011829,
-      "modifiedDate": 1730213017209,
-      "sizeInBytes": 1
+      "createdDate": 1730213313142,
+      "modifiedDate": 1730213528080,
+      "sizeInBytes": 547,
+      "frontmatter": {
+        "number headings": "auto, first-level 2, max 6, 1.1"
+      }
     }
   }
 }
