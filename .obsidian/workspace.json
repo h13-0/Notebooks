@@ -34,6 +34,16 @@
               "icon": "lucide-file",
               "title": "卡尔曼滤波"
             }
+          },
+          {
+            "id": "a9f3bc48be56f139",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "新标签页"
+            }
           }
         ],
         "currentTab": 1
@@ -212,8 +222,8 @@
   },
   "active": "e4224dc2aa5403a3",
   "lastOpenFiles": [
-    "Linux驱动开发/Linux设备树/Device Tree Reference学习笔记.md",
     "自动控制/卡尔曼滤波.md",
+    "Linux驱动开发/Linux设备树/Device Tree Reference学习笔记.md",
     "前后端编程/Readme.md",
     "嵌入式基础/接口技术/CAN/CAN总线协议标准.md",
     "嵌入式基础/Readme.md",
