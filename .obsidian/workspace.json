@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "嵌入式基础/应试笔记与八股.md",
+                "file": "嵌入式基础/软件层技术/应用层通信协议/Modbus.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "应试笔记与八股"
+              "title": "Modbus"
             }
           },
           {
@@ -173,10 +173,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "嵌入式基础/应试笔记与八股.md"
+                "file": "嵌入式基础/软件层技术/应用层通信协议/Modbus.md"
               },
               "icon": "lucide-list",
-              "title": "应试笔记与八股 的大纲"
+              "title": "Modbus 的大纲"
             }
           },
           {
@@ -221,8 +221,9 @@
   },
   "active": "a951988ee889bd75",
   "lastOpenFiles": [
-    "前后端编程/Readme.md",
+    "嵌入式基础/应试笔记与八股.md",
     "FreeRTOS/FreeRTOS应用及原理分析/FreeRTOS工程创建与移植.md",
+    "前后端编程/Readme.md",
     "FreeRTOS/Resources/chrome_cIeEB446qa.png",
     "FreeRTOS/Resources",
     "FreeRTOS/FreeRTOS应用及原理分析/多任务与调度.md",
@@ -239,7 +240,6 @@
     "FreeRTOS/FreeRTOS应用及原理分析",
     "嵌入式基础/接口技术/Readme.md",
     "FreeRTOS",
-    "嵌入式基础/应试笔记与八股.md",
     "嵌入式基础/OTA技术",
     "嵌入式基础/接口技术/USB",
     "自动控制",
