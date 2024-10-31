@@ -16,7 +16,6 @@ Modbus有如下三种协议：
 - Modbus TCP
 Modbus协议规定，使用Modbus的设备必须支持Modbus RTU，且默认为Modbus RTU，因此大多数设备使用的均为Modbus RTU。
 
-
 ### 2.1 Modbus RTU
 
 Modbus RTU可以分为主站和从站，请求报文可以分为如下几个部分：

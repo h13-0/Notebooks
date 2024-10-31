@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "嵌入式基础/软件层技术/应用层通信协议/Modbus.md",
+                "file": "自动控制/卡尔曼滤波.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Modbus"
+              "title": "卡尔曼滤波"
             }
           },
           {
@@ -173,10 +173,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "嵌入式基础/软件层技术/应用层通信协议/Modbus.md"
+                "file": "自动控制/卡尔曼滤波.md"
               },
               "icon": "lucide-list",
-              "title": "Modbus 的大纲"
+              "title": "卡尔曼滤波 的大纲"
             }
           },
           {
@@ -221,6 +221,7 @@
   },
   "active": "a951988ee889bd75",
   "lastOpenFiles": [
+    "嵌入式基础/软件层技术/应用层通信协议/Modbus.md",
     "嵌入式基础/应试笔记与八股.md",
     "FreeRTOS/FreeRTOS应用及原理分析/FreeRTOS工程创建与移植.md",
     "前后端编程/Readme.md",
