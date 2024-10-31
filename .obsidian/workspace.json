@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "前后端编程/Readme.md",
+                "file": "嵌入式基础/应试笔记与八股.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Readme"
+              "title": "应试笔记与八股"
             }
           },
           {
@@ -45,8 +45,7 @@
               "title": "新标签页"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -174,10 +173,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "FreeRTOS/FreeRTOS应用及原理分析/FreeRTOS工程创建与移植.md"
+                "file": "嵌入式基础/应试笔记与八股.md"
               },
               "icon": "lucide-list",
-              "title": "FreeRTOS工程创建与移植 的大纲"
+              "title": "应试笔记与八股 的大纲"
             }
           },
           {
@@ -220,15 +219,15 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "e4224dc2aa5403a3",
+  "active": "a951988ee889bd75",
   "lastOpenFiles": [
-    "FreeRTOS/Resources/chrome_cIeEB446qa.png",
+    "前后端编程/Readme.md",
     "FreeRTOS/FreeRTOS应用及原理分析/FreeRTOS工程创建与移植.md",
+    "FreeRTOS/Resources/chrome_cIeEB446qa.png",
     "FreeRTOS/Resources",
     "FreeRTOS/FreeRTOS应用及原理分析/多任务与调度.md",
     "自动控制/卡尔曼滤波.md",
     "Linux驱动开发/Linux设备树/Device Tree Reference学习笔记.md",
-    "前后端编程/Readme.md",
     "嵌入式基础/接口技术/CAN/CAN总线协议标准.md",
     "嵌入式基础/Readme.md",
     "Linux驱动开发/Linux驱动开发笔记.md",

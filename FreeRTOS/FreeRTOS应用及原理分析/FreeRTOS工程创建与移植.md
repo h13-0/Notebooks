@@ -10,7 +10,9 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ## 2 FreeRTOS工程创建
 
-在一些不严谨的地方也可以称作 "FreeRTOS移植"，与下一章节的[[FreeRTOS工程创建与移植#3 FreeRTOS移植|FreeRTOS移植]]不同的地方在于 "工程创建" 指的是使用FreeRTOS支持的CPU完成工程创建，而移植则包含FreeRTOS暂未支持的CPU的底层实现。
+在一些不严谨的地方也可以称作 "FreeRTOS移植"，与下一章节的[[FreeRTOS工程创建与移植#4 FreeRTOS移植|FreeRTOS移植]]不同的地方在于 "工程创建" 指的是使用FreeRTOS支持的CPU完成工程创建，而移植则包含FreeRTOS暂未支持的CPU的底层实现。
+而在
+
 
 <font color="#c00000">这里以STM32F103系列单片机为例</font>。
 
@@ -57,18 +59,21 @@ FreeRTOS需要将如下的三个中断服务<span style="background:#fff88f"><fo
 1. 直接在 `FreeRTOSConfig.h` 中定义如下的宏，重命名中断handler名，<font color="#c00000">并删除原中断函数实现</font>(<font color="#c00000">若使用CubeMx则需要取消生成对应的中断函数</font>)
 ```C
 #define xPortPendSVHandler      PendSV_Handler
-#define vPortSVCHandler        SVC_Handler
-#define xPortSysTickHandler SysTick_Handler
+#define vPortSVCHandler         SVC_Handler
+#define xPortSysTickHandler     SysTick_Handler
 ```
 2. 修改汇编启动文件，在启动阶段直接修改中断向量到 `xPortPendSVHandler` 等handler。
 
-
 #### 2.1.4 启动和测试FreeRTOS
 
+启动FreeRTOS只需要使用 `vTaskStartScheduler();` 启动调度器即可，随后在主函数中加入死循环并捕获FreeRTOS的退出。
+
+## 3 FreeRTOS启动过程
 
 
 
 
 
+## 4 FreeRTOS的移植
 
-## 3 FreeRTOS移植
+
