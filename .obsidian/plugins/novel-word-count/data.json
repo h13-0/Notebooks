@@ -9436,24 +9436,24 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 190,
+      "wordCount": 340,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 0.6333333333333333,
-      "characterCount": 441,
-      "nonWhitespaceCharacterCount": 392,
-      "readingTimeInMinutes": 0.431433962264151,
+      "pageCount": 1.1333333333333333,
+      "characterCount": 945,
+      "nonWhitespaceCharacterCount": 848,
+      "readingTimeInMinutes": 0.7828679245283019,
       "linkCount": 1,
       "embedCount": 1,
       "aliases": null,
       "createdDate": 1730379795730,
-      "modifiedDate": 1730380672653,
-      "sizeInBytes": 835,
+      "modifiedDate": 1730381273525,
+      "sizeInBytes": 1607,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
     },
-    "Resources/chrome_cIeEB446qa.png": {
+    "FreeRTOS/Resources/chrome_cIeEB446qa.png": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
