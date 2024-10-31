@@ -37,7 +37,36 @@ number headings: auto, first-level 2, max 6, 1.1
 2. 将 `FreeRTOS/Source/include/*.h` 复制到 `freertos/inc` 下。
 3. 在 `FreeRTOS/Source/portable/MemMang` 下选择一种内存管理方式，通常选择 `heap_4.c` 并复制到 `freertos/src` 下。
 5. 在 `FreeRTOS/Source/include/portable` 下进入对应编译器所在目录，并在该目录中找到对应CPU结构体系所在的文件夹，复制 `port.c` 到 `freertos/src` ，复制 `portmacro.h` 到 `freertos/inc` 。
-6. 对于ARM处理器，进入 `FreeRTOS/Source/include/portable` 
+6. 进入 `FreeRTOS/Demo` ，根据平台和编译器选择文件夹，复制 `FreeRTOSConfig.h` 到 `freertos/inc` 。
+即可完成文件提取。
+
+简单来说，文件提取需要提取：
+1. FreeRTOS通用源文件
+2. FreeRTOS通用头文件
+3. 选择FreeRTOS内存管理实现
+4. 复制对应平台的 `port.c` 和 `portmacro.h` 
+5. 复制对应平台的 `FreeRTOSConfig.h` 
+
+#### 2.1.3 中断服务配置
+
+FreeRTOS需要将如下的三个中断服务<span style="background:#fff88f"><font color="#c00000">直接映射到</font></span>对应的接口上：
+- `PendSV_Handler`
+- `SVC_Handler`
+- `SysTick_Handler`
+<font color="#c00000">这三个函数必须直接映射</font>，<span style="background:#fff88f"><font color="#c00000">不可在里面进行二次转发</font></span>(否则会出现函数调用栈，并触发HardFault异常)。可选的方式有：
+1. 直接在 `FreeRTOSConfig.h` 中定义如下的宏，重命名中断handler名，<font color="#c00000">并删除原中断函数实现</font>(<font color="#c00000">若使用CubeMx则需要取消生成对应的中断函数</font>)
+```C
+#define xPortPendSVHandler      PendSV_Handler
+#define vPortSVCHandler        SVC_Handler
+#define xPortSysTickHandler SysTick_Handler
+```
+2. 修改汇编启动文件，在启动阶段直接修改中断向量到 `xPortPendSVHandler` 等handler。
+
+
+#### 2.1.4 启动和测试FreeRTOS
+
+
+
 
 
 
