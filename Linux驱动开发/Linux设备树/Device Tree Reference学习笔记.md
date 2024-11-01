@@ -78,15 +78,19 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 
 #### 2.2.1 示例机及设备树框架搭建
 
+##### 2.2.1.1 基本假设
+
 假设给定的机器有如下属性：
 - 由 "Acme" 制造，命名为 "Coyote's Revenge"。
 - 双核 Cortex-A9 CPU
 - 映射到内存上的外设有：
-	- 两个串口(serial)，基地址分别为：
-		- `0x101F1000` 到 `0x101F1FFF` 
-		- `0x101F2000` 到 `0x101F2FFF`
-	- GPIO控制器，基地址为 `0x101F3000` 
-	- SPI总线控制器，基地址为 `0x10170000` ，并且外挂有如下设备：
+	- 两个串口(serial)：
+		- 串口1基地址分别为 `0x101F1000` ，占用内存大小为 `0x1000`
+		- 串口2基地址分别为 `0x101F2000` ，占用内存大小为 `0x1000`
+	- GPIO控制器，基地址为 `0x101F3000` ，占用内存大小为 `0x1010` 。其中：
+		- 区域1为 `0x101F3000 ~ 0x101F3FFF`
+		- 区域2为 `0x101F4000 ~ 0x101F401F`
+	- SPI总线控制器，基地址为 `0x10170000` ，占用内存大小为 `0x1000` ，并且外挂有如下设备：
 		- 带有SS引脚的MMC插槽，SS引脚为 `GPIO#1`
 	- 外部总线桥，并附带如下设备：
 		- SMC SMC91111以太网设备，基地址为 `0x10100000`
@@ -95,9 +99,7 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 		- 64MB NOR Flash，基地址为 `0x30000000`
 - 256MB的SDRAM，基地址为 `0` 
 
-则可以按照如下字章节的步骤进行编写设备树。
-
-##### 2.2.1.1 指定系统的名称
+##### 2.2.1.2 指定系统的名称
 
 在根节点上添加子节点 `compatible` ，<font color="#c00000">要求格式为</font> `<manufacturer>,<model>` ：
 
@@ -111,7 +113,7 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 
 <span style="background:#fff88f"><font color="#c00000">该属性名务必正确填写</font></span>，具体可详见章节[[Device Tree Reference学习笔记#2 2 2 compatible属性|compatible属性]]。
 
-##### 2.2.1.2 CPUs
+##### 2.2.1.3 CPUs
 
 
 ```dts
@@ -139,7 +141,7 @@ CPU的 `compatible` 填写格式也必须为 `<manufacturer>,<model>` ，该值�
 3. 同级节点必须有唯一的( `<name>[@<unit-address>]` 格式的)名称，地址不同的节点名称不同。
 4. 具体规则可见ePAPR规范的第2.2.1节。
 
-##### 2.2.1.3 添加设备
+##### 2.2.1.4 添加设备
 
 针对上述假设，可以初步编写如下的设备树框架：
 
@@ -228,17 +230,19 @@ compatible属性是操作系统选择设备驱动时使用的key值，因此其�
 1. 不同位数或不同体系的CPU地址长度不同；不同总线协议约定的地址长度不同。
 2. 不同外设映射到的内存大小不同。
 因此Linux给出了可以在设备树中定义设备地址的特性。其有如下特性：
-1. 使用 `#address-cells = <n>` <font color="#c00000">指定该节点及子节点的地址所占用的大小</font>，单位32Bit。例如 `#address-cells = <2>` 表示每个地址使用2个32位字。
+1. 使用 `#address-cells = <n>` <font color="#c00000">指定该节点及子节点的地址所占用的大小</font>，单位32Bit。例如 `#address-cells = <2>` 表示每个地址使用2个32位字<span style="background:#fff88f">(因为尖括号内是32位变量，因此单位就是32Bit)</span>。
 2. 使用 `#size-cells = <n>` <font color="#c00000">指定该外设所占用内存大小<u>的变量的值</u></font>，单位32Bit。例如 `#size-cells = <1>` <font color="#c00000">表示需要使用1个32位字定义内存大小变量</font>，即 `uint32_t size` 。<font color="#c00000">而具体占用的大小需要在下一条中定义</font>。
 3. 在使用上述两个参数定义了一个设备及其子设备的<font color="#c00000">内存地址位数</font>和<font color="#c00000">内存大小位数</font>后，应当使用：
 	- `reg = < ${region1}[, ${region2}, ...] >` 
-	- 
-	格式给出对应设备的参数。方括号内可以省略(见下一行)。
-其中：
-1. 当address-cells为1时，address high<font color="#c00000">必须省略</font>。
-2. 当size-cells为0时，size high,size low<span style="background:#fff88f"><font color="#c00000">都</font></span><font color="#c00000">必须省略</font>。
-3. 当size-cells为1时，size high<font color="#c00000">必须省略</font>。
-
+	定义若干个内存区域。其中：
+	- 一个 `reg` <font color="#c00000">可以同时写一个或多个内存区域</font>。
+	- `${regionx}` 的格式如下：
+		- `[address high,] address low[, size high, size low]`
+	格式给出对应设备的参数，其中：
+	1. 当address-cells为1时，address high<font color="#c00000">必须省略</font>。
+	2. 当size-cells为0时，size high,size low<span style="background:#fff88f"><font color="#c00000">都</font></span><font color="#c00000">必须省略</font>。
+	3. 当size-cells为1时，size high<font color="#c00000">必须省略</font>。
+	(<span style="background:#fff88f"><font color="#c00000">其本质是先写address后写size，用了几个32位就写几个，没用就不写</font></span>，只是目前没有128位机)
 具体示例如各子章节。
 
 #### 2.3.1 CPU寻址示例
@@ -272,4 +276,46 @@ compatible属性是操作系统选择设备驱动时使用的key值，因此其�
 例如上述的32位Cortex A9中，则有平台内存映射设备的：
 - `#address-cells = <1>`
 - `#size-cells = <1>`
+则根据基本假设：
+![[Device Tree Reference学习笔记#2 2 1 1 基本假设]]
+可继续编写如下的设备树：
 
+```dts
+/dts-v1/;
+
+/ {
+    #address-cells = <1>;
+    #size-cells = <1>;
+
+    ...
+
+    serial@101f0000 {
+        compatible = "arm,pl011";
+        reg = <0x101f0000 0x1000 >;
+    };
+
+    serial@101f2000 {
+        compatible = "arm,pl011";
+        reg = <0x101f2000 0x1000 >;
+    };
+
+    gpio@101f3000 {
+        compatible = "arm,pl061";
+        reg = <0x101f3000 0x1000
+               0x101f4000 0x0010>;
+    };
+
+    interrupt-controller@10140000 {
+        compatible = "arm,pl190";
+        reg = <0x10140000 0x1000 >;
+    };
+
+    spi@10115000 {
+        compatible = "arm,pl022";
+        reg = <0x10115000 0x1000 >;
+    };
+
+    ...
+
+};
+```
