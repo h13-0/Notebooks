@@ -426,10 +426,16 @@ ranges = <0 0  0x10100000   0x10000       // Chipselect 1, Ethernet
 ### 2.4 中断的工作原理
 
 首先引入以下四个属性：
-- `interrupt-controller` ，中断控制器，是中断信号的接收设备。其是
-- 
+- `interrupt-controller` ，中断控制器，是中断信号的接收设备。其是空属性，即 `interrupt-controller;` ，<font color="#c00000">用于声明</font>该节点为<font color="#c00000">中断信号的接收设备</font>。
+- `#interrupt-cells` ，<font color="#c00000">定义中断说明符</font>有多少个单元。常见的单元有中断号、中断类型触发等(例如GPIO的上升沿、下降沿触发等...)。
+- `interrupt-parent` ，用于<font color="#c00000">定义节点所属中断控制器</font>。<font color="#c00000">该属性可以继承给子节点</font>。
+- `interrupts` ，<font color="#c00000">给出中断事件的属性</font>，其符合 `#interrupt-cells` 中的单元要求。
 
-
+随后依次完成：
+1. 将 `interrupt-controller;` 属性添加到中断的接收设备下。
+2. 在中断的接收设备中使用 `#interrupt-cells` 定义中断说明符。
+3. 使用 `interrupt-parent` 为该节点和子节点定义接收中断的设备。
+4. 使用 `interrupts` 给出各中断源设备中断的说明符。
 
 
 
