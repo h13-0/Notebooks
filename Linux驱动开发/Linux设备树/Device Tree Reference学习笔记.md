@@ -425,7 +425,9 @@ ranges = <0 0  0x10100000   0x10000       // Chipselect 1, Ethernet
 
 ### 2.4 中断的工作原理
 
-
+首先引入以下四个属性：
+- `interrupt-controller` ，中断控制器，是中断信号的接收设备。其是
+- 
 
 
 
