@@ -437,6 +437,110 @@ ranges = <0 0  0x10100000   0x10000       // Chipselect 1, Ethernet
 3. 使用 `interrupt-parent` 为该节点和子节点定义接收中断的设备。
 4. 使用 `interrupts` 给出各中断源设备中断的说明符。
 
+下方代码即是将所有中断均绑定到同一个中断接收器下。
+
+```dts
+/dts-v1/;
+
+/ {
+    compatible = "acme,coyotes-revenge";
+    #address-cells = <1>;
+    #size-cells = <1>;
+    interrupt-parent = <&intc>;
+
+    cpus {
+        #address-cells = <1>;
+        #size-cells = <0>;
+        cpu@0 {
+            compatible = "arm,cortex-a9";
+            reg = <0>;
+        };
+        cpu@1 {
+            compatible = "arm,cortex-a9";
+            reg = <1>;
+        };
+    };
+
+    serial@101f0000 {
+        compatible = "arm,pl011";
+        reg = <0x101f0000 0x1000 >;
+        interrupts = < 1 0 >;
+    };
+
+    serial@101f2000 {
+        compatible = "arm,pl011";
+        reg = <0x101f2000 0x1000 >;
+        interrupts = < 2 0 >;
+    };
+
+    gpio@101f3000 {
+        compatible = "arm,pl061";
+        reg = <0x101f3000 0x1000
+               0x101f4000 0x0010>;
+        interrupts = < 3 0 >;
+    };
+
+    intc: interrupt-controller@10140000 {
+        compatible = "arm,pl190";
+        reg = <0x10140000 0x1000 >;
+        interrupt-controller;
+        #interrupt-cells = <2>;
+    };
+
+    spi@10115000 {
+        compatible = "arm,pl022";
+        reg = <0x10115000 0x1000 >;
+        interrupts = < 4 0 >;
+    };
+
+    external-bus {
+        #address-cells = <2>;
+        #size-cells = <1>;
+        ranges = <0 0  0x10100000   0x10000     // Chipselect 1, Ethernet
+                  1 0  0x10160000   0x10000     // Chipselect 2, i2c controller
+                  2 0  0x30000000   0x1000000>; // Chipselect 3, NOR Flash
+
+        ethernet@0,0 {
+            compatible = "smc,smc91c111";
+            reg = <0 0 0x1000>;
+            interrupts = < 5 2 >;
+        };
+
+        i2c@1,0 {
+            compatible = "acme,a1234-i2c-bus";
+            #address-cells = <1>;
+            #size-cells = <0>;
+            reg = <1 0 0x1000>;
+            interrupts = < 6 2 >;
+            rtc@58 {
+                compatible = "maxim,ds1338";
+                reg = <58>;
+                interrupts = < 7 3 >;
+            };
+        };
+
+        flash@2,0 {
+            compatible = "samsung,k8f1315ebm", "cfi-flash";
+            reg = <2 0 0x4000000>;
+        };
+    };
+};
+```
+
+不过这种方式限制了一个设备只能有一个中断接收器。
+
+### 2.5 添加平台特定数据
+
+Linux的设备树<font color="#c00000">支持为节点添加任意的属性</font>，但是为了避免冲突，该属性<font color="#c00000">必须</font>使用 `${manufacture},` 前缀，例如rockchip的 `rk3288.dtsi` 中就使用了 `rockchip,grf` 、 `rockchip,playback-channels` 、`rockchip,pins` 等属性。
+
+不过如果需要并入mainline kernel，则需要：
+1. 必须在绑定中记录属性和子节点的含义，以便设备驱动程序作者知道如何解释数据。绑定记录特定兼容值的含义、它应该具有的属性、它可能具有的子节点以及它表示的设备。每个唯一 `compatible` 值都应该有自己的绑定（或声明与另一个兼容值的兼容性）。新设备的绑定记录在此 wiki 中。有关文档格式和审核过程的描述，请参阅[Main Page](https://elinux.org/Main_Page)。
+2. 在devicetree-discuss@lists.ozlabs.org邮件列表上发布新的绑定以供审核。查看新绑定可以捕获许多常见错误，这些错误将在将来导致问题。
+
+### 2.6 特殊节点
+
+#### 2.6.1 别名节点(aliases)
+
 
 
 
