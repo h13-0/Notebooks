@@ -109,7 +109,7 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 };
 ```
 
-<span style="background:#fff88f"><font color="#c00000">该属性名务必正确填写</font></span>，因为操作系统会用该值决定如何在计算机上运行。
+<span style="background:#fff88f"><font color="#c00000">该属性名务必正确填写</font></span>，具体可详见章节[[Device Tree Reference学习笔记#2 2 2 compatible属性|compatible属性]]。
 
 ##### 2.2.1.2 CPUs
 
@@ -199,10 +199,24 @@ CPU的 `compatible` 填写格式也必须为 `<manufacturer>,<model>` ，该值�
 
 注：
 1. 此时该设备树依旧是无效的设备树，其还缺少一些设备之间的连接信息
-2. 每个节点都有 `compatible` 属性
+2. 每个节点都有 `compatible` 属性，具体可详见章节[[Device Tree Reference学习笔记#2 2 2 compatible属性|compatible属性]]
 3. flash节点中 `compatible` 属性有两个字符串
 4. 节点的名称应当反应设备的类型，而非具体的型号。ePAPR 2.2.2章节中已定义通用节点名称的列表。
 
 #### 2.2.2 compatible属性
 
-树中每个节点都应当指定compatible属性，
+compatible属性是操作系统选择设备驱动时使用的key值，因此其基本要求为：
+1. 树中每个节点都应当指定compatible属性。
+2. compatible是一个字符串列表。
+3. 列表中的<font color="#c00000">第一个字符串</font>格式应遵守 `<manufacturer>,<model>` 格式。
+4. 后续的字符串表示兼容的其他设备，例如对于 `compatible = "fsl,mpc8349-uart", "ns16550"` ：
+	- 其 `fsl,mpc8349-uart` 指向确切的器件
+	- `ns16550` 说明该器件与 `ns16550` 完全兼容。
+		- 注：理论上 `ns16550` 也应当遵守 `<manufacturer>,<model>` 格式，但是由于历史原因没有保留制造商前缀。
+	- 该做法允许将现有设备驱动程序绑定到较新的设备，同时仍唯一标识确切的硬件。
+	- 注：
+		- <span style="background:#fff88f"><font color="#c00000">请勿使用通配兼容型号来实现设备树</font></span>，例如 `"fsl,mpc8349-uart"` 不可写为 `"fsl,mpc83xx-uart"` 。因为即使现在mpc83xx的所有型号都互相兼容，<font color="#c00000">但是不能保证该制造商<u>未来的</u>所有mpc83xx型号依旧会兼容该驱动程序</font>。
+
+#### 2.2.3 寻址的工作原理
+
+
