@@ -233,11 +233,11 @@ compatible属性是操作系统选择设备驱动时使用的key值，因此其�
 1. 使用 `#address-cells = <n>` <font color="#c00000">指定该节点</font><span style="background:#fff88f"><font color="#c00000">的子节点</font></span><font color="#c00000">的地址所占用的大小</font>，单位32Bit。例如 `#address-cells = <2>` 表示每个地址使用2个32位字<span style="background:#fff88f">(因为尖括号内是32位变量，因此单位就是32Bit)</span>。
 2. 使用 `#size-cells = <n>` <font color="#c00000">指定该节点</font><span style="background:#fff88f"><font color="#c00000">的子节点</font></span><font color="#c00000">所占用内存大小<u>的宽度</u></font>，单位32Bit。例如 `#size-cells = <1>` <font color="#c00000">表示需要使用1个32位字定义内存大小变量</font>，即 `uint32_t size` 。<font color="#c00000">而具体占用的大小需要在下一条中定义</font>。
 3. 在使用上述两个参数定义了一个设备及其子设备的<font color="#c00000">内存地址位数</font>和<font color="#c00000">内存大小位数</font>后，应当使用：
-	- `reg = < ${region1}[, ${region2}, ...] >` 
+	- `reg = < ${region1}[ ${region2} ...] >` 
 	定义若干个内存区域。其中：
 	- 一个 `reg` <font color="#c00000">可以同时写一个或多个内存区域</font>。
 	- `${regionx}` 的格式如下：
-		- `[address high,] address low[, size high, size low]`
+		- `[address high] address low[ size high size low]`
 	格式给出对应设备的参数，其中：
 	1. 当address-cells为1时，address high<font color="#c00000">必须省略</font>。
 	2. 当size-cells为0时，size high,size low<span style="background:#fff88f"><font color="#c00000">都</font></span><font color="#c00000">必须省略</font>。
@@ -362,6 +362,9 @@ compatible属性是操作系统选择设备驱动时使用的key值，因此其�
 
 #### 2.3.4 地址转换(ranges属性)
 
-CPU需要连接的总线种类繁多，其驱动设计要求也有所不同。例如：
-- PCI总线上有一个完全独立的地址空间，但是PCI
-- I2C总线上
+CPU需要连接的总线种类繁多，其驱动设计要求也有所不同，有的不需要完成地址转换，有的需要完成地址转换但对具体映射的地址没有要求，有的时候需要将总线上的地址原封不动的映射到CPU地址上。例如：
+- PCI总线上有一个完全独立的地址空间，但是需要把详细信息向操作相同公开。
+- I2C总线上的设备没有被映射到CPU地址区域。
+
+因此ranges属性被设计用于完成子地址和父地址之间的转换，其格式为：
+- `ranges = <${addr_pairs1}[${} ....]>`
