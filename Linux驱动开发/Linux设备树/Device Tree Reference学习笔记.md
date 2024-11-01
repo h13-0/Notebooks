@@ -230,7 +230,14 @@ compatible属性是操作系统选择设备驱动时使用的key值，因此其�
 因此Linux给出了可以在设备树中定义设备地址的特性。其有如下特性：
 1. 使用 `#address-cells = <n>` <font color="#c00000">指定该节点及子节点的地址所占用的大小</font>，单位32Bit。例如 `#address-cells = <2>` 表示每个地址使用2个32位字。
 2. 使用 `#size-cells = <n>` <font color="#c00000">指定该外设所占用内存大小<u>的变量的值</u></font>，单位32Bit。例如 `#size-cells = <1>` <font color="#c00000">表示需要使用1个32位字定义内存大小变量</font>，即 `uint32_t size` 。<font color="#c00000">而具体占用的大小需要在下一条中定义</font>。
-3. 在使用上述两个参数定义了一个设备及其子设备的<font color="#c00000">内存地址位数</font>和<font color="#c00000">内存大小位数</font>后，应当使用 `reg = <[address high,] address low[, size high, size low]>` 给出对应设备的参数。方括号内可以省略。
+3. 在使用上述两个参数定义了一个设备及其子设备的<font color="#c00000">内存地址位数</font>和<font color="#c00000">内存大小位数</font>后，应当使用：
+	- `reg = < ${region1}[, ${region2}, ...] >` 
+	- 
+	格式给出对应设备的参数。方括号内可以省略(见下一行)。
+其中：
+1. 当address-cells为1时，address high<font color="#c00000">必须省略</font>。
+2. 当size-cells为0时，size high,size low<span style="background:#fff88f"><font color="#c00000">都</font></span><font color="#c00000">必须省略</font>。
+3. 当size-cells为1时，size high<font color="#c00000">必须省略</font>。
 
 具体示例如各子章节。
 
@@ -258,5 +265,11 @@ compatible属性是操作系统选择设备驱动时使用的key值，因此其�
     };
 ```
 
+#### 2.3.2 普通内存映射设备
 
+在内存映射设备中，由于设备都被映射到内存中了，因此通常内存映射设备寻址时使用相同的内存地址位数和内存大小位数。
+
+例如上述的32位Cortex A9中，则有平台内存映射设备的：
+- `#address-cells = <1>`
+- `#size-cells = <1>`
 
