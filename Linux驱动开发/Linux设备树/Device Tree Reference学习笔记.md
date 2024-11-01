@@ -92,11 +92,11 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 		- 区域2为 `0x101F4000 ~ 0x101F401F`
 	- SPI总线控制器，基地址为 `0x10170000` ，占用内存大小为 `0x1000` ，并且外挂有如下设备：
 		- 带有SS引脚的MMC插槽，SS引脚为 `GPIO#1`
-	- 外部总线桥，假设为片选方式控制这个外部总线桥。该外部总线桥附带如下设备：
-		- 片选0：SMC SMC91111以太网设备，目标映射到的物理地址为 `0x10100000` 并占用大小 `0x10000` 的内存片。
-		- 片选1：I2C控制器，目标映射到的物理地址为 `0x10160000` 并占用大小 `0x10000` 的内存片，并外挂如下设备：
+	- 外部总线桥，假设为片选方式控制这个外部总线桥。该外部总线桥附带如下设备： ^c5o9gk
+		- 片选0的偏移0：SMC SMC91111以太网设备，目标映射到的物理地址为 `0x10100000` 并占用大小 `0x10000` 的内存片。
+		- 片选1的偏移0：I2C控制器，目标映射到的物理地址为 `0x10160000` 并占用大小 `0x10000` 的内存片，并外挂如下设备：
 			- DS1338 RTC时钟，I2C地址为 `0x58`
-		- 片选2：64MB NOR Flash，目标映射到的物理地址为 `0x30000000` 并占用大小 `0x1000000` 的内存片。
+		- 片选2的偏移0：64MB NOR Flash，目标映射到的物理地址为 `0x30000000` 并占用大小 `0x1000000` 的内存片。
 - 256MB的SDRAM，基地址为 `0` 
 
 ##### 2.2.1.2 指定系统的名称
@@ -237,7 +237,7 @@ compatible属性是操作系统选择设备驱动时使用的key值，因此其�
 	定义若干个内存区域。其中：
 	- 一个 `reg` <font color="#c00000">可以同时写一个或多个内存区域</font>。
 	- `${regionx}` 的格式如下：
-		- `[address high] address low[ size high size low]`
+		- `[address_high ]address_low[ size_high size_low]`
 	格式给出对应设备的参数，其中：
 	1. 当address-cells为1时，address high<font color="#c00000">必须省略</font>。
 	2. 当size-cells为0时，size high,size low<span style="background:#fff88f"><font color="#c00000">都</font></span><font color="#c00000">必须省略</font>。
@@ -367,4 +367,57 @@ CPU需要连接的总线种类繁多，其驱动设计要求也有所不同，�
 - I2C总线上的设备没有被映射到CPU地址区域。
 
 因此ranges属性被设计用于完成子地址和父地址之间的转换，其格式为：
-- `ranges = <${addr_pairs1}[${} ....]>`
+- `ranges = <${addr_pairs1}[${addr_pairs2} ...]>`
+其中：
+- `${addr_pairsx}` 的格式为：
+	- `${slave_addr} ${master_addr}[${size}]` 。
+例如，按照假设设备的外部总线桥：
+![[Device Tree Reference学习笔记#^c5o9gk]]
+其从设备的地址可以设计为：
+- `<${片选ID} ${偏移量}>` 的两个32位字
+- 32位CPU中地址占用1个32位字
+- 长度占用1个32位字
+则可以编写如下的 `ranges` 属性：
+
+```dts
+ranges = <0 0  0x10100000   0x10000       // Chipselect 1, Ethernet
+	        1 0  0x10160000   0x10000     // Chipselect 2, i2c controller
+	        2 0  0x30000000   0x1000000>; // Chipselect 3, NOR Flash
+```
+
+随后<font color="#c00000">从总线上挂的设备的reg使用从总线地址即可</font>，即：
+
+```dts
+    external-bus {
+        #address-cells = <2>;
+        #size-cells = <1>;
+        ranges = <0 0  0x10100000   0x10000     // Chipselect 1, Ethernet
+                  1 0  0x10160000   0x10000     // Chipselect 2, i2c controller
+                  2 0  0x30000000   0x1000000>; // Chipselect 3, NOR Flash
+
+        ethernet@0,0 {
+            compatible = "smc,smc91c111";
+            reg = <0 0 0x1000>;
+        };
+
+        i2c@1,0 {
+            compatible = "acme,a1234-i2c-bus";
+            #address-cells = <1>;
+            #size-cells = <0>;
+            reg = <1 0 0x1000>;
+            rtc@58 {
+                compatible = "maxim,ds1338";
+                reg = <58>;
+            };
+        };
+
+        flash@2,0 {
+            compatible = "samsung,k8f1315ebm", "cfi-flash";
+            reg = <2 0 0x4000000>;
+        };
+    };
+```
+
+###
+
+
