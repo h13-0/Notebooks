@@ -281,13 +281,24 @@ compatible属性是操作系统选择设备驱动时使用的key值，因此其�
 可继续编写如下的设备树：
 
 ```dts
-/dts-v1/;
-
 / {
     #address-cells = <1>;
     #size-cells = <1>;
 
-    ...
+    compatible = "acme,coyotes-revenge";
+
+    cpus {
+        #address-cells = <1>;
+        #size-cells = <0>;
+        cpu@0 {
+            compatible = "arm,cortex-a9";
+            reg = <0>;
+        };
+        cpu@1 {
+            compatible = "arm,cortex-a9";
+            reg = <1>;
+        };
+    };
 
     serial@101f0000 {
         compatible = "arm,pl011";
@@ -314,8 +325,31 @@ compatible属性是操作系统选择设备驱动时使用的key值，因此其�
         compatible = "arm,pl022";
         reg = <0x10115000 0x1000 >;
     };
+    
+    external-bus {
+        #address-cells = <2>;
+        #size-cells = <1>;
 
-    ...
+        ethernet@0,0 {
+            compatible = "smc,smc91c111";
+            reg = <0 0 0x1000>;
+        };
 
+        i2c@1,0 {
+            compatible = "acme,a1234-i2c-bus";
+            reg = <1 0 0x1000>;
+            rtc@58 {
+                compatible = "maxim,ds1338";
+            };
+        };
+
+        flash@2,0 {
+            compatible = "samsung,k8f1315ebm", "cfi-flash";
+            reg = <2 0 0x4000000>;
+        };
+    };
 };
 ```
+
+其中：
+- gpio的内存被分为了两个区域，并填写到了一个 `reg` 中。
