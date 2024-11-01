@@ -327,29 +327,20 @@ compatible属性是操作系统选择设备驱动时使用的key值，因此其�
     };
     
     external-bus {
-        #address-cells = <2>;
-        #size-cells = <1>;
-
-        ethernet@0,0 {
-            compatible = "smc,smc91c111";
-            reg = <0 0 0x1000>;
-        };
-
-        i2c@1,0 {
-            compatible = "acme,a1234-i2c-bus";
-            reg = <1 0 0x1000>;
-            rtc@58 {
-                compatible = "maxim,ds1338";
-            };
-        };
-
-        flash@2,0 {
-            compatible = "samsung,k8f1315ebm", "cfi-flash";
-            reg = <2 0 0x4000000>;
-        };
+	    // 由于外部总线下的节点是非根节点
+	    // (也就是不直接与CPU相连的，位于特定总线或设备下的节点)
+	    // 因此其不能直接使用上述方法直接使用CPU地址域配置。
+	    // 详细的方法见 "地址转换章节" 。
     };
 };
 ```
 
 其中：
 - gpio的内存被分为了两个区域，并填写到了一个 `reg` 中。
+
+#### 2.3.3 非内存映射设备
+
+
+#### 2.3.4 地址转换
+
+
