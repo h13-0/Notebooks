@@ -226,10 +226,37 @@ compatible属性是操作系统选择设备驱动时使用的key值，因此其�
 
 而设计统一的寻址方式需要解决如下的问题：
 1. 不同位数或不同体系的CPU地址长度不同；不同总线协议约定的地址长度不同。
-2. 不同外设1
-
+2. 不同外设映射到的内存大小不同。
 因此Linux给出了可以在设备树中定义设备地址的特性。其有如下特性：
-1. 目标地址的长度可以自定义，以用于不同位数的CPU或不同位数的总线上的地址。该特性使用 `#address-cells` 进行指定。例如 `#address-cells = <2>` 表示每个地址使用2个32位字()。
-2. 
+1. 使用 `#address-cells = <n>` <font color="#c00000">指定该节点及子节点的地址所占用的大小</font>，单位32Bit。例如 `#address-cells = <2>` 表示每个地址使用2个32位字。
+2. 使用 `#size-cells = <n>` <font color="#c00000">指定该外设所占用内存大小<u>的变量的值</u></font>，单位32Bit。例如 `#size-cells = <1>` <font color="#c00000">表示需要使用1个32位字定义内存大小变量</font>，即 `uint32_t size` 。<font color="#c00000">而具体占用的大小需要在下一条中定义</font>。
+3. 在使用上述两个参数定义了一个设备及其子设备的<font color="#c00000">内存地址位数</font>和<font color="#c00000">内存大小位数</font>后，应当使用 `reg = <[address high,] address low[, size high, size low]>` 给出对应设备的参数。方括号内可以省略。
+
+具体示例如各子章节。
+
+#### 2.3.1 CPU寻址示例
+
+通常来说，CPU不需要寻址，因此该值通常用于指定 `CPU_ID` 。
+则明显地：
+- 内存地址位数(这里是 `CPU_ID` 位数)为1位，即 `#address-cells = <1>;`
+- 内存大小位数(这里无实际意义)为0位，即 `#size-cells = <0>;`
+则此时 `address high` 、 `size high` 、 `size low` <font color="#c00000">均可省略</font>，有：
+- `reg = <0>;`
+
+```dts
+    cpus {
+        #address-cells = <1>;
+        #size-cells = <0>;
+        cpu@0 {
+            compatible = "arm,cortex-a9";
+            reg = <0>;
+        };
+        cpu@1 {
+            compatible = "arm,cortex-a9";
+            reg = <1>;
+        };
+    };
+```
+
 
 
