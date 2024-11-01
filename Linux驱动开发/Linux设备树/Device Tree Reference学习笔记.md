@@ -367,10 +367,14 @@ CPU需要连接的总线种类繁多，其驱动设计要求也有所不同，�
 - I2C总线上的设备没有被映射到CPU地址区域。
 
 因此ranges属性被设计用于完成子地址和父地址之间的转换，其格式为：
-- `ranges = <${addr_pairs1}[${addr_pairs2} ...]>`
+- `ranges = <[${addr_pairs1} ${addr_pairs2} ...]>`
 其中：
 - `${addr_pairsx}` 的格式为：
 	- `${slave_addr} ${master_addr}[${size}]` 。
+需要注意的是：
+- ranges属性可以为空(此时写作 `ranges;` )，<u>此时含义为将总线上的地址原封不动的映射到CPU地址上</u>。
+- 不配置ranges属性(即不写该项)，则<font color="#c00000">该子节点上的所有设备不能由其父设备以外的任何设备直接访问</font>(例如I2C总线)。
+
 例如，按照假设设备的外部总线桥：
 ![[Device Tree Reference学习笔记#^c5o9gk]]
 其从设备的地址可以设计为：
@@ -418,6 +422,30 @@ ranges = <0 0  0x10100000   0x10000       // Chipselect 1, Ethernet
     };
 ```
 
-###
+### 2.4 中断的工作原理
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
