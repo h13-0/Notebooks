@@ -230,8 +230,8 @@ compatible属性是操作系统选择设备驱动时使用的key值，因此其�
 1. 不同位数或不同体系的CPU地址长度不同；不同总线协议约定的地址长度不同。
 2. 不同外设映射到的内存大小不同。
 因此Linux给出了可以在设备树中定义设备地址的特性。其有如下特性：
-1. 使用 `#address-cells = <n>` <font color="#c00000">指定该节点及子节点的地址所占用的大小</font>，单位32Bit。例如 `#address-cells = <2>` 表示每个地址使用2个32位字<span style="background:#fff88f">(因为尖括号内是32位变量，因此单位就是32Bit)</span>。
-2. 使用 `#size-cells = <n>` <font color="#c00000">指定该外设所占用内存大小<u>的变量的值</u></font>，单位32Bit。例如 `#size-cells = <1>` <font color="#c00000">表示需要使用1个32位字定义内存大小变量</font>，即 `uint32_t size` 。<font color="#c00000">而具体占用的大小需要在下一条中定义</font>。
+1. 使用 `#address-cells = <n>` <font color="#c00000">指定该节点</font><span style="background:#fff88f"><font color="#c00000">的子节点</font></span><font color="#c00000">的地址所占用的大小</font>，单位32Bit。例如 `#address-cells = <2>` 表示每个地址使用2个32位字<span style="background:#fff88f">(因为尖括号内是32位变量，因此单位就是32Bit)</span>。
+2. 使用 `#size-cells = <n>` <font color="#c00000">指定该节点</font><span style="background:#fff88f"><font color="#c00000">的子节点</font></span><font color="#c00000">所占用内存大小<u>的宽度</u></font>，单位32Bit。例如 `#size-cells = <1>` <font color="#c00000">表示需要使用1个32位字定义内存大小变量</font>，即 `uint32_t size` 。<font color="#c00000">而具体占用的大小需要在下一条中定义</font>。
 3. 在使用上述两个参数定义了一个设备及其子设备的<font color="#c00000">内存地址位数</font>和<font color="#c00000">内存大小位数</font>后，应当使用：
 	- `reg = < ${region1}[, ${region2}, ...] >` 
 	定义若干个内存区域。其中：
@@ -271,7 +271,7 @@ compatible属性是操作系统选择设备驱动时使用的key值，因此其�
 
 #### 2.3.2 普通内存映射设备
 
-在内存映射设备中，由于设备都被映射到内存中了，因此通常内存映射设备寻址时使用相同的内存地址位数和内存大小位数。
+在内存映射设备中，由于设备都被映射到内存中了，而上述内存宽度的两个配置都是<font color="#c00000">针对子节点</font><span style="background:#fff88f"><font color="#c00000">才</font></span><font color="#c00000">开始生效</font>。因此在根节点中定义内存宽度即可。
 
 例如上述的32位Cortex A9中，则有平台内存映射设备的：
 - `#address-cells = <1>`
