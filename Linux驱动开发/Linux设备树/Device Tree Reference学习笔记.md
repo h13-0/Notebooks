@@ -114,7 +114,7 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 ##### 2.2.1.2 CPUs
 
 
-```
+```dts
 /dts-v1/;
 
 / {
@@ -141,3 +141,68 @@ CPU的 `compatible` 填写格式也必须为 `<manufacturer>,<model>` ，该值�
 
 ##### 2.2.1.3 添加设备
 
+针对上述假设，可以初步编写如下的设备树框架：
+
+```dts
+/dts-v1/;
+
+/ {
+    compatible = "acme,coyotes-revenge";
+
+    cpus {
+        cpu@0 {
+            compatible = "arm,cortex-a9";
+        };
+        cpu@1 {
+            compatible = "arm,cortex-a9";
+        };
+    };
+
+    serial@101F0000 {
+        compatible = "arm,pl011";
+    };
+
+    serial@101F2000 {
+        compatible = "arm,pl011";
+    };
+
+    gpio@101F3000 {
+        compatible = "arm,pl061";
+    };
+
+    interrupt-controller@10140000 {
+        compatible = "arm,pl190";
+    };
+
+    spi@10115000 {
+        compatible = "arm,pl022";
+    };
+
+    external-bus {
+        ethernet@0,0 {
+            compatible = "smc,smc91c111";
+        };
+
+        i2c@1,0 {
+            compatible = "acme,a1234-i2c-bus";
+            rtc@58 {
+                compatible = "maxim,ds1338";
+            };
+        };
+
+        flash@2,0 {
+            compatible = "samsung,k8f1315ebm", "cfi-flash";
+        };
+    };
+};
+```
+
+注：
+1. 此时该设备树依旧是无效的设备树，其还缺少一些设备之间的连接信息
+2. 每个节点都有 `compatible` 属性
+3. flash节点中 `compatible` 属性有两个字符串
+4. 节点的名称应当反应设备的类型，而非具体的型号。ePAPR 2.2.2章节中已定义通用节点名称的列表。
+
+#### 2.2.2 compatible属性
+
+树中每个节点都应当指定compatible属性，
