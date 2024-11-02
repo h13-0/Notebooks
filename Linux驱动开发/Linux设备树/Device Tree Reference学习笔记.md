@@ -541,9 +541,29 @@ Linux的设备树<font color="#c00000">支持为节点添加任意的属性</fon
 
 #### 2.6.1 别名节点(aliases)
 
+可以使用：
 
+```dts
+    aliases {
+        ethernet0 = &eth0;
+        serial0 = &serial0;
+    };
+```
 
+为节点名赋予一个新的短别名。Linux推荐使用此方式为长设备名分配短别名。
 
+#### 2.6.2 chosen节点
+
+chosen节点用于在固件和操作系统之间传递数据，该节点通常用于传递启动参数。
+该节点不代表硬件。
+
+例如：
+
+```dts
+    chosen {
+        bootargs = "root=/dev/nfs rw nfsroot=192.168.1.1 console=ttyS0,115200";
+    };
+```
 
 
 
