@@ -586,6 +586,12 @@ chosen节点用于在固件和操作系统之间传递数据，该节点通常�
 
 ### 6.1 设备创建、驱动绑定、设备探测(probing)
 
+本章节的参考文档为[devicetree: Kernel Internals and Practical Troubleshooting](https://elinux.org/images/0/0c/Rowand--devicetree_kernel_internals.pdf)。
+
+学习笔记可见[[devicetree -- kernel internals and practical troubleshooting]]。
+
+### 6.2 常见的Linux驱动程序错误
+
 
 
 

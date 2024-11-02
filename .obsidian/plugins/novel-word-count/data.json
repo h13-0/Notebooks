@@ -9100,19 +9100,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 4074,
+      "wordCount": 4112,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 13.58,
-      "characterCount": 15968,
-      "nonWhitespaceCharacterCount": 11976,
-      "readingTimeInMinutes": 9.809849056603774,
-      "linkCount": 2,
+      "pageCount": 13.706666666666667,
+      "characterCount": 16209,
+      "nonWhitespaceCharacterCount": 12198,
+      "readingTimeInMinutes": 9.910679245283019,
+      "linkCount": 3,
       "embedCount": 2,
       "aliases": null,
       "createdDate": 1730213313142,
-      "modifiedDate": 1730550338809,
-      "sizeInBytes": 22832,
+      "modifiedDate": 1730550776415,
+      "sizeInBytes": 23125,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -9470,6 +9470,27 @@
       "createdDate": 1713204230576,
       "modifiedDate": 1715273142399,
       "sizeInBytes": 3557
+    },
+    "Linux驱动开发/内核文档翻译/eLinux/devicetree -- kernel internals and practical troubleshooting.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 153,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0.51,
+      "characterCount": 397,
+      "nonWhitespaceCharacterCount": 361,
+      "readingTimeInMinutes": 0.3379245283018868,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1730550606250,
+      "modifiedDate": 1730551000447,
+      "sizeInBytes": 751,
+      "frontmatter": {
+        "number headings": "auto, first-level 2, max 6, 1.1"
+      }
     }
   }
 }
