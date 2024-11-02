@@ -62,5 +62,7 @@ dts，device tree source file，设备树源文件，具体可见[[Device Tree R
 
 Binary Blob format，二进制块格式。是一个扁平结构，可以通过顺序扫描和偏移进行访问。其基本数据结构如下图所示：
 
+![[Pasted image 20241102214441.png]]
+
 
 
