@@ -123,15 +123,42 @@ of_find_node_by_phandle (handle)
 of_find_node_with_property (*from, ...)
 ```
 
-## 4 章节2 - 根据启动选项匹配设备树
+## 4 章节2 - 根据启动选项匹配和调整设备树
 
 ### 4.1 machine_desc结构体
 
 machine_desc结构体用于为一个特定的设备树描述启动选项，该结构体可以用于多个不同的设备树。
 
+machine_desc结构体的基本结构如下：
 
+```C
+struct machine_desc {
+    unsigned int          nr;          /* architecture */
+    const char            *name;       /* architecture */   
+    unsigned long         atag_offset;
+    char  *dt_compat;                  /* 'compatible' strings */
+    unsigned int          nr_irqs;
+    phys_addr_t           dma_zone_size;
+    ...
+    enum reboot_mode      reboot_mode;
+    unsigned              l2c_aux_val;  /* L2 cache */   
+    unsigned              l2c_aux_mask; /* L2 cache */   
+    ...
+    struct smp_operations *smp;
+    ...
+    void                  (*init_XXX)();
+    ...
+```
 
-
+其中：
+- `.nr` ：机器编号，通常对应于具体的硬件平台。
+- `.name` ：平台名称，用于内核启动时输出日志。
+- `.phys_io` 、 `.io_pg_offst` ：定义物理IO内存的基地址和偏移。
+- `.boot_params` ：用于从引导加载器接收启动参数的内存位置。
+- `.map_io` ：用于设置I/O内存映射的函数指针。
+- `.init_irq` ：用于初始化中断处理机制的函数指针。
+- `.timer` ：指向特定于机器的定时器描述符的指针，用于系统计时和调度。
+- `.init_machine` ：在所有核心子系统初始化之后调用，用于初始化机器特有的硬件设备或驱动。
 
 ## 5 章节3 - 更多的内核启动细节
 
