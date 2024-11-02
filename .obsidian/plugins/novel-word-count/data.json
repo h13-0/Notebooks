@@ -9475,19 +9475,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 512,
+      "wordCount": 712,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 1.7066666666666668,
-      "characterCount": 2102,
-      "nonWhitespaceCharacterCount": 1624,
-      "readingTimeInMinutes": 1.235056603773585,
+      "pageCount": 2.3733333333333335,
+      "characterCount": 3125,
+      "nonWhitespaceCharacterCount": 2490,
+      "readingTimeInMinutes": 1.7698490566037735,
       "linkCount": 1,
-      "embedCount": 1,
+      "embedCount": 2,
       "aliases": null,
       "createdDate": 1730550606250,
-      "modifiedDate": 1730555931170,
-      "sizeInBytes": 3020,
+      "modifiedDate": 1730556549570,
+      "sizeInBytes": 4319,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -9545,6 +9545,24 @@
       "createdDate": 1730555081617,
       "modifiedDate": 1730555081617,
       "sizeInBytes": 59171
+    },
+    "Resources/chrome_8fAskRWQz2.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1730556415613,
+      "modifiedDate": 1730556415614,
+      "sizeInBytes": 52631
     }
   }
 }

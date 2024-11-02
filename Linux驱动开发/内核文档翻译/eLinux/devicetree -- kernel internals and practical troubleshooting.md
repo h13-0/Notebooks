@@ -68,4 +68,37 @@ Binary Blob format，二进制块格式。是一个扁平结构，可以通过�
 
 FDT是平铺的结构，可以使用 `fdt_*` 族函数进行顺序扫描或偏移量进行访问。
 
+#### 3.2.4 Expanded DT
 
+Expanded DT有如下特性：
+- <u>是一个树状的数据结构</u>(其中包含 `parent` 、 `child` 、 `sibling` 、`next` 、 `allnext` 等节点)。具体如下：
+	- ![[chrome_8fAskRWQz2.png]]
+	- 可以使用 `of_find_node_by_path()` 等方式进行树数据结构方式的访问。
+	- `allnext` 链表<span style="background:#fff88f"><font color="#c00000">在被修改过之前</font></span><font color="#c00000">使用深度优先顺序</font>，但是修改
+- 可以进行访问<span style="background:#fff88f"><font color="#c00000">和修改</font></span>(使用 `of_*` 族函数)。
+- 通过链表访问其所有节点。
+- 在启动阶段被创建。
+- <span style="background:#fff88f"><font color="#c00000">节点和属性可以在引导后添加或删除</font></span>。
+其参考结构定义如下：
+
+```C
+struct device_node {
+   const char *name;
+   const char *type;
+   phandle phandle;
+   const char *full_name;
+   struct  property *properties;
+   struct  property *deadprops;
+   struct  device_node *parent;
+   struct  device_node *child;
+   struct  device_node *sibling;
+   struct  device_node *next;
+   struct  device_node *allnext;
+   struct  kobject kobj;
+   unsigned long _flags;
+   void    *data;
+#if defined(CONFIG_SPARC)
+   ...
+#endif
+};
+```
