@@ -29,3 +29,30 @@ number headings: auto, first-level 2, max 6, 1.1
 
 设备树的声明周期如下图所示：
 
+TODO
+
+
+在上图中：
+- .dts - device tree source file，具体可见[[Device Tree Reference学习笔记#2 设备树的使用]]，示例如下：
+```
+/ {   /* incomplete .dts example */              // <--- root node
+	model = "Qualcomm APQ8074 Dragonboard";      // <--- property
+	compatible = "qcom,apq8074-dragonboard";     // <--- property
+	interrupt-parent = <&intc>;                  // <--- property, phandle
+	soc: soc {                                   // <--- node
+	ranges;                                      // <--- property
+	compatible = "simple-bus";                   // <--- property
+	intc: interrupt-controller@f9000000 {        // <--- node, phandle
+		compatible = "qcom,msm-qgic2";           // <--- property
+		interrupt-controller;                    // <--- property
+		reg = <0xf9000000 0x1000>,               // <--- property
+              <0xf9002000 0x1000>;
+	console: serial@f991e000 {                   // <--- node
+		compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+		reg = <0xf991e000 0x1000>;               // <--- property
+		interrupts = <0 108 0x0>;                // <--- property
+	};
+	// ...
+}
+```
+- 

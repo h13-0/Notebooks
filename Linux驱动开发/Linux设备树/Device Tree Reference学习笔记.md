@@ -20,8 +20,6 @@ number headings: auto, first-level 2, max 6, 1.1
 
 Linux中设备树的主要目的是<font color="#c00000">提供一种描述不可发现硬件的方法</font>。此信息以前在源代码中使用硬编码实现。
 
-
-
 ## 2 设备树的使用
 
 ### 2.1 基本数据格式
