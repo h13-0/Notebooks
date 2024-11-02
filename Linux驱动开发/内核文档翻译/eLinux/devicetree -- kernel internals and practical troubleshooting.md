@@ -32,8 +32,10 @@ number headings: auto, first-level 2, max 6, 1.1
 TODO
 
 
-在上图中：
-- .dts - device tree source file，具体可见[[Device Tree Reference学习笔记#2 设备树的使用]]，示例如下：
+在上图中的若干对象及其表述可见各字章节。
+#### 3.2.1 dts - device tree source file
+
+dts，device tree source file，设备树源文件，具体可见[[Device Tree Reference学习笔记#2 设备树的使用]]，示例如下：
 ```
 / {   /* incomplete .dts example */              // <--- root node
 	model = "Qualcomm APQ8074 Dragonboard";      // <--- property
@@ -55,4 +57,10 @@ TODO
 	// ...
 }
 ```
-- 
+
+#### 3.2.2 Binary Blob format
+
+Binary Blob format，二进制块格式。是一个扁平结构，可以通过顺序扫描和偏移进行访问。其基本数据结构如下图所示：
+
+
+

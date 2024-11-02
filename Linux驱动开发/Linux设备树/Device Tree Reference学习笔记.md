@@ -109,7 +109,7 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 };
 ```
 
-<span style="background:#fff88f"><font color="#c00000">该属性名务必正确填写</font></span>，具体可详见章节[[Device Tree Reference学习笔记#2 2 2 compatible属性|compatible属性]]。
+<span style="background:#fff88f"><font color="#c00000">该属性名务必正确填写</font></span>，<span style="background:#fff88f"><font color="#c00000">compatible属性将被用于匹配驱动</font></span>，具体可详见章节[[Device Tree Reference学习笔记#2 2 2 compatible属性|compatible属性]]。
 
 ##### 2.2.1.3 CPUs
 
