@@ -25,3 +25,7 @@ number headings: auto, first-level 2, max 6, 1.1
 
 <span style="background:#fff88f"><font color="#c00000">设备树描述了无法通过探测定位的硬件</font></span>，<font color="#c00000">即描述了不可被主动发现的设备</font>。
 
+### 3.2 设备树生命周期
+
+设备树的声明周期如下图所示：
+
