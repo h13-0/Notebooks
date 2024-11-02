@@ -9491,6 +9491,42 @@
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
+    },
+    "Linux驱动开发/Resources/devicetree -- kernel internals and practical troubleshooting.vsdx": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1730553617688,
+      "modifiedDate": 1730553624171,
+      "sizeInBytes": 55781
+    },
+    "Linux驱动开发/Resources/~$$devicetree -- kernel internals and practical troubleshooting.~vsdx": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1730553618123,
+      "modifiedDate": 1730553618124,
+      "sizeInBytes": 4096
     }
   }
 }
