@@ -123,7 +123,12 @@ of_find_node_by_phandle (handle)
 of_find_node_with_property (*from, ...)
 ```
 
-## 4 章节2 - 
+## 4 章节2 - 根据启动选项匹配设备树
+
+### 4.1 machine_desc结构体
+
+machine_desc结构体用于为一个特定的设备树描述启动选项，该结构体可以用于多个不同的设备树。
+
 
 
 
