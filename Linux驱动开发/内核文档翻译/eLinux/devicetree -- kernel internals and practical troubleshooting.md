@@ -108,5 +108,23 @@ struct device_node {
 };
 ```
 
+### 3.3 设备树节点的内部使用
+
+暂时不做内核开发，仅列出可用API：
+
+```C
+of_find_node_by_name (*from, ...)  
+of_find_node_by_type (*from, ...)  
+
+// handle is unique, so *from not needed.
+of_find_node_by_phandle (handle)  
+
+// traverse allnext and properties.
+of_find_node_with_property (*from, ...)
+```
+
+## 4 章节2 - 
+
+
 
 
