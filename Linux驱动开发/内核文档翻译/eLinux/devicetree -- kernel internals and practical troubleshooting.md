@@ -64,5 +64,8 @@ Binary Blob format，二进制块格式。是一个扁平结构，可以通过�
 
 ![[Pasted image 20241102214441.png]]
 
+#### 3.2.3 Flattened Device Tree(FDT)
+
+FDT是平铺的结构，可以使用 `fdt_*` 族函数进行顺序扫描或偏移量进行访问。
 
 
