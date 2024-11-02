@@ -74,7 +74,7 @@ Expanded DT有如下特性：
 - <u>是一个树状的数据结构</u>(其中包含 `parent` 、 `child` 、 `sibling` 、`next` 、 `allnext` 等节点)。具体如下：
 	- ![[chrome_8fAskRWQz2.png]]
 	- 可以使用 `of_find_node_by_path()` 等方式进行树数据结构方式的访问。
-	- `allnext` 链表<span style="background:#fff88f"><font color="#c00000">在被修改过之前</font></span><font color="#c00000">使用深度优先顺序</font>，但是修改
+	- `allnext` 链表<span style="background:#fff88f"><font color="#c00000">在被修改过之前</font></span><font color="#c00000">使用深度优先顺序</font>，<font color="#c00000">但是修改后无法保证该特性</font>，因此在开发时应视为随机顺序。
 - 可以进行访问<span style="background:#fff88f"><font color="#c00000">和修改</font></span>(使用 `of_*` 族函数)。
 - 通过链表访问其所有节点。
 - 在启动阶段被创建。
@@ -102,3 +102,6 @@ struct device_node {
 #endif
 };
 ```
+
+
+
