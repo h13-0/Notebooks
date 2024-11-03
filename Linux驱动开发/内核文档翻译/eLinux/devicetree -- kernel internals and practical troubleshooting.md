@@ -134,34 +134,34 @@ machine_desc结构体定义如下(Linux 6.10.0-rc)：
 ```C
 struct machine_desc {
     unsigned int		nr;             /* architecture number    */
-    const char		    *name;          /* architecture name	     */
+    const char		    *name;          /* architecture name	  */
     unsigned long		atag_offset;    /* tagged list (relative) */
     const char *const 	*dt_compat;	    /* array of device tree
-                                        * 'compatible' strings   */
+                                         * 'compatible' strings   */
 
     unsigned int        nr_irqs;        /* number of IRQs         */
 
 #ifdef CONFIG_ZONE_DMA
-    phys_addr_t         dma_zone_size;  /* size of DMA-able area */
+    phys_addr_t         dma_zone_size;  /* size of DMA-able area  */
 #endif
 
-    unsigned int		video_start;	/* start of video RAM	*/
-    unsigned int		video_end;	/* end of video RAM	*/
+    unsigned int		video_start;	/* start of video RAM	 */
+    unsigned int		video_end;	    /* end of video RAM	     */
 
-	unsigned char       reserve_lp0 :1; /* never has lp0    */
-    unsigned char       reserve_lp1 :1; /* never has lp1    */
-    unsigned char       reserve_lp2 :1; /* never has lp2    */
-    enum reboot_mode    reboot_mode;    /* default restart mode    */
-    unsigned        l2c_aux_val;    /* L2 cache aux value    */
-    unsigned        l2c_aux_mask;    /* L2 cache aux mask    */
+	unsigned char       reserve_lp0 :1; /* never has lp0         */
+    unsigned char       reserve_lp1 :1; /* never has lp1         */
+    unsigned char       reserve_lp2 :1; /* never has lp2         */
+    enum reboot_mode    reboot_mode;    /* default restart mode  */
+    unsigned        l2c_aux_val;        /* L2 cache aux value    */
+    unsigned        l2c_aux_mask;       /* L2 cache aux mask     */
     void            (*l2c_write_sec)(unsigned long, unsigned);
-    const struct smp_operations    *smp;    /* SMP operations    */
+    const struct smp_operations    *smp; /* SMP operations       */
     bool            (*smp_init)(void);
     void            (*fixup)(struct tag *, char **);
     void            (*dt_fixup)(void);
-    long long        (*pv_fixup)(void);
-    void            (*reserve)(void);/* reserve mem blocks    */
-    void            (*map_io)(void);/* IO mapping function    */
+    long long       (*pv_fixup)(void);
+    void            (*reserve)(void);    /* reserve mem blocks   */
+    void            (*map_io)(void);     /* IO mapping function  */
     void            (*init_early)(void);
     void            (*init_irq)(void);
     void            (*init_time)(void);
@@ -172,17 +172,31 @@ struct machine_desc {
 ```
 
 其中：
-- 
 - `.nr` ：机器编号，通常对应于具体的硬件平台。
 - `.name` ：平台名称，用于内核启动时输出日志。
-- `.phys_io` 、 `.io_pg_offst` ：定义物理IO内存的基地址和偏移。
-- `.boot_params` ：用于从引导加载器接收启动参数的内存位置。
-- `.map_io` ：用于设置I/O内存映射的函数指针。
-- `.init_irq` ：用于初始化中断处理机制的函数指针。
-- `.timer` ：指向特定于机器的定时器描述符的指针，用于系统计时和调度。
-- `.init_machine` ：在所有核心子系统初始化之后调用，用于初始化机器特有的硬件设备或驱动。
 
-该结构体在代码中使用静态创建，
+- boot hooks：
+	- `smp_init`
+	- `fixup`
+	- `dt_fixup`
+	- `pv_fixup`
+	- `reserve`
+	- `map_io`
+	- `init_early`
+	- `init_irq`
+	- `init_time`
+	- `init_machine`
+	- `init_late`
+
+- runtime hooks：
+	- `l2c_write_sec`
+	- `restart`
+
+该结构体在代码中<font color="#c00000">使用静态创建</font>，<font color="#c00000">在支持多平台的Linux系统镜像上有多个该结构体</font>。
+该结构体可以
+
+
+
 
 
 
