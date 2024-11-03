@@ -193,10 +193,52 @@ struct machine_desc {
 	- `restart`
 
 该结构体在代码中<font color="#c00000">使用静态创建</font>，<font color="#c00000">在支持多平台的Linux系统镜像上有多个该结构体</font>。
-该结构体可以
+选择是否支持多平台会在编译Linux内核时交互时配置参数即可：
+1. 使用 `make ARCH=arm menuconfig` 进入Arm-Linux的menuconfig配置
+2. 随后弹出：
+```shell
+Require kernel to be portable to multiple machines (ARCH_MULTIPLATFORM) [Y/n/?] (NEW)
+```
+3. 按需配置即可。
+关于该项，[kernelconfig.io](https://www.kernelconfig.io/config_arch_multiplatform)的解释如下：
+> In general, all Arm machines can be supported in a single kernel image, covering either Armv4/v5 or Armv6/v7.  
+> 
+> However, some configuration options require hardcoding machine specific physical addresses or enable errata workarounds that  may break other machines.  
+> 
+> Selecting N here allows using those options, including DEBUG_UNCOMPRESS, XIP_KERNEL and ZBOOT_ROM. If unsure, say Y.
 
+该结构体可以按照如下的方式定义：
 
+```C
+static const char * const qcom_dt_match[] __initconst = {
+   "qcom,apq8074-dragonboard",
+   "qcom,apq8084",
+   "qcom,msm8660-surf",
+   NULL
+};
 
+DT_MACHINE_START(QCOM_DT, "Qualcomm (Flattened Device Tree)")
+   .dt_compat = qcom_dt_match,
+MACHINE_END
+```
+
+上述的使用了两个宏，其定义如下：
+
+```C
+/*
+ * Set of macros to define architecture features.  This is built into
+ * a table by the linker.
+ */
+#define MACHINE_START(_type,_name)			\
+static const struct machine_desc __mach_desc_##_type    \
+ __used                            \
+ __section(".arch.info.init") = {            \
+    .nr        = MACH_TYPE_##_type,        \
+    .name        = _name,
+
+#define MACHINE_END                \
+};
+```
 
 
 
