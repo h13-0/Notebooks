@@ -169,21 +169,21 @@ struct machine_desc {
 
 ```
 start_kernel()
-   pr_notice("%s", linux_banner)
-   setup_arch()
-      mdesc = setup_machine_fdt(__atags_pointer)
-         mdesc = of_flat_dt_match_machine()
-         /* sometimes firmware provides buggy data */
-            mdesc->dt_fixup()
-      early_paging_init()
-            mdesc->init_meminfo()
-      arm_memblock_init()
-            mdesc->reserve()
-      paging_init()
-         devicemaps_init()
-               mdesc->map_io()
-      ...
-         arm_pm_restart = mdesc->restart
+	pr_notice("%s", linux_banner)
+	setup_arch()
+		mdesc = setup_machine_fdt(__atags_pointer)
+			mdesc = of_flat_dt_match_machine()
+			/* sometimes firmware provides buggy data */
+	            mdesc->dt_fixup()
+		early_paging_init()
+				mdesc->init_meminfo()
+		arm_memblock_init()
+				mdesc->reserve()
+		paging_init()
+			devicemaps_init()
+					mdesc->map_io()
+		...
+			arm_pm_restart = mdesc->restart
       unflatten_device_tree()   <===============
             if (mdesc->smp_init())
       ...
