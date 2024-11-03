@@ -28,7 +28,7 @@ number headings: auto, first-level 2, max 6, 1.1
 ### 3.2 设备树生命周期及其概念
 
 设备树的生命周期如下图所示：
-	![[Pasted image 20241102223502.png]] ^qfilmj
+    ![[Pasted image 20241102223502.png]] ^qfilmj
 
 其生命周期为：
 1. dts源文件被dtc编译为dtb。
@@ -43,23 +43,23 @@ number headings: auto, first-level 2, max 6, 1.1
 dts，device tree source file，设备树源文件，具体可见[[Device Tree Reference学习笔记#2 设备树的使用]]，示例如下：
 ```
 / {   /* incomplete .dts example */              // <--- root node
-	model = "Qualcomm APQ8074 Dragonboard";      // <--- property
-	compatible = "qcom,apq8074-dragonboard";     // <--- property
-	interrupt-parent = <&intc>;                  // <--- property, phandle
-	soc: soc {                                   // <--- node
-	ranges;                                      // <--- property
-	compatible = "simple-bus";                   // <--- property
-	intc: interrupt-controller@f9000000 {        // <--- node, phandle
-		compatible = "qcom,msm-qgic2";           // <--- property
-		interrupt-controller;                    // <--- property
-		reg = <0xf9000000 0x1000>,               // <--- property
+    model = "Qualcomm APQ8074 Dragonboard";      // <--- property
+    compatible = "qcom,apq8074-dragonboard";     // <--- property
+    interrupt-parent = <&intc>;                  // <--- property, phandle
+    soc: soc {                                   // <--- node
+    ranges;                                      // <--- property
+    compatible = "simple-bus";                   // <--- property
+    intc: interrupt-controller@f9000000 {        // <--- node, phandle
+        compatible = "qcom,msm-qgic2";           // <--- property
+        interrupt-controller;                    // <--- property
+        reg = <0xf9000000 0x1000>,               // <--- property
               <0xf9002000 0x1000>;
-	console: serial@f991e000 {                   // <--- node
-		compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-		reg = <0xf991e000 0x1000>;               // <--- property
-		interrupts = <0 108 0x0>;                // <--- property
-	};
-	// ...
+    console: serial@f991e000 {                   // <--- node
+        compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+        reg = <0xf991e000 0x1000>;               // <--- property
+        interrupts = <0 108 0x0>;                // <--- property
+    };
+    // ...
 }
 ```
 
@@ -129,28 +129,50 @@ of_find_node_with_property (*from, ...)
 
 machine_desc结构体用于为一个特定的设备树描述启动选项，该结构体可以用于多个不同的设备树。
 
-machine_desc结构体的基本结构如下：
+machine_desc结构体定义如下(Linux 6.10.0-rc)：
 
 ```C
 struct machine_desc {
-    unsigned int          nr;          /* architecture */
-    const char            *name;       /* architecture */   
-    unsigned long         atag_offset;
-    char  *dt_compat;                  /* 'compatible' strings */
-    unsigned int          nr_irqs;
-    phys_addr_t           dma_zone_size;
-    ...
-    enum reboot_mode      reboot_mode;
-    unsigned              l2c_aux_val;  /* L2 cache */   
-    unsigned              l2c_aux_mask; /* L2 cache */   
-    ...
-    struct smp_operations *smp;
-    ...
-    void                  (*init_XXX)();
-    ...
+    unsigned int		nr;             /* architecture number    */
+    const char		    *name;          /* architecture name	     */
+    unsigned long		atag_offset;    /* tagged list (relative) */
+    const char *const 	*dt_compat;	    /* array of device tree
+                                        * 'compatible' strings   */
+
+    unsigned int        nr_irqs;        /* number of IRQs         */
+
+#ifdef CONFIG_ZONE_DMA
+    phys_addr_t         dma_zone_size;  /* size of DMA-able area */
+#endif
+
+    unsigned int		video_start;	/* start of video RAM	*/
+    unsigned int		video_end;	/* end of video RAM	*/
+
+	unsigned char       reserve_lp0 :1; /* never has lp0    */
+    unsigned char       reserve_lp1 :1; /* never has lp1    */
+    unsigned char       reserve_lp2 :1; /* never has lp2    */
+    enum reboot_mode    reboot_mode;    /* default restart mode    */
+    unsigned        l2c_aux_val;    /* L2 cache aux value    */
+    unsigned        l2c_aux_mask;    /* L2 cache aux mask    */
+    void            (*l2c_write_sec)(unsigned long, unsigned);
+    const struct smp_operations    *smp;    /* SMP operations    */
+    bool            (*smp_init)(void);
+    void            (*fixup)(struct tag *, char **);
+    void            (*dt_fixup)(void);
+    long long        (*pv_fixup)(void);
+    void            (*reserve)(void);/* reserve mem blocks    */
+    void            (*map_io)(void);/* IO mapping function    */
+    void            (*init_early)(void);
+    void            (*init_irq)(void);
+    void            (*init_time)(void);
+    void            (*init_machine)(void);
+    void            (*init_late)(void);
+    void            (*restart)(enum reboot_mode, const char *);
+};
 ```
 
 其中：
+- 
 - `.nr` ：机器编号，通常对应于具体的硬件平台。
 - `.name` ：平台名称，用于内核启动时输出日志。
 - `.phys_io` 、 `.io_pg_offst` ：定义物理IO内存的基地址和偏移。
@@ -169,49 +191,49 @@ struct machine_desc {
 
 ```
 start_kernel()
-	pr_notice("%s", linux_banner)
-	setup_arch()
-		mdesc = setup_machine_fdt(__atags_pointer)
-		
-			// 迭代机器匹配表，找到FDT中与机器兼容的字符串的最佳匹配
-			mdesc = of_flat_dt_match_machine()
-			
-			/* sometimes firmware provides buggy data */
-	            mdesc->dt_fixup()
-	    
-		early_paging_init()
-				mdesc->init_meminfo()
-		
-		arm_memblock_init()
-				mdesc->reserve()
-		
-		paging_init()
-			devicemaps_init()
-					mdesc->map_io()
-		
-		...
-			arm_pm_restart = mdesc->restart
-		unflatten_device_tree()   <===============
-			if (mdesc->smp_init())
-		...
-			handle_arch_irq = mdesc->handle_irq
-		...
-			mdesc->init_early()
-	pr_notice("Kernel command line: %s\n", ...)
-	init_IRQ()
-			machine_desc->init_irq()
-		outer_cache.write_sec = machine_desc->l2c_write_sec
-	time_init()
-		machine_desc->init_time()
-	rest_init()
-		kernel_thread(kernel_init, ...)
-	        kernel_init()
-		                do_initcalls()
-							customize_machine()
-								machine_desc->init_machine()
-	                    // device probing, driver binding
-	                    init_machine_late()
-		                        machine_desc->init_late()
+    pr_notice("%s", linux_banner)
+    setup_arch()
+        mdesc = setup_machine_fdt(__atags_pointer)
+        
+            // 迭代机器匹配表，找到FDT中与机器兼容的字符串的最佳匹配
+            mdesc = of_flat_dt_match_machine()
+            
+            /* sometimes firmware provides buggy data */
+                mdesc->dt_fixup()
+        
+        early_paging_init()
+                mdesc->init_meminfo()
+        
+        arm_memblock_init()
+                mdesc->reserve()
+        
+        paging_init()
+            devicemaps_init()
+                    mdesc->map_io()
+        
+        ...
+            arm_pm_restart = mdesc->restart
+        unflatten_device_tree()   <===============
+            if (mdesc->smp_init())
+        ...
+            handle_arch_irq = mdesc->handle_irq
+        ...
+            mdesc->init_early()
+    pr_notice("Kernel command line: %s\n", ...)
+    init_IRQ()
+            machine_desc->init_irq()
+        outer_cache.write_sec = machine_desc->l2c_write_sec
+    time_init()
+        machine_desc->init_time()
+    rest_init()
+        kernel_thread(kernel_init, ...)
+            kernel_init()
+                        do_initcalls()
+                            customize_machine()
+                                machine_desc->init_machine()
+                        // device probing, driver binding
+                        init_machine_late()
+                                machine_desc->init_late()
 ```
 
 
