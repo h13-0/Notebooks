@@ -199,7 +199,8 @@ struct machine_desc {
 ```shell
 Require kernel to be portable to multiple machines (ARCH_MULTIPLATFORM) [Y/n/?] (NEW)
 ```
-3. 按需配置即可。
+3. 按需配置即可，该配置项会影响宏 `CONFIG_ARCH_MULTIPLATFORM` 的结果，并影响编译。
+
 关于该项，[kernelconfig.io](https://www.kernelconfig.io/config_arch_multiplatform)的解释如下：
 > In general, all Arm machines can be supported in a single kernel image, covering either Armv4/v5 or Armv6/v7.  
 > 
@@ -229,19 +230,20 @@ MACHINE_END
  * Set of macros to define architecture features.  This is built into
  * a table by the linker.
  */
-#define MACHINE_START(_type,_name)			\
+#define MACHINE_START(_type,_name)			            \
 static const struct machine_desc __mach_desc_##_type    \
- __used                            \
- __section(".arch.info.init") = {            \
-    .nr        = MACH_TYPE_##_type,        \
+ __used                                                 \
+ __section(".arch.info.init") = {                       \
+    .nr        = MACH_TYPE_##_type,                     \
     .name        = _name,
 
-#define MACHINE_END                \
+#define MACHINE_END                                     \
 };
 ```
 
+该宏会将 `machine_desc` 结构体存放到 `vmlinux.lds` 中的 `.arch.info.init` 段。
 
-
+### 4.2 简化的Linux内核启动过程
 
 简化的内核启动过程的伪代码如下：
 
@@ -291,6 +293,9 @@ start_kernel()
                         init_machine_late()
                                 machine_desc->init_late()
 ```
+
+### 4.3 
+
 
 
 ## 5 章节3 - 更多的内核启动细节
