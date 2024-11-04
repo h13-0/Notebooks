@@ -9211,19 +9211,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 5071,
+      "wordCount": 5195,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 16.903333333333332,
-      "characterCount": 19509,
-      "nonWhitespaceCharacterCount": 15005,
-      "readingTimeInMinutes": 12.174528301886792,
-      "linkCount": 6,
+      "pageCount": 17.316666666666666,
+      "characterCount": 20173,
+      "nonWhitespaceCharacterCount": 15550,
+      "readingTimeInMinutes": 12.495245283018868,
+      "linkCount": 7,
       "embedCount": 5,
       "aliases": null,
       "createdDate": 1730213313142,
-      "modifiedDate": 1730732351536,
-      "sizeInBytes": 28095,
+      "modifiedDate": 1730732926577,
+      "sizeInBytes": 28937,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -9584,6 +9584,27 @@
       "createdDate": 1713204230576,
       "modifiedDate": 1715273142332,
       "sizeInBytes": 216
+    },
+    "Linux驱动开发/Linux设备树/devicetree-specification.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 36,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0.12,
+      "characterCount": 107,
+      "nonWhitespaceCharacterCount": 90,
+      "readingTimeInMinutes": 0.08618867924528302,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1730732787128,
+      "modifiedDate": 1730732896688,
+      "sizeInBytes": 219,
+      "frontmatter": {
+        "number headings": "auto, first-level 2, max 6, 1.1"
+      }
     }
   }
 }

@@ -161,6 +161,37 @@ status属性表示该属性所述的设备状态，其可选项有：
 - `fail` ：设备错误且不可用
 - `fail-${content}` ：设备错误且不可用，错误内容为 `${content}`
 
+###### 2.1.3.4.5 device_type属性(已废弃)
+
+在一些设备树文件中，会使用 `device_type` 来<font color="#c00000">描述<u>内存和CPU</u>节点</font>(<span style="background:#fff88f"><font color="#c00000">只能</font></span><font color="#c00000">用于描述这俩</font>)。
+
+例如：
+
+```dts
+/dts-v1/;
+
+/ {
+    compatible = "acme,coyotes-revenge";
+
+    cpus {
+        cpu@0 {
+            compatible = "arm,cortex-a9";
+            device_type = "cpu";
+        };
+    };
+
+	memory@30000000 {
+		device_type = "memory";
+		reg = ...;
+	};
+```
+
+不过该属性已被新版本Linux废弃。
+
+###### 2.1.3.4.6 自定义属性
+
+见[[Device Tree Reference学习笔记#2 5 添加平台特定数据]]章节。
+
 ##### 2.1.3.5 特殊节点
 
 见[[Device Tree Reference学习笔记#2 6 特殊节点]]。
@@ -213,7 +244,6 @@ status属性表示该属性所述的设备状态，其可选项有：
 <span style="background:#fff88f"><font color="#c00000">该属性名务必正确填写</font></span>，<span style="background:#fff88f"><font color="#c00000">compatible属性将被用于匹配驱动</font></span>，具体可详见章节[[Device Tree Reference学习笔记#2 2 2 compatible属性|compatible属性]]。
 
 ##### 2.2.1.3 CPUs
-
 
 ```dts
 /dts-v1/;
@@ -689,7 +719,7 @@ Linux的设备树<font color="#c00000">支持为节点添加任意的属性</fon
         serial0 = &serial@101f0000;
 	
 		// 使用label赋予别名
-		eth0 = &ethernet0
+		eth0 = ethernet0
 
         // 使用路径赋予别名
         eth1 = "/external-bus/ethernet@0,0"
@@ -700,8 +730,9 @@ Linux的设备树<font color="#c00000">支持为节点添加任意的属性</fon
 
 #### 2.6.2 chosen节点
 
-chosen节点用于在固件和操作系统之间()传递数据，该节点通常用于传递启动参数。
+chosen节点用于在<font color="#c00000">固件和操作系统之间传递数据</font>(<font color="#c00000">uboot传递给kernel</font>)，该节点通常用于传递启动参数。
 该节点不代表硬件。
+<u>该节点必须是根节点的子节点</u>。
 
 例如：
 
