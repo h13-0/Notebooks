@@ -244,7 +244,7 @@ static const struct machine_desc __mach_desc_##_type    \
 该宏会：
 1. 生成名为 `__mach_desc_${type}_type` 的结构体。
 2. 将 `machine_desc` 结构体存放到 `vmlinux.lds` 中的 `.arch.info.init` 段。
-3. 使用 `__used` 告诉编译器
+3. 使用 `__used` 告诉编译器这段代码有用，组织对该变量的优化和警告。
 
 ### 4.2 简化的Linux内核启动过程
 
@@ -298,7 +298,47 @@ start_kernel()
                                 machine_desc->init_late()
 ```
 
-### 4.3 
+### 4.3 选择设备树最匹配的machine_desc
+
+
+
+
+假设现在的设备树有如下的compatible属性：
+
+```dts
+/ {
+	model = "TI Zoom3";
+	compatible = "ti,omap3-zoom3", "ti,omap36xx", "ti,omap3";
+};
+```
+
+并且Linux内核中有如下的 `machine_desc` 结构体：
+
+```C
+DT_MACHINE_START(OMAP3_DT, "Generic OMAP3 (Flattened Device Tree)")
+    .init_early     = omap3430_init_early,
+    .dt_compat      = omap3_boards_compat,
+MACHINE_END
+
+DT_MACHINE_START(OMAP36XX_DT, "Generic OMAP36xx (Flattened Device Tree)")
+    .init_early     = omap3630_init_early,
+    .dt_compat      = omap36xx_boards_compat,
+MACHINE_END
+
+static const char *omap3_boards_compat[] __initconst = {
+    "ti,omap3430",
+    "ti,omap3",
+    NULL,
+};
+
+static const char *omap36xx_boards_compat[] __initconst = {
+        "ti,omap36xx",
+        NULL,
+};
+```
+
+
+
 
 
 
