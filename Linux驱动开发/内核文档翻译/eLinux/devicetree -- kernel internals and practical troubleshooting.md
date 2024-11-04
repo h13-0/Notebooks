@@ -201,7 +201,7 @@ struct machine_desc {
 ```shell
 Require kernel to be portable to multiple machines (ARCH_MULTIPLATFORM) [Y/n/?] (NEW)
 ```
-3. 按需配置即可，该配置项会影响宏 `CONFIG_ARCH_MULTIPLATFORM` 的结果，并影响编译。
+3. 按需配置即可，该配置项会影响配置项 `CONFIG_ARCH_MULTIPLATFORM` ，并影响编译。
 
 关于该项，[kernelconfig.io](https://www.kernelconfig.io/config_arch_multiplatform)的解释如下：
 > In general, all Arm machines can be supported in a single kernel image, covering either Armv4/v5 or Armv6/v7.  

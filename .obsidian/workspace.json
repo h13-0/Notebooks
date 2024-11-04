@@ -64,7 +64,7 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -192,10 +192,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux驱动开发/内核文档翻译/eLinux/devicetree -- kernel internals and practical troubleshooting.md"
+                "file": "Linux驱动开发/Linux设备树/Device Tree Reference学习笔记.md"
               },
               "icon": "lucide-list",
-              "title": "devicetree -- kernel internals and practical troubleshooting 的大纲"
+              "title": "Device Tree Reference学习笔记 的大纲"
             }
           },
           {
@@ -238,11 +238,11 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "a9f3bc48be56f139",
+  "active": "e4224dc2aa5403a3",
   "lastOpenFiles": [
+    "Linux驱动开发/内核文档翻译/eLinux/devicetree -- kernel internals and practical troubleshooting.md",
     "CPP/应试笔记与八股.md",
     "Linux驱动开发/Linux设备树/Device Tree Reference学习笔记.md",
-    "Linux驱动开发/内核文档翻译/eLinux/devicetree -- kernel internals and practical troubleshooting.md",
     "Resources/Pasted image 20240203021517.png",
     "Resources/Pasted image 20241104000048.png",
     "计算机网络/应试笔记与八股.md",
