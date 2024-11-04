@@ -299,7 +299,8 @@ start_kernel()
 ```
 
 在上述代码中：
-- 单su
+- 单缩进表示控制 `if` 、 `while` 等控制语句
+- 双缩进表示函数的内部调用
 
 ### 4.3 选择设备树最匹配的machine_desc
 
@@ -342,10 +343,6 @@ static const char *omap36xx_boards_compat[] __initconst = {
 	- 找不到 `"ti,omap3-zoom3"` 对应的结构体
 	- 找到 `"ti,omap36xx"` 和 `"ti,omap3"` ：
 		- 优先匹配左侧
-
-
-
-
 
 ## 5 章节3 - 更多的内核启动细节
 
