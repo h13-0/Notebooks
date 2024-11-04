@@ -298,22 +298,24 @@ start_kernel()
                                 machine_desc->init_late()
 ```
 
+在上述代码中：
+- 单su
+
 ### 4.3 选择设备树最匹配的machine_desc
 
+匹配原则：
+- 匹配时设备树的和结构体中的compatible字符串必须完全相同
+- 设备树提供多个compatible选项时，<font color="#c00000">优先匹配最左的选项</font>
 
-
-
-假设现在的设备树有如下的compatible属性：
-
+例如：
+- 假设现在的设备树有如下的compatible属性：
 ```dts
 / {
 	model = "TI Zoom3";
 	compatible = "ti,omap3-zoom3", "ti,omap36xx", "ti,omap3";
 };
 ```
-
-并且Linux内核中有如下的 `machine_desc` 结构体：
-
+- 并且Linux内核中有如下的 `machine_desc` 结构体：
 ```C
 DT_MACHINE_START(OMAP3_DT, "Generic OMAP3 (Flattened Device Tree)")
     .init_early     = omap3430_init_early,
@@ -336,7 +338,10 @@ static const char *omap36xx_boards_compat[] __initconst = {
         NULL,
 };
 ```
-
+- 则：
+	- 找不到 `"ti,omap3-zoom3"` 对应的结构体
+	- 找到 `"ti,omap36xx"` 和 `"ti,omap3"` ：
+		- 优先匹配左侧
 
 
 
