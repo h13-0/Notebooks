@@ -135,7 +135,7 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 
 ##### 2.1.3.4 基本属性
 
-由于笔记书写顺序问题，以及部分属性需要结合后续示例
+由于笔记书写顺序问题，以及部分属性需要结合后续示例进行学习，因此本章节部分属性以跳转形式标记的可以到跳转的目标章节进行学习。
 
 ###### 2.1.3.4.1 compatible属性
 
@@ -318,7 +318,9 @@ compatible属性是操作系统选择设备驱动时使用的key值，因此其�
 	定义若干个内存区域。其中：
 	- 一个 `reg` <font color="#c00000">可以同时写一个或多个内存区域</font>。
 	- `${regionx}` 的格式如下：
-		- `[address_high ]address_low[ size_high size_low]`
+		- `address [size]`
+			- 当上述 `#address-cells` 和 `#size-cells` 规定的大小不为1时，则形式为：
+				- `[address_high ]address_low[ size_high size_low]`
 	格式给出对应设备的参数，其中：
 	1. 当address-cells为1时，address high<font color="#c00000">必须省略</font>。
 	2. 当size-cells为0时，size high,size low<span style="background:#fff88f"><font color="#c00000">都</font></span><font color="#c00000">必须省略</font>。
