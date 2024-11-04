@@ -19,6 +19,7 @@ number headings: auto, first-level 2, max 6, 1.1
 ### 1.1 什么是设备树
 
 Linux中设备树的主要目的是<font color="#c00000">提供一种描述不可发现硬件的方法</font>。此信息以前在源代码中使用硬编码实现。
+设备树并非在Linux中首创，在PowerPC中已有应用。
 
 ## 2 设备树的使用
 
@@ -73,6 +74,14 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 | 混合数据                  | 逗号分割                  | `mixed-property = "a string", [0x01 0x23 0x45 0x67], <0x12345678>;` |                             |
 
 ### 2.2 基本概念
+
+基本概念：
+- DT、Device Tree：设备树
+- FDT、Flattened Device Tree：扁平设备树、开放设备树。起源于OpenFirmware(OF)
+- dts、device tree source：设备树源码
+- dtsi、device tree source include：通用设备树源码
+- dtb、device tree blob：二进制设备树(编译后的设备树)
+- dtc、device tree compiler：设备树编译器
 
 #### 2.2.1 示例机及设备树框架搭建
 
