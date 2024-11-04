@@ -174,7 +174,9 @@ struct machine_desc {
 其中：
 - `.nr` ：机器编号，通常对应于具体的硬件平台。
 - `.name` ：平台名称，用于内核启动时输出日志。
-
+- L2 Cache
+	- `l2c_aux_val`
+	- `l2c_aux_mask`
 - boot hooks：
 	- `smp_init`
 	- `fixup`
@@ -343,6 +345,27 @@ static const char *omap36xx_boards_compat[] __initconst = {
 	- 找不到 `"ti,omap3-zoom3"` 对应的结构体
 	- 找到 `"ti,omap36xx"` 和 `"ti,omap3"` ：
 		- 优先匹配左侧
+
+### 4.4 L2 cache检查
+
+在 `machine_desc` 结构体中，L2 Cache有如下两个配置项。
+
+```C
+    unsigned        l2c_aux_val;        /* L2 cache aux value    */
+    unsigned        l2c_aux_val;       /* L2 cache aux mask     */
+```
+
+其中， `l2c_aux_mask` 用于配置是否需要开启L2兼容性检查：
+- `(l2c_aux_mask || l2c_aux_val) != 0` 时，
+
+
+TODO
+
+### 4.5 总结与注意
+
+1. 内核会选择与设备树最匹配的 `machine_desc` 结构体。
+2. `machine_desc` 结构体中的值会改变启动过程。
+3. 尽可能不用machine_desc hooks。
 
 ## 5 章节3 - 更多的内核启动细节
 
