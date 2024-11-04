@@ -241,7 +241,10 @@ static const struct machine_desc __mach_desc_##_type    \
 };
 ```
 
-该宏会将 `machine_desc` 结构体存放到 `vmlinux.lds` 中的 `.arch.info.init` 段。
+该宏会：
+1. 生成名为 `__mach_desc_${type}_type` 的结构体。
+2. 将 `machine_desc` 结构体存放到 `vmlinux.lds` 中的 `.arch.info.init` 段。
+3. 使用 `__used` 告诉编译器
 
 ### 4.2 简化的Linux内核启动过程
 
