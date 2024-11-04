@@ -11,10 +11,14 @@
             "id": "d78ed57df88bcfa2",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "Linux驱动开发/Linux驱动开发笔记.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "新标签页"
+              "title": "Linux驱动开发笔记"
             }
           }
         ]
@@ -145,10 +149,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux驱动开发/内核文档翻译/eLinux/devicetree -- kernel internals and practical troubleshooting.md"
+                "file": "Linux驱动开发/Linux驱动开发笔记.md"
               },
               "icon": "lucide-list",
-              "title": "devicetree -- kernel internals and practical troubleshooting 的大纲"
+              "title": "Linux驱动开发笔记 的大纲"
             }
           },
           {
@@ -191,12 +195,12 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "7ddc64b2e3c9b5c8",
+  "active": "d78ed57df88bcfa2",
   "lastOpenFiles": [
+    "Linux驱动开发/内核文档翻译/eLinux/devicetree -- kernel internals and practical troubleshooting.md",
     "计算机网络/Resources/Pasted image 20240315114438.png",
     "Linux驱动开发/Linux设备树/Device Tree Reference学习笔记.md",
     "Linux驱动开发/Linux设备树/devicetree-specification.md",
-    "Linux驱动开发/内核文档翻译/eLinux/devicetree -- kernel internals and practical troubleshooting.md",
     "CPP/应试笔记与八股.md",
     "Resources/Pasted image 20240203021517.png",
     "Resources/Pasted image 20241104000048.png",
@@ -235,7 +239,6 @@
     "嵌入式基础/Resources/msedge_suqwKyUVFD.png",
     "嵌入式基础/Resources/Pasted image 20241028221910.png",
     "嵌入式基础/Resources/msedge_u6Gbc7hz8U.png",
-    "嵌入式基础/Resources/msedge_Orq0YvKSMY.png",
     "计算机网络/基础应试学习/第三章 数据链路层/第三章 数据链路层.md",
     "嵌入式基础/Resources/CAN总线入门手册.pdf",
     "计算机网络/基础应试学习/计算机网络应试学习.md",
