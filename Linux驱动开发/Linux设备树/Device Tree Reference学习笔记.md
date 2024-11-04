@@ -78,7 +78,7 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 | 二进制构成的数组              | 使用 `[]` 包围，空格分割       | `a-byte-data-property = [01 23 34 56];`                             | `{ 0x01, 0x23, 0x34, 0x56}` |
 | 混合数据                  | 逗号分割                  | `mixed-property = "a string", [0x01 0x23 0x45 0x67], <0x12345678>;` |                             |
 
-#### 2.1.3 \[附加\] 设备树基本语法
+#### 2.1.3 \[附加\] 设备树基本语法汇总
 
 ##### 2.1.3.1 版本号
 
@@ -112,7 +112,7 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 注：
 - 方括号内可省略。
 	- 上述的 `${label}` 即别名，方便被引用。当包含设备地址时，其节点被引用时也需要带地址引用。但是使用 `${label}` 后则引用 `${label}` 即可。
-- 上述<span style="background:#fff88f"><font color="#c00000">名称区域的</font></span><font color="#c00000">设备地址</font> `[${@unit-address}]` <font color="#c00000">没有实际的语法意义</font>，只是为了方便阅读，方便命名和避免重名。具体地址定义应当在 `[${properties}]` 区域。
+- 上述<span style="background:#fff88f"><font color="#c00000">名称区域的</font></span><font color="#c00000">设备地址</font> `[${@unit-address}]` <font color="#c00000">没有实际的语法意义</font>，只是为了方便阅读，方便命名和避免重名。具体地址定义应当在 `[${properties}]` 区域。<font color="#c00000">不过当节点中含有reg属性后，地址区域也应当加上地址后缀，否则会有警告</font>。
 - <font color="#c00000">节点的名称应当反应设备的类型，而非具体的型号</font>。<font color="#c00000">节点名称尽可能使用标准名</font>，ePAPR 2.2.2章节中已定义通用节点名称的列表。
 - <font color="#c00000">同级节点下</font><span style="background:#fff88f"><font color="#c00000">包含地址的</font></span><font color="#c00000">节点名不能相同</font>，不同级节点的节点名可以相同，如下为一个合法示例：
 ```dts
@@ -155,8 +155,15 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 
 ###### 2.1.3.4.4 status属性
 
+status属性表示该属性所述的设备状态，其可选项有：
+- `okay` ：设备是可用状态
+- `disabled` ：设备不可用
+- `fail` ：设备错误且不可用
+- `fail-${content}` ：设备错误且不可用，错误内容为 `${content}`
 
+##### 2.1.3.5 特殊节点
 
+见[[Device Tree Reference学习笔记#2 6 特殊节点]]。
 
 ### 2.2 基本概念
 
@@ -299,7 +306,7 @@ CPU的 `compatible` 填写格式也必须为 `<manufacturer>,<model>` ，该值�
 
 #### 2.2.2 compatible属性
 
-compatible属性是操作系统选择设备驱动时使用的key值，因此其基本要求为：
+compatible属性是<span style="background:#fff88f"><font color="#c00000">操作系统选择设备驱动时使用的key值</font></span>，因此其基本要求为：
 1. 树中每个节点都应当指定compatible属性。
 2. compatible是一个字符串列表。
 3. 列表中的<font color="#c00000">第一个字符串</font>格式应遵守 `<manufacturer>,<model>` 格式。
@@ -310,6 +317,7 @@ compatible属性是操作系统选择设备驱动时使用的key值，因此其�
 	- 该做法允许将现有设备驱动程序绑定到较新的设备，同时仍唯一标识确切的硬件。
 	- 注：
 		- <span style="background:#fff88f"><font color="#c00000">请勿使用通配兼容型号来实现设备树</font></span>，例如 `"fsl,mpc8349-uart"` 不可写为 `"fsl,mpc83xx-uart"` 。因为即使现在mpc83xx的所有型号都互相兼容，<font color="#c00000">但是不能保证该制造商<u>未来的</u>所有mpc83xx型号依旧会兼容该驱动程序</font>(通常来说，编写设备树的不一定是设备制造商自己。甚至设备制造商自己也无法做到向前兼容，例如如果遇到重大设计问题导致不得不改版等)。
+<font color="#c00000">在compatible匹配通过后，会执行驱动的probe函数</font>。
 
 ### 2.3 寻址的工作原理
 
@@ -644,6 +652,7 @@ Linux的设备树<font color="#c00000">支持为节点添加任意的属性</fon
     aliases {
         ethernet0 = &eth0;
         serial0 = &serial0;
+        
     };
 ```
 
