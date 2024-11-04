@@ -182,7 +182,7 @@ struct machine_desc {
 	- `pv_fixup`
 	- `reserve`
 	- `map_io`
-	- `init_early`
+	- `init_early` ：非常早的回调函数，会在 `setup_arch()` 中调用
 	- `init_irq`
 	- `init_time`
 	- `init_machine`
