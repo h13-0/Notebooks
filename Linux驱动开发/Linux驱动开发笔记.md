@@ -95,12 +95,24 @@ Linux将设备分为了如下三个大类：
 
 #### 3.1.1 Linux 6
 
-- arch：与体系结构相关的代码
-- crypto：
-
-
-
-
+- arch：与体系结构相关的代码，例如arm、arm64、x86等。
+- block：存放块设备相关代码。
+- crypto：存放加密算法的目录。
+- Documentation：存放官方Linux内核文档。
+- drivers：驱动目录
+- firmware：存放固件
+- include：公共头文件目录
+- init：存放Linux内核启动和初始化的代码
+- ipc：进程间通信的代码
+- kernel：存放内核本身的代码
+- lib：存放库函数的文件夹
+- mm：内存管理相关代码
+- net：网络相关代码
+- scripts：脚本
+- security
+- tools：
+- usr：
+- virt：
 
 ## 4 Linux内核模块
 
