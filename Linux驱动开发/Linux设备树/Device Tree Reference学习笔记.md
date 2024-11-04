@@ -580,6 +580,20 @@ chosen节点用于在固件和操作系统之间传递数据，该节点通常�
 
 本章节需要了解PCI的基础知识。
 
+#### 2.7.2 \[附加\] 设备树的编译与反编译
+
+编译设备树：
+
+```shell
+dtc -I dts -O dtb -o xxx.dtb xxx.dts
+```
+
+反编译设备树：
+
+```shell
+dtc -I dtb -O dts -o xxx.dts xxx.dtb
+```
+
 ## 3 [TODO]设备树的历史
 
 
