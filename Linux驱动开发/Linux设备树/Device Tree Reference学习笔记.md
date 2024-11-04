@@ -141,11 +141,22 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 
 见[[Device Tree Reference学习笔记#2 2 2 compatible属性]]。
 
-###### 2.1.3.4.2 
+###### 2.1.3.4.2 reg属性及reg配置项属性
 
-###### 2.1.3.4.3 reg属性
+具体原理在[[Device Tree Reference学习笔记#2 3 寻址的工作原理]]，同样建议跳过本字章节顺序学习到链接所述章节后再学习。
+![[Device Tree Reference学习笔记#^3gtf6k]]
+![[Device Tree Reference学习笔记#^a6lh1o]]
+![[Device Tree Reference学习笔记#^t6f0im]]
 
-见[[Device Tree Reference学习笔记#^t6f0im]]。
+###### 2.1.3.4.3 model属性
+
+一般使用model描述设备的名称，其值为字符串。
+该属性仅为描述性属性，并无程序性作用。
+
+###### 2.1.3.4.4 status属性
+
+
+
 
 ### 2.2 基本概念
 
@@ -311,8 +322,8 @@ compatible属性是操作系统选择设备驱动时使用的key值，因此其�
 1. 不同位数或不同体系的CPU地址长度不同；不同总线协议约定的地址长度不同。
 2. 不同外设映射到的内存大小不同。
 因此Linux给出了可以在设备树中定义设备地址的特性。其有如下特性：
-1. 使用 `#address-cells = <n>` <font color="#c00000">指定该节点</font><span style="background:#fff88f"><font color="#c00000">的子节点</font></span><font color="#c00000">的地址所占用的大小</font>，单位32Bit。例如 `#address-cells = <2>` 表示每个地址使用2个32位字<span style="background:#fff88f">(因为尖括号内是32位变量，因此单位就是32Bit)</span>。
-2. 使用 `#size-cells = <n>` <font color="#c00000">指定该节点</font><span style="background:#fff88f"><font color="#c00000">的子节点</font></span><font color="#c00000">所占用内存大小<u>的宽度</u></font>，单位32Bit。例如 `#size-cells = <1>` <font color="#c00000">表示需要使用1个32位字定义内存大小变量</font>，即 `uint32_t size` 。<font color="#c00000">而具体占用的大小需要在下一条中定义</font>。
+1. 使用 `#address-cells = <n>` <font color="#c00000">指定该节点</font><span style="background:#fff88f"><font color="#c00000">的子节点</font></span><font color="#c00000">的地址所占用的大小</font>，单位32Bit。例如 `#address-cells = <2>` 表示每个地址使用2个32位字<span style="background:#fff88f">(因为尖括号内是32位变量，因此单位就是32Bit)</span>。 ^3gtf6k
+2. 使用 `#size-cells = <n>` <font color="#c00000">指定该节点</font><span style="background:#fff88f"><font color="#c00000">的子节点</font></span><font color="#c00000">所占用内存大小<u>的宽度</u></font>，单位32Bit。例如 `#size-cells = <1>` <font color="#c00000">表示需要使用1个32位字定义内存大小变量</font>，即 `uint32_t size` 。<font color="#c00000">而具体占用的大小需要在下一条中定义</font>。 ^a6lh1o
 3. 在使用上述两个参数定义了一个设备及其子设备的<font color="#c00000">内存地址位数</font>和<font color="#c00000">内存大小位数</font>后，应当使用： ^t6f0im
 	- `reg = < ${region1}[ ${region2} ...] >` 
 	定义若干个内存区域。其中：
