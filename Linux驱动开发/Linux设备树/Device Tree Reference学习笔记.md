@@ -103,7 +103,7 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 子节点的格式为：
 
 ```dts
-[${label:}] node-name[${@unit-address}] {
+[${label}: ]node-name[${@unit-address}] {
 	[${properties}]
 	[${child nodes}]
 };
@@ -111,10 +111,10 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 
 注：
 - 方括号内可省略。
-- 上述的 `[${label:}]` 即别名。
-- 上述的设备地址 `[${@unit-address}]` 没有实际的语法意义，只是为了方便阅读。具体地址定义应当在 `[${properties}]` 区域。
+	- 上述的 `${label}` 即别名，方便被引用。当包含设备地址时，其节点被引用时也需要带地址引用。但是使用 `${label}` 后则引用 `${label}` 即可。
+- 上述<span style="background:#fff88f"><font color="#c00000">名称区域的</font></span><font color="#c00000">设备地址</font> `[${@unit-address}]` <font color="#c00000">没有实际的语法意义</font>，只是为了方便阅读，方便命名和避免重名。具体地址定义应当在 `[${properties}]` 区域。
 - <font color="#c00000">节点的名称应当反应设备的类型，而非具体的型号</font>。<font color="#c00000">节点名称尽可能使用标准名</font>，ePAPR 2.2.2章节中已定义通用节点名称的列表。
-- 同级节点下节点名不能相同，不同级节点的节点名可以相同，如下为一个合法示例：
+- <font color="#c00000">同级节点下</font><span style="background:#fff88f"><font color="#c00000">包含地址的</font></span><font color="#c00000">节点名不能相同</font>，不同级节点的节点名可以相同，如下为一个合法示例：
 ```dts
 /dts-v1/;
 / {
@@ -126,8 +126,26 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 		child {
 		};
 	};
+	serial@101F0000 {
+	};
+	serial@101F2000 {
+	};
 };
 ```
+
+##### 2.1.3.4 基本属性
+
+由于笔记书写顺序问题，以及部分属性需要结合后续示例
+
+###### 2.1.3.4.1 compatible属性
+
+见[[Device Tree Reference学习笔记#2 2 2 compatible属性]]。
+
+###### 2.1.3.4.2 
+
+###### 2.1.3.4.3 reg属性
+
+见[[Device Tree Reference学习笔记#^t6f0im]]。
 
 ### 2.2 基本概念
 
@@ -295,7 +313,7 @@ compatible属性是操作系统选择设备驱动时使用的key值，因此其�
 因此Linux给出了可以在设备树中定义设备地址的特性。其有如下特性：
 1. 使用 `#address-cells = <n>` <font color="#c00000">指定该节点</font><span style="background:#fff88f"><font color="#c00000">的子节点</font></span><font color="#c00000">的地址所占用的大小</font>，单位32Bit。例如 `#address-cells = <2>` 表示每个地址使用2个32位字<span style="background:#fff88f">(因为尖括号内是32位变量，因此单位就是32Bit)</span>。
 2. 使用 `#size-cells = <n>` <font color="#c00000">指定该节点</font><span style="background:#fff88f"><font color="#c00000">的子节点</font></span><font color="#c00000">所占用内存大小<u>的宽度</u></font>，单位32Bit。例如 `#size-cells = <1>` <font color="#c00000">表示需要使用1个32位字定义内存大小变量</font>，即 `uint32_t size` 。<font color="#c00000">而具体占用的大小需要在下一条中定义</font>。
-3. 在使用上述两个参数定义了一个设备及其子设备的<font color="#c00000">内存地址位数</font>和<font color="#c00000">内存大小位数</font>后，应当使用：
+3. 在使用上述两个参数定义了一个设备及其子设备的<font color="#c00000">内存地址位数</font>和<font color="#c00000">内存大小位数</font>后，应当使用： ^t6f0im
 	- `reg = < ${region1}[ ${region2} ...] >` 
 	定义若干个内存区域。其中：
 	- 一个 `reg` <font color="#c00000">可以同时写一个或多个内存区域</font>。
@@ -306,7 +324,8 @@ compatible属性是操作系统选择设备驱动时使用的key值，因此其�
 	2. 当size-cells为0时，size high,size low<span style="background:#fff88f"><font color="#c00000">都</font></span><font color="#c00000">必须省略</font>。
 	3. 当size-cells为1时，size high<font color="#c00000">必须省略</font>。
 	(<span style="background:#fff88f"><font color="#c00000">其本质是先写address后写size，用了几个32位就写几个，没用就不写</font></span>，只是目前没有128位机)
-具体示例如各子章节。
+
+具体示例如各子章节。 
 
 #### 2.3.1 CPU寻址示例
 
