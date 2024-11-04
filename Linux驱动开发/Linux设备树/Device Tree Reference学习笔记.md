@@ -646,21 +646,61 @@ Linux的设备树<font color="#c00000">支持为节点添加任意的属性</fon
 
 #### 2.6.1 别名节点(aliases)
 
+例如对于设备树：
+
+```dts
+/dts-v1/;
+
+/ {
+    compatible = "acme,coyotes-revenge";
+    #address-cells = <1>;
+    #size-cells = <1>;
+    interrupt-parent = <&intc>;
+
+    cpus {
+	    // ...
+    };
+
+    serial@101f0000 {
+		// ...
+    };
+
+    ethernet0:ethernet@101f1000 {
+		// ...
+    };
+
+    external-bus {
+        #address-cells = <2>;
+        #size-cells = <1>;
+        ranges = ...
+
+        ethernet@0,0 {
+			// ...
+        };
+    };
+};
+```
+
 可以使用：
 
 ```dts
     aliases {
-        ethernet0 = &eth0;
-        serial0 = &serial0;
-        
+        // 直接使用节点名赋予别名
+        serial0 = &serial@101f0000;
+	
+		// 使用label赋予别名
+		eth0 = &ethernet0
+
+        // 使用路径赋予别名
+        eth1 = "/external-bus/ethernet@0,0"
     };
 ```
 
-为节点名赋予一个新的短别名。Linux推荐使用此方式为长设备名分配短别名。
+上述使用了三种不同的方式为节点名赋予一个新的短别名。Linux推荐使用此方式为长设备名分配短别名。
 
 #### 2.6.2 chosen节点
 
-chosen节点用于在固件和操作系统之间传递数据，该节点通常用于传递启动参数。
+chosen节点用于在固件和操作系统之间()传递数据，该节点通常用于传递启动参数。
 该节点不代表硬件。
 
 例如：
