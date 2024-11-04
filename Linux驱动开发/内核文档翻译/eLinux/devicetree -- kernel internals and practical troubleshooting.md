@@ -257,6 +257,7 @@ start_kernel()
             mdesc = of_flat_dt_match_machine()
             
             /* sometimes firmware provides buggy data */
+            // 某些版本的uboot在内存节点中可能会传递垃圾条目
                 mdesc->dt_fixup()
         
         early_paging_init()
