@@ -40,18 +40,43 @@ endmenu
 ```Kconfig
 mainmenu "mainmenu"
 
-
+source "module_a/Kconfig"
+source "module_b/Kconfig"
 
 ```
-- `a/Kconfig` ：
+- `module_a/Kconfig` ：
 ```dts
-menu "submenu A"
+menu "module A"
 
 config BOOL_OPTION  
     bool  
-  
-config   
-    bool
+
+menu "submodule"
+
+source "module_a/submodule/Kconfig"
+
+endmenu
 
 endmenu
 ```
+- `module_b/Kconfig` ：
+```dts
+menu "module B"
+
+menu "submodule"
+
+source "module_b/submodule/Kconfig"
+
+endmenu
+
+endmenu
+```
+则上述主菜单中只会出现如下的两个子菜单选项：
+- `module A  --->`
+- `module B  --->`
+而其子选项则需要进入子菜单才可以配置。
+
+### 2.3 config 选项
+
+
+
