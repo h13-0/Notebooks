@@ -18,3 +18,10 @@ number headings: auto, first-level 2, max 6, 1.1
 mainmenu "Linux/$(ARCH) $(KERNELVERSION) Kernel Configuration"
 ```
 
+随后即可指定如红框内的标题：
+
+![[MobaXterm_MkA9yoZ1ys.png]]
+
+### 2.2 menu/endmenu 子菜单
+
+`menu` 会创建一个子菜单，并且在该子菜单中

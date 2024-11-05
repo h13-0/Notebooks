@@ -9610,22 +9610,40 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 48,
+      "wordCount": 83,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 0.16,
-      "characterCount": 186,
-      "nonWhitespaceCharacterCount": 154,
-      "readingTimeInMinutes": 0.11905660377358492,
+      "pageCount": 0.27666666666666667,
+      "characterCount": 288,
+      "nonWhitespaceCharacterCount": 243,
+      "readingTimeInMinutes": 0.20147169811320753,
       "linkCount": 0,
-      "embedCount": 0,
+      "embedCount": 1,
       "aliases": null,
       "createdDate": 1730811438540,
-      "modifiedDate": 1730811627202,
-      "sizeInBytes": 316,
+      "modifiedDate": 1730812230494,
+      "sizeInBytes": 478,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
+    },
+    "Resources/MobaXterm_MkA9yoZ1ys.png": {
+      "isCountable": false,
+      "isDirectory": false,
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1730811646930,
+      "modifiedDate": 1730811646931,
+      "sizeInBytes": 77783
     }
   }
 }
