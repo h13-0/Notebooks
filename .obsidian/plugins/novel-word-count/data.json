@@ -9250,19 +9250,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 16791,
+      "wordCount": 16810,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 55.97,
-      "characterCount": 58774,
-      "nonWhitespaceCharacterCount": 45234,
-      "readingTimeInMinutes": 39.80018867924528,
-      "linkCount": 12,
+      "pageCount": 56.03333333333333,
+      "characterCount": 58838,
+      "nonWhitespaceCharacterCount": 45290,
+      "readingTimeInMinutes": 39.84705660377358,
+      "linkCount": 13,
       "embedCount": 3,
       "aliases": null,
       "createdDate": 1716546707525,
-      "modifiedDate": 1730809884521,
-      "sizeInBytes": 87390,
+      "modifiedDate": 1730811462791,
+      "sizeInBytes": 87484,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -9605,6 +9605,27 @@
       "createdDate": 1713204230576,
       "modifiedDate": 1715273142332,
       "sizeInBytes": 216
+    },
+    "Linux驱动开发/MISC/Kconfig基础语法.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 48,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0.16,
+      "characterCount": 186,
+      "nonWhitespaceCharacterCount": 154,
+      "readingTimeInMinutes": 0.11905660377358492,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1730811438540,
+      "modifiedDate": 1730811627202,
+      "sizeInBytes": 316,
+      "frontmatter": {
+        "number headings": "auto, first-level 2, max 6, 1.1"
+      }
     }
   }
 }
