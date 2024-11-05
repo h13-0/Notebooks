@@ -176,6 +176,12 @@ endchoice
 ![[MobaXterm_n1CHLv2Nx0.png]]
 ![[MobaXterm_LbWbzHA5LI.png]]
 
-### 2.5 comment 选项注释
+### 2.5 comment 注释项
 
+comment用于创建一个专门用于注释的一个项目，该项目不可被选中，且前后有 `***` 包围，例如：
 
+```Kconfig
+comment "shared options"
+```
+
+![[MobaXterm_MWEnFyUZEX.png]]
