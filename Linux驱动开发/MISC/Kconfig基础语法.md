@@ -100,5 +100,37 @@ config ${name}
 #### 2.3.1 依赖关系(depends on、select)
 
 依赖关系分为正向依赖关系( `depends on` )和反向依赖关系( `select` )两种：
-- 正向依赖关系是指声明了该依赖关系的选项只有当依赖的选项被选中后才会出现。
-- 反向依赖关系是指当声明了该关系的选项被选中后，其 `select` 的选项也会被自动选中。
+- 正向依赖关系是指声明了该依赖关系的选项只有当依赖的选项被选中后<font color="#c00000">才会出现</font>。
+- 反向依赖关系是指当声明了该关系的选项被选中后，其 `select` 的选项也会被<font color="#c00000">强制选中</font>。
+
+例如：
+
+```Kconfig
+CONFIG BASE_FUNC1
+	bool "base function1"
+
+CONFIG ADVANCED_FUNC1
+	bool "advanced function1"
+	depends on BASE_FUNC1
+```
+
+则会当选中 `"base function1"` 后，`"advanced function1"` 选项才会出现。
+
+而例如：
+
+```Kconfig
+CONFIG BASE_FUNC2
+	bool "base function2"
+
+CONFIG ADVANCED_FUNC2
+	bool "advanced function2"
+	select BASE_FUNC2
+```
+
+则 `"advanced function2"` 会一直出现，并且若 `"advanced function2"` 被选中，则 `"base function2"` 无法被取消选中。
+
+### 2.4 choice/endchoice 单选项
+
+
+
+
