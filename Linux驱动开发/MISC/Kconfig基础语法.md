@@ -131,6 +131,51 @@ CONFIG ADVANCED_FUNC2
 
 ### 2.4 choice/endchoice 单选项
 
+`choice` 可以把若干个config选项组合成一个单选项目。例如下方代码：
 
+```Kconfig
+#  
+# Select the backing stores to be supported  
+#  
+choice  
+    prompt "RomFS backing stores"  
+    depends on ROMFS_FS  
+    default ROMFS_BACKED_BY_BLOCK  
+    help  
+      Select the backing stores to be supported.  
+  
+config ROMFS_BACKED_BY_BLOCK  
+    bool "Block device-backed ROM file system support"  
+    depends on BLOCK  
+    help  
+      This permits ROMFS to use block devices buffered through the page  
+      cache as the medium from which to retrieve data.  It does not allow  
+      direct mapping of the medium.  
+  
+      If unsure, answer Y.  
+  
+config ROMFS_BACKED_BY_MTD  
+    bool "MTD-backed ROM file system support"  
+    depends on MTD=y || (ROMFS_FS=m && MTD)  
+    help  
+      This permits ROMFS to use MTD based devices directly, without the  
+      intercession of the block layer (which may have been disabled).  It  
+      also allows direct mapping of MTD devices through romfs files under  
+      NOMMU conditions if the underlying device is directly addressable by  
+      the CPU.  
+  
+      If unsure, answer Y.  
+  
+config ROMFS_BACKED_BY_BOTH  
+    bool "Both the above"  
+    depends on BLOCK && (MTD=y || (ROMFS_FS=m && MTD))  
+endchoice
+```
+
+将三个选项组合成了一个单选项目，这一组中只有一个选择框可以被选中：
+![[MobaXterm_n1CHLv2Nx0.png]]
+![[MobaXterm_LbWbzHA5LI.png]]
+
+### 2.5 comment 选项注释
 
 
