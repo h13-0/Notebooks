@@ -185,3 +185,11 @@ comment "shared options"
 ```
 
 ![[MobaXterm_MWEnFyUZEX.png]]
+
+### 2.6 source 读取包含其他Kconfig文件
+
+使用方式：
+
+```Kconfig
+source "${path}"
+```
