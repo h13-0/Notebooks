@@ -78,5 +78,23 @@ endmenu
 
 ### 2.3 config 选项
 
+`config` 选项的基本格式如下：
 
+```Kconfig
+config ${name}
+	${type} ${title}
+	[${default}]
+	[help]
+		[${tips}]
+```
 
+其中：
+- `${name}` <font color="#c00000">为必须项</font>，<font color="#c00000">用于生成.config文件中的配置项</font>，生成结果为 `CONFIG_${name}` 。
+- `${type}` <font color="#c00000">为必须项</font>，可选类型包含 `bool` 、 `tristate` 、 `string` 、 `hex` 、 `int`。其中 `tristate` 为三态，用于表示内核模块的编译配置，值有 `y` 、 `m` 、 `n` 三种。
+- `${title}` <font color="#c00000">为必须项</font>，<font color="#c00000">是该选项在menuconfig界面中的选项名</font>。
+- `help` 为帮助标签，可选项。
+- `${tips}` 为帮助提示，配合 `help` 使用。当聚焦于目标选项时，按下 `h` 键即可查看帮助信息。
+
+### 2.4 依赖关系(depends on、select)
+
+依赖关系分为正向依赖关系( `depends on` )和fan xi
