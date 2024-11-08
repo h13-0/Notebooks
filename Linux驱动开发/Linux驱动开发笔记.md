@@ -265,9 +265,10 @@ module_param_string(name, string, len, perm);
 ```
 
 其中：
-- `nump` 为接收
+- `name` 为变量
+- `nump` 为<span style="background:#fff88f"><font color="#c00000">存放实际接收元素数量的变量地址</font></span>。
 
-在传递数组时，命令行中使用如下的方法：
+示例如下：
 
 ```C
 int arr[10] = { 0 };
@@ -276,8 +277,12 @@ module_param_array(arr, int, &arr_size, S_IRUGO);
 ```
 
 ```Shell
-insmod xxx.ko arr=value1,value2,... #例如：arr=1,2,3
+insmod xxx.ko arr=value1,value2,...
 ```
+
+则当：
+1. 传入数组大小小于等于10个时，参数正常传输，arr_size也为正常大小。
+2. <font color="#c00000">当传入数组大小大于10时</font>，a<font color="#c00000">rr_size为传入数组的大小</font>(<span style="background:#fff88f"><font color="#c00000">会超过10</font></span>)，<font color="#c00000">需要开发者自行处理逻辑</font>。<font color="#c00000">内核只保证前10个数据会被有效接收</font>。
 
 ##### 4.3.3.3 设置参数提示信息
 
@@ -292,6 +297,8 @@ MODULE_PARM_DESC(_parm, desc);
 进行描述，其中：
 - `_parm` 为要描述的参数名称
 - `desc` 为参数信息
+
+<font color="#c00000">随后使用</font> `modinfo` <font color="#c00000">即可查看模块参数提示信息</font>。
 
 #### 4.3.4 模块导出符号
 
