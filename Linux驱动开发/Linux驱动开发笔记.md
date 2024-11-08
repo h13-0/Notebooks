@@ -251,6 +251,54 @@ insmod xxx.ko var=value #例如：port=80
 
 ##### 4.3.3.2 传递数组
 
+###### 4.3.3.2.1 传递普通数组
+
+普通数组的传递方式如下：
+
+```C
+#include "linux/moduleparam.h"
+
+/**
+ * module_param_array - a parameter which is an array of some type
+ * @name: the name of the array variable
+ * @type: the type, as per module_param()
+ * @nump: optional pointer filled in with the number written
+ * @perm: visibility in sysfs
+ *
+ * Input and output are as comma-separated values.  Commas inside values
+ * don't work properly (eg. an array of charp).
+ *
+ * ARRAY_SIZE(@name) is used to determine the number of elements in the
+ * array, so the definition must be visible.
+ */
+module_param_array(name, type, nump, perm);
+```
+
+其中：
+- `name` ：存放数组的变量，并且为参数名
+- `type` ：数组中元素的类型
+- `nump` ：用于存放用户传入参数的数量的变量的指针
+- `perm` ：权限
+
+示例如下：
+
+```C
+int arr[10] = { 0 };
+int arr_size = 0;
+module_param_array(arr, int, &arr_size, S_IRUGO);
+```
+
+```Shell
+insmod xxx.ko arr=value1,value2,...
+```
+
+则当：
+1. 传入数组大小小于等于10个时，参数正常传输，arr_size也为正常大小。
+2. <font color="#c00000">当传入数组大小大于10时</font>，a<font color="#c00000">rr_size为传入数组的大小</font>(<span style="background:#fff88f"><font color="#c00000">会超过10</font></span>)，<font color="#c00000">需要开发者自行处理逻辑</font>。<font color="#c00000">内核只保证前10个数据会被有效接收</font>。
+
+##### chuan
+
+
 数组方式传递的可选方法如下：
 
 ```C
@@ -269,20 +317,6 @@ module_param_string(name, string, len, perm);
 - `nump` 为<span style="background:#fff88f"><font color="#c00000">存放实际接收元素数量的变量地址</font></span>。
 
 示例如下：
-
-```C
-int arr[10] = { 0 };
-int arr_size = 0;
-module_param_array(arr, int, &arr_size, S_IRUGO);
-```
-
-```Shell
-insmod xxx.ko arr=value1,value2,...
-```
-
-则当：
-1. 传入数组大小小于等于10个时，参数正常传输，arr_size也为正常大小。
-2. <font color="#c00000">当传入数组大小大于10时</font>，a<font color="#c00000">rr_size为传入数组的大小</font>(<span style="background:#fff88f"><font color="#c00000">会超过10</font></span>)，<font color="#c00000">需要开发者自行处理逻辑</font>。<font color="#c00000">内核只保证前10个数据会被有效接收</font>。
 
 ##### 4.3.3.3 设置参数提示信息
 
