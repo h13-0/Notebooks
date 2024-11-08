@@ -201,13 +201,22 @@ static int port = 8080;
 module_param(port, int, S_IRUGO);
 ```
 
-在 `module_param` 函数中，` perm` 为访问许可配置，其被定义与 `include/linux/sta.h` 中，并给出了如下的选项：
-- `S_IRWXU`
-- `S_IRUSR`
-- `S_IWUSR`
-- `S_IXUSR`
-- `S_IRWXG`
-- 
+在 `module_param` 函数中，` perm` 为访问许可配置，其被定义与 `include/linux/sta.h` 中，其基本定义与用户态的权限定义一致。具体如下：
+- 文件拥有者：
+	- `S_IRWXU` ：文件拥有者具有可读、可写、可执行权限
+	- `S_IRUSR` ：文件拥有者具有可读权限
+	- `S_IWUSR` ：文件拥有者具有可写权限
+	- `S_IXUSR` ：文件拥有者具有可执行权限
+- 文件拥有者所在用户组的所有用户：
+	- `S_IRWXG` ：同组用户具有可读、可写、可执行权限
+	- `S_IRGRP` ：同组用户具有可读权限
+	- `S_IWGRP` ：同组用户具有可写权限
+	- `S_IXGRP` ：同组用户具有可执行权限
+- 其他用户：
+	- `S_IRWXO` ：其他用户
+	- `S_IROTH` ：
+	- `S_IWOTH` ：
+	- `S_IXOTH` ：
 
 在 `module_param` 函数中：
 - `perm` 为访问许可配置：
