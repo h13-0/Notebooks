@@ -407,7 +407,9 @@ module_param_array_named(name, array, type, nump, perm)
 module_param_string(name, string, len, perm)
 ```
 
-
+其中：
+- `name` ：加载模块时使用的参数名
+- `array` ：实际存放的数组位置
 
 
 
