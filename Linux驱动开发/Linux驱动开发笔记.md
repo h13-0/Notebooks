@@ -194,6 +194,8 @@ module_exit(exit_function);
 
 ##### 4.3.3.1 传递单个参数值
 
+###### 4.3.3.1.1 传递单个普通参数
+
 模块在加载时可以传入一些命令行参数，其主要通过如下方式进行定义与加载：
 
 ```C
@@ -201,7 +203,33 @@ module_exit(exit_function);
 
 // 相当于缺省参数
 static int port = 8080;
-// module_param(name, type, perm)
+
+
+/**
+ * module_param - typesafe helper for a module/cmdline parameter
+ * @name: the variable to alter, and exposed parameter name.
+ * @type: the type of the parameter
+ * @perm: visibility in sysfs.
+ *
+ * @name becomes the module parameter, or (prefixed by KBUILD_MODNAME and a
+ * ".") the kernel commandline parameter.  Note that - is changed to _, so
+ * the user can use "foo-bar=1" even for variable "foo_bar".
+ *
+ * @perm is 0 if the variable is not to appear in sysfs, or 0444
+ * for world-readable, 0644 for root-writable, etc.  Note that if it
+ * is writable, you may need to use kernel_param_lock() around
+ * accesses (esp. charp, which can be kfreed when it changes).
+ *
+ * The @type is simply pasted to refer to a param_ops_##type and a
+ * param_check_##type: for convenience many standard types are provided but
+ * you can create your own by defining those variables.
+ *
+ * Standard types are:
+ *	byte, hexint, short, ushort, int, uint, long, ulong
+ *	charp: a character pointer
+ *	bool: a bool, values 0/1, y/n, Y/N.
+ *	invbool: the above, only sense-reversed (N = true).
+ */
 module_param(port, int, S_IRUGO);
 ```
 
@@ -234,7 +262,7 @@ module_param(port, int, S_IRUGO);
 在加载时可以通过如下命令指定模块参数：
 
 ```Shell
-insmod xxx.ko var=value #例如：port=80
+insmod xxx.ko port=value #例如：port=80
 ```
 
 内核模块支持的加载参数列表如下：
@@ -247,7 +275,49 @@ insmod xxx.ko var=value #例如：port=80
 - `uint` ：关联unsigned int，u表示无符号。
 - `ulong`
 - `ushort`
-- <font color="#c00000">及上述类型对应的数组形式</font>，使用 `module_param_array` <font color="#c00000">等</font>方式进行参数接收。
+
+###### 4.3.3.1.2 传递单个参数并指定参数名
+
+```C
+#include "linux/moduleparam.h"
+
+static int udp_port = 8081;
+// 相当于缺省参数
+static int tcp_port = 8080;
+
+
+/**
+ * module_param_named - typesafe helper for a renamed module/cmdline parameter
+ * @name: a valid C identifier which is the parameter name.
+ * @value: the actual lvalue to alter.
+ * @type: the type of the parameter
+ * @perm: visibility in sysfs.
+ *
+ * Usually it's a good idea to have variable names and user-exposed names the
+ * same, but that's harder if the variable must be non-static or is inside a
+ * structure.  This allows exposure under a different name.
+ */
+module_param_named(port, tcp_port, int, S_IRUGO);
+```
+
+其中：
+- `name` ：在<span style="background:#fff88f"><font color="#c00000">加载模块时</font></span>使用的参数名。<font color="#c00000">要求必须符合C语言标识符规范</font>。
+- `value` ：在源码中实际存储时使用的参数。
+
+随后在加载内核时使用：
+
+```Shell
+insmod xxx.ko port=value #例如：port=80
+```
+
+进行加载。<span style="background:#fff88f"><font color="#c00000">此时参数名为</font></span> `name` <span style="background:#fff88f"><font color="#c00000">中指定的参数</font></span>而非 `value` 的名称。
+
+在本质上，`module_param(name, type, perm)` <font color="#c00000">等价于</font> `module_param_named(name, name, type, perm)` ，在内核中定义如下：
+
+```C
+#define module_param(name, type, perm)                       \  
+        module_param_named(name, name, type, perm)
+```
 
 ##### 4.3.3.2 传递数组
 
@@ -277,8 +347,8 @@ module_param_array(name, type, nump, perm);
 其中：
 - `name` ：存放数组的变量，并且为参数名
 - `type` ：数组中元素的类型
-- `nump` ：用于存放用户传入参数的数量的变量的指针
-- `perm` ：权限
+- `nump` ：为<span style="background:#fff88f"><font color="#c00000">存放实际接收元素数量的变量地址</font></span>
+- `perm` ：权限符
 
 示例如下：
 
@@ -296,27 +366,31 @@ insmod xxx.ko arr=value1,value2,...
 1. 传入数组大小小于等于10个时，参数正常传输，arr_size也为正常大小。
 2. <font color="#c00000">当传入数组大小大于10时</font>，a<font color="#c00000">rr_size为传入数组的大小</font>(<span style="background:#fff88f"><font color="#c00000">会超过10</font></span>)，<font color="#c00000">需要开发者自行处理逻辑</font>。<font color="#c00000">内核只保证前10个数据会被有效接收</font>。
 
-##### chuan
-
-
-数组方式传递的可选方法如下：
+###### 4.3.3.2.2 传递普通数组并指定参数名
 
 ```C
 #include "linux/moduleparam.h"
 
-// 传递普通数组
-module_param_array(name, type, nump, perm);
-
-// 传递字符串
-// len为字符串大小
-module_param_string(name, string, len, perm);
+/**
+ * module_param_array_named - renamed parameter which is an array of some type
+ * @name: a valid C identifier which is the parameter name
+ * @array: the name of the array variable
+ * @type: the type, as per module_param()
+ * @nump: optional pointer filled in with the number written
+ * @perm: visibility in sysfs
+ *
+ * This exposes a different name than the actual variable name.  See
+ * module_param_named() for why this might be necessary.
+ */
+module_param_array_named(name, array, type, nump, perm)
 ```
 
 其中：
-- `name` 为变量
-- `nump` 为<span style="background:#fff88f"><font color="#c00000">存放实际接收元素数量的变量地址</font></span>。
+- `name` ：加载模块时使用的参数名
+- `array` ：实际存放的数组位置
+- `type` ：数组中元素的类型
+并在后续章节不再单独ha
 
-示例如下：
 
 ##### 4.3.3.3 设置参数提示信息
 
