@@ -389,7 +389,28 @@ module_param_array_named(name, array, type, nump, perm)
 - `name` ：加载模块时使用的参数名
 - `array` ：实际存放的数组位置
 - `type` ：数组中元素的类型
-并在后续章节不再单独ha
+并在后续章节不再单独拆除普通方式和指定参数名的方式。
+
+###### 4.3.3.2.3 
+
+```C
+#include "linux/moduleparam.h"
+
+/**
+ * module_param_string - a char array parameter
+ * @name: the name of the parameter
+ * @string: the string variable
+ * @len: the maximum length of the string, incl. terminator
+ * @perm: visibility in sysfs.
+ *
+ * This actually copies the string when it's set (unlike type charp).
+ * @len is usually just sizeof(string).
+ */
+module_param_string(name, string, len, perm)
+```
+
+
+
 
 
 ##### 4.3.3.3 设置参数提示信息
