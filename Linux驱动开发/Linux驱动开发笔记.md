@@ -937,9 +937,6 @@ Block devices:
 ```
 
 此外还有使用 `ls` 命令查看设备的方法：
-<details>
-<summary>点击查看</summary>
-</details>
 
 在 `/dev` 目录下执行 `ls -l` ，可以得到如下结果：
 
