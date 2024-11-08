@@ -446,7 +446,10 @@ int add_int_gpl(int a, int b)
 EXPORT_SYMBOL_GPL(add_int);
 ```
 
-注意：使用 `EXPORT_SYMBOL_GPL` 导出的符号不可以被非GPL模块引用。
+<font color="#c00000">导出符号后的函数可以被其他内核模块使用</font>，使用前只需要声明一下函数定义即可(通常是用引用头文件方式)。
+注：
+- 使用 `EXPORT_SYMBOL_GPL` 导出的符号不可以被非GPL模块引用。
+- 使用 `cat /proc/kallsyms` 即可查看导出符号表。
 
 #### 4.3.5 模块常用信息
 
