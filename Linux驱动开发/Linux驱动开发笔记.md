@@ -212,7 +212,7 @@ module_param(port, int, S_IRUGO);
 	- `S_IRGRP` ：同组用户具有可读权限
 	- `S_IWGRP` ：同组用户具有可写权限
 	- `S_IXGRP` ：同组用户具有可执行权限
-- 其他用户：
+- 同组以外的其他用户：
 	- `S_IRWXO` ：其他用户
 	- `S_IROTH` ：
 	- `S_IWOTH` ：
