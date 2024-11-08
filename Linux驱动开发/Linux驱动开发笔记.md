@@ -920,6 +920,7 @@ Character devices:
 128 ptm
 136 pts
 180 usb
+...
 
 Block devices:
   2 fd
@@ -934,6 +935,7 @@ Block devices:
  69 sd
  70 sd
  71 sd
+ ...
 ```
 
 此外还有使用 `ls` 命令查看设备的方法：
