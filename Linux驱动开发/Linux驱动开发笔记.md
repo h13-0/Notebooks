@@ -893,8 +893,53 @@ module-objs += file1.o file2.o ...
 
 ### 5.1 主设备号和次设备号
 
-可以使用
+可以使用 `cat /proc/devices` 查看当前系统中的设备列表，例如：
 
+```Shell
+Character devices:
+  1 mem
+  4 /dev/vc/0
+  4 tty
+  4 ttyS
+  5 /dev/tty
+  5 /dev/console
+  5 /dev/ptmx
+  5 ttyprintk
+  6 lp
+  7 vcs
+ 10 misc
+ 13 input
+ 14 sound/midi
+ 14 sound/dmmidi
+ 21 sg
+ 29 fb
+ 89 i2c
+ 99 ppdev
+108 ppp
+116 alsa
+128 ptm
+136 pts
+180 usb
+
+Block devices:
+  2 fd
+  7 loop
+  8 sd
+  9 md
+ 11 sr
+ 65 sd
+ 66 sd
+ 67 sd
+ 68 sd
+ 69 sd
+ 70 sd
+ 71 sd
+```
+
+此外还有使用 `ls` 命令查看设备的方法：
+<details>
+<summary>点击查看</summary>
+</details>
 
 在 `/dev` 目录下执行 `ls -l` ，可以得到如下结果：
 
