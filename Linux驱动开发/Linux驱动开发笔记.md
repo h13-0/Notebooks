@@ -409,9 +409,8 @@ module_param_string(name, string, len, perm)
 
 其中：
 - `name` ：加载模块时使用的参数名
-- `array` ：实际存放的数组位置
-
-
+- `string` ：实际存放的字符串
+- `len` ：<font color="#c00000">为最大的可存放的字符串大小</font>，`sizeof(string) - 1` 。
 
 ##### 4.3.3.3 设置参数提示信息
 
