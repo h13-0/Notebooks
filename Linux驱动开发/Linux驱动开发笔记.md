@@ -192,6 +192,8 @@ module_exit(exit_function);
 
 #### 4.3.3 模块参数
 
+##### 4.3.3.1 传递单个参数值
+
 模块在加载时可以传入一些命令行参数，其主要通过如下方式进行定义与加载：
 
 ```C
@@ -219,15 +221,13 @@ module_param(port, int, S_IRUGO);
 	- `S_IXOTH` ：其他用户具有可执行权限
 - 所有用户(UGO，本质为把USR、GRP、OTH进行了或运算)：
 	- `S_IRWXUGO` ：所有用户具有可读、可写、可执行权限
-	- `S_IALLUGO` ：
+	- `S_IALLUGO` ：所有用户具有全部权限
 	- `S_IRUGO` ：所有用户具有可读权限
 	- `S_IWUGO` ：所有用户具有可写权限
 	- `S_IXUGO` ：所有用户具有可执行权限
-
-在 `module_param` 函数中：
-- `perm` 为访问许可配置：
-	- `S_IRUGO` 表示任何人都可以读取该参数
-	- `S_IRUGO|S_IWUSR` 表示root用户可以修改该参数。<font color="#c00000">但是当参数发生修改时</font>，<font color="#c00000">内核不会通知内核模块参数被修改</font>，因此<font color="#c00000">通常</font>不使用。
+而在 `module_param` 函数中，通常使用如下的权限符：
+- `S_IRUGO` 表示任何人都可以读取该参数(<span style="background:#fff88f"><font color="#c00000">最常用</font></span>)
+- `S_IRUGO|S_IWUSR` 表示root用户可以修改该参数。<font color="#c00000">但是当参数发生修改时</font>，<font color="#c00000">内核不会通知内核模块参数被修改</font>，因此<font color="#c00000">通常</font>不使用。
 
 在加载时可以通过如下命令指定模块参数：
 
@@ -245,7 +245,31 @@ insmod var=value #例如：insmod port=80
 - `uint` ：关联unsigned int，u表示无符号。
 - `ulong`
 - `ushort`
-- <font color="#c00000">及上述类型对应的数组形式</font>，使用 `module_param_array` 进行参数接收。
+- <font color="#c00000">及上述类型对应的数组形式</font>，使用 `module_param_array` <font color="#c00000">等</font>方式进行参数接收。
+
+##### 4.3.3.2 传递数组
+
+数组方式传递的可选方法如下：
+
+```C
+// module_param_array为数组的长度
+module_param_array(name, type, nump, perm);
+
+// 传递字符串
+// len为字符串大小
+module_param_string(name, string, len, perm);
+```
+
+##### 4.3.3.3 设置参数提示信息
+
+使用：
+
+```C
+MODULE_PARM_DESC(_parm, desc);
+```
+
+进行描述，其中：
+- `_parm` 
 
 #### 4.3.4 模块导出符号
 
