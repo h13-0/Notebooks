@@ -197,6 +197,8 @@ module_exit(exit_function);
 模块在加载时可以传入一些命令行参数，其主要通过如下方式进行定义与加载：
 
 ```C
+#include "linux/moduleparam.h"
+
 // 相当于缺省参数
 static int port = 8080;
 // module_param(name, type, perm)
@@ -232,7 +234,7 @@ module_param(port, int, S_IRUGO);
 在加载时可以通过如下命令指定模块参数：
 
 ```Shell
-insmod var=value #例如：insmod port=80
+insmod xxx.ko var=value #例如：port=80
 ```
 
 内核模块支持的加载参数列表如下：
@@ -252,7 +254,9 @@ insmod var=value #例如：insmod port=80
 数组方式传递的可选方法如下：
 
 ```C
-// module_param_array为数组的长度
+#include "linux/moduleparam.h"
+
+// 传递普通数组
 module_param_array(name, type, nump, perm);
 
 // 传递字符串
@@ -260,16 +264,34 @@ module_param_array(name, type, nump, perm);
 module_param_string(name, string, len, perm);
 ```
 
+其中：
+- `nump` 为接收
+
+在传递数组时，命令行中使用如下的方法：
+
+```C
+int arr[10] = { 0 };
+int arr_size = 0;
+module_param_array(arr, int, &arr_size, S_IRUGO);
+```
+
+```Shell
+insmod xxx.ko arr=value1,value2,... #例如：arr=1,2,3
+```
+
 ##### 4.3.3.3 设置参数提示信息
 
 使用：
 
 ```C
+#include "linux/moduleparam.h"
+
 MODULE_PARM_DESC(_parm, desc);
 ```
 
 进行描述，其中：
-- `_parm` 
+- `_parm` 为要描述的参数名称
+- `desc` 为参数信息
 
 #### 4.3.4 模块导出符号
 
