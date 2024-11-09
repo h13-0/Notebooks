@@ -3286,19 +3286,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 7169,
+      "wordCount": 5253,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 23.89666666666667,
-      "characterCount": 10860,
-      "nonWhitespaceCharacterCount": 9956,
-      "readingTimeInMinutes": 15.425207547169812,
-      "linkCount": 1,
+      "pageCount": 17.51,
+      "characterCount": 8075,
+      "nonWhitespaceCharacterCount": 7373,
+      "readingTimeInMinutes": 11.380377358490566,
+      "linkCount": 2,
       "embedCount": 2,
       "aliases": null,
       "createdDate": 1729602126714,
-      "modifiedDate": 1731160867177,
-      "sizeInBytes": 24982,
+      "modifiedDate": 1731161159911,
+      "sizeInBytes": 18347,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -8752,19 +8752,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 939,
+      "wordCount": 979,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 3.13,
-      "characterCount": 1497,
-      "nonWhitespaceCharacterCount": 1332,
-      "readingTimeInMinutes": 2.028754716981132,
+      "pageCount": 3.263333333333333,
+      "characterCount": 1598,
+      "nonWhitespaceCharacterCount": 1406,
+      "readingTimeInMinutes": 2.122943396226415,
       "linkCount": 0,
       "embedCount": 1,
       "aliases": null,
       "createdDate": 1730558365190,
-      "modifiedDate": 1731160179442,
-      "sizeInBytes": 3403,
+      "modifiedDate": 1731161049698,
+      "sizeInBytes": 3572,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -9716,6 +9716,27 @@
       "createdDate": 1731160254303,
       "modifiedDate": 1731160745607,
       "sizeInBytes": 279,
+      "frontmatter": {
+        "number headings": "auto, first-level 2, max 6, 1.1"
+      }
+    },
+    "FreeRTOS/应试笔记与八股.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 2022,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 6.74,
+      "characterCount": 2980,
+      "nonWhitespaceCharacterCount": 2730,
+      "readingTimeInMinutes": 4.281660377358491,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1731161073801,
+      "modifiedDate": 1731161329164,
+      "sizeInBytes": 7080,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }

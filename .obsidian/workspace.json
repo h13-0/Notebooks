@@ -41,7 +41,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "操作系统/应试笔记与八股.md",
+                "file": "FreeRTOS/应试笔记与八股.md",
                 "mode": "source",
                 "source": false
               },
@@ -78,7 +78,7 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -206,7 +206,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "嵌入式基础/应试笔记与八股.md"
+                "file": "FreeRTOS/应试笔记与八股.md"
               },
               "icon": "lucide-list",
               "title": "应试笔记与八股 的大纲"
@@ -252,13 +252,14 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "515cf111d6df762e",
+  "active": "b739bd6b29d60009",
   "lastOpenFiles": [
-    "计算机网络/应试笔记与八股.md",
-    "操作系统/应试笔记与八股.md",
     "Linux驱动开发/应试笔记与八股.md",
+    "计算机网络/应试笔记与八股.md",
+    "FreeRTOS/应试笔记与八股.md",
     "嵌入式基础/应试笔记与八股.md",
     "CPP/应试笔记与八股.md",
+    "操作系统/应试笔记与八股.md",
     "Linux驱动开发/Linux驱动开发笔记.md",
     "Resources/Pasted image 20240203021517.png",
     "Resources/Pasted image 20241108162718.png",
@@ -296,7 +297,6 @@
     "嵌入式基础/OTA技术",
     "嵌入式基础/接口技术/USB",
     "自动控制",
-    "计算机网络/基础应试学习/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
     "嵌入式基础/Resources/Pasted image 20241028224543.png",
     "嵌入式基础/接口技术/GPIO",
     "嵌入式基础/Resources/CAN总线入门手册.pdf",
