@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "FreeRTOS/应试笔记与八股.md",
+                "file": "CPP/应试笔记与八股.md",
                 "mode": "source",
                 "source": false
               },
@@ -77,8 +77,7 @@
               "title": "应试笔记与八股"
             }
           }
-        ],
-        "currentTab": 4
+        ]
       }
     ],
     "direction": "vertical"
@@ -252,15 +251,15 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "f5eb611891df9e5c",
+  "active": "d78ed57df88bcfa2",
   "lastOpenFiles": [
-    "嵌入式基础/应试笔记与八股.md",
+    "计算机网络/应试笔记与八股.md",
     "CPP/应试笔记与八股.md",
-    "FreeRTOS/应试笔记与八股.md",
+    "嵌入式基础/应试笔记与八股.md",
     "数据结构算法/应试笔记与八股.md",
     "Linux驱动开发/应试笔记与八股.md",
+    "FreeRTOS/应试笔记与八股.md",
     "面相对象的程序设计/面相对象的程序设计.md",
-    "计算机网络/应试笔记与八股.md",
     "数据结构算法/数据结构算法基础.md",
     "操作系统/应试笔记与八股.md",
     "Linux驱动开发/Linux驱动开发笔记.md",
