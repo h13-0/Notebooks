@@ -78,7 +78,7 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 4
       }
     ],
     "direction": "vertical"
@@ -206,7 +206,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "嵌入式基础/应试笔记与八股.md"
+                "file": "CPP/应试笔记与八股.md"
               },
               "icon": "lucide-list",
               "title": "应试笔记与八股 的大纲"
@@ -252,14 +252,14 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "515cf111d6df762e",
+  "active": "f5eb611891df9e5c",
   "lastOpenFiles": [
-    "数据结构算法/应试笔记与八股.md",
     "嵌入式基础/应试笔记与八股.md",
     "CPP/应试笔记与八股.md",
+    "FreeRTOS/应试笔记与八股.md",
+    "数据结构算法/应试笔记与八股.md",
     "Linux驱动开发/应试笔记与八股.md",
     "面相对象的程序设计/面相对象的程序设计.md",
-    "FreeRTOS/应试笔记与八股.md",
     "计算机网络/应试笔记与八股.md",
     "数据结构算法/数据结构算法基础.md",
     "操作系统/应试笔记与八股.md",
