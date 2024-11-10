@@ -176,6 +176,7 @@ module_init(init_func);
 注意：
 - 模块的加载函数中通常会遇到错误，在遇到错误后，<font color="#c00000">应当停止后续的加载并释放已经加载的内存</font>。在这里通常使用 `goto` 语句实现，也可以编写统一的 `cleanup` 函数检查资源是否被成功分配并释放资源(<font color="#c00000">推荐后者</font>)。一般 `cleanup` 函数不会被注册为卸载函数，因此<font color="#c00000">不能被标记为</font> `__exit` 。
 - 错误码应当使用 `<linux/errno.h>` 中的错误码，这样方便用户使用 `perror` 之类的函数将错误转换为有意义的字符串。
+- 关于 `__init` 标识符的用途可见章节[[Linux驱动开发笔记#4 3 6 其他常用特性|4.3.6 其他常用特性]]中的解释。
 
 #### 4.3.2 模块卸载函数
 
@@ -188,7 +189,9 @@ static void __exit exit_function(void)
 module_exit(exit_function);
 ```
 
-<font color="#c00000">如果未定义模块卸载函数，则内核不允许卸载该模块。</font>
+注意：
+- <font color="#c00000">如果未定义模块卸载函数，则内核不允许卸载该模块。</font>
+- 关于 `__exit` 标识符的用途可见章节[[Linux驱动开发笔记#4 3 6 其他常用特性|4.3.6 其他常用特性]]中的解释。
 
 #### 4.3.3 模块参数
 
@@ -268,7 +271,7 @@ insmod xxx.ko port=value #例如：port=80
 内核模块支持的加载参数列表如下：
 - `bool`
 - `invbool` ：<font color="#c00000">关联int型</font>，反转bool值，输入为 `true` 则传入为 `false` 。
-- `charp` ：<font color="#c00000">关联char*</font>，<font color="#c00000">内核会为用户提供的字符串分配内存并设置指针</font>。
+- `charp` ：<font color="#c00000">关联char*</font>，<span style="background:#fff88f"><font color="#c00000">内核会为用户提供的字符串分配内存并设置指针</font></span>。
 - `int`
 - `long`
 - `short`
@@ -411,6 +414,7 @@ module_param_string(name, string, len, perm)
 - `name` ：加载模块时使用的参数名
 - `string` ：实际存放的字符串
 - `len` ：<font color="#c00000">为最大的可存放的字符串大小</font>，`sizeof(string) - 1` 。
+不过<span style="background:#fff88f"><font color="#c00000">还是推荐使用</font></span> `module_param` 配合 `charp` 的方式，这样不用手动管理内存，也不用提前为字符串分配一个足够大的内存区域，<span style="background:#fff88f"><font color="#c00000">且不需要在模块退出时手动释放这部分内存</font></span>。
 
 ##### 4.3.3.3 设置参数提示信息
 
@@ -485,11 +489,9 @@ MODULE_ALIAS("...");
 #### 4.3.6 其他常用特性
 
 1. 定义只在初始化阶段就需要的数据：
-
 ```C
 static int var_name __initdata = 0;
 ```
-
 上述 `__initdata` 和模块加载函数的 `__init` 都标识<font color="#c00000">在内核被加载完毕后</font>，<font color="#c00000">其所定义的变量或函数会被从内存中扔掉</font>。
 2. 与上一条相似的是，内核中也有 `__exitdata` 与 `__exit` 。上述四个特性均会被放置到特殊ELF端。
 
