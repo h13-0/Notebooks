@@ -8995,19 +8995,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 1125,
+      "wordCount": 1226,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 3.75,
-      "characterCount": 1831,
-      "nonWhitespaceCharacterCount": 1605,
-      "readingTimeInMinutes": 2.43622641509434,
+      "pageCount": 4.086666666666667,
+      "characterCount": 2066,
+      "nonWhitespaceCharacterCount": 1830,
+      "readingTimeInMinutes": 2.6648301886792454,
       "linkCount": 0,
       "embedCount": 1,
       "aliases": null,
       "createdDate": 1730558365190,
-      "modifiedDate": 1731226277506,
-      "sizeInBytes": 4093,
+      "modifiedDate": 1731226431704,
+      "sizeInBytes": 4526,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -9761,6 +9761,27 @@
       "createdDate": 1713204230576,
       "modifiedDate": 1715273142332,
       "sizeInBytes": 216
+    },
+    "Linux用户态开发/IPC/Linux用户态IPC.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 72,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0.24,
+      "characterCount": 163,
+      "nonWhitespaceCharacterCount": 114,
+      "readingTimeInMinutes": 0.17237735849056604,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1731226688529,
+      "modifiedDate": 1731226801652,
+      "sizeInBytes": 349,
+      "frontmatter": {
+        "number headings": "auto, first-level 2, max 6, 1.1"
+      }
     }
   }
 }
