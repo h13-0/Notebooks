@@ -154,7 +154,7 @@ Linux内核模块的加载、卸载以及查看基本信息等操作：
 
 一个Linux内核模块应当具有且实现以下几个组成部分：
 1. 模块加载函数<font color="#c00000">(必须)</font>
-2. 模块卸载函数<font color="#c00000">(必须)</font>
+2. 模块卸载函数<span style="background:#fff88f"><font color="#c00000">(<u>可选</u>)</font></span>，<font color="#c00000">注意不是必须</font>。
 3. 模块许可证声明<font color="#c00000">(必须)</font>
 4. 模块参数(可选)
 5. 模块导出符号(可选)
