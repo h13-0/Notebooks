@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux驱动开发/Linux驱动开发笔记.md",
+                "file": "CPP/应试笔记与八股.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Linux驱动开发笔记"
+              "title": "应试笔记与八股"
             }
           },
           {
@@ -163,10 +163,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux驱动开发/Linux驱动开发笔记.md"
+                "file": "CPP/应试笔记与八股.md"
               },
               "icon": "lucide-list",
-              "title": "Linux驱动开发笔记 的大纲"
+              "title": "应试笔记与八股 的大纲"
             }
           },
           {
@@ -211,13 +211,13 @@
   },
   "active": "8128e58443694866",
   "lastOpenFiles": [
+    "Linux驱动开发/Linux驱动开发笔记.md",
     "CPP/应试笔记与八股.md",
     "嵌入式基础/接口技术/串口/串口总线标准.md",
     "Linux用户态开发/IPC/Linux用户态IPC.md",
     "Linux驱动开发/Linux设备树/Device Tree Reference学习笔记.md",
     "Linux驱动开发/Linux设备树/devicetree-specification.md",
     "Linux驱动开发/MISC/Kconfig基础语法.md",
-    "Linux驱动开发/Linux驱动开发笔记.md",
     "FreeRTOS/应试笔记与八股.md",
     "计算机网络/应试笔记与八股.md",
     "嵌入式基础/应试笔记与八股.md",
