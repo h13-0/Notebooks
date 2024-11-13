@@ -26,6 +26,8 @@ Modbus确实在不同的物理层和链路层上的实现不同，<span style="b
 
 此外，<font color="#c00000">协议规定Modbus协议是一种请求/应答协议</font>，<font color="#c00000">也就意味着无论是哪种Modbus</font>，<span style="background:#fff88f"><font color="#c00000">从站均不能主动向主站发送信息</font></span>。
 
+此外，主站也可以被叫作Server，从站被叫作Client。
+
 Modbus当前支持的硬件协议：
 - TCP/IP协议
 - 异步串口协议：
@@ -71,7 +73,7 @@ Modbus的数据包均遵从如下基本格式：
 在通信模型上：
 - Modbus可以分为主站和从站，<font color="#c00000">在一条链路上只能有1个主站</font>，<font color="#c00000">但是可以有多个从站</font>。
 - 与I2C类似的是，Modbus中也有<font color="#9bbb59">从站地址</font>和<font color="#9bbb59">寄存器地址</font>的概念。其中，从站地址8位、<font color="#c00000">寄存器地址16位</font>。
-- Modbus在<font color="#c00000">任何情况下</font><span style="background:#fff88f"><font color="#c00000">子节点都不会主动发送数据</font></span>，仅当主站请求时，从站才可以发。
+- 与C/S模型类似的是，Modbus在<font color="#c00000">任何情况下</font><span style="background:#fff88f"><font color="#c00000">从站都不会主动发送数据</font></span>，仅当主站请求时，从站才可以发。
 - Modbus<font color="#c00000">有广播和单拨两种模式</font>：
 	- <font color="#c00000">在广播模式下</font>，所有从站必须执行主站命令而<font color="#c00000">无需应答返回</font>。
 	- 在单播模式下，<font color="#c00000">子节点必须做出应答</font>，<font color="#c00000">只有应答完成后主站才可以进行下一个事务处理</font>。
@@ -99,7 +101,9 @@ Modbus的数据包均遵从如下基本格式：
 	- 从机地址范围被定义在 $[1, 247]$ 
 	- 保留区可以用于设置特定地址段的广播指令等
 
-#### 3.1.2 功能码及其报文结构
+#### 3.1.2 功能码及其对应报文结构
+
+在Modbus中的通信过程中，如果
 
 |  地址域  |  功能码  |                   数据域                    | CRC差错校验 |
 | :---: | :---: | :--------------------------------------: | :-----: |
