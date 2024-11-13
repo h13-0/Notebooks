@@ -3,24 +3,55 @@ number headings: auto, first-level 2, max 6, 1.1
 ---
 #嵌入式 
 
-## 1 目录
+## 1 Readme
+
+本文基于[Modbus官方文档](https://modbus.org/docs/Modbus_Application_Protocol_V1_1b.pdf)进行学习。
+
+## 2 目录
 
 ```toc
 ```
 
-## 2 Modbus概述
+## 3 Modbus概述
 
 Modbus有如下三种协议：
 - Modbus ASCII
-- [Modbus RTU](https://modbus.org/docs/Modbus_Application_Protocol_V1_1b.pdf)
+- Modbus RTU
 - Modbus TCP
 Modbus协议规定，使用Modbus的设备必须支持Modbus RTU，且默认为Modbus RTU，因此大多数设备使用的均为Modbus RTU。
 
 此外，<font color="#c00000">协议规定Modbus协议是一种请求/应答协议</font>，<font color="#c00000">也就意味着无论是哪种Modbus</font>，<span style="background:#fff88f"><font color="#c00000">从站均不能主动向主站发送信息</font></span>。
 
-### 2.1 Modbus RTU
+Modbus当前支持的硬件协议：
+- TCP/IP协议
+- 异步串口协议：
+	- RS-232
+	- RS-442
+	- RS-485
+	- 光纤
+	- 无线电
+- [[第三章 数据链路层#3 4 3 HDLC协议|HDLC]](Modbus Plus)
 
-#### 2.1.1 Modbus RTU基本规定
+Modbus官方缩写如下表所示。
+
+| 缩写   | 含义                           |
+| ---- | ---------------------------- |
+| ADU  | Application Data Unit        |
+| HDLC | High level Data Link Control |
+| HMI  |                              |
+| IETF |                              |
+| I/O  |                              |
+| IP   |                              |
+| MAC  |                              |
+| MB   |                              |
+| MBAP |                              |
+| PDU  |                              |
+| PLC  |                              |
+| TCP  |                              |
+
+### 3.1 Modbus RTU
+
+#### 3.1.1 Modbus RTU基本规定
 
 Modbus RTU的所有数据包均遵从如下基本格式：
 
@@ -44,7 +75,7 @@ Modbus RTU的所有数据包均遵从如下基本格式：
 - 输入寄存器：16个bit的<span style="background:#fff88f"><font color="#c00000">只读</font></span>寄存器
 为了方便叙述，将上述的16bit称之为 "字" ，即 "word" 。但是要注意并不是所有的CPU平台的 "word" 长度均为16bit。
 
-#### 2.1.2 地址域
+#### 3.1.2 地址域
 
 |  地址域  |  功能码  | 数据域  | CRC差错校验 |
 | :---: | :---: | :--: | :-----: |
@@ -59,7 +90,7 @@ Modbus RTU的所有数据包均遵从如下基本格式：
 	- 从机地址范围被定义在 $[1, 247]$ 
 	- 保留区可以用于设置特定地址段的广播指令等
 
-#### 2.1.3 功能码及其报文结构
+#### 3.1.3 功能码及其报文结构
 
 |  地址域  |  功能码  | 数据域  | CRC差错校验 |
 | :---: | :---: | :--: | :-----: |
@@ -98,9 +129,9 @@ Modbus RTU内置的功能码如下：
 注：
 - <font color="#c00000">上述表格中常用功能会被标红</font>
 
-##### 2.1.3.1 01H 读线圈寄存器(bit)
+##### 3.1.3.1 01H 读线圈寄存器(bit)
 
-###### 2.1.3.1.1 请求报文结构
+###### 3.1.3.1.1 请求报文结构
 
 正如基本规定中所述：
 - Modbus RTU中设备地址占8位、寄存器地址占16位。
@@ -114,15 +145,15 @@ Modbus RTU内置的功能码如下：
 则上述Demo的含义为：
 - 读取从站地址为 `0x01` 的设备上的 `0x02C4` 地址开始的连续 `0x0105` 个寄存器
 
-###### 2.1.3.1.2 应答报文结构
+###### 3.1.3.1.2 应答报文结构
 
 
 
 
-##### 2.1.3.2 02H 读离散线圈寄存器(bit)
+##### 3.1.3.2 02H 读离散线圈寄存器(bit)
 
 
 
-### 2.2 Modbus TCP
+### 3.2 Modbus TCP
 
 Modbus TCP默认端口为502端口。
