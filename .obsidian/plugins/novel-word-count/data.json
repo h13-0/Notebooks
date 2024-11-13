@@ -218,15 +218,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 20.996666666666666,
-      "characterCount": 12291,
+      "characterCount": 12292,
       "nonWhitespaceCharacterCount": 11429,
       "readingTimeInMinutes": 13.710037735849056,
       "linkCount": 0,
       "embedCount": 17,
       "aliases": null,
       "createdDate": 1713204230905,
-      "modifiedDate": 1731488599664,
-      "sizeInBytes": 24685
+      "modifiedDate": 1731489172842,
+      "sizeInBytes": 24686
     },
     "计算机网络/基础应试学习/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md": {
       "isCountable": true,
@@ -3191,15 +3191,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 6.423333333333333,
-      "characterCount": 4833,
-      "nonWhitespaceCharacterCount": 4471,
+      "characterCount": 4823,
+      "nonWhitespaceCharacterCount": 4461,
       "readingTimeInMinutes": 4.318679245283019,
       "linkCount": 2,
       "embedCount": 5,
       "aliases": null,
       "createdDate": 1729690706332,
-      "modifiedDate": 1731488845187,
-      "sizeInBytes": 8492,
+      "modifiedDate": 1731488894701,
+      "sizeInBytes": 8482,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -9783,7 +9783,7 @@
       "modifiedDate": 1715273142332,
       "sizeInBytes": 216
     },
-    "Resources/result.jpeg": {
+    "嵌入式基础/Resources/result.jpeg": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
