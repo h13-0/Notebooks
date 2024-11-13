@@ -86,6 +86,21 @@ Modbus的数据包均遵从如下基本格式：
 - 输入寄存器：16个bit的<span style="background:#fff88f"><font color="#c00000">只读</font></span>寄存器
 为了方便叙述，将上述的16bit称之为 "字" ，即 "word" 。但是要注意并不是所有的CPU平台的 "word" 长度均为16bit。
 
+在报文长度上，<font color="#c00000">由于第一版Modbus的实现限制了ADU和PDU的长度</font>(该版本限制ADU最长256字节)，因此：
+- RS232、RS485的Modbus中：
+	- <font color="#c00000">PDU最长为253字节</font>
+	- ADU最长为256字节：
+		- Addr=1Byte
+		- PDU=253Byte
+		- CRC=2Byte
+- TCP中的Modbus中：
+	- <font color="#c00000">PDU最长为253字节</font>
+	- ADU最长为260字节：
+		- MBAP=7Byte
+		- Addr=1Byte
+		- PDU=253Byte
+		- CRC=2Byte
+该设计保证了任何
 #### 3.1.1 地址域
 
 |  地址域  |  功能码  |                   数据域                    | CRC差错校验 |
@@ -103,7 +118,9 @@ Modbus的数据包均遵从如下基本格式：
 
 #### 3.1.2 功能码及其对应报文结构
 
-在Modbus中的通信过程中，如果
+在Modbus中的通信过程中：
+- 如果从站的响应<font color="#c00000">没有错误</font>，则从站<font color="#c00000">返回报文的功能码与主站的请求报文中一致</font>。
+- 如果从站的响应<font color="#c00000">发生错误</font>，则从站<font color="#c00000">返回报文的功能码为异常功能码</font>，具体可见异常响应章节。
 
 |  地址域  |  功能码  |                   数据域                    | CRC差错校验 |
 | :---: | :---: | :--------------------------------------: | :-----: |
