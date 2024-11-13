@@ -3166,19 +3166,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 1603,
+      "wordCount": 1554,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 5.343333333333334,
-      "characterCount": 6783,
-      "nonWhitespaceCharacterCount": 4738,
-      "readingTimeInMinutes": 3.848037735849057,
+      "pageCount": 5.18,
+      "characterCount": 6652,
+      "nonWhitespaceCharacterCount": 4625,
+      "readingTimeInMinutes": 3.7145660377358487,
       "linkCount": 1,
       "embedCount": 2,
       "aliases": null,
       "createdDate": 1729696078252,
-      "modifiedDate": 1731513287382,
-      "sizeInBytes": 9499,
+      "modifiedDate": 1731513845466,
+      "sizeInBytes": 9306,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -3187,19 +3187,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 1876,
+      "wordCount": 1883,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 6.253333333333333,
-      "characterCount": 4703,
-      "nonWhitespaceCharacterCount": 4346,
-      "readingTimeInMinutes": 4.1936226415094335,
-      "linkCount": 2,
+      "pageCount": 6.276666666666666,
+      "characterCount": 4720,
+      "nonWhitespaceCharacterCount": 4364,
+      "readingTimeInMinutes": 4.209396226415095,
+      "linkCount": 3,
       "embedCount": 4,
       "aliases": null,
       "createdDate": 1729690706332,
-      "modifiedDate": 1731512891769,
-      "sizeInBytes": 8278,
+      "modifiedDate": 1731513573688,
+      "sizeInBytes": 8311,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -9819,7 +9819,7 @@
       "modifiedDate": 1731510935117,
       "sizeInBytes": 129957
     },
-    "Resources/chrome_1AsQ0QQGM7.png": {
+    "嵌入式基础/Resources/chrome_1AsQ0QQGM7.png": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
