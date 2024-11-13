@@ -14,6 +14,17 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ## 3 Modbus概述
 
+在众多学习资料中往往会提到：
+
+> Modbus定义了Modbus ASCII、Modbus RTU、Modbus TCP/IP三种基本协议。
+
+<span style="background:#fff88f"><font color="#c00000">但这种看法是不准确的、不本质的</font></span>。
+Modbus确实在不同的物理层和链路层上的实现不同，<span style="background:#fff88f"><font color="#c00000">但是这三种情况在应用层的数据封装上完全一致</font></span>。其主要区别在于：
+- Modbus RTU以逻辑二进制进行数据传输，直接传输Modbus对应的二进制数据包。
+- Modbus TCP由于在TCP/IP网络上运行，<font color="#c00000">需要处理网络相关的问题</font>，<font color="#c00000">如会话的建立和维持</font>，这由MBAP头部分处理。
+- Modbus ASCII<font color="#c00000">使用ASCII字符来编码二进制数据</font>，每个数据字节被分割为两个ASCII字符。例如使用ASCII字符 `'0'` 和 `'F'` 编码二进制 ``
+
+
 Modbus有如下三种协议：
 - Modbus ASCII
 - Modbus RTU
