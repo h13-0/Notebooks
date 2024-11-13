@@ -3187,19 +3187,19 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 871,
+      "wordCount": 910,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 2.9033333333333333,
-      "characterCount": 2426,
-      "nonWhitespaceCharacterCount": 2252,
-      "readingTimeInMinutes": 1.9654716981132077,
+      "pageCount": 3.033333333333333,
+      "characterCount": 2563,
+      "nonWhitespaceCharacterCount": 2382,
+      "readingTimeInMinutes": 2.0576603773584905,
       "linkCount": 0,
       "embedCount": 3,
       "aliases": null,
       "createdDate": 1729690706332,
-      "modifiedDate": 1731483830635,
-      "sizeInBytes": 4109,
+      "modifiedDate": 1731484642202,
+      "sizeInBytes": 4312,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -9783,7 +9783,7 @@
       "modifiedDate": 1715273142332,
       "sizeInBytes": 216
     },
-    "嵌入式基础/Resources/Pasted image 20241113154210.png": {
+    "Resources/Pasted image 20241113155619.png": {
       "isCountable": false,
       "isDirectory": false,
       "noteCount": 0,
@@ -9797,9 +9797,9 @@
       "linkCount": 0,
       "embedCount": 0,
       "aliases": [],
-      "createdDate": 1731483730759,
-      "modifiedDate": 1731483730762,
-      "sizeInBytes": 138989
+      "createdDate": 1731484579652,
+      "modifiedDate": 1731484579652,
+      "sizeInBytes": 11940
     }
   }
 }
