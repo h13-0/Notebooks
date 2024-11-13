@@ -34,20 +34,27 @@ Modbus当前支持的硬件协议：
 
 Modbus官方缩写如下表所示。
 
-| 缩写   | 含义                           |
-| ---- | ---------------------------- |
-| ADU  | Application Data Unit        |
-| HDLC | High level Data Link Control |
-| HMI  |                              |
-| IETF |                              |
-| I/O  |                              |
-| IP   |                              |
-| MAC  |                              |
-| MB   |                              |
-| MBAP |                              |
-| PDU  |                              |
-| PLC  |                              |
-| TCP  |                              |
+| <center>缩写</center>   | <center>含义</center>             |
+| ---- | ------------------------------- |
+| ADU  | Application Data Unit           |
+| HDLC | High level Data Link Control    |
+| HMI  | Human Machine Interface         |
+| IETF | Internet Engineering Task Force |
+| I/O  | Input/Output                    |
+| IP   | Internet Protocol               |
+| MAC  | Medium Access Control           |
+| MB   | MODBUS Protocol                 |
+| MBAP | MODBUS Application Protocol     |
+| PDU  | Protocol Data Unit              |
+| PLC  | Programmable Logic Controller   |
+| TCP  | Transport Control Protocol      |
+
+Modbus提供了一种简单的，可以跨物理层/数据链路层/网络层的通信协议：
+	![[chrome_Ylc5HPXvpA.png]]
+
+Modbus在大多数总线下
+
+![[chrome_1AsQ0QQGM7.png]]
 
 ### 3.1 Modbus RTU
 
