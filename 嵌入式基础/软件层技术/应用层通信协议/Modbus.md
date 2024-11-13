@@ -40,20 +40,20 @@ Modbus当前支持的硬件协议：
 
 Modbus官方缩写如下表所示。
 
-| <center>缩写</center>   | <center>含义</center>             |
-| ---- | ------------------------------- |
-| ADU  | Application Data Unit           |
-| HDLC | High level Data Link Control    |
-| HMI  | Human Machine Interface         |
-| IETF | Internet Engineering Task Force |
-| I/O  | Input/Output                    |
-| IP   | Internet Protocol               |
-| MAC  | Medium Access Control           |
-| MB   | MODBUS Protocol                 |
-| MBAP | MODBUS Application Protocol     |
-| PDU  | Protocol Data Unit              |
-| PLC  | Programmable Logic Controller   |
-| TCP  | Transport Control Protocol      |
+| <center>缩写</center> | <center>含义</center>             |
+| ------------------- | ------------------------------- |
+| ADU                 | Application Data Unit           |
+| HDLC                | High level Data Link Control    |
+| HMI                 | Human Machine Interface         |
+| IETF                | Internet Engineering Task Force |
+| I/O                 | Input/Output                    |
+| IP                  | Internet Protocol               |
+| MAC                 | Medium Access Control           |
+| MB                  | MODBUS Protocol                 |
+| MBAP                | MODBUS Application Protocol     |
+| PDU                 | Protocol Data Unit              |
+| PLC                 | Programmable Logic Controller   |
+| TCP                 | Transport Control Protocol      |
 
 Modbus提供了一种简单的，可以跨物理层/数据链路层/网络层的通信协议：
 	![[chrome_Ylc5HPXvpA.png]]
@@ -69,6 +69,10 @@ Modbus的数据包均遵从如下基本格式：
 |  地址域  |  功能码  |                   数据域                    | CRC差错校验 |
 | :---: | :---: | :--------------------------------------: | :-----: |
 | 1Byte | 1Byte | 长度不定，<font color="#c00000">也可能不存在</font> |  2Byte  |
+
+在上图/上表中：
+- `${地址域}${功能码}${数据}${差错校验}` 部分被称作<font color="#9bbb59">ADU</font>(<font color="#9bbb59">应用数据单元</font>)。
+- `${功能码}${数据}` 部分被称作<font color="#9bbb59">PDU</font>(<font color="#9bbb59">协议数据单元</font>)。
 
 在通信模型上：
 - Modbus可以分为主站和从站，<font color="#c00000">在一条链路上只能有1个主站</font>，<font color="#c00000">但是可以有多个从站</font>。
@@ -100,7 +104,10 @@ Modbus的数据包均遵从如下基本格式：
 		- Addr=1Byte
 		- PDU=253Byte
 		- CRC=2Byte
-该设计保证了任何
+该设计<font color="#c00000">保证了在任何链路中的数据协议单元长度均为253字节</font>，从而实现了跨物理层/数据链路层/网络层的通信协议。
+
+Modbus根据请求和响应及其结果，将
+
 #### 3.1.1 地址域
 
 |  地址域  |  功能码  |                   数据域                    | CRC差错校验 |
@@ -120,7 +127,7 @@ Modbus的数据包均遵从如下基本格式：
 
 在Modbus中的通信过程中：
 - 如果从站的响应<font color="#c00000">没有错误</font>，则从站<font color="#c00000">返回报文的功能码与主站的请求报文中一致</font>。
-- 如果从站的响应<font color="#c00000">发生错误</font>，则从站<font color="#c00000">返回报文的功能码为异常功能码</font>，具体可见异常响应章节。
+- 如果从站的响应<font color="#c00000">发生错误</font>，则从站<font color="#c00000">返回报文的功能码为异常功能码</font>(定义为 $请求功能码+0x80$ )，具体可见异常响应章节。
 
 |  地址域  |  功能码  |                   数据域                    | CRC差错校验 |
 | :---: | :---: | :--------------------------------------: | :-----: |
@@ -131,7 +138,6 @@ Modbus的数据包均遵从如下基本格式：
 	- 功能码 $0$ 无效
 	- 功能码 $[1, 127]$ 作为普通功能码使用
 	- 功能码 $[128, 255]$ 用于异常响应
-- `${功能码}${数据}` 部分被称作<font color="#9bbb59">PDU</font>(<font color="#9bbb59">协议数据单元</font>)。
 
 Modbus内置的功能码如下：
 
