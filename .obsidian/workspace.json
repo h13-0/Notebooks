@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "嵌入式基础/应试笔记与八股.md",
+                "file": "自动控制/卡尔曼滤波.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "应试笔记与八股"
+              "title": "卡尔曼滤波"
             }
           },
           {
@@ -191,10 +191,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "嵌入式基础/应试笔记与八股.md"
+                "file": "自动控制/卡尔曼滤波.md"
               },
               "icon": "lucide-list",
-              "title": "应试笔记与八股 的大纲"
+              "title": "卡尔曼滤波 的大纲"
             }
           },
           {
@@ -239,6 +239,7 @@
   },
   "active": "ec16b9cf42a004f0",
   "lastOpenFiles": [
+    "嵌入式基础/应试笔记与八股.md",
     "CPP/应试笔记与八股.md",
     "FreeRTOS/应试笔记与八股.md",
     "嵌入式基础/接口技术/I2C/I2C总线标准.md",
@@ -249,7 +250,6 @@
     "计算机网络/计算机网络非应试拓展/JSON Web Token/JSON Web Token.md",
     "计算机网络/计算机网络非应试拓展/JSON",
     "Linux驱动开发/Linux设备树/Device Tree Reference学习笔记.md",
-    "嵌入式基础/应试笔记与八股.md",
     "操作系统/应试笔记与八股.md",
     "Linux驱动开发/Linux驱动开发笔记.md",
     "Linux驱动开发/应试笔记与八股.md",
