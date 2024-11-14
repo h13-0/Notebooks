@@ -63,7 +63,8 @@
               "title": "应试笔记与八股"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -191,10 +192,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "自动控制/卡尔曼滤波.md"
+                "file": "嵌入式基础/接口技术/CAN/CAN总线协议标准.md"
               },
               "icon": "lucide-list",
-              "title": "卡尔曼滤波 的大纲"
+              "title": "CAN总线协议标准 的大纲"
             }
           },
           {
@@ -237,8 +238,9 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "ec16b9cf42a004f0",
+  "active": "107629546467f3be",
   "lastOpenFiles": [
+    "自动控制/卡尔曼滤波.md",
     "嵌入式基础/应试笔记与八股.md",
     "CPP/应试笔记与八股.md",
     "FreeRTOS/应试笔记与八股.md",
@@ -277,7 +279,6 @@
     "Linux用户态开发/IPC",
     "Linux用户态开发",
     "面相对象的程序设计/面相对象的程序设计.md",
-    "数据结构算法/数据结构算法基础.md",
     "Linux驱动开发/内核文档翻译/eLinux",
     "FreeRTOS/Resources",
     "Linux驱动开发/Linux设备树",
