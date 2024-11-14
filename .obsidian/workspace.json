@@ -22,6 +22,18 @@
             }
           },
           {
+            "id": "8543f89c0802ee66",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.7.6"
+              },
+              "icon": "lucide-file",
+              "title": "Release Notes 1.7.6"
+            }
+          },
+          {
             "id": "107629546467f3be",
             "type": "leaf",
             "state": {
@@ -49,7 +61,8 @@
               "title": "第三章 数据链路层"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -176,11 +189,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "嵌入式基础/软件层技术/应用层通信协议/Modbus.md"
-              },
+              "state": {},
               "icon": "lucide-list",
-              "title": "Modbus 的大纲"
+              "title": "大纲"
             }
           },
           {
@@ -223,7 +234,7 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "ec16b9cf42a004f0",
+  "active": "8543f89c0802ee66",
   "lastOpenFiles": [
     "计算机网络/基础应试学习/第三章 数据链路层/第三章 数据链路层.md",
     "嵌入式基础/接口技术/CAN/CAN总线协议标准.md",
