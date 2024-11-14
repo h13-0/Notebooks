@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CPP/应试笔记与八股.md",
+                "file": "嵌入式基础/应试笔记与八股.md",
                 "mode": "source",
                 "source": false
               },
@@ -63,8 +63,7 @@
               "title": "应试笔记与八股"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -192,10 +191,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "嵌入式基础/接口技术/CAN/CAN总线协议标准.md"
+                "file": "嵌入式基础/应试笔记与八股.md"
               },
               "icon": "lucide-list",
-              "title": "CAN总线协议标准 的大纲"
+              "title": "应试笔记与八股 的大纲"
             }
           },
           {
@@ -238,8 +237,12 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "107629546467f3be",
+  "active": "ec16b9cf42a004f0",
   "lastOpenFiles": [
+    "CPP/应试笔记与八股.md",
+    "FreeRTOS/应试笔记与八股.md",
+    "嵌入式基础/接口技术/I2C/I2C总线标准.md",
+    "嵌入式基础/接口技术/CAN/CAN总线协议标准.md",
     "嵌入式基础/软件层技术/应用层通信协议/JSON.md",
     "嵌入式基础/软件层技术/应用层通信协议/Modbus.md",
     "计算机网络/计算机网络非应试拓展/JSON/JSON.md",
@@ -247,10 +250,6 @@
     "计算机网络/计算机网络非应试拓展/JSON",
     "Linux驱动开发/Linux设备树/Device Tree Reference学习笔记.md",
     "嵌入式基础/应试笔记与八股.md",
-    "嵌入式基础/接口技术/CAN/CAN总线协议标准.md",
-    "嵌入式基础/接口技术/I2C/I2C总线标准.md",
-    "CPP/应试笔记与八股.md",
-    "FreeRTOS/应试笔记与八股.md",
     "操作系统/应试笔记与八股.md",
     "Linux驱动开发/Linux驱动开发笔记.md",
     "Linux驱动开发/应试笔记与八股.md",
