@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "嵌入式基础/接口技术/CAN/CAN总线协议标准.md",
+                "file": "CPP/C2CPP/C2CPP.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "CAN总线协议标准"
+              "title": "C2CPP"
             }
           },
           {
@@ -192,10 +192,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "嵌入式基础/接口技术/CAN/CAN总线协议标准.md"
+                "file": "CPP/C2CPP/C2CPP.md"
               },
               "icon": "lucide-list",
-              "title": "CAN总线协议标准 的大纲"
+              "title": "C2CPP 的大纲"
             }
           },
           {
@@ -240,10 +240,11 @@
   },
   "active": "107629546467f3be",
   "lastOpenFiles": [
+    "FreeRTOS/FreeRTOS应用及原理分析/FreeRTOS工程创建与移植.md",
+    "嵌入式基础/接口技术/CAN/CAN总线协议标准.md",
     "CPP/应试笔记与八股.md",
     "嵌入式基础/接口技术/I2C/I2C总线标准.md",
     "FreeRTOS/应试笔记与八股.md",
-    "嵌入式基础/接口技术/CAN/CAN总线协议标准.md",
     "自动控制/卡尔曼滤波.md",
     "嵌入式基础/应试笔记与八股.md",
     "嵌入式基础/软件层技术/应用层通信协议/JSON.md",
@@ -278,7 +279,6 @@
     "Java/Java语言基础/Java语言基础.md",
     "Linux用户态开发/IPC",
     "Linux用户态开发",
-    "面相对象的程序设计/面相对象的程序设计.md",
     "Linux驱动开发/内核文档翻译/eLinux",
     "FreeRTOS/Resources",
     "Linux驱动开发/Linux设备树",
