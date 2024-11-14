@@ -2579,15 +2579,15 @@
       "wordCountTowardGoal": 0,
       "wordGoal": null,
       "pageCount": 1.9166666666666667,
-      "characterCount": 1349,
+      "characterCount": 1344,
       "nonWhitespaceCharacterCount": 1204,
       "readingTimeInMinutes": 1.2564150943396226,
       "linkCount": 0,
       "embedCount": 0,
       "aliases": null,
       "createdDate": 1730298827539,
-      "modifiedDate": 1730301729066,
-      "sizeInBytes": 2508,
+      "modifiedDate": 1731584956692,
+      "sizeInBytes": 2503,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
