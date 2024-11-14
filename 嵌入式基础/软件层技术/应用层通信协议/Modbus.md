@@ -85,19 +85,13 @@ Modbus的数据包均遵从如下基本格式：
 
 <span style="background:#fff88f"><font color="#c00000">在数据结构上</font></span>，Modbus定义了如下四种基础的数据结构：
 
-| 数据结构  | 数据类型    | 读写类型 | 注释  |
-| ----- | ------- | ---- | --- |
-| 离散输入  | 单bit数据  | 只读   |     |
-| 线圈    | 单bit数据  | 可读可写 |     |
-| 输入寄存器 | 16bit的字 | 只读   |     |
-| 保持寄存器 | 16bit的字 |      |     |
+| <center>数据结构</center> | 数据类型    | 读写类型 | <center>附注</center>            |
+| --------------------- | ------- | ---- | ------------------------------ |
+| 离散输入                  | 单bit数据  | 只读   | 通常表示 `TRUE/FALSE` 、 `ON/OFF` 等 |
+| 线圈                    | 单bit数据  | 可读可写 |                                |
+| 输入寄存器                 | 16bit的字 | 只读   |                                |
+| 保持寄存器                 | 16bit的字 | 可读可写 |                                |
 
-
-Modbus中<font color="#c00000"><u>预先定义了一些数据结构</u></font>，比如：
-- 线圈寄存器( `coils` )：1个bit的<font color="#c00000">读写</font>寄存器，通常表示 `TRUE/FALSE` 、 `ON/OFF` 等。
-- 离散输入寄存器( `Discrete Inputs` )：1个bit的<span style="background:#fff88f"><font color="#c00000">只读</font></span>寄存器
-- 保持寄存器：16个bit的<font color="#c00000">读写</font>寄存器
-- 输入寄存器：16个bit的<span style="background:#fff88f"><font color="#c00000">只读</font></span>寄存器
 为了方便叙述，将上述的16bit称之为 "字" ，即 "word" 。但是要注意并不是所有的CPU平台的 "word" 长度均为16bit。
 
 在报文长度上，<font color="#c00000">由于第一版Modbus的实现限制了ADU和PDU的长度</font>(该版本限制ADU最长256字节)，因此：
