@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "嵌入式基础/应试笔记与八股.md",
+                "file": "CPP/应试笔记与八股.md",
                 "mode": "source",
                 "source": false
               },
@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "嵌入式基础/接口技术/串口/串口总线标准.md",
+                "file": "嵌入式基础/接口技术/CAN/CAN总线协议标准.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "串口总线标准"
+              "title": "CAN总线协议标准"
             }
           },
           {
@@ -55,7 +55,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CPP/应试笔记与八股.md",
+                "file": "FreeRTOS/应试笔记与八股.md",
                 "mode": "source",
                 "source": false
               },
@@ -63,8 +63,7 @@
               "title": "应试笔记与八股"
             }
           }
-        ],
-        "currentTab": 3
+        ]
       }
     ],
     "direction": "vertical"
@@ -238,13 +237,15 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "5051711b8b4457f3",
+  "active": "ec16b9cf42a004f0",
   "lastOpenFiles": [
     "嵌入式基础/应试笔记与八股.md",
-    "嵌入式基础/软件层技术/应用层通信协议/Modbus.md",
-    "计算机网络/基础应试学习/第三章 数据链路层/第三章 数据链路层.md",
     "嵌入式基础/接口技术/CAN/CAN总线协议标准.md",
+    "计算机网络/基础应试学习/第三章 数据链路层/第三章 数据链路层.md",
+    "FreeRTOS/应试笔记与八股.md",
+    "CPP/应试笔记与八股.md",
     "嵌入式基础/接口技术/串口/串口总线标准.md",
+    "嵌入式基础/软件层技术/应用层通信协议/Modbus.md",
     "嵌入式基础/Resources/chrome_1AsQ0QQGM7.png",
     "嵌入式基础/Resources/chrome_Ylc5HPXvpA.png",
     "计算机网络/基础应试学习/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
@@ -260,12 +261,10 @@
     "嵌入式基础/Resources/Pasted image 20241113154210.png",
     "STM32开发/Resources/javaw_I7t8h99PuJ.png",
     "Linux驱动开发/应试笔记与八股.md",
-    "CPP/应试笔记与八股.md",
     "Linux用户态开发/IPC/Linux用户态IPC.md",
     "Linux驱动开发/Linux设备树/Device Tree Reference学习笔记.md",
     "Linux驱动开发/Linux设备树/devicetree-specification.md",
     "Linux驱动开发/MISC/Kconfig基础语法.md",
-    "FreeRTOS/应试笔记与八股.md",
     "计算机网络/应试笔记与八股.md",
     "数据结构算法/应试笔记与八股.md",
     "操作系统/应试笔记与八股.md",
