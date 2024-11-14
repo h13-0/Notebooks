@@ -9836,6 +9836,42 @@
       "createdDate": 1713204230576,
       "modifiedDate": 1715273142399,
       "sizeInBytes": 3557
+    },
+    "嵌入式基础/软件层技术/应用层通信协议/JSON.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 28,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0.09333333333333334,
+      "characterCount": 56,
+      "nonWhitespaceCharacterCount": 52,
+      "readingTimeInMinutes": 0.05954716981132075,
+      "linkCount": 1,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1731577175126,
+      "modifiedDate": 1731577506090,
+      "sizeInBytes": 110
+    },
+    "计算机网络/计算机网络非应试拓展/JSON/JSON.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1731577465025,
+      "modifiedDate": 1731577465025,
+      "sizeInBytes": 0
     }
   }
 }
