@@ -83,7 +83,17 @@ Modbus的数据包均遵从如下基本格式：
 	- 在单播模式下，<font color="#c00000">子节点必须做出应答</font>，<font color="#c00000">只有应答完成后主站才可以进行下一个事务处理</font>。
 	- 和IP协议类似，<font color="#c00000">广播和单播模式通过地址进行区分</font>。
 
-<span style="background:#fff88f"><font color="#c00000">在数据结构上</font></span>，Modbus中<font color="#c00000"><u>预先定义了一些数据结构</u></font>，比如：
+<span style="background:#fff88f"><font color="#c00000">在数据结构上</font></span>，Modbus定义了如下四种基础的数据结构：
+
+| 数据结构  | 数据类型    | 读写类型 | 注释  |
+| ----- | ------- | ---- | --- |
+| 离散输入  | 单bit数据  | 只读   |     |
+| 线圈    | 单bit数据  | 可读可写 |     |
+| 输入寄存器 | 16bit的字 | 只读   |     |
+| 保持寄存器 | 16bit的字 |      |     |
+
+
+Modbus中<font color="#c00000"><u>预先定义了一些数据结构</u></font>，比如：
 - 线圈寄存器( `coils` )：1个bit的<font color="#c00000">读写</font>寄存器，通常表示 `TRUE/FALSE` 、 `ON/OFF` 等。
 - 离散输入寄存器( `Discrete Inputs` )：1个bit的<span style="background:#fff88f"><font color="#c00000">只读</font></span>寄存器
 - 保持寄存器：16个bit的<font color="#c00000">读写</font>寄存器
@@ -106,7 +116,7 @@ Modbus的数据包均遵从如下基本格式：
 		- CRC=2Byte
 该设计<font color="#c00000">保证了在任何链路中的数据协议单元长度均为253字节</font>，从而实现了跨物理层/数据链路层/网络层的通信协议。
 
-Modbus根据请求和响应及其结果，将
+<span style="background:#fff88f"><font color="#c00000">Modbus在数据编码时采用大端模式</font></span>。
 
 #### 3.1.1 地址域
 
