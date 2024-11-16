@@ -18,7 +18,7 @@ number headings: auto, first-level 2, max 6, 1.1
 - <font color="#9bbb59">阻塞</font>：在进行请求时，若系统不能立即处理或满足该请求，则该线程会被该函数阻塞，直到处理结束或满足该请求。阻塞时该线程通常不会获得处理器时间。
 - <font color="#9bbb59">非阻塞</font>：在进行请求时，无论系统能不能立即处理或满足该请求，该函数都一定会立即返回。
 - <font color="#9bbb59">同步</font>：在进行一系列请求时，必须按照顺序，在一个请求完成后才可以处理下一个请求的IO模型叫作同步IO。<font color="#c00000">在使用函数实现同步IO时，函数必须在该请求完成后才能返回</font>。
-- <font color="#9bbb59">异步</font>：在进行一系列请求时，<font color="#c00000">可以不按照顺序</font>，<font color="#c00000">同时处理多个请求</font>的IO模型叫作异步IO。<font color="#c00000">使用函数实现异步IO时，函数可以在请求完成前就返回</font>(然后通过回调或其他方式通知结果)。
+- <font color="#9bbb59">异步</font>：在进行一系列请求时，<font color="#c00000">可以不按照顺序</font>，<font color="#c00000">同时处理多个请求</font>的IO模型叫作异步IO。<font color="#c00000">使用函数实现异步IO时，函数可以在请求完成前就返回</font>(然后通过查询或回调等方式获取或通知结果)。
 
 同步和阻塞之间的关系：
 1. <font color="#c00000">阻塞IO一定是同步IO</font>：当应用程序执行阻塞IO时，它会同步地等待IO操作的完成。因此所有阻塞IO操作也是同步的。
@@ -26,7 +26,7 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ### 3.1 阻塞IO(BIO)
 
-以常见的TCP编程为例，其阻塞IO下的通信流程如下图所示：
+以常见的TCP编程为例，其BIO下的通信流程如下图所示：
 	![[Pasted image 20241116230432.png]]
 在上图中：
 - `accept` 、 `read` 、 `write` 均是阻塞型IO：
@@ -41,7 +41,8 @@ number headings: auto, first-level 2, max 6, 1.1
 ### 3.2 同步非阻塞IO(NIO)
 
 正如上文所述，非阻塞型IO应当有如下特性：
-- 
+- 该IO的打开、读写等操作一定是非阻塞的。
+- 但是若干IO之间依旧需要顺序执行。
 
 
 
