@@ -2135,11 +2135,12 @@ do {										\
 		- 在不满足唤醒条件时休眠(即 `___wait_event` 定义中的 `cmd` 部分)
 - `___wait_event(wq_head, condition, state, exclusive, ret, cmd)` ：
 	1. 创建并初始化等待队列入口 `wait_queue_entry` 
-	2. 使用 `prepare_to_wait_event` 
+	2. 使用 `prepare_to_wait_event` 将等待队列入口添加到等待队列中，同时设置现成的状态。
+	3. 在 `cmd` 中调用 `shedule()` 选择下一个要运行的进程，并进行上下文切换。
 
 #### 8.5.1 独占等待
 
-正如章节简单休眠中所述，线程请求简单休眠后，
+正如章节简单休眠中所述，线程请求简单休眠后，一次 `wake_up` 可能会唤醒多个简单休眠对象，该队列上的所有
 
 
 
