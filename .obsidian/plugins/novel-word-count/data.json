@@ -4011,24 +4011,6 @@
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
     },
-    "操作系统/课外补充/Berstein条件.md": {
-      "isCountable": true,
-      "isDirectory": false,
-      "noteCount": 1,
-      "wordCount": 106,
-      "wordCountTowardGoal": 0,
-      "wordGoal": null,
-      "pageCount": 0.35333333333333333,
-      "characterCount": 330,
-      "nonWhitespaceCharacterCount": 289,
-      "readingTimeInMinutes": 0.2581132075471698,
-      "linkCount": 0,
-      "embedCount": 0,
-      "aliases": null,
-      "createdDate": 1718184207919,
-      "modifiedDate": 1718185272873,
-      "sizeInBytes": 500
-    },
     "Readme.md": {
       "isCountable": true,
       "isDirectory": false,
@@ -9873,47 +9855,62 @@
       "modifiedDate": 1715273142332,
       "sizeInBytes": 216
     },
-    "Linux用户态开发/IO/socket/Linux用户态socket.md": {
+    "Linux用户态开发/socket/Linux用户态socket.md": {
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 15,
+      "wordCount": 23,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 0.05,
-      "characterCount": 58,
-      "nonWhitespaceCharacterCount": 39,
-      "readingTimeInMinutes": 0.04064150943396226,
+      "pageCount": 0.07666666666666666,
+      "characterCount": 114,
+      "nonWhitespaceCharacterCount": 86,
+      "readingTimeInMinutes": 0.07083018867924529,
       "linkCount": 0,
       "embedCount": 0,
       "aliases": null,
       "createdDate": 1731766361347,
       "modifiedDate": 1731767307355,
-      "sizeInBytes": 132,
-      "frontmatter": {
-        "number headings": "auto, first-level 2, max 6, 1.1"
-      }
+      "sizeInBytes": 132
     },
-    "Linux用户态开发/IO/IO概述.md": {
+    "操作系统/课外补充/IO模型/IO模型.md": {
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 56,
+      "wordCount": 53,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 0.18666666666666668,
-      "characterCount": 136,
-      "nonWhitespaceCharacterCount": 106,
-      "readingTimeInMinutes": 0.13505660377358492,
+      "pageCount": 0.17666666666666667,
+      "characterCount": 133,
+      "nonWhitespaceCharacterCount": 103,
+      "readingTimeInMinutes": 0.1290566037735849,
       "linkCount": 0,
       "embedCount": 0,
       "aliases": null,
       "createdDate": 1731767225512,
-      "modifiedDate": 1731768021689,
-      "sizeInBytes": 284,
+      "modifiedDate": 1731768352850,
+      "sizeInBytes": 275,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
+    },
+    "操作系统/课外补充/并发与互斥/Berstein条件.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 106,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0.35333333333333333,
+      "characterCount": 330,
+      "nonWhitespaceCharacterCount": 289,
+      "readingTimeInMinutes": 0.2581132075471698,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1718184207919,
+      "modifiedDate": 1718185272873,
+      "sizeInBytes": 500
     }
   }
 }

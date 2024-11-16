@@ -16,7 +16,7 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ### 3.1 阻塞IO(BIO)
 
-阻塞IO在处理
+阻塞IO
 
 
 
