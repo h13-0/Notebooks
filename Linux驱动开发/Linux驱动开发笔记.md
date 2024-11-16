@@ -2123,8 +2123,16 @@ do {										\
 
 其定义和使用了三个宏，按照调用顺序依次为：
 - `wait_event(wq_head, condition)` ：
-	1. 该函数先调用 `might_sleep` 宏函数，该函数
+	1. 该函数先调用 `might_sleep` 宏函数，<font color="#c00000">被设计为一个注解</font>，该函数会先后调用如下两个函数：
+		1. `__might_sleep(__FILE__, __LINE__);` ，在源码中定义为空函数。
+		2. `might_resched()` ，即 `int __cond_resched(void)` 函数。
+	2. 判定是否满足唤醒条件，若不满足则调用 `__wait_event(wq_head, condition);` 。
 - `__wait_event(wq_head, condition)` ：
+	1. 直接调用 `___wait_event(wq_head, condition, TASK_UNINTERRUPTIBLE, 0, 0, schedule())` ，即：
+		- 设置该休眠为不可中断
+		- 非独占等待
+		- 返回值为 `0`
+		- 
 - `___wait_event(wq_head, condition, state, exclusive, ret, cmd)` ：
 
 
