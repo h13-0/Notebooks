@@ -2158,16 +2158,69 @@ do {										\
  * @note:
  *     - 独占等待相关注意事项见上述段落
  */
-#define wait_event_exclusive_cmd(wq_head, condition, cmd1, cmd2)
+wait_event_exclusive_cmd(wq_head, condition, cmd1, cmd2)
 ```
 
 #### 8.5.2 手工休眠
 
 
-### 8.5.3 唤醒j
+### 8.6 唤醒及其相关细节
 
+```C
+/**
+ * @brief: 唤醒队列上的第一个独占等待的进程(如果存在)和所有非独占等待的进程
+ * @return:
+ * @note:
+ */
+wake_up(x)
 
-### 8.6 非阻塞IO
+/**
+ * @brief: 唤醒队列上的nr个独占等待的进程(如果存在)和所有非独占等待的进程
+ * @return:
+ * @note:
+ *     - 当nr为0时是唤醒所有独占等待的进程，而非0个
+ */
+wake_up_nr(x, nr)
+
+/**
+ * @brief: 唤醒队列上的所有进程
+ * @return:
+ * @note:
+ *     - 本质上就是 wake_up_nr(x, 0)
+ */
+wake_up_all(x)
+
+/**
+ * @brief:
+ * @return:
+ * @note:
+ */
+wake_up_locked(x)
+wake_up_all_locked(x)
+
+/**
+ * @brief: 
+ *     - 唤醒队列上的第一个独占等待的进程(如果存在)和所有非独占等待的进程，
+ *       并跳过所有不可中断休眠的进程
+ * @return:
+ * @note:
+ */
+wake_up_interruptible(x)
+
+// 下面两个均为跳过所有不可中断休眠进程的版本。
+wake_up_interruptible_nr(x, nr)
+wake_up_interruptible_all(x)
+
+/**
+ * @brief: 唤醒队列上的nr个独占等待的进程(如果存在)和所有非独占等待的进程
+ * @return:
+ * @note:
+ *     - 当nr为0时是唤醒所有独占等待的进程，而非0个
+ */
+wake_up_interruptible_sync(x)
+```
+
+### 8.7 非阻塞IO
 
 除了阻塞IO之外，Linux支持用户程序以非阻塞IO打开/操作设备。
 选择是否为非阻塞IO需要<span style="background:#fff88f"><font color="#c00000">且仅能</font></span>在 `f_open` 阶段进行设置。
