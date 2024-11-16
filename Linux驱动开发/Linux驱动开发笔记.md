@@ -2040,10 +2040,10 @@ wake_up_interruptible(x)
 在上一章节的简单休眠中所使用的 `wait_queue_head_t` 的定义如下：
 
 ```C
-struct wait_queue_head {  
-        spinlock_t            lock;  
-        struct list_head       head;  
-};  
+struct wait_queue_head {
+	spinlock_t		lock;
+	struct list_head	head;
+};
 typedef struct wait_queue_head wait_queue_head_t;
 ```
 
@@ -2132,9 +2132,9 @@ do {										\
 		- 设置该休眠为不可中断
 		- 非独占等待
 		- 返回值为 `0`
-		- 
+		- 在不满足唤醒条件时休眠(即 `___wait_event` 定义中的 `cmd` 部分)
 - `___wait_event(wq_head, condition, state, exclusive, ret, cmd)` ：
-
+	1. 创建 `wait_queue_entry` 
 
 #### 8.5.1 独占等待
 
