@@ -1970,6 +1970,8 @@ echo "90" > /dev/servo0
 
 #### 8.3.1 阻塞型IO的标准语义
 
+##### 8.3.1.1 read与write语义
+
 
 
 
@@ -2221,14 +2223,14 @@ wake_up_interruptible_all(x)
  * @brief: 
  *     - 同步版本的唤醒更倾向于在唤醒者进入休眠后，被唤醒者才会被执行；
  *       而非普通版本的立即执行。
- *     - 优势在于
- * @return:
- * @note:
+ *     - 在并发上通常用于调度者不希望自己立即被调度处理器时使用。
+ *     - 性能上的优势在于控制了被唤醒者的执行顺序，减少了上下文切换的次数。
+ * @return: void
  */
 wake_up_interruptible_sync(x)
 ```
 
-### 8.7 非阻塞IO
+### 8.7 非阻塞型IO
 
 除了阻塞IO之外，Linux支持用户程序以非阻塞IO打开/操作设备。
 选择是否为非阻塞IO需要<span style="background:#fff88f"><font color="#c00000">且仅能</font></span>在 `f_open` 阶段进行设置。
@@ -2240,6 +2242,10 @@ fd = open("path"，O_RDONLY | O_NONBLOCK)
 
 随后在内核模块中的后续操作时就应当根据是否定义了该非阻塞标志实现不同的行为。例如当应用程序请求的操作无法执行时，通常返回 `-EAGAIN` (try it again)。
 只有 `read` 、 `write` 和 `open` 文件操作会收非阻塞标志的影响。
+
+#### 8.7.1 非阻塞型IO的标准语义
+
+
 
 
 
