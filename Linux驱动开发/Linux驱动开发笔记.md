@@ -2134,7 +2134,8 @@ do {										\
 		- 返回值为 `0`
 		- 在不满足唤醒条件时休眠(即 `___wait_event` 定义中的 `cmd` 部分)
 - `___wait_event(wq_head, condition, state, exclusive, ret, cmd)` ：
-	1. 创建 `wait_queue_entry` 
+	1. 创建并初始化等待队列入口 `wait_queue_entry` 
+	2. 使用 `prepare_to_wait_event` 
 
 #### 8.5.1 独占等待
 
