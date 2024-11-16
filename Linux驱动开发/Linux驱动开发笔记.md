@@ -2020,6 +2020,7 @@ wait_event_interruptible(wq_head, condition)
 ```
 注：
 - 上述 `condition` 是一个<font color="#c00000">不带副作用</font>的 `bool` 表达式，<span style="background:#fff88f"><font color="#c00000">该表达式可能会被多次求值</font></span>。
+- `condition` 的另一注意点见下方[[Linux驱动开发笔记#^dcp6ey|关键注意点]]。
 3. 唤醒指令。休眠和唤醒通常伴随出现。
 ```C
 // wake_up会唤醒所有等在queue上的线程
@@ -2029,11 +2030,14 @@ wake_up(x)
 wake_up_interruptible(x)
 ```
 
-需要注意的是，本章节所提及的简单休眠API，<font color="#c00000">当一个线程触发</font> `wake_up` <font color="#c00000">后</font>，<font color="#c00000">阻塞队列上的</font><span style="background:#fff88f"><font color="#c00000">所有</font></span><font color="#c00000"><u>简单休眠</u>的线程</font><span style="background:#fff88f"><font color="#c00000">均会被唤醒并判定休眠条件</font></span> `condition` 。在简单休眠中，队列并没有实际的先后作用，队列的作用发生于[[Linux驱动开发笔记#独占等待]]中。
+<span style="background:#fff88f"><font color="#c00000">关键注意点</font></span>： ^dcp6ey
+1. 本章节所提及的简单休眠API，<font color="#c00000">当一个线程触发</font> `wake_up` <font color="#c00000">后</font>，<font color="#c00000">阻塞队列上的</font>(非独占等待节点之前的)<span style="background:#fff88f"><font color="#c00000">所有</font></span><font color="#c00000"><u>简单休眠</u>的线程</font><span style="background:#fff88f"><font color="#c00000">均会被唤醒并判定休眠条件</font></span> `condition` 。在简单休眠中，队列并没有实际的先后作用，队列的作用发生于[[Linux驱动开发笔记#独占等待]]中。
+2. 由于一次 `wake_up` 可能会唤醒多个简单休眠对象，<font color="#c00000">因此</font> `condition` <font color="#c00000">的操作也必须是原子的</font>。
+3. 简单休眠可能会被多次唤醒，并且时常会不满足判定条件。<font color="#c00000">不满足判定条件的线程会被再次休眠</font>。
 
 ### 8.5 高级休眠
 
-章节[[Linux驱动开发笔记#8 3 2 阻塞与休眠]]中所使用的 `wait_queue_head_t` 的定义如下：
+在上一章节的简单休眠中所使用的 `wait_queue_head_t` 的定义如下：
 
 ```C
 struct wait_queue_head {  
@@ -2044,6 +2048,17 @@ typedef struct wait_queue_head wait_queue_head_t;
 ```
 
 其是由一个自旋锁和链表组成。
+
+而线程的休眠与恢复会影响 `task_struct` 中的 `__state` 标志位，该标志位有如下几个
+
+
+```C
+#define TASK_RUNNING                  0x00000000  
+#define TASK_INTERRUPTIBLE             0x00000001  
+#define TASK_UNINTERRUPTIBLE           0x00000002  
+#define __TASK_STOPPED                0x00000004  
+#define __TASK_TRACED                 0x00000008
+```
 
 #### 8.5.1 独占等待
 
