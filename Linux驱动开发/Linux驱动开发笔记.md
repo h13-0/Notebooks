@@ -2049,19 +2049,94 @@ typedef struct wait_queue_head wait_queue_head_t;
 
 其是由一个自旋锁和链表组成。
 
-而线程的休眠与恢复会影响 `task_struct` 中的 `__state` 标志位，该标志位有如下几个
+而线程的休眠与恢复会影响 `task_struct` 中的 `__state` 标志位，该标志位有如下几个状态：
+- `TASK_RUNNING`
+- `TASK_INTERRUPTIBLE`
+- `TASK_UNINTERRUPTIBLE`
+- `__TASK_STOPPED`
+- `__TASK_TRACED`
+这些状态被定义于 `linux/sched.h` ，从而影响任务的调度。
 
+而以简单休眠章节中的最简单的休眠函数 `wait_event` 为例，来分析 `wait_event` (宏)函数的具体定义：
 
 ```C
-#define TASK_RUNNING                  0x00000000  
-#define TASK_INTERRUPTIBLE             0x00000001  
-#define TASK_UNINTERRUPTIBLE           0x00000002  
-#define __TASK_STOPPED                0x00000004  
-#define __TASK_TRACED                 0x00000008
+/*
+ * The below macro ___wait_event() has an explicit shadow of the __ret
+ * variable when used from the wait_event_*() macros.
+ *
+ * This is so that both can use the ___wait_cond_timeout() construct
+ * to wrap the condition.
+ *
+ * The type inconsistency of the wait_event_*() __ret variable is also
+ * on purpose; we use long where we can return timeout values and int
+ * otherwise.
+ */
+
+#define ___wait_event(wq_head, condition, state, exclusive, ret, cmd)		\
+({										\
+	__label__ __out;							\
+	struct wait_queue_entry __wq_entry;					\
+	long __ret = ret;	/* explicit shadow */				\
+										\
+	init_wait_entry(&__wq_entry, exclusive ? WQ_FLAG_EXCLUSIVE : 0);	\
+	for (;;) {								\
+		long __int = prepare_to_wait_event(&wq_head, &__wq_entry, state);\
+										\
+		if (condition)							\
+			break;							\
+										\
+		if (___wait_is_interruptible(state) && __int) {			\
+			__ret = __int;						\
+			goto __out;						\
+		}								\
+										\
+		cmd;								\
+	}									\
+	finish_wait(&wq_head, &__wq_entry);					\
+__out:	__ret;									\
+})
+
+#define __wait_event(wq_head, condition)					\
+	(void)___wait_event(wq_head, condition, TASK_UNINTERRUPTIBLE, 0, 0,	\
+			    schedule())
+
+/**
+ * wait_event - sleep until a condition gets true
+ * @wq_head: the waitqueue to wait on
+ * @condition: a C expression for the event to wait for
+ *
+ * The process is put to sleep (TASK_UNINTERRUPTIBLE) until the
+ * @condition evaluates to true. The @condition is checked each time
+ * the waitqueue @wq_head is woken up.
+ *
+ * wake_up() has to be called after changing any variable that could
+ * change the result of the wait condition.
+ */
+#define wait_event(wq_head, condition)						\
+do {										\
+	might_sleep();								\
+	if (condition)								\
+		break;								\
+	__wait_event(wq_head, condition);					\
+} while (0)
 ```
+
+其定义和使用了三个宏，按照调用顺序依次为：
+- `wait_event(wq_head, condition)` ：
+	1. 该函数先调用 `might_sleep` 宏函数，该函数
+- `__wait_event(wq_head, condition)` ：
+- `___wait_event(wq_head, condition, state, exclusive, ret, cmd)` ：
+
 
 #### 8.5.1 独占等待
 
+正如章节简单休眠中所述，线程请求简单休眠后，
+
+
+
+
+
+#### 8.5.2 手工休眠
 
 
 ### 8.6 非阻塞IO
