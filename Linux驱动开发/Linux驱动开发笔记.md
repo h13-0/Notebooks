@@ -2140,13 +2140,31 @@ do {										\
 
 #### 8.5.1 独占等待
 
-正如章节简单休眠中所述，线程请求简单休眠后，一次 `wake_up` 可能会唤醒多个简单休眠对象，该队列上的所有
+正如章节简单休眠中所述，线程请求简单休眠后，一次 `wake_up` 可能会唤醒多个简单休眠对象，每一个被唤醒的多个简单休眠对象又会重新竞争 `condition` 资源，竞争不到的休眠对象又会被 `schedule` 重新切换到别的进程上，在一定程度上浪费了资源。
+因此linux设计了一种一次只会唤醒一个休眠对象的等待，称为独占等待。
 
+独占等待的特性：
+1. 被设置为独占等待的进程在休眠时会被<font color="#c00000">添加到等待队列</font><span style="background:#fff88f"><font color="#c00000">尾部</font></span>
+2. 普通休眠的进程会被添加到等待队列<span style="background:#fff88f"><font color="#c00000">头部</font></span>
+3. 当 `wake_up` 被调用时，其会一直唤醒<font color="#c00000">第一个独占休眠</font><span style="background:#fff88f"><font color="#c00000">以及之前的</font></span>队列上的<font color="#c00000">等待进程</font>。
 
+独占等待的相关api为：
 
-
+```C
+/**
+ * @brief: 独占等待直到condition为true。在执行等待前和后，cmd1和cmd2会分别被执行
+ * @return:
+ *     - 当其被信号打断时返回值为非零
+ * @note:
+ *     - 独占等待相关注意事项见上述段落
+ */
+#define wait_event_exclusive_cmd(wq_head, condition, cmd1, cmd2)
+```
 
 #### 8.5.2 手工休眠
+
+
+### 8.5.3 唤醒j
 
 
 ### 8.6 非阻塞IO
