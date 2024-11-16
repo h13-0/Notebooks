@@ -14,7 +14,9 @@ number headings: auto, first-level 2, max 6, 1.1
 
 在IO模型上，主要可以分为阻塞IO(BIO)、同步非阻塞(NIO)和异步非阻塞(AIO)三种。
 
+### 3.1 阻塞IO(BIO)
 
+阻塞IO在处理
 
 
 
