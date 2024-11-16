@@ -1968,6 +1968,10 @@ echo "90" > /dev/servo0
 2. 休眠时允许拥有信号量，则务必关注可能会被该信号量影响的线程，且需要注意不要构成循环等待这种死锁情况。(该线程所持有的信号量所阻塞的线程拥有该线程所等待的资源)
 3. 在进行休眠时，<font color="#c00000">务必确保有其他线程或进程会唤醒本进程</font>。
 
+#### 8.3.1 阻塞型IO的
+
+
+
 ### 8.4 简单休眠
 
 在Linux中的头文件 `<linux/wait.h>` 中提供了阻塞与休眠相关的API，其较为重要的使用方法如下：
@@ -2212,10 +2216,9 @@ wake_up_interruptible_nr(x, nr)
 wake_up_interruptible_all(x)
 
 /**
- * @brief: 唤醒队列上的nr个独占等待的进程(如果存在)和所有非独占等待的进程
+ * @brief: 
  * @return:
  * @note:
- *     - 当nr为0时是唤醒所有独占等待的进程，而非0个
  */
 wake_up_interruptible_sync(x)
 ```
