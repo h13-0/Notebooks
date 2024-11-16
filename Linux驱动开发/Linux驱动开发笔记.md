@@ -1958,8 +1958,6 @@ echo "90" > /dev/servo0
 
 当设备无法立即完成某请求时，常用的做法之一是实现一个阻塞型IO。
 
-#### 8.3.1 阻塞的若干注意事项
-
 阻塞和休眠通常都是由等待一个事件或资源引起的，因此其等待的时间通常具有不可预测的特性。在进入休眠时，务必注意下列注意事项：
 1. <span style="background:#fff88f"><font color="#c00000">不可在原子上下文中进行休眠</font></span>。因为原子操作通常依靠自旋锁、顺序锁甚至是关闭中断来实现的。在这里进行休眠及其容易造成死锁或其他系统稳定性相关的问题。<font color="#c00000">在进入休眠时需检查如下事项</font>：
 	1. 休眠时不可拥有(<font color="#c00000">因为下述机制本就是为避免休眠切约定不可休眠的互斥方法</font>)：
@@ -1970,7 +1968,7 @@ echo "90" > /dev/servo0
 2. 休眠时允许拥有信号量，则务必关注可能会被该信号量影响的线程，且需要注意不要构成循环等待这种死锁情况。(该线程所持有的信号量所阻塞的线程拥有该线程所等待的资源)
 3. 在进行休眠时，<font color="#c00000">务必确保有其他线程或进程会唤醒本进程</font>。
 
-#### 8.3.2 阻塞与休眠
+### 8.4 简单休眠
 
 在Linux中的头文件 `<linux/wait.h>` 中提供了阻塞与休眠相关的API，其较为重要的使用方法如下：
 1. <font color="#c00000">休眠和唤醒</font>通常通过等待队列来实现，可以通过如下的方法静态或动态的定义一个等待队列：
@@ -2031,18 +2029,7 @@ wake_up(x)
 wake_up_interruptible(x)
 ```
 
-### 8.4 非阻塞IO
-
-除了阻塞IO之外，Linux支持用户程序以非阻塞IO打开/操作设备。
-选择是否为非阻塞IO需要<span style="background:#fff88f"><font color="#c00000">且仅能</font></span>在 `f_open` 阶段进行设置。
-
-```C
-// 只读、非阻塞
-fd = open("path"，O_RDONLY | O_NONBLOCK)
-```
-
-随后在内核模块中的后续操作时就应当根据是否定义了该非阻塞标志实现不同的行为。例如当应用程序请求的操作无法执行时，通常返回 `-EAGAIN` (try it again)。
-只有 `read` 、 `write` 和 `open` 文件操作会收非阻塞标志的影响。
+需要注意的是，本章节所提及的简单休眠API，<font color="#c00000">当一个线程触发</font> `wake_up` <font color="#c00000">后</font>，<font color="#c00000">阻塞队列上的</font><span style="background:#fff88f"><font color="#c00000">所有</font></span><font color="#c00000"><u>简单休眠</u>的线程</font><span style="background:#fff88f"><font color="#c00000">均会被唤醒并判定休眠条件</font></span> `condition` 。在简单休眠中，队列并没有实际的先后作用，队列的作用发生于[[Linux驱动开发笔记#独占等待]]中。
 
 ### 8.5 高级休眠
 
@@ -2057,6 +2044,24 @@ typedef struct wait_queue_head wait_queue_head_t;
 ```
 
 其是由一个自旋锁和链表组成。
+
+#### 8.5.1 独占等待
+
+
+
+### 8.6 非阻塞IO
+
+除了阻塞IO之外，Linux支持用户程序以非阻塞IO打开/操作设备。
+选择是否为非阻塞IO需要<span style="background:#fff88f"><font color="#c00000">且仅能</font></span>在 `f_open` 阶段进行设置。
+
+```C
+// 只读、非阻塞
+fd = open("path"，O_RDONLY | O_NONBLOCK)
+```
+
+随后在内核模块中的后续操作时就应当根据是否定义了该非阻塞标志实现不同的行为。例如当应用程序请求的操作无法执行时，通常返回 `-EAGAIN` (try it again)。
+只有 `read` 、 `write` 和 `open` 文件操作会收非阻塞标志的影响。
+
 
 
 ## 9 时间、延迟及延缓操作
