@@ -59,8 +59,7 @@
               "title": "关系图谱"
             }
           }
-        ],
-        "currentTab": 3
+        ]
       }
     ],
     "direction": "vertical"
@@ -232,8 +231,9 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "beece2c4e512ea4f",
+  "active": "9045b9f6d0a82728",
   "lastOpenFiles": [
+    "Linux用户态开发/socket/Linux用户态socket.md",
     "操作系统/课外补充/IO模型/IO模型.md",
     "Linux驱动开发/Linux驱动开发笔记.md",
     "操作系统/应试笔记与八股.md",
@@ -241,7 +241,6 @@
     "Resources/Pasted image 20240203021517.png",
     "操作系统/Resources",
     "操作系统/课外补充/并发与互斥",
-    "Linux用户态开发/socket/Linux用户态socket.md",
     "CPP/应试笔记与八股.md",
     "Linux用户态开发/IPC/Linux用户态IPC.md",
     "操作系统/课外补充/IO模型",
