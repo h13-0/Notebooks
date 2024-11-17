@@ -107,8 +107,7 @@
               "title": "Bookmarks"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -201,7 +200,7 @@
             }
           }
         ],
-        "currentTab": 5
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
@@ -220,11 +219,11 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "85a99ffcd4adfabe",
+  "active": "7ddc64b2e3c9b5c8",
   "lastOpenFiles": [
-    "操作系统/用户态开发/socket/Linux用户态socket.md",
-    "操作系统/用户态开发/socket/Windows用户态socket.md",
     "前后端编程/SSM框架/SpringFramework/Spring Framework基础.md",
+    "操作系统/用户态开发/socket/Windows用户态socket.md",
+    "操作系统/用户态开发/socket/Linux用户态socket.md",
     "操作系统/应试笔记与八股.md",
     "操作系统/用户态开发/IPC/Linux用户态IPC.md",
     "操作系统/Resources/Pasted image 20241116230432.png",

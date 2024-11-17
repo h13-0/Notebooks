@@ -12,28 +12,29 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ## 3 BIO socket
 
-### 3.1 server端
+### 3.1 server端Demo
 
 单线程的server段的主要逻辑如下：
 
 ```mermaid
 flowchart TB
-	A[开始] --> B[启动Winsock DLL]
+	A[开始] --> B[启动Winsock DLL<br><code>WSAStartup</code>]
 	B --> C{判定退出}
-	C --> D[创建socket]
-	D --> E[定义要监听的IP和端口]
-	E --> F[配置可选项]
-	F --> G[将监听地址与socket绑定]
-	G --> H[开始监听并阻塞]
-	H --> I[接受连接]
-	I --> J[read & write]
-	J --> C
-	C --> K[清除Winsock DLL]
+	C --> |继续|D[创建socket<br><code>socket</code>]
+	D --> E[定义要监听的IP和端口<br><code>SOCKADDR_IN、SOCKADDR</code>]
+	E --> F[配置可选项<br><code>setsockopt</code>]
+	F --> G[将监听地址与socket绑定<br><code>bind</code>]
+	G --> H[开始监听并阻塞<br><code>listen</code>]
+	H --> I[接受连接<br><code>accept</code>]
+	I --> J[<code>read</code> & <code>write</code>]
+	C --> |退出|K[清除Winsock DLL<br><code>WSACleanup</code>]
 	K --> L[退出]
+	J --> M[判定退出...]
 ```
 
-```CPP
+在Windows下，<font color="#c00000">socket每进行一次连接都需要重新创建</font>。
 
+```CPP
 #include <iostream>
 #include <winsock2.h>
 // Link with ws2_32.lib
@@ -143,3 +144,18 @@ int main()
 }
 
 ```
+
+### 3.2 client端Demo
+
+
+
+### 3.3 相关APIs
+
+#### 3.3.1 setsockopt
+
+
+
+
+....则该函数的常用选项如字章节所示。
+
+##### 3.3.1.1 SO_REUSEADDR duan k
