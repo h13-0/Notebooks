@@ -26,10 +26,10 @@ flowchart TB
 	E --> F{判定退出条件}
 	F --> |继续|G[接受连接<br><code>accept</code>]
 	G --> H[<code>read</code> & <code>send</code>]
-	H --> I[关闭连接]
+	H --> I[关闭连接<br><code>close</code>]
 	I --> F
 	F --> J[退出]
-	K[退出] --> L[?]
+	K[退出] --> L[关闭socket<br><code>close</code>]
 ```
 
 
@@ -49,8 +49,8 @@ int main() {
 
     int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
 
-    int yes = 1;
-    setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes));
+    int opt = 1;
+    setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(yes));
 
     struct sockaddr_in server_addr;
     memset(&server_addr, 0, sizeof(server_addr));
@@ -76,15 +76,19 @@ int main() {
         shutdown(conn_fd, SHUT_WR); // 关闭发送
         close(conn_fd); // 关闭连接
     }
-}
 
+	close(socket_fd);
+	return 0;
+}
 ```
 
 ### 3.2 Client端Demo
 
 ### 3.3 相关APIs
 
-#### 3.3.1 数据结构
+#### 3.3.1 数据结构 sockaddr_in 与 sockaddr
+
+
 
 #### 3.3.2 setsockopt
 
@@ -94,7 +98,11 @@ int main() {
 
 ![[setsockopt及其选项列表#3 setsockopt选项列表]]
 
-## 4 拓展
+#### 3.3.3 close与shutdown
 
-### 4.1 八股与思考
+
+## 4 NIO socket
+
+
+
 
