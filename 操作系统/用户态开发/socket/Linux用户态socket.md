@@ -138,6 +138,26 @@ extern int select (int __nfds, fd_set *__restrict __readfds,
 - `__timeout` ：select函数阻塞的时长，需要注意该结构体有两个成员，分别为秒级成员和微秒级成员。注意两个成员都要初始化。
 返回值为：
 
+其中：
+- `fd_set` 与内核之间的交互如下图组所示：
+	![[Pasted image 20241118000708.png]]
+	![[Pasted image 20241118000735.png]]
+	(该图片出自[https://subingwen.cn/](https://subingwen.cn/))
+- 内核也为 `fd_set` 提供了如下的操作API：
+```C
+// 清空set集合中所有标志位
+void FD_ZERO(fd_set *set);
+
+// 将fd对应的标识符置1
+void FD_SET(int fd, fd_set *set);
+
+// 将fd对应的标识符清空
+void FD_CLR(int fd, fd_set *set);
+
+// 判断fd对应标识符是否被置1
+int  FD_ISSET(int fd, fd_set *set);
+```
+
 在Windows中，
 
 
