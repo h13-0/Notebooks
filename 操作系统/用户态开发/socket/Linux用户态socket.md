@@ -136,13 +136,15 @@ extern int select (int __nfds, fd_set *__restrict __readfds,
 	- 传入时：委托内核需要<font color="#c00000">检测异常</font>的文件描述符的集合
 	- 传出时：发生异常的文件描述符集合
 - `__timeout` ：select函数阻塞的时长，需要注意该结构体有两个成员，分别为秒级成员和微秒级成员。注意两个成员都要初始化。
-返回值为：
+返回值：
+- 大于等于0时，为检测到的符合要求的文件标识符总个数。
+- 为-1时，则函数调用失败。
 
 其中：
 - `fd_set` 与内核之间的交互如下图组所示：
 	![[Pasted image 20241118000708.png]]
 	![[Pasted image 20241118000735.png]]
-	(该图片出自[https://subingwen.cn/](https://subingwen.cn/))
+	(该图片出自[https://subingwen.cn/](https://subingwen.cn/)，该图片自带盲水印，如需二次使用请注明原出处)
 - 内核也为 `fd_set` 提供了如下的操作API：
 ```C
 // 清空set集合中所有标志位
@@ -158,11 +160,22 @@ void FD_CLR(int fd, fd_set *set);
 int  FD_ISSET(int fd, fd_set *set);
 ```
 
-在Windows中，
+在Windows中的定义如下：
 
+```C
+int WSAAPI select(
+  [in]      int           nfds,
+  [in, out] fd_set        *readfds,
+  [in, out] fd_set        *writefds,
+  [in, out] fd_set        *exceptfds,
+  [in]      const timeval *timeout
+);
+```
 
-其中：
+其中，与BSD socket中不一致的参数为：
 - `nfds` 参数无效，<span style="background:#fff88f"><font color="#c00000">填写为-1即可</font></span>。
+在返回值上：
+
 
 
 通常使用的函数为select和epoll。
