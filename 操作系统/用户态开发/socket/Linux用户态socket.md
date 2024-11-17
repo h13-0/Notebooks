@@ -103,6 +103,25 @@ int main() {
 
 ## 4 NIO socket
 
+### 4.1 相关APIs
+
+#### 4.1.1 select
+
+select函数是跨平台的函数，已验证支持的平台有：
+- Linux
+- Windows
+- Mac OS
+select底层使用的数据结构为线性表，默认的连接上限为1024个。
+通常使用的函数为select和epoll。
 
 
+
+
+#### 4.1.2 poll
+
+poll函数底层使用的数据结构为线性表
+
+#### 4.1.3 epoll
+
+epoll函数底层使用的数据结构为红黑树
 
