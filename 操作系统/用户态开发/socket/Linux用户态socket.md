@@ -100,6 +100,7 @@ int main() {
 
 #### 3.3.3 close与shutdown
 
+#TODO
 
 ## 4 NIO socket
 
@@ -118,14 +119,14 @@ select底层使用的数据结构为线性表，<font color="#c00000">默认的�
 在Linux中， `select` 函数的定义如下：
 
 ```C
-extern int select (int __nfds, fd_set *__restrict __readfds,
-                   fd_set *__restrict __writefds,
-                   fd_set *__restrict __exceptfds,
-                   struct timeval *__restrict __timeout);
+int select(int nfds, fd_set *_Nullable restrict readfds,
+            fd_set *_Nullable restrict writefds,
+            fd_set *_Nullable restrict exceptfds,
+            struct timeval *_Nullable restrict timeout);
 ```
 
 其中，参数：
-- `nfds` ：委托给内核的三类文件描述符集合的<font color="#c00000">最大集合的个数</font><span style="background:#fff88f"><font color="#c00000">+1</font></span>
+- `nfds` ：委托给内核的三类文件描述符集合的<font color="#c00000">最大集合的个数</font><span style="background:#fff88f"><font color="#c00000">+1</font></span>。或者设置为1024(但是效率略有降低)。
 - `__readfds` ：大小默认为1024bit，<font color="#c00000">即1024个标志位</font>。
 	- 传入时：为委托内核需要<font color="#c00000">检测读缓冲区</font>的文件描述符的集合
 	- 传出时：读缓冲区<font color="#c00000">可读</font>的文件描述符集合
@@ -173,7 +174,7 @@ int WSAAPI select(
 ```
 
 其中，与BSD socket中不一致的参数为：
-- `nfds` 参数无效，<span style="background:#fff88f"><font color="#c00000">填写为-1即可</font></span>。
+- `nfds` 参数无效，随意填写即可。
 在返回值上：
 
 
