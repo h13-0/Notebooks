@@ -153,9 +153,9 @@ int main()
 
 #### 3.3.1 setsockopt
 
+##### 3.3.1.1 setsockopt概述
 
+##### setsockopt选项列表
 
+![[setsockopt及其选项列表#3 setsockopt选项列表]]
 
-....则该函数的常用选项如字章节所示。
-
-##### 3.3.1.1 SO_REUSEADDR duan k
