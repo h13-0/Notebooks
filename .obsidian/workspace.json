@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "操作系统/课外补充/IO模型/IO模型.md",
+                "file": "计算机网络/基础应试学习/第五章 传输层/第五章 传输层.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "IO模型"
+              "title": "第五章 传输层"
             }
           },
           {
@@ -186,9 +186,11 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {},
+              "state": {
+                "file": "计算机网络/基础应试学习/第五章 传输层/第五章 传输层.md"
+              },
               "icon": "lucide-list",
-              "title": "大纲"
+              "title": "第五章 传输层 的大纲"
             }
           },
           {
@@ -212,7 +214,7 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
@@ -233,8 +235,9 @@
   },
   "active": "9045b9f6d0a82728",
   "lastOpenFiles": [
-    "Linux用户态开发/socket/Linux用户态socket.md",
+    "计算机网络/基础应试学习/第六章 应用层/第六章 应用层.md",
     "操作系统/课外补充/IO模型/IO模型.md",
+    "Linux用户态开发/socket/Linux用户态socket.md",
     "Linux驱动开发/Linux驱动开发笔记.md",
     "操作系统/应试笔记与八股.md",
     "操作系统/Resources/Pasted image 20241116230432.png",
