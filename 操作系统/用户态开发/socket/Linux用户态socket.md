@@ -84,10 +84,15 @@ int main() {
 
 ### 3.3 相关APIs
 
-#### 数据结构
+#### 3.3.1 数据结构
 
+#### 3.3.2 setsockopt
 
+##### 3.3.2.1 setsockopt概述
 
+##### 3.3.2.2 setsockopt选项列表
+
+![[setsockopt及其选项列表#3 setsockopt选项列表]]
 
 ## 4 拓展
 

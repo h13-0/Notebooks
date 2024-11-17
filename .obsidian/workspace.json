@@ -49,8 +49,7 @@
               "title": "应试笔记与八股"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -178,10 +177,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "操作系统/用户态开发/socket/Windows用户态socket.md"
+                "file": "操作系统/用户态开发/socket/Linux用户态socket.md"
               },
               "icon": "lucide-list",
-              "title": "Windows用户态socket 的大纲"
+              "title": "Linux用户态socket 的大纲"
             }
           },
           {
@@ -224,10 +223,10 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "89ff3ef4812bb016",
+  "active": "6f6a6ffe90d80b0b",
   "lastOpenFiles": [
-    "操作系统/用户态开发/socket/Linux用户态socket.md",
     "操作系统/用户态开发/socket/Windows用户态socket.md",
+    "操作系统/用户态开发/socket/Linux用户态socket.md",
     "操作系统/用户态开发/socket/setsockopt及其选项列表.md",
     "操作系统/应试笔记与八股.md",
     "Linux驱动开发/Linux驱动开发笔记.md",
