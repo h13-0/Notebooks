@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "操作系统/用户态开发/socket/Windows用户态socket.md",
+                "file": "操作系统/课外补充/IO模型/IO模型.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Windows用户态socket"
+              "title": "IO模型"
             }
           },
           {
@@ -177,10 +177,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "操作系统/用户态开发/socket/Windows用户态socket.md"
+                "file": "操作系统/课外补充/IO模型/IO模型.md"
               },
               "icon": "lucide-list",
-              "title": "Windows用户态socket 的大纲"
+              "title": "IO模型 的大纲"
             }
           },
           {
@@ -225,11 +225,11 @@
   },
   "active": "89ff3ef4812bb016",
   "lastOpenFiles": [
+    "操作系统/用户态开发/socket/Windows用户态socket.md",
     "STM32开发/STM32配置与API手册/外设接口/外设接口.md",
     "Resources/Pasted image 20240203021517.png",
     "操作系统/用户态开发/socket/Linux用户态socket.md",
     "操作系统/课外补充/IO模型/IO模型.md",
-    "操作系统/用户态开发/socket/Windows用户态socket.md",
     "Resources/Pasted image 20241118002637.png",
     "操作系统/Resources/Pasted image 20241118000708.png",
     "操作系统/Resources/Pasted image 20241116230432.png",
