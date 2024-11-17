@@ -13,7 +13,7 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ## 3 BIO socket
 
-### 3.1 Server段Demo
+### 3.1 Server端Demo
 
 单线程的server段的主要逻辑如下：
 
@@ -79,6 +79,14 @@ int main() {
 }
 
 ```
+
+### 3.2 Client端Demo
+
+### 3.3 相关APIs
+
+#### 数据结构
+
+
 
 
 ## 4 拓展
