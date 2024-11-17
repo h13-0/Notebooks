@@ -51,8 +51,14 @@ number headings: auto, first-level 2, max 6, 1.1
 对上一章节末尾的场景进行分析，其效率问题主要集中在了：
 - 线程利用率低，一个线程只能负责一个阻塞业务
 - 线程数量太多所带来的附加问题
+
 针对上述BIO线程数过多的问题，BSD socket提出了 `select` 解决方案。
 
+BSD socket最开始是为了BSD系统(类Unix系统)设计的，而类Unix系统的设计理念之一就是"一切皆文件"，因此BSD为socket等文件设计了如下的 `select` 解决方案：
+1. 设计一个 `select` 函数，该函数可以<font color="#c00000">同时监听</font><span style="background:#fff88f"><font color="#c00000">多个文件</font></span>的<font color="#c00000">读缓冲区可读</font>、<font color="#c00000">写缓冲区可写</font>、<font color="#c00000">异常事件</font>。
+2. 该函数由一个线程轮询调用，当<font color="#c00000">这些被监听的事件发生</font>或<font color="#c00000">函数阻塞到达最长等待时长</font>后，函数会返回并告知调用者轮询结果。
+3. 在调用者收到轮询结果后，可以对需要操作的<font color="#c00000">多个文件</font>进行操作。
 
+基本示意图如下：
 
 

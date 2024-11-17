@@ -49,7 +49,8 @@
               "title": "setsockopt及其选项列表"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -177,10 +178,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "操作系统/课外补充/IO模型/IO模型.md"
+                "file": "操作系统/应试笔记与八股.md"
               },
               "icon": "lucide-list",
-              "title": "IO模型 的大纲"
+              "title": "应试笔记与八股 的大纲"
             }
           },
           {
@@ -223,18 +224,18 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "89ff3ef4812bb016",
+  "active": "beece2c4e512ea4f",
   "lastOpenFiles": [
+    "操作系统/用户态开发/socket/setsockopt及其选项列表.md",
+    "操作系统/课外补充/IO模型/IO模型.md",
     "操作系统/用户态开发/socket/Windows用户态socket.md",
     "STM32开发/STM32配置与API手册/外设接口/外设接口.md",
     "Resources/Pasted image 20240203021517.png",
     "操作系统/用户态开发/socket/Linux用户态socket.md",
-    "操作系统/课外补充/IO模型/IO模型.md",
     "Resources/Pasted image 20241118002637.png",
     "操作系统/Resources/Pasted image 20241118000708.png",
     "操作系统/Resources/Pasted image 20241116230432.png",
     "操作系统/Resources/Pasted image 20241118000735.png",
-    "操作系统/用户态开发/socket/setsockopt及其选项列表.md",
     "操作系统/应试笔记与八股.md",
     "Linux驱动开发/Linux驱动开发笔记.md",
     "前后端编程/SSM框架/SpringFramework/Spring Framework基础.md",
