@@ -27,9 +27,9 @@ flowchart TB
 	G --> H[开始监听并阻塞<br><code>listen</code>]
 	H --> I[接受连接<br><code>accept</code>]
 	I --> J[<code>read</code> & <code>write</code>]
-	C --> |退出|K[清除Winsock DLL<br><code>WSACleanup</code>]
-	K --> L[退出]
-	J --> M[判定退出...]
+	C --> |退出|K[退出开始]
+	J --> C
+	L[退出开始] --> M[清除Winsock DLL<br><code>WSACleanup</code>]
 ```
 
 在Windows下，<font color="#c00000">socket每进行一次连接都需要重新创建</font>。
@@ -151,11 +151,14 @@ int main()
 
 ### 3.3 相关APIs
 
-#### 3.3.1 setsockopt
+#### 3.3.1 数据结构 SOCKADDR_IN 与 SOCKADDR
 
-##### 3.3.1.1 setsockopt概述
 
-##### setsockopt选项列表
+#### 3.3.2 setsockopt
+
+##### 3.3.2.1 setsockopt概述
+
+##### 3.3.2.2 setsockopt选项列表
 
 ![[setsockopt及其选项列表#3 setsockopt选项列表]]
 
