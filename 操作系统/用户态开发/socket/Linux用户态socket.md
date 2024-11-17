@@ -25,7 +25,7 @@ flowchart TB
 	D --> E[开始监听<br><code>listen</code>]
 	E --> F{判定退出条件}
 	F --> |继续|G[接受连接<br><code>accept</code>]
-	G --> H[<code>read</code> & <code>send</code>]
+	G --> H[<code>recv</code> & <code>send</code>]
 	H --> I[关闭连接<br><code>close</code>]
 	I --> F
 	F --> J[退出]

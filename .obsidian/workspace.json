@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "操作系统/用户态开发/socket/Linux用户态socket.md",
+                "file": "操作系统/课外补充/IO模型/IO模型.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Linux用户态socket"
+              "title": "IO模型"
             }
           },
           {
@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "操作系统/用户态开发/socket/Windows用户态socket.md",
+                "file": "操作系统/用户态开发/socket/Linux用户态socket.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Windows用户态socket"
+              "title": "Linux用户态socket"
             }
           },
           {
@@ -177,10 +177,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "操作系统/用户态开发/socket/Linux用户态socket.md"
+                "file": "操作系统/课外补充/IO模型/IO模型.md"
               },
               "icon": "lucide-list",
-              "title": "Linux用户态socket 的大纲"
+              "title": "IO模型 的大纲"
             }
           },
           {
@@ -225,19 +225,19 @@
   },
   "active": "6f6a6ffe90d80b0b",
   "lastOpenFiles": [
-    "操作系统/用户态开发/socket/Windows用户态socket.md",
+    "操作系统/Resources/Pasted image 20241116230432.png",
+    "操作系统/课外补充/IO模型/IO模型.md",
     "操作系统/用户态开发/socket/Linux用户态socket.md",
+    "操作系统/用户态开发/socket/Windows用户态socket.md",
     "操作系统/用户态开发/socket/setsockopt及其选项列表.md",
     "操作系统/应试笔记与八股.md",
     "Linux驱动开发/Linux驱动开发笔记.md",
     "前后端编程/SSM框架/SpringFramework/Spring Framework基础.md",
     "操作系统/用户态开发/IPC/Linux用户态IPC.md",
-    "操作系统/Resources/Pasted image 20241116230432.png",
     "操作系统/用户态开发/应试笔记.md",
     "操作系统/Linux用户态开发/未命名.md",
     "计算机网络/基础应试学习/第五章 传输层/第五章 传输层.md",
     "计算机网络/基础应试学习/第六章 应用层/第六章 应用层.md",
-    "操作系统/课外补充/IO模型/IO模型.md",
     "Resources/Pasted image 20240203021517.png",
     "操作系统/Resources",
     "操作系统/课外补充/并发与互斥",
@@ -256,7 +256,6 @@
     "自动控制/卡尔曼滤波.md",
     "FreeRTOS/FreeRTOS应用及原理分析/FreeRTOS工程创建与移植.md",
     "嵌入式基础/接口技术/I2C/I2C总线标准.md",
-    "嵌入式基础/软件层技术/应用层通信协议/JSON.md",
     "计算机网络/计算机网络非应试拓展/JSON",
     "嵌入式基础/Resources/chrome_1AsQ0QQGM7.png",
     "嵌入式基础/Resources/chrome_Ylc5HPXvpA.png",
