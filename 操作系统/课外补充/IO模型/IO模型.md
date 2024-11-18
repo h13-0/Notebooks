@@ -120,15 +120,20 @@ struct pollfd{
 int poll(struct pollfd *fds, nfds_t nfds, int timeout);
 ```
 - 其参数：
-	- `struct pollfd *fds` ：为 `struct pollfd` 构成的数组，其结构体成员：
+	- `struct pollfd *fds` ：为 `struct pollfd` 构成的<font color="#c00000">数组</font>， `struct pollfd` 的结构体成员：
 		- `fd` ：需要监听的fd号
-		- `events` ：
-		- `revents` ：
-	- 
-	- 
-
-其中：
-
+		- `events` ：需要使用poll等待的事件，可以使用位运算
+		- `revents` ：发生的事件
+	- `nfds_t nfds` ：指定 `fds` 的数组大小
+	- `int timeout` ：等待的毫秒数，其中：
+		- `timeout = -1` ：永久等待，直到事件发生
+		- `timeout = 0` ：立即返回
+		- `timeout > 0` ：等待xxms
+- 其返回值：
+	- 大于等于0时，含义为 `revents` 域不为0的文件描述符个数
+	- 失败时为-1，错误查看方法取决于各操作系统
+注：
+- 本函数在Windows上的实现为 `WSAPoll` 函数，作用与形式类似。
 
 #### 3.2.3 epoll解决方案
 
