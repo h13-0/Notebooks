@@ -50,10 +50,12 @@ number headings: auto, first-level 2, max 6, 1.1
 - 该IO的打开、读写等操作一定是非阻塞的。
 - 但是若干IO之间依旧需要顺序执行。
 
+#TODO 
 
-### 3.3 
 
+本IO模型不常用。
 
+### 3.3 IO多路复用(IO Multiplexing)
 
 对上一章节末尾的场景进行分析，其效率问题主要集中在了：
 - 线程利用率低，一个线程只能负责一个阻塞业务
@@ -143,16 +145,18 @@ int poll(struct pollfd *fds, nfds_t nfds, int timeout);
 #### 3.3.3 epoll解决方案
 
 
+### 3.4 信号驱动型IO(Signal Driven IO)
 
 
 
-### 3.4 异步IO(AIO)
 
 
-### 3.5 IO多路复用(IO Multiplexing)
+
+### 3.5 异步IO(AIO)
 
 
-### 3.6 信号驱动型IO(Signal Driven IO)
+
+
 
 
 
