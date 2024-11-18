@@ -60,10 +60,9 @@ number headings: auto, first-level 2, max 6, 1.1
 对上一章节末尾的场景进行分析，其效率问题主要集中在了：
 - 线程利用率低，一个线程只能负责一个阻塞业务
 - 线程数量太多所带来的附加问题
+针对上述BIO线程数过多的问题，BSD提出了IO多路复用方案，让一个线程同时监听多个IO的事件。
 
 #### 3.3.1 select解决方案
-
-针对上述BIO线程数过多的问题，BSD socket提出了 `select` 解决方案。
 
 BSD socket最开始是为了BSD系统(类Unix系统)设计的，而类Unix系统的设计理念之一就是"一切皆文件"，因此BSD为socket等文件设计了如下的 `select` 解决方案：
 1. 设计一个 `select` 函数，该函数可以<font color="#c00000">同时监听</font><span style="background:#fff88f"><font color="#c00000">多个文件</font></span>的<font color="#c00000">读缓冲区可读</font>、<font color="#c00000">写缓冲区可写</font>、<font color="#c00000">异常事件</font>。
@@ -141,8 +140,15 @@ int poll(struct pollfd *fds, nfds_t nfds, int timeout);
 	- 失败时为-1，错误查看方法取决于各操作系统
 注：
 - 本函数在Windows上的实现为 `WSAPoll` 函数，作用与形式类似。
+- 尽管没有了 `select` 中的1024上限，但是当数量过多时仍然会导致运行速度降低。
 
 #### 3.3.3 epoll解决方案
+
+epoll是Linux中独有的一种IO多路复用方案。该方案的使用比上述两个方案更为复杂，但是由于其内部使用的是红黑树的数据结构，其效率相较于 `select` 和 `poll` 更为高效。
+
+epoll方案的使用步骤为：
+1. 使用 `int epoll_create();`
+
 
 
 ### 3.4 信号驱动型IO(Signal Driven IO)
