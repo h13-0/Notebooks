@@ -111,6 +111,7 @@ int main() {
 
 select函数是跨平台的函数，已验证支持的平台有：
 - Linux
+- Free BSD
 - Windows
 - Mac OS
 select底层使用的数据结构为线性表，<font color="#c00000">默认的连接上限为1024个</font>：

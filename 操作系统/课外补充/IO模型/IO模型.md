@@ -52,6 +52,8 @@ number headings: auto, first-level 2, max 6, 1.1
 - 线程利用率低，一个线程只能负责一个阻塞业务
 - 线程数量太多所带来的附加问题
 
+#### 3.2.1 select解决方案
+
 针对上述BIO线程数过多的问题，BSD socket提出了 `select` 解决方案。
 
 BSD socket最开始是为了BSD系统(类Unix系统)设计的，而类Unix系统的设计理念之一就是"一切皆文件"，因此BSD为socket等文件设计了如下的 `select` 解决方案：
@@ -68,4 +70,22 @@ BSD socket最开始是为了BSD系统(类Unix系统)设计的，而类Unix系统
 3. 将socket加入<font color="#c00000">读缓冲区可读</font>监视集合。
 4. 当socket文件发生缓冲区可读时，进行 `accept` 。
 5. 将 `accept` 得到的文件<font color="#c00000">设置为非阻塞</font>，并加入listen集合。
+
+本函数是跨平台的函数，在Linux、FreeBSD、Windows、Mac OS上均有实现，其基本参数为：
+- `int  nfds` ：
+- `fd_set	*readfds` ：
+- `fd_set *writefds` ：
+- `fd_set *exceptfds` ：
+- `struct timeval *timeout`
+此处仅简单列出参数含义，具体定义见各操作系统的socket开发笔记。
+
+#### 3.2.2 poll解决方案
+
+
+
+
+#### 3.2.3 epoll解决方案
+
+
+
 
