@@ -63,5 +63,9 @@ BSD socket最开始是为了BSD系统(类Unix系统)设计的，而类Unix系统
 	![[Pasted image 20241118011240.png]]
 
 在上图中：
-1. 按照正常流程创建socket
-2. 使用
+1. 按照正常流程创建socket。
+2. 在调用 `listen` 时，将socket<font color="#c00000">设置为非阻塞</font>。此时socket也是文件。
+3. 将socket加入<font color="#c00000">读缓冲区可读</font>监视集合。
+4. 当socket文件发生缓冲区可读时，进行 `accept` 。
+5. 将 `accept` 得到的文件<font color="#c00000">设置为非阻塞</font>，并加入listen集合。
+

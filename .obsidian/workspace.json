@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "操作系统/用户态开发/BSD socket/setsockopt及其选项列表.md",
+                "file": "操作系统/用户态开发/BSD socket/Linux用户态socket.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "setsockopt及其选项列表"
+              "title": "Linux用户态socket"
             }
           },
           {
@@ -225,11 +225,11 @@
   },
   "active": "89ff3ef4812bb016",
   "lastOpenFiles": [
-    "Resources/Pasted image 20241118011240.png",
-    "操作系统/用户态开发/BSD socket/setsockopt及其选项列表.md",
     "操作系统/用户态开发/BSD socket/Linux用户态socket.md",
-    "操作系统/应试笔记与八股.md",
+    "操作系统/用户态开发/BSD socket/setsockopt及其选项列表.md",
     "操作系统/课外补充/IO模型/IO模型.md",
+    "Resources/Pasted image 20241118011240.png",
+    "操作系统/应试笔记与八股.md",
     "操作系统/用户态开发/BSD socket/Windows用户态socket.md",
     "STM32开发/STM32配置与API手册/外设接口/外设接口.md",
     "Resources/Pasted image 20240203021517.png",
@@ -265,7 +265,6 @@
     "嵌入式基础/Resources/chrome_Ylc5HPXvpA.png",
     "嵌入式基础/Resources/result.jpeg",
     "Resources/0519[2].png",
-    "Resources/0519.png",
     "操作系统/用户态开发/IPC",
     "操作系统/用户态开发",
     "Linux驱动开发/内核文档翻译/eLinux",

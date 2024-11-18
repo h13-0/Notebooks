@@ -60,10 +60,11 @@ int main() {
 
     bind(socket_fd, (struct sockaddr*)&server_addr, sizeof(server_addr));
 
-    cout << "Start listening 0.0.0.0:8888." << endl;
+    // 设置为监听状态, 该步不阻塞
     listen(socket_fd, 10);
 
     while (1) {
+	    // 等待客户端连接
         cout << "Waiting for connection." << endl;
         int conn_fd = accept(socket_fd, NULL, NULL);
         cout << "Connected." << endl;
