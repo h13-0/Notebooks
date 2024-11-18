@@ -50,11 +50,16 @@ number headings: auto, first-level 2, max 6, 1.1
 - 该IO的打开、读写等操作一定是非阻塞的。
 - 但是若干IO之间依旧需要顺序执行。
 
+
+### 3.3 
+
+
+
 对上一章节末尾的场景进行分析，其效率问题主要集中在了：
 - 线程利用率低，一个线程只能负责一个阻塞业务
 - 线程数量太多所带来的附加问题
 
-#### 3.2.1 select解决方案
+#### 3.3.1 select解决方案
 
 针对上述BIO线程数过多的问题，BSD socket提出了 `select` 解决方案。
 
@@ -104,7 +109,7 @@ int select(int nfds, fd_set *readfds,
 
 此处仅简单列出参数含义用于大致对比不同的解决方案，具体定义见各操作系统的socket开发笔记。
 
-#### 3.2.2 poll解决方案
+#### 3.3.2 poll解决方案
 
 poll解决方案与select基本一致，其只是<font color="#c00000">没有了1024的最大文件数的限制</font>，以及传参的形式有所区别。
 
@@ -135,19 +140,19 @@ int poll(struct pollfd *fds, nfds_t nfds, int timeout);
 注：
 - 本函数在Windows上的实现为 `WSAPoll` 函数，作用与形式类似。
 
-#### 3.2.3 epoll解决方案
+#### 3.3.3 epoll解决方案
 
 
 
 
 
-### 3.3 异步IO(AIO)
+### 3.4 异步IO(AIO)
 
 
-### 3.4 IO多路复用(IO Multiplexing)
+### 3.5 IO多路复用(IO Multiplexing)
 
 
-### 3.5 信号驱动型IO(Signal Driven IO)
+### 3.6 信号驱动型IO(Signal Driven IO)
 
 
 
