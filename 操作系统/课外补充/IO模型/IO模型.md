@@ -73,19 +73,31 @@ BSD socket最开始是为了BSD系统(类Unix系统)设计的，而类Unix系统
 4. 当socket文件发生缓冲区可读时，进行 `accept` 。
 5. 将 `accept` 得到的文件<font color="#c00000">设置为非阻塞</font>，并加入listen集合。
 
-本函数是跨平台的函数，在Linux、FreeBSD、Windows、Mac OS上均有实现，其基本参数为：
-- `int  nfds` ：需要使用 `select` 委托内核查询的三个集合中的<font color="#c00000">最大fd号</font><span style="background:#fff88f"><font color="#c00000">+1</font></span>。
-- `fd_set	*readfds` ：
-	- 传入时：为委托内核需要<font color="#c00000">检测读缓冲区</font>的文件描述符的集合
-	- 传出时：读缓冲区<font color="#c00000">可读</font>的文件描述符集合
-- `fd_set *writefds` ：
-	- 传入时：委托内核需要<font color="#c00000">检测写缓冲区</font>的文件描述符的集合
-	- 传出时：写缓冲区<font color="#c00000">可写</font>的文件描述符集合
-- `fd_set *exceptfds` ：
-	- 传入时：委托内核需要<font color="#c00000">检测异常</font>的文件描述符的集合
-	- 传出时：发生异常的文件描述符集合
-- `struct timeval *timeout` ：
-	- 最大阻塞时长
+本函数在Linux、FreeBSD、Windows、Mac OS上均有实现：
+- 其基本函数声明为(具体声明取决于实现平台)：
+```C
+int select(int nfds, fd_set *readfds,
+            fd_set *writefds,
+            fd_set *exceptfds,
+            struct timeval *timeout);
+```
+- 其参数：
+	- `int  nfds` ：需要使用 `select` 委托内核查询的三个集合中的<font color="#c00000">最大fd号</font><span style="background:#fff88f"><font color="#c00000">+1</font></span>。
+	- `fd_set	*readfds` ：
+		- 传入时：为委托内核需要<font color="#c00000">检测读缓冲区</font>的文件描述符的集合
+		- 传出时：读缓冲区<font color="#c00000">可读</font>的文件描述符集合
+	- `fd_set *writefds` ：
+		- 传入时：委托内核需要<font color="#c00000">检测写缓冲区</font>的文件描述符的集合
+		- 传出时：写缓冲区<font color="#c00000">可写</font>的文件描述符集合
+	- `fd_set *exceptfds` ：
+		- 传入时：委托内核需要<font color="#c00000">检测异常</font>的文件描述符的集合
+		- 传出时：发生异常的文件描述符集合
+	- `struct timeval *timeout` ：
+		- 最大阻塞时长
+- 其返回值：
+	- 大于等于0时，为检测到的符合要求的文件标识符总个数。
+	- 为-1时，则函数调用失败。
+
 其中需要注意的是：
 - 在Linux中，`select` 默认可以监视的最大fd数量为1024
 - 在Free BSD中，`select` 默认可以监视的最大fd数量为1024
@@ -96,8 +108,8 @@ BSD socket最开始是为了BSD系统(类Unix系统)设计的，而类Unix系统
 
 poll解决方案与select基本一致，其只是<font color="#c00000">没有了1024的最大文件数的限制</font>，以及传参的形式有所区别。
 
-在linux中poll函数声明如下：
-
+本函数在Linux、FreeBSD上均有实现：
+- 其基本函数声明为(具体声明取决于实现平台)：
 ```C
 struct pollfd{
 	int fd;
@@ -107,9 +119,16 @@ struct pollfd{
 
 int poll(struct pollfd *fds, nfds_t nfds, int timeout);
 ```
+- 其参数：
+	- `struct pollfd *fds` ：为 `struct pollfd` 构成的数组，其结构体成员：
+		- `fd` ：需要监听的fd号
+		- `events` ：
+		- `revents` ：
+	- 
+	- 
 
 其中：
-- `struct pollfd *fds` ：为 `struct pollfd` 构成的数组，需要在成员 `fd` 中填入需要监听的fd号、在
+
 
 #### 3.2.3 epoll解决方案
 
