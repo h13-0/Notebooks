@@ -60,7 +60,7 @@ number headings: auto, first-level 2, max 6, 1.1
 对上一章节末尾的场景进行分析，其效率问题主要集中在了：
 - 线程利用率低，一个线程只能负责一个阻塞业务
 - 线程数量太多所带来的附加问题
-针对上述BIO线程数过多的问题，BSD提出了IO多路复用方案，让一个线程同时监听多个IO的事件。
+针对上述BIO线程数过多的问题，BSD提出了IO多路复用方案：<font color="#c00000">让一个线程同时监听多个IO的指定事件</font>。
 
 #### 3.3.1 select解决方案
 
@@ -147,9 +147,24 @@ int poll(struct pollfd *fds, nfds_t nfds, int timeout);
 epoll是Linux中独有的一种IO多路复用方案。该方案的使用比上述两个方案更为复杂，但是由于其内部使用的是红黑树的数据结构，其效率相较于 `select` 和 `poll` 更为高效。
 
 epoll方案的使用步骤为：
-1. 使用 `int epoll_create();`
+![[chrome_8uyFjkPyld.png]]
+1. 使用 `int epoll_create(int size);` 创建epoll实例，其中 `size` 参数表示 `epoll` 实例可以管理的最大文件描述符数。
+2. 将一个或多个事件通过 `int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);` 添加到epoll实例中。
+3. 使用 `int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout);` 函数等待事件。
+4. 处理发生的事件。
 
+具体实现可见[[Linux用户态socket]]笔记。
 
+#### 3.3.4 三种IO多路复用方案的比较
+
+|        |                 `select`                  |                 `poll`                  | `epoll`                  |
+| ------ | :---------------------------------------: | :-------------------------------------: | ------------------------ |
+| 操作方式   |                                           |                                         |                          |
+| 底层数据结构 |                    数组                     |                   链表                    | 哈希表                      |
+| IO效率   |                                           |                                         |                          |
+| 最大连接数  |           1024(x86) 或 2048(x64)           |                   无上限                   | 无上限                      |
+| fd拷贝   | 每次调用 `select` 都要完成<br>fd集合的用户-内核-用户的两次拷贝。 | 每次调用 `poll` 都要完成<br>fd集合的用户-内核-用户的两次拷贝。 | 调用 `epoll_ctl` 时拷贝进内核并保存 |
+|        |                                           |                                         |                          |
 
 ### 3.4 信号驱动型IO(Signal Driven IO)
 
