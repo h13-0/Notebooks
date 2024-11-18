@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "操作系统/用户态开发/BSD socket/Linux用户态socket.md",
+                "file": "操作系统/课外补充/IO模型/IO模型.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Linux用户态socket"
+              "title": "IO模型"
             }
           },
           {
@@ -163,10 +163,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "操作系统/用户态开发/BSD socket/Linux用户态socket.md"
+                "file": "操作系统/课外补充/IO模型/IO模型.md"
               },
               "icon": "lucide-list",
-              "title": "Linux用户态socket 的大纲"
+              "title": "IO模型 的大纲"
             }
           },
           {
@@ -209,11 +209,12 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "7ddc64b2e3c9b5c8",
+  "active": "beece2c4e512ea4f",
   "lastOpenFiles": [
+    "Resources/Pasted image 20241118155456.png",
+    "操作系统/用户态开发/BSD socket/Linux用户态socket.md",
     "操作系统/Resources/10031-2017.pdf",
     "操作系统/课外补充/IO模型/IO模型.md",
-    "操作系统/用户态开发/BSD socket/Linux用户态socket.md",
     "操作系统/用户态开发/BSD socket/setsockopt及其选项列表.md",
     "Resources/Pasted image 20241118011240.png",
     "操作系统/应试笔记与八股.md",
@@ -256,7 +257,6 @@
     "操作系统/用户态开发",
     "Linux驱动开发/内核文档翻译/eLinux",
     "FreeRTOS/Resources",
-    "Linux驱动开发/Linux设备树",
     "嵌入式基础/接口技术/未命名.canvas",
     "CPP/Resources/C数据类型.canvas"
   ]

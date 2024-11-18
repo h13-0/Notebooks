@@ -24,6 +24,8 @@ number headings: auto, first-level 2, max 6, 1.1
 1. <font color="#c00000">阻塞IO一定是同步IO</font>：当应用程序执行阻塞IO时，它会同步地等待IO操作的完成。因此所有阻塞IO操作也是同步的。
 2. <font color="#c00000">同步IO</font><span style="background:#fff88f"><font color="#c00000">不一定</font></span><font color="#c00000">是阻塞IO</font>：同步IO表示应用程序关心IO操作何时完成，并在操作完成前不会继续执行其他逻辑处理。<font color="#c00000">但是这并不意味着它一定会阻塞应用程序的执行线程</font>。
 
+![[Pasted image 20241118155456.png]]
+
 ### 3.1 阻塞IO(BIO)
 
 以常见的TCP编程为例，其BIO下的通信流程如下图所示：
@@ -118,10 +120,10 @@ int poll(struct pollfd *fds, nfds_t nfds, int timeout);
 ### 3.3 异步IO(AIO)
 
 
-### 3.4 IO多路复用
+### 3.4 IO多路复用(IO Multiplexing)
 
 
-### 3.5 信号驱动型IO
+### 3.5 信号驱动型IO(Signal Driven IO)
 
 
 
