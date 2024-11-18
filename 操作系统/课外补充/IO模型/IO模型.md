@@ -86,17 +86,42 @@ BSD socket最开始是为了BSD系统(类Unix系统)设计的，而类Unix系统
 	- 最大阻塞时长
 其中需要注意的是：
 - 在Linux中，`select` 默认可以监视的最大fd数量为1024
-- 在Free BSD中
+- 在Free BSD中，`select` 默认可以监视的最大fd数量为1024
 
 此处仅简单列出参数含义用于大致对比不同的解决方案，具体定义见各操作系统的socket开发笔记。
 
 #### 3.2.2 poll解决方案
 
-poll解决方案与select基本一致，其只是没有了
+poll解决方案与select基本一致，其只是<font color="#c00000">没有了1024的最大文件数的限制</font>，以及传参的形式有所区别。
 
+在linux中poll函数声明如下：
+
+```C
+struct pollfd{
+	int fd;
+	short events;
+	short revents;
+};
+
+int poll(struct pollfd *fds, nfds_t nfds, int timeout);
+```
+
+其中：
+- `struct pollfd *fds` ：为 `struct pollfd` 构成的数组，需要在成员 `fd` 中填入需要监听的fd号、在
 
 #### 3.2.3 epoll解决方案
 
+
+
+
+
+### 3.3 异步IO(AIO)
+
+
+### 3.4 IO多路复用
+
+
+### 3.5 信号驱动型IO
 
 
 
