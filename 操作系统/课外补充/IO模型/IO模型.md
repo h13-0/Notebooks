@@ -72,16 +72,27 @@ BSD socket最开始是为了BSD系统(类Unix系统)设计的，而类Unix系统
 5. 将 `accept` 得到的文件<font color="#c00000">设置为非阻塞</font>，并加入listen集合。
 
 本函数是跨平台的函数，在Linux、FreeBSD、Windows、Mac OS上均有实现，其基本参数为：
-- `int  nfds` ：
+- `int  nfds` ：需要使用 `select` 委托内核查询的三个集合中的<font color="#c00000">最大fd号</font><span style="background:#fff88f"><font color="#c00000">+1</font></span>。
 - `fd_set	*readfds` ：
+	- 传入时：为委托内核需要<font color="#c00000">检测读缓冲区</font>的文件描述符的集合
+	- 传出时：读缓冲区<font color="#c00000">可读</font>的文件描述符集合
 - `fd_set *writefds` ：
+	- 传入时：委托内核需要<font color="#c00000">检测写缓冲区</font>的文件描述符的集合
+	- 传出时：写缓冲区<font color="#c00000">可写</font>的文件描述符集合
 - `fd_set *exceptfds` ：
-- `struct timeval *timeout`
-此处仅简单列出参数含义，具体定义见各操作系统的socket开发笔记。
+	- 传入时：委托内核需要<font color="#c00000">检测异常</font>的文件描述符的集合
+	- 传出时：发生异常的文件描述符集合
+- `struct timeval *timeout` ：
+	- 最大阻塞时长
+其中需要注意的是：
+- 在Linux中，`select` 默认可以监视的最大fd数量为1024
+- 在Free BSD中
+
+此处仅简单列出参数含义用于大致对比不同的解决方案，具体定义见各操作系统的socket开发笔记。
 
 #### 3.2.2 poll解决方案
 
-
+poll解决方案与select基本一致，其只是没有了
 
 
 #### 3.2.3 epoll解决方案

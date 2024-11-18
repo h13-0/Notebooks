@@ -128,7 +128,7 @@ int select(int nfds, fd_set *_Nullable restrict readfds,
 ```
 
 其中，参数：
-- `nfds` ：委托给内核的三类文件描述符集合的<font color="#c00000">最大集合的个数</font><span style="background:#fff88f"><font color="#c00000">+1</font></span>。或者设置为1024(但是效率略有降低)。
+- `nfds` ：需要使用 `select` 委托内核查询的三个集合中的<font color="#c00000">最大fd号</font><span style="background:#fff88f"><font color="#c00000">+1</font></span>。或者设置为1024(但是效率略有降低)。
 - `__readfds` ：大小默认为1024bit，<font color="#c00000">即1024个标志位</font>。
 	- 传入时：为委托内核需要<font color="#c00000">检测读缓冲区</font>的文件描述符的集合
 	- 传出时：读缓冲区<font color="#c00000">可读</font>的文件描述符集合
