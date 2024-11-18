@@ -2234,7 +2234,7 @@ wake_up_interruptible_sync(x)
 
 ### 8.7 非阻塞型IO
 
-关于阻塞IO和非阻塞IO的相关定义与基础知识可以详见：[[IO模型#3 IO模型]]。
+学习本章前，务必学习[[IO模型]]。
 
 除了阻塞IO之外，Linux支持用户程序以非阻塞IO打开/操作设备。
 选择是否为非阻塞IO需要<span style="background:#fff88f"><font color="#c00000">且仅能</font></span>在 `f_open` 阶段进行设置。
