@@ -202,6 +202,8 @@ IO多路复用解决了线程数过多的问题，允许使用一个线程监听
 
 ### 3.5 异步IO(AIO)
 
+![[Pasted image 20241118171908.png]]
+
 在拥有了非阻塞的IO模型后(注意非阻塞IO和NIO的区别)，就已经可以实现异步请求了：
 
 ```CPP
@@ -221,7 +223,7 @@ int service(){
 }
 ```
 
-#### 3.5.1 Promise设计
+#### 3.5.1 Promise方案
 
 但是上述的异步请求伪代码只是实现了同时请求多个IO操作，并在后续的 `while` 中进行轮询，浪费了大量的CPU时间。
 
@@ -236,33 +238,45 @@ int service(){
 因此可以设计如下的 `Promise` 类：
 
 ```CPP
-
-class Promise() 
-
-
+class Promise() {
+public:
+	// 非阻塞查询
+	bool IsReady() const;
+	// 阻塞等待
+	void Wait() const;
+	static void WaitForAll(const std::vector<SimplePromise<T>*>& promises);
+	// 回调函数
+	void Then(const std::function<void(const T&)>& callback);
+}
 ```
 
+上述的Promise类可以基于IO多路复用等方式实现。
 
-
+则原先的代码可以如下编写：
 
 ```CPP
 int service(){
 	// 发起数据库读取请求
-	promise db_promise = nio_db_read_async();
+	Promise db_promise = aio_db_read_async();
 	
 	// 发起文件下载请求
-	promise dl_promise = nio_file_download_async();
+	Promise dl_promise = aio_file_download_async();
 
-	while(nio_db_read_complete() && nio_file_download_complete()) {
-		// do sth...
-	}
+	// 阻塞等待多个Promise
+	Promise::WaitForAll({db_promise, dl_promise});
+
+	// do sth...
 
 	return 0;
 }
 ```
 
+#### 3.5.2 await/async方案
 
 
 
 
-![[Pasted image 20241118171908.png]]
+
+
+
+
