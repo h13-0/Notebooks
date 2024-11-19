@@ -2259,10 +2259,10 @@ fd = open("path"，O_RDONLY | O_NONBLOCK)
 
 Linux为[[IO模型#3 3 IO多路复用 IO Multiplexing|IO多路复用模型]]提供了 `select` 、 `poll` 、 `epoll` 三种操作接口。但是这三种操作接口本质都是调用 `file_operations` 结构体中的 `poll` 函数指针实现的。
 
-设备驱动程序中的 `poll` 接口定义为：
+设备驱动程序中的 `poll` 函数声明为：
 
 ```C
-__poll_t (*poll) (struct file *, struct poll_table_struct *);
+__poll_t poll(struct file *filep, struct poll_table_struct *wait);
 ```
 
 
