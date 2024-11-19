@@ -296,11 +296,41 @@ flowchart
 ```CPP
 int service() {
 	Promise taskA_Promise = 
-		task_a_async().Then(
-			
-		)
+		task_a_step1_async().Then([](){
+			return task_a_step2_async().Then([]{
+				return task_a_step3_async().Then([]{
+					return task_a_step4_async();
+				})
+			})
+		});
+	
+	Promise taskB_Promise = 
+		task_b_step1_async().Then([](){
+			return task_b_step2_async().Then([]{
+				return task_b_step3_async();
+				})
+			})
+		});
+	
+	Promise taskC_Promise = 
+		task_c_step1_async().Then([](){
+			return task_c_step2_async();
+		});
+	
+	Promise::WaitForAll({taskA_Promise, taskB_Promise, taskC_Promise});
+	
+	// Do sth.
+	
+	return 0;
 }
 ```
+
+但是这样调用会存在 `callback hell` 问题，为了解决问题从而引入了await/async方案。
+
+该方案可以理解为语言为异步IO模型提供了一种异步编程的简化，其主要特性如下：
+1. 
+2. 在编译层面，使用 `async` 和 `await` 的代码通常被编译器转换成状态机，即yi wei
+
 
 
 
