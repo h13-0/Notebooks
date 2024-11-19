@@ -20,8 +20,21 @@
               "icon": "lucide-file",
               "title": "Linux驱动开发笔记"
             }
+          },
+          {
+            "id": "4be77e9b88812449",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.7.7"
+              },
+              "icon": "lucide-file",
+              "title": "Release Notes 1.7.7"
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -148,11 +161,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "Linux驱动开发/Linux驱动开发笔记.md"
-              },
+              "state": {},
               "icon": "lucide-list",
-              "title": "Linux驱动开发笔记 的大纲"
+              "title": "大纲"
             }
           },
           {
@@ -195,10 +206,28 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "054893e65459980c",
+  "active": "4be77e9b88812449",
   "lastOpenFiles": [
+    "操作系统/用户态开发/协程/协程.md",
+    "操作系统/用户态开发/线程锁/实现/线程锁 with pthread.md",
+    "操作系统/用户态开发/线程锁/线程锁与信号量.md",
+    "操作系统/用户态开发/POSIX/Readme.md",
+    "操作系统/课外补充/并发与互斥/Berstein条件.md",
+    "嵌入式基础/接口技术/I2C/I2C总线标准.md",
+    "嵌入式基础/应试笔记与八股.md",
+    "计算机网络/计算机网络非应试拓展/JSON/JSON.md",
+    "嵌入式基础/软件层技术/应用层通信协议/JSON.md",
+    "嵌入式基础/接口技术/CAN/CAN总线协议标准.md",
+    "自动控制/卡尔曼滤波.md",
+    "CPP/应试笔记与八股.md",
+    "操作系统/用户态开发/IPC/Linux用户态IPC.md",
+    "操作系统/应试笔记与八股.md",
+    "操作系统/用户态开发/BSD socket/setsockopt及其选项列表.md",
+    "操作系统/用户态开发/BSD socket/Windows用户态socket.md",
+    "STM32开发/STM32配置与API手册/外设接口/外设接口.md",
     "操作系统/用户态开发/BSD socket/Linux用户态socket.md",
     "操作系统/课外补充/IO模型/IO模型.md",
+    "Linux驱动开发/Linux驱动开发笔记.md",
     "操作系统/Resources/Pasted image 20241118171908.png",
     "操作系统/Resources/Pasted image 20241118171902.png",
     "操作系统/Resources/Pasted image 20241118171723.png",
@@ -207,36 +236,19 @@
     "操作系统/Resources/Pasted image 20241118011240.png",
     "Resources/Pasted image 20240203021517.png",
     "操作系统/Resources/chrome_8uyFjkPyld.png",
-    "操作系统/用户态开发/BSD socket/setsockopt及其选项列表.md",
-    "Linux驱动开发/Linux驱动开发笔记.md",
     "操作系统/Resources/10031-2017.pdf",
-    "操作系统/应试笔记与八股.md",
-    "操作系统/用户态开发/BSD socket/Windows用户态socket.md",
-    "STM32开发/STM32配置与API手册/外设接口/外设接口.md",
     "Resources/Pasted image 20241118002637.png",
     "操作系统/Resources/Pasted image 20241118000708.png",
     "前后端编程/SSM框架/SpringFramework/Spring Framework基础.md",
-    "操作系统/用户态开发/IPC/Linux用户态IPC.md",
     "操作系统/用户态开发/应试笔记.md",
     "操作系统/Linux用户态开发/未命名.md",
     "计算机网络/基础应试学习/第五章 传输层/第五章 传输层.md",
     "计算机网络/基础应试学习/第六章 应用层/第六章 应用层.md",
     "操作系统/Resources",
     "操作系统/课外补充/并发与互斥",
-    "CPP/应试笔记与八股.md",
     "操作系统/课外补充/IO模型",
     "操作系统/用户态开发/BSD socket",
     "计算机网络/基础应试学习/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
-    "CPP/C标准笔记/C与C++标准.md",
-    "CPP/C标准笔记/C标准学习笔记.md",
-    "CPP/C2CPP/C2CPP.md",
-    "嵌入式基础/应试笔记与八股.md",
-    "嵌入式基础/接口技术/CAN/CAN总线协议标准.md",
-    "嵌入式基础/软件层技术/应用层通信协议/Modbus.md",
-    "计算机网络/基础应试学习/第三章 数据链路层/第三章 数据链路层.md",
-    "FreeRTOS/应试笔记与八股.md",
-    "自动控制/卡尔曼滤波.md",
-    "FreeRTOS/FreeRTOS应用及原理分析/FreeRTOS工程创建与移植.md",
     "计算机网络/计算机网络非应试拓展/JSON",
     "操作系统/用户态开发/IPC",
     "操作系统/用户态开发",

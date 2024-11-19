@@ -2173,7 +2173,8 @@ wait_event_exclusive_cmd(wq_head, condition, cmd1, cmd2)
 
 #### 8.5.2 手工休眠
 
-shou
+手工休眠主要工作是将内核提供的宏函数展开并按照需要的逻辑实现。
+#TODO 
 
 ### 8.6 唤醒及其相关细节
 
