@@ -2328,6 +2328,7 @@ int fsync(struct file *filep, loff_t start, loff_t end, int datasync);
 
 #### 8.7.2 select、poll、epoll的底层原理和数据结构
 
+详见[[IO多路复用接口(select、poll、epoll)]]。
 
 #### 8.7.3 异步IO
 

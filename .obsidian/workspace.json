@@ -27,15 +27,16 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "操作系统/课外补充/IO模型/IO模型.md",
+                "file": "操作系统/Linux原理专题/系统调用专题/IO多路复用接口(select、poll、epoll).md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "IO模型"
+              "title": "IO多路复用接口(select、poll、epoll)"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -209,8 +210,9 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "893be47d5d8d11df",
+  "active": "b79238cdb4ee50f9",
   "lastOpenFiles": [
+    "Linux驱动开发/Linux驱动开发笔记.md",
     "操作系统/课外补充/IO模型/IO模型.md",
     "操作系统/Linux原理专题/系统调用专题/IO多路复用接口(select、poll、epoll).md",
     "Linux驱动开发/MISC/select、poll、epoll的底层原理和数据结构.md",
@@ -221,7 +223,6 @@
     "操作系统/Linux原理专题",
     "Linux驱动开发/MISC/pr_fmt应用及原理解析.md",
     "Linux驱动开发/MISC/Kconfig基础语法.md",
-    "Linux驱动开发/Linux驱动开发笔记.md",
     "操作系统/Resources/chrome_zST8iNWLGQ.png",
     "操作系统/Resources/git_ignored/UNIX环境高级编程（中文第三版） (W. Richard Stevens etc.) (Z-Library).pdf",
     "操作系统/Resources/git_ignored",
