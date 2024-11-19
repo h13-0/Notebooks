@@ -2253,15 +2253,7 @@ fd = open("path", O_RDONLY | O_NONBLOCK)
 
 #### 8.7.1 非阻塞型IO的标准语义
 
-##### 8.7.1.1 read函数的标准语义
-
-##### write
-
-##### 8.7.1.2 read、write、open函数的标准语义
-
-
-
-##### 8.7.1.3 poll函数的标准语义
+##### 8.7.1.1 poll函数的标准语义
 
 Linux为[[IO模型#3 3 IO多路复用 IO Multiplexing|IO多路复用模型]]提供了 `select` 、 `poll` 、 `epoll` 三种操作接口。但是这三种操作接口本质都是调用 `file_operations` 结构体中的 `poll` 函数指针实现的。
 
@@ -2270,6 +2262,29 @@ Linux为[[IO模型#3 3 IO多路复用 IO Multiplexing|IO多路复用模型]]提�
 ```C
 __poll_t poll(struct file *filep, struct poll_table_struct *wait);
 ```
+
+#TODO 
+
+上述的poll函数，除了用于为 `select` 、 `poll` 、 `epoll` 三种操作接口提供后端外，还需要保证<font color="#c00000">在文件的不同状态时</font>与 `read` 、 `write` 函数<span style="background:#fff88f"><font color="#c00000">保持对应匹配的行为</font></span>(<font color="#c00000">即使当前文件被使用阻塞IO打开</font>)。具体可见后续章节
+
+##### 8.7.1.2 read函数的标准语义
+
+从设备读取数据时可以分为如下三种情况进行讨论：
+1. <font color="#c00000">如果输入缓冲区有数据</font>：即可读数据大于等于1byte，则read函数应当立即返回。返回的
+2. <font color="#c00000">如果输入缓冲区没有数据</font>：则：
+	1. <font color="#c00000">若未设置为非阻塞IO</font>：则read函数必须阻塞直到至少有一个字节到达。
+	2. <font color="#c00000">若设置为非阻塞IO</font>：则：
+		- read函数必须立即返回，返回值为 `-EAGAIN` 。
+		- poll函数必须报告she
+
+
+
+
+##### 8.7.1.3 write函数的标准语义
+
+
+
+##### 8.7.1.4 open函数的标准语义
 
 
 
