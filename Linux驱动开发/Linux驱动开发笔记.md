@@ -1116,7 +1116,7 @@ struct file_operations {
 | `write`             | 可为空<sup>1</sup>                  |                     | 用于写入数据，返回值为写入的字节数。                                                                                                                                                                                                                                                                                                                         |
 | `aio_write`         | 可为空<sup>1</sup>                  |                     | 用于从设备中<font color="#c00000">异步</font>写入数据，数据写入完毕后调用参数指定的回调函数。                                                                                                                                                                                                                                                                              |
 | `readdir`           | 可为空                              |                     | 读取目录操作。<font color="#c00000">对于文件类型，该参数应当为NULL</font>。                                                                                                                                                                                                                                                                                     |
-| `iopoll`            | 可为空                              |                     | NIO多路复用模型的后端实现。用于查询请求某个事件/操作是否会被阻塞。<br>为NULL时则意味告诉内核请求该设备任何事件/操作都不会发生阻塞。                                                                                                                                                                                                                                                                   |
+| `iopoll`            | 可为空                              |                     | [[IO模型#3 3 IO多路复用 IO Multiplexing\|非阻塞IO多路复用模型]]的后端实现。用于查询请求某个事件/操作是否会被阻塞。<br>为NULL时则意味告诉内核请求该设备任何事件/操作都不会发生阻塞。                                                                                                                                                                                                                            |
 | `ioctl`             | 可为空<sup>1</sup>                  |                     | <span style="background:#fff88f"><font color="#c00000">为内核/用户提供该设备的特殊命令操作</font></span>。                                                                                                                                                                                                                                                   |
 | `mmap`              | 可为空<sup>1</sup>                  |                     | 将设备内存映射到进程地址空间。                                                                                                                                                                                                                                                                                                                            |
 | `open`              | <font color="#c00000">可为空</font> |                     | 如果该函数为NULL，<span style="background:#fff88f"><font color="#c00000">则打开该设备的请求无论如何都会成功</font></span>，且驱动程序不会知道本设备被打开。                                                                                                                                                                                                                         |
@@ -1974,7 +1974,7 @@ echo "90" > /dev/servo0
 
 ##### 8.3.1.1 read与write语义
 
-
+#TODO 
 
 
 
@@ -2250,6 +2250,14 @@ fd = open("path"，O_RDONLY | O_NONBLOCK)
 只有 `read` 、 `write` 和 `open` 文件操作会收非阻塞标志的影响。
 
 #### 8.7.1 非阻塞型IO的标准语义
+
+##### 8.7.1.1 read、write、open函数的标准语义
+
+
+
+##### 8.7.1.2 select和poll函数的标准语义
+
+
 
 
 

@@ -22,19 +22,20 @@
             }
           },
           {
-            "id": "4be77e9b88812449",
+            "id": "a5478a68c7dac42b",
             "type": "leaf",
             "state": {
-              "type": "release-notes",
+              "type": "markdown",
               "state": {
-                "currentVersion": "1.7.7"
+                "file": "操作系统/课外补充/IO模型/IO模型.md",
+                "mode": "source",
+                "source": false
               },
               "icon": "lucide-file",
-              "title": "Release Notes 1.7.7"
+              "title": "IO模型"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -161,9 +162,11 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {},
+              "state": {
+                "file": "Linux驱动开发/Linux驱动开发笔记.md"
+              },
               "icon": "lucide-list",
-              "title": "大纲"
+              "title": "Linux驱动开发笔记 的大纲"
             }
           },
           {
@@ -206,8 +209,10 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "4be77e9b88812449",
+  "active": "054893e65459980c",
   "lastOpenFiles": [
+    "操作系统/课外补充/IO模型/IO模型.md",
+    "Linux驱动开发/Linux驱动开发笔记.md",
     "操作系统/用户态开发/协程/协程.md",
     "操作系统/用户态开发/线程锁/实现/线程锁 with pthread.md",
     "操作系统/用户态开发/线程锁/线程锁与信号量.md",
@@ -226,8 +231,6 @@
     "操作系统/用户态开发/BSD socket/Windows用户态socket.md",
     "STM32开发/STM32配置与API手册/外设接口/外设接口.md",
     "操作系统/用户态开发/BSD socket/Linux用户态socket.md",
-    "操作系统/课外补充/IO模型/IO模型.md",
-    "Linux驱动开发/Linux驱动开发笔记.md",
     "操作系统/Resources/Pasted image 20241118171908.png",
     "操作系统/Resources/Pasted image 20241118171902.png",
     "操作系统/Resources/Pasted image 20241118171723.png",
