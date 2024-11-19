@@ -227,8 +227,8 @@
   "active": "2375971c848776a5",
   "lastOpenFiles": [
     "操作系统/课外补充/IO模型/IO模型.md",
-    "操作系统/Linux原理专题/系统调用专题/IO多路复用接口(select、poll、epoll).md",
     "Linux驱动开发/Linux驱动开发笔记.md",
+    "操作系统/Linux原理专题/系统调用专题/IO多路复用接口(select、poll、epoll).md",
     "Linux驱动开发/MISC/select、poll、epoll的底层原理和数据结构.md",
     "操作系统/Linux原理专题/系统调用专题/Linux系统调用基础.md",
     "操作系统/课外补充/Readme.md",
