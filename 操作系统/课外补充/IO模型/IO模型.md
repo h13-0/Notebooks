@@ -245,8 +245,8 @@ public:
 	// 阻塞等待
 	void Wait() const;
 	static void WaitForAll(const std::vector<SimplePromise<T>*>& promises);
-	// 回调函数
-	void Then(const std::function<void(const T&)>& callback);
+	// 回调函数, 返回值为参数内回调函数的返回值
+	std::optional<R> Then(const std::function<R(const T&)>& callback);
 }
 ```
 
@@ -273,9 +273,34 @@ int service(){
 
 #### 3.5.2 await/async方案
 
+考虑如下的任务流：
 
+```mermaid
+flowchart
+	A[开始] --> B[前驱子任务A步骤1]
+	B --> C[前驱子任务A步骤2]
+	C --> D[前驱子任务A步骤3]
+	D --> E[前驱子任务A步骤4]
+	A[开始] --> F[前驱子任务B步骤1]
+	F --> G[前驱子任务B步骤2]
+	G --> H[前驱子任务B步骤3]
+	A[开始] --> I[前驱子任务C步骤1]
+	I --> J[前驱子任务C步骤2]
+	E --> K[后置任务D]
+	H --> K
+	J --> K
+```
 
+则明显地，此时可以考虑使用嵌套回调函数完成：
 
+```CPP
+int service() {
+	Promise taskA_Promise = 
+		task_a_async().Then(
+			
+		)
+}
+```
 
 
 
