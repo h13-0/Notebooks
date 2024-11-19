@@ -2266,6 +2266,9 @@ Linux为[[IO模型#3 3 IO多路复用 IO Multiplexing|IO多路复用模型]]提�
 __poll_t poll(struct file *filep, struct poll_table_struct *wait);
 ```
 
+尽管IO多路复用的实现机制较为复杂，但是在上述函数中只需要实现如下两件事：
+1. 
+
 #TODO 
 
 上述的poll函数，除了用于为 `select` 、 `poll` 、 `epoll` 三种操作接口提供后端外，还需要保证<font color="#c00000">在文件的不同状态时</font>与 `read` 、 `write` 函数<span style="background:#fff88f"><font color="#c00000">保持对应匹配的行为</font></span>(<font color="#c00000">即使当前文件被使用阻塞IO打开</font>)，因为对应用程序而言，<span style="background:#fff88f"><font color="#c00000">poll等函数(select、epoll，下同)的返回结果必须保证能够明确接下来的read和write函数是否会遭到阻塞</font></span>。
