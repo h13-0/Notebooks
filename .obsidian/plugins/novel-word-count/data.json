@@ -9532,19 +9532,22 @@
       "isCountable": true,
       "isDirectory": false,
       "noteCount": 1,
-      "wordCount": 266,
+      "wordCount": 270,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 0.8866666666666667,
-      "characterCount": 1591,
-      "nonWhitespaceCharacterCount": 1395,
-      "readingTimeInMinutes": 0.7146792452830188,
+      "pageCount": 0.9,
+      "characterCount": 1601,
+      "nonWhitespaceCharacterCount": 1400,
+      "readingTimeInMinutes": 0.7297735849056604,
       "linkCount": 0,
       "embedCount": 0,
       "aliases": null,
       "createdDate": 1724153598355,
-      "modifiedDate": 1724155857954,
-      "sizeInBytes": 1933
+      "modifiedDate": 1732028825757,
+      "sizeInBytes": 1999,
+      "frontmatter": {
+        "number headings": "auto, first-level 2, max 6, 1.1"
+      }
     },
     "Linux驱动开发/MISC/Kconfig基础语法.md": {
       "isCountable": true,
@@ -10175,6 +10178,63 @@
       "createdDate": 1732027723169,
       "modifiedDate": 1732027723169,
       "sizeInBytes": 130266
+    },
+    "Linux驱动开发/MISC/select、poll、epoll的底层原理和数据结构.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 15,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0.05,
+      "characterCount": 61,
+      "nonWhitespaceCharacterCount": 40,
+      "readingTimeInMinutes": 0.04064150943396226,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1732028717609,
+      "modifiedDate": 1732028855758,
+      "sizeInBytes": 135,
+      "frontmatter": {
+        "number headings": "auto, first-level 2, max 6, 1.1"
+      }
+    },
+    "操作系统/课外补充/Readme.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 33,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0.11,
+      "characterCount": 40,
+      "nonWhitespaceCharacterCount": 36,
+      "readingTimeInMinutes": 0.066,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1732029161733,
+      "modifiedDate": 1732029229636,
+      "sizeInBytes": 110
+    },
+    "操作系统/Linux原理专题/系统调用专题/Linux系统调用基础.md": {
+      "isCountable": true,
+      "isDirectory": false,
+      "noteCount": 1,
+      "wordCount": 5,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0.016666666666666666,
+      "characterCount": 10,
+      "nonWhitespaceCharacterCount": 8,
+      "readingTimeInMinutes": 0.011773584905660377,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1732029238041,
+      "modifiedDate": 1732029268799,
+      "sizeInBytes": 18
     }
   }
 }

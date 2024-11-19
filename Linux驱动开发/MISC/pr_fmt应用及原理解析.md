@@ -1,12 +1,15 @@
+---
+number headings: auto, first-level 2, max 6, 1.1
+---
 #嵌入式 #Linux驱动开发 #操作系统 
 
-## 目录
+## 1 目录
 
 ```toc
 
 ```
 
-# 定义
+## 2 定义
 
 `pr_fmt` 为内核模块定义打印tag的一种常用方式, <span style="background:#fff88f"><font color="#c00000">常用</font></span>使用方式如下：
 
@@ -31,7 +34,7 @@ pr_debug(msg)
 注：
 1. 上述为<font color="#c00000">常用</font>使用方式，也就是说可以利用该宏实现任何想要的输出格式, 例如加入 `__LINE__` 等宏变量。
 
-## 应用
+## 3 应用
 
 在 `drivers/i2c/i2c-core-base.c` 中可见如下应用：
 
@@ -43,7 +46,7 @@ pr_debug(msg)
 pr_err("adapter '%s': no algo supplied!\n", adap->name);
 ```
 
-## 原理
+## 4 原理
 
 上述提到的给内核开发者使用的 `pr_level` 的若干API被定义在 `include/linux/printk.h` 中, 具体如下：
 
