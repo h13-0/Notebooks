@@ -50,7 +50,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -178,10 +178,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux驱动开发/Linux驱动开发笔记.md"
+                "file": "操作系统/课外补充/IO模型/IO模型.md"
               },
               "icon": "lucide-list",
-              "title": "Linux驱动开发笔记 的大纲"
+              "title": "IO模型 的大纲"
             }
           },
           {
@@ -224,10 +224,10 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "96ee9ba8e9716a8b",
+  "active": "a5478a68c7dac42b",
   "lastOpenFiles": [
-    "操作系统/用户态开发/BSD socket/Linux用户态socket.md",
     "Linux驱动开发/Linux驱动开发笔记.md",
+    "操作系统/用户态开发/BSD socket/Linux用户态socket.md",
     "操作系统/课外补充/IO模型/IO模型.md",
     "操作系统/用户态开发/协程/协程.md",
     "操作系统/用户态开发/线程锁/实现/线程锁 with pthread.md",
