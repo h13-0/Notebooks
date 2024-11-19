@@ -2265,24 +2265,39 @@ __poll_t poll(struct file *filep, struct poll_table_struct *wait);
 
 #TODO 
 
-上述的poll函数，除了用于为 `select` 、 `poll` 、 `epoll` 三种操作接口提供后端外，还需要保证<font color="#c00000">在文件的不同状态时</font>与 `read` 、 `write` 函数<span style="background:#fff88f"><font color="#c00000">保持对应匹配的行为</font></span>(<font color="#c00000">即使当前文件被使用阻塞IO打开</font>)。具体可见后续章节
+上述的poll函数，除了用于为 `select` 、 `poll` 、 `epoll` 三种操作接口提供后端外，还需要保证<font color="#c00000">在文件的不同状态时</font>与 `read` 、 `write` 函数<span style="background:#fff88f"><font color="#c00000">保持对应匹配的行为</font></span>(<font color="#c00000">即使当前文件被使用阻塞IO打开</font>)，因为对应用程序而言，<span style="background:#fff88f"><font color="#c00000">poll函数的返回结果必须保证接下来的read和write函数的阻塞状态</font></span>。
+
+
+具体可见后续章节。
 
 ##### 8.7.1.2 read函数的标准语义
 
 从设备读取数据时可以分为如下三种情况进行讨论：
-1. <font color="#c00000">如果输入缓冲区有数据</font>：即可读数据大于等于1byte，则read函数应当立即返回。返回的
+1. <font color="#c00000">如果输入缓冲区有数据</font>：即可读数据大于等于1byte，则read函数应当立即返回，并读取至少一个字节。
 2. <font color="#c00000">如果输入缓冲区没有数据</font>：则：
 	1. <font color="#c00000">若未设置为非阻塞IO</font>：则read函数必须阻塞直到至少有一个字节到达。
 	2. <font color="#c00000">若设置为非阻塞IO</font>：则：
 		- read函数必须立即返回，返回值为 `-EAGAIN` 。
-		- poll函数必须报告she
-
-
-
+		- <font color="#c00000">poll函数必须报告设备不可读</font>。
+3. <font color="#c00000">若到达文件末尾</font>：则：
+	- read函数必须立即返回0。
+	- <font color="#c00000">无论是否为非阻塞IO</font>，poll函数应当报告 `POLLHUP` 。
 
 ##### 8.7.1.3 write函数的标准语义
 
+向设备写入数据时可以分为如下三种情况进行讨论：
+1. <font color="#c00000">如果输出缓冲区有空间</font>：即可写数据大于等于1byte，则：
+	- write函数必须立刻返回，并至少接收一个字节。
+	- poll函数应当报告设备可写。
+2. <font color="#c00000">如果输出缓冲区已满</font>：则：
+	1. <font color="#c00000">若未设置为非阻塞IO</font>：则write函数必须阻塞直到至少有一个字节可写。
+	2. <font color="#c00000">若设置为非阻塞IO</font>：则：
+		- write函数必须立即返回，返回值为 `-EAGAIN` 。
+		- <font color="#c00000">poll函数必须报告设备不可写</font>。
+3. <font color="#c00000">若输出设备无剩余可写空间</font>：例如磁盘已满，则<font color="#c00000">write应当立即返回并报告</font> `-ENOSPC` (无剩余空间)，<font color="#c00000">无论设备是否为阻塞IO</font>。
 
+此外，还需要注意一点：
+1. <font color="#c00000">永远不能让write调用等待缓冲区中的数据写入设备</font>，无论是否为阻塞IO。
 
 ##### 8.7.1.4 open函数的标准语义
 
