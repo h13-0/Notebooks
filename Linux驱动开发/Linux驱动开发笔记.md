@@ -1972,11 +1972,13 @@ echo "90" > /dev/servo0
 
 关于阻塞IO和非阻塞IO的相关定义与基础知识可以详见：[[IO模型#3 IO模型]]。
 
-##### 8.3.1.1 read与write语义
+##### 8.3.1.1 open语义
 
 #TODO 
 
+##### 8.3.1.2 read与write语义
 
+阻塞型IO的read与write语义应详见：
 
 ### 8.4 简单休眠
 
@@ -2243,7 +2245,7 @@ wake_up_interruptible_sync(x)
 
 ```C
 // 只读、非阻塞
-fd = open("path"，O_RDONLY | O_NONBLOCK)
+fd = open("path", O_RDONLY | O_NONBLOCK)
 ```
 
 随后在内核模块中的后续操作时就应当根据是否定义了该非阻塞标志实现不同的行为。例如当应用程序请求的操作无法执行时，通常返回 `-EAGAIN` (try it again)。
@@ -2251,11 +2253,15 @@ fd = open("path"，O_RDONLY | O_NONBLOCK)
 
 #### 8.7.1 非阻塞型IO的标准语义
 
-##### 8.7.1.1 read、write、open函数的标准语义
+##### 8.7.1.1 read函数的标准语义
+
+##### write
+
+##### 8.7.1.2 read、write、open函数的标准语义
 
 
 
-##### 8.7.1.2 poll函数的标准语义
+##### 8.7.1.3 poll函数的标准语义
 
 Linux为[[IO模型#3 3 IO多路复用 IO Multiplexing|IO多路复用模型]]提供了 `select` 、 `poll` 、 `epoll` 三种操作接口。但是这三种操作接口本质都是调用 `file_operations` 结构体中的 `poll` 函数指针实现的。
 
