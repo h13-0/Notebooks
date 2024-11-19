@@ -127,6 +127,7 @@ int select(int nfds, fd_set *readfds,
 
 #### 3.3.2 poll解决方案
 
+poll解决方案由System V引入。
 poll解决方案与select基本一致，其只是<font color="#c00000">没有了1024的最大文件数的限制</font>，以及传参的形式有所区别。
 
 本函数在Linux、FreeBSD上均有实现：
@@ -159,6 +160,7 @@ int poll(struct pollfd *fds, nfds_t nfds, int timeout);
 
 #### 3.3.3 epoll解决方案
 
+epoll在Linux 2.5.45中引入。
 epoll是Linux中独有的一种IO多路复用方案。该方案的使用比上述两个方案更为复杂，但是由于其内部使用的是红黑树的数据结构，其效率相较于 `select` 和 `poll` 更为高效。
 
 epoll方案的使用步骤为：
@@ -180,6 +182,7 @@ epoll方案的使用步骤为：
 | 最大连接数  |           1024(x86) 或 2048(x64)           |                   无上限                   |                        无上限                         |
 | fd拷贝   | 每次调用 `select` 都要完成<br>fd集合的用户-内核-用户的两次拷贝。 | 每次调用 `poll` 都要完成<br>fd集合的用户-内核-用户的两次拷贝。 | 调用 `epoll_ctl` 时拷贝进内核并保存，<br>随后 `epoll_wait` 时不拷贝。 |
 
+之所以同样是IO多路复用，却要搞出三种方案，是因为 `select` 和 `poll` 几乎是由两个Unix团体同时引入。
 这些IO多路复用模型也是非阻塞型IO。
 
 ### 3.4 信号驱动型IO(Signal Driven IO)
