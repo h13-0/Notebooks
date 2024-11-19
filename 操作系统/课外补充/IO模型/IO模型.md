@@ -200,11 +200,49 @@ IO多路复用解决了线程数过多的问题，允许使用一个线程监听
 
 ### 3.5 异步IO(AIO)
 
-在有了非阻塞的IOmo
+在拥有了非阻塞的IO模型后，就已经可以实现异步请求了：
+
+```C
+
+int service(){
+	// 发起数据库读取请求
+	db_promise = nio_db_read();
+	
+	// 发起文件下载请求
+	dl_promise = nio_file_download();
+
+	// 轮询等待IO完成
+	while(!nio_db_read_complete() || !nio_file_download_complete());
+
+	// do sth...
+
+	return 0;
+}
+```
+
+但是上述的异步请求伪代码只是实现了同时请求多个IO操作，并在后续的 `while` 中进行轮询，浪费了大量的CPU事件
 
 
 
-在上述各同步IO中，依旧无法
+```C
+
+int service(){
+	// 发起数据库读取请求
+	promise db_promise = nio_db_read_async();
+	
+	// 发起文件下载请求
+	promise dl_promise = nio_file_download_async();
+
+	while(nio_db_read_complete() && nio_file_download_complete()) {
+		// do sth...
+	}
+
+	return 0;
+}
+```
+
+
+
 
 
 ![[Pasted image 20241118171908.png]]
