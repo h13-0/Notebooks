@@ -2307,8 +2307,14 @@ __poll_t poll(struct file *filep, struct poll_table_struct *wait);
 `fsync` 函数的声明为：
 
 ```C
-int fsync(struct file *filep, loff_t, loff_t, int datasync);
+int fsync(struct file *filep, loff_t start, loff_t end, int datasync);
 ```
+
+其中：
+- `struct file *filep` 为指向文件的指针
+- `loff_t start` 
+- `loff_t end`
+- `int datasync`
 
 
 ##### 8.7.1.5 open函数的标准语义
