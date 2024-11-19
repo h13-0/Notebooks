@@ -328,10 +328,49 @@ int service() {
 但是这样调用会存在 `callback hell` 问题，为了解决问题从而引入了await/async方案。
 
 该方案可以理解为语言为异步IO模型提供了一种异步编程的简化，其主要特性如下：
-1. 
-2. 在编译层面，使用 `async` 和 `await` 的代码通常被编译器转换成状态机，即yi wei
+1. 这两个关键字再次包装了 `Promise` ：
+	1. `async` 关键字用于修饰函数，被该关键字修饰的函数会立刻返回一个 `Promise` 对象。
+	2. `await` 用于等待 `Promise` 对象完成。
+2. 在编译层面，使用 `async` 和 `await` 的代码<font color="#c00000">通常被编译器转换成状态机</font>，即意味着编译器会自动将开发者所写的连贯逻辑编译为使用状态机控制的代码。
 
+则上述代码可以转化为：
 
+```C#
+class Program
+{
+    static async Task Main(string[] args)
+    {
+        // 启动任务A和任务B
+        Task taskA = TaskA();
+        Task taskB = TaskB();
+        Task taskC = TaskC();
 
+        // 等待任务A和任务B都完成
+        await Task.WhenAll(taskA, taskB, taskC);
 
+        // 执行任务C
+        await TaskD();
+    }
 
+    static async Task TaskA()
+    {
+        await StepA1();
+        await StepA2();
+        await StepA3();
+        await StepA4();
+    }
+
+    static async Task TaskB()
+    {
+        await StepB1();
+        await StepB2();
+        await StepB3();
+    }
+
+    static async Task TaskC()
+    {
+        await StepC1();
+        await StepC2();
+    }
+}
+```

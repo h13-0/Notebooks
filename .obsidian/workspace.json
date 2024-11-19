@@ -4,35 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "03515d50bdaa3720",
+        "id": "fd8f1c4a783db5d4",
         "type": "tabs",
         "children": [
           {
-            "id": "beece2c4e512ea4f",
+            "id": "054893e65459980c",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "操作系统/课外补充/IO模型/IO模型.md",
+                "file": "Linux驱动开发/Linux驱动开发笔记.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "IO模型"
-            }
-          },
-          {
-            "id": "f9454249422ef0a1",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "操作系统/用户态开发/BSD socket/Linux用户态socket.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Linux用户态socket"
+              "title": "Linux驱动开发笔记"
             }
           }
         ]
@@ -163,10 +149,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "操作系统/课外补充/IO模型/IO模型.md"
+                "file": "Linux驱动开发/Linux驱动开发笔记.md"
               },
               "icon": "lucide-list",
-              "title": "IO模型 的大纲"
+              "title": "Linux驱动开发笔记 的大纲"
             }
           },
           {
@@ -209,8 +195,10 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "beece2c4e512ea4f",
+  "active": "054893e65459980c",
   "lastOpenFiles": [
+    "操作系统/用户态开发/BSD socket/Linux用户态socket.md",
+    "操作系统/课外补充/IO模型/IO模型.md",
     "操作系统/Resources/Pasted image 20241118171908.png",
     "操作系统/Resources/Pasted image 20241118171902.png",
     "操作系统/Resources/Pasted image 20241118171723.png",
@@ -219,8 +207,6 @@
     "操作系统/Resources/Pasted image 20241118011240.png",
     "Resources/Pasted image 20240203021517.png",
     "操作系统/Resources/chrome_8uyFjkPyld.png",
-    "操作系统/课外补充/IO模型/IO模型.md",
-    "操作系统/用户态开发/BSD socket/Linux用户态socket.md",
     "操作系统/用户态开发/BSD socket/setsockopt及其选项列表.md",
     "Linux驱动开发/Linux驱动开发笔记.md",
     "操作系统/Resources/10031-2017.pdf",
