@@ -2311,13 +2311,23 @@ int fsync(struct file *filep, loff_t start, loff_t end, int datasync);
 ```
 
 其中：
-- `struct file *filep` 为指向文件的指针
-- `loff_t start` 
-- `loff_t end`
-- `int datasync`
-
+- `struct file *filep` 为指向文件的指针。
+- `loff_t start` ：同步操作的起始位置，是一个64位的偏移量。
+- `loff_t end` ：同步操作的结束位置，同样是一个64位的偏移量。
+- `int datasync` ：用来指示同步操作的类型，如果 `datasync` 非零，则仅同步文件的数据部分，而不同步文件的元数据(如最后修改时间等)。如果为零，则同时同步数据和元数据。
+该函数对操作的时间等没有具体的要求，正常实现即可。
+在大多数情况下，该函数不会出现在字符设备中。但是在块设备中通常都会出现。
 
 ##### 8.7.1.5 open函数的标准语义
+
+#TODO 
+
+
+#### 8.7.2 select、poll、epoll的底层原理和数据结构
+
+
+#### 8.7.3 异步IO
+
 
 
 
