@@ -1978,7 +1978,10 @@ echo "90" > /dev/servo0
 
 ##### 8.3.1.2 read与write语义
 
+由于无论是否IO为阻塞型IO，read、write的行为必须和poll的行为保持同步，因此此处不详细说明阻塞IO模型下的read与write语义。
 阻塞型IO的read与write语义应详见：
+- [[Linux驱动开发笔记#8 7 1 2 read函数的标准语义]]
+- [[Linux驱动开发笔记#8 7 1 3 write函数的标准语义]]
 
 ### 8.4 简单休眠
 
@@ -2265,9 +2268,7 @@ __poll_t poll(struct file *filep, struct poll_table_struct *wait);
 
 #TODO 
 
-上述的poll函数，除了用于为 `select` 、 `poll` 、 `epoll` 三种操作接口提供后端外，还需要保证<font color="#c00000">在文件的不同状态时</font>与 `read` 、 `write` 函数<span style="background:#fff88f"><font color="#c00000">保持对应匹配的行为</font></span>(<font color="#c00000">即使当前文件被使用阻塞IO打开</font>)，因为对应用程序而言，<span style="background:#fff88f"><font color="#c00000">poll函数的返回结果必须保证接下来的read和write函数的阻塞状态</font></span>。
-
-
+上述的poll函数，除了用于为 `select` 、 `poll` 、 `epoll` 三种操作接口提供后端外，还需要保证<font color="#c00000">在文件的不同状态时</font>与 `read` 、 `write` 函数<span style="background:#fff88f"><font color="#c00000">保持对应匹配的行为</font></span>(<font color="#c00000">即使当前文件被使用阻塞IO打开</font>)，因为对应用程序而言，<span style="background:#fff88f"><font color="#c00000">poll等函数(select、epoll，下同)的返回结果必须保证能够明确接下来的read和write函数是否会遭到阻塞</font></span>。
 具体可见后续章节。
 
 ##### 8.7.1.2 read函数的标准语义
@@ -2296,10 +2297,17 @@ __poll_t poll(struct file *filep, struct poll_table_struct *wait);
 		- <font color="#c00000">poll函数必须报告设备不可写</font>。
 3. <font color="#c00000">若输出设备无剩余可写空间</font>：例如磁盘已满，则<font color="#c00000">write应当立即返回并报告</font> `-ENOSPC` (无剩余空间)，<font color="#c00000">无论设备是否为阻塞IO</font>。
 
-此外，还需要注意一点：
-1. <font color="#c00000">永远不能让write调用等待缓冲区中的数据写入设备</font>，无论是否为阻塞IO。
+此外，还需要注意：
+1. <font color="#c00000">永远不能让write调用等待缓冲区中的数据写入设备</font>，无论是否为阻塞IO。正是由于<font color="#c00000">poll等函数可以用于保证接下来的write函数不会被阻塞</font>。而上述的poll与write之间的行为必须保证联动，<font color="#c00000">上述poll函数表示可写时，write必须不可被阻塞</font>，也不能等待缓冲区数据写入设备。
+2. 如果需要保证数据完整性，则可以实现 `fsync` 方法，<span style="background:#fff88f"><font color="#c00000">fsync方法会阻塞直到缓冲区数据被写入设备</font></span>，<font color="#c00000">无论该IO是否被设置为阻塞IO</font>。
+3. 可移除设备应当实现 `fsync` 方法。
 
-##### 8.7.1.4 open函数的标准语义
+##### 8.7.1.4 fsync函数的标准语义
+
+
+
+
+##### 8.7.1.5 open函数的标准语义
 
 
 
