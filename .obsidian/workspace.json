@@ -4,39 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "fd8f1c4a783db5d4",
+        "id": "fb6280476c77934e",
         "type": "tabs",
         "children": [
           {
-            "id": "054893e65459980c",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Linux驱动开发/Linux驱动开发笔记.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Linux驱动开发笔记"
-            }
-          },
-          {
-            "id": "a5478a68c7dac42b",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "操作系统/课外补充/IO模型/IO模型.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "IO模型"
-            }
-          },
-          {
-            "id": "96ee9ba8e9716a8b",
+            "id": "9588cb357e8628bb",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -49,8 +21,7 @@
               "title": "Linux驱动开发笔记"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -178,10 +149,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "操作系统/课外补充/IO模型/IO模型.md"
+                "file": "Linux驱动开发/Linux驱动开发笔记.md"
               },
               "icon": "lucide-list",
-              "title": "IO模型 的大纲"
+              "title": "Linux驱动开发笔记 的大纲"
             }
           },
           {
@@ -224,11 +195,18 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "a5478a68c7dac42b",
+  "active": "9588cb357e8628bb",
   "lastOpenFiles": [
+    "操作系统/课外补充/IO模型/IO模型.md",
+    "操作系统/Resources/chrome_zST8iNWLGQ.png",
+    "操作系统/Resources/git_ignored/UNIX环境高级编程（中文第三版） (W. Richard Stevens etc.) (Z-Library).pdf",
+    "操作系统/Resources/git_ignored",
+    "操作系统/Resources/新建文件夹",
+    "操作系统/用户态开发/新建文件夹",
+    "Resources/git",
+    "Resources/新建文件夹",
     "Linux驱动开发/Linux驱动开发笔记.md",
     "操作系统/用户态开发/BSD socket/Linux用户态socket.md",
-    "操作系统/课外补充/IO模型/IO模型.md",
     "操作系统/用户态开发/协程/协程.md",
     "操作系统/用户态开发/线程锁/实现/线程锁 with pthread.md",
     "操作系统/用户态开发/线程锁/线程锁与信号量.md",
@@ -256,7 +234,6 @@
     "操作系统/Resources/chrome_8uyFjkPyld.png",
     "操作系统/Resources/10031-2017.pdf",
     "Resources/Pasted image 20241118002637.png",
-    "操作系统/Resources/Pasted image 20241118000708.png",
     "前后端编程/SSM框架/SpringFramework/Spring Framework基础.md",
     "操作系统/用户态开发/应试笔记.md",
     "操作系统/Linux用户态开发/未命名.md",
@@ -265,13 +242,6 @@
     "操作系统/Resources",
     "操作系统/课外补充/并发与互斥",
     "操作系统/课外补充/IO模型",
-    "操作系统/用户态开发/BSD socket",
-    "计算机网络/基础应试学习/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
-    "计算机网络/计算机网络非应试拓展/JSON",
-    "操作系统/用户态开发/IPC",
-    "操作系统/用户态开发",
-    "Linux驱动开发/内核文档翻译/eLinux",
-    "FreeRTOS/Resources",
     "嵌入式基础/接口技术/未命名.canvas",
     "CPP/Resources/C数据类型.canvas"
   ]

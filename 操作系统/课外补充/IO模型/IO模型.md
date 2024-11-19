@@ -144,7 +144,7 @@ int poll(struct pollfd *fds, nfds_t nfds, int timeout);
 - 其参数：
 	- `struct pollfd *fds` ：为 `struct pollfd` 构成的<font color="#c00000">数组</font>， `struct pollfd` 的结构体成员：
 		- `fd` ：需要监听的fd号
-		- `events` ：需要使用poll等待的事件，可以使用位运算
+		- `events` ：需要使用poll等待的事件，可以使用位运算，详见下表。
 		- `revents` ：发生的事件
 	- `nfds_t nfds` ：指定 `fds` 的数组大小
 	- `int timeout` ：等待的毫秒数，其中：
@@ -154,6 +154,10 @@ int poll(struct pollfd *fds, nfds_t nfds, int timeout);
 - 其返回值：
 	- 大于等于0时，含义为 `revents` 域不为0的文件描述符个数
 	- 失败时为-1，错误查看方法取决于各操作系统
+- 其中：
+	- `short events` 和 `short revents` 可以是：
+		- ![[chrome_zST8iNWLGQ.png]]
+		该图源自《UNIX环境高级编程》P409，W. Richard Stevens etc.
 注：
 - 本函数在Windows上的实现为 `WSAPoll` 函数，作用与形式类似。
 - 尽管没有了 `select` 中的1024上限，但是当数量过多时仍然会导致运行速度降低。
