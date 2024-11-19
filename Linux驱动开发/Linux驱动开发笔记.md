@@ -2173,6 +2173,7 @@ wait_event_exclusive_cmd(wq_head, condition, cmd1, cmd2)
 
 #### 8.5.2 手工休眠
 
+shou
 
 ### 8.6 唤醒及其相关细节
 
