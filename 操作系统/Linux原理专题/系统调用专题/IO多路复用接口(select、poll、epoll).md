@@ -23,9 +23,22 @@ number headings: auto, first-level 2, max 6, 1.1
 `poll` 系统调用的处理流程如下：
 
 ```mermaid
-subgraph one
-	a1 --> a2
-end
+flowchart TB
+
+    
+    subgraph one
+
+    end
+    
+    subgraph two
+
+    end
+    
+    subgraph sys_poll
+    参数校验 -> do_sys_poll
+
+    end
+
 
 ```
 ### 3.3 epoll
