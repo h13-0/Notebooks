@@ -2049,6 +2049,7 @@ wake_up_interruptible(x)
 1. 本章节所提及的简单休眠API，<font color="#c00000">当一个线程触发</font> `wake_up` <font color="#c00000">后</font>，<font color="#c00000">阻塞队列上的</font>(非独占等待节点之前的)<span style="background:#fff88f"><font color="#c00000">所有</font></span><font color="#c00000"><u>简单休眠</u>的线程</font><span style="background:#fff88f"><font color="#c00000">均会被唤醒并判定休眠条件</font></span> `condition` 。在简单休眠中，队列并没有实际的先后作用，队列的作用发生于[[Linux驱动开发笔记#独占等待]]中。
 2. 由于一次 `wake_up` 可能会唤醒多个简单休眠对象，<font color="#c00000">因此</font> `condition` <font color="#c00000">的操作也必须是原子的</font>。
 3. 简单休眠可能会被多次唤醒，并且时常会不满足判定条件。<font color="#c00000">不满足判定条件的线程会被再次休眠</font>。
+4. 注意点1中所述的 "<font color="#c00000">阻塞队列上的非独占等待节点之前的所有简单线程均会被唤醒</font>" 的设计在后续的(例如)
 
 ### 8.5 高级休眠
 

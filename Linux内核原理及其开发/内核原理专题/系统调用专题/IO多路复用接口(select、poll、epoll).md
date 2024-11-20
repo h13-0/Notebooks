@@ -128,7 +128,7 @@ struct poll_table_entry {
 };
 ```
 
-该数据结构用于存储poll类操作时文件和
+<font color="#c00000">该数据结构用于存储poll类操作时与单个文件相关的poll类查询信息</font>(例如等待的文件对象、等待的事件掩码、等待的线程、线程的等待队列)。
 其中：
 - `struct file *filp` ：为指向Linux kernel中文件对象的指针。
 - `__poll_t key` ：IO复用系统调用时所选择监听的事件掩码。
@@ -177,4 +177,4 @@ struct poll_wqueues {
 - `int triggered` ：标志位，表示是否有事件被触发。
 - `int error` ：当轮询过程中发生错误时，此字段将存储错误码。
 - `int inline_index` ：用于指示下一个空闲的 `inline_entries` 插槽的索引。
-- `struct poll_table_entry inline_entries` ：一个固定大小的数组。
+- `struct poll_table_entry inline_entries` ：一个固定大小的数组，存放poll类操作查询信息的对象。
