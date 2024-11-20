@@ -93,7 +93,7 @@ struct poll_list {
 };
 ```
 
-该结构体是一个链表，其中：
+该结构体是一个链表，<font color="#c00000">用于分割数量过大的pollfd数组，以避免栈溢出或超过单个内存页</font>。其中：
 - `struct poll_list *next` ：为下一节点的指针。
 - `unsigned int len` ：表示在 `entries` 数组中存储的 `pollfd` 结构的数量。
 - `struct pollfd entries[]` ：一个柔性数组，存储实际的 `pollfd` 结构数组。
