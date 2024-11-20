@@ -24,6 +24,15 @@ number headings: auto, first-level 2, max 6, 1.1
 
 程序入口 `sys_poll()` ：
 - 设置poll_select的超时时间
+- 调用 `int ret = do_sys_poll(ufds, nfds, to)` ：
+	- 初始化变量
+	- <u>将用户态传递来的数组转化为链表形式存储</u>，并将数据从用户区拷贝到内核区
+	- 调用 `poll_initwait` 初始化等待队列
+	- 调用 `do_poll` 执行实际的轮询操作，监视文件描述符并等待事件发生或超时：
+		- 
+	- 调用 `poll_freewait` 清理等待队列
+	- 遍历 `poll_list` 链表，将每个 `pollfd` 的结果( `revents` 字段)复制回用户空间的 `ufds` 数组
+	- 错误处理与返回。
 
 
 
