@@ -20,6 +20,12 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ### 3.2 poll
 
+`poll` 系统调用的处理流程如下：
+
+```mermaid
+flowchart TB
+	A[]
+```
 
 ### 3.3 epoll
 
@@ -117,6 +123,9 @@ SYSCALL_DEFINE4(epoll_ctl, int, epfd, int, op, int, fd,
 
 
 #### 3.3.3 epoll_wait
+
+
+
 
 ```C
 /**
