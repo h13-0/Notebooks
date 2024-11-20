@@ -49,7 +49,8 @@
               "title": "IO多路复用接口(select、poll、epoll)"
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -177,10 +178,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md"
+                "file": "Linux内核原理及其开发/内核原理专题/系统调用专题/IO多路复用接口(select、poll、epoll).md"
               },
               "icon": "lucide-list",
-              "title": "内核基本数据结构(types.h部分) 的大纲"
+              "title": "IO多路复用接口(select、poll、epoll) 的大纲"
             }
           },
           {
@@ -223,11 +224,11 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "893be47d5d8d11df",
+  "active": "2375971c848776a5",
   "lastOpenFiles": [
+    "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/IO多路复用接口(select、poll、epoll).md",
     "操作系统/课外补充/IO模型/IO模型.md",
-    "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/Linux系统调用基础.md",
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题",

@@ -128,15 +128,15 @@ struct poll_table_entry {
 };
 ```
 
+该数据结构用于存储poll类操作时文件和
 其中：
 - `struct file *filp` ：为指向Linux kernel中文件对象的指针。
 - `__poll_t key` ：IO复用系统调用时所选择监听的事件掩码。
-- `wait_queue_entry_t wait` ：
-- `wait_queue_head_t *wait_address` ：
+- `wait_queue_entry_t wait` ：用于将当前进程挂起，直到感兴趣的事件在文件描述符上发生。
+- `wait_queue_head_t *wait_address` ：存储进程等待队列的队列头指针。
 	- 该结构体定义于 `include/linux/wait.h` ，其中有如下两个元素：
 		- `spinlock_t lock` ：自旋锁
 		- `struct list_head head` ：链表锚点，详见[[内核基本数据结构(types.h部分)#^xl7wru|链表锚点]]。该链表锚点用于定义在结构体内，方便组织成链表结构。
-
 
 ### 4.5 struct poll_table_page
 
