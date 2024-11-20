@@ -26,8 +26,8 @@ number headings: auto, first-level 2, max 6, 1.1
 1. 设置poll_select的超时时间
 2. 调用 `int ret = do_sys_poll(ufds, nfds, to)` ：
 	1. 初始化变量
-	2. <u>将用户态传递来的数组转化为链表形式存储</u>，并将数据从用户区拷贝到内核区
-	3. 调用 `poll_initwait` 初始化等待队列
+	2. <u>将用户态传递来的数组转化为链表形式存储</u>，并将数据从用户区拷贝到内核区，<font color="#c00000">同时将过大的pollfd数组进行分段</font>，转存到[[IO多路复用接口(select、poll、epoll)#4 2 struct poll_list|struct poll_list]]中，<font color="#c00000">以避免栈溢出或超过单个内存页</font>。
+	3. 调用 `poll_initwait` 初始化[[IO多路复用接口(select、poll、epoll)#4 3 struct poll_wqueues|struct poll_wqueues]]等待队列。
 	4. 调用 `do_poll` 执行实际的轮询操作，监视文件描述符并等待事件发生或超时： `static int do_poll(struct poll_list *list, struct poll_wqueues *wait, struct timespec64 *end_time)` <font color="#c00000">(poll函数会在这里阻塞)</font>：
 		1. 处理无须等待的情况。当无须等待时，立即将 `timed_out` 置1。
 		2. 轮询 `list` 中的文件描述符，调用 `do_pollfd` 检查是否有事件发生。 `__poll_t do_pollfd(struct pollfd *pollfd, poll_table *pwait, bool *can_busy_poll, __poll_t busy_flag)` ：
@@ -81,9 +81,9 @@ struct pollfd {
 
 具体含义即用户态表现可见[[IO模型#^n3ntl8]]。
 
-### 4.2 struct poll_table
+### 4.2 struct poll_list
 
-`struct poll_table` 的定义如下：
+`struct poll_list` 的定义如下：
 
 ```C
 struct poll_list {
@@ -98,5 +98,35 @@ struct poll_list {
 - `unsigned int len` ：表示在 `entries` 数组中存储的 `pollfd` 结构的数量。
 - `struct pollfd entries[]` ：一个柔性数组，存储实际的 `pollfd` 结构数组。
 
-### 4.3 struct poll_wqueues
+### 4.3 struct poll_table_struct(poll_table)
+
+`struct poll_table_struct` 或 `poll_table` 的定义如下：
+
+```C
+typedef struct poll_table_struct {
+	poll_queue_proc _qproc;
+	__poll_t _key;
+} poll_table;
+```
+
+
+
+### 4.4 struct poll_wqueues
+
+`struct poll_wqueues` 的定义如下：
+
+```C
+/*
+ * Structures and helpers for select/poll syscall
+ */
+struct poll_wqueues {
+	poll_table pt;
+	struct poll_table_page *table;
+	struct task_struct *polling_task;
+	int triggered;
+	int error;
+	int inline_index;
+	struct poll_table_entry inline_entries[N_INLINE_POLL_ENTRIES];
+};
+```
 
