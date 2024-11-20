@@ -1,7 +1,7 @@
 ---
 number headings: auto, first-level 2, max 6, 1.1
 ---
-#嵌入式 #Linux驱动开发 
+#操作系统 #Linux系统原理 #Linux内核开发 
 
 ## 1 目录
 
@@ -135,7 +135,7 @@ struct poll_table_entry {
 - `wait_queue_head_t *wait_address` ：
 	- 该结构体定义于 `include/linux/wait.h` ，其中有如下两个元素：
 		- `spinlock_t lock` ：自旋锁
-		- `struct list_head head` ：普通链表头，定义于 `include/linux/types.h`
+		- `struct list_head head` ：链表锚点，定义于 `include/linux/types.h` 。该链表锚点用于定义在结构体内，方便组织成链表结构。
 
 
 ### 4.5 struct poll_table_page

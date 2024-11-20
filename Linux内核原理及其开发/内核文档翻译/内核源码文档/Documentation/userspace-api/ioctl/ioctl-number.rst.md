@@ -14,11 +14,11 @@
 | _IOWR | an  | ioctl with both write and read parameters.                                |
 上述的 `read` 和 `write` 应当像普通系统调用的命名规则一样，针对用户态视角来进行设计，而不是内核态视角。例如名为 `SET_FOO` 的cmd应当选用 `_IOW` ，<font color="#c00000">因为其数据是从用户空间传向内核空间的</font>(<font color="#c00000">copy_from_user</font>)、该指令以用户视角是写入，以内核视角是读取。而名为 `GET_FOO` 的cmd应当选用 `_IOR` ，因为其数据流向为内核空间到用户空间。
 
-`_IO` 、 `_IOW` 、 `_IOR` 或 `_IOWR` 的第一个参数(即 `type` 字段，[注1](ioctl-number.rst#^q5ti6p))是下方表格中的识别 `letter` 或 `number` 。由于驱动类型众多，许多驱动与其他驱动共用一个 `letter` 。
+`_IO` 、 `_IOW` 、 `_IOR` 或 `_IOWR` 的第一个参数(即 `type` 字段，[注1](ioctl-number.rst.md#^q5ti6p))是下方表格中的识别 `letter` 或 `number` 。由于驱动类型众多，许多驱动与其他驱动共用一个 `letter` 。
 
 如果您正在为一个新设备编写驱动程序，并且需要一个 `letter` ，请选择一个有足够扩展空间的未使用块：32到256的ioctl命令。您可以通过修补这个文件并将修补程序提交给 Linus Torvalds 来注册这个块。或者你可以发电子邮件给我(mec@shout.net)，我会为你注册一个。
 
-`_IO` 、 `_IOW` 、 `_IOR` 或 `_IOWR` 的第二个参数(即 `nr` 字段，[注1](ioctl-number.rst#^q5ti6p))是用于区分ioctls的顺序数字。 `_IOW` 、 `_IOR` 或 `_IOWR` 的第三个参数(即 `size` 字段，[注1](ioctl-number.rst#^q5ti6p))是进入内核或从内核出来的数据类型(例如， `int` 或 `struct foo` )。<font color="#c00000">注意!不要使用</font> `sizeof(arg)` 作为<font color="#c00000">第三个参数，因为这会导致ioctl认为它传递一个</font> `size_t` <font color="#c00000">类型的参数</font>。
+`_IO` 、 `_IOW` 、 `_IOR` 或 `_IOWR` 的第二个参数(即 `nr` 字段，[注1](ioctl-number.rst.md#^q5ti6p))是用于区分ioctls的顺序数字。 `_IOW` 、 `_IOR` 或 `_IOWR` 的第三个参数(即 `size` 字段，[注1](ioctl-number.rst.md#^q5ti6p))是进入内核或从内核出来的数据类型(例如， `int` 或 `struct foo` )。<font color="#c00000">注意!不要使用</font> `sizeof(arg)` 作为<font color="#c00000">第三个参数，因为这会导致ioctl认为它传递一个</font> `size_t` <font color="#c00000">类型的参数</font>。
 
 有些设备使用它们的主编号作为标识符; 只要它是唯一的就没问题。有些设备是不规则的，根本不遵循任何公约。
 
