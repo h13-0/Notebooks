@@ -115,7 +115,43 @@ typedef struct poll_table_struct {
 - `poll_queue_proc _qproc` ：为一个函数指针，用于指向一个回调函数，该函数在需要将当前进程添加到等待队列时调用。
 - `__poll_t _key` ：IO复用系统调用时所选择监听的事件掩码。
 
-### 4.4 struct poll_wqueues
+### 4.4 struct poll_table_entry
+
+`struct poll_table_entry` 的定义如下：
+
+```C
+struct poll_table_entry {
+	struct file *filp;
+	__poll_t key;
+	wait_queue_entry_t wait;
+	wait_queue_head_t *wait_address;
+};
+```
+
+其中：
+- `struct file *filp` ：为指向Linux kernel中文件对象的指针。
+- `__poll_t key` ：IO复用系统调用时所选择监听的事件掩码。
+- `wait_queue_entry_t wait` ：
+- `wait_queue_head_t *wait_address` ：
+	- 该结构体定义于 `include/linux/wait.h` ，其中有如下两个元素：
+		- `spinlock_t lock` ：自旋锁
+		- `struct list_head head` ：普通链表头，定义于 `include/linux/types.h`
+
+
+### 4.5 struct poll_table_page
+
+`struct poll_table_page` 的定义如下：
+
+```C
+struct poll_table_page {
+	struct poll_table_page * next;
+	struct poll_table_entry * entry;
+	struct poll_table_entry entries[];
+};
+```
+
+
+### 4.6 struct poll_wqueues
 
 `struct poll_wqueues` 的定义如下：
 
@@ -142,35 +178,3 @@ struct poll_wqueues {
 - `int error` ：当轮询过程中发生错误时，此字段将存储错误码。
 - `int inline_index` ：用于指示下一个空闲的 `inline_entries` 插槽的索引。
 - `struct poll_table_entry inline_entries` ：一个固定大小的数组。
-
-### 4.5 struct poll_table_entry
-
-`struct poll_table_entry` 的定义如下：
-
-```C
-struct poll_table_entry {
-	struct file *filp;
-	__poll_t key;
-	wait_queue_entry_t wait;
-	wait_queue_head_t *wait_address;
-};
-```
-
-其中：
-- `struct file *filp` ：为指向Linux kernel中文件对象的指针。
-- `__poll_t key` ：IO复用系统调用时所选择监听的事件掩码。
-- `wait_queue_entry_t wait` ：
-- `wait_queue_head_t *wait_address` ：
-
-### 4.6 struct poll_table_page
-
-`struct poll_table_page` 的定义如下：
-
-```C
-struct poll_table_page {
-	struct poll_table_page * next;
-	struct poll_table_entry * entry;
-	struct poll_table_entry entries[];
-};
-```
-

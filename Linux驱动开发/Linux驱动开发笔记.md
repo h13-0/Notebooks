@@ -2271,6 +2271,8 @@ __poll_t poll(struct file *filep, struct poll_table_struct *wait);
 
 #TODO 
 
+至于具体的 `select` 、 `poll` 、 `epoll` 的底层原理可参见[[Linux驱动开发笔记#8 7 2 select、poll、epoll的底层原理和数据结构]]。
+
 上述的poll函数，除了用于为 `select` 、 `poll` 、 `epoll` 三种操作接口提供后端外，还需要保证<font color="#c00000">在文件的不同状态时</font>与 `read` 、 `write` 函数<span style="background:#fff88f"><font color="#c00000">保持对应匹配的行为</font></span>(<font color="#c00000">即使当前文件被使用阻塞IO打开</font>)，因为对应用程序而言，<span style="background:#fff88f"><font color="#c00000">poll等函数(select、epoll，下同)的返回结果必须保证能够明确接下来的read和write函数是否会遭到阻塞</font></span>。
 具体可见后续章节。
 
