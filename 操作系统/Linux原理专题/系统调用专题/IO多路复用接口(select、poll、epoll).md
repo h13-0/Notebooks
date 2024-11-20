@@ -27,7 +27,7 @@ number headings: auto, first-level 2, max 6, 1.1
 2. 调用 `int ret = do_sys_poll(ufds, nfds, to)` ：
 	1. 初始化变量
 	2. <u>将用户态传递来的数组转化为链表形式存储</u>，并将数据从用户区拷贝到内核区，<font color="#c00000">同时将过大的pollfd数组进行分段</font>，转存到[[IO多路复用接口(select、poll、epoll)#4 2 struct poll_list|struct poll_list]]中，<font color="#c00000">以避免栈溢出或超过单个内存页</font>。
-	3. 调用 `poll_initwait` 初始化[[IO多路复用接口(select、poll、epoll)#4 3 struct poll_wqueues|struct poll_wqueues]]等待队列。
+	3. 调用 `poll_initwait` 初始化[[IO多路复用接口(select、poll、epoll)#4 4 struct poll_wqueues|struct poll_wqueues]]等待队列。
 	4. 调用 `do_poll` 执行实际的轮询操作，监视文件描述符并等待事件发生或超时： `static int do_poll(struct poll_list *list, struct poll_wqueues *wait, struct timespec64 *end_time)` <font color="#c00000">(poll函数会在这里阻塞)</font>：
 		1. 处理无须等待的情况。当无须等待时，立即将 `timed_out` 置1。
 		2. 轮询 `list` 中的文件描述符，调用 `do_pollfd` 检查是否有事件发生。 `__poll_t do_pollfd(struct pollfd *pollfd, poll_table *pwait, bool *can_busy_poll, __poll_t busy_flag)` ：
@@ -109,7 +109,9 @@ typedef struct poll_table_struct {
 } poll_table;
 ```
 
-
+该数据结构用于管理 `poll` 、 `select` 和 `epoll` 系统调用中的等待队列机制，其中：
+- `poll_queue_proc _qproc` ：为一个函数指针，用于指向一个回调函数，该函数在需要将当前进程添加到等待队列时调用。
+- `__poll_t _key` ：IO复用系统调用时所选择监听的事件掩码。
 
 ### 4.4 struct poll_wqueues
 
@@ -129,4 +131,15 @@ struct poll_wqueues {
 	struct poll_table_entry inline_entries[N_INLINE_POLL_ENTRIES];
 };
 ```
+
+其中：
+- `poll_table pt` ：其包含轮询的回调指针和所监听的事件掩码。
+- `struct poll_table_page *table` ：
+- `struct task_struct *polling_task` ：
+- `int triggered` ：标志位，表示是否有事件被触发。
+- `int error` ：当轮询过程中发生错误时，此字段将存储错误码。
+- `int inline_index` ：用于指示下一个空闲的 `inline_entries` 插槽的索引。
+- `struct poll_table_entry inline_entries` ：一个固定大小的数组。
+
+
 
