@@ -23,16 +23,19 @@ number headings: auto, first-level 2, max 6, 1.1
 `poll` 系统调用的处理流程如下：
 
 程序入口 `sys_poll()` ：
-- 设置poll_select的超时时间
-- 调用 `int ret = do_sys_poll(ufds, nfds, to)` ：
-	- 初始化变量
-	- <u>将用户态传递来的数组转化为链表形式存储</u>，并将数据从用户区拷贝到内核区
-	- 调用 `poll_initwait` 初始化等待队列
-	- 调用 `do_poll` 执行实际的轮询操作，监视文件描述符并等待事件发生或超时：
-		- 
-	- 调用 `poll_freewait` 清理等待队列
-	- 遍历 `poll_list` 链表，将每个 `pollfd` 的结果( `revents` 字段)复制回用户空间的 `ufds` 数组
-	- 错误处理与返回。
+1. 设置poll_select的超时时间
+2. 调用 `int ret = do_sys_poll(ufds, nfds, to)` ：
+	1. 初始化变量
+	2. <u>将用户态传递来的数组转化为链表形式存储</u>，并将数据从用户区拷贝到内核区
+	3. 调用 `poll_initwait` 初始化等待队列
+	4. 调用 `do_poll` 执行实际的轮询操作，监视文件描述符并等待事件发生或超时。 `static int do_poll(struct poll_list *list, struct poll_wqueues *wait, struct timespec64 *end_time)` ：
+		1. 处理无须等待的情况。当无须等待时，立即将 `timed_out` 置1。
+		2. 轮询 `list` 中的文件描述符，调用 `do_pollfd` 检查是否有事件发生。 `__poll_t do_pollfd(struct pollfd *pollfd, poll_table *pwait, bool *can_busy_poll, __poll_t busy_flag)` ：
+			1. 调用 `demangle_poll(pollfd->events)` 将时间掩码转换为内核使用的形式。
+			2. 向掩码中追加 `EPOLLERR` 和 `EPOLLHUP` 事件
+	5. 调用 `poll_freewait` 清理等待队列
+	6. 遍历 `poll_list` 链表，将每个 `pollfd` 的结果( `revents` 字段)复制回用户空间的 `ufds` 数组
+	7. 错误处理与返回。
 
 
 
