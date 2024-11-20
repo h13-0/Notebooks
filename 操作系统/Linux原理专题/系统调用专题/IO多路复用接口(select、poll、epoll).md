@@ -23,10 +23,11 @@ number headings: auto, first-level 2, max 6, 1.1
 `poll` 系统调用的处理流程如下：
 
 ```mermaid
-flowchart TB
-	A[]
-```
+subgraph one
+	a1 --> a2
+end
 
+```
 ### 3.3 epoll
 
 epoll相关函数定义在了 `fs/eventpoll.c` 中，其主要有如下函数：
