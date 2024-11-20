@@ -41,16 +41,16 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux内核原理及其开发/内核原理专题/系统调用专题/IO多路复用接口(select、poll、epoll).md",
+                "file": "操作系统/课外补充/IO模型/IO模型.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "IO多路复用接口(select、poll、epoll)"
+              "title": "IO模型"
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -178,10 +178,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux内核原理及其开发/应试笔记与八股.md"
+                "file": "操作系统/课外补充/IO模型/IO模型.md"
               },
               "icon": "lucide-list",
-              "title": "应试笔记与八股 的大纲"
+              "title": "IO模型 的大纲"
             }
           },
           {
@@ -224,11 +224,11 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "b79238cdb4ee50f9",
+  "active": "1bc30e82fd7b9190",
   "lastOpenFiles": [
-    "Linux内核原理及其开发/Linux驱动开发笔记.md",
-    "Linux内核原理及其开发/应试笔记与八股.md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/IO多路复用接口(select、poll、epoll).md",
+    "Linux内核原理及其开发/应试笔记与八股.md",
+    "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/Linux系统调用基础.md",
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
     "操作系统/课外补充/IO模型/IO模型.md",
