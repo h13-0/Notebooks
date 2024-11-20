@@ -93,7 +93,8 @@ struct poll_list {
 };
 ```
 
-该结构体是一个链表，<font color="#c00000">用于分割数量过大的pollfd数组，以避免栈溢出或超过单个内存页</font>。其中：
+该结构体是一个链表，<font color="#c00000">用于分割数量过大的pollfd数组，以避免栈溢出或超过单个内存页</font>。
+其中：
 - `struct poll_list *next` ：为下一节点的指针。
 - `unsigned int len` ：表示在 `entries` 数组中存储的 `pollfd` 结构的数量。
 - `struct pollfd entries[]` ：一个柔性数组，存储实际的 `pollfd` 结构数组。
@@ -109,7 +110,8 @@ typedef struct poll_table_struct {
 } poll_table;
 ```
 
-该数据结构用于管理 `poll` 、 `select` 和 `epoll` 系统调用中的等待队列机制，其中：
+该数据结构用于管理 `poll` 、 `select` 和 `epoll` 系统调用中的等待队列机制。
+其中：
 - `poll_queue_proc _qproc` ：为一个函数指针，用于指向一个回调函数，该函数在需要将当前进程添加到等待队列时调用。
 - `__poll_t _key` ：IO复用系统调用时所选择监听的事件掩码。
 
@@ -141,5 +143,34 @@ struct poll_wqueues {
 - `int inline_index` ：用于指示下一个空闲的 `inline_entries` 插槽的索引。
 - `struct poll_table_entry inline_entries` ：一个固定大小的数组。
 
+### 4.5 struct poll_table_entry
 
+`struct poll_table_entry` 的定义如下：
+
+```C
+struct poll_table_entry {
+	struct file *filp;
+	__poll_t key;
+	wait_queue_entry_t wait;
+	wait_queue_head_t *wait_address;
+};
+```
+
+其中：
+- `struct file *filp` ：为指向Linux kernel中文件对象的指针。
+- `__poll_t key` ：IO复用系统调用时所选择监听的事件掩码。
+- `wait_queue_entry_t wait` ：
+- `wait_queue_head_t *wait_address` ：
+
+### 4.6 struct poll_table_page
+
+`struct poll_table_page` 的定义如下：
+
+```C
+struct poll_table_page {
+	struct poll_table_page * next;
+	struct poll_table_entry * entry;
+	struct poll_table_entry entries[];
+};
+```
 
