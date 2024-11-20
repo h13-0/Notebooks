@@ -130,7 +130,7 @@ int select(int nfds, fd_set *readfds,
 poll解决方案由System V引入。
 poll解决方案与select基本一致，其只是<font color="#c00000">没有了1024的最大文件数的限制</font>，以及传参的形式有所区别。
 
-本函数在Linux、FreeBSD上均有实现：
+本函数在Linux、FreeBSD上均有实现： ^n3ntl8
 - 其基本函数声明为(具体声明取决于实现平台)：
 ```C
 struct pollfd{
