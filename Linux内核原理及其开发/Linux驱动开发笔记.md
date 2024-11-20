@@ -2049,7 +2049,10 @@ wake_up_interruptible(x)
 1. 本章节所提及的简单休眠API，<font color="#c00000">当一个线程触发</font> `wake_up` <font color="#c00000">后</font>，<font color="#c00000">阻塞队列上的</font>(非独占等待节点之前的)<span style="background:#fff88f"><font color="#c00000">所有</font></span><font color="#c00000"><u>简单休眠</u>的线程</font><span style="background:#fff88f"><font color="#c00000">均会被唤醒并判定休眠条件</font></span> `condition` 。在简单休眠中，队列并没有实际的先后作用，队列的作用发生于[[Linux驱动开发笔记#独占等待]]中。
 2. 由于一次 `wake_up` 可能会唤醒多个简单休眠对象，<font color="#c00000">因此</font> `condition` <font color="#c00000">的操作也必须是原子的</font>。
 3. 简单休眠可能会被多次唤醒，并且时常会不满足判定条件。<font color="#c00000">不满足判定条件的线程会被再次休眠</font>。
-4. 注意点1中所述的 "<font color="#c00000">阻塞队列上的非独占等待节点之前的所有简单线程均会被唤醒</font>" 的设计在后续的(例如)
+4. 注意点1中所述的 "<font color="#c00000">阻塞队列上的非独占等待节点之前的所有简单线程均会被唤醒</font>" <font color="#c00000">的设计</font><span style="background:#fff88f"><font color="#c00000">在后续所学习的别的内核提供的功能上有大用</font></span>。例如：
+	- IO多路复用模型中：
+		- 一个使用select/poll/epoll监听多个文件事件的线程在不满足监听条件时会被阻塞，但是阻塞是由内核框架完成的，<font color="#c00000">被设置为可中断的</font><span style="background:#fff88f"><font color="#c00000">普通</font></span><font color="#c00000">休眠</font>。
+		- 而让驱动或内核去把等待poll类函数的线程绑定到若干事件上的程序设计又太过复杂，因此索性设计为只要当可被监听的事件发生，均调用 `wake_up_interruptible()` 唤醒所有普通休眠的线程，自然就包括了被poll类函数阻塞的线程。
 
 ### 8.5 高级休眠
 
@@ -2332,6 +2335,8 @@ int fsync(struct file *filep, loff_t start, loff_t end, int datasync);
 #### 8.7.2 select、poll、epoll的底层原理和数据结构
 
 详见[[IO多路复用接口(select、poll、epoll)]]。
+
+<font color="#c00000">简单总结版本</font>：[[Linux内核原理及其开发/应试笔记与八股#^uhjg4c]]。
 
 #### 8.7.3 异步IO
 
