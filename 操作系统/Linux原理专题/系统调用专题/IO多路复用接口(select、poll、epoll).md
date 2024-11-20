@@ -81,11 +81,22 @@ struct pollfd {
 
 具体含义即用户态表现可见[[IO模型#^n3ntl8]]。
 
-### 4.2 poll_table
+### 4.2 struct poll_table
+
+`struct poll_table` 的定义如下：
 
 ```C
-
+struct poll_list {
+	struct poll_list *next;
+	unsigned int len;
+	struct pollfd entries[];
+};
 ```
 
-### struct poll_wqueues
+该结构体是一个链表，其中：
+- `struct poll_list *next` ：为下一节点的指针。
+- `unsigned int len` ：表示在 `entries` 数组中存储的 `pollfd` 结构的数量。
+- `struct pollfd entries[]` ：一个柔性数组，存储实际的 `pollfd` 结构数组。
+
+### 4.3 struct poll_wqueues
 
