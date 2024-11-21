@@ -34,21 +34,8 @@
               "icon": "lucide-file",
               "title": "应试笔记与八股"
             }
-          },
-          {
-            "id": "2375971c848776a5",
-            "type": "leaf",
-            "state": {
-              "type": "image",
-              "state": {
-                "file": "Resources/Pasted image 20240203021517.png"
-              },
-              "icon": "lucide-image",
-              "title": "Pasted image 20240203021517"
-            }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -176,10 +163,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Resources/Pasted image 20240203021517.png"
+                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md"
               },
               "icon": "lucide-list",
-              "title": "Pasted image 20240203021517 的大纲"
+              "title": "Linux驱动开发笔记 的大纲"
             }
           },
           {
@@ -222,11 +209,12 @@
       "obsidian42-brat:BRAT": false
     }
   },
-  "active": "2375971c848776a5",
+  "active": "893be47d5d8d11df",
   "lastOpenFiles": [
+    "Linux内核原理及其开发/应试笔记与八股.md",
+    "Resources/Pasted image 20240203021517.png",
     "操作系统/课外补充/IO模型/IO模型.md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/IO多路复用接口(select、poll、epoll).md",
-    "Linux内核原理及其开发/应试笔记与八股.md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/Linux系统调用基础.md",
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
@@ -260,14 +248,12 @@
     "嵌入式基础/接口技术/CAN/CAN总线协议标准.md",
     "自动控制/卡尔曼滤波.md",
     "CPP/应试笔记与八股.md",
-    "操作系统/用户态开发/IPC/Linux用户态IPC.md",
     "操作系统/Resources/Pasted image 20241118171908.png",
     "操作系统/Resources/Pasted image 20241118171902.png",
     "操作系统/Resources/Pasted image 20241118171723.png",
     "操作系统/Resources/Pasted image 20241118171710.png",
     "操作系统/Resources/Pasted image 20241118155456.png",
     "操作系统/Resources/Pasted image 20241118011240.png",
-    "Resources/Pasted image 20240203021517.png",
     "操作系统/Resources/chrome_8uyFjkPyld.png",
     "操作系统/Resources/10031-2017.pdf",
     "嵌入式基础/接口技术/未命名.canvas",
