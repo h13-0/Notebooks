@@ -2274,7 +2274,51 @@ __poll_t poll(struct file *filep, struct poll_table_struct *wait);
 0. 自己定义并管理一个等待队列  `wait_queue_head_t` 。
 1. 不用管系统怎么使用poll，直接使用 `poll_wait` 将当前线程塞回上述等待队列。
 2. 不用管用户具体等待的事件掩码是什么，直接返回当前可操作事件的事件掩码。
-随后在驱动程序(例如中断中)
+随后在驱动程序的潜在事件发生处(例如中断中)使用 `wake_up_interruptible()` 唤醒对应队列上的所有普通休眠进程。
+
+示例如下：
+
+```C
+static int __init mpipe_init(void)
+{
+
+}
+
+
+static __poll_t poll(struct file *filep, struct poll_table_struct *wait)
+{
+	struct mpipe_dev *dev = file->private_data;
+
+	// 1. 不需要管具体的系统实现，只需要将等待队列插入到
+	poll_wait(filep, &dev->read_queue, wait);
+
+	// 2. 检查设备是否可读、可写等...
+	if()
+
+}
+
+
+
+
+
+static void __exit mpipe_exit(void) { ... }
+
+static int mpipe_write()
+{
+
+}
+
+static int mpipe_read()
+{
+	struct mpipe_dev *dev = file->private_data;
+
+	
+}
+
+
+
+```
+
 
 
 至于具体的 `select` 、 `poll` 、 `epoll` 的底层原理可参见[[Linux驱动开发笔记#8 7 2 select、poll、epoll的底层原理和数据结构]]。
