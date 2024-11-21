@@ -2279,23 +2279,42 @@ __poll_t poll(struct file *filep, struct poll_table_struct *wait);
 示例如下：
 
 ```C
+struct mpipe_dev {
+	// 读/写等待队列
+	wait_queue_head_t read_queue;
+	wait_queue_head_t write_queue;
+
+	// 读/写环形缓冲区
+	struct kfifo read_fifo;
+	struct kfifo write_fifo;
+}
+
 static int __init mpipe_init(void)
 {
-
+	// ...
 }
 
 
 static __poll_t poll(struct file *filep, struct poll_table_struct *wait)
 {
-	__poll_t mask
+	__poll_t mask = 0;
 	struct mpipe_dev *dev = file->private_data;
 
 	// 1. 不需要管具体的系统实现，只需要将等待队列插入到
 	poll_wait(filep, &dev->read_queue, wait);
+	poll_wait(filep, &dev->write_queue, wait);
 
 	// 2. 不用管用户具体在等待哪个，将设备是否可读、可写等全检查一遍并返回
-	if()
+	if(!kfifo_is_empty(&dev->read_queue)) {
+		// 读缓冲区非空, 可读
+		mask |= POLLIN | POLLRDNORM;
+	}
+	if(!kfifo_is_full(&dev->write_queue)) {
+		// 写缓冲区非满, 可写
+		mask |= POLLOUT | POLLWRNORM;
+	}
 
+	return mask;
 }
 
 
@@ -2304,15 +2323,20 @@ static __poll_t poll(struct file *filep, struct poll_table_struct *wait)
 
 static void __exit mpipe_exit(void) { ... }
 
-static int mpipe_write()
-{
-
-}
-
-static int mpipe_read()
+static int mpipe_write(struct file *, const char __user *, size_t, loff_t *)
 {
 	struct mpipe_dev *dev = file->private_data;
+	// ...
 
+	// 3. 当写入事件成功完成时, 通知读队列开读。
+	wake_up_interruptible(dev->read_queue);
+}
+
+static int mpipe_read(struct file *, char __user *, size_t, loff_t *)
+{
+	struct mpipe_dev *dev = file->private_data;
+	// ...
+	
 	
 }
 
