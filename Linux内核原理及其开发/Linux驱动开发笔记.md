@@ -2409,10 +2409,15 @@ int fsync(struct file *filep, loff_t start, loff_t end, int datasync);
 
 <font color="#c00000">简单总结版本</font>：[[Linux内核原理及其开发/应试笔记与八股#^uhjg4c]]。
 
-#### 8.7.3 异步IO
+#### 8.7.3 异步通知
+
+本章节所讲述的IO模型为[[IO模型#3 4 信号驱动型IO Signal Driven IO|信号驱动型IO]]。
 
 
 
+若用户
+
+通常来说，用户应假设只有socket和
 
 ## 9 时间、延迟及延缓操作
 

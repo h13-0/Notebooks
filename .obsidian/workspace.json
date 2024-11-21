@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
+                "file": "操作系统/课外补充/IO模型/IO模型.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Linux驱动开发笔记"
+              "title": "IO模型"
             }
           },
           {
@@ -225,10 +225,10 @@
   },
   "active": "893be47d5d8d11df",
   "lastOpenFiles": [
-    "Linux内核原理及其开发/应试笔记与八股.md",
-    "Linux内核原理及其开发/Linux驱动开发笔记.md",
-    "Resources/Pasted image 20240203021517.png",
     "操作系统/课外补充/IO模型/IO模型.md",
+    "Linux内核原理及其开发/Linux驱动开发笔记.md",
+    "Linux内核原理及其开发/应试笔记与八股.md",
+    "Resources/Pasted image 20240203021517.png",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/IO多路复用接口(select、poll、epoll).md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/Linux系统调用基础.md",
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
