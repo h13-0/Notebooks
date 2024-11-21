@@ -49,7 +49,8 @@
               "title": "应试笔记与八股"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -177,10 +178,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md"
+                "file": "操作系统/课外补充/IO模型/IO模型.md"
               },
               "icon": "lucide-list",
-              "title": "Linux驱动开发笔记 的大纲"
+              "title": "IO模型 的大纲"
             }
           },
           {
@@ -223,10 +224,10 @@
       "obsidian42-brat:BRAT": false
     }
   },
-  "active": "893be47d5d8d11df",
+  "active": "d97859749b1ab779",
   "lastOpenFiles": [
-    "操作系统/课外补充/IO模型/IO模型.md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
+    "操作系统/课外补充/IO模型/IO模型.md",
     "Linux内核原理及其开发/应试笔记与八股.md",
     "Resources/Pasted image 20240203021517.png",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/IO多路复用接口(select、poll、epoll).md",

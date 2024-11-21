@@ -2417,7 +2417,7 @@ int fsync(struct file *filep, loff_t start, loff_t end, int datasync);
 
 若用户
 
-通常来说，用户应假设只有socket和
+通常来说，用户应假设只有socket和terminal具有异步通知能力。
 
 ## 9 时间、延迟及延缓操作
 
