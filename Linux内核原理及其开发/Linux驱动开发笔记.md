@@ -2287,12 +2287,13 @@ static int __init mpipe_init(void)
 
 static __poll_t poll(struct file *filep, struct poll_table_struct *wait)
 {
+	__poll_t mask
 	struct mpipe_dev *dev = file->private_data;
 
 	// 1. 不需要管具体的系统实现，只需要将等待队列插入到
 	poll_wait(filep, &dev->read_queue, wait);
 
-	// 2. 检查设备是否可读、可写等...
+	// 2. 不用管用户具体在等待哪个，将设备是否可读、可写等全检查一遍并返回
 	if()
 
 }
