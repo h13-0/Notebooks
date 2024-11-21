@@ -2270,11 +2270,11 @@ Linux为[[IO模型#3 3 IO多路复用 IO Multiplexing|IO多路复用模型]]提�
 __poll_t poll(struct file *filep, struct poll_table_struct *wait);
 ```
 
-尽管IO多路复用的实现机制较为复杂，但是在上述函数中只需要实现如下三件事：
+尽管IO多路复用的实现机制较为复杂，但是在上述函数中只需要实现<font color="#c00000">如下的基本语义</font>：
 0. 自己定义并管理一个等待队列  `wait_queue_head_t` 。
 1. 不用管系统怎么使用poll，直接使用 `poll_wait` 将当前线程塞回上述等待队列。
 2. 不用管用户具体等待的事件掩码是什么，直接返回当前可操作事件的事件掩码。
-随后在驱动程序的潜在事件发生处(例如中断中)使用 `wake_up_interruptible()` 唤醒对应队列上的所有普通休眠进程。
+随后在驱动程序的潜在事件发生处(例如中断中)使用 `wake_up_interruptible()` <font color="#c00000">唤醒对应队列上的所有普通休眠进程</font>。
 
 示例如下：
 
@@ -2287,13 +2287,14 @@ struct mpipe_dev {
 	// 读/写环形缓冲区
 	struct kfifo read_fifo;
 	struct kfifo write_fifo;
-}
 
-static int __init mpipe_init(void)
-{
+	struct cdev cdev;
+	spinlock_t lock;
 	// ...
 }
 
+static int __init mpipe_init(void) { ... }
+static void __exit mpipe_exit(void) { ... }
 
 static __poll_t poll(struct file *filep, struct poll_table_struct *wait)
 {
@@ -2319,17 +2320,16 @@ static __poll_t poll(struct file *filep, struct poll_table_struct *wait)
 
 
 
-
-
-static void __exit mpipe_exit(void) { ... }
-
 static int mpipe_write(struct file *, const char __user *, size_t, loff_t *)
 {
 	struct mpipe_dev *dev = file->private_data;
 	// ...
 
-	// 3. 当写入事件成功完成时, 通知读队列开读。
-	wake_up_interruptible(dev->read_queue);
+	// 3. 当写入事件成功完成时, 如果缓冲区非空, 通知读队列开读。
+    if (!kfifo_is_empty(&dev->read_fifo))
+        wake_up_interruptible(&dev->read_queue);
+
+	return ...;
 }
 
 static int mpipe_read(struct file *, char __user *, size_t, loff_t *)
@@ -2337,14 +2337,13 @@ static int mpipe_read(struct file *, char __user *, size_t, loff_t *)
 	struct mpipe_dev *dev = file->private_data;
 	// ...
 	
-	
+	// 3. 当读取事件成功完成时, 如果缓冲区非满, 通知写队列开写。
+    if (!kfifo_is_full(&dev->write_fifo))
+        wake_up_interruptible(&dev->write_queue);
+
+	return ...;
 }
-
-
-
 ```
-
-
 
 至于具体的 `select` 、 `poll` 、 `epoll` 的底层原理可参见[[Linux驱动开发笔记#8 7 2 select、poll、epoll的底层原理和数据结构]]。
 简单的机制总结可见：[[Linux内核原理及其开发/应试笔记与八股#^uhjg4c]]。
