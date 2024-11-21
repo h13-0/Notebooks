@@ -39,14 +39,12 @@
             "id": "2375971c848776a5",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "image",
               "state": {
-                "file": "操作系统/课外补充/IO模型/IO模型.md",
-                "mode": "source",
-                "source": false
+                "file": "Resources/Pasted image 20240203021517.png"
               },
-              "icon": "lucide-file",
-              "title": "IO模型"
+              "icon": "lucide-image",
+              "title": "Pasted image 20240203021517"
             }
           }
         ],
@@ -178,10 +176,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "操作系统/课外补充/IO模型/IO模型.md"
+                "file": "Resources/Pasted image 20240203021517.png"
               },
               "icon": "lucide-list",
-              "title": "IO模型 的大纲"
+              "title": "Pasted image 20240203021517 的大纲"
             }
           },
           {
@@ -219,19 +217,19 @@
       "command-palette:打开命令面板": false,
       "audio-recorder:开始/结束录音": false,
       "obsidian-git:Open Git source control": false,
-      "obsidian42-brat:BRAT": false,
       "webpage-html-export:Export Vault to HTML": false,
-      "mermaid-tools:Open Mermaid Toolbar": false
+      "mermaid-tools:Open Mermaid Toolbar": false,
+      "obsidian42-brat:BRAT": false
     }
   },
-  "active": "1bc30e82fd7b9190",
+  "active": "2375971c848776a5",
   "lastOpenFiles": [
+    "操作系统/课外补充/IO模型/IO模型.md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/IO多路复用接口(select、poll、epoll).md",
     "Linux内核原理及其开发/应试笔记与八股.md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/Linux系统调用基础.md",
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
-    "操作系统/课外补充/IO模型/IO模型.md",
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题",
     "Linux内核原理及其开发/内核原理专题/Readme.md",
     "Resources/8619b62ac43800a3e18be2330e906e05.png",
