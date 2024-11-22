@@ -47,6 +47,11 @@ flowchart TB
 int main() {
     using namespace std;
 
+	// 1. 创建socket
+	//    参数:
+	//		- [in] int af:       地址系列规范, 常用AF_INET(IPV4)、AF_INET6(IPV6)、AF_BTH(蓝牙)等
+	//		- [in] int type:     socket类型规范, 常用SOCK_STREAM(流式传输)、SOCK_DGRAM(数据报传输)等
+	//		- [in] int protocol: socket要使用的协议，常用0(默认)、IPPROTO_ICMP(ICMP)、IPPROTO_TCP(TCP)、IPPROTO_UDP(UDP)等
     int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
 
     int opt = 1;
@@ -58,6 +63,7 @@ int main() {
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     server_addr.sin_port = htons(PORT);
 
+	// 将socket和
     bind(socket_fd, (struct sockaddr*)&server_addr, sizeof(server_addr));
 
     // 设置为监听状态, 该步不阻塞
