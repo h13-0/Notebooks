@@ -41,12 +41,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "操作系统/用户态开发/BSD socket/Windows用户态socket.md",
+                "file": "操作系统/用户态开发/BSD socket/BSD Socket API及常用实现.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Windows用户态socket"
+              "title": "BSD Socket API及常用实现"
             }
           }
         ],
@@ -178,10 +178,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "操作系统/用户态开发/BSD socket/Windows用户态socket.md"
+                "file": "操作系统/用户态开发/BSD socket/BSD Socket API及常用实现.md"
               },
               "icon": "lucide-list",
-              "title": "Windows用户态socket 的大纲"
+              "title": "BSD Socket API及常用实现 的大纲"
             }
           },
           {
@@ -226,7 +226,9 @@
   },
   "active": "b79238cdb4ee50f9",
   "lastOpenFiles": [
+    "操作系统/用户态开发/BSD socket/setsockopt及其选项列表.md",
     "操作系统/用户态开发/BSD socket/Linux用户态socket.md",
+    "操作系统/用户态开发/BSD socket/BSD Socket API及常用实现.md",
     "操作系统/用户态开发/BSD socket/Windows用户态socket.md",
     "操作系统/课外补充/IO模型/IO模型.md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
@@ -262,8 +264,6 @@
     "计算机网络/计算机网络非应试拓展/JSON/JSON.md",
     "嵌入式基础/软件层技术/应用层通信协议/JSON.md",
     "嵌入式基础/接口技术/CAN/CAN总线协议标准.md",
-    "自动控制/卡尔曼滤波.md",
-    "CPP/应试笔记与八股.md",
     "操作系统/Resources/Pasted image 20241118171908.png",
     "操作系统/Resources/Pasted image 20241118171902.png",
     "操作系统/Resources/Pasted image 20241118171723.png",

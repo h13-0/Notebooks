@@ -4954,19 +4954,19 @@
       "isCountable": true,
       "targetNodeType": "file",
       "noteCount": 1,
-      "wordCount": 209,
+      "wordCount": 210,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 0.6966666666666667,
-      "characterCount": 386,
-      "nonWhitespaceCharacterCount": 339,
-      "readingTimeInMinutes": 0.4481509433962264,
+      "pageCount": 0.7,
+      "characterCount": 398,
+      "nonWhitespaceCharacterCount": 350,
+      "readingTimeInMinutes": 0.4519245283018868,
       "linkCount": 0,
       "embedCount": 0,
       "aliases": null,
       "createdDate": 1731852708985,
-      "modifiedDate": 1731853077580,
-      "sizeInBytes": 850,
+      "modifiedDate": 1732261927169,
+      "sizeInBytes": 862,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -10286,6 +10286,27 @@
       "createdDate": 1713204230576,
       "modifiedDate": 1715273142332,
       "sizeInBytes": 216
+    },
+    "操作系统/用户态开发/BSD socket/BSD Socket API及常用实现.md": {
+      "isCountable": true,
+      "targetNodeType": "file",
+      "noteCount": 1,
+      "wordCount": 20,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0.06666666666666667,
+      "characterCount": 157,
+      "nonWhitespaceCharacterCount": 134,
+      "readingTimeInMinutes": 0.05773584905660377,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1732261868639,
+      "modifiedDate": 1732262169969,
+      "sizeInBytes": 233,
+      "frontmatter": {
+        "number headings": "auto, first-level 2, max 6, 1.1"
+      }
     }
   }
 }
