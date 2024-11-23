@@ -3211,19 +3211,19 @@
       "isCountable": true,
       "targetNodeType": "file",
       "noteCount": 1,
-      "wordCount": 3640,
+      "wordCount": 3632,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 12.133333333333333,
-      "characterCount": 10354,
-      "nonWhitespaceCharacterCount": 8385,
-      "readingTimeInMinutes": 8.471849056603773,
+      "pageCount": 12.106666666666667,
+      "characterCount": 10340,
+      "nonWhitespaceCharacterCount": 8375,
+      "readingTimeInMinutes": 8.455849056603773,
       "linkCount": 1,
       "embedCount": 9,
       "aliases": null,
       "createdDate": 1731767225512,
-      "modifiedDate": 1732348987518,
-      "sizeInBytes": 16833,
+      "modifiedDate": 1732349440583,
+      "sizeInBytes": 16801,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -10307,6 +10307,27 @@
       "createdDate": 1713204230576,
       "modifiedDate": 1715273142332,
       "sizeInBytes": 216
+    },
+    "操作系统/用户态开发/信号/可监听的信号.md": {
+      "isCountable": true,
+      "targetNodeType": "file",
+      "noteCount": 1,
+      "wordCount": 18,
+      "wordCountTowardGoal": 0,
+      "wordGoal": null,
+      "pageCount": 0.06,
+      "characterCount": 71,
+      "nonWhitespaceCharacterCount": 46,
+      "readingTimeInMinutes": 0.050188679245283016,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": null,
+      "createdDate": 1732349564301,
+      "modifiedDate": 1732349721962,
+      "sizeInBytes": 147,
+      "frontmatter": {
+        "number headings": "auto, first-level 2, max 6, 1.1"
+      }
     }
   }
 }
