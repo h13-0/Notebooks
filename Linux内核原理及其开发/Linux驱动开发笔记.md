@@ -2453,7 +2453,6 @@ fcntl(fd, F_SETFL, flags | O_ASYNC);
 int fasync(int fd, struct file *filp, int on);
 ```
 
-
 内核中为了方便该函数的实现，提供了如下的辅助函数：
 - `int fasync_helper(int fd, struct file * filp, int on, struct fasync_struct **fapp)` ：
 	- 该函数帮助驱动程序向 `fasync_struct` 中<font color="#c00000">添加或移除节点</font>。当 `on == 0` 时移除， `on == 1` 时添加。
@@ -2462,7 +2461,12 @@ int fasync(int fd, struct file *filp, int on);
 		- 小于0时表示函数执行错误
 		- 等于0时表示函数并为对链表进行更改
 		- 大于0时表示成功添加或删除队列中的条目
-
+- `void kill_fasync(struct fasync_struct **fp, int sig, int band)` ：
+	- <font color="#c00000">该函数应当在设备可以访问时由驱动程序主动发出</font>，用于向监听的进程发出信号。
+	- 其参数：
+		- `struct fasync_struct **fp` ：驱动程序所管理的 `fasync_struct` 链表
+		- `int sig` ：驱动程序要发出的信号
+		- `int band` ：
 
 
 
