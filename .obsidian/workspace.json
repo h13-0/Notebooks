@@ -105,8 +105,7 @@
               "title": "内核基本数据结构(types.h部分)"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -234,10 +233,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux内核原理及其开发/内核文档翻译/内核源码文档/Documentation/userspace-api/ioctl/ioctl-number.rst.md"
+                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md"
               },
               "icon": "lucide-list",
-              "title": "ioctl-number.rst 的大纲"
+              "title": "Linux驱动开发笔记 的大纲"
             }
           },
           {
@@ -280,10 +279,10 @@
       "obsidian42-brat:BRAT": false
     }
   },
-  "active": "77cf5755aac8c1d3",
+  "active": "893be47d5d8d11df",
   "lastOpenFiles": [
-    "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "Linux内核原理及其开发/内核文档翻译/内核源码文档/Documentation/userspace-api/ioctl/ioctl-number.rst.md",
+    "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
     "操作系统/用户态开发/信号/可监听的信号列表.md",
     "操作系统/课外补充/IO模型/IO模型.md",
