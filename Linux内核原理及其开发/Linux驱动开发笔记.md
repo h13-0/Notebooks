@@ -2432,15 +2432,32 @@ fcntl(fd, F_SETOWN, getpid());
 //    获取该文件原先的文件状态标签，添加异步通知功能，再设置回去
 f_flags = fcntl(fd, F_GETFL, 0);
 fcntl(fd, F_SETFL, flags | O_ASYNC);
+
+// 4. 定义回调函数, 略
+...
 ```
+
+通常来说，用户应假设只有socket和terminal具有异步通知能力。
 
 上述用户态操作对应的内核驱动程序的操作分别为：
 
-| 
+| <center>用户态操作</center> | <center>内核操作</center>           | <center>驱动程序操作</center> |
+| ---------------------- | ------------------------------- | ----------------------- |
+| 为文件设置回调函数              | 内核会将 `filep->f_owner` 设置为目标PID。 |                         |
+| 为文件设置所有者               |                                 |                         |
+| 启用异步通知                 |                                 | 驱动程序的 `fasync` 操作被调用。   |
+
+`fasync` 函数的声明为：
+
+```C
+int fasync(int fd, struct file *filp, int on);
+```
 
 
 
-通常来说，用户应假设只有socket和terminal具有异步通知能力。
+
+
+
 
 ## 9 时间、延迟及延缓操作
 
