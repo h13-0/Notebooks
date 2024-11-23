@@ -198,14 +198,8 @@ IO多路复用解决了线程数过多的问题，允许使用一个线程监听
 ![[Pasted image 20241118171902.png]]
 
 基本的使用流程为：
-1. 使用：
-	1. (推荐) `int sigaction(int signum, const struct sigaction _Nullable restrict act, struct sigaction _Nullable restrict oldact);` ：
-		- `int signum` ：要监听的信号编号
-		- `struct sigaction act` ：信号发生时的动作
-		- 
-	1. `signal` (不推荐)
-	注册需要监听的信号及其回调函数。
-2. 将socket的所有者设置为当前进程，随后的内核通知的目标进程就会被设置为该进程。
+1. 使用 `sigaction` 或 `signal` 注册需要监听的信号及其回调函数。通常推荐使用前者。
+2. 将文件的所有者设置为当前进程，随后的内核通知的目标进程就会被设置为该进程。
 3. 启用异步通知。
 4. 在回调函数中对IO进行处理。
 

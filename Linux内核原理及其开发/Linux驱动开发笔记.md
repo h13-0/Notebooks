@@ -2413,7 +2413,17 @@ int fsync(struct file *filep, loff_t start, loff_t end, int datasync);
 
 本章节所讲述的IO模型为[[IO模型#3 4 信号驱动型IO Signal Driven IO|信号驱动型IO]]。
 
+用户态APP启用异步通知的基本步骤为：
+1. 使用 `sigaction` 或 `signal` 注册需要监听的信号及其回调函数。通常推荐使用前者。
+2. 将文件的所有者设置为当前进程，随后的内核通知的目标进程就会被设置为该进程。
+3. 启用异步通知。
+4. 在回调函数中对IO进行处理。
+示例如下：
 
+```C
+// 这里使用signal只是yin wei
+
+```
 
 
 若用户

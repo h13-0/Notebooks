@@ -239,10 +239,10 @@
   },
   "active": "893be47d5d8d11df",
   "lastOpenFiles": [
-    "操作系统/用户态开发/信号/可监听的信号列表.md",
     "操作系统/课外补充/IO模型/IO模型.md",
-    "操作系统/用户态开发/BSD socket/BSD Socket API及常用实现.md",
+    "操作系统/用户态开发/信号/可监听的信号列表.md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
+    "操作系统/用户态开发/BSD socket/BSD Socket API及常用实现.md",
     "操作系统/Resources/MobaXterm_C1PkrYnmXJ.png",
     "操作系统/用户态开发/BSD socket/Linux用户态socket.md",
     "操作系统/Resources/0261.png",
