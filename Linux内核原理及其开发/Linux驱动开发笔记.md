@@ -2458,6 +2458,10 @@ int fasync(int fd, struct file *filp, int on);
 - `int fasync_helper(int fd, struct file * filp, int on, struct fasync_struct **fapp)` ：
 	- 该函数帮助驱动程序向 `fasync_struct` 中<font color="#c00000">添加或移除节点</font>。当 `on == 0` 时移除， `on == 1` 时添加。
 	- 在调用该函数时，前三个参数与 `fasync` 函数中传来的一致，第四个参数为驱动程序所管理的 `fasync_struct` 链表。
+	- 其返回值：
+		- 小于0时表示函数执行错误
+		- 等于0时表示函数并为对链表进行更改
+		- 大于0时表示成功添加或删除队列中的条目
 
 
 
