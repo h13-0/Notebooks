@@ -2320,9 +2320,9 @@ static __poll_t poll(struct file *filep, struct poll_table_struct *wait)
 
 
 
-static int mpipe_write(struct file *, const char __user *, size_t, loff_t *)
+static int mpipe_write(struct file *filep, const char __user *, size_t, loff_t *)
 {
-	struct mpipe_dev *dev = file->private_data;
+	struct mpipe_dev *dev = filep->private_data;
 	// ...
 
 	// 3. 当写入事件成功完成时, 如果缓冲区非空, 通知读队列开读。
@@ -2332,9 +2332,9 @@ static int mpipe_write(struct file *, const char __user *, size_t, loff_t *)
 	return ...;
 }
 
-static int mpipe_read(struct file *, char __user *, size_t, loff_t *)
+static int mpipe_read(struct file *filep, char __user *, size_t, loff_t *)
 {
-	struct mpipe_dev *dev = file->private_data;
+	struct mpipe_dev *dev = filep->private_data;
 	// ...
 	
 	// 3. 当读取事件成功完成时, 如果缓冲区非满, 通知写队列开写。
