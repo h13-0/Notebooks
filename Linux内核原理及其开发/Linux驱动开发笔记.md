@@ -2455,7 +2455,9 @@ int fasync(int fd, struct file *filp, int on);
 
 
 内核中为了方便该函数的实现，提供了如下的辅助函数：
-- `fasync_helper` ：该函数
+- `int fasync_helper(int fd, struct file * filp, int on, struct fasync_struct **fapp)` ：
+	- 该函数帮助驱动程序向 `fasync_struct` 中<font color="#c00000">添加或移除节点</font>。当 `on == 0` 时移除， `on == 1` 时添加。
+	- 在调用该函数时，前三个参数与 `fasync` 函数中传来的一致，第四个参数为驱动程序所管理的 `fasync_struct` 链表。
 
 
 
