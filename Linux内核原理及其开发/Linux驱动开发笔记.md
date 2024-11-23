@@ -2421,12 +2421,24 @@ int fsync(struct file *filep, loff_t start, loff_t end, int datasync);
 示例如下：
 
 ```C
-// 这里使用signal只是yin wei
+// 1. 注册监听信号及其回调函数
+//    这里使用signal只是因为使用起来比较简单和简洁，实际使用中应使用sigaction。
+signal(SIGIO, &callback);
 
+// 2. 设置文件所有者为当前进程
+fcntl(fd, F_SETOWN, getpid());
+
+// 3. 启用异步通知
+//    获取该文件原先的文件状态标签，添加异步通知功能，再设置回去
+f_flags = fcntl(fd, F_GETFL, 0);
+fcntl(fd, F_SETFL, flags | O_ASYNC);
 ```
 
+上述用户态操作对应的内核驱动程序的操作分别为：
 
-若用户
+| 
+
+
 
 通常来说，用户应假设只有socket和terminal具有异步通知能力。
 
