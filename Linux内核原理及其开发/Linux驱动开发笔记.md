@@ -1053,13 +1053,31 @@ static inline int register_chrdev(unsigned int major, const char *name,
 void unregister_chrdev_region(dev_t from, unsigned count)
 ```
 
-### 5.4 创建设备
+### 5.4 创建设备节点
 
 使用上述的注册设备号的方法仅会在系统中注册一个字符设备，但是并不会在文件系统中注册对应的设备。
 
-#### 5.4.1 创建设备(device_create)
+#### 5.4.1 创建设备节点
 
+##### 5.4.1.1 device_create
 
+`device_create` 函数的声明如下：
+
+```C
+#include <linux/device.h>
+
+__printf(5, 6) struct device *
+device_create(const struct class *cls, struct device *parent, dev_t devt,
+	      void *drvdata, const char *fmt, ...);
+```
+
+其中：
+- 参数：
+	- `const struct class *cls` ：设备所属类型
+	- `struct device *parent` ：父设备指针
+	- `dev_t devt` ：需要创建设备节点的设备号
+	- `void *drvdata` ：设备私有数据指针，传入后可使用 `dev_set_drvdata` 和 `dev_get_drvdata` 进行读写。
+	- 
 
 
 #### 5.4.2 删除设备(device_destroy)
