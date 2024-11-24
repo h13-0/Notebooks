@@ -1073,12 +1073,13 @@ device_create(const struct class *cls, struct device *parent, dev_t devt,
 
 其中：
 - 参数：
-	- `const struct class *cls` ：设备所属类型
-	- `struct device *parent` ：父设备指针
+	- `const struct class *cls` ：设备所属类型，该类型需要自行定义。
+	- `struct device *parent` ：父设备指针，如果没有则设置为 `NULL` 。
 	- `dev_t devt` ：需要创建设备节点的设备号
 	- `void *drvdata` ：设备私有数据指针，传入后可使用 `dev_set_drvdata` 和 `dev_get_drvdata` 进行读写。
-	- 
-
+	- `const char *fmt` 及其可变参数：用于构造设备名称
+- 返回值：
+	- 新创建的 `struct device` 指针。出现错误时返回 `NULL` 。
 
 #### 5.4.2 删除设备(device_destroy)
 
