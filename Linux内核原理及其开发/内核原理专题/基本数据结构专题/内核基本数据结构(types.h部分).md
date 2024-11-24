@@ -117,9 +117,24 @@ static void func() {
 }
 ```
 
-#### 3.1.4 获取宿主链表入口(list_entry)
+#### 3.1.4 获取宿主链表入口(list_entry、container_of)
+
+获取宿主链表入口有两个函数 `list_entry` 和 `container_of` ，其本质相同互为别名，定义如下：
+
+```C
 
 
+/**
+ * container_of - cast a member of a structure out to the containing structure
+ * @ptr:	the pointer to the member.
+ * @type:	the type of the container struct this is embedded in.
+ * @member:	the name of the member within the struct.
+ *
+ */
+#define container_of(ptr, type, member) ({			\
+	const typeof( ((type *)0)->member ) *__mptr = (ptr);	\
+	(type *)( (char *)__mptr - offsetof(type,member) );})
+```
 
 
 
@@ -157,10 +172,7 @@ flowchart LR
 各宿主节点均遵从上方定义的[[内核基本数据结构(types.h部分)#^4l9s1l|统一的宿主数据结构]]，要在 `node1` 和 `node2` 之间增加 `node4` ，则示例如下：
 
 ```C
-
-list_add(node1.)
-
-
+list_add(&(node4.list), &(node1.list));
 ```
 
 #### 3.1.6 删除指定节点(list_del)
@@ -199,7 +211,19 @@ flowchart LR
 list_del(node1);
 ```
 
-#### 3.1.7 遍历节点(for_each)
+#### 3.1.7 遍历节点(list_for_each)
+
+`list_for_each` 函数的定义如下：
+
+```C
+/**
+ * list_for_each	-	iterate over a list
+ * @pos:	the &struct list_head to use as a loop cursor.
+ * @head:	the head for your list.
+ */
+#define list_for_each(pos, head) \
+	for (pos = (head)->next; pos != (head); pos = pos->next)
+```
 
 
 
