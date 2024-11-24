@@ -10365,24 +10365,6 @@
       "modifiedDate": 1715273142332,
       "sizeInBytes": 216
     },
-    "Linux内核原理及其开发/Resources/~$$devicetree -- kernel internals and practical troubleshooting.~vsdx": {
-      "isCountable": false,
-      "targetNodeType": "file",
-      "noteCount": 0,
-      "wordCount": 0,
-      "wordCountTowardGoal": 0,
-      "wordGoal": 0,
-      "pageCount": 0,
-      "characterCount": 0,
-      "nonWhitespaceCharacterCount": 0,
-      "readingTimeInMinutes": 0,
-      "linkCount": 0,
-      "embedCount": 0,
-      "aliases": [],
-      "createdDate": 1732438119076,
-      "modifiedDate": 1732438119078,
-      "sizeInBytes": 4096
-    },
     "Linux内核原理及其开发/Resources/type.h.vsdx": {
       "isCountable": false,
       "targetNodeType": "file",
