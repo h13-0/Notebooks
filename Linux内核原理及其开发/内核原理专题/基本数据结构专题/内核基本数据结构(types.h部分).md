@@ -51,26 +51,41 @@ struct list_head {
 
 #### 3.1.1 基本数据结构
 
+为了简化程序设计：
+- 该链表锚点通常需要一个表头
+- 为了方便从尾部插入，其表头的 `prev` 指向链表表尾节点，表头的 `next` 指向第一个节点
+- 当链表为空时，其 `prev` 、 `next` 两个指针均指向自己
+
+
 
 #### 3.1.2 静态创建链表(LIST_HEAD_INIT)
 
 ```C
-
 struct mdata_list {
 	int data;
 	struct list_head list;
-} mdata_list_head = {
+}
+
+static struct mdata_list mdata_list_head = {
 	.data = -1;
 	.list = LIST_HEAD_INIT(mdata_list_head.list)
 }
-
 ```
-
-
 
 #### 3.1.3 动态创建链表(INIT_LIST_HEAD)
 
+```C
+struct mdata_list {
+	int data;
+	struct list_head list;
+}
 
+static void func() {
+	struct mdata_list mdata_list_head = { 0 };
+	
+	INIT_LIST_HEAD(&mdata_list_head.list);
+}
+```
 
 ### 3.2 单向链表
 
