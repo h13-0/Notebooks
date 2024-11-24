@@ -9391,19 +9391,19 @@
       "isCountable": true,
       "targetNodeType": "file",
       "noteCount": 1,
-      "wordCount": 676,
+      "wordCount": 862,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 2.2533333333333334,
-      "characterCount": 1812,
-      "nonWhitespaceCharacterCount": 1566,
-      "readingTimeInMinutes": 1.5524150943396227,
+      "pageCount": 2.8733333333333335,
+      "characterCount": 2784,
+      "nonWhitespaceCharacterCount": 2376,
+      "readingTimeInMinutes": 2.089358490566038,
       "linkCount": 0,
-      "embedCount": 1,
+      "embedCount": 2,
       "aliases": null,
       "createdDate": 1732113231111,
-      "modifiedDate": 1732438911215,
-      "sizeInBytes": 3090,
+      "modifiedDate": 1732439633484,
+      "sizeInBytes": 4268,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -10398,10 +10398,10 @@
       "embedCount": 0,
       "aliases": [],
       "createdDate": 1732438479769,
-      "modifiedDate": 1732438896963,
-      "sizeInBytes": 49277
+      "modifiedDate": 1732439208040,
+      "sizeInBytes": 52658
     },
-    "Linux内核原理及其开发/Resources/~$$type.h.~vsdx": {
+    "Linux内核原理及其开发/Resources/Pasted image 20241124170623.png": {
       "isCountable": false,
       "targetNodeType": "file",
       "noteCount": 0,
@@ -10415,11 +10415,11 @@
       "linkCount": 0,
       "embedCount": 0,
       "aliases": [],
-      "createdDate": 1732438480246,
-      "modifiedDate": 1732438480247,
-      "sizeInBytes": 4096
+      "createdDate": 1732439183945,
+      "modifiedDate": 1732439183945,
+      "sizeInBytes": 73743
     },
-    "Resources/Pasted image 20241124170145.png": {
+    "Linux内核原理及其开发/Resources/Pasted image 20241124170145.png": {
       "isCountable": false,
       "targetNodeType": "file",
       "noteCount": 0,

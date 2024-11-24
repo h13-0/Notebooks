@@ -41,6 +41,10 @@ struct my_data_list {
 	- 优点：任何一个链表都可以定义为其自己的类型，这在大型项目中想当有用。
 	- 缺点：使用了宏。
 
+在上述的第二种方案中，先约定几个概念：
+- `entry` ：宿主链表的入口
+- 
+
 ### 3.1 双向链表锚点(struct list_head)
 
 `struct list_head` 的定义为：
@@ -64,14 +68,26 @@ struct mdata_list {
 
 为了简化程序设计：
 - 该链表锚点通常需要一个表头
-- 为了方便从尾部插入，其表头的 `prev` 指向链表表尾节点，表头的 `next` 指向第一个节点：
-	- 
-- 当链表为空时，其 `prev` 、 `next` 两个指针均指向自己：
+- <font color="#c00000">当链表为空时，其prev、next两个指针均指向自己</font>：
 	- ![[Pasted image 20241124170145.png]]
-
-
+- <font color="#c00000">为了方便从尾部插入，其表头的prev指向链表表尾节点，表头的next指向第一个节点</font>：
+	- ![[Pasted image 20241124170623.png]]
 
 #### 3.1.2 静态创建链表(LIST_HEAD_INIT)
+
+`LIST_HEAD_INIT` 函数的定义为：
+
+```C
+#define LIST_HEAD_INIT(name) { &(name), &(name) }
+
+static inline void INIT_LIST_HEAD(struct list_head *list)
+{
+	list->next = list;
+	list->prev = list;
+}
+```
+
+因此其参数类型为 `struct list_head *list` 。示例如下：
 
 ```C
 static struct mdata_list mdata_list_head = {
@@ -82,6 +98,18 @@ static struct mdata_list mdata_list_head = {
 
 #### 3.1.3 动态创建链表(INIT_LIST_HEAD)
 
+`INIT_LIST_HEAD` 函数的定义为：
+
+```C
+static inline void INIT_LIST_HEAD(struct list_head *list)
+{
+	list->next = list;
+	list->prev = list;
+}
+```
+
+其使用示例如下：
+
 ```C
 static void func() {
 	struct mdata_list mdata_list_head = { 0 };
@@ -89,6 +117,50 @@ static void func() {
 	INIT_LIST_HEAD(&mdata_list_head.list);
 }
 ```
+
+#### 3.1.4 获取宿主链表入口(list_entry)
+
+
+
+
+
+
+#### 3.1.5 向指定节点后添加一个节点(list_add)
+
+`list_add` 函数的定义为：
+
+```C
+/**
+ * list_add - add a new entry
+ * @new: new entry to be added
+ * @head: list head to add it after
+ *
+ * Insert a new entry after the specified head.
+ * This is good for implementing stacks.
+ */
+static inline void list_add(struct list_head *new, struct list_head *head)
+{
+	__list_add(new, head, head->next);
+}
+```
+
+其使用示例为：
+
+```C
+
+
+
+
+```
+
+
+
+#### 3.1.6 删除指定节点(list_del)
+
+
+
+
+
 
 ### 3.2 单向链表
 
