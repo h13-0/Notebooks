@@ -41,13 +41,34 @@ struct my_data_list {
 	- 优点：任何一个链表都可以定义为其自己的类型，这在大型项目中想当有用。
 	- 缺点：使用了宏。
 
-### 3.1 双向链表锚地(struct list_head)
+### 3.1 双向链表锚点(struct list_head)
 
 ```C
 struct list_head {
 	struct list_head *next, *prev;
 };
 ```
+
+#### 3.1.1 基本数据结构
+
+
+#### 3.1.2 静态创建链表(LIST_HEAD_INIT)
+
+```C
+
+struct mdata_list {
+	int data;
+	struct list_head list;
+} mdata_list_head = {
+	.data = -1;
+	.list = LIST_HEAD_INIT(mdata_list_head.list)
+}
+
+```
+
+
+
+#### 3.1.3 动态创建链表(INIT_LIST_HEAD)
 
 
 
