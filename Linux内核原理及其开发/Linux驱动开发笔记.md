@@ -940,7 +940,7 @@ Block devices:
  ...
 ```
 
-此外还有使用 `ls` 命令查看设备的方法：
+此外还有使用 `ls` 命令查看设备的方法(<font color="#c00000">但是该方法无法查看未注册文件节点的设备，以及子目录设备</font>，故不推荐)：
 
 在 `/dev` 目录下执行 `ls -l` ，可以得到如下结果：
 
@@ -1053,7 +1053,23 @@ static inline int register_chrdev(unsigned int major, const char *name,
 void unregister_chrdev_region(dev_t from, unsigned count)
 ```
 
-### 5.4 绑定文件操作(file_operations 数据结构)
+### 5.4 创建设备
+
+使用上述的注册设备号的方法仅会在系统中注册一个字符设备，但是并不会在文件系统中注册对应的设备。
+
+#### 5.4.1 创建设备(device_create)
+
+
+
+
+#### 5.4.2 删除设备(device_destroy)
+
+
+
+
+
+
+### 5.5 绑定文件操作(file_operations 数据结构)
 
 如上述章节所述， `struct file_operations` 用于建立文件操作和驱动程序操作的连接，该数据结构的定义如下(Linux 6.10版本)：
 
@@ -1129,7 +1145,7 @@ struct file_operations {
 注：
 1. 当指定的函数为 `NULL` 时，则会告诉内核该设备不支持对应操作，当用户调用时会抛出错误。
 
-### 5.5 file 数据结构
+### 5.6 file 数据结构
 
 注意本章节所述的 `file` 类型与C标准库的 `FILE` 类型无任何关联。`file` 是内核提供的一个数据结构，不会暴露给用户态程序。而 `FILE` 是C语言标准库中所定义的，不会出现在内核态的代码中。
 在内核中，`struct file` 指针通常被称为 `file` 或 `filep` 。`struct file` 数据结构的定义如下(Linux 6.10版本)：
@@ -1190,7 +1206,7 @@ struct file {
 | `private_data`      |                       |                     | 主要用于跨系统调用时保存或传递相关信息，或存储驱动自身所需要保存的信息。<br><font color="#c00000">该指针所分配的资源需要在release方法中手动释放</font>。                       |
 | `f_dentry`          |                       |                     | 文件对应的目录项结构，大多数设备文件无需关心。                                                                                                |
 
-### 5.6 inode 数据结构
+### 5.7 inode 数据结构
 
 `inode` 即Linux的混合索引分配的节点，不过设备文件通常不需要关心混合索引分配的文件系统管理相关的内容(电科爱考)，因此需要关注的成员主要有如下两个：
 
@@ -1206,7 +1222,7 @@ unsigned int iminor(struct inode *inode);
 unsigned int imajor(struct inode *inode);
 ```
 
-### 5.7 字符设备的分配、注册与回收
+### 5.8 字符设备的分配、注册与回收
 
 通常来说(但不绝对)，注册一个字符设备需要完成<font color="#c00000">申请结构体空间</font>、配置结构体、注册设备、反注册设备、<font color="#c00000">回收空间</font>几个任务。注意错误处理和资源回收即可。字符设备需要使用 `cdev_t` ，其定义于 `<linux/cdev.h>` 中。
 需要注意的是字符设备使用的 `cdev_t` 有两种内存分配方式：
@@ -1267,7 +1283,7 @@ static void __exit mpipe_exit(void)
 }
 ```
 
-### 5.8 open和release方法
+### 5.9 open和release方法
 
 open应当完成如下任务：
 1. 首次open时应当初始化硬件
@@ -1279,7 +1295,7 @@ open应当完成如下任务：
 1. 清除在 `filep` 中寄存的数据
 2. 关闭设备
 
-### 5.9 read和write方法
+### 5.10 read和write方法
 
 read和write方法的函数指针如下所示：
 
@@ -1309,7 +1325,7 @@ unsigned long copy_from_user(void *to, const void __user *from, unsigned long co
 
 上述两个函数在Linux 6.10中均由汇编实现。
 
-#### 5.9.1 read方法返回值
+#### 5.10.1 read方法返回值
 
 read方法的返回值应符合如下几种情况：
 1. 当返回值大于0时，其含义为从字符设备读取到的字节数，该值不能大于 `count` 。
@@ -1319,11 +1335,11 @@ read方法的返回值应符合如下几种情况：
 3. 当返回值小于0时，其用于表示错误。错误值定义于 `<linux/errno.h>`
 此外，read方法也可以实现阻塞读取方式。
 
-#### 5.9.2 write方法返回值
+#### 5.10.2 write方法返回值
 
 write和read方法的返回值及其注意事项相似。
 
-### 5.10 readv和writev方法
+### 5.11 readv和writev方法
 
 在Linux中已对用户态提供了readv和writev两个批量读写的api。内核驱动可以自行选择是否实现批量版本的读写方法。若内核驱动不实现该方法，则readv和writev会自动<span style="background:#fff88f"><font color="#c00000">在用户态多次调用</font></span>对应的read和write方法进行实现。<font color="#c00000">随之带来的问题就是执行一次readv或writev会多次切换CPU状态</font>。
 而对于用户而言，使用readv、writev而不是read、write的主要原因是前者可以<font color="#c00000">批量复制位于不连续内存空间</font>上的数据。
