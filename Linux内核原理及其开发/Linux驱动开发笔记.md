@@ -2306,11 +2306,11 @@ static __poll_t poll(struct file *filep, struct poll_table_struct *wait)
 	poll_wait(filep, &dev->write_queue, wait);
 
 	// 2. 不用管用户具体在等待哪个，将设备是否可读、可写等全检查一遍并返回
-	if(!kfifo_is_empty(&dev->read_queue)) {
+	if(!kfifo_is_empty(&dev->read_fifo)) {
 		// 读缓冲区非空, 可读
 		mask |= POLLIN | POLLRDNORM;
 	}
-	if(!kfifo_is_full(&dev->write_queue)) {
+	if(!kfifo_is_full(&dev->read_fifo)) {
 		// 写缓冲区非满, 可写
 		mask |= POLLOUT | POLLWRNORM;
 	}
