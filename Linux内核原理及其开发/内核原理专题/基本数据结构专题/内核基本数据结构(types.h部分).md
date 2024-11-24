@@ -43,7 +43,6 @@ struct my_data_list {
 
 在上述的第二种方案中，先约定几个概念：
 - `entry` ：宿主链表的入口
-- 
 
 ### 3.1 双向链表锚点(struct list_head)
 
@@ -55,7 +54,7 @@ struct list_head {
 };
 ```
 
-<font color="#c00000">本章节的宿主结构体统一定义如下</font>：
+<font color="#c00000">本章节的宿主结构体统一定义如下</font>： ^4l9s1l
 
 ```C
 struct mdata_list {
@@ -144,21 +143,63 @@ static inline void list_add(struct list_head *new, struct list_head *head)
 }
 ```
 
-其使用示例为：
+其入口参数类型为 `list` 。
+假设各宿主节点关系如下：
+
+```mermaid
+flowchart LR
+	A[head] --> B[node1]
+	B --> C[node2]
+	C --> D[node3]
+	D --> A
+```
+
+各宿主节点均遵从上方定义的[[内核基本数据结构(types.h部分)#^4l9s1l|统一的宿主数据结构]]，要在 `node1` 和 `node2` 之间增加 `node4` ，则示例如下：
 
 ```C
 
-
+list_add(node1.)
 
 
 ```
 
-
-
 #### 3.1.6 删除指定节点(list_del)
 
+`list_del` 函数的定义为：
 
+```C
+/**
+ * list_del - deletes entry from list.
+ * @entry: the element to delete from the list.
+ * Note: list_empty() on entry does not return true after this, the entry is
+ * in an undefined state.
+ */
+static inline void list_del(struct list_head *entry)
+{
+	__list_del(entry->prev, entry->next);
+	entry->next = LIST_POISON1;
+	entry->prev = LIST_POISON2;
+}
+```
 
+其入口参数类型为 `entry` 。
+假设各宿主节点关系如下：
+
+```mermaid
+flowchart LR
+	A[head] --> B[node1]
+	B --> C[node2]
+	C --> D[node3]
+	D --> A
+```
+
+各宿主节点均遵从上方定义的[[内核基本数据结构(types.h部分)#^4l9s1l|统一的宿主数据结构]]，则删除node2节点的示例为：
+
+```C
+list_del(node1);
+```
+
+#### 3.1.7 遍历节点(for_each)
 
 
 
