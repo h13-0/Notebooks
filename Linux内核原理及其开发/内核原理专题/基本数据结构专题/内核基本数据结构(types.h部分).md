@@ -43,6 +43,7 @@ struct my_data_list {
 
 在上述的第二种方案中，先约定几个概念：
 - `entry` ：宿主链表的入口
+- `list` ：链表锚点
 
 ### 3.1 双向链表锚点(struct list_head)
 
@@ -122,7 +123,14 @@ static void func() {
 获取宿主链表入口有两个函数 `list_entry` 和 `container_of` ，其本质相同互为别名，定义如下：
 
 ```C
-
+/**
+ * list_entry - get the struct for this entry
+ * @ptr:	the &struct list_head pointer.
+ * @type:	the type of the struct this is embedded in.
+ * @member:	the name of the list_head within the struct.
+ */
+#define list_entry(ptr, type, member) \
+	container_of(ptr, type, member)
 
 /**
  * container_of - cast a member of a structure out to the containing structure
@@ -136,8 +144,15 @@ static void func() {
 	(type *)( (char *)__mptr - offsetof(type,member) );})
 ```
 
+均为使用 `list` 链表锚点获取宿主结构体 `entry` ，使用demo如下：
 
-
+```C
+struct my_data_list *entry = list_entry(
+	&(node.list), 
+	struct my_data_list,
+	list
+)
+```
 
 #### 3.1.5 向指定节点后添加一个节点(list_add)
 
@@ -175,7 +190,29 @@ flowchart LR
 list_add(&(node4.list), &(node1.list));
 ```
 
-#### 3.1.6 删除指定节点(list_del)
+#### 3.1.6 向尾部添加一个节点(list_add_tail)
+
+`list_add_tail` 函数的定义为：
+
+```C
+/**
+ * list_add_tail - add a new entry
+ * @new: new entry to be added
+ * @head: list head to add it before
+ *
+ * Insert a new entry before the specified head.
+ * This is useful for implementing queues.
+ */
+static inline void list_add_tail(struct list_head *new, struct list_head *head)
+{
+	__list_add(new, head->prev, head);
+}
+```
+
+
+
+
+#### 3.1.7 删除指定节点(list_del)
 
 `list_del` 函数的定义为：
 
@@ -211,7 +248,7 @@ flowchart LR
 list_del(node1);
 ```
 
-#### 3.1.7 遍历节点(list_for_each)
+#### 3.1.8 遍历节点(list_for_each)
 
 `list_for_each` 函数的定义如下：
 
@@ -224,8 +261,6 @@ list_del(node1);
 #define list_for_each(pos, head) \
 	for (pos = (head)->next; pos != (head); pos = pos->next)
 ```
-
-
 
 ### 3.2 单向链表
 
