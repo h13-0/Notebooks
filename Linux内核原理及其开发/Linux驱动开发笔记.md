@@ -1083,10 +1083,18 @@ device_create(const struct class *cls, struct device *parent, dev_t devt,
 
 #### 5.4.2 删除设备(device_destroy)
 
+`device_destory` 函数的声明为：
 
+```C
+#include <linux/device.h>
 
+void device_destroy(const struct class *cls, dev_t devt);
+```
 
-
+其中：
+- 参数：
+	- `const struct class *cls` ：设备所属类型
+	- `dev_t devt` ：需要销毁的设备节点的设备号
 
 ### 5.5 绑定文件操作(file_operations 数据结构)
 
