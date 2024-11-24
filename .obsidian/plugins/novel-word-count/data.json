@@ -9391,19 +9391,19 @@
       "isCountable": true,
       "targetNodeType": "file",
       "noteCount": 1,
-      "wordCount": 655,
+      "wordCount": 673,
       "wordCountTowardGoal": 0,
       "wordGoal": null,
-      "pageCount": 2.183333333333333,
-      "characterCount": 1742,
-      "nonWhitespaceCharacterCount": 1501,
-      "readingTimeInMinutes": 1.506867924528302,
+      "pageCount": 2.243333333333333,
+      "characterCount": 1766,
+      "nonWhitespaceCharacterCount": 1528,
+      "readingTimeInMinutes": 1.5410943396226413,
       "linkCount": 0,
       "embedCount": 0,
       "aliases": null,
       "createdDate": 1732113231111,
-      "modifiedDate": 1732437858851,
-      "sizeInBytes": 2974,
+      "modifiedDate": 1732438022950,
+      "sizeInBytes": 3040,
       "frontmatter": {
         "number headings": "auto, first-level 2, max 6, 1.1"
       }
@@ -10364,6 +10364,24 @@
       "createdDate": 1713204230576,
       "modifiedDate": 1715273142332,
       "sizeInBytes": 216
+    },
+    "Linux内核原理及其开发/Resources/~$$devicetree -- kernel internals and practical troubleshooting.~vsdx": {
+      "isCountable": false,
+      "targetNodeType": "file",
+      "noteCount": 0,
+      "wordCount": 0,
+      "wordCountTowardGoal": 0,
+      "wordGoal": 0,
+      "pageCount": 0,
+      "characterCount": 0,
+      "nonWhitespaceCharacterCount": 0,
+      "readingTimeInMinutes": 0,
+      "linkCount": 0,
+      "embedCount": 0,
+      "aliases": [],
+      "createdDate": 1732438119076,
+      "modifiedDate": 1732438119078,
+      "sizeInBytes": 4096
     }
   }
 }

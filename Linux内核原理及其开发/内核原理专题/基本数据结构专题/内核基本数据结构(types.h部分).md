@@ -43,10 +43,21 @@ struct my_data_list {
 
 ### 3.1 双向链表锚点(struct list_head)
 
+`struct list_head` 的定义为：
+
 ```C
 struct list_head {
 	struct list_head *next, *prev;
 };
+```
+
+<font color="#c00000">本章节的宿主结构体统一定义如下</font>：
+
+```C
+struct mdata_list {
+	int data;
+	struct list_head list;
+}
 ```
 
 #### 3.1.1 基本数据结构
@@ -61,11 +72,6 @@ struct list_head {
 #### 3.1.2 静态创建链表(LIST_HEAD_INIT)
 
 ```C
-struct mdata_list {
-	int data;
-	struct list_head list;
-}
-
 static struct mdata_list mdata_list_head = {
 	.data = -1;
 	.list = LIST_HEAD_INIT(mdata_list_head.list)
@@ -75,11 +81,6 @@ static struct mdata_list mdata_list_head = {
 #### 3.1.3 动态创建链表(INIT_LIST_HEAD)
 
 ```C
-struct mdata_list {
-	int data;
-	struct list_head list;
-}
-
 static void func() {
 	struct mdata_list mdata_list_head = { 0 };
 	
