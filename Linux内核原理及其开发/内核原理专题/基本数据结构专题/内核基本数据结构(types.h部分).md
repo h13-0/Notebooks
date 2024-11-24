@@ -79,12 +79,6 @@ struct mdata_list {
 
 ```C
 #define LIST_HEAD_INIT(name) { &(name), &(name) }
-
-static inline void INIT_LIST_HEAD(struct list_head *list)
-{
-	list->next = list;
-	list->prev = list;
-}
 ```
 
 因此其参数类型为 `struct list_head *list` 。示例如下：
