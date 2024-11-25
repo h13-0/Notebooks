@@ -49,7 +49,8 @@
               "title": "C标准学习笔记"
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -177,10 +178,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md"
+                "file": "CPP/C标准笔记/C标准学习笔记.md"
               },
               "icon": "lucide-list",
-              "title": "Linux驱动开发笔记 的大纲"
+              "title": "C标准学习笔记 的大纲"
             }
           },
           {
@@ -223,10 +224,10 @@
       "obsidian42-brat:BRAT": false
     }
   },
-  "active": "0d266d685c6dd69d",
+  "active": "1b83a01ad694a167",
   "lastOpenFiles": [
-    "CPP/C标准笔记/C标准学习笔记.md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
+    "CPP/C标准笔记/C标准学习笔记.md",
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
     "CPP/C标准笔记/C与C++标准.md",
     "Linux内核原理及其开发/MISC/pr_fmt应用及原理解析.md",
