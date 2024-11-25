@@ -108,7 +108,7 @@ static void func() {
 }
 ```
 
-#### 3.1.4 获取宿主链表入口(list_entry、container_of)
+#### 3.1.4 获取宿主链表入口 list_entry/container_of(list_head \*ptr, host_type, member_id)
 
 获取宿主链表入口有两个函数 `list_entry` 和 `container_of` ，其本质相同互为别名，定义如下：
 
