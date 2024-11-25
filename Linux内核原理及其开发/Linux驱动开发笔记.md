@@ -2513,7 +2513,11 @@ int fasync(int fd, struct file *filp, int on);
 
 ### 8.8 高级字符设备驱动程序最终Demo
 
-
+该Demo为一个简易的IPC管道( `mpipe` )，其具备如下基本特性：
+1. 该驱动程序为字符设备，挂载到文件系统的 `/dev/mpipe` 路径。
+2. 
+3. 每个 `mpipe` 均有一个唯一的 `mpipe_id` 。
+4. 
 
 
 ## 9 时间、延迟及延缓操作
