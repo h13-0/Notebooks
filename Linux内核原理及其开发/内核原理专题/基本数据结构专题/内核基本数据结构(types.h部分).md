@@ -41,10 +41,6 @@ struct my_data_list {
 	- 优点：任何一个链表都可以定义为其自己的类型，这在大型项目中想当有用。
 	- 缺点：使用了宏。
 
-在上述的第二种方案中，先约定几个概念：
-- `entry` ：宿主链表的入口
-- `list` ：链表锚点
-
 ### 3.1 双向链表锚点(struct list_head)
 
 `struct list_head` 的定义为：
@@ -67,11 +63,11 @@ struct mdata_list {
 #### 3.1.1 基本数据结构
 
 为了简化程序设计：
-- 该链表锚点通常需要一个表头
+- <font color="#c00000">该链表必须为含有头结点的链表</font>( `list_empty` 等函数要求)
 - <font color="#c00000">当链表为空时，其prev、next两个指针均指向自己</font>：
-	- ![[Pasted image 20241124170145.png]]
+	![[Pasted image 20241124170145.png]]
 - <font color="#c00000">为了方便从尾部插入，其表头的prev指向链表表尾节点，表头的next指向第一个节点</font>：
-	- ![[Pasted image 20241124170623.png]]
+	![[Pasted image 20241124170623.png]]
 
 #### 3.1.2 静态创建链表(LIST_HEAD_INIT)
 
@@ -148,7 +144,7 @@ struct my_data_list *entry = list_entry(
 )
 ```
 
-#### 3.1.5 向指定节点后添加一个节点(list_add)
+#### 3.1.5 向指定节点后添加一个节点 list_add(list_head \*new, list_head \*head)
 
 `list_add` 函数的定义为：
 
@@ -167,7 +163,6 @@ static inline void list_add(struct list_head *new, struct list_head *head)
 }
 ```
 
-其入口参数类型为 `list` 。
 假设各宿主节点关系如下：
 
 ```mermaid
@@ -184,7 +179,7 @@ flowchart LR
 list_add(&(node4.list), &(node1.list));
 ```
 
-#### 3.1.6 向尾部添加一个节点(list_add_tail)
+#### 3.1.6 向尾部添加一个节点 list_add_tail(list_head \*new, list_head \*head)
 
 `list_add_tail` 函数的定义为：
 
@@ -203,10 +198,7 @@ static inline void list_add_tail(struct list_head *new, struct list_head *head)
 }
 ```
 
-
-
-
-#### 3.1.7 删除指定节点(list_del)
+#### 3.1.7 删除指定节点 list_del(list_head \*entry)
 
 `list_del` 函数的定义为：
 
@@ -225,7 +217,6 @@ static inline void list_del(struct list_head *entry)
 }
 ```
 
-其入口参数类型为 `entry` 。
 假设各宿主节点关系如下：
 
 ```mermaid
@@ -242,7 +233,7 @@ flowchart LR
 list_del(node1);
 ```
 
-#### 3.1.8 遍历节点(list_for_each)
+#### 3.1.8 遍历节点 list_for_each(list_head \*pos, list_head \*head)
 
 `list_for_each` 函数的定义如下：
 
