@@ -2511,6 +2511,8 @@ int fasync(int fd, struct file *filp, int on);
 		- `int sig` ：驱动程序要发出的信号
 		- `int band` ：
 
+### 8.8 高级字符设备驱动程序最终Demo
+
 
 
 

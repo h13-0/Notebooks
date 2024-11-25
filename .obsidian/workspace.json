@@ -35,8 +35,7 @@
               "title": "内核基本数据结构(types.h部分)"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -164,10 +163,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md"
+                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md"
               },
               "icon": "lucide-list",
-              "title": "内核基本数据结构(types.h部分) 的大纲"
+              "title": "Linux驱动开发笔记 的大纲"
             }
           },
           {
@@ -210,11 +209,11 @@
       "obsidian42-brat:BRAT": false
     }
   },
-  "active": "b814c7b051982724",
+  "active": "0d266d685c6dd69d",
   "lastOpenFiles": [
+    "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
     "CPP/C标准笔记/C标准学习笔记.md",
     "CPP/C标准笔记/C与C++标准.md",
-    "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
     "Linux内核原理及其开发/MISC/pr_fmt应用及原理解析.md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "Resources/Pasted image 20240203021517.png",
