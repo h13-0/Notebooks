@@ -46,7 +46,7 @@ number headings: auto, first-level 2, max 6, 1.1
 		3. 调用 `fsnotify_close` 向监听者触发文件关闭事件。
 		4. 调用 `eventpoll_release` 回收与 `epoll` 相关的资源。
 		5. 调用 `locks_remove_file` 释放与该文件相关的所有锁。
-		6. 调用 `security_file_release`
+		6. 调用 `security_file_release` ，该函数是Linux安全模块的钩子函数，允许安全模块对该事件的监听。
 		7. <font color="#c00000">在文件开启了异步通知，并且驱动程序定义了</font> `f_op->fasync` <font color="#c00000">时，调用</font> `f_op->fasync` <font color="#c00000">将该文件从驱动程序的通知队列中移除</font>。
 		8. <font color="#c00000">当驱动程序定义了</font> `f_op->release` <font color="#c00000">时，调用</font> `f_op->release` <font color="#c00000">释放文件</font>。
 		9. 使用宏 `S_ISCHR` 检查 `inode` 是否是一个字符设备，如果满足如下若干条件则减少对字符设备的引用计数：
@@ -55,9 +55,9 @@ number headings: auto, first-level 2, max 6, 1.1
 		10. 调用 `void module_put(struct module *module)` <font color="#c00000">减少对该文件的内核模块的引用计数</font>。
 		11. 调用 `void put_pid(struct pid *pid)` 减少对该PID结构体的引用计数。
 		12. 调用 `void put_file_access(struct file *file)` 减少对该文件的读取和写入计数器。
-		13. 调用 `dput`
-		14. 检测该文件是否设置了 `FMODE_NEED_UNMOUNT` 
-		15. 调用 `mntput`
+		13. 调用 `dput` 减少对该文件的目录项结构体( `struct dentry` )的引用。
+		14. 检测该文件是否设置了 `FMODE_NEED_UNMOUNT` (是否需要取消挂载该挂载实例)，如果设置了则调用 `dissolve_on_fput` 取消挂载。
+		15. 调用 `mntput` 减少对文件系统挂载实例( `struct vfsmount` )的引用。
 		16. 释放 `struct file` 结构体。
 4. 检测 `filp_flush` 的特定错误。
 5. 返回 `filp_flush` 的返回值。
