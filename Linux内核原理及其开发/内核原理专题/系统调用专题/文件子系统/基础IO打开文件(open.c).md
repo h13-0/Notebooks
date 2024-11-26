@@ -14,7 +14,7 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ## 3 系统调用及其分析
 
-### 3.1 open
+### 3.1 open ^qyilk5
 
 `open` 系统调用的基本处理流程如下：
 1. 对于内核架构：
