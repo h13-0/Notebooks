@@ -50,6 +50,11 @@ number headings: auto, first-level 2, max 6, 1.1
 		7. <font color="#c00000">在文件开启了异步通知，并且驱动程序定义了</font> `f_op->fasync` <font color="#c00000">时，调用</font> `f_op->fasync` <font color="#c00000">将该文件从驱动程序的通知队列中移除</font>。
 		8. <font color="#c00000">当驱动程序定义了</font> `f_op->release` <font color="#c00000">时，调用</font> `f_op->release` <font color="#c00000">释放文件</font>。
 		9. 
+		10. 调用 `void module_put(struct module *module)` <font color="#c00000">减少对该文件的内核模块的引用计数</font>。
+		11. 调用 `void put_pid(struct pid *pid)` 减少对该PID结构体的引用计数。
+		12. 调用 `void put_file_access(struct file *file)` 减少对该文件的读取和写入计数器。
+		13. 调用 `dput`
+			1. 检测该文件是否设置了 ``
 4. 检测 `filp_flush` 的特定错误。
 5. 返回 `filp_flush` 的返回值。
 
