@@ -1322,6 +1322,8 @@ open应当完成如下任务：
 1. 清除在 `filep` 中寄存的数据
 2. 关闭设备
 
+需要注意的是，<font color="#c00000">一旦用户态对某个文件</font><span style="background:#fff88f"><font color="#c00000">发起</font></span><font color="#c00000">close操作</font>(<font color="#c00000">即使close并未完成</font>)，<font color="#c00000">该文件的其他所有操作均会被返回为错误信息</font>。
+
 ### 5.10 read和write方法
 
 read和write方法的函数指针如下所示：
@@ -2511,7 +2513,30 @@ int fasync(int fd, struct file *filp, int on);
 		- `int sig` ：驱动程序要发出的信号
 		- `int band` ：
 
-### 8.8 高级字符设备驱动程序最终Demo
+### 8.8 文件操作的用户态和内核态标准语义汇总
+
+#### 8.8.1 open操作
+
+#### 8.8.2 close函数
+
+##### 8.8.2.1 用户态语义
+
+<font color="#c00000">一旦用户态进程触发某个文件的close操作</font>，<font color="#c00000">在其后的所有对该文件标识符操作均会被标记为无效</font>，<span style="background:#fff88f"><font color="#c00000">即使close操作尚未完成</font></span>。
+
+
+#### 8.8.3 read函数
+
+##### 8.8.3.1 用户态语义
+
+
+##### 8.8.3.2 系统调用操作(sys_read)
+
+
+##### 8.8.3.3 内核态语义(f_op->read)
+
+
+
+### 8.9 高级字符设备驱动程序最终Demo
 
 该Demo为一个简易的IPC管道( `mpipe` )，其具备如下基本特性：
 - 基本设备属性：
@@ -2536,13 +2561,18 @@ int fasync(int fd, struct file *filp, int on);
 		- `poll` 类操作
 		- `signal` 、 `sigaction`
 
-#### 8.8.1 考虑数据结构
+#### 8.9.1 考虑数据结构
 
 
-#### 8.8.2 考虑互斥并发管理
+#### 8.9.2 考虑互斥并发管理
 
 
-#### 8.8.3 考虑文件关闭操作
+#### 8.9.3 考虑连接建立
+
+如上述管道的基本特性，两个管道之间要建立连接需要其目标 `mpipe_id` 均为对方的 `mpipe_id` 。
+
+
+#### 8.9.4 考虑文件关闭操作
 
 考虑如下场景：
 1. 场景1：
@@ -2552,12 +2582,12 @@ int fasync(int fd, struct file *filp, int on);
 	- 
 按照上述互斥并发管理，在此期间mpipe2不会被上锁，因此此时并没有禁止mpipe2访问mpipe1的缓冲区。
 
-#### 8.8.4 考虑断开连接操作
+#### 8.9.5 考虑断开连接操作
 
 
 
 
-#### 8.8.5 最终驱动程序和测试程序
+#### 8.9.6 最终驱动程序和测试程序
 
 则最终Demo程序如下：
 
