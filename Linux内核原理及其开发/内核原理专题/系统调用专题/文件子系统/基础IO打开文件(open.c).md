@@ -31,16 +31,18 @@ number headings: auto, first-level 2, max 6, 1.1
 ### 3.2 close
 
 `close` 系统调用的基本处理流程如下：
-1. 调用 `struct file *file_close_fd(unsigned int fd);` ，从 `fdt` 中寻找 `fd` 对应的 `file` 结构体指针。 
+1. 调用 `struct file *file_close_fd(unsigned int fd);` ，从 `fdt` ( `fd_table` )中寻找 `fd` 对应的 `file` 结构体指针。 
 2. 调用 `filp_flush` 刷新文件缓冲区。
 	1. 检查文件计数器是否已经为0，如果发现已经为0，则输出错误信息，并<font color="#c00000">可选地使用</font> `BUG()` <font color="#c00000">停止系统</font>。
 	2. 当设置了 `f_op->flush` 时调用 `f_op->flush` 。
 	3. 检查文件是否为路径，如果是则：
 		1. 调用 `dnotify_flush` 处理目录通知。
 		2. 调用 `locks_remove_posix` 移除该文件的POSIX锁。
-3. 调用 `void __fput_sync(struct file *);` 执行：
-	1. 减少引用计数
-	2. 释放文件的最后一个引用。
-4. 检测特定错误
+3. 调用 `void __fput_sync(struct file *);` 减少文件的引用计数器，并当最后一个引用被释放时：
+	1. 原子地减少引用计数。
+	2. 当计数器为0时，调用 `void __fput(struct file *file)` 释放文件的最后一个引用：
+		1. 检查该文件是否已经被成功打开，如果未被成功打开则直接释放 `struct file` 结构体。
+		2. 执行 <
+4. 检测 `filp_flush` 的特定错误。
 5. 返回 `filp_flush` 的返回值。
 
