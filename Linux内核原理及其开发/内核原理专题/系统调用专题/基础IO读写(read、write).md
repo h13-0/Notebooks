@@ -25,6 +25,13 @@ struct fd {
 	unsigned int flags;
 };
 		```
-	2. 
-
+	2. 当 `.file != NULL` 时：
+		1. 使用 `file_ppos` 获取当前文件的偏移量
+		2. 调用 `ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)` ：
+			1. 使用 `file->f_mode` 判定文件是否可读，否则返回 `-EBADF` 。
+			2. 使用 `file->f_mode` 判定打开方式是否可读，否则返回 `-EINVAL` 。
+			3. 使用 `access_ok` 判定用户传来的内存区域是否可访问，否则返回 `-EFAULT` 。
+			4. 
+		3. 更新文件偏移量
+	3. 若 `.file == NULL` ，则返回 `-EBADF` 。
 
