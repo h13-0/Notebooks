@@ -2491,7 +2491,7 @@ fcntl(fd, F_SETFL, flags | O_ASYNC);
 | 为文件设置回调函数              | 内核会将 `filep->f_owner` 设置为目标PID。 |                                                                                                               |
 | 为文件设置所有者               |                                 |                                                                                                               |
 | 启用异步通知                 |                                 | <span style="background:#fff88f"><font color="#c00000">只要当FASYNC标记被改变</font></span>，<br>驱动程序的 `fasync` 操作被调用。 |
-| 调用 `close` 操作          |                                 | 调用驱动程序的 `fasync` ，将该文件移除通知队列                                                                                  |
+| 调用 `close` 操作          |                                 | 调用驱动程序的 `fasync` ，将该 `struct file*` 移除通知队列                                                                    |
 
 `fasync` 函数的声明为：
 
@@ -2518,27 +2518,29 @@ int fasync(int fd, struct file *filp, int on);
 
 #### 8.8.1 open操作
 
-##### 8.8.1.1 #####
+##### 8.8.1.1 用户态语义
+
 
 ##### 8.8.1.2 系统调用操作(sys_open)
 
-系统调用 `sys_open` 的内部处理详见：[[基础IO打开文件(open.c)#^qyilk5]]。
+系统调用 `sys_open` 的内部处理详见：[[基础IO打开关闭(open.c)#^qyilk5]]。
 - 该处理可以简述如下： ^dttvnu
 	- 
 
-##### 8.8.1.3 
+##### 8.8.1.3 内核态语义
+
 
 #### 8.8.2 close函数
 
 ##### 8.8.2.1 用户态语义
 
-POSIX的用户态 `open` 语义可见：[[IEEE Std 1003.1™-2017 学习笔记#^s5pcbs]]。
+POSIX的用户态 `close` 语义可见：[[IEEE Std 1003.1™-2017 学习笔记#^s5pcbs]]。
 
 
 
 ##### 8.8.2.2 系统调用操作(sys_close)
 
-系统调用 `sys_close` 的内部处理详见：[[基础IO打开文件(open.c)#^4b5xl4]]。
+系统调用 `sys_close` 的内部处理详见：[[基础IO打开关闭(open.c)#^4b5xl4]]。
 - 该处理可以简述如下： ^dqyd87
 	1. 使用用户提供的整数类型的 `fd` 文件号，从 `fd table` 中找到对应的内核中的文件对象 `struct file` 。
 	2. 调用
