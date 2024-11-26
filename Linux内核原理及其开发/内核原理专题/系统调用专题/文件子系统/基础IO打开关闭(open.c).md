@@ -23,10 +23,13 @@ number headings: auto, first-level 2, max 6, 1.1
 		2. <font color="#c00000">如果未被配置为32位</font>，即 `CONFIG_ARCH_32BIT_OFF_T` 未启用，则<font color="#c00000">默认开启大文件模式</font>。
 	2. 64位的内核通常无须配置该项，原生支持64位的 `off_t` ，默认开启大文件模式。
 2. 调用返回 `long do_sys_open(int dfd, const char __user *filename, int flags, umode_t mode)` ：
-	1. 调用 `build_open_how` 将用户态的 `umode_t` 
+	1. 调用 `build_open_how` 将用户态的 `umode_t` 转化为内核态的 `open_how` 结构体，同时过滤掉非法标志位或模式位。在该结构体中：
+		1. 成员 `__u64 flags` ：表示用户态使用 `open` 时指定的行为，例如读写、文件创建、文件追加等。
+		2. 成员 `__u64 mode` ：当需要创建文件时，文件的权限。不需要创建文件时该成员值为0。
+		3. 成员 `__u64 resolve` ：指定用于路径解析的方式，例如禁止解析符号链接、避免跨越设备边界进行路径解析等。
 	2. 调用返回 `static long do_sys_openat2(int dfd, const char __user *filename, struct open_how *how)` ：
 		1. 调用 `build_open_flags` 将 `open_how` 转换为 `flags` ：
-
+			1. 检测传入的
 
 
 
