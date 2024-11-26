@@ -48,9 +48,22 @@
               "icon": "lucide-file",
               "title": "基础IO打开文件(open.c)"
             }
+          },
+          {
+            "id": "cdec1cb14bc2d54d",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Linux驱动开发笔记"
+            }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -225,12 +238,12 @@
       "webpage-html-export:Export as HTML": false
     }
   },
-  "active": "98484f6427feef31",
+  "active": "b814c7b051982724",
   "lastOpenFiles": [
-    "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统/基础IO读写(read_write.c).md",
-    "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统/基础IO打开文件(open.c).md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
+    "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统/基础IO打开文件(open.c).md",
     "操作系统/用户态开发/POSIX/IEEE Std 1003.1™-2017 学习笔记.md",
+    "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统/基础IO读写(read_write.c).md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/Linux系统调用基础.md",
     "操作系统/用户态开发/POSIX/Readme.md",
     "CPP/C标准笔记/C标准学习笔记.md",

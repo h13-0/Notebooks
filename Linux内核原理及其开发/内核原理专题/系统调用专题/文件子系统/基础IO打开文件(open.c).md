@@ -42,7 +42,14 @@ number headings: auto, first-level 2, max 6, 1.1
 	1. 原子地减少引用计数。
 	2. 当计数器为0时，调用 `void __fput(struct file *file)` 释放文件的最后一个引用：
 		1. 检查该文件是否已经被成功打开，如果未被成功打开则直接释放 `struct file` 结构体。
-		2. 执行 <
+		2. <font color="#7f7f7f">执行</font> `might_sleep` <font color="#7f7f7f">标注，该标注在release模式下无效，在调试模式下可以在原子上下文中捕获该标注，并打印堆栈等信息。</font>
+		3. 调用 `fsnotify_close` 向监听者触发文件关闭事件。
+		4. 调用 `eventpoll_release` 
+		5. 调用 `locks_remove_file`
+		6. 调用 `security_file_release`
+		7. <font color="#c00000">在文件开启了异步通知，并且驱动程序定义了</font> `f_op->fasync` <font color="#c00000">时，调用</font> `f_op->fasync` <font color="#c00000">将该文件从驱动程序的通知队列中移除</font>。
+		8. <font color="#c00000">当驱动程序定义了</font> `f_op->release` <font color="#c00000">时，调用</font> `f_op->release` <font color="#c00000">释放文件</font>。
+		9. 
 4. 检测 `filp_flush` 的特定错误。
 5. 返回 `filp_flush` 的返回值。
 

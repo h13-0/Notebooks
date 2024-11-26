@@ -2491,6 +2491,7 @@ fcntl(fd, F_SETFL, flags | O_ASYNC);
 | 为文件设置回调函数              | 内核会将 `filep->f_owner` 设置为目标PID。 |                                                                                                               |
 | 为文件设置所有者               |                                 |                                                                                                               |
 | 启用异步通知                 |                                 | <span style="background:#fff88f"><font color="#c00000">只要当FASYNC标记被改变</font></span>，<br>驱动程序的 `fasync` 操作被调用。 |
+| 调用 `close` 操作          |                                 | 调用驱动程序的 `fasync` ，将该文件移除通知队列                                                                                  |
 
 `fasync` 函数的声明为：
 
