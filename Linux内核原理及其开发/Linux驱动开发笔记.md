@@ -2536,6 +2536,13 @@ int fasync(int fd, struct file *filp, int on);
 		- `poll` 类操作
 		- `signal` 、 `sigaction`
 
+#### 8.8.1 考虑数据结构
+
+
+
+
+#### 8.8.2 最终驱动程序和测试程序
+
 则最终Demo程序如下：
 
 ```C
