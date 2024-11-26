@@ -31,10 +31,18 @@ number headings: auto, first-level 2, max 6, 1.1
 		1. 调用 `build_open_flags` 将 `open_how` 转换为 `flags` ，同时进行大量的文件行为标识符、文件权限以及路径解析的方式的参数检查，如果失败则返回对应错误码。成功时返回0。
 		2. 调用 `getname` 获取文件名，如果失败则返回对应错误码。
 		3. 调用 `get_unused_fd_flags` 获取一个未使用的文件标识符。
-		4. 当 `fd` 大于0时，调用 do_filp_open 打开文件，并返回内核文件对象 `struct file` 。
-		5. 当发生错误时
-
-
+		4. 当 `fd` 大于0时，调用 `struct file *do_filp_open(int dfd, struct filename *pathname, const struct open_flags *op)` 打开文件：
+			1. 调用 `set_nameidata` 
+			2. 调用 `struct file *path_openat(struct nameidata *nd, const struct open_flags *op, unsigned flags)` 打开文件：
+				1. 调用 `alloc_empty_file` 创建一个空的文件对象( `struct file` )。
+				2. 根据标识符选择打开临时文件、普通文件、创建文件夹等行为。
+				3. 调用 `fput` 
+			3. 处理特殊错误
+			4. 调用 `restore_nameidata`
+			5. 返回 `struct file` 对象。
+		5. 当 `do_filp_open` 执行成功时，返回内核文件对象 `struct file` ，并调用 `fd_install` 向 `fd_table` 中添加一个 `fd` 及其对应的 `file` 对象。
+		6. 当 `do_filp_open` 发生错误时，调用 `put_unused_fd` 归还未使用的 `fd` ，并用 `fd` 存放错误信息
+		7. 返回第5或6步的 `fd` 。
 
 ### 3.2 close ^4b5xl4
 
