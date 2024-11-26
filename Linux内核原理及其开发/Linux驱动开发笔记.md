@@ -2528,15 +2528,21 @@ int fasync(int fd, struct file *filp, int on);
 	- 当一方申请断开，则双方完成当前mpipe读写指令后立即断开。
 - IO操作：
 	- 支持阻塞IO与非阻塞IO，且符合标准语义。
-	- 支持的操作有：
+	- 支持的IO操作有：
 		- `open`
 		- `close`
 		- `read`
 		- `write`
 		- `poll` 类操作
-		- `signal` 、 
+		- `signal` 、 `sigaction`
 
 则最终Demo程序如下：
+
+```C
+
+```
+
+其用户态测试程序为：
 
 ```C
 
