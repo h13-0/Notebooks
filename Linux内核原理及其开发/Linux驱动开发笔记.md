@@ -2518,6 +2518,16 @@ int fasync(int fd, struct file *filp, int on);
 
 #### 8.8.1 open操作
 
+##### 8.8.1.1 #####
+
+##### 8.8.1.2 系统调用操作(sys_open)
+
+系统调用 `sys_open` 的内部处理详见：[[基础IO打开文件(open.c)#^qyilk5]]。
+- 该处理可以简述如下： ^dttvnu
+	- 
+
+##### 8.8.1.3 
+
 #### 8.8.2 close函数
 
 ##### 8.8.2.1 用户态语义
@@ -2525,13 +2535,15 @@ int fasync(int fd, struct file *filp, int on);
 POSIX的用户态 `open` 语义可见：[[IEEE Std 1003.1™-2017 学习笔记#^s5pcbs]]。
 
 
-<font color="#c00000">一旦用户态进程触发某个文件的close操作</font>，<font color="#c00000">在其后的所有对该文件标识符操作均会被标记为无效</font>，<span style="background:#fff88f"><font color="#c00000">即使close操作尚未完成</font></span>。
 
-##### 8.8.2.2 系统调用操作(sys_open)
+##### 8.8.2.2 系统调用操作(sys_close)
 
-系统调用 `sys_open` 的内部处理详见：[[基础IO打开文件(open.c)#^qyilk5]]。
-- 该处理可以简述如下： ^dttvnu
-	- 
+系统调用 `sys_close` 的内部处理详见：[[基础IO打开文件(open.c)#^4b5xl4]]。
+- 该处理可以简述如下： ^dqyd87
+	1. 使用用户提供的整数类型的 `fd` 文件号，从 `fd table` 中找到对应的内核中的文件对象 `struct file` 。
+	2. 调用
+
+
 
 
 #### 8.8.3 read函数

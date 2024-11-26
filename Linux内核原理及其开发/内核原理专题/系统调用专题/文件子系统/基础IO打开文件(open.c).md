@@ -28,7 +28,7 @@ number headings: auto, first-level 2, max 6, 1.1
 		1. 调用 `build_open_flags` 将 `open_how` 转换为 `flags` ：
 
 
-### 3.2 close
+### 3.2 close ^4b5xl4
 
 `close` 系统调用的基本处理流程如下：
 1. 调用 `struct file *file_close_fd(unsigned int fd);` ，从 `fdt` ( `fd_table` )中寻找 `fd` 对应的 `file` 结构体指针。 
@@ -58,7 +58,10 @@ number headings: auto, first-level 2, max 6, 1.1
 		13. 调用 `dput` 减少对该文件的目录项结构体( `struct dentry` )的引用。
 		14. 检测该文件是否设置了 `FMODE_NEED_UNMOUNT` (是否需要取消挂载该挂载实例)，如果设置了则调用 `dissolve_on_fput` 取消挂载。
 		15. 调用 `mntput` 减少对文件系统挂载实例( `struct vfsmount` )的引用。
-		16. 释放 `struct file` 结构体。
+		16. 调用 `file_free` 释放 `struct file` 结构体。
 4. 检测 `filp_flush` 的特定错误。
 5. 返回 `filp_flush` 的返回值。
+
+需要注意的是：
+1. 在Linux的相当多资源管理中，通常都不会直接立即释放某一资源。基本上都是通过引用计数器来释放，这样可以保证已经开始执行的操作正常的完成。
 
