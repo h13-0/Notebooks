@@ -17,6 +17,14 @@ number headings: auto, first-level 2, max 6, 1.1
 
 `read` 系统调用被定义在 `linux/fs/read_write.c` 中，其基本处理流程如下：
 1. `sys_read` 直接调用返回 `ssize_t ksys_read(unsigned int fd, char __user *buf, size_t count)` ：
-	1. 
+	1. 调用 `fdget_pos` 从 `int` 类型的 `fd` 转换为用户所打开的文件结构体对象 `struct fd` 。
+		- `struct fd` 定义如下：
+		```C
+struct fd {
+	struct file *file;
+	unsigned int flags;
+};
+		```
+	2. 
 
 
