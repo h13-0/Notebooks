@@ -2532,7 +2532,7 @@ int fasync(int fd, struct file *filp, int on);
 ##### 8.8.3.2 系统调用操作(sys_read)
 
 
-##### 8.8.3.3 内核态语义(f_op->read)
+##### 8.8.3.3 内核态语义(f_ops->read)
 
 
 
