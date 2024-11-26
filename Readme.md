@@ -1,5 +1,5 @@
 <font color="#c00000">NOTE:</font>
-	They are `Notebooks` but not `Books`, so there must be a lot of mistakes and omissions.
+	They are `Notebooks` but not `Books`.
 
 此笔记的在线浏览网址为：[https://notebooks.h13.tech/](https://notebooks.h13.tech/).  
 此笔记的Gitee仓库为：[https://gitee.com/h13/Notebooks](https://gitee.com/h13/Notebooks).  

@@ -28,6 +28,12 @@ number headings: auto, first-level 2, max 6, 1.1
 		1. 调用 `build_open_flags` 将 `open_how` 转换为 `flags` ：
 
 
+
+
+
+
+
+
 ### 3.2 close ^4b5xl4
 
 `close` 系统调用的基本处理流程如下：
