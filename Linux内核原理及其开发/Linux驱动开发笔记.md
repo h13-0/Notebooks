@@ -2545,11 +2545,19 @@ int fasync(int fd, struct file *filp, int on);
 #### 8.8.3 考虑文件关闭操作
 
 考虑如下场景：
-1. mpipe2正在高频的向mpipe1发送数据，此时mpipe2中存有mpipe1的地址
-2. mpipe1突然关闭文件，关闭文件的时候会先对pipe_list加锁，随后对mpipe1加锁。
+1. 场景1：
+	- mpipe2正在高频的向mpipe1发送数据，此时mpipe2中存有mpipe1的地址。
+	- mpipe1突然关闭文件，关闭文件的时候会先对pipe_list加锁，随后对mpipe1加锁。
+2. 场景2：
+	- 
 按照上述互斥并发管理，在此期间mpipe2不会被上锁，因此此时并没有禁止mpipe2访问mpipe1的缓冲区。
 
-#### 8.8.4 最终驱动程序和测试程序
+#### 8.8.4 考虑断开连接操作
+
+
+
+
+#### 8.8.5 最终驱动程序和测试程序
 
 则最终Demo程序如下：
 
