@@ -23,4 +23,7 @@ number headings: auto, first-level 2, max 6, 1.1
 		2. <font color="#c00000">如果未被配置为32位</font>，即 `CONFIG_ARCH_32BIT_OFF_T` 未启用，则<font color="#c00000">默认开启大文件模式</font>。
 	2. 64位的内核通常无须配置该项，原生支持64位的 `off_t` ，默认开启大文件模式。
 2. 调用返回 `long do_sys_open(int dfd, const char __user *filename, int flags, umode_t mode)` ：
-	1. 
+	1. 调用 `build_open_how`
+	2. 调用 `build_open_flags` 将 `open_how` 转换为 `flags` ：
+		1. 
+	3. 

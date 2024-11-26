@@ -11,5 +11,8 @@ number headings: auto, first-level 2, max 6, 1.1
 ## 2 Readme
 
 本笔记主要存放Linux系统调用的学习笔记，仅针对系统调用及其原理。
-muu
+目录对应关系如下：
 
+| 源码路径  | 对应子笔记 |
+| ----- | ----- |
+| `/fs` | 文件子系统 |

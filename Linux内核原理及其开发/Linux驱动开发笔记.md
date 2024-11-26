@@ -2525,7 +2525,9 @@ int fasync(int fd, struct file *filp, int on);
 
 ##### 8.8.2.2 系统调用操作(sys_open)
 
-![[基础IO打开文件(open.c)#^qyilk5]]
+系统调用 `sys_open` 的内部处理详见：[[基础IO打开文件(open.c)#^qyilk5]]。
+- 该处理可以简述如下： ^dttvnu
+	- 
 
 
 #### 8.8.3 read函数
@@ -2535,8 +2537,12 @@ int fasync(int fd, struct file *filp, int on);
 
 ##### 8.8.3.2 系统调用操作(sys_read)
 
+系统调用 `sys_read` 的内部处理详见：[[基础IO读写(read_write.c)#^4c1l78]]。
+- 该处理可以简述如下： ^rhxomn
+	- 
 
-##### 8.8.3.3 内核态语义(f_ops->read)
+
+##### 8.8.3.3 内核态语义(f_op->read)
 
 
 
