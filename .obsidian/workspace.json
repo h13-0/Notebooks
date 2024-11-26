@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux内核原理及其开发/应试笔记与八股.md",
+                "file": "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "应试笔记与八股"
+              "title": "内核基本数据结构(types.h部分)"
             }
           },
           {
@@ -49,7 +49,8 @@
               "title": "IO模型"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -177,10 +178,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md"
+                "file": "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md"
               },
               "icon": "lucide-list",
-              "title": "Linux驱动开发笔记 的大纲"
+              "title": "内核基本数据结构(types.h部分) 的大纲"
             }
           },
           {
@@ -224,11 +225,11 @@
       "webpage-html-export:Export as HTML": false
     }
   },
-  "active": "0d266d685c6dd69d",
+  "active": "b814c7b051982724",
   "lastOpenFiles": [
     "Linux内核原理及其开发/应试笔记与八股.md",
-    "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
+    "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
     "Linux内核原理及其开发/内核模块/版本依赖.md",
     "Linux内核原理及其开发/内核文档翻译/LWN文章翻译/The new way of ioctl().md",
     "Linux内核原理及其开发/内核文档翻译/Readme.md",
