@@ -28,12 +28,11 @@ number headings: auto, first-level 2, max 6, 1.1
 		2. 成员 `__u64 mode` ：当需要创建文件时，文件的权限。不需要创建文件时该成员值为0。
 		3. 成员 `__u64 resolve` ：指定用于路径解析的方式，例如禁止解析符号链接、避免跨越设备边界进行路径解析等。
 	2. 调用返回 `static long do_sys_openat2(int dfd, const char __user *filename, struct open_how *how)` ：
-		1. 调用 `build_open_flags` 将 `open_how` 转换为 `flags` ：
-			1. 检测传入的
-
-
-
-
+		1. 调用 `build_open_flags` 将 `open_how` 转换为 `flags` ，同时进行大量的文件行为标识符、文件权限以及路径解析的方式的参数检查，如果失败则返回对应错误码。成功时返回0。
+		2. 调用 `getname` 获取文件名，如果失败则返回对应错误码。
+		3. 调用 `get_unused_fd_flags` 获取一个未使用的文件标识符。
+		4. 当 `fd` 大于0时，调用 do_filp_open 打开文件，并返回内核文件对象 `struct file` 。
+		5. 当发生错误时
 
 
 
