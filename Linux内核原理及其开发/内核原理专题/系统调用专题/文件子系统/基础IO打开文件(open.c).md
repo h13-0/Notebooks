@@ -31,8 +31,12 @@ number headings: auto, first-level 2, max 6, 1.1
 ### 3.2 close
 
 `close` 系统调用的基本处理流程如下：
-1. 调用 `file_close_fd`
-2. 调用 `filp_flush`
+1. 调用 `struct file *file_close_fd(unsigned int fd);` ，从 `fdt` 中寻找 `fd` 对应的 `file` 结构体指针。 
+2. 调用 `filp_flush` 刷新文件缓冲区。
+	1. 
+	2. 当设置了 `f_op->flush` 时调用 `f_op->flush` 。
+	3. 
 3. 调用 `__fput_sync`
-4. 
+4. 检测特定错误
+5. 返回 `filp_flush` 的返回值。
 
