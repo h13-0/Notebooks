@@ -38,23 +38,27 @@ number headings: auto, first-level 2, max 6, 1.1
 	3. 检查文件是否为路径，如果是则：
 		1. 调用 `dnotify_flush` 处理目录通知。
 		2. 调用 `locks_remove_posix` 移除该文件的POSIX锁。
-3. 调用 `void __fput_sync(struct file *);` 减少文件的引用计数器，并当最后一个引用被释放时：
+3. 调用 `void __fput_sync(struct file *);` <font color="#c00000">减少文件的引用计数器</font>(下面全都在干这个)，并当最后一个引用被释放时：
 	1. 原子地减少引用计数。
 	2. 当计数器为0时，调用 `void __fput(struct file *file)` 释放文件的最后一个引用：
 		1. 检查该文件是否已经被成功打开，如果未被成功打开则直接释放 `struct file` 结构体。
 		2. <font color="#7f7f7f">执行</font> `might_sleep` <font color="#7f7f7f">标注，该标注在release模式下无效，在调试模式下可以在原子上下文中捕获该标注，并打印堆栈等信息。</font>
 		3. 调用 `fsnotify_close` 向监听者触发文件关闭事件。
-		4. 调用 `eventpoll_release` 
-		5. 调用 `locks_remove_file`
+		4. 调用 `eventpoll_release` 回收与 `epoll` 相关的资源。
+		5. 调用 `locks_remove_file` 释放与该文件相关的所有锁。
 		6. 调用 `security_file_release`
 		7. <font color="#c00000">在文件开启了异步通知，并且驱动程序定义了</font> `f_op->fasync` <font color="#c00000">时，调用</font> `f_op->fasync` <font color="#c00000">将该文件从驱动程序的通知队列中移除</font>。
 		8. <font color="#c00000">当驱动程序定义了</font> `f_op->release` <font color="#c00000">时，调用</font> `f_op->release` <font color="#c00000">释放文件</font>。
-		9. 
+		9. 使用宏 `S_ISCHR` 检查 `inode` 是否是一个字符设备，如果满足如下若干条件则减少对字符设备的引用计数：
+			1. 是一个字符设备。
+			2. 该文件模式未设置为目录模式。
 		10. 调用 `void module_put(struct module *module)` <font color="#c00000">减少对该文件的内核模块的引用计数</font>。
 		11. 调用 `void put_pid(struct pid *pid)` 减少对该PID结构体的引用计数。
 		12. 调用 `void put_file_access(struct file *file)` 减少对该文件的读取和写入计数器。
 		13. 调用 `dput`
-			1. 检测该文件是否设置了 ``
+		14. 检测该文件是否设置了 `FMODE_NEED_UNMOUNT` 
+		15. 调用 `mntput`
+		16. 释放 `struct file` 结构体。
 4. 检测 `filp_flush` 的特定错误。
 5. 返回 `filp_flush` 的返回值。
 
