@@ -30,8 +30,12 @@ struct fd {
 		2. 调用 `ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)` ：
 			1. 使用 `file->f_mode` 判定文件是否可读，否则返回 `-EBADF` 。
 			2. 使用 `file->f_mode` 判定打开方式是否可读，否则返回 `-EINVAL` 。
-			3. 使用 `access_ok` 判定用户传来的内存区域是否可访问，否则返回 `-EFAULT` 。
-			4. 
+			3. 使用 `access_ok` 判定进程是否有权访问传来的<font color="#c00000">内存区域</font>，否则返回 `-EFAULT` 。
+			4. 使用 `rw_verify_area` 判定进程访问的<font color="#c00000">文件区域</font>是否可读，否则原值返回该函数的值。
+			5. 调用 `f_op->read` ，如果没有定义 `f_op->read` 则调用 `f_op->read_iter` 。若都未定义则返回 `-EINVAL` 。
+			6. 当读取字节数大于0时，调用 `fsnotify_access` 告知事件监听系统该文件已被读取。
+			7. 当读取字节数大于0时，调用 `add_rchar` 增肌进程的读取字节数计数器。
+			8. 调用 `inc_syscr` 增加进程的读操作次数计数器。
 		3. 更新文件偏移量
 	3. 若 `.file == NULL` ，则返回 `-EBADF` 。
 
