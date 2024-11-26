@@ -34,9 +34,23 @@
               "icon": "lucide-file",
               "title": "IEEE Std 1003.1™-2017 学习笔记"
             }
+          },
+          {
+            "id": "98484f6427feef31",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Linux驱动开发笔记"
+            }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -164,10 +178,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "操作系统/用户态开发/POSIX/IEEE Std 1003.1™-2017 学习笔记.md"
+                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md"
               },
               "icon": "lucide-list",
-              "title": "IEEE Std 1003.1™-2017 学习笔记 的大纲"
+              "title": "Linux驱动开发笔记 的大纲"
             }
           },
           {
@@ -211,21 +225,21 @@
       "webpage-html-export:Export as HTML": false
     }
   },
-  "active": "1b83a01ad694a167",
+  "active": "98484f6427feef31",
   "lastOpenFiles": [
-    "操作系统/用户态开发/POSIX/Readme.md",
     "操作系统/用户态开发/POSIX/IEEE Std 1003.1™-2017 学习笔记.md",
+    "Linux内核原理及其开发/Linux驱动开发笔记.md",
+    "Linux内核原理及其开发/内核原理专题/系统调用专题/Linux系统调用基础.md",
+    "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统/基础IO打开文件(open.c).md",
+    "操作系统/用户态开发/POSIX/Readme.md",
     "CPP/C标准笔记/C标准学习笔记.md",
     "CPP/C标准笔记/C与C++标准.md",
-    "Linux内核原理及其开发/Linux驱动开发笔记.md",
-    "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统/基础IO打开文件(open.c).md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统/基础IO读写(read_write.c).md",
     "操作系统/课外补充/IO模型/IO模型.md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/Readme.md",
     "文件子系统.md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统/IO多路复用接口(select、poll、epoll).md",
     "Linux内核原理及其开发/内核原理专题/Readme.md",
-    "Linux内核原理及其开发/内核原理专题/系统调用专题/Linux系统调用基础.md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统",
     "Linux内核原理及其开发/应试笔记与八股.md",
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",

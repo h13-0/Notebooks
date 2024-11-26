@@ -2521,6 +2521,9 @@ int fasync(int fd, struct file *filp, int on);
 
 ##### 8.8.2.1 用户态语义
 
+POSIX的用户态 `open` 语义可见：[[IEEE Std 1003.1™-2017 学习笔记#^s5pcbs]]。
+
+
 <font color="#c00000">一旦用户态进程触发某个文件的close操作</font>，<font color="#c00000">在其后的所有对该文件标识符操作均会被标记为无效</font>，<span style="background:#fff88f"><font color="#c00000">即使close操作尚未完成</font></span>。
 
 ##### 8.8.2.2 系统调用操作(sys_open)
