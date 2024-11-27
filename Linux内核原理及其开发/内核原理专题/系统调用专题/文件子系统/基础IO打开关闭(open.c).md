@@ -36,8 +36,8 @@ number headings: auto, first-level 2, max 6, 1.1
 			2. 调用 `struct file *path_openat(struct nameidata *nd, const struct open_flags *op, unsigned flags)` 打开文件：
 				1. 调用 `alloc_empty_file` 创建一个空的文件对象( `struct file` )。
 				2. 根据标识符选择打开临时文件、普通文件、创建文件夹等行为。
-				3. 调用 `fput` 
-			3. 处理特殊错误
+				3. 调用 `fput` 减少对文件对象的引用。
+			3. 处理特殊错误。
 			4. 调用 `restore_nameidata`
 			5. 返回 `struct file` 对象。
 		5. 当 `do_filp_open` 执行成功时，返回内核文件对象 `struct file` ，并调用 `fd_install` 向 `fd_table` 中添加一个 `fd` 及其对应的 `file` 对象。
