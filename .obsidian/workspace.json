@@ -212,10 +212,10 @@
   },
   "active": "c01162631d93d489",
   "lastOpenFiles": [
-    "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
-    "Linux内核原理及其开发/内核原理专题/基本数据结构专题/引用计数器refcount_t(refcount.h).md",
-    "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统/基础IO打开关闭(open.c).md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
+    "Linux内核原理及其开发/内核原理专题/基本数据结构专题/引用计数器refcount_t(refcount.h).md",
+    "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
+    "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统/基础IO打开关闭(open.c).md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/Linux系统调用基础.md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统/基础IO读写(read_write.c).md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统/IO多路复用接口(select、poll、epoll).md",
