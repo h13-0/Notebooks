@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux内核原理及其开发/内核原理专题/基本数据结构专题/引用计数器refcount_t(refcount.h).md",
+                "file": "Linux内核原理及其开发/应试笔记与八股.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "引用计数器refcount_t(refcount.h)"
+              "title": "应试笔记与八股"
             }
           }
         ],
@@ -164,10 +164,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux内核原理及其开发/内核原理专题/基本数据结构专题/引用计数器refcount_t(refcount.h).md"
+                "file": "Linux内核原理及其开发/应试笔记与八股.md"
               },
               "icon": "lucide-list",
-              "title": "引用计数器refcount_t(refcount.h) 的大纲"
+              "title": "应试笔记与八股 的大纲"
             }
           },
           {
