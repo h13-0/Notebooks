@@ -2602,13 +2602,116 @@ POSIX的用户态 `close` 语义可见：[[IEEE Std 1003.1™-2017 学习笔记#
 
 #### 8.9.4 考虑文件关闭操作
 
-考虑如下场景：
-1. 场景1：
-	- mpipe2正在高频的向mpipe1发送数据，此时mpipe2中存有mpipe1的地址。
-	- mpipe1突然关闭文件，关闭文件的时候会先对pipe_list加锁，随后对mpipe1加锁。
-2. 场景2：
-	- 
-按照上述互斥并发管理，在此期间mpipe2不会被上锁，因此此时并没有禁止mpipe2访问mpipe1的缓冲区。
+##### 8.9.4.1 考虑如下场景
+###### 8.9.4.1.1 场景一：正在处理read的过程中，close被调用并执行完毕
+
+在内核中的驱动正在响应用户的操作请求<font color="#c00000">的</font><span style="background:#fff88f"><font color="#c00000">过程中</font></span>， `f_op->release` 被调用，那么仍在处理的操作请求如何完成？
+1. 明显地，直接在 `f_op->release` 中释放 `struct mdev_info` 将无法保证正在执行的操作会被顺利完成，例如下方代码中，在完成 `mdev_read` 中的 `do_operation1` 后被下处理器，并完成 `mdev_release` 函数，随后 `do_operation2` 就会触发错误：
+```C
+static ssize_t mdev_read(struct file *filep, char __user *buf, size_t count, loff_t *ppos)
+{
+	// 1. 获取info数据结构
+	struct mdev_info *mdev_info_p = filep->private_data;
+
+	// 2. 执行操作1
+	do_operation1(mdev_info_p);
+
+	// 3. 执行操作2
+	do_operation2(mdev_info_p);
+
+	return ...;
+}
+
+static int mdev_release(struct inode *node, struct file *filep)
+{
+	// [错误示范] 直接释放相关数据结构
+	// 1. 获取info数据结构
+	struct mdev_info *mdev_info_p = filep->private_data;
+
+	// 2. 回收数据结构
+	kfree(mdev_info_p);
+
+	return 0;
+}
+```
+2. 则此时可以考虑使用计数器的方式代替直接的 `free` 操作：
+```C
+struct mdev_info {
+	// ...
+
+    // ref counter for mdev_info, used to complete incomplete requests.
+    atomic_t ref_counts;
+};
+
+/**
+ * @brief: add references to mdev_info.
+ */
+static void mdev_info_get(struct mdev_info *info)
+{
+	atomic_inc(&info->ref_counts);
+}
+
+/**
+ * @brief: remove the reference to mpipe_info, andelease the memory space
+ *          when the last reference is released.
+ */
+static void mdev_info_put(struct mdev_info *info)
+{
+    if(atomic_dec_and_test(&info->ref_counts))
+    {
+        vfree(info);
+    }
+}
+
+static int mdev_open(struct inode *node, struct file *filep)
+{
+	//...
+
+	// success.
+	// 增加对该结构体的引用计数
+	mdev_info_get(mdev_info);
+
+	return 0;
+}
+
+static ssize_t mdev_read(struct file *filep, char __user *buf, size_t count, loff_t *ppos)
+{
+	// 1. 获取info数据结构
+	struct mdev_info *mdev_info_p = filep->private_data;
+
+	// 2. 增加引用计数器
+	mdev_info_get(mdev_info);
+
+	// 3. 执行操作1
+	do_operation1(mdev_info_p);
+
+	// 4. 执行操作2
+	do_operation2(mdev_info_p);
+
+	// 5. 解除引用奇数
+	mdev_info_put(mdev_info);
+
+	return ...;
+}
+
+static int mdev_release(struct inode *node, struct file *filep)
+{
+	// [错误示范] 普通计数器
+	// 1. 获取info数据结构
+	struct mdev_info *mdev_info_p = filep->private_data;
+
+	// 2. 解除驱动对该info的引用计数
+	mdev_info_put(mdev_info_p);
+
+	return 0;
+}
+```
+3. 但是依旧有问题，例如：
+	1. 用户发起read请求，并执行到 `mdev_read` 的 `struct mdev_info *mdev_info_p = filep->private_data;` 处被下处理器，<font color="#c00000">此时引用计数器并未增加</font>。
+	2. 随后内核处理用户的文件关闭请求，并完成 `mdev_release` 的执行。<font color="#c00000">此时引用计数器被成功归0</font>， `struct mdev_info` <font color="#c00000">被成功释放</font>。
+	3.  `mdev_read` <font color="#c00000">继续执行</font>，<span style="background:#fff88f"><font color="#c00000">此时计数器为-1</font></span>，<font color="#c00000">且需要访问的</font> `struct mdev_info` <span style="background:#fff88f"><font color="#c00000">已被清空</font></span>。
+
+针对这个问题，则可以考虑使用[[引用计数器refcount_t(refcount.h)|引用计数器]]管理 `mdev_info` 解决。
 
 #### 8.9.5 考虑断开连接操作
 
