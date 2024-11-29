@@ -2603,6 +2603,9 @@ POSIX的用户态 `close` 语义可见：[[IEEE Std 1003.1™-2017 学习笔记#
 #### 8.9.4 考虑文件关闭操作
 
 ##### 8.9.4.1 考虑如下场景
+
+由于本子章节并不针对于上述假象设备 `mpipe` ，因此本字章节的设备名均命名为 `mdev` 。
+
 ###### 8.9.4.1.1 场景一：正在处理read的过程中，close被调用并执行完毕
 
 在内核中的驱动正在响应用户的操作请求<font color="#c00000">的</font><span style="background:#fff88f"><font color="#c00000">过程中</font></span>， `f_op->release` 被调用，那么仍在处理的操作请求如何完成？
@@ -2709,9 +2712,9 @@ static int mdev_release(struct inode *node, struct file *filep)
 3. 但是依旧有问题，例如：
 	1. 用户发起read请求，并执行到 `mdev_read` 的 `struct mdev_info *mdev_info_p = filep->private_data;` 处被下处理器，<font color="#c00000">此时引用计数器并未增加</font>。
 	2. 随后内核处理用户的文件关闭请求，并完成 `mdev_release` 的执行。<font color="#c00000">此时引用计数器被成功归0</font>， `struct mdev_info` <font color="#c00000">被成功释放</font>。
-	3.  `mdev_read` <font color="#c00000">继续执行</font>，<span style="background:#fff88f"><font color="#c00000">此时计数器为-1</font></span>，<font color="#c00000">且需要访问的</font> `struct mdev_info` <span style="background:#fff88f"><font color="#c00000">已被清空</font></span>。
+	3.  `mdev_read` <font color="#c00000">继续执行</font>，<span style="background:#fff88f"><font color="#c00000">此时计数器为-1</font></span>，<font color="#c00000">且需要访问的</font> `struct mdev_info` <span style="background:#fff88f"><font color="#c00000">已被清空</font></span>。错误发生。
 
-针对这个问题，则可以考虑使用[[引用计数器refcount_t(refcount.h)|引用计数器]]管理 `mdev_info` 解决。
+针对这个问题，则可以考虑使用[[引用计数器refcount_t(refcount.h)|引用计数器]]管理 `mdev_info` 解决，详见相关API。
 
 #### 8.9.5 考虑断开连接操作
 

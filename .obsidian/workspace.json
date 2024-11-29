@@ -35,7 +35,8 @@
               "title": "引用计数器refcount_t(refcount.h)"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -163,10 +164,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md"
+                "file": "Linux内核原理及其开发/内核原理专题/基本数据结构专题/引用计数器refcount_t(refcount.h).md"
               },
               "icon": "lucide-list",
-              "title": "Linux驱动开发笔记 的大纲"
+              "title": "引用计数器refcount_t(refcount.h) 的大纲"
             }
           },
           {
@@ -209,7 +210,7 @@
       "obsidian42-brat:BRAT": false
     }
   },
-  "active": "fd1f76f2af1efa59",
+  "active": "c01162631d93d489",
   "lastOpenFiles": [
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题/引用计数器refcount_t(refcount.h).md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
