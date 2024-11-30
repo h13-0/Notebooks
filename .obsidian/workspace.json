@@ -27,15 +27,16 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux内核原理及其开发/应试笔记与八股.md",
+                "file": "Linux内核原理及其开发/内核原理专题/基本数据结构专题/错误码(errno.h).md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "应试笔记与八股"
+              "title": "错误码(errno.h)"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -163,10 +164,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux内核原理及其开发/内核原理专题/基本数据结构专题/引用计数器refcount_t(refcount.h).md"
+                "file": "Linux内核原理及其开发/内核原理专题/基本数据结构专题/错误码(errno.h).md"
               },
               "icon": "lucide-list",
-              "title": "引用计数器refcount_t(refcount.h) 的大纲"
+              "title": "错误码(errno.h) 的大纲"
             }
           },
           {
@@ -210,12 +211,13 @@
       "webpage-html-export:Export as HTML": false
     }
   },
-  "active": "fd1f76f2af1efa59",
+  "active": "c01162631d93d489",
   "lastOpenFiles": [
+    "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
+    "Linux内核原理及其开发/内核原理专题/基本数据结构专题/错误码(errno.h).md",
+    "Linux内核原理及其开发/内核原理专题/基本数据结构专题/引用计数器refcount_t(refcount.h).md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "Linux内核原理及其开发/应试笔记与八股.md",
-    "Linux内核原理及其开发/内核原理专题/基本数据结构专题/引用计数器refcount_t(refcount.h).md",
-    "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统/基础IO打开关闭(open.c).md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/Linux系统调用基础.md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统/基础IO读写(read_write.c).md",
@@ -238,7 +240,6 @@
     "Linux内核原理及其开发/Linux设备树/devicetree-specification.md",
     "Linux内核原理及其开发/MISC/Kconfig基础语法.md",
     "Linux内核原理及其开发/MISC/pr_fmt应用及原理解析.md",
-    "操作系统/课外补充/Readme.md",
     "Resources/Pasted image 20240203021517.png",
     "Linux内核原理及其开发/Resources/Pasted image 20241124170145.png",
     "Linux内核原理及其开发/Resources/Pasted image 20241124170623.png",
