@@ -47,7 +47,8 @@ typedef struct refcount_struct {
 
 由于 `refcount_t` 只使用了一个原子变量，因此其操作的大致流程与原子变量几乎一致：
 1. 声明 `refcount_t` ，略。
-2. 定义 `refcount_t` ，使用
+2. 定义 `refcount_t` ，使用 `refcount_set` 即可。
+3. 在非零时增加 `refcount_t` ，使用 `refcount_inc_not_zero` 。
 
 
 #### 3.2.1 设置引用次数refcount_set(refcount_t \*r, int n)
