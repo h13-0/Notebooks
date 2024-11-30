@@ -2083,7 +2083,7 @@ wait_event_interruptible(wq_head, condition)
 - `condition` 的另一注意点见下方[[Linux驱动开发笔记#^dcp6ey|关键注意点]]。
 3. 唤醒指令。休眠和唤醒通常伴随出现。
 ```C
-// wake_up会唤醒所有等在queue上的线程
+// wake_up会唤醒所有等在queue上的非独占休眠线程
 wake_up(x)
 
 // wake_up_interruptible只会唤醒可中断休眠的线程
