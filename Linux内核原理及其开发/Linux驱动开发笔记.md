@@ -2592,6 +2592,18 @@ POSIX的用户态 `close` 语义可见：[[IEEE Std 1003.1™-2017 学习笔记#
 #### 8.9.1 初步考虑数据结构
 
 
+
+##### 8.9.1.1 考虑管道状态表示
+
+| <center>状态</center> | <center>判定方式</center>                                     |
+| ------------------- | --------------------------------------------------------- |
+| 管道被禁用               | `mpipe_info.target_mpipe_id == MPIPE_STATUS_DISABLED`     |
+| 管道等待连接              | `mpipe_info.target_mpipe_id == MPIPE_STATUS_DISCONNECTED` |
+| 管道已连接               | `mpipe_info.partner_pipe != NULL`                         |
+
+
+
+
 #### 8.9.2 初步考虑互斥并发管理
 
 
