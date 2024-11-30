@@ -35,8 +35,7 @@
               "title": "应试笔记与八股"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -164,10 +163,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux内核原理及其开发/应试笔记与八股.md"
+                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md"
               },
               "icon": "lucide-list",
-              "title": "应试笔记与八股 的大纲"
+              "title": "Linux驱动开发笔记 的大纲"
             }
           },
           {
@@ -207,13 +206,14 @@
       "audio-recorder:开始/结束录音": false,
       "obsidian-git:Open Git source control": false,
       "mermaid-tools:Open Mermaid Toolbar": false,
-      "obsidian42-brat:BRAT": false
+      "obsidian42-brat:BRAT": false,
+      "webpage-html-export:Export as HTML": false
     }
   },
-  "active": "c01162631d93d489",
+  "active": "fd1f76f2af1efa59",
   "lastOpenFiles": [
-    "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "Linux内核原理及其开发/应试笔记与八股.md",
+    "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题/引用计数器refcount_t(refcount.h).md",
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统/基础IO打开关闭(open.c).md",
