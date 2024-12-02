@@ -213,7 +213,6 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "webpage-html-export:Export Vault to HTML": false,
       "switcher:打开快速切换": false,
       "graph:查看关系图谱": false,
       "canvas:新建白板": false,
@@ -221,8 +220,8 @@
       "audio-recorder:开始/结束录音": false,
       "obsidian-git:Open Git source control": false,
       "mermaid-tools:Open Mermaid Toolbar": false,
-      "obsidian42-brat:BRAT": false,
-      "webpage-html-export:Export as HTML": false
+      "webpage-html-export:Export as HTML": false,
+      "obsidian42-brat:BRAT": false
     }
   },
   "active": "c01162631d93d489",
