@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
+                "file": "操作系统/基础应试学习/Readme.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Linux驱动开发笔记"
+              "title": "Readme"
             }
           },
           {
@@ -178,10 +178,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md"
+                "file": "操作系统/基础应试学习/Readme.md"
               },
               "icon": "lucide-list",
-              "title": "Linux驱动开发笔记 的大纲"
+              "title": "Readme 的大纲"
             }
           },
           {
@@ -226,8 +226,12 @@
   },
   "active": "c01162631d93d489",
   "lastOpenFiles": [
-    "Linux内核原理及其开发/内核文档翻译/内核源码文档/Documentation/userspace-api/ioctl/ioctl-number.rst.md",
+    "计算机网络/基础应试学习/计算机网络应试学习.md",
+    "操作系统/基础应试学习/Readme.md",
+    "操作系统/基础应试学/未命名",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
+    "操作系统/基础应试学习",
+    "Linux内核原理及其开发/内核文档翻译/内核源码文档/Documentation/userspace-api/ioctl/ioctl-number.rst.md",
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题/引用计数器refcount_t(refcount.h).md",
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题/错误码(errno.h).md",
@@ -251,8 +255,6 @@
     "Linux内核原理及其开发/内核文档翻译/LWN文章翻译/The new way of ioctl().md",
     "Linux内核原理及其开发/内核文档翻译/Readme.md",
     "Linux内核原理及其开发/内核文档翻译/eLinux/devicetree -- kernel internals and practical troubleshooting.md",
-    "Linux内核原理及其开发/Linux设备树/Device Tree Reference学习笔记.md",
-    "Linux内核原理及其开发/Linux设备树/devicetree-specification.md",
     "Resources/Pasted image 20240203021517.png",
     "Linux内核原理及其开发/Resources/Pasted image 20241124170145.png",
     "Linux内核原理及其开发/Resources/Pasted image 20241124170623.png",
@@ -267,9 +269,7 @@
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题",
     "Resources/8619b62ac43800a3e18be2330e906e05.png",
     "Linux内核原理及其开发/内核原理专题/系统调用专题",
-    "Linux内核原理及其开发/内核原理专题",
     "操作系统/Resources/chrome_zST8iNWLGQ.png",
-    "操作系统/Resources/git_ignored/UNIX环境高级编程（中文第三版） (W. Richard Stevens etc.) (Z-Library).pdf",
     "操作系统/Resources/Pasted image 20241118171908.png",
     "操作系统/Resources/Pasted image 20241118171902.png",
     "嵌入式基础/接口技术/未命名.canvas",
