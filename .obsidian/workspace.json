@@ -49,8 +49,7 @@
               "title": "计算机网络应试学习"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -178,10 +177,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "操作系统/基础应试学习/第二章 进程与线程/第二章 进程与线程.md"
+                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md"
               },
               "icon": "lucide-list",
-              "title": "第二章 进程与线程 的大纲"
+              "title": "Linux驱动开发笔记 的大纲"
             }
           },
           {
@@ -224,10 +223,10 @@
       "obsidian42-brat:BRAT": false
     }
   },
-  "active": "c01162631d93d489",
+  "active": "fd1f76f2af1efa59",
   "lastOpenFiles": [
-    "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "操作系统/基础应试学习/第二章 进程与线程/第二章 进程与线程.md",
+    "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "计算机网络/基础应试学习/计算机网络应试学习.md",
     "计算机网络/基础应试学习/第四章 网络层/第四章 网络层.md",
     "计算机网络/基础应试学习/第六章 应用层/第六章 应用层.md",
