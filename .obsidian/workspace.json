@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
+                "file": "生活常识/法律常识/租房及其注意事项.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Linux驱动开发笔记"
+              "title": "租房及其注意事项"
             }
           },
           {
@@ -177,10 +177,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md"
+                "file": "生活常识/法律常识/租房及其注意事项.md"
               },
               "icon": "lucide-list",
-              "title": "Linux驱动开发笔记 的大纲"
+              "title": "租房及其注意事项 的大纲"
             }
           },
           {
@@ -225,8 +225,10 @@
   },
   "active": "fd1f76f2af1efa59",
   "lastOpenFiles": [
-    "操作系统/基础应试学习/第二章 进程与线程/第二章 进程与线程.md",
+    "生活常识/法律常识/法律常识.md",
+    "生活常识/法律常识/租房及其注意事项.md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
+    "操作系统/基础应试学习/第二章 进程与线程/第二章 进程与线程.md",
     "计算机网络/基础应试学习/计算机网络应试学习.md",
     "计算机网络/基础应试学习/第四章 网络层/第四章 网络层.md",
     "计算机网络/基础应试学习/第六章 应用层/第六章 应用层.md",
@@ -253,8 +255,6 @@
     "CPP/C标准笔记/C与C++标准.md",
     "操作系统/课外补充/IO模型/IO模型.md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/Readme.md",
-    "文件子系统.md",
-    "Linux内核原理及其开发/内核原理专题/Readme.md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统",
     "Resources/Pasted image 20240203021517.png",
     "Linux内核原理及其开发/Resources/Pasted image 20241124170145.png",
