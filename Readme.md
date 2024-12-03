@@ -1,4 +1,4 @@
-<font color="#c00000">NOTE:</font>
+<font color="#c00000">NOTICE:</font>
 	They are `Notebooks` but not `Books`.
 
 此笔记的在线浏览网址为：[https://notebooks.h13.tech/](https://notebooks.h13.tech/).  
