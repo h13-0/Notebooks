@@ -2793,7 +2793,9 @@ static int mdev_release(struct inode *node, struct file *filep)
 
 内核中的变量 `jiffies_64` 在系统启动时会被置0，并当上述时钟中断发生时计数器会+1。该计数器在32位和64位系统中均为64位。
 
-在实际开发中，应当使用 `jiffies` 变量，其为 `unsigned long` 类型，其具体位数可见[[Linux驱动开发笔记#2 2 1 1 不同架构处理器下的数据类型大小|2.2.1.1 不同架构处理器下的数据类型大小]]，该值可能与 `jiffies_64` 相同，也可能是 `jiffies_64` 的低32位。
+<font color="#c00000">在实际开发中，应当使用</font> `jiffies` <font color="#c00000">变量</font>，其为 `unsigned long` 类型，其具体位数可见[[Linux驱动开发笔记#2 2 1 1 不同架构处理器下的数据类型大小|2.2.1.1 不同架构处理器下的数据类型大小]]，该值可能与 `jiffies_64` 相同，也可能是 `jiffies_64` 的低32位。且通常对该值的访问速度比 `jiffies_64` 快。
+
+
 
 ## 10 内存分配
 
