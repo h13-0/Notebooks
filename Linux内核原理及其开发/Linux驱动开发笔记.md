@@ -2927,7 +2927,7 @@ struct timespec current_kernel_time(void);
 
 #### 9.3.1 jiffies等待
 
-##### 9.3.1.1 忙等
+##### 9.3.1.1 忙等(不推荐)
 
 直接使用：
 
@@ -2936,8 +2936,27 @@ while(time_before(jiffies, target))
 	cpu_relax();
 ```
 
-即可，在对应平台上 `cpu_relax()` 会做出不同的行为。
+即可，需要注意的是：
+1. <span style="background:#fff88f"><font color="#c00000">在进入该循环之前不可禁止中断</font></span>，不然 `jiffies` 永远无法得到更新，直接陷入死机。
+2. 在对应平台上 `cpu_relax()` 会做出不同的行为(例如在支持超线程的CPU上会让出处理器给其他线程)，但是行为具体做了什么不重要，因为不推荐使用此方式。
 
+##### 9.3.1.2 让出处理器(不推荐)
+
+```C
+while(time_before(jiffies, target))
+	shedule();
+```
+
+该方法在大多数情况下并没有什么问题，但<font color="#c00000">依旧不是最好的解决方案</font>。当系统中有别的可运行进程时，该代码可以正常让出处理器；但是当系统中仅剩这一个可运行进程或低负荷情况下， `shedule()` 并不能有效地让出处理器，此时又变成忙等状态。
+
+##### 9.3.1.3 超时(推荐)
+
+直接使用前几章提到的 `wait_event_*timeout` 函数即可，API如下：
+
+```C
+
+
+```
 
 ## 10 内存分配
 
