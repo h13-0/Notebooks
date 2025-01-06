@@ -2888,10 +2888,31 @@ rdtscl(low32);
 rdtscll(var64);
 ```
 
-### 9.2 获取当前时间
+### 9.2 获取当前时间(绝对时间)
 
+在大多数情况下，内核只需要处理 `jiffies` 就可以满足需求，并且通常会将年月日时分秒的处理留给用户空间进行处理，但是内核依旧提供了一些绝对时间的处理方法。
 
+#### 9.2.1 年月日时分秒转jiffies
 
+```C
+#include <linux/time.h>
+unsigned long mktime(unsigned int year, unsigned int mon,
+						unsigned int day, unsigned int hour,
+						unsigned int min, unsigned int sec);
+```
+
+#### 9.2.2 获取UNIX时间戳(以1970年为起始)
+
+```C
+// struct timeval可以记录
+#include <linux/time.h>
+void do_gettimeofday(struct timeval *tv);
+```
+
+```C
+#include <linux/time.h>
+struct timespec current_kernel_time(void);
+```
 
 ## 10 内存分配
 
