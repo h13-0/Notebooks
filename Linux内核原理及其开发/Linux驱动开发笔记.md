@@ -2904,15 +2904,27 @@ unsigned long mktime(unsigned int year, unsigned int mon,
 #### 9.2.2 获取UNIX时间戳(以1970年为起始)
 
 ```C
-// struct timeval可以记录
 #include <linux/time.h>
+
+// struct timeval可以记录微秒(ms)级别的时间
+// 且在许多平台上该API也有微秒级别的精度
 void do_gettimeofday(struct timeval *tv);
 ```
 
 ```C
 #include <linux/time.h>
+
+// struct timespec可以记录纳秒(ns)级别的时间
+// 但是实际上也只有时钟滴答的精度(jiffies)
 struct timespec current_kernel_time(void);
 ```
+
+### 9.3 延迟执行
+
+在考虑使用延迟执行时，需要根据延迟时间分别考虑使用的API：
+- 当延迟时间大于时钟滴答( `jiffies` )时，可以依靠于时钟滴答进行处理，此类延迟被称作长延迟，通常以若干毫秒为单位。
+- 当时间延迟
+
 
 ## 10 内存分配
 
