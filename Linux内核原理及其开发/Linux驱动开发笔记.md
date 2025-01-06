@@ -2979,7 +2979,7 @@ wait_event_interruptible_timeout(wq_head, condition, timeout)
 ```
 
 在使用上述API进行等待时只需要把 `condition` 填写为 `0` 并等待超时即可。
-本方法与上述让出处理器的方法的区别仅在于本方法的API还额外设置了任务状态()。
+本方法与上述让出处理器的方法的区别仅在于本方法的API还额外设置了任务状态( `TASK_INTERRUPTIBLE` / `TASK_UNINTERRUPTIBLE` )。
 
 #### 9.3.2 绝对时间等待
 
