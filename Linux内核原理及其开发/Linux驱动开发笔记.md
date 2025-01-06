@@ -2951,12 +2951,40 @@ while(time_before(jiffies, target))
 
 ##### 9.3.1.3 超时(推荐)
 
-直接使用前几章提到的 `wait_event_*timeout` 函数即可，API如下：
+直接使用休眠章节提到的 `wait_event_*timeout` 函数即可，API如下：
 
 ```C
+#include <linux/wait.h>
+
+wait_queue_head_t wait;
+
+/**
+ * @brief: 休眠直到condition为true，或者超时(以jiffy表示)时中断休眠。
+ * @return:
+ *     - 当超时后condition为true返回0
+ *     - 当超时后condition为false返回1
+ *     - 超时前condition为true则返回剩余jiffy数(大于等于1)
+ */
+wait_event_timeout(wq_head, condition, timeout)
 
 
+/**
+ * @brief: 休眠直到condition为true，或者被信号中断休眠，或者超时(以jiffy表示)时中断休眠。当其被信号打断时返回值为非零。
+ * @return:
+ *     - 当超时后condition为true返回0
+ *     - 当超时后condition为false返回1
+ *     - 超时前condition为true则返回剩余jiffy数(大于等于1)
+ */
+wait_event_interruptible_timeout(wq_head, condition, timeout)
 ```
+
+在使用上述API进行等待时只需要把 `condition` 填写为 `0` 并等待超时即可。
+本方法与上述让出处理器的方法的区别仅在于本方法的API还额外设置了任务状态()。
+
+#### 9.3.2 绝对时间等待
+
+
+
 
 ## 10 内存分配
 
