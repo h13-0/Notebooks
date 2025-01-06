@@ -2803,8 +2803,20 @@ static int mdev_release(struct inode *node, struct file *filep)
 ##### 9.1.1.2 32位CPU下的jiffies及其溢出问题
 
 在32位平台下，1000hz中断时， `jiffies` 大约50天会溢出一次。但是内核态代码仍然应当谨慎处理该问题。
-而想只用一个32位的计数器完全从根本上解决溢出问题是不现实的(例如 `jiffies_a` 于数百天以前记录，此时和当前 `jiffies` 比较大小或者计算时间差)
+而想只用一个32位的计数器完全从根本上解决溢出问题是不现实的(例如32位的 `jiffies_a` 于数百天以前记录，此时和当前 `jiffies` 比较大小或者计算时间差)，因此其被如下设计：
+1. 32位的 `jiffies` <font color="#c00000">应当至少可以满足</font>比较<span style="background:#fff88f"><font color="#c00000">至多数秒或数天</font></span>间隔的时间戳。
+2. 当比较<span style="background:#fff88f"><font color="#c00000">可能接近或者大于溢出周期</font></span>的时间戳时应当考虑使用 `jiffies_64` 。
+因此，当<font color="#c00000">比较或计算</font><span style="background:#fff88f"><font color="#c00000">远低于半个溢出周期</font></span><font color="#c00000">的时间戳时</font>可以考虑使用如下的函数：
 
+```C
+#include <linux/jiffies.h>
+
+// 宏函数, 当a比b靠后时返回真
+int time_after(unsigned long a, unsigned long b);
+int time_before(unsigned long a, unsigned long b);
+int time_after_eq(unsigned long a, unsigned long b);
+int time_before_eq(unsigned long a, unsigned long b);
+```
 
 ## 10 内存分配
 
