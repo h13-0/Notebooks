@@ -2811,13 +2811,34 @@ static int mdev_release(struct inode *node, struct file *filep)
 ```C
 #include <linux/jiffies.h>
 
-// 宏函数, 当a比b靠后时返回真
+// 宏函数, 当a比b靠后时返回真, 表达式为((long)(b) - (long)(a) < 0))
 int time_after(unsigned long a, unsigned long b);
+// 宏函数, 当a比b靠前时返回真, 表达式为((long)(a) - (long)(b) < 0))
 int time_before(unsigned long a, unsigned long b);
+// 宏函数, 当a比b靠后或相等时返回真, 表达式为((long)(b) - (long)(a) <= 0))
 int time_after_eq(unsigned long a, unsigned long b);
+// 宏函数, 当a比b靠前或相等时返回真, 表达式为((long)(a) - (long)(b) <= 0))
 int time_before_eq(unsigned long a, unsigned long b);
 ```
 
+其原理为将 `a` 和 `b` 强制转换为 `signed long` 后进行比较，
+
+| `unsigned long a` | `long a` | `unsigned long b` | `long b` |
+| :---------------: | :------: | :---------------: | :------: |
+|         0         |    0     |                   |          |
+|         1         |    1     |                   |          |
+|         2         |    2     |                   |          |
+|         3         |    3     |                   |          |
+|        ...        |          |                   |          |
+|        127        |   127    |                   |          |
+|        128        |   -128   |                   |          |
+|        129        |   -127   |                   |          |
+|        130        |   -126   |                   |          |
+|        ...        |   ...    |                   |          |
+|        254        |          |                   |          |
+|        255        |          |                   |          |
+|         0         |          |                   |          |
+|         1         |          |                   |          |
 ## 10 内存分配
 
 
