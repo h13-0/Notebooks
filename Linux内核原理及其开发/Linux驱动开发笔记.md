@@ -2785,7 +2785,7 @@ static int mdev_release(struct inode *node, struct file *filep)
 
 ## 9 时间、延迟及延缓操作
 
-### 9.1 度量时间差
+### 9.1 度量时间差(以系统启动时间为基准)
 
 #### 9.1.1 jiffies计数器
 
@@ -2862,7 +2862,35 @@ unsigned long timeval_to_jiffies(struct timeval *value);
 void jiffies_to_timeval(unsigned long jiffies, struct timeval *value);
 ```
 
-#### 平台
+#### 9.1.2 平台特有高精度计时寄存器
+
+##### 9.1.2.1 通用平台
+
+linux内核为所有平台都提供了访问CPU时钟周期数的API，在支持的平台上会返回正确宽度的 `cycles_t` ，但是在不支持的平台上返回结果恒为0。
+
+```C
+#include <linux/timex.h>
+cycles_t get_cycles(void);
+```
+
+##### 9.1.2.2 x86
+
+在Pentium后的所有x86和x86_64的CPU上均会有一个TSC计数器(Timestamp counter)，该计数器会记录CPU的时钟周期数，可以通过如下方式访问：
+
+```C
+#include <asm/msr.h>
+
+// 宏, 将64位的计数器原子地读取到两个32位的变量中
+rdtsc(low32, high32);
+// 宏, 只原子地读取低32位
+rdtscl(low32);
+// 宏, 将64位计数器原子地读取到一个64位变量中
+rdtscll(var64);
+```
+
+### 9.2 获取当前时间
+
+
 
 
 ## 10 内存分配
