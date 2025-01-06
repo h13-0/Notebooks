@@ -2789,9 +2789,10 @@ static int mdev_release(struct inode *node, struct file *filep)
 
 #### 9.1.1 jiffies计数器
 
-#### 9.1.2 jiffies_64机制
+##### 9.1.1.1 jiffies_64机制
 
 内核中会定义一个硬件的时钟中断，该中断频率通常为1000hz<font color="#7f7f7f">(软件仿真器中是24hz)</font>，该值不为固定值，可以在编译内核时设置，因此进行内核开发时不应当指定固定值，而应当通过API来获取。且在修改内核中断频率后，必须重新编译并使用新的内核模块。
+该值可在内核态代码中访问，其被定义在 `<linux/param.h>` 中的 `HZ` 中。
 
 内核中的变量 `jiffies_64` 在系统启动时会被置0，并当上述时钟中断发生时计数器会+1。该计数器在32位和64位系统中均为64位。
 
@@ -2799,9 +2800,10 @@ static int mdev_release(struct inode *node, struct file *filep)
 - 访问 `jiffies_64` 应使用统一的接口(`get_jiffies_64`)
 - 访问 `jiffies` 时可以直接访问
 
-##### 9.1.2.1 32位CPU下的jiffies及其溢出问题
+##### 9.1.1.2 32位CPU下的jiffies及其溢出问题
 
-
+在32位平台下，1000hz中断时， `jiffies` 大约50天会溢出一次。但是内核态代码仍然应当谨慎处理该问题。
+而想只用一个32位的计数器完全从根本上解决溢出问题是不现实的(例如 `jiffies_a` 于数百天以前记录，此时和当前 `jiffies` 比较大小或者计算时间差)
 
 
 ## 10 内存分配
