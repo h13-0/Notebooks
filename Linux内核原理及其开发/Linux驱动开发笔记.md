@@ -2785,6 +2785,12 @@ static int mdev_release(struct inode *node, struct file *filep)
 
 ## 9 时间、延迟及延缓操作
 
+### 9.1 度量时间差
+
+#### 9.1.1 jiffies计数器
+
+内核中会定义一个硬件的时钟中断，该中断频率通常为1000hz()
+
 
 ## 10 内存分配
 

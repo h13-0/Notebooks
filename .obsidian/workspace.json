@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "c930a128a0f41381",
+        "id": "8e1b191d7d552e56",
         "type": "tabs",
         "children": [
           {
-            "id": "a3c9eced2d73a9b3",
+            "id": "02b39e87be44a82d",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Readme.md",
+                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Readme"
+              "title": "Linux驱动开发笔记"
             }
           }
         ]
@@ -87,7 +87,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 279.5
+    "width": 279.5,
+    "collapsed": true
   },
   "right": {
     "id": "989a0ed08fe1a7b2",
@@ -149,10 +150,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Readme.md"
+                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md"
               },
               "icon": "lucide-list",
-              "title": "Outline of Readme"
+              "title": "Outline of Linux驱动开发笔记"
             }
           },
           {
@@ -190,11 +191,14 @@
       "command-palette:Open command palette": false,
       "audio-recorder:Start/stop recording": false,
       "obsidian-git:Open Git source control": false,
-      "obsidian42-brat:BRAT": false
+      "obsidian42-brat:BRAT": false,
+      "webpage-html-export:Export as HTML": false,
+      "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "a3c9eced2d73a9b3",
+  "active": "02b39e87be44a82d",
   "lastOpenFiles": [
+    "Readme.md",
     "计算机网络/基础应试学习/计算机网络应试学习.md",
     "嵌入式基础/应试笔记与八股.md",
     "生活常识/法律常识/租房及其注意事项.md",
@@ -221,7 +225,6 @@
     "Linux内核原理及其开发/内核原理专题/系统调用专题/Linux系统调用基础.md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统/基础IO读写(read_write.c).md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统/IO多路复用接口(select、poll、epoll).md",
-    "Readme.md",
     "操作系统/用户态开发/POSIX/IEEE Std 1003.1™-2017 学习笔记.md",
     "操作系统/用户态开发/POSIX/Readme.md",
     "CPP/C标准笔记/C标准学习笔记.md",
