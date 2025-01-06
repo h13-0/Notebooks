@@ -2797,8 +2797,12 @@ static int mdev_release(struct inode *node, struct file *filep)
 内核中的变量 `jiffies_64` 在系统启动时会被置0，并当上述时钟中断发生时计数器会+1。该计数器在32位和64位系统中均为64位。
 
 <font color="#c00000">在实际开发中，应当使用</font> `jiffies` <font color="#c00000">变量</font>，其为 `unsigned long` 类型，其具体位数可见[[Linux驱动开发笔记#2 2 1 1 不同架构处理器下的数据类型大小|2.2.1.1 不同架构处理器下的数据类型大小]]。在64位处理器上这两个变量其实是同一个，对该变量的访问也是原子的。在32位处理器上，该值是 `jiffies_64` 的低32位，<font color="#c00000">且访问非原子</font>。因此：
-- 访问 `jiffies_64` 应使用统一的接口(`get_jiffies_64`)
-- 访问 `jiffies` 时可以直接访问
+- 访问 `jiffies_64` 应使用统一的接口:
+```C
+#include <linux/jiffies.h>
+u64 get_jiffies_64(void);
+```
+- 访问 `jiffies` 时可以直接访问。
 
 ##### 9.1.1.2 32位CPU下的jiffies及其溢出问题
 
@@ -2850,9 +2854,15 @@ int time_before_eq(unsigned long a, unsigned long b);
 ##### 9.1.1.3 jiffies与用户态时间互转
 
 ```C
-#include <>
+#include <linux/time.h>
+
+unsigned long timespec_to_jiffies(struct timespec *value);
+void jiffies_to_timespec(unsigned long jiffies, struct timespec *value);
+unsigned long timeval_to_jiffies(struct timeval *value);
+void jiffies_to_timeval(unsigned long jiffies, struct timeval *value);
 ```
 
+#### 平台
 
 
 ## 10 内存分配
