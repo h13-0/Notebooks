@@ -2992,6 +2992,7 @@ void mdelay(unsigned long msecs);
 
 上述函数的实际实现包含在 `<asm/delay.h>` 中，且<font color="#c00000">除了udelay以外的两个函数</font><span style="background:#fff88f"><font color="#c00000">可能并未被定义</font></span>。而 `udelay` <font color="#c00000">一定会被提供</font>并且其最终的延迟时间一定可以达到目标延迟时间或更长。
 `udelay` 
+
 ## 10 内存分配
 
 

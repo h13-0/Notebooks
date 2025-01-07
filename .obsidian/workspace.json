@@ -206,9 +206,9 @@
       "command-palette:Open command palette": false,
       "audio-recorder:Start/stop recording": false,
       "obsidian-git:Open Git source control": false,
-      "obsidian42-brat:BRAT": false,
       "webpage-html-export:Export as HTML": false,
-      "mermaid-tools:Open Mermaid Toolbar": false
+      "mermaid-tools:Open Mermaid Toolbar": false,
+      "obsidian42-brat:BRAT": false
     }
   },
   "active": "1989c571884548ca",
