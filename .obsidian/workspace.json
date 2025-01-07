@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
+                "file": "CPP/应试笔记与八股.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Linux驱动开发笔记"
+              "title": "应试笔记与八股"
             }
           }
         ],
@@ -102,8 +102,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 279.5,
-    "collapsed": true
+    "width": 279.5
   },
   "right": {
     "id": "989a0ed08fe1a7b2",
@@ -165,10 +164,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md"
+                "file": "CPP/应试笔记与八股.md"
               },
               "icon": "lucide-list",
-              "title": "Outline of Linux驱动开发笔记"
+              "title": "Outline of 应试笔记与八股"
             }
           },
           {
@@ -213,8 +212,8 @@
   },
   "active": "1989c571884548ca",
   "lastOpenFiles": [
-    "CPP/应试笔记与八股.md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
+    "CPP/应试笔记与八股.md",
     "Readme.md",
     "计算机网络/基础应试学习/计算机网络应试学习.md",
     "嵌入式基础/应试笔记与八股.md",
