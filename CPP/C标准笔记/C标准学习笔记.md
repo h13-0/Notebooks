@@ -4,6 +4,7 @@
 	That's how much that paper is worth. —— Linus Torvalds.
 
 ## 目录
+
 ```toc
 min_depth: 1
 ```
@@ -1023,6 +1024,22 @@ char *strstr(const char *s1, const char *s2);
 **返回值**
 1. `strstr` 函数将返回 `s1` 中第一次出现子串 `s2` 位置的指针，如果 `s1` 中没有子串 `s2` ，则返回 `NULL` 。
 2. 如果 `s2` 为零长度字符串(即 `{ '\0' }` )，则返回值为 `s1` 。
+
+##### 7.24.5.8 strtok函数
+
+**摘要**
+
+```C
+#include <string.h>
+char *strtok(char * restrict s1,
+	const char * restrict s2);
+```
+
+**描述**
+
+1. `strtok` 函数通常会被一系列的调用：在首次调用时其会在 `s1` 字符串中搜索 `s2` 子字符串，在后续搜索原 `s1` 字符串时，参数 `s1` 需要保持为 `NULL` 。
+2. 
+
 
 ## 附录K 边界检查接口
 
