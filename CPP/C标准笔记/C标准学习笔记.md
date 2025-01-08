@@ -1038,7 +1038,14 @@ char *strtok(char * restrict s1,
 **描述**
 
 1. `strtok` 函数通常会被一系列的调用：在首次调用时其会在 `s1` 字符串中搜索 `s2` 子字符串，在后续搜索原 `s1` 字符串时，参数 `s1` 需要保持为 `NULL` 。
-2. 
+2. 该函数搜索出的字符字串不包含 `s2` 子串，当有搜索结果时会返回原 `s1` 字符串内存区域内的指向下一字串的指针，当无更多子串时返回 `NULL` 。
+3. `strtok` 函数会保存指向后续字符的指针，从而实现后续 `s1` 参数为 `NULL` 的搜索。
+4. <font color="#c00000">该函数并没有考虑竞态问题</font>，<span style="background:#fff88f"><font color="#c00000">因此应当避免和其他函数同时使用</font></span>(<span style="background:#fff88f"><font color="#c00000">竞态时应当使用</font></span> `strtok_s` )。
+
+**返回值**
+
+1. `strtok` 函数返回一个指向 `s2` 字串的第一个字符的指针。如果没有令牌，则返回一个空指针
+
 
 
 ## 附录K 边界检查接口
