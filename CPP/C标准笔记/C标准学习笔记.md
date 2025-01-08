@@ -1044,8 +1044,23 @@ char *strtok(char * restrict s1,
 
 **返回值**
 
-1. `strtok` 函数返回一个指向 `s2` 字串的第一个字符的指针。如果没有令牌，则返回一个空指针
+1. `strtok` 函数返回一个指向 `s2` 子串的第一个字符的指针。如果没有 `s2` 子串，则返回一个空指针。
+2. 示例：
+```C
+#include <string.h>
 
+static char str[] = "?a???b,,,#c";
+char *t;
+
+t = strtok(str, "?"); // t points to the token "a"
+t = strtok(NULL, ","); // t points to the token "??b"
+t = strtok(NULL, "#,"); // t points to the token "c"
+t = strtok(NULL, "?"); // t is a null pointer
+```
+
+
+笔记注：
+1. 
 
 
 ## 附录K 边界检查接口
