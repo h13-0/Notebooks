@@ -1060,7 +1060,7 @@ t = strtok(NULL, "?"); // t is a null pointer
 
 
 笔记注：
-1. 
+1. <span style="background:#fff88f"><font color="#c00000">该函数会修改输入的s1字符串</font></span>，会将
 
 
 ## 附录K 边界检查接口
