@@ -2991,7 +2991,23 @@ void mdelay(unsigned long msecs);
 ```
 
 上述函数的实际实现包含在 `<asm/delay.h>` 中，且<font color="#c00000">除了udelay以外的两个函数</font><span style="background:#fff88f"><font color="#c00000">可能并未被定义</font></span>。而 `udelay` <font color="#c00000">一定会被提供</font>并且其最终的延迟时间一定可以达到目标延迟时间或更长。
-`udelay` 
+此外，内核还未 `udelay` 和 `ndelay` 中能接收的参数值添加了上限，当值过大时会提示 `__bad_udelay` 。
+<font color="#c00000">注意</font>：<span style="background:#fff88f"><font color="#c00000">上述三个函数均为忙等待函数</font></span>，非忙等待函数为如下几个函数：
+
+```C
+#include <linux/delay.h>
+
+// 可以被中断的休眠，当进程被提前唤醒时，其返回值为提前唤醒的毫秒数。
+unsigned long msleep_interruptible(unsigned int millisecs);
+
+// 非忙等，但是也不可中断休眠
+void ssleep(unsigned int seconds);
+```
+
+### 9.4 内核定时器
+
+
+
 
 ## 10 内存分配
 
