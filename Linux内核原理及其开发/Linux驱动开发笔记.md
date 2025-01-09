@@ -3010,11 +3010,27 @@ void ssleep(unsigned int seconds);
 1. 对于没有提供外部中断功能的硬件设备，可以使用内核定时器定时轮询。
 2. 在完成 `fops->close` 等操作时，使用内核定时器异步完成。
 
-<span style="background:#fff88f"><font color="#c00000">内核定时器是一种软件中断</font></span>，这些dai'ma因此：
-1. 
+<span style="background:#fff88f"><font color="#c00000">内核定时器是一种软件中断</font></span>，<font color="#c00000">这些代码位于中断上下文中而非进程上下文</font>，因此：
+1. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为不在进程上下文中。
+2. 用于指向当前进程的 `current` 指针也无效。
+3. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
 
+内核提供了一些API
+[[Linux驱动开发笔记#^h05ata]]
 
 ## 10 内存分配
+
+
+
+## 11 与硬件通信
+
+
+## 12 中断处理
+
+
+### 12.1 查询当前状态 ^h05ata
+
+#### 12.1.1 查询当前是否在中断上下文中
 
 
 
