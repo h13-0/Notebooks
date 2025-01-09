@@ -3011,12 +3011,10 @@ void ssleep(unsigned int seconds);
 2. 在完成 `fops->close` 等操作时，使用内核定时器异步完成。
 
 <span style="background:#fff88f"><font color="#c00000">内核定时器是一种软件中断</font></span>，<font color="#c00000">这些代码位于中断上下文中而非进程上下文</font>，因此：
-1. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为不在进程上下文中。
-2. 用于指向当前进程的 `current` 指针也无效。
-3. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
+！[[Linux驱动开发笔记#^h05ata|当前上下文状态与注意事项]]
 
-内核提供了一些API
-[[Linux驱动开发笔记#^h05ata]]
+
+内核提供了一些API可以用于查询当前上下文的状态，API及不同上下文的注意事项可见[[Linux驱动开发笔记#^h05ata|当前上下文状态与注意事项]]。
 
 ## 10 内存分配
 
@@ -3028,10 +3026,20 @@ void ssleep(unsigned int seconds);
 ## 12 中断处理
 
 
-### 12.1 查询当前状态 ^h05ata
+### 12.1 当前上下文状态与注意事项 ^h05ata
 
 #### 12.1.1 查询当前是否在中断上下文中
 
+```C
+#include <asm/hardirq.h>
+in_interrupt()
+```
 
+当当前上下文为软件或硬件中断时会返回非零值。
 
+#### 12.1.2 中断上下文中的注意事项 ^fw453g
 
+在中断上下文中时需要注意：
+1. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为不在进程上下文中。
+2. 用于指向当前进程的 `current` 指针也无效。
+3. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
