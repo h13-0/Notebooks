@@ -3006,7 +3006,12 @@ void ssleep(unsigned int seconds);
 
 ### 9.4 内核定时器
 
-内核定时器
+内核定时器通常有如下的典型应用场景(实际上并不局限于此)：
+1. 对于没有提供外部中断功能的硬件设备，可以使用内核定时器定时轮询。
+2. 在完成 `fops->close` 等操作时，使用内核定时器异步完成。
+
+<span style="background:#fff88f"><font color="#c00000">内核定时器是一种软件中断</font></span>，这些dai'ma因此：
+1. 
 
 
 ## 10 内存分配
