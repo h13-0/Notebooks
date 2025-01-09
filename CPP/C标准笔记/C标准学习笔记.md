@@ -1037,14 +1037,14 @@ char *strtok(char * restrict s1,
 
 **描述**
 
-1. `strtok` 函数通常会被一系列的调用：在首次调用时其会在 `s1` 字符串中搜索 `s2` 子字符串，在后续搜索原 `s1` 字符串时，参数 `s1` 需要保持为 `NULL` 。
-2. 该函数搜索出的字符字串不包含 `s2` 子串，当有搜索结果时会返回原 `s1` 字符串内存区域内的指向下一字串的指针，当无更多子串时返回 `NULL` 。
+1. `strtok` 函数通常会被一系列的调用：在首次调用时其会在 `s1` 字符串中搜索 `s2` <span style="background:#fff88f"><font color="#c00000">中的所有字符</font></span>， `s2` <font color="#c00000">字符中的</font><span style="background:#fff88f"><font color="#c00000">任意一个字符都是单独的分隔符</font></span>。在后续搜索原 `s1` 字符串时，参数 `s1` 需要保持为 `NULL` 。
+2. 该函数搜索出的字符字串不包含 `s2` <span style="background:#fff88f"><font color="#c00000">字符串中的任意一个字符</font></span>，当有搜索结果时会返回原 `s1` 字符串内存区域内的指向下一字串的指针，当无更多子串时返回 `NULL` 。
 3. `strtok` 函数会保存指向后续字符的指针，从而实现后续 `s1` 参数为 `NULL` 的搜索。
 4. <font color="#c00000">该函数并没有考虑竞态问题</font>，<span style="background:#fff88f"><font color="#c00000">因此应当避免和其他函数同时使用</font></span>(<span style="background:#fff88f"><font color="#c00000">竞态时应当使用</font></span> `strtok_s` )。
 
 **返回值**
 
-1. `strtok` 函数返回一个指向 `s2` 子串的第一个字符的指针。如果没有 `s2` 子串，则返回一个空指针。
+1. `strtok` 函数返回 `s1` 内存区域内的被 `s2` 字符串中所有字符集合作为分隔符的第一个字串的指针。如果 `s1` 不包含 `s2` 字符串中的所有字符集合，则返回 `NULL` 。
 2. 示例：
 ```C
 #include <string.h>
@@ -1052,15 +1052,15 @@ char *strtok(char * restrict s1,
 static char str[] = "?a???b,,,#c";
 char *t;
 
+// 1. 搜索
 t = strtok(str, "?"); // t points to the token "a"
 t = strtok(NULL, ","); // t points to the token "??b"
 t = strtok(NULL, "#,"); // t points to the token "c"
 t = strtok(NULL, "?"); // t is a null pointer
 ```
 
-
 笔记注：
-1. <span style="background:#fff88f"><font color="#c00000">该函数会修改输入的s1字符串</font></span>，会将
+1. <span style="background:#fff88f"><font color="#c00000">该函数会修改输入的s1字符串</font></span>，会将 `\0` 插入到后续字符串中<span style="background:#fff88f"><font color="#c00000">第一个被分隔子串的结束位置</font></span>用于分割字串，具体可见上方示例。
 
 
 ## 附录K 边界检查接口

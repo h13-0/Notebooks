@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CPP/应试笔记与八股.md",
+                "file": "CPP/C标准笔记/C标准学习笔记.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "应试笔记与八股"
+              "title": "C标准学习笔记"
             }
           },
           {
@@ -35,8 +35,7 @@
               "title": "Linux驱动开发笔记"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -165,10 +164,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md"
+                "file": "CPP/C标准笔记/C标准学习笔记.md"
               },
               "icon": "lucide-list",
-              "title": "Outline of Linux驱动开发笔记"
+              "title": "Outline of C标准学习笔记"
             }
           },
           {
@@ -211,12 +210,12 @@
       "obsidian42-brat:BRAT": false
     }
   },
-  "active": "1989c571884548ca",
+  "active": "02b39e87be44a82d",
   "lastOpenFiles": [
-    "CPP/C标准笔记/C标准学习笔记.md",
-    "CPP/C标准笔记/C与C++标准.md",
     "CPP/应试笔记与八股.md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
+    "CPP/C标准笔记/C标准学习笔记.md",
+    "CPP/C标准笔记/C与C++标准.md",
     "Readme.md",
     "计算机网络/基础应试学习/计算机网络应试学习.md",
     "嵌入式基础/应试笔记与八股.md",
