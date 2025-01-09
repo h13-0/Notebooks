@@ -1052,16 +1052,27 @@ char *strtok(char * restrict s1,
 static char str[] = "?a???b,,,#c";
 char *t;
 
-// 1. 搜索
-t = strtok(str, "?"); // t points to the token "a"
-t = strtok(NULL, ","); // t points to the token "??b"
-t = strtok(NULL, "#,"); // t points to the token "c"
-t = strtok(NULL, "?"); // t is a null pointer
+// 1. 在 "?a???b,,,#c" 中搜索字符集合 { '?' }, 
+//    并将 '\0' 插入到第一个被分割字串的结尾。
+//    此时 str="\0a\0??b,,,#c", t 所表示的字符串为 "a"
+t = strtok(str, "?");
+
+// 2. 在 "??b,,,#c" 中搜索字符集合 { ',' }, 
+//    并将 '\0' 插入到第一个被分割字串的结尾。
+//    此时 str="\0a\0??b\0,,#c", t 所表示的字符串为 "??b"
+t = strtok(NULL, ",");
+
+// 3. 在 ",,#c" 中搜索字符集合 { '#', ',' }, 
+//    并将 '\0' 插入到第一个被分割字串的结尾。
+//    此时 str="\0a\0??b\0\0\0\0c", t 所表示的字符串为 "c"
+t = strtok(NULL, "#,");
+
+// 4. 此时 t = NULL
+t = strtok(NULL, "?");
 ```
 
 笔记注：
-1. <span style="background:#fff88f"><font color="#c00000">该函数会修改输入的s1字符串</font></span>，会将 `\0` 插入到后续字符串中<span style="background:#fff88f"><font color="#c00000">第一个被分隔子串的结束位置</font></span>用于分割字串，具体可见上方示例。
-
+1. <span style="background:#fff88f"><font color="#c00000">该函数会修改输入的s1字符串</font></span>，会将 `\0` <font color="#c00000">插入到后续字符串中</font><span style="background:#fff88f"><font color="#c00000">第一个被分隔子串的结束位置</font></span><font color="#c00000">用于分割字串</font>，具体可见上方示例。
 
 ## 附录K 边界检查接口
 
