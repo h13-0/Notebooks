@@ -3013,7 +3013,18 @@ void ssleep(unsigned int seconds);
 <span style="background:#fff88f"><font color="#c00000">内核定时器是一种软件中断</font></span>，<font color="#c00000">这些代码位于中断上下文中而非进程上下文</font>，此时的注意事项可见[[Linux驱动开发笔记#^fw453g]]：
 ![[Linux驱动开发笔记#12 1 2 中断上下文中的注意事项 fw453g]]
 
-内核提供了一些API可以用于查询当前上下文的状态，API及不同上下文的注意事项可见[[Linux驱动开发笔记#^h05ata|当前上下文状态与注意事项]]。
+此外内核还提供了一些API可以用于查询当前上下文的状态，API及不同上下文的注意事项可见[[Linux驱动开发笔记#^h05ata|当前上下文状态与注意事项]]。
+
+内核定时器的几个重要特性：
+1. 允许任务将自己注册在稍后一些的时间上重新运行，因为每个 `timer_list` 结构都会在运行之前从活动定时器链表中移走。
+2. <span style="background:#fff88f"><font color="#c00000">定时器函数总会在注册自己的CPU上重新运行</font></span>，这样可以尽可能保持缓存的局域性。
+3. 即使在单处理器上，定时器也是竞态的潜在来源。
+
+内核定时器相关API如下：
+
+```C
+
+```
 
 ## 10 内存分配
 
@@ -3031,7 +3042,7 @@ void ssleep(unsigned int seconds);
 
 ```C
 #include <asm/hardirq.h>
-in_interrupt()
+in_interrupt();
 ```
 
 当当前上下文为软件或硬件中断时会返回非零值。
@@ -3044,4 +3055,14 @@ in_interrupt()
 3. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
 
 #### 12.1.3 查询当前是否在原子上下文中
+
+```C
+#include <asm/hardirq.h>
+in_atpmic();
+```
+
+在中断上下文中时需要注意：
+1. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为可能引起调度。
+2. `current` 指针可用，但是不能访问用户空间。
+
 
