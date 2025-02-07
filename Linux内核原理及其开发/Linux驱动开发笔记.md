@@ -3088,7 +3088,9 @@ struct timer_list {
 void add_timer(struct timer_list *timer);
 void add_timer_on(struct timer_list *timer, int cpu);
 	```
-	- 在定时器对象初始化完成后即可使用 `add_timer*` 函数将定时器加入到内核中。
+	- 在定时器对象初始化完成后即可使用 `add_timer*` 函数将定时器加入到内核中，其中：
+		- `add_timer` 会将定时器加入到当前CPU中。
+		- `add_timer_on` 会将
 - 更新定时器的到期时间：
 	```C
 int mod_timer(struct timer_list *timer, unsigned long expires);
