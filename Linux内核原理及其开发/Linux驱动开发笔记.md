@@ -3017,7 +3017,7 @@ void ssleep(unsigned int seconds);
 
 内核定时器的几个重要特性：
 1. 允许任务将自己注册在稍后一些的时间上重新运行，因为每个 `timer_list` 结构都会在运行之前从活动定时器链表中移走。
-2. <span style="background:#fff88f"><font color="#c00000">定时器函数总会在注册自己的CPU上重新运行</font></span>，这样可以尽可能保持缓存的局域性。
+2. <font color="#c00000">定时器函数</font><span style="background:#fff88f"><font color="#c00000">默认</font></span><font color="#c00000">会在注册自己的CPU上重新运行</font>，这样可以尽可能保持缓存的局域性。****
 3. 即使在单处理器上，定时器也是竞态的潜在来源。
 
 #### 9.4.1 内核定时器相关API
@@ -3090,7 +3090,7 @@ void add_timer_on(struct timer_list *timer, int cpu);
 	```
 	- 在定时器对象初始化完成后即可使用 `add_timer*` 函数将定时器加入到内核中，其中：
 		- `add_timer` 会将定时器加入到当前CPU中。
-		- `add_timer_on` 会将
+		- `add_timer_on` 会将定时器加入到指定CPU中，可以减少跨CPU的中断和上下文切换开销(例如实现NUMA架构下的局部性优化)。
 - 更新定时器的到期时间：
 	```C
 int mod_timer(struct timer_list *timer, unsigned long expires);
@@ -3113,6 +3113,11 @@ int timer_pending(const struct timer_list * timer);
 #### 9.4.2 内核定时器的实现(了解)
 
 
+### 9.5 tasklet
+
+tasklet机制即小任务机制，其特性有：
+1. 始终在中断期间运行
+2. 相较于定时器，开发者不能要求tasklet在给定的时间运行
 
 
 
@@ -3140,9 +3145,9 @@ in_interrupt();
 #### 12.1.2 中断上下文中的注意事项 ^fw453g
 
 在中断上下文中时需要注意：
-2. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为不在进程上下文中。
-3. 用于指向当前进程的 `current` 指针也无效。
-4. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
+3. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为不在进程上下文中。
+4. 用于指向当前进程的 `current` 指针也无效。
+5. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
 
 #### 12.1.3 查询当前是否在原子上下文中
 
@@ -3152,7 +3157,7 @@ in_atpmic();
 ```
 
 在中断上下文中时需要注意：
-5. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为可能引起调度。
-6. `current` 指针可用，但是不能访问用户空间。
+6. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为可能引起调度。
+7. `current` 指针可用，但是不能访问用户空间。
 
 
