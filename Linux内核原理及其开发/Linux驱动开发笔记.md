@@ -3041,6 +3041,7 @@ struct timer_list {
 	- 其中，上述结构体中：
 		- `expires` 表示期望定时器执行时的 `jiffies` 值。
 		- `function` 为抵达 `jiffies` 值时被调用的函数。
+		- `function` 被调用时的参数为该定时器的指针，即内核调用时为 `timer.function(&timer)` 。
 - 静态初始化：
 	```C
 #define __TIMER_INITIALIZER(_function, _flags) {		\
@@ -3055,6 +3056,7 @@ struct timer_list {
 		__TIMER_INITIALIZER(_function, 0)
 	```
 	- 在调用时，使用 `DEFINE_TIMER` 定义定时器变量名并传入目标函数即可。
+	- 随后需要使用 `add_timer` 将该定时器加入到内核中。
 - 动态初始化：
 	```C
 /**
@@ -3073,8 +3075,10 @@ struct timer_list {
 #define timer_setup_on_stack(timer, callback, flags)		\
 	__init_timer_on_stack((timer), (callback), (flags))
 	```
-	- 
-	- 返回值为 `void`
+	- 通常的定时器使用 `DEFINE_TIMER` 和 `timer_setup` 即可。
+	- 如需使用栈上定时器则需要使用 `timer_setup_on_stack` ，且有ru'xi栈上定时器的生命周期受限于当前函数栈帧，必须在函数返回前删除并释放定时器，仅适用于短期定时操作。
+	- 上述两个函数的返回值为 `void` 。
+	- 随后需要使用 `add_timer` 将该定时器加入到内核中。
 
 ## 10 内存分配
 
