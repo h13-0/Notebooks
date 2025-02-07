@@ -3020,7 +3020,9 @@ void ssleep(unsigned int seconds);
 2. <span style="background:#fff88f"><font color="#c00000">定时器函数总会在注册自己的CPU上重新运行</font></span>，这样可以尽可能保持缓存的局域性。
 3. 即使在单处理器上，定时器也是竞态的潜在来源。
 
-内核定时器相关源码如下：
+#### 9.4.1 内核定时器相关API
+
+内核定时器相关API如下：
 - 数据结构定义：
 	```C
 struct timer_list {
@@ -3093,13 +3095,20 @@ int mod_timer(struct timer_list *timer, unsigned long expires);
 int mod_timer_pending(struct timer_list *timer, unsigned long expires);
 	```
 	- 通常用于延长定时器的到期时间。
-- 删除定时器
+- 删除定时器：
 	```C
 int del_timer(struct timer_list *timer);
 int del_timer_sync(struct timer_list *timer);
 	```
 	- 从内核中删除定时器。
 		- `del_timer_sync` 可以确保该函数在返回时没有任何CPU在运行定时器的回调函数，在SMP系统上可以用于避免竞态等。
+- 查询定时器是否在等待调度(是否在挂起状态)：
+	```C
+int timer_pending(const struct timer_list * timer);
+	```
+	- `1 if the timer is pending, 0 if not.`
+
+#### 9.4.2 内核定时器的实现(了解)
 
 
 
