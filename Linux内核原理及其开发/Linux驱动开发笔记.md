@@ -3076,9 +3076,17 @@ struct timer_list {
 	__init_timer_on_stack((timer), (callback), (flags))
 	```
 	- 通常的定时器使用 `DEFINE_TIMER` 和 `timer_setup` 即可。
-	- 如需使用栈上定时器则需要使用 `timer_setup_on_stack` ，且有ru'xi栈上定时器的生命周期受限于当前函数栈帧，必须在函数返回前删除并释放定时器，仅适用于短期定时操作。
+	- 如需使用栈上定时器则需要使用 `timer_setup_on_stack` ，且有如下的注意事项：
+		- 栈上定时器的生命周期受限于当前函数栈帧，必须在函数返回前删除并释放定时器，仅适用于短期定时操作。
+		- 释放栈上定时器的操作为 `destroy_timer_on_stack` ，在某些内核配置模式下，未调用该释放操作可能会导致内存泄漏。
 	- 上述两个函数的返回值为 `void` 。
 	- 随后需要使用 `add_timer` 将该定时器加入到内核中。
+- 添加定时器到内核的定时器模块中：
+	```C
+void add_timer(struct timer_list *timer);
+void add_timer_on(struct timer_list *timer, int cpu);
+	```
+	- 
 
 ## 10 内存分配
 
