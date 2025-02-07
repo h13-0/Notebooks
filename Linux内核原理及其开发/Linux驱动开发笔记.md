@@ -3041,7 +3041,7 @@ struct timer_list {
 	- 其中，上述结构体中：
 		- `expires` 表示期望定时器执行时的 `jiffies` 值。
 		- `function` 为抵达 `jiffies` 值时被调用的函数。
-- 初始化：
+- 静态初始化：
 	```C
 #define __TIMER_INITIALIZER(_function, _flags) {		\
 		.entry = { .next = TIMER_ENTRY_STATIC },	\
@@ -3054,7 +3054,27 @@ struct timer_list {
 	struct timer_list _name =				\
 		__TIMER_INITIALIZER(_function, 0)
 	```
-	- 在调用时，
+	- 在调用时，使用 `DEFINE_TIMER` 定义定时器变量名并传入目标函数即可。
+- 动态初始化：
+	```C
+/**
+ * timer_setup - prepare a timer for first use
+ * @timer: the timer in question
+ * @callback: the function to call when timer expires
+ * @flags: any TIMER_* flags
+ *
+ * Regular timer initialization should use either DEFINE_TIMER() above,
+ * or timer_setup(). For timers on the stack, timer_setup_on_stack() must
+ * be used and must be balanced with a call to destroy_timer_on_stack().
+ */
+#define timer_setup(timer, callback, flags)			\
+	__init_timer((timer), (callback), (flags))
+
+#define timer_setup_on_stack(timer, callback, flags)		\
+	__init_timer_on_stack((timer), (callback), (flags))
+	```
+	- 
+	- 返回值为 `void`
 
 ## 10 内存分配
 
