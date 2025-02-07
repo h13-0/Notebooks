@@ -3041,6 +3041,11 @@ struct timer_list {
 
 ```
 
+其中，上述 `timer_list` 结构体中：
+- `expires` 表示期望定时器执行时的 `jiffies` 值。
+- `function` 为抵达 `jiffies` 值时被调用的函数。
+- 
+
 ## 10 内存分配
 
 
