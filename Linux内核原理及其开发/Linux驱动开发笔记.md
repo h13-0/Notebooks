@@ -3116,8 +3116,12 @@ int timer_pending(const struct timer_list * timer);
 ### 9.5 tasklet
 
 tasklet机制即小任务机制，其特性有：
-1. 始终在中断期间运行
-2. 相较于定时器，开发者不能要求tasklet在给定的时间运行
+1. 始终在中断期间运行。
+2. 相较于定时器，开发者不能要求tasklet在给定的时间运行。
+3. tasklet可以注册自己本身。
+4. tasklet有高低优先级特性，高优先级的tasklet会被先执行。
+5. <font color="#c00000">tasklet在系统负载不重时立刻执行，且始终不会晚于下一个定时器滴答</font>。
+6. tasklet可以和别的tasklet并发执行，但<span style="background:#fff88f"><font color="#c00000">同一个tasklet自身</font></span><font color="#c00000">只能串行执行</font>(指的是自己注册自己的运行情况)，即同一个tasklet不会在多个处理器上同时运行。
 
 
 
@@ -3145,9 +3149,9 @@ in_interrupt();
 #### 12.1.2 中断上下文中的注意事项 ^fw453g
 
 在中断上下文中时需要注意：
-3. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为不在进程上下文中。
-4. 用于指向当前进程的 `current` 指针也无效。
-5. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
+7. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为不在进程上下文中。
+8. 用于指向当前进程的 `current` 指针也无效。
+9. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
 
 #### 12.1.3 查询当前是否在原子上下文中
 
@@ -3157,7 +3161,7 @@ in_atpmic();
 ```
 
 在中断上下文中时需要注意：
-6. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为可能引起调度。
-7. `current` 指针可用，但是不能访问用户空间。
+10. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为可能引起调度。
+11. `current` 指针可用，但是不能访问用户空间。
 
 
