@@ -3086,7 +3086,24 @@ struct timer_list {
 void add_timer(struct timer_list *timer);
 void add_timer_on(struct timer_list *timer, int cpu);
 	```
-	- 
+	- 在定时器对象初始化完成后即可使用 `add_timer*` 函数将定时器加入到内核中。
+- 更新定时器的到期时间：
+	```C
+int mod_timer(struct timer_list *timer, unsigned long expires);
+int mod_timer_pending(struct timer_list *timer, unsigned long expires);
+	```
+	- 通常用于延长定时器的到期时间。
+- 删除定时器
+	```C
+int del_timer(struct timer_list *timer);
+int del_timer_sync(struct timer_list *timer);
+	```
+	- 从内核中删除定时器。
+		- `del_timer_sync` 可以确保该函数在返回时没有任何CPU在运行定时器的回调函数，在SMP系统上可以用于避免竞态等。
+
+
+
+
 
 ## 10 内存分配
 
