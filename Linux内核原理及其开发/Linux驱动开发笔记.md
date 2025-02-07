@@ -3020,9 +3020,9 @@ void ssleep(unsigned int seconds);
 2. <span style="background:#fff88f"><font color="#c00000">定时器函数总会在注册自己的CPU上重新运行</font></span>，这样可以尽可能保持缓存的局域性。
 3. 即使在单处理器上，定时器也是竞态的潜在来源。
 
-内核定时器相关API如下：
-
-```C
+内核定时器相关源码如下：
+- 数据结构定义：
+	```C
 struct timer_list {
 	/*
 	 * All fields that change during normal runtime grouped to the
@@ -3037,14 +3037,24 @@ struct timer_list {
 	struct lockdep_map	lockdep_map;
 #endif
 };
+	```
+	- 其中，上述结构体中：
+		- `expires` 表示期望定时器执行时的 `jiffies` 值。
+		- `function` 为抵达 `jiffies` 值时被调用的函数。
+- 初始化：
+	```C
+#define __TIMER_INITIALIZER(_function, _flags) {		\
+		.entry = { .next = TIMER_ENTRY_STATIC },	\
+		.function = (_function),			\
+		.flags = (_flags),				\
+		__TIMER_LOCKDEP_MAP_INITIALIZER(FILE_LINE)	\
+	}
 
-
-```
-
-其中，上述 `timer_list` 结构体中：
-- `expires` 表示期望定时器执行时的 `jiffies` 值。
-- `function` 为抵达 `jiffies` 值时被调用的函数。
-- 
+#define DEFINE_TIMER(_name, _function)				\
+	struct timer_list _name =				\
+		__TIMER_INITIALIZER(_function, 0)
+	```
+	- 在调用时，
 
 ## 10 内存分配
 
@@ -3070,9 +3080,9 @@ in_interrupt();
 #### 12.1.2 中断上下文中的注意事项 ^fw453g
 
 在中断上下文中时需要注意：
-1. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为不在进程上下文中。
-2. 用于指向当前进程的 `current` 指针也无效。
-3. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
+2. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为不在进程上下文中。
+3. 用于指向当前进程的 `current` 指针也无效。
+4. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
 
 #### 12.1.3 查询当前是否在原子上下文中
 
@@ -3082,7 +3092,7 @@ in_atpmic();
 ```
 
 在中断上下文中时需要注意：
-1. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为可能引起调度。
-2. `current` 指针可用，但是不能访问用户空间。
+5. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为可能引起调度。
+6. `current` 指针可用，但是不能访问用户空间。
 
 
