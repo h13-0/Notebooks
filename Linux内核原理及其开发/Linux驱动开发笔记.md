@@ -3122,7 +3122,7 @@ tasklet机制即小任务机制，其特性有：
 4. tasklet有高低优先级特性，高优先级的tasklet会被先执行。
 5. <font color="#c00000">tasklet在系统负载不重时立刻执行，且始终不会晚于下一个定时器滴答</font>。
 6. tasklet可以和别的tasklet并发执行，但<span style="background:#fff88f"><font color="#c00000">同一个tasklet自身</font></span><font color="#c00000">只能串行执行</font>(指的是自己注册自己的运行情况)，即同一个tasklet不会在多个处理器上同时运行。
-7. tasklet，<font color="#c00000">其内部有一个禁用次数计数器和启用次数计数器</font>，<font color="#c00000">当且仅当这两个计数器相等时tasklet才会被执行</font>。
+7. tasklet<font color="#c00000">内部有一个禁用-启用次数计数器</font>，当且仅当计数器为0时会被调度。
 
 #### 9.5.1 tasklet相关API
 
@@ -3142,6 +3142,7 @@ struct tasklet_struct
 	unsigned long data;
 };
 	```
+- 
 - 禁用tasklet：
 	```C
 void tasklet_disable(struct tasklet_struct *t);
@@ -3155,6 +3156,11 @@ void tasklet_disable_nosync(struct tasklet_struct *t);
 void tasklet_enable(struct tasklet_struct *t);
 	```
 	- 启用被禁用的tasklet
+
+
+
+
+
 ## 10 内存分配
 
 
