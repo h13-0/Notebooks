@@ -3194,7 +3194,9 @@ void tasklet_enable(struct tasklet_struct *t);
 
 ### 9.6 工作队列(workqueue)
 
-workqueue和tasklet的
+workqueue和tasklet<font color="#c00000">都是</font>内核的一种<font color="#c00000">异步执行机制</font>，其区别在于：
+
+| 特性 | workqueue | 
 
 
 
