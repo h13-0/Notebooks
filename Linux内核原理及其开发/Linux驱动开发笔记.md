@@ -3127,6 +3127,21 @@ tasklet机制即小任务机制，其特性有：
 #### 9.5.1 tasklet相关API
 
 tasklet相关API如下(头文件 `linux/interrupt.h` )：
+- 数据结构定义：
+	```C
+struct tasklet_struct
+{
+	struct tasklet_struct *next;
+	unsigned long state;
+	atomic_t count;
+	bool use_callback;
+	union {
+		void (*func)(unsigned long data);
+		void (*callback)(struct tasklet_struct *t);
+	};
+	unsigned long data;
+};
+	```
 - 禁用tasklet：
 	```C
 void tasklet_disable(struct tasklet_struct *t);
