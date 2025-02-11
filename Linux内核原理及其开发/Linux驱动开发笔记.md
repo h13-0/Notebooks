@@ -3044,7 +3044,7 @@ struct timer_list {
 		- `expires` 表示期望定时器执行时的 `jiffies` 值。
 		- `function` 为抵达 `jiffies` 值时被调用的函数。
 		- `function` 被调用时的参数为该定时器的指针，即内核调用时为 `timer.function(&timer)` 。
-- 静态初始化：
+- 静态初始化(头文件 `timer.h` )：
 	```C
 #define __TIMER_INITIALIZER(_function, _flags) {		\
 		.entry = { .next = TIMER_ENTRY_STATIC },	\
@@ -3059,7 +3059,7 @@ struct timer_list {
 	```
 	- 在调用时，使用 `DEFINE_TIMER` 定义定时器变量名并传入目标函数即可。
 	- 随后需要使用 `add_timer` 将该定时器加入到内核中。
-- 动态初始化：
+- 动态初始化(头文件 `timer.h` )：
 	```C
 /**
  * timer_setup - prepare a timer for first use
@@ -3122,6 +3122,10 @@ tasklet机制即小任务机制，其特性有：
 4. tasklet有高低优先级特性，高优先级的tasklet会被先执行。
 5. <font color="#c00000">tasklet在系统负载不重时立刻执行，且始终不会晚于下一个定时器滴答</font>。
 6. tasklet可以和别的tasklet并发执行，但<span style="background:#fff88f"><font color="#c00000">同一个tasklet自身</font></span><font color="#c00000">只能串行执行</font>(指的是自己注册自己的运行情况)，即同一个tasklet不会在多个处理器上同时运行。
+
+#### 9.5.1 tasklet相关API
+
+
 
 
 
