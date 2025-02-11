@@ -3194,10 +3194,23 @@ void tasklet_enable(struct tasklet_struct *t);
 
 ### 9.6 工作队列(workqueue)
 
-workqueue和tasklet<font color="#c00000">都是</font>内核的一种<font color="#c00000">异步执行机制</font>，其区别在于：
+workqueue和tasklet<font color="#c00000">都是</font>内核的一种<font color="#c00000">异步执行机制</font>，其区别如下表所示。
 
-| 特性 | workqueue | 
+| <center>特性</center> | <center>workqueue</center>                                                | <center>tasklet</center> |
+| ------------------- | ------------------------------------------------------------------------- | ------------------------ |
+| 运行环境                | "内核线程"的上下文                                                                | 中断上下文                    |
+| 环境限制                | 无，<font color="#c00000">允许休眠</font>，可以不原子化，<br>但由于其在"内核线程"的上下文中，不可访问用户空间。 | 要遵守中断限制，如禁止休眠等。          |
+| 抢占                  | 执行时可以抢占，可以长时间占用                                                           | 不可抢占，尽快退出                |
+| 并发性                 | 使用多线程workqueue时可以在多个CPU上并行执行                                              | 同一个tasklet不会在多个CPU上同时执行  |
+| 延迟                  | 延迟高                                                                       | 延迟很低，实时性高                |
+| 延迟控制                | 可以做到指定时间的延迟                                                               | 不可指定延迟                   |
 
+如上表所示，workqueue是在"内核线程"中执行的，具体来说其可在如下三种工作队列中执行：
+1. 每个workqueue在每个CPU上创建的
+
+#### 9.6.1 独有工作队列
+
+workqueue在执行时
 
 
 
@@ -3225,9 +3238,9 @@ in_interrupt();
 #### 12.1.2 中断上下文中的注意事项 ^fw453g
 
 在中断上下文中时需要注意：
-4. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为不在进程上下文中。
-5. 用于指向当前进程的 `current` 指针也无效。
-6. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
+2. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为不在进程上下文中。
+3. 用于指向当前进程的 `current` 指针也无效。
+4. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
 
 #### 12.1.3 查询当前是否在原子上下文中
 
@@ -3237,7 +3250,7 @@ in_atpmic();
 ```
 
 在原子上下文中时需要注意：
-7. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为可能引起调度。
-8. `current` 指针可用，但是不能访问用户空间。
+5. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为可能引起调度。
+6. `current` 指针可用，但是不能访问用户空间。
 
 
