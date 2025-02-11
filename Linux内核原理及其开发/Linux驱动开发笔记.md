@@ -3124,6 +3124,11 @@ tasklet机制即小任务机制，其特性有：
 6. tasklet可以和别的tasklet并发执行，但<span style="background:#fff88f"><font color="#c00000">同一个tasklet自身</font></span><font color="#c00000">只能串行执行</font>(指的是自己注册自己的运行情况)，即同一个tasklet不会在多个处理器上同时运行。
 7. tasklet<font color="#c00000">内部有一个禁用-启用次数计数器</font>，当且仅当计数器为0时会被调度。
 
+tasklet其<font color="#c00000">最根本的功能是可以将部分或后续操作异步的进行处理</font>，其常用使用流程：
+1. 定义 `tasklet_struct` 的变量。
+2. 初始化tasklet，并填入回调函数，参数等。
+3. 使用
+
 #### 9.5.1 tasklet相关API
 
 tasklet相关API如下(头文件 `linux/interrupt.h` )：
@@ -3147,7 +3152,11 @@ struct tasklet_struct
 void tasklet_init(struct tasklet_struct *t,
 	void (*func)(unsigned long), unsigned long data);
 	```
-	- 
+	- 本函数的功能是将回调函数、参数填入tasklet对象。
+- 手动调度tasklet(异步，调用后li'ji)：
+	```C
+void tasklet_schedule(struct tasklet_struct *t);
+	```
 - 禁用tasklet：
 	```C
 void tasklet_disable(struct tasklet_struct *t);
@@ -3193,9 +3202,9 @@ in_interrupt();
 #### 12.1.2 中断上下文中的注意事项 ^fw453g
 
 在中断上下文中时需要注意：
-1. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为不在进程上下文中。
-2. 用于指向当前进程的 `current` 指针也无效。
-3. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
+4. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为不在进程上下文中。
+5. 用于指向当前进程的 `current` 指针也无效。
+6. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
 
 #### 12.1.3 查询当前是否在原子上下文中
 
@@ -3205,7 +3214,7 @@ in_atpmic();
 ```
 
 在原子上下文中时需要注意：
-1. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为可能引起调度。
-2. `current` 指针可用，但是不能访问用户空间。
+7. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为可能引起调度。
+8. `current` 指针可用，但是不能访问用户空间。
 
 
