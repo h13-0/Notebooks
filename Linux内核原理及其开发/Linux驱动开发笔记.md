@@ -3127,7 +3127,28 @@ tasklet机制即小任务机制，其特性有：
 tasklet其<font color="#c00000">最根本的功能是可以将部分或后续操作异步的进行处理</font>，其常用使用流程：
 1. 定义 `tasklet_struct` 的变量。
 2. 初始化tasklet，并填入回调函数，参数等。
-3. 使用
+3. 使用 `tasklet_schedule` 将回调函数中的操作放入异步处理。
+
+经典例子：
+
+```C
+void my_tasklet_handler(unsigned long data) {
+    // 在中断外完成中断处理的后半部分...
+}
+
+// 某中断处理函数
+static irqreturn_t my_interrupt_handler(int irq, void *dev_id) {
+    // 快速读取设备状态寄存器(关键操作)
+    device_status = readl(DEVICE_STATUS_REG);
+    printk(KERN_INFO "Interrupt handled on CPU %d: Device status = 0x%x\n",
+           smp_processor_id(), device_status);
+
+    // 调度 tasklet 处理非关键操作...
+    tasklet_schedule(&my_tasklet);
+
+    return IRQ_HANDLED;
+}
+```
 
 #### 9.5.1 tasklet相关API
 
@@ -3153,7 +3174,7 @@ void tasklet_init(struct tasklet_struct *t,
 	void (*func)(unsigned long), unsigned long data);
 	```
 	- 本函数的功能是将回调函数、参数填入tasklet对象。
-- 手动调度tasklet(异步，调用后li'ji)：
+- 手动调度tasklet(异步，<font color="#c00000">调用后会立即返回</font>)：
 	```C
 void tasklet_schedule(struct tasklet_struct *t);
 	```
