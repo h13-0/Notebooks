@@ -3113,7 +3113,7 @@ int timer_pending(const struct timer_list * timer);
 #### 9.4.2 内核定时器的实现(了解)
 
 
-### 9.5 tasklet
+### 9.5 tasklet(即将被移除)
 
 tasklet机制即小任务机制，其特性有：
 1. 始终在中断期间运行。
