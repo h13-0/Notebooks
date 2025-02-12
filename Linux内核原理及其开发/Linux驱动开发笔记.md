@@ -3249,10 +3249,28 @@ bool queue_delayed_work(struct workqueue_struct *wq,
 	struct delayed_work *dwork,
 	unsigned long delay);
 	```
-	- 注意：
+	- 其中：
 		- <span style="background:#fff88f"><font color="#c00000">返回值</font></span>：
 			- 当任务成功加入队列时返回 `true`
-			- 
+			- 如果工作项已经在队列中(即重复提交时)返回 `false`
+		- 内存顺序保证：
+			- 如果 `queue_work` 返回 `true`，则在 `queue_work` 调用之前的所有内存写操作( `stores` )对执行 `work` 的CPU是可见的。
+			- 即在 `work` 执行时，可以安全地访问在 `queue_work` 之前写入的数据。
+- 取消任务：
+	```C
+bool cancel_delayed_work(struct delayed_work *dwork);
+	```
+	- 其中：
+		- 返回值：
+			- 若任务在开始前被取消则返回 `true`
+		- 该函数可以确认任务是否开始。若需要确认任务是否完成，可以用下方的API。
+- 
+
+- 释放资源：
+	```C
+
+	```
+	- 其中
 
 ## 10 内存分配
 
