@@ -3214,7 +3214,9 @@ workqueue和tasklet<font color="#c00000">都是</font>内核的一种<font color
 
 workqueue在创建时，可以选择：
 1. 为该workqueue在每个CPU上都创建一个专属的"内核线程"
-2. 只为该workqueue创建一个"内核线程"，<font color="#c00000">在默认情况下该队列会被绑定到一个具体的CPU上</font>，<font color="#c00000">具体是哪个CPU取决于调度器</font>，但是通常是创建时使用的CPU。即使多次调度该任务，也会始终在同一个CPU上运行。
+2. 只为该workqueue创建一个"内核线程"，<font color="#c00000">在默认情况下该队列会被绑定到一个具体的CPU上</font>，<font color="#c00000">具体是哪个CPU取决于调度器</font>，但是通常是<font color="#c00000">提交时</font>( `queue_work` )使用的CPU。需要注意：
+	1. 若原先的CPU被弹出或不可用，则会被转移到其他CPU上运行。
+	2. 此外，若多次调度该任务，也会始终在同一个CPU上运行。
 独有工作队列的相关API有：
 - 定义工作队列对象
 ```C
@@ -3237,9 +3239,20 @@ struct workqueue_struct *create_workqueue(const char *name);
 struct workqueue_struct *create_singlethread_workqueue(const char *name);
 ```
 - 提交工作到工作队列
-```C
+	```C
+// 
+bool queue_work(struct workqueue_struct *wq,
+	struct work_struct *work);
 
-```
+// 提交并指定延迟，延迟单位为jiffies
+bool queue_delayed_work(struct workqueue_struct *wq,
+	struct delayed_work *dwork,
+	unsigned long delay);
+	```
+	- 注意：
+		- <span style="background:#fff88f"><font color="#c00000">返回值</font></span>：
+			- 当任务成功加入队列时返回 `true`
+			- 
 
 ## 10 内存分配
 
