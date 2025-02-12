@@ -3264,7 +3264,7 @@ bool cancel_delayed_work(struct delayed_work *dwork);
 		- 返回值：
 			- 若任务在开始前被取消则返回 `true`
 		- 该函数可以确认任务是否开始。若需要确认任务是否完成，可以用下方的API。
-- 
+- 等待整个工作队列执行完毕(阻塞)：
 ```C
 flush_workqueue(wq);
 ```
@@ -3299,9 +3299,9 @@ in_interrupt();
 #### 12.1.2 中断上下文中的注意事项 ^fw453g
 
 在中断上下文中时需要注意：
-3. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为不在进程上下文中。
-4. 用于指向当前进程的 `current` 指针也无效。
-5. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
+1. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为不在进程上下文中。
+2. 用于指向当前进程的 `current` 指针也无效。
+3. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
 
 #### 12.1.3 查询当前是否在原子上下文中
 
@@ -3311,7 +3311,7 @@ in_atpmic();
 ```
 
 在原子上下文中时需要注意：
-6. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为可能引起调度。
-7. `current` 指针可用，但是不能访问用户空间。
+1. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为可能引起调度。
+2. `current` 指针可用，但是不能访问用户空间。
 
 
