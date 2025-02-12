@@ -3321,8 +3321,8 @@ void *kmalloc(size_t size, gfp_t gfp);
 
 其中分配标志 `gfp` <font color="#c00000">主要分为"分配优先级"和"分配选项"两类</font>，<span style="background:#fff88f"><font color="#c00000">这两类之间可以使用或运算结合配置</font></span>。
 分配优先级有：
-- `GFP_ATOMIC` ：原子地分配内存，不会引起休眠，通常在中断中使用。
-- `GFP_KERNEL` ：
+- `GFP_ATOMIC` ：原子地分配内存，<font color="#c00000">不会引起休眠</font>，通常在中断中使用。
+- `GFP_KERNEL` ：在内核空间中
 - `GFP_USER`
 - `GFP_HIGHUSER`
 - `GFP_NOIO`
