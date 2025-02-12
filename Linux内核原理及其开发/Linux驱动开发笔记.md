@@ -3265,12 +3265,15 @@ bool cancel_delayed_work(struct delayed_work *dwork);
 			- 若任务在开始前被取消则返回 `true`
 		- 该函数可以确认任务是否开始。若需要确认任务是否完成，可以用下方的API。
 - 
-
+```C
+flush_workqueue(wq);
+```
 - 释放资源：
 	```C
 
 	```
-	- 其中
+	- 其中：
+		- 
 
 ## 10 内存分配
 
