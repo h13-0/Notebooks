@@ -3220,7 +3220,9 @@ workqueue在创建时，可以选择：
 ```C
 #include <linux/workqueue.h>
 
-// 
+// create_workqueue已经被宏定义到alloc_workqueue，下方为宏替换后的函数原型，并非实际定义
+struct workqueue_struct *create_workqueue(const char *name);
+struct workqueue_struct *
 ```
 
 
