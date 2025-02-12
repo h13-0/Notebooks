@@ -3216,15 +3216,30 @@ workqueue在创建时，可以选择：
 1. 为该workqueue在每个CPU上都创建一个专属的"内核线程"
 2. 只为该workqueue创建一个"内核线程"，<font color="#c00000">在默认情况下该队列会被绑定到一个具体的CPU上</font>，<font color="#c00000">具体是哪个CPU取决于调度器</font>，但是通常是创建时使用的CPU。即使多次调度该任务，也会始终在同一个CPU上运行。
 独有工作队列的相关API有：
+- 定义工作队列对象
+```C
+// 静态定义
+#define DECLARE_WORK(name, void (*function)(void*))
 
+// 动态定义
+#define INIT_WORK(_work, _func)
+
+```
+- 创建工作队列
 ```C
 #include <linux/workqueue.h>
 
-// create_workqueue已经被宏定义到alloc_workqueue，下方为宏替换后的函数原型，并非实际定义
-struct workqueue_struct *create_workqueue(const char *name);
-struct workqueue_struct *
-```
+// 下方两个函数已被宏定义到alloc_workqueue。下方为宏替换后的函数原型，并非实际定义
 
+// 为该队列在每个CPU上都创建一个专属的内核线程
+struct workqueue_struct *create_workqueue(const char *name);
+// 仅创建一个内核线程
+struct workqueue_struct *create_singlethread_workqueue(const char *name);
+```
+- 提交工作到工作队列
+```C
+
+```
 
 ## 10 内存分配
 
