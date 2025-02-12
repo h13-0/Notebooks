@@ -3278,26 +3278,48 @@ void destroy_workqueue(struct workqueue_struct *wq);
 
 #### 9.6.2 共享队列
 
+并不是所有的内核模块都有独立管理一个等待队列的必要，因此内核提供了如下几种共享队列：
+- `system_wq` ：普通优先级的工作队列(默认)。
+- `system_highpri_wq` ：高优先级的工作队列。
+- `system_long_wq` ：适用于执行时间较长的任务。
 
+而对于共享队列来说，其有如下的特性：
+1. 无需使用 `create_workqueue` 或 `destroy_workqueue` 管理队列。
+2. 相较于独有工作队列，其资源消耗更小。
+3. 由于要和其他内核代码共享队列，因此：
+	1. 不能长期占用队列，例如长期休眠等。
 
+其拥有如下的API：
+- 提交工作：
+```C
+// 提交工作，返回值意义同上一章节
+bool schedule_work(struct work_struct *work);
 
+// 提交工作并指定运行的CPU
+bool schedule_work_on(int cpu, struct work_struct *work);
 
+// 提交工作并指定延迟，延迟单位为jiffies
+bool schedule_delayed_work(struct delayed_work *dwork,
+	unsigned long delay);
 
-
-
-
-
-
-
-
-
+// 提交工作并指定延迟和所运行的CPU
+bool schedule_delayed_work_on(int cpu, struct delayed_work *dwork,
+	unsigned long delay)
+```
+- 等待工作完成的接口与上一章节相同。
 
 ## 10 内存分配
 
 ### 10.1 kmalloc相关
 
+函数原型：
 
+```C
+#include <linux/slab.h>
+void *kmalloc(size_t size, gfp_t gfp);
+```
 
+其中：
 
 
 ## 11 与硬件通信
@@ -3320,9 +3342,9 @@ in_interrupt();
 #### 12.1.2 中断上下文中的注意事项 ^fw453g
 
 在中断上下文中时需要注意：
-1. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为不在进程上下文中。
-2. 用于指向当前进程的 `current` 指针也无效。
-3. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
+5. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为不在进程上下文中。
+6. 用于指向当前进程的 `current` 指针也无效。
+7. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
 
 #### 12.1.3 查询当前是否在原子上下文中
 
@@ -3332,7 +3354,7 @@ in_atpmic();
 ```
 
 在原子上下文中时需要注意：
-1. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为可能引起调度。
-2. `current` 指针可用，但是不能访问用户空间。
+8. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为可能引起调度。
+9. `current` 指针可用，但是不能访问用户空间。
 
 
