@@ -3270,11 +3270,33 @@ flush_workqueue(wq);
 ```
 - 释放资源：
 	```C
-
+void destroy_workqueue(struct workqueue_struct *wq);
 	```
-	- 其中在该接口调用前必须保证队列中所有任务完成，例如使用 `flush_workqueue` 
+	- 其中在该接口调用前必须保证队列中所有任务完成，例如：
+		- 使用 `flush_workqueue` 阻塞并等待队列中所有任务完成。
+		- 使用 `flush_work` 阻塞并等待某一个任务完成。
+
+#### 9.6.2 共享队列
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## 10 内存分配
+
+### 10.1 kmalloc相关
+
+
 
 
 
