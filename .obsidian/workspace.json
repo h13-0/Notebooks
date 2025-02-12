@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
+                "file": "嵌入式基础/应试笔记与八股.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "内核基本数据结构(types.h部分)"
+              "title": "应试笔记与八股"
             }
           }
         ]
@@ -53,10 +53,10 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "参数",
+                "query": "arm",
                 "matchingCase": false,
                 "explainSearch": false,
-                "collapseAll": false,
+                "collapseAll": true,
                 "extraContext": false,
                 "sortOrder": "alphabetical"
               },
@@ -84,8 +84,7 @@
               "title": "Bookmarks"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -198,16 +197,20 @@
       "obsidian42-brat:BRAT": false
     }
   },
-  "active": "d7694db761056d1c",
+  "active": "7ddc64b2e3c9b5c8",
   "lastOpenFiles": [
+    "ARM架构基础",
+    "CPP/应试笔记与八股.md",
+    "计算机网络/应试笔记与八股.md",
+    "Linux内核原理及其开发/应试笔记与八股.md",
+    "机器学习/应试笔记与八股.md",
+    "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
     "面相对象的程序设计/面相对象的程序设计.md",
     "嵌入式基础/应试笔记与八股.md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "Linux内核原理及其开发/Linux设备树/devicetree-specification.md",
     "Linux内核原理及其开发/Linux设备树/Device Tree Reference学习笔记.md",
-    "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
     "CPP/C标准笔记/C标准学习笔记.md",
-    "CPP/应试笔记与八股.md",
     "CPP/C标准笔记/C与C++标准.md",
     "Readme.md",
     "计算机网络/基础应试学习/计算机网络应试学习.md",
@@ -228,10 +231,6 @@
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题/引用计数器refcount_t(refcount.h).md",
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题/错误码(errno.h).md",
     "Linux内核原理及其开发/MISC/pr_fmt应用及原理解析.md",
-    "Linux内核原理及其开发/应试笔记与八股.md",
-    "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统/基础IO打开关闭(open.c).md",
-    "Linux内核原理及其开发/内核原理专题/系统调用专题/Linux系统调用基础.md",
-    "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统/基础IO读写(read_write.c).md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统",
     "Resources/Pasted image 20240203021517.png",
     "Linux内核原理及其开发/Resources/Pasted image 20241124170145.png",
