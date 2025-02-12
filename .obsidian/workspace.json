@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "嵌入式基础/应试笔记与八股.md",
+                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "应试笔记与八股"
+              "title": "Linux驱动开发笔记"
             }
           }
         ]
@@ -197,8 +197,9 @@
       "obsidian42-brat:BRAT": false
     }
   },
-  "active": "7ddc64b2e3c9b5c8",
+  "active": "1989c571884548ca",
   "lastOpenFiles": [
+    "嵌入式基础/应试笔记与八股.md",
     "ARM架构基础",
     "CPP/应试笔记与八股.md",
     "计算机网络/应试笔记与八股.md",
@@ -206,7 +207,6 @@
     "机器学习/应试笔记与八股.md",
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
     "面相对象的程序设计/面相对象的程序设计.md",
-    "嵌入式基础/应试笔记与八股.md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "Linux内核原理及其开发/Linux设备树/devicetree-specification.md",
     "Linux内核原理及其开发/Linux设备树/Device Tree Reference学习笔记.md",
@@ -242,7 +242,6 @@
     "操作系统/Resources/0261.png",
     "操作系统/Resources/git_ignored/UNIX环境高级编程（中文第三版） (W. Richard Stevens etc.) (Z-Library)/0261.png",
     "操作系统/Resources/git_ignored/UNIX环境高级编程（中文第三版） (W. Richard Stevens etc.) (Z-Library)",
-    "操作系统/用户态开发/信号",
     "Resources/8619b62ac43800a3e18be2330e906e05.png",
     "操作系统/Resources/chrome_zST8iNWLGQ.png",
     "嵌入式基础/接口技术/未命名.canvas",
