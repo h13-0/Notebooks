@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
+                "file": "CPP/C标准笔记/C标准学习笔记.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Linux驱动开发笔记"
+              "title": "C标准学习笔记"
             }
           }
         ]
@@ -198,11 +198,11 @@
   },
   "active": "07165391f82df774",
   "lastOpenFiles": [
-    "面相对象的程序设计/面相对象的程序设计.md",
     "CPP/C2CPP/C2CPP.md",
+    "Linux内核原理及其开发/Linux驱动开发笔记.md",
+    "面相对象的程序设计/面相对象的程序设计.md",
     "CPP/C标准笔记/C与C++标准.md",
     "嵌入式基础/接口技术/串口/串口总线标准.md",
-    "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "嵌入式基础/应试笔记与八股.md",
     "CPP/C标准笔记/C标准学习笔记.md",
     "CPP/应试笔记与八股.md",
