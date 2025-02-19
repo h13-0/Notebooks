@@ -3017,18 +3017,317 @@ void ssleep(unsigned int seconds);
 
 内核定时器的几个重要特性：
 1. 允许任务将自己注册在稍后一些的时间上重新运行，因为每个 `timer_list` 结构都会在运行之前从活动定时器链表中移走。
-2. <span style="background:#fff88f"><font color="#c00000">定时器函数总会在注册自己的CPU上重新运行</font></span>，这样可以尽可能保持缓存的局域性。
+2. <font color="#c00000">定时器函数</font><span style="background:#fff88f"><font color="#c00000">默认</font></span><font color="#c00000">会在注册自己的CPU上重新运行</font>，这样可以尽可能保持缓存的局域性。****
 3. 即使在单处理器上，定时器也是竞态的潜在来源。
 
+#### 9.4.1 内核定时器相关API
+
 内核定时器相关API如下：
+- 数据结构定义：
+	```C
+struct timer_list {
+	/*
+	 * All fields that change during normal runtime grouped to the
+	 * same cacheline
+	 */
+	struct hlist_node	entry;
+	unsigned long		expires;
+	void			(*function)(struct timer_list *);
+	u32			flags;
+
+#ifdef CONFIG_LOCKDEP
+	struct lockdep_map	lockdep_map;
+#endif
+};
+	```
+	- 其中，上述结构体中：
+		- `expires` 表示期望定时器执行时的 `jiffies` 值。
+		- `function` 为抵达 `jiffies` 值时被调用的函数。
+		- `function` 被调用时的参数为该定时器的指针，即内核调用时为 `timer.function(&timer)` 。
+- 静态初始化(头文件 `timer.h` )：
+	```C
+#define __TIMER_INITIALIZER(_function, _flags) {		\
+		.entry = { .next = TIMER_ENTRY_STATIC },	\
+		.function = (_function),			\
+		.flags = (_flags),				\
+		__TIMER_LOCKDEP_MAP_INITIALIZER(FILE_LINE)	\
+	}
+
+#define DEFINE_TIMER(_name, _function)				\
+	struct timer_list _name =				\
+		__TIMER_INITIALIZER(_function, 0)
+	```
+	- 在调用时，使用 `DEFINE_TIMER` 定义定时器变量名并传入目标函数即可。
+	- 随后需要使用 `add_timer` 将该定时器加入到内核中。
+- 动态初始化(头文件 `timer.h` )：
+	```C
+/**
+ * timer_setup - prepare a timer for first use
+ * @timer: the timer in question
+ * @callback: the function to call when timer expires
+ * @flags: any TIMER_* flags
+ *
+ * Regular timer initialization should use either DEFINE_TIMER() above,
+ * or timer_setup(). For timers on the stack, timer_setup_on_stack() must
+ * be used and must be balanced with a call to destroy_timer_on_stack().
+ */
+#define timer_setup(timer, callback, flags)			\
+	__init_timer((timer), (callback), (flags))
+
+#define timer_setup_on_stack(timer, callback, flags)		\
+	__init_timer_on_stack((timer), (callback), (flags))
+	```
+	- 通常的定时器使用 `DEFINE_TIMER` 和 `timer_setup` 即可。
+	- 如需使用栈上定时器则需要使用 `timer_setup_on_stack` ，且有如下的注意事项：
+		- 栈上定时器的生命周期受限于当前函数栈帧，必须在函数返回前删除并释放定时器，仅适用于短期定时操作。
+		- 释放栈上定时器的操作为 `destroy_timer_on_stack` ，在某些内核配置模式下，未调用该释放操作可能会导致内存泄漏。
+	- 上述两个函数的返回值为 `void` 。
+	- 随后需要使用 `add_timer` 将该定时器加入到内核中。
+- 添加定时器到内核的定时器模块中：
+	```C
+void add_timer(struct timer_list *timer);
+void add_timer_on(struct timer_list *timer, int cpu);
+	```
+	- 在定时器对象初始化完成后即可使用 `add_timer*` 函数将定时器加入到内核中，其中：
+		- `add_timer` 会将定时器加入到当前CPU中。
+		- `add_timer_on` 会将定时器加入到指定CPU中，可以减少跨CPU的中断和上下文切换开销(例如实现NUMA架构下的局部性优化)。
+- 更新定时器的到期时间：
+	```C
+int mod_timer(struct timer_list *timer, unsigned long expires);
+int mod_timer_pending(struct timer_list *timer, unsigned long expires);
+	```
+	- 通常用于延长定时器的到期时间。
+- 删除定时器：
+	```C
+int del_timer(struct timer_list *timer);
+int del_timer_sync(struct timer_list *timer);
+	```
+	- 从内核中删除定时器。
+		- `del_timer_sync` 可以确保该函数在返回时没有任何CPU在运行定时器的回调函数，在SMP系统上可以用于避免竞态等。
+- 查询定时器是否在等待调度(是否在挂起状态)：
+	```C
+int timer_pending(const struct timer_list * timer);
+	```
+	- `1 if the timer is pending, 0 if not.`
+
+#### 9.4.2 内核定时器的实现(了解)
+
+
+### 9.5 tasklet(即将被移除)
+
+tasklet机制即小任务机制，其特性有：
+1. <span style="background:#fff88f"><font color="#c00000">始终在中断期间运行</font></span>，具体注意事项应见[[Linux驱动开发笔记#12 1 2 中断上下文中的注意事项 fw453g|中断上下文中的注意事项]]。
+2. 相较于定时器，开发者不能要求tasklet在给定的时间运行。
+3. tasklet可以注册自己本身。
+4. tasklet有高低优先级特性，高优先级的tasklet会被先执行。
+5. <font color="#c00000">tasklet在系统负载不重时立刻执行，且始终不会晚于下一个定时器滴答</font>。
+6. tasklet可以和别的tasklet并发执行，但<span style="background:#fff88f"><font color="#c00000">同一个tasklet自身</font></span><font color="#c00000">只能串行执行</font>(指的是自己注册自己的运行情况)，即同一个tasklet不会在多个处理器上同时运行。
+7. tasklet<font color="#c00000">内部有一个禁用-启用次数计数器</font>，当且仅当计数器为0时会被调度。
+
+tasklet其<font color="#c00000">最根本的功能是可以将部分或后续操作异步的进行处理</font>，其常用使用流程：
+1. 定义 `tasklet_struct` 的变量。
+2. 初始化tasklet，并填入回调函数，参数等。
+3. 使用 `tasklet_schedule` 将回调函数中的操作放入异步处理。
+
+经典例子：
 
 ```C
+void my_tasklet_handler(unsigned long data) {
+    // 在中断外完成中断处理的后半部分...
+}
+
+// 某中断处理函数
+static irqreturn_t my_interrupt_handler(int irq, void *dev_id) {
+    // 快速读取设备状态寄存器(关键操作)
+    device_status = readl(DEVICE_STATUS_REG);
+    printk(KERN_INFO "Interrupt handled on CPU %d: Device status = 0x%x\n",
+           smp_processor_id(), device_status);
+
+    // 调度 tasklet 处理非关键操作...
+    tasklet_schedule(&my_tasklet);
+
+    return IRQ_HANDLED;
+}
+```
+
+#### 9.5.1 tasklet相关API
+
+tasklet相关API如下(头文件 `linux/interrupt.h` )：
+- 数据结构定义：
+	```C
+struct tasklet_struct
+{
+	struct tasklet_struct *next;
+	unsigned long state;
+	atomic_t count;
+	bool use_callback;
+	union {
+		void (*func)(unsigned long data);
+		void (*callback)(struct tasklet_struct *t);
+	};
+	unsigned long data;
+};
+	```
+- 初始化tasklet：
+	```C
+void tasklet_init(struct tasklet_struct *t,
+	void (*func)(unsigned long), unsigned long data);
+	```
+	- 本函数的功能是将回调函数、参数填入tasklet对象。
+- 手动调度tasklet(异步，<font color="#c00000">调用后会立即返回</font>)：
+	```C
+void tasklet_schedule(struct tasklet_struct *t);
+	```
+- 禁用tasklet：
+	```C
+void tasklet_disable(struct tasklet_struct *t);
+void tasklet_disable_nosync(struct tasklet_struct *t);
+	```
+	- 禁用该tasklet，并在再次启用前该tasklet不会被调度。其中：
+		- `tasklet_disable` 在该tasklet被执行时调用会忙等直到tasklet退出。
+		- `tasklet_disable_nosync` 在该tasklet被执行时调用操作无效，并且不会忙等。
+- 启用tasklet：
+	```C
+void tasklet_enable(struct tasklet_struct *t);
+	```
+	- 启用被禁用的tasklet
+
+### 9.6 工作队列(workqueue)
+
+workqueue和tasklet<font color="#c00000">都是</font>内核的一种<font color="#c00000">异步执行机制</font>，其区别如下表所示。
+
+| <center>特性</center> | <center>workqueue</center>                                                                              | <center>tasklet</center>           |
+| ------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| 运行环境                | "内核线程"的上下文                                                                                              | 中断上下文                              |
+| 环境限制                | 无，<font color="#c00000">允许休眠</font>，可以不原子化。<br>但由于其在"内核线程"的上下文中，故<font color="#c00000">不可访问用户空间</font>。 | 要遵守中断限制，如禁止休眠等。                    |
+| 多次执行                | 可以多次执行，每次执行之前调用 `schedule_work()`                                                                       | 可以多次执行，每次执行之前调用 `tasklet_schedule` |
+| 抢占                  | 执行时可以抢占，可以长时间占用                                                                                         | 不可抢占，尽快退出                          |
+| 并发性                 | 使用多线程workqueue时可以在多个CPU上并行执行                                                                            | 同一个tasklet不会在多个CPU上同时执行            |
+| 延迟                  | 延迟高                                                                                                     | 延迟很低，实时性高                          |
+| 延迟控制                | 可以做到指定时间的延迟                                                                                             | 不可指定延迟                             |
+
+如上表所示，workqueue是在"内核线程"中执行的，具体来说其可在如下两种工作队列中执行：
+1. 每个workqueue<span style="background:#fff88f"><font color="#c00000">专用的</font></span><font color="#c00000">一个或多个</font>"内核线程"中
+2. 整个内核共享的workqueue的"内核线程"中
+
+#### 9.6.1 独有工作队列
+
+workqueue在创建时，可以选择：
+1. 为该workqueue在每个CPU上都创建一个专属的"内核线程"
+2. 只为该workqueue创建一个"内核线程"，<font color="#c00000">在默认情况下该队列会被绑定到一个具体的CPU上</font>，<font color="#c00000">具体是哪个CPU取决于调度器</font>，但是通常是<font color="#c00000">提交时</font>( `queue_work` )使用的CPU。需要注意：
+	1. 若原先的CPU被弹出或不可用，则会被转移到其他CPU上运行。
+	2. 此外，若多次调度该任务，也会始终在同一个CPU上运行。
+独有工作队列的相关API有：
+- 定义工作队列对象
+```C
+// 静态定义
+#define DECLARE_WORK(name, void (*function)(void*))
+
+// 动态定义
+#define INIT_WORK(_work, _func)
 
 ```
+- 创建工作队列
+```C
+#include <linux/workqueue.h>
+
+// 下方两个函数已被宏定义到alloc_workqueue。下方为宏替换后的函数原型，并非实际定义
+
+// 为该队列在每个CPU上都创建一个专属的内核线程
+struct workqueue_struct *create_workqueue(const char *name);
+// 仅创建一个内核线程
+struct workqueue_struct *create_singlethread_workqueue(const char *name);
+```
+- 提交工作到工作队列
+	```C
+// 
+bool queue_work(struct workqueue_struct *wq,
+	struct work_struct *work);
+
+// 提交并指定延迟，延迟单位为jiffies
+bool queue_delayed_work(struct workqueue_struct *wq,
+	struct delayed_work *dwork,
+	unsigned long delay);
+	```
+	- 其中：
+		- <span style="background:#fff88f"><font color="#c00000">返回值</font></span>：
+			- 当任务成功加入队列时返回 `true`
+			- 如果工作项已经在队列中(即重复提交时)返回 `false`
+		- 内存顺序保证：
+			- 如果 `queue_work` 返回 `true`，则在 `queue_work` 调用之前的所有内存写操作( `stores` )对执行 `work` 的CPU是可见的。
+			- 即在 `work` 执行时，可以安全地访问在 `queue_work` 之前写入的数据。
+- 取消任务：
+	```C
+bool cancel_delayed_work(struct delayed_work *dwork);
+	```
+	- 其中：
+		- 返回值：
+			- 若任务在开始前被取消则返回 `true`
+		- 该函数可以确认任务是否开始。若需要确认任务是否完成，可以用下方的API。
+- 等待整个工作队列执行完毕(阻塞)：
+```C
+flush_workqueue(wq);
+```
+- 释放资源：
+	```C
+void destroy_workqueue(struct workqueue_struct *wq);
+	```
+	- 其中在该接口调用前必须保证队列中所有任务完成，例如：
+		- 使用 `flush_workqueue` 阻塞并等待队列中所有任务完成。
+		- 使用 `flush_work` 阻塞并等待某一个任务完成。
+
+#### 9.6.2 共享队列
+
+并不是所有的内核模块都有独立管理一个等待队列的必要，因此内核提供了如下几种共享队列：
+- `system_wq` ：普通优先级的工作队列(默认)。
+- `system_highpri_wq` ：高优先级的工作队列。
+- `system_long_wq` ：适用于执行时间较长的任务。
+
+而对于共享队列来说，其有如下的特性：
+1. 无需使用 `create_workqueue` 或 `destroy_workqueue` 管理队列。
+2. 相较于独有工作队列，其资源消耗更小。
+3. 由于要和其他内核代码共享队列，因此：
+	1. 不能长期占用队列，例如长期休眠等。
+
+其拥有如下的API：
+- 提交工作：
+```C
+// 提交工作，返回值意义同上一章节
+bool schedule_work(struct work_struct *work);
+
+// 提交工作并指定运行的CPU
+bool schedule_work_on(int cpu, struct work_struct *work);
+
+// 提交工作并指定延迟，延迟单位为jiffies
+bool schedule_delayed_work(struct delayed_work *dwork,
+	unsigned long delay);
+
+// 提交工作并指定延迟和所运行的CPU
+bool schedule_delayed_work_on(int cpu, struct delayed_work *dwork,
+	unsigned long delay)
+```
+- 等待工作完成的接口与上一章节相同。
 
 ## 10 内存分配
 
+### 10.1 kmalloc相关
 
+函数原型：
+
+```C
+#include <linux/slab.h>
+void *kmalloc(size_t size, gfp_t gfp);
+```
+
+其中分配标志 `gfp` <font color="#c00000">主要分为"分配优先级"和"分配选项"两类</font>，<span style="background:#fff88f"><font color="#c00000">这两类之间可以使用或运算结合配置</font></span>。
+分配优先级有：
+- `GFP_ATOMIC` ：原子地分配内存，<font color="#c00000">不会引起休眠</font>，通常在中断中使用。
+- `GFP_KERNEL` ：在内核空间中
+- `GFP_USER`
+- `GFP_HIGHUSER`
+- `GFP_NOIO`
+- `GFP_NOFS`
+- 
 
 ## 11 与硬件通信
 
@@ -3050,9 +3349,9 @@ in_interrupt();
 #### 12.1.2 中断上下文中的注意事项 ^fw453g
 
 在中断上下文中时需要注意：
-1. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为不在进程上下文中。
-2. 用于指向当前进程的 `current` 指针也无效。
-3. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
+5. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为不在进程上下文中。
+6. 用于指向当前进程的 `current` 指针也无效。
+7. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
 
 #### 12.1.3 查询当前是否在原子上下文中
 
@@ -3061,8 +3360,8 @@ in_interrupt();
 in_atpmic();
 ```
 
-在中断上下文中时需要注意：
-1. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为可能引起调度。
-2. `current` 指针可用，但是不能访问用户空间。
+在原子上下文中时需要注意：
+8. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为可能引起调度。
+9. `current` 指针可用，但是不能访问用户空间。
 
 
