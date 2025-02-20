@@ -3333,9 +3333,11 @@ void *kmalloc(size_t size, gfp_t gfp);
 - `__GFP_COLD` ：从冷页面页表中进行内存分配，这部分内存所在页面没有被频繁访问，甚至已经被swap到硬盘。<font color="#c00000">可以用于分配不经常使用的内存</font>。在不使用该标志时，会优先分配热缓存页面。
 - `__GFP_NOWARN` ：避免在kmalloc中使用printk。
 - `__GFP_HIGH` ：表示高优先级请求，在紧急情况下使用，允许使用内核预留的内存页面。
-- `__GFP_REPEAT` ：进行有限次数的重试，
-- `__GFP_NOFAIL` ：无限重试直到分配成功，
-- `__GFP_NORETRY` ：若请求的内存不可得则应当立即返回，<font color="#c00000">使用该标志位可以避免休眠</font>。
+- `__GFP_REPEAT` ：进行有限次数的重试。
+- `__GFP_NOFAIL` ：无限重试直到分配成功。
+- `__GFP_NORETRY` ：若请求的内存不可得则应当立即返回，使用该标志位可以<font color="#c00000">减少休眠</font>。
+
+
 
 
 ## 11 与硬件通信
