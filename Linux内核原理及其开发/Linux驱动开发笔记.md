@@ -1823,9 +1823,9 @@ per-CPU变量如字面意思一样，是每个CPU都有一份实例的变量，�
 
 在其访问时根据当前CPU ID计算偏移量，从而定位实例。例如，在x86中通过段寄存器(如 `gs` )保存基地址，配合偏移量寻址。
 
-在读写per-CPU变量时，
+##### 7.4.4.1 静态声明与定义
 
-变量声明与定义：
+per-CPU变量的声明与定义：
 
 ```C
 #include "linux/percpu-defs.h"
@@ -1840,11 +1840,63 @@ DEFINE_PER_CPU(int, my_counter) = 0;
 DEFINE_PER_CPU(int[4], my_array) __cacheline_aligned = { 0 }; 
 ```
 
+##### 7.4.4.2 动态创建与销毁
 
+```C
+#include "linux/percpu-defs.h"
 
+int __percpu *dyn_counter = alloc_percpu(int);
 
+// 操作per-CPU变量
+*per_cpu_ptr(dyn_counter, smp_processor_id()) = 42;
 
+free_percpu(dyn_counter);
+```
+##### 7.4.4.3 读写操作
 
+<span style="background:#fff88f"><font color="#c00000">在读写per-CPU变量时需要禁用抢占</font></span>，<font color="#c00000">关闭抢占后当前任务不会被其他任务抢占</font>，确保当前任务只会在同一个CPU上运行，例如：
+
+```C
+int cpu = get_cpu();         // 获取当前CPU ID并禁用抢占
+per_cpu(my_counter, cpu)++;  // 操作当前CPU的变量
+put_cpu();                   // 启用抢占
+```
+
+或者直接用隐含启停抢占的形式：
+
+```C
+get_cpu_var(my_counter)++;   // 操作当前CPU变量(自动禁用抢占)
+put_cpu_var(my_counter);     // 释放
+```
+
+上述接口的定义如下：
+
+```C
+#define get_cpu()		({ preempt_disable(); __smp_processor_id(); })
+#define put_cpu()		preempt_enable()
+
+/*
+ * Must be an lvalue. Since @var must be a simple identifier,
+ * we force a syntax error here if it isn't.
+ */
+#define get_cpu_var(var)						\
+(*({									\
+	preempt_disable();						\
+	this_cpu_ptr(&var);						\
+}))
+
+/*
+ * The weird & is necessary because sparse considers (void)(var) to be
+ * a direct dereference of percpu variable (var).
+ */
+#define put_cpu_var(var)						\
+do {									\
+	(void)&(var);							\
+	preempt_enable();						\
+} while (0)
+```
+
+其主要依靠 `preempt_disable()` 和 `preempt_enable()` 进行管理CPU抢占。
 
 ## 8 高级字符设备驱动程序
 
