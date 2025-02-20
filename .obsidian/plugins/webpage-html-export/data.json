@@ -9,7 +9,7 @@
     "makeHeadersTrees": true,
     "postProcess": true,
     "displayProgress": true,
-    "inlineHTML": false,
+    "inlineHTML": true,
     "exportPath": "C:\\Users\\h13\\Documents\\GitHub\\Notebooks-html\\Notebooks",
     "filesToExport": [
       "all"
@@ -71,8 +71,8 @@
     },
     "fileNavigationOptions": {
       "featureId": "file-navigation",
-      "enabled": true,
-      "unavailable": false,
+      "enabled": false,
+      "unavailable": true,
       "alwaysEnabled": false,
       "displayTitle": "",
       "featurePlacement": {
@@ -90,8 +90,8 @@
     },
     "searchOptions": {
       "featureId": "search",
-      "enabled": true,
-      "unavailable": false,
+      "enabled": false,
+      "unavailable": true,
       "alwaysEnabled": false,
       "displayTitle": "Search...",
       "featurePlacement": {
@@ -125,8 +125,8 @@
     },
     "graphViewOptions": {
       "featureId": "graph-view",
-      "enabled": true,
-      "unavailable": false,
+      "enabled": false,
+      "unavailable": true,
       "alwaysEnabled": false,
       "displayTitle": "Graph View",
       "featurePlacement": {
@@ -179,8 +179,8 @@
     },
     "rssOptions": {
       "featureId": "obsidian-document",
-      "enabled": true,
-      "unavailable": false,
+      "enabled": false,
+      "unavailable": true,
       "alwaysEnabled": false,
       "siteUrl": "",
       "siteName": "Notebooks",
@@ -189,22 +189,28 @@
     "relativeHeaderLinks": false,
     "includeJS": true,
     "includeCSS": true,
-    "inlineMedia": false,
-    "inlineCSS": false,
-    "inlineJS": false,
-    "inlineFonts": false,
-    "inlineOther": false,
+    "inlineMedia": true,
+    "inlineCSS": true,
+    "inlineJS": true,
+    "inlineFonts": true,
+    "inlineOther": true,
     "combineAsSingleFile": false,
     "offlineResources": false,
     "themeName": "",
-    "slugifyPaths": true,
+    "slugifyPaths": false,
     "flattenExportPaths": false,
     "fixLinks": true,
     "faviconPath": "",
     "iconEmojiStyle": "Native",
-    "exportRoot": "/",
-    "includePluginCss": [],
-    "includeStyleCssIds": [],
+    "exportRoot": "",
+    "includePluginCss": [
+      "novel-word-count",
+      "code-styler-styles"
+    ],
+    "includeStyleCssIds": [
+      "novel-word-count",
+      "code-styler-styles"
+    ],
     "autoDisposeWebpages": true
   },
   "logLevel": "warning",
@@ -212,7 +218,7 @@
   "rssDateProperty": "date",
   "onlyExportModified": true,
   "deleteOldFiles": true,
-  "exportPreset": "online",
+  "exportPreset": "raw-documents",
   "openAfterExport": false,
   "filePickerBlacklist": [
     "(^|\\/)node_modules\\/",
