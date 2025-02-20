@@ -3337,7 +3337,20 @@ void *kmalloc(size_t size, gfp_t gfp);
 - `__GFP_NOFAIL` ：无限重试直到分配成功。
 - `__GFP_NORETRY` ：若请求的内存不可得则应当立即返回，使用该标志位可以<font color="#c00000">减少休眠</font>。
 
+### 10.2 Linux的内存区段
 
+Linux的内存区段划分取决于具体的硬件平台，可以使用如下命令查询：
+
+```shell
+cat /proc/buddyinfo
+```
+
+#### 10.2.1 x86
+
+在x86上，Linux内存区段被划分为如下三个区段：
+- `ZONE_DMA` ：物理地址 `0x00000000` 到 `0x00FFFFFF` (0~16 MB)，专供老式ISA设备使用。
+- `ZONE_NORMAL` ：物理地址 `0x01000000` 到 `0x07FFFFFF` (16 MB ~ 896 MB)，内核可直接线性映射到虚拟地址空间的区域。
+- `ZONE_HIGHMEM` ：物理地址 `0x08000000` 及以上(高于896 MB)，供用户空间程序使用，需动态映射到内核空间。
 
 
 ## 11 与硬件通信
