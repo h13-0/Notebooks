@@ -3392,10 +3392,15 @@ void* kmem_cache_create(const char* name, size_t size, slab_flags_t flag);
 	- `size` ：每个slab对象的大小，应使用 `sizeof(obj)` 获取。
 	- `flag` ：控制如何完成分配，可用值如下：
 		- `SLAB_NO_REAP` ：禁止内核在内存不足时主动回收(Reap)该Slab缓存的空闲内存页，<font color="#c00000">通常不用</font>。在SLUB实现中已经弃用，是早期Linux的设计。
-		- `SLAB_HWCACHE_ALIGN` ：要求所有数据和高速缓存行对齐，
-		- `SLAB_CACHE_DMA` ：
-	- `ctor` ：对象的构造函数，初始化用。
-2. 
+		- `SLAB_HWCACHE_ALIGN` ：对齐到硬件缓存行大小，保证单个CPU一次只能读取一个对象，减少跨核心的缓存行无效化。在实际开发中应当使用一些工具验证该标志位的真实收益，避免盲目使用导致的内存开销。
+		- `SLAB_CACHE_DMA` ：要求从DMA内存区段分配。
+	- `ctor` ：对象的构造函数，初始化用，可为 `NULL` 。
+2. 使用 `kmem_cache_alloc` 从高速缓存中分配内存：
+	```C
+void* struct kmem_cache *cachep, gfp_t flags)
+	```
+1. shi'y
+
 
 #### 10.3.2 slab的变种实现或改进
 
