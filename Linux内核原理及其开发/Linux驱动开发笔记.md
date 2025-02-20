@@ -3321,13 +3321,15 @@ void *kmalloc(size_t size, gfp_t gfp);
 
 其中分配标志 `gfp` <font color="#c00000">主要分为"分配优先级"和"分配选项"两类</font>，<span style="background:#fff88f"><font color="#c00000">这两类之间可以使用或运算结合配置</font></span>。
 分配优先级有：
-- `GFP_ATOMIC` ：原子地分配内存，<font color="#c00000">不会引起休眠</font>，通常在中断中使用。
+- `GFP_NOWAIT` ：在<font color="#c00000">内核空间</font>中分配内存，<font color="#c00000">不会引起休眠</font>。
+- `GFP_ATOMIC` ：原子地分配内存，<font color="#c00000">不会引起休眠</font>，<font color="#c00000">可能会使用紧急内存池</font>。通常在中断中使用。
 - `GFP_KERNEL` ：在<font color="#c00000">内核空间</font>中分配内存，可能休眠。
 - `GFP_USER` ：在内核中<font color="#c00000">为用户空间相关操作</font>分配内存(例如 `mmap` )，可能休眠，且该内存<font color="#c00000">用户可见</font>。
 - `GFP_HIGHUSER` ：类似于 `GFP_USER` ，但是优先分配高端内存。
 - `GFP_NOIO` ：类似于`GFP_KERNEL` ，但是禁止I/O代码初始化。
 - `GFP_NOFS` ：类似于`GFP_KERNEL` ，但是禁止文件系统调用。
 分配选项有：
+- `__GFP_ZERO` ：分配并清空内存空间。
 - `__GFP_DMA` ：分配可DMA区段中的内存。
 - `__GFP_HIGHMEM` ：分配高端内存。
 - `__GFP_COLD` ：从冷页面页表中进行内存分配，这部分内存所在页面没有被频繁访问，甚至已经被swap到硬盘。<font color="#c00000">可以用于分配不经常使用的内存</font>。在不使用该标志时，会优先分配热缓存页面。
