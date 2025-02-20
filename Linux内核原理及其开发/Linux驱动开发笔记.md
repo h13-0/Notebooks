@@ -3381,7 +3381,7 @@ slab在开发中通常按照如下的方式进行调用：
 1. 使用 `kmem_cache_create` 创建专用slab缓存，函数原型等价于(但不等于)：
 	```C
 // 旧版本
-void* kmem_cache_create(const char* name, size_t size, slab_flags_t flag, ctor_t ctor);
+void* kmem_cache_create(const char* name, size_t size, slab_flags_t flag, void (*ctor)(void *));
 
 // 新版本
 void* kmem_cache_create(const char* name, size_t size, slab_flags_t flag);
@@ -3391,9 +3391,10 @@ void* kmem_cache_create(const char* name, size_t size, slab_flags_t flag);
 	- `name` ：为缓存名称，用于 `/proc/slabinfo` 和调试信息中标识，命名应有唯一性。<font color="#c00000">该参数应当使用静态存储</font>，通常直接取字符串。
 	- `size` ：每个slab对象的大小，应使用 `sizeof(obj)` 获取。
 	- `flag` ：控制如何完成分配，可用值如下：
-		- `SLAB_NO_REAP`
-		- 
-	- `ctor` ：
+		- `SLAB_NO_REAP` ：
+		- `SLAB_HWCACHE_ALIGN` ：
+		- `SLAB_CACHE_DMA` ：
+	- `ctor` ：对象的构造函数，初始化用。
 
 
 #### 10.3.2 slab的变种实现或改进
