@@ -201,6 +201,7 @@
   },
   "active": "1989c571884548ca",
   "lastOpenFiles": [
+    "操作系统/课外补充/内存屏障/内存屏障.md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "Linux内核原理及其开发/应试笔记与八股.md",
     "生活常识/二手购物/电动车.md",
@@ -233,7 +234,6 @@
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题/引用计数器refcount_t(refcount.h).md",
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题/错误码(errno.h).md",
     "Linux内核原理及其开发/MISC/pr_fmt应用及原理解析.md",
-    "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统/基础IO打开关闭(open.c).md",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统",
     "Resources/Pasted image 20240203021517.png",
     "Linux内核原理及其开发/Resources/Pasted image 20241124170145.png",

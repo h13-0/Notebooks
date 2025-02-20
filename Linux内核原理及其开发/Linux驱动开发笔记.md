@@ -3346,6 +3346,15 @@ Node 0, zone    DMA32  10175   2398    642    372    107     27      4      2   
 
 ### 10.2 伙伴系统(buddy system)
 
+如上述章节，伙伴系统负责以page为单位对物理内存进行分割，则当内核需要分配大块的内存时，直接使用伙伴系统是最优选择。其主要提供了如下的API：
+
+
+
+
+
+
+
+
 
 ### 10.3 后备高速缓存(slab) ^utt6c3
 
@@ -3397,10 +3406,16 @@ void* kmem_cache_create(const char* name, size_t size, slab_flags_t flag);
 	- `ctor` ：对象的构造函数，初始化用，可为 `NULL` 。
 2. 使用 `kmem_cache_alloc` 从高速缓存中分配内存：
 	```C
-void* struct kmem_cache *cachep, gfp_t flags)
+void* kmem_cache_alloc(struct kmem_cache *cachep, gfp_t flags);
 	```
-1. shi'y
-
+3. 使用 `kmem_cache_free` 回收内存：
+	```C
+void kmem_cache_free(struct kmem_cache *s, void *objp);
+	```
+4. 使用 `kmem_cache_destroy` 销毁slab缓存：
+	```C
+void kmem_cache_destroy(struct kmem_cache *s);
+	```
 
 #### 10.3.2 slab的变种实现或改进
 
@@ -3414,7 +3429,7 @@ SLUB和SLOB均为slab的变种，现代内核默认使用SLUB。
 #TODO 
 
 
-### 10.4 kmalloc
+### 10.4 kmalloc接口(最常用)
 
 #### 10.4.1 开发调用
 
