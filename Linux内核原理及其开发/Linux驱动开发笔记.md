@@ -3323,11 +3323,20 @@ void *kmalloc(size_t size, gfp_t gfp);
 分配优先级有：
 - `GFP_ATOMIC` ：原子地分配内存，<font color="#c00000">不会引起休眠</font>，通常在中断中使用。
 - `GFP_KERNEL` ：在<font color="#c00000">内核空间</font>中分配内存，可能休眠。
-- `GFP_USER` ：在<font color="#c00000">用户空间</font>中分配内存，可能休眠，且该内存<font color="#c00000">用户可见</font>
-- `GFP_HIGHUSER` ：
-- `GFP_NOIO` ：
-- `GFP_NOFS` ：
-- 
+- `GFP_USER` ：在内核中<font color="#c00000">为用户空间相关操作</font>分配内存(例如 `mmap` )，可能休眠，且该内存<font color="#c00000">用户可见</font>。
+- `GFP_HIGHUSER` ：类似于 `GFP_USER` ，但是优先分配高端内存。
+- `GFP_NOIO` ：类似于`GFP_KERNEL` ，但是禁止I/O代码初始化。
+- `GFP_NOFS` ：类似于`GFP_KERNEL` ，但是禁止文件系统调用。
+分配选项有：
+- `__GFP_DMA` ：分配可DMA区段中的内存
+- `__GFP_HIGHMEM` ：
+- `__GFP_COLD` ：
+- `__GFP_NOWARN` ：
+- `__GFP_HIGH` ：
+- `__GFP_REPEAT` ：
+- `__GFP_NOFAIL` ：
+- `__GFP_NORETRY` ：
+
 
 ## 11 与硬件通信
 
