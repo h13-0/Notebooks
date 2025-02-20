@@ -3316,7 +3316,7 @@ bool schedule_delayed_work_on(int cpu, struct delayed_work *dwork,
 
 Linux内核的内存分配存在如下的层次结构：
 1. 伙伴系统：负责以page为单位对物理内存进行分割，支持 `alloc_pages` 接口。
-2. slab分配器(SLUB、SLOB)：基于伙伴系统，将page拆分为固定大小的若干小块(8B、16B等)，提供给小对象高效使用。
+2. slab分配器(SLUB、SLOB)：基于伙伴系统，将page拆分为固定大小的若干小块(8B、16B、...、8KB)。
 3. kmalloc/kfree接口：为大多数开发者提供的接口，底层依赖slab分配器。
 
 #### 10.1.2 Linux内核的内存区段(了解)
@@ -3351,7 +3351,7 @@ Node 0, zone    DMA32  10175   2398    642    372    107     27      4      2   
 
 slab基于buddy system实现了如下的两种缓存：
 1. 特定对象专用缓存：专为某个类型(如 `struct task_struct`)频繁分配设计（通过 `kmem_cache_create` 创建）。
-2. 通用对象缓存：以固定大小(如 8B, 16B, 32B, ..., 8KB)预创建的缓存池，`kmalloc` 通过它们实现内存分配。
+2. 通用对象缓存：以固定大小(如8B、16B、32B、...、8KB)预创建的缓存池，`kmalloc` 通过它们实现内存分配。
 
 正如上述所属的两种缓存，当需要<font color="#c00000">高频且高效地</font>创建和销毁某些<font color="#c00000">小的内存对象</font>时，使用通用对象缓存的 `kmalloc` 的性能表现显然不如直接使用特定对象专用缓存的性能表现好。这种内存池也被称作后备高速缓存。尽管后备高速缓存(lookaside cache)的名字中有"cache"，但是其实际存储位置仍然为内存区域。
 
@@ -3361,7 +3361,13 @@ slab基于buddy system实现了如下的两种缓存：
 cat /proc/slabinfo
 ```
 
-一个输出demo
+一个输出demo：
+
+```Shell
+# name            <active_objs> <num_objs> <objsize> <objperslab> <pagesperslab> : tunables <limit> <batchcount> <sharedfactor> : slabdata <active_slabs> <num_slabs> <sharedavail>
+nf_conntrack         197    264    320   12    1 : tunables    0    0    0 : slabdata     22     22      0
+au_finfo               0      0    192   21    1 : tunables    0    0    0 : slabdata      0      0      0
+```
 
 #### 10.3.1 slab的变种实现或改进
 
@@ -3376,6 +3382,8 @@ SLUB和SLOB均为slab的变种，现代内核默认使用SLUB。
 
 
 ### 10.4 kmalloc
+
+#### 10.4.1 开发调用
 
 函数原型(但实际上并非如此)：
 
@@ -3404,13 +3412,23 @@ void *kmalloc(size_t size, gfp_t gfp);
 - `__GFP_NOFAIL` ：无限重试直到分配成功。<font color="#c00000">慎重使用</font>。
 - `__GFP_NORETRY` ：若请求的内存不可得则应当立即返回，使用该标志位可以<font color="#c00000">减少休眠</font>。
 
-值得注意的是，`kmalloc` 所使用的头文件是 `slab.h` 。事实上，`kmalloc` 也算基于[[Linux驱动开发笔记#^utt6c3|slab]]实现的。
-
 在终端中输入如下命令即可查询 `kmalloc` 的使用情况：
 
 ```Shell
 cat /proc/slabinfo | grep kmalloc
 ```
+
+#### 10.4.2 原理概述
+
+正如上文所述，`kmalloc` 是基于[[Linux驱动开发笔记#^utt6c3|slab]]实现的，所以其使用的头文件也是 `slab.h` 。
+在内核启动时，内核通过 `kmalloc_caches` 数组预先创建一系列通用Slab缓存，该系列缓存大小为8B、16B、32B、...、8KB，
+
+
+
+#TODO 
+
+
+
 
 ## 11 与硬件通信
 
