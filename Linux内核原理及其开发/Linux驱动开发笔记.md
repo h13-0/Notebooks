@@ -3354,11 +3354,18 @@ cat /proc/buddyinfo
 
 ### 10.3 后备高速缓存(slab)
 
-当需要<font color="#c00000">高频且高效地</font>创建和销毁某些<font color="#c00000">小的内存对象</font>时，使用 `kmalloc(xx, GFP_ATOMIC)` 可能会有性能问题，
+当需要<font color="#c00000">高频且高效地</font>创建和销毁某些<font color="#c00000">小的内存对象</font>时，
+
+
+
+
+
+
+使用 `kmalloc(xx, GFP_ATOMIC)` 可能会有性能问题，
 
 为此，Linux内核单独维护了一组拥有同一大小内存块的内存池，该内存池被称作后备高速缓存。尽管后备高速缓存(lookaside cache)的名字中有 `cache` ，但是<font color="#c00000">其实际存储位置仍然为内存区域</font>。
 
-
+其
 
 
 ## 11 与硬件通信
