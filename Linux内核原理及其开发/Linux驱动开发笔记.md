@@ -3380,10 +3380,20 @@ au_finfo               0      0    192   21    1 : tunables    0    0    0 : sla
 slab在开发中通常按照如下的方式进行调用：
 1. 使用 `kmem_cache_create` 创建专用slab缓存，函数原型等价于(但不等于)：
 	```C
-// 
-kmem_cache_create(const char* name, size_t size, gfp_t flag, ctor)
-	```
+// 旧版本
+void* kmem_cache_create(const char* name, size_t size, slab_flags_t flag, ctor_t ctor);
 
+// 新版本
+void* kmem_cache_create(const char* name, size_t size, slab_flags_t flag);
+	```
+	上述函数实际使用宏函数实现，依赖于C11的 `_Generic()` 特性同时兼容新旧版本。
+	其中：
+	- `name` ：为缓存名称，用于 `/proc/slabinfo` 和调试信息中标识，命名应有唯一性。<font color="#c00000">该参数应当使用静态存储</font>，通常直接取字符串。
+	- `size` ：每个slab对象的大小，应使用 `sizeof(obj)` 获取。
+	- `flag` ：控制如何完成分配，可用值如下：
+		- `SLAB_NO_REAP`
+		- 
+	- `ctor` ：
 
 
 #### 10.3.2 slab的变种实现或改进
