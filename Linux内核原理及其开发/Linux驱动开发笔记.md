@@ -3310,14 +3310,54 @@ bool schedule_delayed_work_on(int cpu, struct delayed_work *dwork,
 
 ## 10 内存分配
 
-### 10.1 Linux内核内存分配的层次结构
+### 10.1 Linux内核内存管理概述
+
+#### 10.1.1 Linux内核的内存区段
+
+Linux的内存区段划分取决于具体的硬件平台，可以使用如下命令查询：
+
+```shell
+cat /proc/buddyinfo
+```
+
+##### 10.1.1.1 x86架构(32位)
+
+在x86上，Linux内存区段被划分为如下三个区段：
+- `ZONE_DMA` ：物理地址 `0x00000000` 到 `0x00FFFFFF` (0~16 MB)，专供老式ISA设备使用。
+- `ZONE_NORMAL` ：物理地址 `0x01000000` 到 `0x07FFFFFF` (16 MB ~ 896 MB)，内核可直接线性映射到虚拟地址空间的区域。
+- `ZONE_HIGHMEM` ：物理地址 `0x08000000` 及以上(高于896 MB)，供用户空间程序使用，需动态映射到内核空间。
+
+#### 10.1.2 Linux内核内存分配的层次结构
+
+Linux内核的内存分配存在如下的层次结构：
+1. 伙伴系统：负责以page为单位对物理内存进行分割，支持 `alloc_pages` 接口。
+2. slab分配器(SLUB、SLOB)：基于伙伴系统，将page拆分为固定大小的若干小块(8B、16B等)，提供给小对象高效使用。
+3. kmalloc/kfree接口：为大多数开发者提供的接口，底层依赖slab分配器。
+
+### 10.2 伙伴系统(buddy system)
 
 
+### 10.3 后备高速缓存(slab) ^utt6c3
+
+slab基于buddy system实现了如下的两种缓存：
+1. 特定对象专用缓存：专为某个类型(如 `struct task_struct`)频繁分配设计（通过 `kmem_cache_create` 创建）。
+2. 通用对象缓存：以固定大小(如 8B, 16B, 32B, ..., 8KB)预创建的缓存池，`kmalloc` 通过它们实现内存分配。
+
+正如上述所属的两种缓存，当需要<font color="#c00000">高频且高效地</font>创建和销毁某些<font color="#c00000">小的内存对象</font>时，使用通用对象缓存的 `kmalloc` 的性能表现显然不如直接使用特定对象专用缓存的性能表现好。这种内存池被称作后备高速缓存。尽管后备高速缓存(lookaside cache)的名字中有 cache ，但是其实际存储位置仍然为内存区域。
+
+其
+
+#### 10.3.1 SLUB
+
+SLUB和SLOB均为slab的变种，现代内核默认使用SLUB。
+#TODO 
+
+#### 10.3.2 SLOB
+
+#TODO 
 
 
-
-
-### 10.2 kmalloc相关
+### 10.4 kmalloc
 
 函数原型(但实际上并非如此)：
 
@@ -3348,45 +3388,6 @@ void *kmalloc(size_t size, gfp_t gfp);
 
 值得注意的是，`kmalloc` 所使用的头文件是 `slab.h` 。事实上，`kmalloc` 也算基于[[Linux驱动开发笔记#^utt6c3|slab]]实现的。
 
-### 10.3 Linux的内存区段
-
-Linux的内存区段划分取决于具体的硬件平台，可以使用如下命令查询：
-
-```shell
-cat /proc/buddyinfo
-```
-
-#### 10.3.1 x86
-
-在x86上，Linux内存区段被划分为如下三个区段：
-- `ZONE_DMA` ：物理地址 `0x00000000` 到 `0x00FFFFFF` (0~16 MB)，专供老式ISA设备使用。
-- `ZONE_NORMAL` ：物理地址 `0x01000000` 到 `0x07FFFFFF` (16 MB ~ 896 MB)，内核可直接线性映射到虚拟地址空间的区域。
-- `ZONE_HIGHMEM` ：物理地址 `0x08000000` 及以上(高于896 MB)，供用户空间程序使用，需动态映射到内核空间。
-
-### 10.4 后备高速缓存(slab) ^utt6c3
-
-
-当需要<font color="#c00000">高频且高效地</font>创建和销毁某些<font color="#c00000">小的内存对象</font>时，
-
-
-
-
-
-
-使用 `kmalloc(xx, GFP_ATOMIC)` 可能会有性能问题，
-
-为此，Linux内核单独维护了一组拥有同一大小内存块的内存池，该内存池被称作后备高速缓存。尽管后备高速缓存(lookaside cache)的名字中有 `cache` ，但是<font color="#c00000">其实际存储位置仍然为内存区域</font>。
-
-其
-
-#### 10.4.1 SLUB
-
-SLUB和SLOB均为slab的变种，现代内核默认使用SLUB。
-#TODO 
-
-#### 10.4.2 SLOB
-
-#TODO 
 
 ## 11 与硬件通信
 
