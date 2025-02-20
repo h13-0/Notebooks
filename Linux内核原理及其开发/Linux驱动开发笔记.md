@@ -3353,7 +3353,10 @@ slab基于buddy system实现了如下的两种缓存：
 1. 特定对象专用缓存：专为某个类型(如 `struct task_struct`)频繁分配设计（通过 `kmem_cache_create` 创建）。
 2. 通用对象缓存：以固定大小(如8B、16B、32B、...、8KB)预创建的缓存池，`kmalloc` 通过它们实现内存分配。
 
-正如上述所属的两种缓存，当需要<font color="#c00000">高频且高效地</font>创建和销毁某些<font color="#c00000">小的内存对象</font>时，使用通用对象缓存的 `kmalloc` 的性能表现显然不如直接使用特定对象专用缓存的性能表现好。这种内存池也被称作后备高速缓存。尽管后备高速缓存(lookaside cache)的名字中有"cache"，但是其实际存储位置仍然为内存区域。
+正如上述所属的两种缓存，当：
+1. 需要<font color="#c00000">高频且高效地</font>创建和销毁某些<font color="#c00000">小的内存对象</font>时，
+2. 需要分配的内存对象大小不是2的整数幂，且内核中需要分配众多该
+3. 使用通用对象缓存的 `kmalloc` 的性能表现显然不如直接使用特定对象专用缓存的性能表现好。这种内存池也被称作后备高速缓存。尽管后备高速缓存(lookaside cache)的名字中有"cache"，但是其实际存储位置仍然为内存区域。
 
 在终端中输入如下命令即可查看slab的使用情况：
 
@@ -3369,14 +3372,24 @@ nf_conntrack         197    264    320   12    1 : tunables    0    0    0 : sla
 au_finfo               0      0    192   21    1 : tunables    0    0    0 : slabdata      0      0      0
 ```
 
-#### 10.3.1 slab的变种实现或改进
+#### 10.3.1 开发调用
 
-##### 10.3.1.1 SLUB
+slab在开发中通常按照如下的方式进行调用：
+1. 使用 `kmem_cache_create` 创建专用slab缓存：
+	```C
+
+	```
+
+
+
+#### 10.3.2 slab的变种实现或改进
+
+##### 10.3.2.1 SLUB
 
 SLUB和SLOB均为slab的变种，现代内核默认使用SLUB。
 #TODO 
 
-##### 10.3.1.2 SLOB
+##### 10.3.2.2 SLOB
 
 #TODO 
 
@@ -3421,14 +3434,10 @@ cat /proc/slabinfo | grep kmalloc
 #### 10.4.2 原理概述
 
 正如上文所述，`kmalloc` 是基于[[Linux驱动开发笔记#^utt6c3|slab]]实现的，所以其使用的头文件也是 `slab.h` 。
-在内核启动时，内核通过 `kmalloc_caches` 数组预先创建一系列通用Slab缓存，该系列缓存大小为8B、16B、32B、...、8KB，
 
+在内核启动时，内核通过 `kmalloc_caches` 数组预先创建一系列通用Slab缓存，该系列缓存大小为8B、16B、32B、...、8KB，这些缓存使用上一子章节末尾的查询命令输出的slab名分别为kmalloc-8、kmalloc-16、...、kmalloc-8k。
 
-
-#TODO 
-
-
-
+当发生 `kmalloc` 调用时，其会将 `kmalloc` 中的 `size` 参数向上对齐到最小的缓存块，例如 200Byte -> 256Byte。随后根据GFP标志为其分配对象。
 
 ## 11 与硬件通信
 
