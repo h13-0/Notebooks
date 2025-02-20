@@ -3335,7 +3335,7 @@ void *kmalloc(size_t size, gfp_t gfp);
 - `__GFP_HIGH` ：表示高优先级请求，在紧急情况下使用，允许使用内核预留的内存页面。
 - `__GFP_REPEAT` ：
 - `__GFP_NOFAIL` ：
-- `__GFP_NORETRY` ：若请求的内存不可得则应当立即返回
+- `__GFP_NORETRY` ：若请求的内存不可得则应当立即返回，<font color="#c00000">使用该标志位可以避免休眠</font>。
 
 
 ## 11 与硬件通信
