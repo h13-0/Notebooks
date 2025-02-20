@@ -3346,15 +3346,18 @@ Node 0, zone    DMA32  10175   2398    642    372    107     27      4      2   
 
 ### 10.2 伙伴系统(buddy system)
 
-如上述章节，伙伴系统负责以page为单位对物理内存进行分割，则当内核需要分配大块的内存时，直接使用伙伴系统是最优选择。其主要提供了如下的API：
-
-
-
-
-
-
-
-
+如上述章节，伙伴系统负责以page为单位对物理内存进行分割，则当内核需要分配大块的内存时，直接使用伙伴系统是最优选择。其主要提供了如下的API(均位于 `linux/gfp.h` )：
+- `alloc_pages(gfp_t gfp_mask, unsigned int order)` ：
+	- 分配连续物理页帧，返回页描述符(`struct page*`)，可直接用于底层内存操作。
+- `__get_free_pages(gfp_t gfp_mask, unsigned int order)` ：
+	- 与 `alloc_pages` 类似，但返回物理内存的起始虚拟地址(内核逻辑地址)。
+- `free_pages(unsigned long addr, unsigned int order)` ：
+	- 释放通过上述接口分配的内存。
+- `get_zeroed_page(gfp_t gfp_mask)` ：
+	- 分配并用零填充的单页。
+其中：
+- `order` <font color="#c00000">为要申请或施放的页面数的</font> $\log_2$ <font color="#c00000">次幂</font>。
+- `gfp_mask` 可见[[Linux驱动开发笔记#^74tb72|kmalloc接口开发调用]]。
 
 ### 10.3 后备高速缓存(slab) ^utt6c3
 
@@ -3431,7 +3434,7 @@ SLUB和SLOB均为slab的变种，现代内核默认使用SLUB。
 
 ### 10.4 kmalloc接口(最常用)
 
-#### 10.4.1 开发调用
+#### 10.4.1 开发调用 ^74tb72
 
 函数原型(但实际上并非如此)：
 
@@ -3473,6 +3476,13 @@ cat /proc/slabinfo | grep kmalloc
 在内核启动时，内核通过 `kmalloc_caches` 数组预先创建一系列通用Slab缓存，该系列缓存大小为8B、16B、32B、...、8KB，这些缓存使用上一子章节末尾的查询命令输出的slab名分别为kmalloc-8、kmalloc-16、...、kmalloc-8k。
 
 当发生 `kmalloc` 调用时，其会将 `kmalloc` 中的 `size` 参数<span style="background:#fff88f"><font color="#c00000">向上对齐到最小的缓存块</font></span>，<font color="#c00000">例如 200Byte -> 256Byte</font>。随后根据GFP标志为其分配对象。
+
+### 10.5 vmalloc接口
+
+
+
+
+
 
 ## 11 与硬件通信
 
