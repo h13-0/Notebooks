@@ -1817,6 +1817,35 @@ RCU的基本流程：
 void call_rcu(struct rcu_head* head, void(*func)(void *arg), void *arg);
 ```
 
+#### 7.4.4 per-CPU变量
+
+per-CPU变量如字面意思一样，是每个CPU都有一份实例的变量，每个CPU操作自身的副本，无需与其他CPU同步。该变量存储在每个CPU的私有内存区域中，通过编译器或运行时机制隔离访问。
+
+在其访问时根据当前CPU ID计算偏移量，从而定位实例。例如，在x86中通过段寄存器(如 `gs` )保存基地址，配合偏移量寻址。
+
+在读写per-CPU变量时，
+
+变量声明与定义：
+
+```C
+#include "linux/percpu-defs.h"
+
+// 声明未初始化的变量
+DECLARE_PER_CPU(int, my_counter);
+
+// 声明并初始化
+DEFINE_PER_CPU(int, my_counter) = 0;
+
+// 启用缓存行对齐避免伪共享(本例中直接定义了数组)
+DEFINE_PER_CPU(int[4], my_array) __cacheline_aligned = { 0 }; 
+```
+
+
+
+
+
+
+
 ## 8 高级字符设备驱动程序
 
 ### 8.1 ioctl
@@ -3517,6 +3546,8 @@ cat /proc/slabinfo | grep kmalloc
 // 注：下方并非实际定义，仅为原型参考
 void *vmalloc(unsigned long size);
 ```
+
+
 
 ## 11 与硬件通信
 
