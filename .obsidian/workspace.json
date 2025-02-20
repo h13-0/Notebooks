@@ -164,10 +164,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "面相对象的程序设计/面相对象的程序设计.md"
+                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "面相对象的程序设计 的大纲"
+              "title": "Outline of Linux驱动开发笔记"
             }
           },
           {
@@ -195,8 +198,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 317.5,
-    "collapsed": true
+    "width": 317.5
   },
   "left-ribbon": {
     "hiddenItems": {
