@@ -3434,6 +3434,13 @@ SLUB和SLOB均为slab的变种，现代内核默认使用SLUB。
 
 ### 10.4 kmalloc接口(最常用)
 
+<span style="background:#fff88f"><font color="#c00000">特性</font></span>：
+1. <span style="background:#fff88f"><font color="#c00000">分配得到的内存区域在物理地址上一定连续</font></span>，这是和vmalloc的重要区别。
+2. <font color="#c00000">分配的内存默认不可被换出</font>。
+3. <font color="#c00000">分配的内存不会被ZSWAP/ZRAM</font>。
+4. 基于slab的通用对象缓存实现。
+5. <font color="#c00000">内存实际占用会向上取整到2的整数幂</font>。因此有内存碎片。
+
 #### 10.4.1 开发调用 ^74tb72
 
 函数原型(但实际上并非如此)：
