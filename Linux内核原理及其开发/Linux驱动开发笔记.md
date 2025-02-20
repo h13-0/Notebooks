@@ -1817,6 +1817,106 @@ RCU的基本流程：
 void call_rcu(struct rcu_head* head, void(*func)(void *arg), void *arg);
 ```
 
+#### 7.4.4 per-CPU变量 ^3z1la0
+
+per-CPU变量如字面意思一样，是每个CPU都有一份实例的变量，per-CPU确保这些变量在每个CPU上独立且只能自己可见。若需要进行数据同步操作则需要额外的互斥等机制进行实现。
+
+<span style="background:#fff88f"><font color="#c00000">考虑如下场景</font></span>：
+- 某内核模块需要实现一个计数器(通常per-CPU的使用场景就是计数器)，需要统计某项操作或者事件的次数。
+- 这个操作或者事件可能在多个CPU上同时发生。
+那么考虑如下的实现：
+1. 使用per-CPU变量，在每个CPU上独立实例化一个计数器。
+2. 当每个CPU上发生该操作或事件时，计数器+1。
+3. <font color="#c00000">确保每个事件的处理仅会涉及一个CPU</font>，不会被换出到其他CPU上。
+4. 最终统计汇总计数器时使用其他的互斥操作实现。
+这样就能极大的优化互斥管理。
+总的来说，<font color="#c00000">per-CPU变量的使用场景为</font>：<span style="background:#fff88f"><font color="#c00000">高频次局部修改，低频次全局读取</font></span>(例如计数器、统计信息)。
+
+那么per-CPU则有如下特性：
+1. 每个CPU操作自身的副本，无需与其他CPU同步。该变量可以通过存储在每个CPU的私有内存区域中实现，或通过编译器或运行时机制隔离访问实现(例如在其访问时根据当前CPU ID计算偏移量，从而定位实例)
+2. 读写操作时提供禁用抢占的操作方式。
+
+##### 7.4.4.1 静态声明与定义
+
+per-CPU变量的声明与定义：
+
+```C
+#include "linux/percpu-defs.h"
+
+// 声明未初始化的变量
+DECLARE_PER_CPU(int, my_counter);
+
+// 声明并初始化
+DEFINE_PER_CPU(int, my_counter) = 0;
+
+// 启用缓存行对齐避免伪共享(本例中直接定义了数组)
+DEFINE_PER_CPU(int[4], my_array) __cacheline_aligned = { 0 }; 
+```
+
+##### 7.4.4.2 动态创建与销毁
+
+```C
+#include "linux/percpu-defs.h"
+
+int __percpu *dyn_counter = alloc_percpu(int);
+
+// 操作per-CPU变量
+*per_cpu_ptr(dyn_counter, smp_processor_id()) = 42;
+
+free_percpu(dyn_counter);
+```
+##### 7.4.4.3 读写操作
+
+<span style="background:#fff88f"><font color="#c00000">在读写per-CPU变量时需要禁用抢占</font></span>，<font color="#c00000">关闭抢占后当前任务不会被其他任务抢占</font>，<font color="#c00000">确保当前任务只会在同一个CPU上运行</font>，例如：
+
+```C
+int cpu = get_cpu();         // 获取当前CPU ID并禁用抢占
+per_cpu(my_counter, cpu)++;  // 操作当前CPU的变量
+put_cpu();                   // 启用抢占
+```
+
+或者直接用隐含启停抢占的形式：
+
+```C
+get_cpu_var(my_counter)++;   // 操作当前CPU变量(自动禁用抢占)
+put_cpu_var(my_counter);     // 释放
+```
+
+上述接口的定义如下：
+
+```C
+#define get_cpu()		({ preempt_disable(); __smp_processor_id(); })
+#define put_cpu()		preempt_enable()
+
+/*
+ * Must be an lvalue. Since @var must be a simple identifier,
+ * we force a syntax error here if it isn't.
+ */
+#define get_cpu_var(var)						\
+(*({									\
+	preempt_disable();						\
+	this_cpu_ptr(&var);						\
+}))
+
+/*
+ * The weird & is necessary because sparse considers (void)(var) to be
+ * a direct dereference of percpu variable (var).
+ */
+#define put_cpu_var(var)						\
+do {									\
+	(void)&(var);							\
+	preempt_enable();						\
+} while (0)
+```
+
+其主要依靠 `preempt_disable()` 和 `preempt_enable()` 进行管理CPU抢占。
+
+##### 7.4.4.4 注意点
+
+per-CPU变量需要注意如下的注意点：
+1. 汇总时需要注意CPU热拔插问题。
+2. 必须禁用抢占后才能读取CPU ID，不然可能错位。
+
 ## 8 高级字符设备驱动程序
 
 ### 8.1 ioctl
@@ -3310,9 +3410,145 @@ bool schedule_delayed_work_on(int cpu, struct delayed_work *dwork,
 
 ## 10 内存分配
 
-### 10.1 kmalloc相关
+### 10.1 Linux内核内存管理概述
 
-函数原型：
+#### 10.1.1 Linux内核内存分配的层次结构
+
+Linux内核的内存分配存在如下的层次结构：
+1. 伙伴系统：负责以page为单位对物理内存进行分割，支持 `alloc_pages` 接口。
+2. slab分配器(SLUB、SLOB)：基于伙伴系统，将page拆分为固定大小的若干小块(8B、16B、...、8KB)。
+3. kmalloc/kfree接口：为大多数开发者提供的接口，底层依赖slab分配器。
+
+#### 10.1.2 Linux内核的内存区段(了解)
+
+Linux的内存区段划分取决于具体的硬件平台，可以使用如下命令查询：
+
+```shell
+cat /proc/buddyinfo
+```
+
+一个demo结果为：
+
+```Shell
+root@VM-4-7-ubuntu:/proc# cat buddyinfo
+Node 0, zone      DMA      9     18     13      8     12      4      3      5      3      0      0
+Node 0, zone    DMA32  10175   2398    642    372    107     27      4      2      0      5      1
+```
+
+注：wsl中通常没有该文件。
+
+##### 10.1.2.1 x86架构(32位)
+
+在x86上，Linux内存区段被划分为如下三个区段：
+- `ZONE_DMA` ：物理地址 `0x00000000` 到 `0x00FFFFFF` (0~16 MB)，专供老式ISA设备使用。
+- `ZONE_NORMAL` ：物理地址 `0x01000000` 到 `0x07FFFFFF` (16 MB ~ 896 MB)，内核可直接线性映射到虚拟地址空间的区域。
+- `ZONE_HIGHMEM` ：物理地址 `0x08000000` 及以上(高于896 MB)，供用户空间程序使用，需动态映射到内核空间。
+
+### 10.2 伙伴系统(buddy system)
+
+如上述章节，伙伴系统负责以page为单位对物理内存进行分割，则当内核需要分配大块的内存时，直接使用伙伴系统是最优选择。其主要提供了如下的API(均位于 `linux/gfp.h` )：
+- `alloc_pages(gfp_t gfp_mask, unsigned int order)` ：
+	- 分配连续物理页帧，返回页描述符(`struct page*`)，可直接用于底层内存操作。
+- `__get_free_pages(gfp_t gfp_mask, unsigned int order)` ：
+	- 与 `alloc_pages` 类似，但返回物理内存的起始虚拟地址(内核逻辑地址)。
+- `free_pages(unsigned long addr, unsigned int order)` ：
+	- 释放通过上述接口分配的内存。
+- `get_zeroed_page(gfp_t gfp_mask)` ：
+	- 分配并用零填充的单页。
+其中：
+- `order` <font color="#c00000">为要申请或施放的页面数的</font> $\log_2$ <font color="#c00000">次幂</font>。
+- `gfp_mask` 可见[[Linux驱动开发笔记#^74tb72|kmalloc接口开发调用]]。
+
+### 10.3 后备高速缓存(slab) ^utt6c3
+
+slab基于buddy system实现了如下的两种缓存：
+1. 特定对象专用缓存：专为某个类型(如 `struct task_struct`)频繁分配设计（通过 `kmem_cache_create` 创建）。
+2. 通用对象缓存：以固定大小(如8B、16B、32B、...、8KB)预创建的缓存池，`kmalloc` 通过它们实现内存分配。
+
+正如上述所属的两种缓存，当：
+1. 需要<font color="#c00000">高频且高效地</font>创建和销毁某些<font color="#c00000">小的内存对象</font>时；
+2. 需要分配的<font color="#c00000">内存对象大小不是2的整数幂</font>，<font color="#c00000">且内核中需要分配众多该对象时</font>(例如 `inode` 对象)。
+使用通用对象缓存的 `kmalloc` 分别可能造成如下问题：
+- 高频高效创建小内存对象-> `kmalloc` 会比直接使用slab多造成一些花销
+- <font color="#c00000">内存对象大小不是2的整数幂</font>-><span style="background:#fff88f"><font color="#c00000">造成内存碎片</font></span>，可见[[Linux驱动开发笔记#^yd7n15|kmalloc原理概述]]
+此时应当使用特定对象专用缓存进行管理，这种内存池也被称作后备高速缓存。尽管后备高速缓存(lookaside cache)的名字中有"cache"，但是其实际存储位置仍然为内存区域。
+
+在终端中输入如下命令即可查看slab的使用情况：
+
+```Shell
+cat /proc/slabinfo
+```
+
+一个输出demo：
+
+```Shell
+# name            <active_objs> <num_objs> <objsize> <objperslab> <pagesperslab> : tunables <limit> <batchcount> <sharedfactor> : slabdata <active_slabs> <num_slabs> <sharedavail>
+nf_conntrack         197    264    320   12    1 : tunables    0    0    0 : slabdata     22     22      0
+au_finfo               0      0    192   21    1 : tunables    0    0    0 : slabdata      0      0      0
+```
+
+#### 10.3.1 开发调用
+
+slab在开发中通常按照如下的方式进行调用：
+1. 使用 `kmem_cache_create` 创建专用slab缓存，函数原型等价于(但不等于)：
+	```C
+// 旧版本
+void* kmem_cache_create(const char* name, size_t size, slab_flags_t flag, void (*ctor)(void *));
+
+// 新版本
+void* kmem_cache_create(const char* name, size_t size, slab_flags_t flag);
+	```
+	上述函数实际使用宏函数实现，依赖于C11的 `_Generic()` 特性同时兼容新旧版本。
+	其中：
+	- `name` ：为缓存名称，用于 `/proc/slabinfo` 和调试信息中标识，命名应有唯一性。<font color="#c00000">该参数应当使用静态存储</font>，通常直接取字符串。
+	- `size` ：每个slab对象的大小，应使用 `sizeof(obj)` 获取。
+	- `flag` ：控制如何完成分配，可用值如下：
+		- `SLAB_NO_REAP` ：禁止内核在内存不足时主动回收(Reap)该Slab缓存的空闲内存页，<font color="#c00000">通常不用</font>。在SLUB实现中已经弃用，是早期Linux的设计。
+		- `SLAB_HWCACHE_ALIGN` ：对齐到硬件缓存行大小，保证单个CPU一次只能读取一个对象，减少跨核心的缓存行无效化。在实际开发中应当使用一些工具验证该标志位的真实收益，避免盲目使用导致的内存开销。
+		- `SLAB_CACHE_DMA` ：要求从DMA内存区段分配。
+	- `ctor` ：对象的构造函数，初始化用，可为 `NULL` 。
+2. 使用 `kmem_cache_alloc` 从高速缓存中分配内存：
+	```C
+void* kmem_cache_alloc(struct kmem_cache *cachep, gfp_t flags);
+	```
+3. 使用 `kmem_cache_free` 回收内存：
+	```C
+void kmem_cache_free(struct kmem_cache *s, void *objp);
+	```
+4. 使用 `kmem_cache_destroy` 销毁slab缓存：
+	```C
+void kmem_cache_destroy(struct kmem_cache *s);
+	```
+
+#### 10.3.2 slab的变种实现或改进
+
+##### 10.3.2.1 SLUB
+
+SLUB和SLOB均为slab的变种，现代内核默认使用SLUB。
+#TODO 
+
+##### 10.3.2.2 SLOB
+
+#TODO 
+
+
+### 10.4 kmalloc接口(最常用)
+
+<span style="background:#fff88f"><font color="#c00000">特性</font></span>：
+1. <span style="background:#fff88f"><font color="#c00000">分配得到的内存区域在物理地址上一定连续</font></span>，这是和vmalloc的重要区别，该特性的延申特性有：
+	1. 由于物理地址连续，故可用于DMA。
+	2. 可以避免切换页表所导致的开销。
+2. 由于物理地址连续，因此其可分配的最大单块内存有限制，<font color="#c00000">通常为内存页面的2倍</font>。
+3. <font color="#c00000">分配的内存默认不可被换出</font>。
+4. <font color="#c00000">分配的内存不会被ZSWAP/ZRAM</font>。
+5. 基于slab的通用对象缓存实现。
+6. <font color="#c00000">内存实际占用会向上取整到2的整数幂</font>。因此有内存碎片。
+7. 可以避免休眠。
+8. 销毁 `kmalloc` 申请的内存需要使用 `kfree` 。
+
+#### 10.4.1 开发调用 ^74tb72
+
+函数原型(但实际上并非如此)：
 
 ```C
 #include <linux/slab.h>
@@ -3321,13 +3557,68 @@ void *kmalloc(size_t size, gfp_t gfp);
 
 其中分配标志 `gfp` <font color="#c00000">主要分为"分配优先级"和"分配选项"两类</font>，<span style="background:#fff88f"><font color="#c00000">这两类之间可以使用或运算结合配置</font></span>。
 分配优先级有：
-- `GFP_ATOMIC` ：原子地分配内存，<font color="#c00000">不会引起休眠</font>，通常在中断中使用。
-- `GFP_KERNEL` ：在内核空间中
-- `GFP_USER`
-- `GFP_HIGHUSER`
-- `GFP_NOIO`
-- `GFP_NOFS`
-- 
+- `GFP_NOWAIT` ：在<font color="#c00000">内核空间</font>中分配内存，<font color="#c00000">不会引起休眠</font>。
+- `GFP_ATOMIC` ：原子地分配内存，<font color="#c00000">不会引起休眠</font>，<font color="#c00000">可能会使用紧急内存池</font>。通常在中断中使用。
+- `GFP_KERNEL` ：在<font color="#c00000">内核空间</font>中分配内存，可能休眠。
+- `GFP_USER` ：在内核中<font color="#c00000">为用户空间相关操作</font>分配内存(例如 `mmap` )，可能休眠，且该内存<font color="#c00000">用户可见</font>。
+- `GFP_HIGHUSER` ：类似于 `GFP_USER` ，但是优先分配高端内存。
+- `GFP_NOIO` ：类似于`GFP_KERNEL` ，但是禁止I/O代码初始化。
+- `GFP_NOFS` ：类似于`GFP_KERNEL` ，但是禁止文件系统调用。
+分配选项有：
+- `__GFP_ZERO` ：分配并清空内存空间。
+- `__GFP_DMA` ：分配可DMA区段中的内存。
+- `__GFP_HIGHMEM` ：分配高端内存，且可能使用紧急内存池。
+- `__GFP_COLD` ：从冷页面页表中进行内存分配，这部分内存所在页面没有被频繁访问，甚至已经被swap到硬盘。<font color="#c00000">可以用于分配不经常使用的内存</font>。在不使用该标志时，会优先分配热缓存页面。
+- `__GFP_NOWARN` ：避免在kmalloc中使用printk。
+- `__GFP_HIGH` ：表示高优先级请求，在紧急情况下使用，允许使用内核预留的内存页面。
+- `__GFP_REPEAT` ：进行有限次数的重试。
+- `__GFP_NOFAIL` ：无限重试直到分配成功。<font color="#c00000">慎重使用</font>。
+- `__GFP_NORETRY` ：若请求的内存不可得则应当立即返回，使用该标志位可以<font color="#c00000">减少休眠</font>。
+
+在终端中输入如下命令即可查询 `kmalloc` 的使用情况：
+
+```Shell
+cat /proc/slabinfo | grep kmalloc
+```
+
+#### 10.4.2 原理概述 ^yd7n15
+
+正如上文所述，`kmalloc` 是基于[[Linux驱动开发笔记#^utt6c3|slab]]实现的，所以其使用的头文件也是 `slab.h` 。
+
+在内核启动时，内核通过 `kmalloc_caches` 数组预先创建一系列通用Slab缓存，该系列缓存大小为8B、16B、32B、...、8KB，这些缓存使用上一子章节末尾的查询命令输出的slab名分别为kmalloc-8、kmalloc-16、...、kmalloc-8k。
+
+当发生 `kmalloc` 调用时，其会将 `kmalloc` 中的 `size` 参数<span style="background:#fff88f"><font color="#c00000">向上对齐到最小的缓存块</font></span>，<font color="#c00000">例如 200Byte -> 256Byte</font>。随后根据GFP标志为其分配对象。
+
+### 10.5 vmalloc接口
+
+特性：
+1. 虚拟地址连续，<span style="background:#fff88f"><font color="#c00000">但是物理地址可能离散</font></span>，这是与kmalloc之间最重要的区别。
+2. 分配得到的内存使用起来效率不高。
+3. 可能会导致休眠。
+4. 分配得到的内存位于内核的"动态映射区"。
+5. 可以用于大块的，对物理连续性无要求的场景，例如文件系统缓存、网络协议栈的临时缓冲区。
+6. 可以考虑使用伙伴系统代替该需求，直接与页面打交道。
+7. 销毁 `vmalloc` 申请的内存需要使用 `vfree` 。
+8. 使用vmalloc的代码可能会在合并到主线linux时受到冷遇。
+
+#### 10.5.1 vmalloc & kmalloc(slab)特性对比
+
+| 特性       | slab-特定对象缓存 | slab-通用对象缓存(kmalloc) | vmalloc                                                                    |
+| -------- | ----------- | -------------------- | -------------------------------------------------------------------------- |
+| 虚拟地址连续性  | 连续          | 连续                   | 连续                                                                         |
+| 物理地址连续性  | 一定连续        | 一定连续                 | <span style="background:#fff88f"><font color="#c00000">不一定连续</font></span> |
+| 能否避免休眠   | 可以避免        | 可以避免                 | <span style="background:#fff88f"><font color="#c00000">不能</font></span>    |
+| 所得内存使用效率 | 高           | 高                    | 一般                                                                         |
+
+#### 10.5.2 开发调用
+
+```C
+#include "linux/vmalloc.h"
+// 注：下方并非实际定义，仅为原型参考
+void *vmalloc(unsigned long size);
+```
+
+
 
 ## 11 与硬件通信
 
