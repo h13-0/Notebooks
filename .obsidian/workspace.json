@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "面相对象的程序设计/面相对象的程序设计.md",
+                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "面相对象的程序设计"
+              "title": "Linux驱动开发笔记"
             }
           },
           {
@@ -58,7 +58,7 @@
                 "autoReveal": false
               },
               "icon": "lucide-folder-closed",
-              "title": "文件列表"
+              "title": "Files"
             }
           },
           {
@@ -98,8 +98,7 @@
               "title": "Bookmarks"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -208,11 +207,13 @@
       "audio-recorder:Start/stop recording": false,
       "obsidian-git:Open Git source control": false,
       "obsidian42-brat:BRAT": false,
-      "webpage-html-export:Export as HTML": false
+      "webpage-html-export:Export as HTML": false,
+      "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
   "active": "d9da4c93f36ba921",
   "lastOpenFiles": [
+    "面相对象的程序设计/面相对象的程序设计.md",
     "CPP/C2CPP/C2CPP.md",
     "CPP/C标准笔记/C与C++标准.md",
     "嵌入式基础/接口技术/串口/串口总线标准.md",
