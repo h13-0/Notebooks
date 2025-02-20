@@ -3435,11 +3435,15 @@ SLUB和SLOB均为slab的变种，现代内核默认使用SLUB。
 ### 10.4 kmalloc接口(最常用)
 
 <span style="background:#fff88f"><font color="#c00000">特性</font></span>：
-1. <span style="background:#fff88f"><font color="#c00000">分配得到的内存区域在物理地址上一定连续</font></span>，这是和vmalloc的重要区别。
-2. <font color="#c00000">分配的内存默认不可被换出</font>。
-3. <font color="#c00000">分配的内存不会被ZSWAP/ZRAM</font>。
-4. 基于slab的通用对象缓存实现。
-5. <font color="#c00000">内存实际占用会向上取整到2的整数幂</font>。因此有内存碎片。
+1. <span style="background:#fff88f"><font color="#c00000">分配得到的内存区域在物理地址上一定连续</font></span>，这是和vmalloc的重要区别，该特性的延申特性有：
+	1. 由于物理地址连续，故可用于DMA。
+	2. 可以避免切换页表所导致的开销。
+2. 由于物理地址连续，因此其可分配的最大单块内存有限制。
+3. <font color="#c00000">分配的内存默认不可被换出</font>。
+4. <font color="#c00000">分配的内存不会被ZSWAP/ZRAM</font>。
+5. 基于slab的通用对象缓存实现。
+6. <font color="#c00000">内存实际占用会向上取整到2的整数幂</font>。因此有内存碎片。
+7. 销毁 `kmalloc` 申请的内存需要使用 `kfree` 。
 
 #### 10.4.1 开发调用 ^74tb72
 
@@ -3485,6 +3489,28 @@ cat /proc/slabinfo | grep kmalloc
 当发生 `kmalloc` 调用时，其会将 `kmalloc` 中的 `size` 参数<span style="background:#fff88f"><font color="#c00000">向上对齐到最小的缓存块</font></span>，<font color="#c00000">例如 200Byte -> 256Byte</font>。随后根据GFP标志为其分配对象。
 
 ### 10.5 vmalloc接口
+
+特性：
+1. 虚拟地址连续，<span style="background:#fff88f"><font color="#c00000">但是物理地址可能离散</font></span>，这是与kmalloc之间最重要的区别。
+2. 分配得到的内存使用起来效率不高。
+3. 可能会da
+4. 分配得到的内存位于内核的"动态映射区"。
+5. 可以用于大块的，对物理连续性无要求的场景，例如文件系统缓存、网络协议栈的临时缓冲区。
+6. 可以考虑使用伙伴系统代替该需求，直接与页面打交道。
+7. 销毁 `vmalloc` 申请的内存需要使用 `vfree` 。
+8. 使用vmalloc的代码可能会在合并到主线linux时受到冷遇。
+
+
+
+#### 10.5.1 vmalloc & kmalloc(slab)特性对比
+
+| 特性      | slab-特定对象缓存 | slab-通用对象缓存(kmalloc) | vmalloc |
+| ------- | ----------- | -------------------- | ------- |
+| 虚拟地址连续性 |             |                      |         |
+| 物理地址连续性 |             |                      |         |
+|         |             |                      |         |
+|         |             |                      |         |
+|         |             |                      |         |
 
 
 
