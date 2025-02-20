@@ -69,10 +69,11 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "custom"
+                "sortOrder": "custom",
+                "autoReveal": false
               },
               "icon": "lucide-folder-closed",
-              "title": "Files"
+              "title": "文件列表"
             }
           },
           {
@@ -99,7 +100,7 @@
               "type": "starred",
               "state": {},
               "icon": "lucide-file",
-              "title": "Plugin no longer active"
+              "title": "插件不再活动"
             }
           },
           {
@@ -184,7 +185,7 @@
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Linux驱动开发笔记"
+              "title": "Linux驱动开发笔记 的大纲"
             }
           },
           {
@@ -216,11 +217,11 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:Open quick switcher": false,
-      "graph:Open graph view": false,
-      "canvas:Create new canvas": false,
-      "command-palette:Open command palette": false,
-      "audio-recorder:Start/stop recording": false,
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "command-palette:打开命令面板": false,
+      "audio-recorder:开始/结束录音": false,
       "obsidian-git:Open Git source control": false,
       "webpage-html-export:Export as HTML": false,
       "mermaid-tools:Open Mermaid Toolbar": false,
@@ -229,41 +230,40 @@
   },
   "active": "c4ffb509c449facd",
   "lastOpenFiles": [
-    "Linux内核原理及其开发/应试笔记与八股.md",
-    "Linux内核原理及其开发/Linux驱动开发笔记.md",
-    "Linux内核原理及其开发/内核原理专题/内存管理专题",
-    "操作系统/课外补充/内存屏障/内存屏障.md",
-    "生活常识/二手购物/电动车.md",
-    "生活常识/Readme.md",
-    "生活常识/法律常识/法律常识.md",
-    "生活常识/常见物质生产方式.md",
-    "生活常识/二手购物",
-    "Readme.md",
-    "面相对象的程序设计/面相对象的程序设计.md",
-    "CPP/C2CPP/C2CPP.md",
-    "Linux内核原理及其开发/Linux驱动开发笔记.md",
-    "面相对象的程序设计/面相对象的程序设计.md",
     "CPP/C标准笔记/C与C++标准.md",
-    "嵌入式基础/接口技术/串口/串口总线标准.md",
-    "嵌入式基础/应试笔记与八股.md",
-    "CPP/C标准笔记/C标准学习笔记.md",
-    "CPP/应试笔记与八股.md",
-    "计算机网络/基础应试学习/计算机网络应试学习.md",
-    "生活常识/法律常识/租房及其注意事项.md",
-    "生活常识/Resources/3a4f2e672eb17167e81a9907cf8642f.png",
-    "Resources/3a4f2e672eb17167e81a9907cf8642f 1.png",
-    "操作系统/基础应试学习/第二章 进程与线程/第二章 进程与线程.md",
-    "计算机网络/基础应试学习/第四章 网络层/第四章 网络层.md",
-    "计算机网络/基础应试学习/第六章 应用层/第六章 应用层.md",
-    "操作系统/基础应试学习/第一章 计算机系统概述/第一章 计算机系统概述.md",
-    "操作系统/基础应试学习/第二章 进程与线程",
-    "操作系统/基础应试学习/第一章 计算机系统概述",
-    "操作系统/基础应试学习/Readme.md",
-    "Linux内核原理及其开发/内核文档翻译/内核源码文档/Documentation/userspace-api/ioctl/ioctl-number.rst.md",
-    "操作系统/基础应试学/未命名",
-    "操作系统/基础应试学习",
+    "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统/IO多路复用接口(select、poll、epoll).md",
+    "Linux内核原理及其开发/内核原理专题/系统调用专题/Readme.md",
+    "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统/基础IO读写(read_write.c).md",
+    "操作系统/用户态开发/POSIX/IEEE Std 1003.1™-2017 学习笔记.md",
+    "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统/基础IO打开关闭(open.c).md",
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题/引用计数器refcount_t(refcount.h).md",
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题/错误码(errno.h).md",
+    "操作系统/基础应试学习/第一章 计算机系统概述/第一章 计算机系统概述.md",
+    "操作系统/基础应试学习/Readme.md",
+    "操作系统/基础应试学习/第二章 进程与线程/第二章 进程与线程.md",
+    "生活常识/法律常识/租房及其注意事项.md",
+    "Readme.md",
+    "CPP/应试笔记与八股.md",
+    "CPP/C标准笔记/C标准学习笔记.md",
+    "嵌入式基础/接口技术/串口/串口总线标准.md",
+    "嵌入式基础/应试笔记与八股.md",
+    "操作系统/课外补充/内存屏障/内存屏障.md",
+    "Linux内核原理及其开发/Linux驱动开发笔记.md",
+    "Linux内核原理及其开发/应试笔记与八股.md",
+    "生活常识/二手购物/电动车.md",
+    "生活常识/常见物质生产方式.md",
+    "Linux内核原理及其开发/内核原理专题/内存管理专题",
+    "生活常识/Readme.md",
+    "生活常识/法律常识/法律常识.md",
+    "生活常识/二手购物",
+    "面相对象的程序设计/面相对象的程序设计.md",
+    "CPP/C2CPP/C2CPP.md",
+    "生活常识/Resources/3a4f2e672eb17167e81a9907cf8642f.png",
+    "Resources/3a4f2e672eb17167e81a9907cf8642f 1.png",
+    "操作系统/基础应试学习/第二章 进程与线程",
+    "操作系统/基础应试学习/第一章 计算机系统概述",
+    "操作系统/基础应试学/未命名",
+    "操作系统/基础应试学习",
     "Linux内核原理及其开发/内核原理专题/系统调用专题/文件子系统",
     "Resources/Pasted image 20240203021517.png",
     "Linux内核原理及其开发/Resources/Pasted image 20241124170145.png",
