@@ -1817,11 +1817,24 @@ RCU的基本流程：
 void call_rcu(struct rcu_head* head, void(*func)(void *arg), void *arg);
 ```
 
-#### 7.4.4 per-CPU变量
+#### 7.4.4 per-CPU变量 ^3z1la0
 
-per-CPU变量如字面意思一样，是每个CPU都有一份实例的变量，每个CPU操作自身的副本，无需与其他CPU同步。该变量存储在每个CPU的私有内存区域中，通过编译器或运行时机制隔离访问。
+per-CPU变量如字面意思一样，是每个CPU都有一份实例的变量，per-CPU确保这些变量在每个CPU上独立且只能自己可见。若需要进行数据同步操作则需要额外的互斥等机制进行实现。
 
-在其访问时根据当前CPU ID计算偏移量，从而定位实例。例如，在x86中通过段寄存器(如 `gs` )保存基地址，配合偏移量寻址。
+<span style="background:#fff88f"><font color="#c00000">考虑如下场景</font></span>：
+- 某内核模块需要实现一个计数器(通常per-CPU的使用场景就是计数器)，需要统计某项操作或者事件的次数。
+- 这个操作或者事件可能在多个CPU上同时发生。
+那么考虑如下的实现：
+1. 使用per-CPU变量，在每个CPU上独立实例化一个计数器。
+2. 当每个CPU上发生该操作或事件时，计数器+1。
+3. <font color="#c00000">确保每个事件的处理仅会涉及一个CPU</font>，不会被换出到其他CPU上。
+4. 最终统计汇总计数器时使用其他的互斥操作实现。
+这样就能极大的优化互斥管理。
+总的来说，<font color="#c00000">per-CPU变量的使用场景为</font>：<span style="background:#fff88f"><font color="#c00000">高频次局部修改，低频次全局读取</font></span>(例如计数器、统计信息)。
+
+那么per-CPU则有如下特性：
+1. 每个CPU操作自身的副本，无需与其他CPU同步。该变量可以通过存储在每个CPU的私有内存区域中实现，或通过编译器或运行时机制隔离访问实现(例如在其访问时根据当前CPU ID计算偏移量，从而定位实例)
+2. 读写操作时提供禁用抢占的操作方式。
 
 ##### 7.4.4.1 静态声明与定义
 
@@ -1854,7 +1867,7 @@ free_percpu(dyn_counter);
 ```
 ##### 7.4.4.3 读写操作
 
-<span style="background:#fff88f"><font color="#c00000">在读写per-CPU变量时需要禁用抢占</font></span>，<font color="#c00000">关闭抢占后当前任务不会被其他任务抢占</font>，确保当前任务只会在同一个CPU上运行，例如：
+<span style="background:#fff88f"><font color="#c00000">在读写per-CPU变量时需要禁用抢占</font></span>，<font color="#c00000">关闭抢占后当前任务不会被其他任务抢占</font>，<font color="#c00000">确保当前任务只会在同一个CPU上运行</font>，例如：
 
 ```C
 int cpu = get_cpu();         // 获取当前CPU ID并禁用抢占
@@ -1897,6 +1910,12 @@ do {									\
 ```
 
 其主要依靠 `preempt_disable()` 和 `preempt_enable()` 进行管理CPU抢占。
+
+##### 7.4.4.4 注意点
+
+per-CPU变量需要注意如下的注意点：
+1. 汇总时需要注意CPU热拔插问题。
+2. 必须禁用抢占后才能读取CPU ID，不然可能错位。
 
 ## 8 高级字符设备驱动程序
 
