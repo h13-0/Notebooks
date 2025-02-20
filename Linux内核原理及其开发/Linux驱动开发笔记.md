@@ -3514,20 +3514,9 @@ cat /proc/slabinfo | grep kmalloc
 
 ```C
 #include "linux/vmalloc.h"
-
-
-
-unsigned long size
-
+// 注：下方并非实际定义，仅为原型参考
+void *vmalloc(unsigned long size);
 ```
-
-头文件为 `linux/vmalloc.h`
-
-
-
-
-
-
 
 ## 11 与硬件通信
 
