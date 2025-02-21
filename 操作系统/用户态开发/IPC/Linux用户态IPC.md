@@ -20,6 +20,9 @@ Linux用户态IPC的方式主要有如下几种：
 7. 文件系统：
 8. 内存映射文件：
 
+用户态常用IPC库有：
+- [Remote Call Framework (RCF) - Delta V Software](https://www.deltavsoft.com/)
+
 ## 3 管道
 
 

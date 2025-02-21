@@ -1830,7 +1830,7 @@ per-CPU变量如字面意思一样，是每个CPU都有一份实例的变量，p
 3. <font color="#c00000">确保每个事件的处理仅会涉及一个CPU</font>，不会被换出到其他CPU上。
 4. 最终统计汇总计数器时使用其他的互斥操作实现。
 这样就能极大的优化互斥管理。
-总的来说，<font color="#c00000">per-CPU变量的使用场景为</font>：<span style="background:#fff88f"><font color="#c00000">高频次局部修改，低频次全局读取</font></span>(例如计数器、统计信息)。
+总的来说，<font color="#c00000">per-CPU变量的使用场景为</font>：<span style="background:#fff88f"><font color="#c00000">高频局部修改，低频全局读写</font></span>(例如计数器、统计信息)。
 
 那么per-CPU则有如下特性：
 1. 每个CPU操作自身的副本，无需与其他CPU同步。该变量可以通过存储在每个CPU的私有内存区域中实现，或通过编译器或运行时机制隔离访问实现(例如在其访问时根据当前CPU ID计算偏移量，从而定位实例)
