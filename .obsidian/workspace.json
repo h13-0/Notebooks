@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "STM32开发/OTA&Bootloader/STM32启动流程.md",
+                "file": "STM32开发/STM32内存、储存模型/STM32内存模型.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "STM32启动流程"
+              "title": "STM32内存模型"
             }
           },
           {
@@ -164,13 +164,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "STM32开发/OTA&Bootloader/STM32启动流程.md",
+                "file": "STM32开发/STM32内存、储存模型/STM32内存模型.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "STM32启动流程 的大纲"
+              "title": "STM32内存模型 的大纲"
             }
           },
           {
@@ -215,8 +215,10 @@
   },
   "active": "eae4d2cae21ffbf0",
   "lastOpenFiles": [
-    "CPP/C2CPP/C2CPP.md",
     "STM32开发/OTA&Bootloader/STM32启动流程.md",
+    "STM32开发/STM32内存、储存模型/STM32内存模型.md",
+    "STM32开发/STM32内存、储存模型",
+    "CPP/C2CPP/C2CPP.md",
     "STM32开发/OTA&Bootloader/STM32 OTA&Bootloader开发.md",
     "计算机组成原理/待分类/CPU缓存一致性.md",
     "STM32开发/OTA&Bootloader",
@@ -243,7 +245,6 @@
     "软件工程/软件工程应试笔记.md",
     "电子技术/基本元器件/MOSFET.md",
     "生活常识/国家标准/生活常识的国家标准.md",
-    "生活常识/数码/电脑IO接口与协议.md",
     "CPP/Resources/C数据类型.canvas",
     "Linux内核原理及其开发/内核原理专题/内存管理专题",
     "生活常识/二手购物",
@@ -257,7 +258,6 @@
     "Resources/Pasted image 20240203021517.png",
     "Linux内核原理及其开发/Resources/Pasted image 20241124170145.png",
     "Linux内核原理及其开发/Resources/Pasted image 20241124170623.png",
-    "Linux内核原理及其开发/Resources/~$$type.h.~vsdx",
     "操作系统/Resources/MobaXterm_C1PkrYnmXJ.png",
     "操作系统/Resources/0261.png",
     "操作系统/Resources/git_ignored/UNIX环境高级编程（中文第三版） (W. Richard Stevens etc.) (Z-Library)/0261.png",

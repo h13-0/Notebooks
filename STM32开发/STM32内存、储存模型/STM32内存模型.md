@@ -1,0 +1,30 @@
+---
+number headings: auto, first-level 2, max 6, 1.1
+---
+#STM32开发 
+
+## 1 目录
+
+```toc
+```
+
+## 2 STM32F10x
+
+### 2.1 内存地址划分
+
+STM32F10x将Flash、SRAM、寄存器以及外设均映射到了统一的内存空间：
+
+| <center>地址范围</center>         | <center>用途</center> | <center>说明</center>        |
+| ----------------------------- | ------------------- | -------------------------- |
+| **0x0000 0000 - 0x1FFF FFFF** | 代码存储区               | 映射到内部Flash或系统存储器(取决BOOT引脚) |
+| **0x2000 0000 - 0x3FFF FFFF** | **AM 存储区            | 执行时的变量、堆栈等动态数据(SRAM)       |
+| **0x4000 0000 - 0x5FFF FFFF** | **外设寄存器             | GPIO、USART、SPI、TIM等外设控制寄存器 |
+| **0xE000 0000 - 0xE00F FFFF** | Cortex-M内核私有外设      | SysTick、NVIC、SCB等内核寄存器     |
+
+
+
+
+
+
+
+
