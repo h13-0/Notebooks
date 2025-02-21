@@ -3618,9 +3618,29 @@ cat /proc/slabinfo | grep kmalloc
 void *vmalloc(unsigned long size);
 ```
 
-
-
 ## 11 与硬件通信
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## 12 中断处理
