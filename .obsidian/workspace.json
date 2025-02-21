@@ -180,8 +180,8 @@
             "state": {
               "type": "git-view",
               "state": {},
-              "icon": "lucide-file",
-              "title": "Plugin no longer active"
+              "icon": "git-pull-request",
+              "title": "Source Control"
             }
           },
           {
@@ -190,8 +190,8 @@
             "state": {
               "type": "mermaid-toolbar-view",
               "state": {},
-              "icon": "lucide-file",
-              "title": "Plugin no longer active"
+              "icon": "trident-custom",
+              "title": "Mermaid Toolbar"
             }
           }
         ],
@@ -214,7 +214,7 @@
       "obsidian42-brat:BRAT": false
     }
   },
-  "active": "08383a2f56ae4812",
+  "active": "1bc30e82fd7b9190",
   "lastOpenFiles": [
     "计算机组成原理/计算机组成原理应试学习.md",
     "计算机组成原理/常用存储器.md",
