@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "STM32开发/OTA&Bootloader/STM32 OTA&Bootloader开发.md",
+                "file": "STM32开发/OTA&Bootloader/STM32启动流程.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "STM32 OTA&Bootloader开发"
+              "title": "STM32启动流程"
             }
           },
           {
@@ -164,13 +164,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "STM32开发/OTA&Bootloader/STM32 OTA&Bootloader开发.md",
+                "file": "STM32开发/OTA&Bootloader/STM32启动流程.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "STM32 OTA&Bootloader开发 的大纲"
+              "title": "STM32启动流程 的大纲"
             }
           },
           {
@@ -215,6 +215,7 @@
   },
   "active": "eae4d2cae21ffbf0",
   "lastOpenFiles": [
+    "CPP/C2CPP/C2CPP.md",
     "STM32开发/OTA&Bootloader/STM32启动流程.md",
     "STM32开发/OTA&Bootloader/STM32 OTA&Bootloader开发.md",
     "计算机组成原理/待分类/CPU缓存一致性.md",
@@ -222,7 +223,6 @@
     "计算机组成原理/Resources/Pasted image 20250221133107.png",
     "Linux内核原理及其开发/应试笔记与八股.md",
     "计算机组成原理/待分类",
-    "CPP/C2CPP/C2CPP.md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "计算机组成原理/计算机组成原理应试学习.md",
     "计算机组成原理/常用存储器.md",
