@@ -58,7 +58,7 @@
                 "autoReveal": false
               },
               "icon": "lucide-folder-closed",
-              "title": "Files"
+              "title": "文件列表"
             }
           },
           {
@@ -85,7 +85,7 @@
               "type": "starred",
               "state": {},
               "icon": "lucide-file",
-              "title": "Plugin no longer active"
+              "title": "插件不再活动"
             }
           },
           {
@@ -170,7 +170,7 @@
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of CPU缓存一致性"
+              "title": "CPU缓存一致性 的大纲"
             }
           },
           {
@@ -202,11 +202,11 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:Open quick switcher": false,
-      "graph:Open graph view": false,
-      "canvas:Create new canvas": false,
-      "command-palette:Open command palette": false,
-      "audio-recorder:Start/stop recording": false,
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "command-palette:打开命令面板": false,
+      "audio-recorder:开始/结束录音": false,
       "obsidian-git:Open Git source control": false,
       "webpage-html-export:Export as HTML": false,
       "mermaid-tools:Open Mermaid Toolbar": false,
