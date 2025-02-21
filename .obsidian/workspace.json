@@ -35,7 +35,8 @@
               "title": "STM32启动流程"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -164,13 +165,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "STM32开发/STM32内存、储存模型/STM32内存模型.md",
+                "file": "STM32开发/OTA&Bootloader/STM32启动流程.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "STM32内存模型 的大纲"
+              "title": "STM32启动流程 的大纲"
             }
           },
           {
@@ -213,10 +214,10 @@
       "obsidian42-brat:BRAT": false
     }
   },
-  "active": "eae4d2cae21ffbf0",
+  "active": "08383a2f56ae4812",
   "lastOpenFiles": [
-    "STM32开发/OTA&Bootloader/STM32启动流程.md",
     "STM32开发/STM32内存、储存模型/STM32内存模型.md",
+    "STM32开发/OTA&Bootloader/STM32启动流程.md",
     "STM32开发/OTA&Bootloader/STM32 OTA&Bootloader开发.md",
     "CPP/C2CPP/C2CPP.md",
     "STM32开发/STM32内存、储存模型",
