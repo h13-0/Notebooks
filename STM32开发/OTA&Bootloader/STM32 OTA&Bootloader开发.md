@@ -8,8 +8,13 @@ number headings: auto, first-level 2, max 6, 1.1
 ```toc
 ```
 
-## 2 基本原理
+## 2 前置基础
+
+需要了解[[STM32启动流程]]：
+![[STM32启动流程]]
+
+## 3 基本原理
 
 
 
-## 3 
+## 4 

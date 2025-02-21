@@ -63,8 +63,6 @@ STM32的启动模式主要有如下几种：
 3. 读取固件头的中断向量表(可详见[[STM32启动流程#^ekk2l7|STM32固件结构]])，并执行：
 	1. 将初始化栈顶指针读取到SP寄存器
 	2. 执行 `Reset_Handler` 函数，详见[[STM32启动流程#^1xjvks]]：![[STM32启动流程#5 1 Reset_Handler函数 ^1xjvks]]
-	3. 启动C库
-	4. 引导到用户程序入口( `main()` )
 
 ### 5.1 Reset_Handler函数 ^1xjvks
 
@@ -85,7 +83,9 @@ Reset_Handler:
 ```
 
 其主要流程为：
-1. 调用 `SystemInit` 函数，
-2. 初始化 `.data` 段：
-	1. 
-3. 跳转 `LoopCopyDataInit` 函数。
+1. 调用 `SystemInit` 函数，主要初始化系统时钟源、PLL锁等。
+2. 初始化 `.data` 段。
+3. 跳转 `LoopCopyDataInit` 函数：
+   1. 清零 `.bss` 段。
+   2. 调用 `__libc_init_array` 函数初始化C库。
+   3. 调用 `main` 函数。
