@@ -4,67 +4,20 @@
     "type": "split",
     "children": [
       {
-        "id": "de869037f56c4c1a",
+        "id": "a8d9449162ce089c",
         "type": "tabs",
         "children": [
           {
-            "id": "1989c571884548ca",
+            "id": "eae4d2cae21ffbf0",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "Linux驱动开发笔记"
-            }
-          },
-          {
-            "id": "c9f9b8727c0c2b9c",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Linux内核原理及其开发/应试笔记与八股.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "应试笔记与八股"
-            }
-          },
-          {
-            "id": "c4ffb509c449facd",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Linux驱动开发笔记"
-            }
-          },
-          {
-            "id": "6ac2b38ee738a25b",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "STM32开发/STM32开发笔记.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "STM32开发笔记"
+              "title": "New tab"
             }
           }
-        ],
-        "currentTab": 3
+        ]
       }
     ],
     "direction": "vertical"
@@ -87,7 +40,7 @@
                 "autoReveal": false
               },
               "icon": "lucide-folder-closed",
-              "title": "文件列表"
+              "title": "Files"
             }
           },
           {
@@ -114,7 +67,7 @@
               "type": "starred",
               "state": {},
               "icon": "lucide-file",
-              "title": "插件不再活动"
+              "title": "Plugin no longer active"
             }
           },
           {
@@ -193,13 +146,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "STM32开发/STM32开发笔记.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "STM32开发笔记 的大纲"
+              "title": "Outline"
             }
           },
           {
@@ -231,19 +183,22 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:打开快速切换": false,
-      "graph:查看关系图谱": false,
-      "canvas:新建白板": false,
-      "command-palette:打开命令面板": false,
-      "audio-recorder:开始/结束录音": false,
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "command-palette:Open command palette": false,
+      "audio-recorder:Start/stop recording": false,
       "obsidian-git:Open Git source control": false,
       "webpage-html-export:Export as HTML": false,
       "mermaid-tools:Open Mermaid Toolbar": false,
       "obsidian42-brat:BRAT": false
     }
   },
-  "active": "6ac2b38ee738a25b",
+  "active": "eae4d2cae21ffbf0",
   "lastOpenFiles": [
+    "Linux内核原理及其开发/Linux驱动开发笔记.md",
+    "Linux内核原理及其开发/应试笔记与八股.md",
+    "STM32开发/STM32开发笔记.md",
     "机器学习/应试笔记与八股.md",
     "计算机网络/计算机网络非应试拓展/TCP标准.md",
     "计算机网络/基础应试学习/计算机网络应试学习.md",
@@ -267,9 +222,6 @@
     "土木常识/计算软件/SACS海工计算软件.md",
     "土木常识/土木常识.md",
     "Others/电子科技大学C语言笔试准备/历年笔试题目笔记.md",
-    "操作系统/用户态开发/线程锁/线程锁与信号量.md",
-    "Others/正则表达式/常用需求.md",
-    "Others/正则表达式/正则表达式.md",
     "CPP/Resources/C数据类型.canvas",
     "Linux内核原理及其开发/内核原理专题/内存管理专题",
     "生活常识/二手购物",
