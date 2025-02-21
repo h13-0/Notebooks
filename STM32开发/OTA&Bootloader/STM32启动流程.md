@@ -19,9 +19,7 @@ number headings: auto, first-level 2, max 6, 1.1
 [[STM32内存模型#^z95v2x]]：
 ![[STM32内存模型#2 1 STM32F10x的硬件内存地址划分 z95v2x]]
 
-### 3.2 STM32固件结构
-
-
+### 3.2 STM32固件结构 ^ekk2l7
 
 STM32固件结构如下：
 1. 中断向量表。
@@ -62,5 +60,32 @@ STM32的启动模式主要有如下几种：
 从内置Flash启动的启动流程为：
 1. 芯片上电或触发复位。
 2. SYSCLK的第4个上升沿，BOOT引脚的值将被锁存，此时被配置为从内置Flash启动，`0x0000 0000` 的地址会被映射到 `0x0800 0000` ，并开始执行代码。
-3. 读取固件头的中断向量表(可详见)
+3. 读取固件头的中断向量表(可详见[[STM32启动流程#^ekk2l7|STM32固件结构]])，并执行：
+	1. 将初始化栈顶指针读取到SP寄存器
+	2. 执行 `Reset_Handler` 函数，详见[[STM32启动流程#^1xjvks]]：![[STM32启动流程#5 1 Reset_Handler函数 ^1xjvks]]
+	3. 启动C库
+	4. 引导到用户程序入口( `main()` )
 
+### 5.1 Reset_Handler函数 ^1xjvks
+
+`Reset_Handler` 函数的参考代码如下：
+
+```C
+Reset_Handler:
+
+/* Call the clock system initialization function.*/
+    bl  SystemInit
+
+/* Copy the data segment initializers from flash to SRAM */
+  ldr r0, =_sdata
+  ldr r1, =_edata
+  ldr r2, =_sidata
+  movs r3, #0
+  b LoopCopyDataInit
+```
+
+其主要流程为：
+1. 调用 `SystemInit` 函数，
+2. 初始化 `.data` 段：
+	1. 
+3. 跳转 `LoopCopyDataInit` 函数。
