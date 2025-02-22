@@ -21,3 +21,18 @@ STM32F10x将Flash、SRAM、寄存器以及外设均映射到了统一的内存�
 - `0x4000 0000` - `0x5FFF FFFF` ：外设寄存器，排布GPIO、USART、SPI、TIM等外设控制寄存器。
 - `0xE000 0000` - `0xE00F FFFF` ：Cortex-M内核私有外设，排布SysTick、NVIC、SCB等内核寄存器。
 
+### 2.2 STM32F10x的
+
+
+
+
+### 2.3 编译器链接及链接脚本(\*.ld)
+
+
+
+
+
+
+
+
+
