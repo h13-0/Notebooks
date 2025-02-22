@@ -10,8 +10,13 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ## 2 前置基础
 
-需要了解[[STM32启动流程]]：
+### 2.1 STM32启动流程
+
 ![[STM32启动流程]]
+
+### 2.2 固件布局(Sections)
+
+
 
 ## 3 基本原理
 
