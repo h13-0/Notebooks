@@ -73,6 +73,12 @@ STM32的启动模式主要有如下几种：
 
 ### 5.1 Reset_Handler函数 ^1xjvks
 
+<span style="background:#fff88f"><font color="#c00000">注意点</font></span>： ^yd4zac
+- `Reset_Handler` 函数是复位中断的入口函数，<font color="#c00000">它负责初始化RAM</font>( `.data` 、 `.bss` 段)、<font color="#c00000">设置堆栈指针</font>、<font color="#c00000">跳转到</font> `main()` <font color="#c00000">函数的工作</font>。
+- `Reset_Handler` <font color="#c00000">相较于复位</font>：
+	- <span style="background:#fff88f"><font color="#c00000">不会重置外设寄存器或恢复硬件到初始状态!!!</font></span>，也就是外设寄存器配置不变
+	- <font color="#c00000">不会重新加载Flash</font>
+	- <font color="#c00000">仅重新初始化核心寄存器</font>( `PC` 等)、<font color="#c00000">重新初始化</font> `.data` <font color="#c00000">和</font> `.bss` <font color="#c00000">段</font>、<font color="#c00000">重构堆栈</font>
 
 `Reset_Handler` 函数的参考代码如下：
 

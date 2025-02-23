@@ -38,8 +38,11 @@ MEMORY
 1. 实现Bootloader基础功能，主要包含：
 	1. [[STM32 OTA&Bootloader开发#^8pv5ar|Flash烧写功能]]
 	2. [[STM32 OTA&Bootloader开发#^fsnwb3|跳转功能]]，需要完成：
-		1. 设置主堆栈指针MSP。
-		2. <font color="#c00000">找到并执行App程序中的复位中断函数</font>( `Reset_Handler` )。
+		1. 关闭并重置Bootloader程序所用到的所有外设。
+		2. 如果使用了RTOS，则还可能需要切换为特权模式。
+		3. 设置主堆栈指针MSP。
+		4. <font color="#c00000">找到并执行App程序中的复位中断的入口函数</font>( `Reset_Handler` )，<span style="background:#fff88f"><font color="#c00000">需要注意该函数仅仅包含了部分初始化功能</font></span>，<span style="background:#fff88f"><font color="#c00000">并不能重新初始化MCU!!!</font></span>
+			- 详见：[[STM32启动流程#^yd4zac|Reset_handler注意点]]。
 2. 补全业务逻辑，略。
 
 #### 3.1.1 Flash烧写功能 ^8pv5ar
