@@ -28,17 +28,33 @@ number headings: auto, first-level 2, max 6, 1.1
 
 在Bootloader工程中进行如下修改：
 1. 修改 `*.ld` 文件的 `MEMORY` 定义的大小，<font color="#c00000">用于限制Bootloader固件的大小</font>：
-	```C
+```C
 MEMORY
 {
   RAM    (xrw)    : ORIGIN = 0x20000000,   LENGTH = 20K
   FLASH    (rx)    : ORIGIN = 0x8000000,   LENGTH = 4K  /* 64K */
 }
-	```
-1. 实现Bootloader基础功能
+```
+1. 实现Bootloader基础功能，主要包含：
+	1. [[STM32 OTA&Bootloader开发#^8pv5ar|Flash烧写功能]]
+	2. [[STM32 OTA&Bootloader开发#^fsnwb3|跳转功能]]
 2. 补全业务逻辑，略。
 
-#### 3.1.1 App程序实现
+#### 3.1.1 Flash烧写功能 ^8pv5ar
+
+
+
+
+
+#### 3.1.2 跳转功能 ^fsnwb3
+
+
+
+
+
+
+
+### 3.2 App程序实现
 
 在APP中应当进行如下修改：
 1. 修改Flash的起始位置、Flash大小，<font color="#c00000">需要注意的是K为1024而非1000</font>：
@@ -53,11 +69,10 @@ MEMORY
 - 补充：
 	- 在本步骤中，<font color="#c00000">修改了FLASH的起始地址</font>，<span style="background:#fff88f"><font color="#c00000">也就顺带修改了该固件中所有函数调用时所指向的函数地址</font></span>(包括汇编指令、`.init` 段等函数地址调用)，<font color="#c00000">也就是只要把固件拷贝到正确的内存地址后，即可保证启动后APP的正常运行</font>。
 	- 而在整个生命周期中，仅有[[STM32启动流程|STM32启动过程中]]还未保证地址的正确偏移，此时则需要进行第二步处理。
-1. 修改APP中的中断向量表偏移：
+2. 修改APP中的中断向量表偏移，全局搜索 `VECT_TAB_OFFSET` 宏，并完成修改即可。该宏位于 `system_stm32*xx.c` 中，<font color="#c00000">CubeMX不会重新生成该文件</font>，<font color="#c00000">正常使用宏定义即可</font>：
 ```C
-
+#define USER_VECT_TAB_ADDRESS
+#define VECT_TAB_OFFSET 0x00002000U // 具体偏移是Bootloader预留的空间大小
 ```
-- 
-
-
-## 4 
+- 补充：
+	- 在整个启动流程中，仅 `startup_*.s` 中的操作不受链接器的影响
