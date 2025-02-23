@@ -37,7 +37,9 @@ MEMORY
 ```
 1. 实现Bootloader基础功能，主要包含：
 	1. [[STM32 OTA&Bootloader开发#^8pv5ar|Flash烧写功能]]
-	2. [[STM32 OTA&Bootloader开发#^fsnwb3|跳转功能]]
+	2. [[STM32 OTA&Bootloader开发#^fsnwb3|跳转功能]]，需要完成：
+		1. 设置主堆栈指针MSP。
+		2. <font color="#c00000">找到并执行App程序中的复位中断函数</font>( `Reset_Handler` )。
 2. 补全业务逻辑，略。
 
 #### 3.1.1 Flash烧写功能 ^8pv5ar
@@ -75,4 +77,5 @@ MEMORY
 #define VECT_TAB_OFFSET 0x00002000U // 具体偏移是Bootloader预留的空间大小
 ```
 - 补充：
-	- 在整个启动流程中，仅 `startup_*.s` 中的操作不受链接器的影响
+	- 在整个启动流程中，仅 `startup_*.s` 中的操作不受链接器的影响。
+	- 本质上修改了 `SCB->VTOR` 所指向的地址。
