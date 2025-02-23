@@ -2,9 +2,6 @@
   "settingsVersion": "1.8.01",
   "exportOptions": {
     "createDocumentContainer": true,
-    "keepModHeaderFooter": false,
-    "addPageIcon": true,
-    "unifyTitleFormat": true,
     "createPusherElement": true,
     "makeHeadersTrees": true,
     "postProcess": true,
@@ -17,11 +14,11 @@
     "addBodyClasses": true,
     "addMathjaxStyles": true,
     "addHeadTag": true,
+    "addRSS": true,
+    "addTitle": true,
     "backlinkOptions": {
       "featureId": "backlinks",
       "enabled": true,
-      "unavailable": false,
-      "alwaysEnabled": false,
       "displayTitle": "Backlinks",
       "featurePlacement": {
         "selector": ".footer",
@@ -31,8 +28,6 @@
     "tagOptions": {
       "featureId": "tags",
       "enabled": true,
-      "unavailable": false,
-      "alwaysEnabled": false,
       "displayTitle": "",
       "featurePlacement": {
         "selector": ".header .data-bar",
@@ -50,8 +45,6 @@
     "aliasOptions": {
       "featureId": "aliases",
       "enabled": true,
-      "unavailable": false,
-      "alwaysEnabled": false,
       "displayTitle": "",
       "featurePlacement": {
         "selector": ".header .data-bar",
@@ -61,8 +54,6 @@
     "propertiesOptions": {
       "featureId": "properties",
       "enabled": true,
-      "unavailable": false,
-      "alwaysEnabled": false,
       "displayTitle": "Properties",
       "featurePlacement": {
         "selector": ".header",
@@ -72,14 +63,11 @@
     "fileNavigationOptions": {
       "featureId": "file-navigation",
       "enabled": true,
-      "unavailable": false,
-      "alwaysEnabled": false,
       "displayTitle": "",
       "featurePlacement": {
         "selector": "#left-sidebar-content",
         "type": "end"
       },
-      "showCustomIcons": false,
       "showDefaultFolderIcons": false,
       "showDefaultFileIcons": false,
       "defaultFolderIcon": "lucide//folder",
@@ -91,8 +79,6 @@
     "searchOptions": {
       "featureId": "search",
       "enabled": true,
-      "unavailable": false,
-      "alwaysEnabled": false,
       "displayTitle": "Search...",
       "featurePlacement": {
         "selector": "#left-sidebar .topbar-content",
@@ -102,8 +88,6 @@
     "outlineOptions": {
       "featureId": "outline",
       "enabled": true,
-      "unavailable": false,
-      "alwaysEnabled": false,
       "displayTitle": "Outline",
       "featurePlacement": {
         "selector": "#right-sidebar-content",
@@ -115,8 +99,6 @@
     "themeToggleOptions": {
       "featureId": "theme-toggle",
       "enabled": true,
-      "unavailable": false,
-      "alwaysEnabled": false,
       "displayTitle": "",
       "featurePlacement": {
         "selector": "#right-sidebar .topbar-content",
@@ -126,8 +108,6 @@
     "graphViewOptions": {
       "featureId": "graph-view",
       "enabled": true,
-      "unavailable": false,
-      "alwaysEnabled": false,
       "displayTitle": "Graph View",
       "featurePlacement": {
         "selector": "#right-sidebar-content",
@@ -148,8 +128,6 @@
     "sidebarOptions": {
       "featureId": "sidebar",
       "enabled": true,
-      "unavailable": false,
-      "alwaysEnabled": false,
       "allowResizing": true,
       "allowCollapsing": true,
       "rightDefaultWidth": "20em",
@@ -158,8 +136,6 @@
     "customHeadOptions": {
       "featureId": "custom-head",
       "enabled": true,
-      "unavailable": false,
-      "alwaysEnabled": false,
       "displayTitle": "",
       "featurePlacement": {
         "selector": "head",
@@ -168,23 +144,12 @@
       "sourcePath": "",
       "includePath": "site-lib/html/custom-head.html"
     },
-    "documentOptions": {
+    "fileOptions": {
       "featureId": "obsidian-document",
       "enabled": true,
-      "unavailable": false,
-      "alwaysEnabled": true,
       "allowFoldingLists": true,
       "allowFoldingHeadings": true,
       "documentWidth": "40em"
-    },
-    "rssOptions": {
-      "featureId": "obsidian-document",
-      "enabled": true,
-      "unavailable": false,
-      "alwaysEnabled": false,
-      "siteUrl": "",
-      "siteName": "Notebooks",
-      "authorName": ""
     },
     "relativeHeaderLinks": false,
     "includeJS": true,
@@ -200,22 +165,18 @@
     "slugifyPaths": true,
     "flattenExportPaths": false,
     "fixLinks": true,
+    "siteURL": "",
+    "siteName": "Notebooks",
     "faviconPath": "",
+    "customHeadPath": "",
     "iconEmojiStyle": "Native",
+    "authorName": "",
     "exportRoot": "",
-    "includePluginCss": [
-      "novel-word-count",
-      "code-styler-styles"
-    ],
-    "includeStyleCssIds": [
-      "novel-word-count",
-      "code-styler-styles"
-    ],
-    "autoDisposeWebpages": true
+    "includePluginCSS": [],
+    "includeSvelteCSS": true
   },
   "logLevel": "warning",
   "titleProperty": "title",
-  "rssDateProperty": "date",
   "onlyExportModified": true,
   "deleteOldFiles": true,
   "exportPreset": "online",
