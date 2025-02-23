@@ -41,7 +41,7 @@ STM32编译后的Sections主要有(按照地址从低到高排序)：
 ### 3.1 Bootloader实现
 
 在Bootloader工程中进行如下修改：
-1. 修改 `*.ld` 文件的 `MEMORY` 定义的大小，<font color="#c00000">用于限制Bootloader固件的大小</font>。
+1. 修改 `*.ld` 文件的 `MEMORY` 定义的大小，<font color="#c00000">用于限制Bootloader固件的大小</font>：
 	```C
 MEMORY
 {
@@ -49,12 +49,21 @@ MEMORY
   FLASH    (rx)    : ORIGIN = 0x8000000,   LENGTH = 4K  /* 64K */
 }
 	```
-2. 
+1. 实现Bootloader基础功能
+2. 补全业务逻辑，略。
 
 #### 3.1.1 App程序实现
 
 在APP中应当进行如下修改：
-1. 修改Flash的起始位置、Flash大小
-
+1. 修改Flash的起始位置、Flash大小，<font color="#c00000">需要注意的是K为1024而非1000</font>：
+```C
+MEMORY
+{
+  RAM    (xrw)    : ORIGIN = 0x20000000,   LENGTH = 20K
+  /* FLASH    (rx)    : ORIGIN = 0x8000000,   LENGTH = 64K */
+  FLASH    (rx)    : ORIGIN = 0x8002000,   LENGTH = 56K
+}
+```
+2. 
 
 ## 4 
