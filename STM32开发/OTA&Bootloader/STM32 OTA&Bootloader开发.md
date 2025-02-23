@@ -64,6 +64,8 @@ MEMORY
   FLASH    (rx)    : ORIGIN = 0x8002000,   LENGTH = 56K
 }
 ```
-2. 
+- 补充：
+	- 在本步骤中，<font color="#c00000">修改了FLASH的起始地址</font>，<span style="background:#fff88f"><font color="#c00000">也就顺带修改了该固件中所有函数调用时所指向的函数地址</font></span>(包括汇编指令、`.init` 段等函数地址调用)
+1. 
 
 ## 4 
