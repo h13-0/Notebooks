@@ -3677,7 +3677,54 @@ writel(dev->regs.control, xxx);
 
 ### 11.2 使用IO端口
 
+Linux系统的包含串口、PCI bus、DMA等IO端口的分配均在 `/proc/ioports` 中可见，并会列出IO的地址范围，例如：
 
+```Shell
+# cat /proc/ioports
+0000-0cf7 : PCI Bus 0000:00
+  0000-001f : dma1
+  0020-0021 : pic1
+  0040-0043 : timer0
+  0050-0053 : timer1
+  0060-0060 : keyboard
+  0064-0064 : keyboard
+  0070-0071 : rtc0
+  0080-008f : dma page reg
+  00a0-00a1 : pic2
+  00c0-00df : dma2
+  00f0-00ff : fpu
+  0170-0177 : 0000:00:01.1
+    0170-0177 : ata_piix
+  01f0-01f7 : 0000:00:01.1
+    01f0-01f7 : ata_piix
+  0376-0376 : 0000:00:01.1
+    0376-0376 : ata_piix
+  03f2-03f2 : floppy
+  03f4-03f5 : floppy
+  03f6-03f6 : 0000:00:01.1
+    03f6-03f6 : ata_piix
+  03f7-03f7 : floppy
+  03f8-03ff : serial
+  0600-063f : 0000:00:01.3
+    0600-0603 : ACPI PM1a_EVT_BLK
+    0604-0605 : ACPI PM1a_CNT_BLK
+    0608-060b : ACPI PM_TMR
+  0700-070f : 0000:00:01.3
+0cf8-0cff : PCI conf1
+0d00-ffff : PCI Bus 0000:00
+  afe0-afe3 : ACPI GPE0_BLK
+  c000-cfff : PCI Bus 0000:02
+  d000-dfff : PCI Bus 0000:01
+  e000-e03f : 0000:00:06.0
+  e040-e05f : 0000:00:01.2
+    e040-e05f : uhci_hcd
+  e060-e07f : 0000:00:05.0
+  e080-e09f : 0000:00:07.0
+  e0a0-e0af : 0000:00:01.1
+    e0a0-e0af : ata_piix
+```
+
+在使用端口时，
 
 
 
