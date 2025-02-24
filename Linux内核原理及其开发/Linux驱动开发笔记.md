@@ -3637,17 +3637,23 @@ void barrier(void);
 
 #include <asm/system.h>
 // 以下四种API均为在硬件层面插入内存屏障
+// 在大多数架构中，下列四种API调用时均会隐含 barrier() 调用
 // 读内存屏障，可以保证 rmb() 调用之前的所有读取操作均已完成
 void rmb(void);
-// 阻止部分读取操作的读内存屏障，除非明白
+// 阻止部分读取操作的读内存屏障，除非明白与 rmb() 之间的差别，否则不建议调用
 void read_barrier_depends(void);
 // 写内存屏障，可以保证 wmb() 调用之前的所有写入操作均已完成
 void wmb(void);
+// 全内存屏障，可以保证 mb() 调用之前的所有读写操作均已完成
 void mb(void);
 ```
 
 
+一个经典的内存屏障的使用形式如下：
 
+```C
+
+```
 
 
 
