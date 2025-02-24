@@ -3675,6 +3675,10 @@ wmb();
 writel(dev->regs.control, xxx);
 ```
 
+### 11.2 使用IO端口
+
+
+
 
 
 
