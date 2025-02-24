@@ -3724,7 +3724,11 @@ Linux系统的包含串口、PCI bus、DMA等IO端口的分配均在 `/proc/iopo
     e0a0-e0af : ata_piix
 ```
 
-在使用端口时，
+内核中为IO端口分配提供了如下的接口：
+
+```C
+
+```
 
 
 
