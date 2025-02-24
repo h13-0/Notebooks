@@ -3725,9 +3725,10 @@ Linux系统的包含串口、PCI bus、DMA等IO端口的分配均在 `/proc/iopo
 ```
 
 内核中为IO端口分配提供了如下的接口：
-
+- 
 ```C
-
+#include <linux/ioports.h>
+struct resource *request_region(resource_size_t start, resource_size_t n, const char *name);
 ```
 
 
