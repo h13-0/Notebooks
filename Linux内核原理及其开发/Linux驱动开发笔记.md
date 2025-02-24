@@ -3651,12 +3651,28 @@ void wmb(void);
 void mb(void);
 ```
 - 多核心内存屏障：
-	- 相比于单核心的内存屏障放重vg'v
+	- 相比于单核心的内存屏障，多核心的内存屏障额外的增加了多核心之间的同步机制，例如[[CPU缓存一致性|MESI]]等。
+```C
+#include <asm/system.h>
+void smp_rmb(void);
+void smp_read_barrier_depends(void);
+void smp_wmb(void);
+void smp_mb(void);
+```
 
 一个经典的内存屏障的使用形式如下：
 
 ```C
+// 写入寄存器进行硬件配置
+writel(dev->regs.addr, xxx);
+writel(dev->regs.size, xxx);
+writel(dev->regs.ops, xxx);
 
+// 插入写内存屏障，确保前面三哥寄存器操作均已完成
+wmb();
+
+// 执行硬件操作
+writel(dev->regs.control, xxx);
 ```
 
 
