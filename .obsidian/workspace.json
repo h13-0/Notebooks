@@ -27,12 +27,26 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
+                "file": "计算机组成原理/第一章 计算机系统概述/第一章 计算机系统概述.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Linux驱动开发笔记"
+              "title": "第一章 计算机系统概述"
+            }
+          },
+          {
+            "id": "59133015946cfe5b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "嵌入式基础/应试笔记与八股.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "应试笔记与八股"
             }
           }
         ],
@@ -218,6 +232,9 @@
   "active": "d9ef96d0b0aa6657",
   "lastOpenFiles": [
     "操作系统/课外补充/内存屏障/内存屏障.md",
+    "嵌入式基础/应试笔记与八股.md",
+    "嵌入式基础/Readme.md",
+    "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "计算机组成原理/第一章 计算机系统概述/第一章 计算机系统概述.md",
     "计算机组成原理/待分类/CPU缓存一致性.md",
     "STM32开发/OTA&Bootloader/STM32启动流程.md",
@@ -240,9 +257,6 @@
     "计算机网络/计算机网络非应试拓展/TCP标准.md",
     "计算机网络/基础应试学习/计算机网络应试学习.md",
     "计算机网络/基础应试学习/第四章 网络层/第四章 网络层.md",
-    "计算机网络/基础应试学习/第一章 计算机网络体系结构/第一章 计算机网络体系结构.md",
-    "计算机网络/基础应试学习/第六章 应用层/第六章 应用层.md",
-    "软件工程/软件工程应试笔记.md",
     "CPP/Resources/C数据类型.canvas",
     "CPP/C语言杂项",
     "CPP/Resources/n1570.pdf",
