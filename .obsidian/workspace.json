@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
+                "file": "Readme.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Linux驱动开发笔记"
+              "title": "Readme"
             }
           }
         ]
@@ -195,11 +195,15 @@
       "command-palette:Open command palette": false,
       "audio-recorder:Start/stop recording": false,
       "obsidian-git:Open Git source control": false,
-      "obsidian42-brat:BRAT": false
+      "obsidian42-brat:BRAT": false,
+      "webpage-html-export:Export Vault to HTML": false,
+      "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
   "active": "ec6397eedfe7fef7",
   "lastOpenFiles": [
+    "生活常识/二手购物/电动车.md",
+    "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "操作系统/课外补充/内存屏障/内存屏障.md",
     "计算机组成原理/第二章 数据的表示和运算/第二章 数据的表示和运算.md",
     "微型计算机原理与接口技术/第一章 计算机基础知识/第一章 计算机基础知识.md",
@@ -215,7 +219,6 @@
     "计算机网络/基础应试学习/第六章 应用层/第六章 应用层.md",
     "计算机组成原理/第二章 数据的表示和运算",
     "嵌入式基础/Readme.md",
-    "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "计算机组成原理/待分类/CPU缓存一致性.md",
     "STM32开发/OTA&Bootloader/STM32启动流程.md",
     "STM32开发/STM32内存、储存模型/STM32内存模型.md",
