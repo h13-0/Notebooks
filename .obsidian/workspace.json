@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "STM32开发/STM32内存、储存模型/STM32内置Flash.md",
+                "file": "生活常识/Readme.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "STM32内置Flash"
+              "title": "Readme"
             }
           }
         ]
@@ -202,14 +202,14 @@
   },
   "active": "d22c18003893ae57",
   "lastOpenFiles": [
-    "STM32开发/STM32内存、储存模型/STM32内存模型.md",
     "STM32开发/STM32内存、储存模型/STM32内置Flash.md",
+    "Readme.md",
+    "STM32开发/STM32内存、储存模型/STM32内存模型.md",
     "STM32开发/OTA&Bootloader/STM32 OTA&Bootloader开发.md",
     "STM32开发/OTA&Bootloader/STM32启动流程.md",
     "ESP32开发笔记/ESP32 GPIO专项.md",
     "嵌入式基础/接口技术/DCMI/DCMI接口标准.md",
     "嵌入式基础/接口技术/DCMI",
-    "Readme.md",
     "Resources/chrome_QXgvHAMLdc.png",
     "Resources/Pasted image 20240203021517.png",
     "操作系统/用户态开发/IPC/Linux用户态IPC.md",
