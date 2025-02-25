@@ -1,7 +1,7 @@
 ---
 number headings: auto, first-level 2, max 6, 1.1
 ---
-#STM32开发 
+#嵌入式 #STM32开发 
 
 ## 1 目录
 
@@ -29,12 +29,5 @@ STM32F10x将Flash、SRAM、寄存器以及外设均映射到了统一的内存�
 
 
 ### 2.3 编译器链接及链接脚本(\*.ld)
-
-
-
-
-
-
-
 
 
