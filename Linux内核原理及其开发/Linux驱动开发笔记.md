@@ -3740,10 +3740,22 @@ void release_region(resource_size_t start, resource_size_t n);
 #include <asm/io.h>
 
 // 读写8位
+u8 inb(unsigned long addr);
+void outb(unsigned char x, unsigned long port);
 
+// 读写16位
+u16 inw(unsigned long addr);
+void outw(unsigned short x, unsigned long port);
+
+// 读写32位
+u32 inl(unsigned long addr);
+void outl(unsigned int x, unsigned long port);
+```
+- 串操作：
+	- 一些jia'gou
+```C
 
 ```
-
 
 
 
