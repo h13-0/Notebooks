@@ -3752,9 +3752,18 @@ u32 inl(unsigned long addr);
 void outl(unsigned int x, unsigned long port);
 ```
 - 串操作：
-	- 一些jia'gou
+	- 一些架构上提供了一次传输一个数据序列的指令，因此内核还提供了对应的串操作。在支持串IO的架构上会使用对应的指令，在不支持的架构上会使用紧凑循环实现，比自行实现循环效率要高。
 ```C
+#include <asm/io.h>
 
+void insb(unsigned long port, void *dst, unsigned long count);
+void outsb(unsigned long port, const void *src, unsigned long count);
+
+void insw(unsigned long port, void *dst, unsigned long count);
+void outsw(unsigned long port, const void *src, unsigned long count);
+
+void insl(unsigned long port, void *dst, unsigned long count);
+void outsl(unsigned long port, const void *src, unsigned long count);
 ```
 
 
