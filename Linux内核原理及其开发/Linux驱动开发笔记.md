@@ -3736,7 +3736,13 @@ struct resource *request_region(resource_size_t start, resource_size_t n, const 
 void release_region(resource_size_t start, resource_size_t n);
 ```
 - 操作IO：
+```C
+#include <asm/io.h>
 
+// 读写8位
+
+
+```
 
 
 
