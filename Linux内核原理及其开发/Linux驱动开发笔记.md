@@ -3769,10 +3769,13 @@ void outsl(unsigned long port, const void *src, unsigned long count);
 	- 在一些老式总线上(比如ISA总线)可能会出现CPU速度比总线速度快的问题，因此若需要保持正确的时序的话就需要引入暂停式IO。
 	- 此类IO比上述IO多了一个 `_p` 后缀。
 	- 暂停式IO会使用一些延迟方法来等待这些低速设备的响应(通常是延迟1us)。<font color="#c00000">该IO在现代设备中很少使用</font>，在大多数平台上均已被重定向为普通IO(Power-PC仍有延迟)。
-```C
 
-```
-  
+#### 11.2.1 实际Demo
+
+#TODO 
+
+### 11.3 使用IO内存
+
 
 
 
