@@ -3765,7 +3765,8 @@ void outsw(unsigned long port, const void *src, unsigned long count);
 void insl(unsigned long port, void *dst, unsigned long count);
 void outsl(unsigned long port, const void *src, unsigned long count);
 ```
-
+- 暂停式IO：
+	- 在一些老设备上
 
   
 
