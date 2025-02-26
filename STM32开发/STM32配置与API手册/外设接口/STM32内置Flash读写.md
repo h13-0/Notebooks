@@ -48,7 +48,10 @@ LL库并未提供对应API，需要手动操作寄存器。
 
 #### 3.1.3 烧写Flash ^s1wv62
 
+在STM32L4xx中，HAL库提供了如下的Flash烧写API：
+
 ```C
+#include <stm32xx_hal.h>
 HAL_StatusTypeDef  HAL_FLASH_Program(uint32_t TypeProgram, uint32_t Address, uint64_t Data);
 HAL_StatusTypeDef  HAL_FLASH_Program_IT(uint32_t TypeProgram, uint32_t Address, uint64_t Data);
 ```
