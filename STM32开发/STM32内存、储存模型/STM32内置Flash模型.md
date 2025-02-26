@@ -23,4 +23,3 @@ STM32 F10x系列按照存储容量可以进行如下划分：
 - 信息块主要包含：系统存储器(即内置Bootloader)、以及选项字节(例如内存容量等信息)，其存储与ROM中，不可修改。
 - <span style="background:#fff88f"><font color="#c00000">信息快不占用STM32标称的Flash存储空间</font></span>。例如STM32F103C8，其用户可读写的空间仍为标称的64Kbyte。
 - 命名规则参考：[[查阅性基础#^imvzdn|STM32命名规则]]。
-
