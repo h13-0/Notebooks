@@ -62,7 +62,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -241,10 +241,10 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "054d4e4be9e3cdc9",
+  "active": "4b5a2f94f054cd55",
   "lastOpenFiles": [
-    "计算机组成原理/第二章 数据的表示和运算/第二章 数据的表示和运算.md",
     "微型计算机原理与接口技术/第一章 计算机基础知识/第一章 计算机基础知识.md",
+    "计算机组成原理/第二章 数据的表示和运算/第二章 数据的表示和运算.md",
     "STM32开发/STM32内存、储存模型/STM32内置Flash.md",
     "STM32开发/Readme.md",
     "STM32开发/查阅性基础.md",
