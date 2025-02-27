@@ -48,6 +48,18 @@
               "icon": "lucide-file",
               "title": "查阅性基础"
             }
+          },
+          {
+            "id": "ba719311759cd1cb",
+            "type": "leaf",
+            "state": {
+              "type": "image",
+              "state": {
+                "file": "STM32开发/Resources/chrome_guClhcVZRT.png"
+              },
+              "icon": "lucide-image",
+              "title": "chrome_guClhcVZRT"
+            }
           }
         ],
         "currentTab": 1
@@ -231,9 +243,11 @@
   },
   "active": "fcf9c2e21a4321ae",
   "lastOpenFiles": [
+    "STM32开发/Resources/chrome_guClhcVZRT.png",
     "STM32开发/查阅性基础.md",
     "STM32开发/STM32内存、储存模型/STM32内置Flash模型.md",
     "STM32开发/STM32配置与API手册/外设接口/STM32内置Flash读写.md",
+    "Resources/msedge_lNBTjFOTWK.png",
     "生活常识/二手购物/电动车.md",
     "生活常识/Resources/车外视角.jpg",
     "生活常识/Resources/电池混用.jpg",
@@ -247,8 +261,6 @@
     "Resources/Pasted image 20250227142842.png",
     "STM32开发/STM32配置与API手册/外设接口/外设接口.md",
     "STM32开发/STM32内存、储存模型/STM32内存模型.md",
-    "Resources/chrome_QXgvHAMLdc.png",
-    "STM32开发/Resources/msedge_2N4A2QEz9X.png",
     "STM32开发/Readme.md",
     "STM32开发/OTA&Bootloader/STM32启动流程.md",
     "计算机网络/基础应试学习/计算机网络应试学习.md",
