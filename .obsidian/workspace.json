@@ -11,10 +11,14 @@
             "id": "154dcb66075a12ee",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "微型计算机原理与接口技术/第一章 计算机基础知识/第一章 计算机基础知识.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "第一章 计算机基础知识"
             }
           }
         ]
@@ -198,6 +202,7 @@
   },
   "active": "154dcb66075a12ee",
   "lastOpenFiles": [
+    "计算机组成原理/第二章 数据的表示和运算/第二章 数据的表示和运算.md",
     "生活常识/二手购物/电动车.md",
     "STM32开发/STM32配置与API手册/外设接口/STM32内置Flash读写.md",
     "STM32开发/STM32配置与API手册/外设接口/外设接口.md",
@@ -210,7 +215,6 @@
     "STM32开发/Resources/msedge_LFuPxUpbdZ.png",
     "STM32开发/Resources/msedge_EMBmFmDIL5.png",
     "STM32开发/Readme.md",
-    "计算机组成原理/第二章 数据的表示和运算/第二章 数据的表示和运算.md",
     "微型计算机原理与接口技术/第一章 计算机基础知识/第一章 计算机基础知识.md",
     "STM32开发/Resources/chrome_guClhcVZRT.png",
     "STM32开发/OTA&Bootloader/STM32启动流程.md",
