@@ -15,8 +15,9 @@ STM32 F10x系列按照存储容量可以进行如下划分：
 	![[msedge_EMBmFmDIL5.png]]
 - 中容量产品：128Kbyte及以下，标识符段为 `F103*B` 及以下的。
 	![[msedge_2N4A2QEz9X.png]]
-- 大容量产品：256Kbyte及以上，最大512Kbyte，标识符段为 `F103*Z` 及以上的。
+- 大容量产品：256Kbyte及以上，最大512Kbyte，标识符段为 `F103*Z` ~ `F103*D`。
 	![[msedge_RWSicTexx5.png]]
+- 超大容量产品：容量大于512KByte的，标识符段为
 - 互联型产品：标识符段为 `F105` 或 `F107` 的。
 	![[msedge_LFuPxUpbdZ.png]]
 注：

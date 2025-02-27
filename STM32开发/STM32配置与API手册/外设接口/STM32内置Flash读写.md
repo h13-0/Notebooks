@@ -56,6 +56,39 @@ HAL库API为：
 HAL_StatusTypeDef HAL_FLASHEx_Erase(FLASH_EraseInitTypeDef *pEraseInit, uint32_t *PageError);
 ```
 
+其中 `FLASH_EraseInitTypeDef` 的定义为：
+
+```C
+/**
+  * @brief  FLASH Erase structure definition
+  */
+typedef struct
+{
+  uint32_t TypeErase;   /*!< Mass erase or page erase.
+                             This parameter can be a value of @ref FLASH_Type_Erase */
+  uint32_t Banks;       /*!< Select bank to erase.
+                             This parameter must be a value of @ref FLASH_Banks
+                             (FLASH_BANK_BOTH should be used only for mass erase) */
+  uint32_t Page;        /*!< Initial Flash page to erase when page erase is disabled
+                             This parameter must be a value between 0 and (max number of pages in the bank - 1)
+                             (eg : 255 for 1MB dual bank) */
+  uint32_t NbPages;     /*!< Number of pages to be erased.
+                             This parameter must be a value between 1 and (max number of pages in the bank - value of initial page)*/
+} FLASH_EraseInitTypeDef;
+```
+
+该结构体的参考定义方式为：
+
+```C
+FLASH_EraseInitTypeDef EraseInit;
+
+EraseInit.TypeErase   = FLASH_TYPEERASE_PAGES;
+EraseInit.Banks       = FLASH_BANK_1;         // 单Bank型号可忽略
+EraseInit.Page        = 128;                  // 目标页号
+EraseInit.NbPages     = 1;                    // 擦除1页
+```
+
+
 #### 3.1.4 烧写Flash ^s1wv62
 
 在STM32L4xx中，HAL库提供了如下的Flash烧写API：
@@ -65,6 +98,13 @@ HAL_StatusTypeDef HAL_FLASHEx_Erase(FLASH_EraseInitTypeDef *pEraseInit, uint32_t
 HAL_StatusTypeDef  HAL_FLASH_Program(uint32_t TypeProgram, uint32_t Address, uint64_t Data);
 HAL_StatusTypeDef  HAL_FLASH_Program_IT(uint32_t TypeProgram, uint32_t Address, uint64_t Data);
 ```
+
+在上述API中：
+- `HAL_FLASH_Program` 为同步方法，该函数会一直等待直到烧写完成。
+- `HAL_FLASH_Program_IT` 为异步方法，该函数会立即返回，操作完毕后使用中断( `Flash_IRQn` )通知结果。
+异步的优势及使用场景通常为：
+1. 低功耗场景
+2. 多任务实时系统等
 
 ### 3.2 3.2操作选项字节区域(Option Bytes)
 
