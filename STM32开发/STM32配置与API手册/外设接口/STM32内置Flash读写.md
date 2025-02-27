@@ -88,7 +88,6 @@ EraseInit.Page        = 128;                  // 目标页号
 EraseInit.NbPages     = 1;                    // 擦除1页
 ```
 
-
 #### 3.1.4 烧写Flash ^s1wv62
 
 在STM32L4xx中，HAL库提供了如下的Flash烧写API：

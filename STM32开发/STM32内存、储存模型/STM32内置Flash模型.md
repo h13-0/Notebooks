@@ -11,13 +11,13 @@ number headings: auto, first-level 2, max 6, 1.1
 ## 2 STM32 F10x系列Flash组织结构
 
 STM32 F10x系列按照存储容量可以进行如下划分：
-- 小容量产品：容量为 `32KB` 及以下，标识符段为 `F103*6` 及以下的。
+- 小容量产品：容量为 `32KB` 及以下，标识符段为 `F10x*6` 及以下的。
 	![[msedge_EMBmFmDIL5.png]]
-- 中容量产品：容量为 `48KB` ~ `128KB` ，标识符段为 `F103*7` ~ `F103*B` 。
+- 中容量产品：容量为 `48KB` ~ `128KB` ，标识符段为 `F10x*7` ~ `F10x*B` 。
 	![[msedge_2N4A2QEz9X.png]]
-- 大容量产品：容量为 `192KB` ~ `512KB` ，标识符段为 `F103*Z` ~ `F103*D` 。
+- 大容量产品：容量为 `192KB` ~ `512KB` ，标识符段为 `F10x*Z` ~ `F10x*E` 。
 	![[msedge_RWSicTexx5.png]]
-- 超大容量产品：容量为 `512KB` ~ `1024KB` 的，标识符段为 `F103*D` ~ `F103*E` 。
+- 超大容量产品：容量为 `768KB` ~ `1024KB` 的，标识符段为 `F10x*F` ~ `F10x*G` 。
 	- ![[msedge_lNBTjFOTWK.png]]
 	- <span style="background:#fff88f"><font color="#c00000">注意该系列产品为双BANK架构</font></span>。
 - 互联型产品：标识符段为 `F105` 或 `F107` 的。
