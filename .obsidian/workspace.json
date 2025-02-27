@@ -20,6 +20,16 @@
               "icon": "lucide-file",
               "title": "电动车"
             }
+          },
+          {
+            "id": "154dcb66075a12ee",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "New tab"
+            }
           }
         ]
       }
@@ -202,6 +212,7 @@
   },
   "active": "0648b05e4885a261",
   "lastOpenFiles": [
+    "生活常识/二手购物/电动车.md",
     "STM32开发/STM32配置与API手册/外设接口/STM32内置Flash读写.md",
     "STM32开发/STM32配置与API手册/外设接口/外设接口.md",
     "STM32开发/STM32内存、储存模型/STM32内置Flash模型.md",
@@ -233,7 +244,6 @@
     "操作系统/课外补充/内存屏障/内存屏障.md",
     "生活常识/电子电气/电池/常见电池电压及组合串数表.md",
     "计算机组成原理/第一章 计算机系统概述/第一章 计算机系统概述.md",
-    "生活常识/二手购物/电动车.md",
     "ESP32开发笔记/Resources/chrome_AWDTtlXSXc.png",
     "ESP32开发笔记/Resources/chrome_JKccr4VVc3.png",
     "ESP32开发笔记/Resources",
