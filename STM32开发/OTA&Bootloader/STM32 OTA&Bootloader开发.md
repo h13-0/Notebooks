@@ -53,11 +53,51 @@ MEMORY
 
 #### 3.1.2 跳转功能 ^fsnwb3
 
+```C
+/**
+ * @brief: boot from flash.
+ * @param: firmware address.
+ */
+void boot(uint32_t addr)
+{
+	void (*app)(void) = addr;
 
+	// Gradually shut down the hardware resources used by the bootloader.
+	// 1. Close global interrupt and prepare to shut down hardware.
+	__disable_irq();
 
+	// 2. Close systick and reset counter.
+	SysTick->CTRL = 0; // For Cortex-m3/m4, simply press Ctrl at position 0 to close it.
+	SysTick->LOAD = 0; // Clear the reload value register.
+	SysTick->VAL  = 0; // Clear current count.
 
+	// 3. Reset RCC.
+	HAL_RCC_DeInit();
 
+	// 4. Close all interrupt enable bits and clear interrupt suspension.
+	for(int i = 0; i < 8; i++)
+	{
+		NVIC->ICER[i] = 0xFFFFFFFF;
+		NVIC->ICPR[i] = 0xFFFFFFFF;
+	}
 
+	// 5. Switch the current CPU to privileged mode.
+	__set_CONTROL(0);
+
+	// 6. Set main stack pointer.
+	__set_MSP(addr + 4);
+
+	// 7. Enable global interrupt.
+	__enable_irq();
+
+	// 8. Jump.
+	app();
+
+	// 9. It's impossible to reach, but to avoid it, a hard reset is still triggered.
+	// TODO: Sending startup failure log.
+	NVIC_SystemReset();
+}
+```
 
 ### 3.2 App程序实现
 
