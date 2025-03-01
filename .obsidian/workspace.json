@@ -20,8 +20,19 @@
               "icon": "lucide-file",
               "title": "STM32 OTA&Bootloader开发"
             }
+          },
+          {
+            "id": "156301279003842d",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "新标签页"
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -200,8 +211,9 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "5ca045b9155f7947",
+  "active": "156301279003842d",
   "lastOpenFiles": [
+    "STM32开发/OTA&Bootloader/STM32 OTA&Bootloader开发.md",
     "STM32开发/STM32配置与API手册/外设接口/STM32内置Flash读写.md",
     "STM32开发/Resources/msedge_lNBTjFOTWK.png",
     "生活常识/二手购物/电动车.md",
@@ -228,7 +240,6 @@
     "STM32开发/Resources/STM32F10x中文参考手册_V10.pdf",
     "生活常识/Readme.md",
     "Readme.md",
-    "STM32开发/OTA&Bootloader/STM32 OTA&Bootloader开发.md",
     "ESP32开发笔记/ESP32 GPIO专项.md",
     "嵌入式基础/接口技术/DCMI/DCMI接口标准.md",
     "嵌入式基础/接口技术/DCMI",
