@@ -35,8 +35,7 @@
               "title": "STM32内置Flash读写"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -215,10 +214,10 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "7ff26750e18cd482",
+  "active": "5ca045b9155f7947",
   "lastOpenFiles": [
-    "STM32开发/OTA&Bootloader/STM32 OTA&Bootloader开发.md",
     "STM32开发/STM32配置与API手册/外设接口/STM32内置Flash读写.md",
+    "STM32开发/OTA&Bootloader/STM32 OTA&Bootloader开发.md",
     "STM32开发/Resources/msedge_lNBTjFOTWK.png",
     "生活常识/二手购物/电动车.md",
     "微型计算机原理与接口技术/第一章 计算机基础知识/第一章 计算机基础知识.md",

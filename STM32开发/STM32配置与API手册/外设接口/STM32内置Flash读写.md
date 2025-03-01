@@ -102,9 +102,9 @@ HAL_StatusTypeDef  HAL_FLASH_Program_IT(uint32_t TypeProgram, uint32_t Address, 
 - `HAL_FLASH_Program` 为同步方法，该函数会一直等待直到烧写完成。
 - `HAL_FLASH_Program_IT` 为异步方法，该函数会立即返回，操作完毕后使用中断( `Flash_IRQn` )通知结果。
 - `TypeProgram` 可以选择烧录选项，具体如下：
-	- `FLASH_TYPEPROGRAM_DOUBLEWORD` ：适用于单次写入 `64bit` ，速度较慢(每次操作都要 `assert` 和一系列硬件操作)
-	- `FLASH_TYPEPROGRAM_FAST` ：适用于<span style="background:#fff88f"><font color="#c00000">连续写入一页</font></span>，参数 `Data` 为内存地址。但是写入最后一次操作时应使用下方的 `TypeProgram` 选项。
-	- `FLASH_TYPEPROGRAM_FAST_AND_LAST` ：适用于<span style="background:#fff88f"><font color="#c00000">连续写入一页</font></span>，参数 `Data` 为内存地址。且本操作为连续操作的最后一次操作。
+	- `FLASH_TYPEPROGRAM_DOUBLEWORD` ：适用于单次写入 `64bit` ，参数 `Data` <font color="#c00000">为值</font>，速度较慢(每次操作都要 `assert` 和一系列硬件操作)
+	- `FLASH_TYPEPROGRAM_FAST` ：适用于<span style="background:#fff88f"><font color="#c00000">连续写入一页</font></span>，参数 `Data` <font color="#c00000">为内存地址</font>。但是写入最后一次操作时应使用下方的 `TypeProgram` 选项。
+	- `FLASH_TYPEPROGRAM_FAST_AND_LAST` ：适用于<span style="background:#fff88f"><font color="#c00000">连续写入一页</font></span>，参数 `Data` <font color="#c00000">为内存地址</font>。且本操作为连续操作的最后一次操作。
 - `HAL_FLASH_Program` 的实现依旧为每次使用赋值操作为指定地址赋32位数据。
 
 异步的优势及使用场景通常为：
