@@ -105,7 +105,7 @@ HAL_StatusTypeDef  HAL_FLASH_Program_IT(uint32_t TypeProgram, uint32_t Address, 
 1. 低功耗场景
 2. 多任务实时系统等
 
-### 3.2 3.2操作选项字节区域(Option Bytes)
+### 3.2 操作选项字节区域(Option Bytes)
 
 STM32的OB Flash区域的操作步骤如下：
 1. [[STM32内置Flash读写#^9g3lah|解锁Flash]]
