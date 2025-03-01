@@ -20,19 +20,8 @@
               "icon": "lucide-file",
               "title": "STM32 OTA&Bootloader开发"
             }
-          },
-          {
-            "id": "156301279003842d",
-            "type": "leaf",
-            "state": {
-              "type": "empty",
-              "state": {},
-              "icon": "lucide-file",
-              "title": "新标签页"
-            }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -211,7 +200,7 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "156301279003842d",
+  "active": "5ca045b9155f7947",
   "lastOpenFiles": [
     "STM32开发/OTA&Bootloader/STM32 OTA&Bootloader开发.md",
     "STM32开发/STM32配置与API手册/外设接口/STM32内置Flash读写.md",
