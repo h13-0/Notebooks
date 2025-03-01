@@ -101,10 +101,10 @@ HAL_StatusTypeDef  HAL_FLASH_Program_IT(uint32_t TypeProgram, uint32_t Address, 
 在上述API中：
 - `HAL_FLASH_Program` 为同步方法，该函数会一直等待直到烧写完成。
 - `HAL_FLASH_Program_IT` 为异步方法，该函数会立即返回，操作完毕后使用中断( `Flash_IRQn` )通知结果。
-- 一次均只能烧写64bit数据。具体 `TypeProgram` 如下：
-	- `FLASH_TYPEPROGRAM_DOUBLEWORD`
-	- `FLASH_TYPEPROGRAM_FAST`
-	- `FLASH_TYPEPROGRAM_FAST_AND_LAST`
+- `TypeProgram` 可以选择烧录选项。具体 `TypeProgram` 如下：
+	- `FLASH_TYPEPROGRAM_DOUBLEWORD` ：适用于单次写入，速度较慢
+	- `FLASH_TYPEPROGRAM_FAST` ：适用于<span style="background:#fff88f"><font color="#c00000">连续写入64个32Bit</font></span>()，但是写入最后一次操作时应使用下方选项。参数为内存地址。
+	- `FLASH_TYPEPROGRAM_FAST_AND_LAST` ：适用于<span style="background:#fff88f"><font color="#c00000">连续写入64个32Bit</font></span>，且为最后一次操作。参数为内存地址。
 异步的优势及使用场景通常为：
 1. 低功耗场景
 2. 多任务实时系统等
