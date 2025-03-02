@@ -108,7 +108,7 @@ MEMORY
 {
   RAM    (xrw)    : ORIGIN = 0x20000000,   LENGTH = 20K
   /* FLASH    (rx)    : ORIGIN = 0x8000000,   LENGTH = 64K */
-  FLASH    (rx)    : ORIGIN = 0x8002000,   LENGTH = 56K
+  FLASH    (rx)    : ORIGIN = 0x8005000,   LENGTH = 46K
 }
 ```
 - 补充：
@@ -117,7 +117,7 @@ MEMORY
 2. 修改APP中的中断向量表偏移，全局搜索 `VECT_TAB_OFFSET` 宏，并完成修改即可。该宏位于 `system_stm32*xx.c` 中，<font color="#c00000">CubeMX不会重新生成该文件</font>，<font color="#c00000">正常使用宏定义即可</font>：
 ```C
 #define USER_VECT_TAB_ADDRESS
-#define VECT_TAB_OFFSET 0x00002000U // 具体偏移是Bootloader预留的空间大小
+#define VECT_TAB_OFFSET 0x00005000U // 具体偏移是Bootloader预留的空间大小
 ```
 - 补充：
 	- 在整个启动流程中，仅 `startup_*.s` 中的操作不受链接器的影响。

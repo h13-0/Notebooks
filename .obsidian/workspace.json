@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "STM32开发/OTA&Bootloader/STM32启动流程.md",
+                "file": "STM32开发/OTA&Bootloader/STM32 OTA&Bootloader开发.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "STM32启动流程"
+              "title": "STM32 OTA&Bootloader开发"
             }
           }
         ],
@@ -217,11 +217,11 @@
   },
   "active": "7ff26750e18cd482",
   "lastOpenFiles": [
+    "STM32开发/OTA&Bootloader/STM32启动流程.md",
     "STM32开发/OTA&Bootloader/STM32 OTA&Bootloader开发.md",
     "STM32开发/STM32配置与API手册/外设接口/STM32内置Flash读写.md",
     "STM32开发/STM32配置与API手册/外设接口/外设接口.md",
     "STM32开发/STM32内存、储存模型/STM32内存模型.md",
-    "STM32开发/OTA&Bootloader/STM32启动流程.md",
     "STM32开发/STM32配置与API手册/通用配置/通用配置.md",
     "Readme.md",
     "嵌入式基础/接口技术/串口/串口总线标准.md",
