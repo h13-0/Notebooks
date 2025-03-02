@@ -32,7 +32,7 @@ number headings: auto, first-level 2, max 6, 1.1
 MEMORY
 {
   RAM    (xrw)    : ORIGIN = 0x20000000,   LENGTH = 20K
-  FLASH    (rx)    : ORIGIN = 0x8000000,   LENGTH = 4K  /* 64K */
+  FLASH    (rx)    : ORIGIN = 0x8000000,   LENGTH = 20K  /* 64K */
 }
 ```
 1. 实现Bootloader基础功能，主要包含：
