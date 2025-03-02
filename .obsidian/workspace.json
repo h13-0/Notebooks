@@ -50,7 +50,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -117,7 +117,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 279.5
+    "width": 279.5,
+    "collapsed": true
   },
   "right": {
     "id": "989a0ed08fe1a7b2",
@@ -229,13 +230,13 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "a93d3db249c45486",
+  "active": "7ff26750e18cd482",
   "lastOpenFiles": [
+    "STM32开发/OTA&Bootloader/STM32启动流程.md",
     "STM32开发/STM32内存、储存模型/STM32内存模型.md",
     "STM32开发/STM32内存、储存模型/STM32内置Flash模型.md",
     "STM32开发/STM32配置与API手册/外设接口/STM32内置Flash读写.md",
     "STM32开发/OTA&Bootloader/STM32 OTA&Bootloader开发.md",
-    "STM32开发/OTA&Bootloader/STM32启动流程.md",
     "STM32开发/STM32配置与API手册/外设接口/外设接口.md",
     "STM32开发/STM32配置与API手册/通用配置/通用配置.md",
     "Readme.md",

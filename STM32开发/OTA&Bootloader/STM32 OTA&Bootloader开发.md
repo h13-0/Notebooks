@@ -57,10 +57,14 @@ MEMORY
 /**
  * @brief: boot from flash.
  * @param: firmware address.
+ * @note:
+ * 		This function will disable necessary bootloader peripherals such as
+ * 		interrupts, Systick, and RCC. Other extended peripherals need to be
+ * 		manually disabled before executing this function.
  */
 void boot(uint32_t addr)
 {
-	void (*app)(void) = addr;
+	void (*app)(void) = (void *)(*(__IO uint32_t*)(addr + 4));
 
 	// Gradually shut down the hardware resources used by the bootloader.
 	// 1. Close global interrupt and prepare to shut down hardware.
@@ -85,19 +89,18 @@ void boot(uint32_t addr)
 	__set_CONTROL(0);
 
 	// 6. Set main stack pointer.
-	__set_MSP(addr + 4);
+	__set_MSP(addr);
 
 	// 7. Enable global interrupt.
 	__enable_irq();
 
 	// 8. Jump.
 	app();
-
-	// 9. It's impossible to reach, but to avoid it, a hard reset is still triggered.
-	// TODO: Sending startup failure log.
-	NVIC_SystemReset();
 }
 ```
+
+注意：
+- `app` 指针<span style="background:#fff88f"><font color="#c00000">并非指向</font></span> `addr + 4` ，<span style="background:#fff88f"><font color="#c00000">而是指向</font></span> `addr + 4` <span style="background:#fff88f"><font color="#c00000">中存储的32位地址</font></span>。
 
 ### 3.2 App程序实现
 
