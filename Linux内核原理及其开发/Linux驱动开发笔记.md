@@ -3781,7 +3781,8 @@ void outsl(unsigned long port, const void *src, unsigned long count);
 CPU硬件或操作系统通常会把硬件的寄存器或内存映射到内存空间当中去。与上一章节的端口IO(Port IO)的区别点在于该内存地址位于内存空间中，称作内存映射IO(Memory-Mapped IO，MMIO)。根据计算机体系结构和目标IO的不同，IO内存<font color="#c00000">可能是</font>、<font color="#c00000">也可能不是经由页表进行的</font>，<font color="#c00000">但是在内核编程时使用的步骤是一致的</font>。
 
 使用IO内存的基本步骤为：
-1. [[Linux驱动开发笔记#^x2iaei|标注物理内存资源的所有权]]( `request_mem_region` )
+1. [[Linux驱动开发笔记#^x2iaei|标注物理内存资源的所有权]]( `request_mem_region` )，进行互斥和资源管理
+2. [[Linux驱动开发笔记#^p797kv|将物理内存区域映射到虚拟内存]]( `ioremap` )，方便进行权限管理
 
 
 使用页表组织MMIO的优点有：
@@ -3807,10 +3808,10 @@ struct resource * request_mem_region(resource_size_t start, resource_size_t n, c
 
 需要注意：
 1. 该函数并不像普通的 `*malloc` 那样分配内存
-2. <span style="background:#fff88f"><font color="#c00000">该函数的目的是确保该物理区域不会被多个驱动冲突访问</font></span>，并不负责权限控制
-3. 
+2. <span style="background:#fff88f"><font color="#c00000">该函数的目的是确保该物理区域不会被多个驱动冲突访问</font></span>，并不负责权限控制。从技术上来看，即使不使用 `request_mem_region` 进行标记，对应内存区域依旧可以被访问，但是不能确保安全，且无法使用该函数的 `name` 进行追踪。
+3. 使用本函数标记所有权的内存区域需要使用
 
-
+##### 11.3.1.2 将物理内存区域映射到虚拟内存(ioremap) ^p797kv
 
 
 
