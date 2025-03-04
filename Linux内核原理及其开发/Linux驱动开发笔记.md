@@ -3783,6 +3783,7 @@ CPU硬件或操作系统通常会把硬件的寄存器或内存映射到内存�
 使用IO内存的基本步骤为：
 1. [[Linux驱动开发笔记#^x2iaei|标注物理内存资源的所有权]]( `request_mem_region` )，进行互斥和资源管理
 2. [[Linux驱动开发笔记#^p797kv|将物理内存区域映射到虚拟内存]]( `ioremap` )，方便进行权限管理
+3. 
 
 
 使用页表组织MMIO的优点有：
@@ -3802,17 +3803,36 @@ MMIO会被设置为不可换出、不可缓存(uncached)，不用担心页面置
 `request_mem_region` 的函数原型可参考(注意并非实际函数原型)：
 
 ```C
-#include "linux/ioport.h"
+#include <linux/ioport.h>
 struct resource * request_mem_region(resource_size_t start, resource_size_t n, const char* name);
 ```
 
 需要注意：
 1. 该函数并不像普通的 `*malloc` 那样分配内存
 2. <span style="background:#fff88f"><font color="#c00000">该函数的目的是确保该物理区域不会被多个驱动冲突访问</font></span>，并不负责权限控制。从技术上来看，即使不使用 `request_mem_region` 进行标记，对应内存区域依旧可以被访问，但是不能确保安全，且无法使用该函数的 `name` 进行追踪。
-3. 使用本函数标记所有权的内存区域需要使用
-
+3. 使用本函数标记所有权的内存区域需要使用[[Linux驱动开发笔记#^0ucvb2]]释放物理内存的所有权。
 ##### 11.3.1.2 将物理内存区域映射到虚拟内存(ioremap) ^p797kv
 
+```C
+#include <asm/io.h>
+void __iomem *ioremap(phys_addr_t offset, size_t size);
+void __iomem __ref *ioremap_prot(phys_addr_t phys_addr, size_t size, unsigned long prot)
+```
+
+需要注意：
+1. 该函数
+
+##### 11.3.1.3 取消内存映射
+
+```C
+#include <asm/io.h>
+void iounmap(volatile void __iomem *addr);
+```
+
+
+##### 11.3.1.4 释放内存资源的所有权()
+
+anchor ^0ucvb2
 
 
 ## 12 中断处理
