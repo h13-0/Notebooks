@@ -3776,7 +3776,7 @@ void outsl(unsigned long port, const void *src, unsigned long count);
 
 ### 11.3 使用IO内存
 
-
+CPU硬件或操作系统通常会把硬件的寄存器或内存映射到内存空间当中去。根据计算机体系结构和目标IO的不同，IO内存可能是、也可能不是经由页表进行的
 
 
 
