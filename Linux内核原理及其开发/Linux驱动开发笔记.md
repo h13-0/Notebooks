@@ -3783,8 +3783,9 @@ CPU硬件或操作系统通常会把硬件的寄存器或内存映射到内存�
 使用IO内存的基本步骤为：
 1. [[Linux驱动开发笔记#^x2iaei|标注物理内存资源的所有权]]( `request_mem_region` )，进行互斥和资源管理
 2. [[Linux驱动开发笔记#^p797kv|将物理内存区域映射到虚拟内存]]( `ioremap` )，方便进行权限管理
-3. 
-
+3. [[Linux驱动开发笔记#^1udrzm|操作内存区域]]，注意不要使用普通内存操作，普通内存操作不具备可移植性
+4. [[Linux驱动开发笔记#^akiihr|取消内存映射]]( `iounmap` )
+5. [[Linux驱动开发笔记#11 3 1 5 释放内存资源的所有权 release_mem_region 0ucvb2|释放内存资源的所有权]]( `release_mem_region` )
 
 使用页表组织MMIO的优点有：
 1. 为用户态提供虚拟内存地址，避免暴露物理地址
@@ -3825,17 +3826,49 @@ void __iomem *ioremap_prot(phys_addr_t phys_addr, size_t size, unsigned long pro
 3. 函数的默认虚拟内存配置为：
 	1. 可读可写，不可执行
 	2. 默认禁用缓存
-	具体的配置需求可使用 `ioremap_prot` s'j'p
+	具体的配置需求可使用 `ioremap_prot` 手动配置。
 
-##### 11.3.1.3 取消内存映射
+##### 11.3.1.3 取消内存映射(iounmap) ^akiihr
 
 ```C
 #include <asm/io.h>
 void iounmap(volatile void __iomem *addr);
 ```
 
+##### 11.3.1.4 操作内存区域 ^1udrzm
 
-##### 11.3.1.4 释放内存资源的所有权(release_mem_region) ^0ucvb2
+在部分平台上允许使用普通IO操作来访问这些内存，但是该方法不具备可移植性。应当使用如下的方法族：
+
+```C
+#include <asm/io.h>
+
+// 读取单个
+unsigned int ioread8(void *addr);
+unsigned int ioread16(void *addr);
+unsigned int ioread32(void *addr);
+
+// 写入单个
+void iowrite8(u8 value, void *addr);
+void iowrite16(u16 value, void *addr);
+void iowrite32(u32 value, void *addr);
+
+// 读写序列
+void ioread8_rep(void *addr, void *buf, unsigned long count);
+void ioread16(void *addr, void *buf, unsigned long count);
+void ioread32(void *addr, void *buf, unsigned long count);
+void iowrite8(void *addr, const void *buf, unsigned long count);
+void iowrite16(void *addr, const void *buf, unsigned long count);
+void iowrite32(void *addr, const void *buf, unsigned long count);
+
+// 内存操作
+void memset_io(void *dst, int c, unsigned long count);
+void memcpy_fromio();
+void memcpy_toio()
+```
+
+
+##### 11.3.1.5 释放内存资源的所有权(release_mem_region) ^0ucvb2
+
 
 
 
