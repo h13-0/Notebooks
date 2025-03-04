@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "机器学习/深度学习/CV/Tricks/多尺度图像特征融合.md",
+                "file": "机器学习/深度学习/CV/Tricks/注意力机制.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "多尺度图像特征融合"
+              "title": "注意力机制"
             }
           }
         ]
@@ -202,9 +202,10 @@
   },
   "active": "b0873eb4fe27cf43",
   "lastOpenFiles": [
+    "机器学习/深度学习/CV/Tricks/多尺度图像特征融合.md",
+    "机器学习/深度学习/CV/Tricks/注意力机制.md",
     "Resources/Pasted image 20250304200626.png",
     "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
-    "机器学习/深度学习/CV/Tricks/多尺度图像特征融合.md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "机器学习/深度学习/CV/Tricks",
     "微型计算机原理与接口技术/第三章 指令系统/第三章 指令系统.md",
@@ -237,7 +238,6 @@
     "生活常识/Resources/车外视角2.jpg",
     "生活常识/Resources/车座筒视角.jpg",
     "微型计算机原理与接口技术/Resources/Pasted image 20250227150402.png",
-    "微型计算机原理与接口技术/Resources/Pasted image 20250227153515.png",
     "STM32开发/Readme.md",
     "计算机网络/基础应试学习/计算机网络应试学习.md",
     "STM32开发/Resources/STM32F10x中文参考手册_V10.pdf",
