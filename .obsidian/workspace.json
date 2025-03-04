@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "7993b8a3d9502b7f",
+        "id": "d1742ed6b2c57126",
         "type": "tabs",
         "children": [
           {
-            "id": "8b7d844a9e756211",
+            "id": "b0873eb4fe27cf43",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
+                "file": "机器学习/深度学习/CV/Tricks/多尺度图像特征融合.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Linux驱动开发笔记"
+              "title": "多尺度图像特征融合"
             }
           }
         ]
@@ -200,14 +200,17 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "8b7d844a9e756211",
+  "active": "b0873eb4fe27cf43",
   "lastOpenFiles": [
+    "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
+    "机器学习/深度学习/CV/Tricks/多尺度图像特征融合.md",
+    "Linux内核原理及其开发/Linux驱动开发笔记.md",
+    "机器学习/深度学习/CV/Tricks",
     "微型计算机原理与接口技术/第三章 指令系统/第三章 指令系统.md",
     "微型计算机原理与接口技术/第二章 微处理器与总线/第二章 微处理器与总线.md",
     "微型计算机原理与接口技术/第一章 计算机基础知识/第一章 计算机基础知识.md",
     "嵌入式基础/Resources/Pasted image 20250301203057.png",
     "计算机组成原理/Resources/Pasted image 20250304111239.png",
-    "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "计算机组成原理/第三章 存储系统/第三章 存储系统.md",
     "计算机组成原理/第二章 数据的表示和运算/第二章 数据的表示和运算.md",
     "计算机组成原理/待分类/CPU缓存一致性.md",
@@ -238,8 +241,6 @@
     "计算机网络/基础应试学习/计算机网络应试学习.md",
     "STM32开发/Resources/STM32F10x中文参考手册_V10.pdf",
     "生活常识/Readme.md",
-    "ESP32开发笔记/ESP32 GPIO专项.md",
-    "嵌入式基础/接口技术/DCMI/DCMI接口标准.md",
     "嵌入式基础/接口技术/DCMI",
     "ESP32开发笔记/Resources",
     "ESP32开发笔记",
@@ -248,7 +249,6 @@
     "计算机组成原理/第二章 数据的表示和运算",
     "CPP/Resources/C数据类型.canvas",
     "CPP/C语言杂项",
-    "CPP/Resources/n1570.pdf",
     "嵌入式基础/接口技术/未命名.canvas"
   ]
 }
