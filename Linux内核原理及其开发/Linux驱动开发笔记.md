@@ -3862,19 +3862,20 @@ void iowrite32(void *addr, const void *buf, unsigned long count);
 
 // 内存操作
 void memset_io(void *dst, int c, unsigned long count);
-void memcpy_fromio();
-void memcpy_toio()
+void memcpy_fromio(void *to, const void *from, unsigned long count);
+void memcpy_toio(void *to, const void *from, unsigned long count);
 ```
-
 
 ##### 11.3.1.5 释放内存资源的所有权(release_mem_region) ^0ucvb2
 
+该函数的参考原型如下(并非实际原型)：
 
-
-
+```C
+#include <linux/ioport.h>
+void release_mem_region(resource_size_t start, resource_size_t n);
+```
 
 ## 12 中断处理
-
 
 ### 12.1 当前上下文状态与注意事项 ^h05ata
 
