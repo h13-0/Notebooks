@@ -3816,22 +3816,16 @@ struct resource * request_mem_region(resource_size_t start, resource_size_t n, c
 ```C
 #include <asm/io.h>
 void __iomem *ioremap(phys_addr_t offset, size_t size);
-void __iomem *ioremap_cache(resource_size_t res_cookie, size_t size);
-void __iomem *ioremap_wc(resource_size_t res_cookie, size_t size);
-ioremap_cache
-ioremap_wc
-ioremap_wt
-void __iomem __ref *ioremap_prot(phys_addr_t phys_addr, size_t size, unsigned long prot)
+void __iomem *ioremap_prot(phys_addr_t phys_addr, size_t size, unsigned long prot)
 ```
 
 需要注意：
-1. 该函数
+1. 此类函数的作用为<span style="background:#fff88f"><font color="#c00000">将物理地址映射到内核虚拟地址，并设置访问权限和缓存策略</font></span>。
 2. 该函数映射后的地址位于 `vmalloc` 区域中
-3. 该函数的默认虚拟内存配置为：
+3. 函数的默认虚拟内存配置为：
 	1. 可读可写，不可执行
 	2. 默认禁用缓存
-	3. 
-
+	具体的配置需求可使用 `ioremap_prot` s'j'p
 
 ##### 11.3.1.3 取消内存映射
 
