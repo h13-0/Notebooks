@@ -3724,6 +3724,8 @@ Linux系统的包含串口、PCI bus、DMA等IO端口的分配均在 `/proc/iopo
     e0a0-e0af : ata_piix
 ```
 
+<font color="#c00000">值得注意的是上述地址范围</font><span style="background:#fff88f"><font color="#c00000">并非内存地址范围</font></span>，<font color="#c00000">上述地址是独立编址的</font>，称作端口IO(Port IO)。
+
 内核中为IO端口分配提供了如下的接口：
 - 请求分配IO，可以通过返回值判定可用性(并非实际原型)：
 ```C
@@ -3776,7 +3778,11 @@ void outsl(unsigned long port, const void *src, unsigned long count);
 
 ### 11.3 使用IO内存
 
-CPU硬件或操作系统通常会把硬件的寄存器或内存映射到内存空间当中去。根据计算机体系结构和目标IO的不同，IO内存可能是、也可能不是经由页表进行的
+CPU硬件或操作系统通常会把硬件的寄存器或内存映射到内存空间当中去。与上一章节的端口IO(Port IO)的区别点在于该内存地址位于内存空间中，称作内存映射IO(Memory-Mapped IO，MMIO)。根据计算机体系结构和目标IO的不同，IO内存可能是、也可能不是经由页表进行的。
+使用页表组织MMIO的优点有：
+1. 为用户态提供虚拟内存地址
+2. 方便管理权限
+3. 可以设置为不可换出、不可缓存(uncached)
 
 
 
