@@ -3778,7 +3778,12 @@ void outsl(unsigned long port, const void *src, unsigned long count);
 
 ### 11.3 使用IO内存
 
-CPU硬件或操作系统通常会把硬件的寄存器或内存映射到内存空间当中去。与上一章节的端口IO(Port IO)的区别点在于该内存地址位于内存空间中，称作内存映射IO(Memory-Mapped IO，MMIO)。根据计算机体系结构和目标IO的不同，IO内存可能是、也可能不是经由页表进行的。
+CPU硬件或操作系统通常会把硬件的寄存器或内存映射到内存空间当中去。与上一章节的端口IO(Port IO)的区别点在于该内存地址位于内存空间中，称作内存映射IO(Memory-Mapped IO，MMIO)。根据计算机体系结构和目标IO的不同，IO内存<font color="#c00000">可能是</font>、<font color="#c00000">也可能不是经由页表进行的</font>，<font color="#c00000">但是在内核编程时使用的步骤是一致的</font>。
+
+使用IO内存的基本步骤为：
+1. [[Linux驱动开发笔记#^x2iaei|标注物理内存资源的所有权]]( `request_mem_region` )
+
+
 使用页表组织MMIO的优点有：
 1. 为用户态提供虚拟内存地址，避免暴露物理地址
 2. 方便统一使用虚拟内存机制管理内存，不需要为了管理用户态的访问增设额外的机制
@@ -3791,7 +3796,7 @@ MMIO会被设置为不可换出、不可缓存(uncached)，不用担心页面置
 
 #### 11.3.1 相关API
 
-##### 11.3.1.1 标注物理内存资源的所有权(request_mem_region)
+##### 11.3.1.1 标注物理内存资源的所有权(request_mem_region) ^x2iaei
 
 `request_mem_region` 的函数原型可参考(注意并非实际函数原型)：
 
@@ -3802,7 +3807,8 @@ struct resource * request_mem_region(resource_size_t start, resource_size_t n, c
 
 需要注意：
 1. 该函数并不像普通的 `*malloc` 那样分配内存
-2. 该函数
+2. <span style="background:#fff88f"><font color="#c00000">该函数的目的是确保该物理区域不会被多个驱动冲突访问</font></span>，并不负责权限控制
+3. 
 
 
 
