@@ -3816,11 +3816,22 @@ struct resource * request_mem_region(resource_size_t start, resource_size_t n, c
 ```C
 #include <asm/io.h>
 void __iomem *ioremap(phys_addr_t offset, size_t size);
+void __iomem *ioremap_cache(resource_size_t res_cookie, size_t size);
+void __iomem *ioremap_wc(resource_size_t res_cookie, size_t size);
+ioremap_cache
+ioremap_wc
+ioremap_wt
 void __iomem __ref *ioremap_prot(phys_addr_t phys_addr, size_t size, unsigned long prot)
 ```
 
 需要注意：
 1. 该函数
+2. 该函数映射后的地址位于 `vmalloc` 区域中
+3. 该函数的默认虚拟内存配置为：
+	1. 可读可写，不可执行
+	2. 默认禁用缓存
+	3. 
+
 
 ##### 11.3.1.3 取消内存映射
 
