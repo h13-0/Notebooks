@@ -3787,9 +3787,22 @@ CPU硬件或操作系统通常会把硬件的寄存器或内存映射到内存�
 5. 方便内核使用 `mmap` 将MMIO映射到用户空间
 MMIO会被设置为不可换出、不可缓存(uncached)，不用担心页面置换问题。
 
+在使用IO内存时，基本流程和使用普通内存一致，<font color="#c00000">均为申请-使用-释放的过程</font>，只是使用的API和成功/失败对应的意义不同。
 
+#### 11.3.1 相关API
 
+##### 11.3.1.1 标注物理内存资源的所有权(request_mem_region)
 
+`request_mem_region` 的函数原型可参考(注意并非实际函数原型)：
+
+```C
+#include "linux/ioport.h"
+struct resource * request_mem_region(resource_size_t start, resource_size_t n, const char* name);
+```
+
+需要注意：
+1. 该函数并不像普通的 `*malloc` 那样分配内存
+2. 该函数
 
 
 

@@ -11,10 +11,14 @@
             "id": "8b7d844a9e756211",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "Linux驱动开发笔记"
             }
           }
         ]
@@ -196,8 +200,9 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "7ddc64b2e3c9b5c8",
+  "active": "8b7d844a9e756211",
   "lastOpenFiles": [
+    "微型计算机原理与接口技术/第三章 指令系统/第三章 指令系统.md",
     "微型计算机原理与接口技术/第二章 微处理器与总线/第二章 微处理器与总线.md",
     "微型计算机原理与接口技术/第一章 计算机基础知识/第一章 计算机基础知识.md",
     "嵌入式基础/Resources/Pasted image 20250301203057.png",
