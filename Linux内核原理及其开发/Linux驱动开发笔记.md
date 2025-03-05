@@ -3971,10 +3971,13 @@ int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, co
 	- `IRQF_TRIGGER_FALLING` ：下降沿触发
 	- `IRQF_TRIGGER_HIGH` ：高电平触发
 	- `IRQF_TRIGGER_LOW` ：低电平触发
-	- `IRQF_TRIGGER_PROBE` ：自动探测触发(慎用，且整个内核原码中尚无使用)
+	- `IRQF_TRIGGER_PROBE` ：自动探测触发(慎用，需要二次判定触发条件是否正确，且整个内核原码中尚无使用)
 2. 中断共享控制掩码：
-	- `IRQF_SHARED` ：共享中断
-	- 
+	- `IRQF_SHARED` ：共享中断，所有共享设备的中断触发方式必须一致。新平台中很少使用。
+	- `IRQF_PROBE_SHARED` ：共享中断，允许驱动在共享中断线时，绕过触发方式的严格一致性检查。用于调试、探测或动态适配用途，<font color="#c00000">生产环境中禁用该标志位</font>。
+	- `IRQF_COND_ONESHOT` ：表示中断在执行完成后必须显式的重新启用。需要注意：
+		- 该标志位必须配合 `IRQF_SHARED` 使用，否则无效。
+		- 若某一共享设备已经启用该标志位，后来设备在注册中断时未设置标志位，则后来设备的注册操作会返回 `-EINVAL` 。
 3. 中断处理与调度控制
 
 #### 12.3.2 中断号选用原则 ^adyua2
