@@ -123,27 +123,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "操作系统/Linux原理专题/系统调用专题/IO多路复用接口(select、poll、epoll).md",
+                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "IO多路复用接口(select、poll、epoll) 的出链列表"
-            }
-          },
-          {
-            "id": "3c997c4dde5bf122",
-            "type": "leaf",
-            "state": {
-              "type": "tag",
-              "state": {
-                "sortOrder": "frequency",
-                "useHierarchy": true,
-                "showSearch": false,
-                "searchQuery": ""
-              },
-              "icon": "lucide-tags",
-              "title": "Tags"
+              "title": "Outgoing links from Linux驱动开发笔记"
             }
           },
           {
@@ -172,7 +157,7 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
