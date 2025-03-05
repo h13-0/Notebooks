@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Readme.md",
+                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Readme"
+              "title": "Linux驱动开发笔记"
             }
           }
         ]
@@ -138,10 +138,12 @@
               "type": "tag",
               "state": {
                 "sortOrder": "frequency",
-                "useHierarchy": true
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
               },
               "icon": "lucide-tags",
-              "title": "标签"
+              "title": "Tags"
             }
           },
           {
@@ -150,33 +152,23 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "STM32开发/OTA&Bootloader/STM32 OTA&Bootloader开发.md",
+                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "STM32 OTA&Bootloader开发 的大纲"
+              "title": "Outline of Linux驱动开发笔记"
             }
           },
           {
-            "id": "d976f59277efb42c",
+            "id": "b266dac2d0b442cd",
             "type": "leaf",
             "state": {
-              "type": "git-view",
+              "type": "smtcmp-chat-view",
               "state": {},
-              "icon": "git-pull-request",
-              "title": "Source Control"
-            }
-          },
-          {
-            "id": "85a99ffcd4adfabe",
-            "type": "leaf",
-            "state": {
-              "type": "mermaid-toolbar-view",
-              "state": {},
-              "icon": "lucide-file",
-              "title": "Plugin no longer active"
+              "icon": "wand-sparkles",
+              "title": "Smart composer chat"
             }
           }
         ],
@@ -184,8 +176,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 317.5,
-    "collapsed": true
+    "width": 317.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -202,8 +193,9 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "0f291e55cd167cc5",
+  "active": "b266dac2d0b442cd",
   "lastOpenFiles": [
+    "Readme.md",
     "机器学习/深度学习/CV/Tricks/注意力机制.md",
     "机器学习/深度学习/CV/Tricks/多尺度图像特征融合.md",
     "Resources/Pasted image 20250304200626.png",
@@ -229,7 +221,6 @@
     "STM32开发/STM32内存、储存模型/STM32内置Flash模型.md",
     "STM32开发/STM32配置与API手册/外设接口/STM32内置Flash读写.md",
     "STM32开发/STM32配置与API手册/通用配置/通用配置.md",
-    "Readme.md",
     "嵌入式基础/接口技术/串口/串口总线标准.md",
     "STM32开发/Resources/msedge_lNBTjFOTWK.png",
     "面相对象的程序设计/面相对象的程序设计.md",
