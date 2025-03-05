@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "d1742ed6b2c57126",
+        "id": "64f74a610f3dd1f3",
         "type": "tabs",
         "children": [
           {
-            "id": "b0873eb4fe27cf43",
+            "id": "0f291e55cd167cc5",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "机器学习/深度学习/CV/Tricks/注意力机制.md",
+                "file": "Readme.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "注意力机制"
+              "title": "Readme"
             }
           }
         ]
@@ -200,10 +200,10 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "b0873eb4fe27cf43",
+  "active": "0f291e55cd167cc5",
   "lastOpenFiles": [
-    "机器学习/深度学习/CV/Tricks/多尺度图像特征融合.md",
     "机器学习/深度学习/CV/Tricks/注意力机制.md",
+    "机器学习/深度学习/CV/Tricks/多尺度图像特征融合.md",
     "Resources/Pasted image 20250304200626.png",
     "机器学习/深度学习/CV/文章笔记/1989 LeNet.md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",

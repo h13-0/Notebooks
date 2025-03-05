@@ -1,5 +1,6 @@
-<font color="#c00000">NOTICE:</font>
-> They are `Notebooks` but **NOT** `Books`.
+
+> [!attention]
+> They are `Notebooks` but **<font color="#c00000">NOT</font>** `Books` !
 
 ## Web访问
 
