@@ -3911,20 +3911,35 @@ in_atpmic();
 使用 `cat /proc/interrupts` 命令，有：
 
 ```Shell
-          CPU0
- 1:          9   IO-APIC   1-edge      i8042
- 4:         24   IO-APIC   4-edge      ttyS0
- 6:          3   IO-APIC   6-edge      floppy
- 8:          0   IO-APIC   8-edge      rtc0
- 9:          0   IO-APIC   9-fasteoi   acpi
-11:          0   IO-APIC  11-fasteoi   virtio2, uhci_hcd:usb1
-12:         15   IO-APIC  12-edge      i8042
-14:   34687446   IO-APIC  14-edge      ata_piix
-15:          0   IO-APIC  15-edge      ata_piix
+          CPU0       CPU1       
+ 0:        170          0     IR-IO-APIC    2-edge      timer
+ 1:         10          0     IR-IO-APIC    1-edge      i8042
+ 8:          1          0     IR-IO-APIC    8-edge      rtc0
+ 9:        214          0     IR-IO-APIC    9-fasteoi   acpi
+12:        124          0     IR-IO-APIC   12-edge      i8042
+16:       3589          0     IR-IO-APIC   16-fasteoi   ehci_hcd:usb1
+24:          0        652     IR-PCI-MSI 32768-edge      xhci_hcd
 ...
 ```
 
 上述内容中：
 - 第一列为中断号
-- 各 CPU
+- 各 CPU 列为在该 CPU 上触发中断的次数
+- 最后一列为关联的硬件设备或中断类型
+- 中间几列为处理中断的可编程中断控制器
+
+需要补充的是：
+1. Linux 内核通常会在第一个 CPU 上处理中断，从而最大化缓存本地性。
+
+此外，使用 `cat /proc/stat` 命令，在 `intr` 行也可以查看各中断的触发次数，例如：
+
+```Shell
+...
+intr 2586828620 0 9 0 0 24 0 3 0 0 0 0 0 15 0 34688478 0 0 0 0 0 0 0 0 0 50 539037977 688394395 0 284284934 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+...
+```
+
+上述 `intr` 行中：
+- 第一个数字为系统触发中断的总次数
+- 后续若干个数字是各个 IRQ 信号线上触发中断的次数 ()
 
