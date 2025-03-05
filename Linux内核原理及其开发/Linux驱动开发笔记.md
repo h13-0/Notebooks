@@ -3973,12 +3973,24 @@ int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, co
 	- `IRQF_TRIGGER_LOW` ：低电平触发
 	- `IRQF_TRIGGER_PROBE` ：自动探测触发(慎用，需要二次判定触发条件是否正确，且整个内核原码中尚无使用)
 2. 中断共享控制掩码：
-	- `IRQF_SHARED` ：共享中断，所有共享设备的中断触发方式必须一致。新平台中很少使用。
-	- `IRQF_PROBE_SHARED` ：共享中断，允许驱动在共享中断线时，绕过触发方式的严格一致性检查。用于调试、探测或动态适配用途，<font color="#c00000">生产环境中禁用该标志位</font>。
-	- `IRQF_COND_ONESHOT` ：表示中断在执行完成后必须显式的重新启用。需要注意：
+	- `IRQF_SHARED` ：共享中断。新平台中很少使用。
+		- <span style="background:#fff88f"><font color="#c00000">所有共享设备的中断触发方式必须一致</font></span>，否则报错。
+		- 不允许和非共享设备共享中断。
+	- `IRQF_PROBE_SHARED` ：共享中断，允许驱动在共享中断线时，<font color="#c00000">绕过触发方式的严格一致性检查</font>。
+		- 可以用于共享设备中<span style="background:#fff88f"><font color="#c00000">触发方式</font></span><font color="#c00000">不一致</font>的情况。
+		- 用于调试、探测或动态适配用途，<font color="#c00000">生产环境中禁用该标志位</font>。
+	- `IRQF_COND_ONESHOT` ：表示该共享中断在执行完成后必须显式的重新启用。需要注意：
 		- 该标志位必须配合 `IRQF_SHARED` 使用，否则无效。
 		- 若某一共享设备已经启用该标志位，后来设备在注册中断时未设置标志位，则后来设备的注册操作会返回 `-EINVAL` 。
-3. 中断处理与调度控制
+		- 可以与 `IRQF_ONESHOT` 重复设置，但没有必要。
+3. 中断处理与调度控制：
+	- `IRQF_TIMER` ：标记为定时器中断，优先处理以保障精度。
+	- `IRQF_PERCPU` ：标记为per-CPU中断，每CPU核心独立中断，
+	- `IRQF_NOBALANCING` ：禁止中断负载均衡，用于将中断绑定到一个特定的CPU上。
+	- `IRQF_IRQPOLL` ：中断用于轮询模式优化，用于需要频繁轮询的中断。
+	- `IRQF_ONESHOT` ：单次启动中断，表示中断在执行完成后必须显式的重新启用。
+	- `IRQF_NO_THREAD` ：禁止线程化中断，强制使用原子上下文处理程序，用于极低延迟或不可睡眠的中断处理。
+	- `IRQF_NO_AUTOEN` ：不自动启用中断，需手动调用 `enable_irq()` ，可以
 
 #### 12.3.2 中断号选用原则 ^adyua2
 
