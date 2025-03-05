@@ -3985,7 +3985,7 @@ int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, co
 		- 可以与 `IRQF_ONESHOT` 重复设置，但没有必要。
 3. 中断处理与调度控制：
 	- `IRQF_TIMER` ：标记为定时器中断，优先处理以保障精度。
-	- `IRQF_PERCPU` ：标记为per-CPU中断，每个CPU核心独立注册并处理该中断，通常用于ARM的每个CPU的本地计时器，或
+	- `IRQF_PERCPU` ：标记为per-CPU中断，每个CPU核心独立注册并处理该中断，通常用于ARM的每个CPU的本地计时器，或高性能网卡的每CPU中断。
 	- `IRQF_NOBALANCING` ：禁止中断负载均衡，用于将中断绑定到一个特定的CPU上。
 	- `IRQF_IRQPOLL` ：中断用于轮询模式优化，用于需要频繁轮询的中断。
 	- `IRQF_ONESHOT` ：单次启动中断，表示中断在执行完成后必须显式的重新启用。
@@ -3996,9 +3996,9 @@ int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, co
 		- 该中断不保证中断能唤醒系统，需结合设备唤醒能力配置。
 	- `IRQF_FORCE_RESUME` ：在系统唤醒后强制重新启用中断，修复某些休眠后中断未正确恢复的场景。
 	- `IRQF_EARLY_RESUME` ：在系统唤醒早期阶段恢复中断
-	- `IRQF_COND_SUSPEND` ：用于共享设备的条件性挂起，
-
-
+	- `IRQF_COND_SUSPEND` ：可以动态的决定是否可以被挂起。
+		- 使用 `enable_irq_wake(irq)` 可以把该中断作为唤醒中断，从而在系统挂起期间不关闭此中断。
+		- 使用 `disable_irq(irq)` 可以禁用该中断。
 
 #### 12.3.2 中断号选用原则 ^adyua2
 
