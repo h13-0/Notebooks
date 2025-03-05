@@ -3924,7 +3924,7 @@ in_atpmic();
 
 上述内容中：
 - 第一列为中断号
-- 各 CPU 列为在该 CPU 上触发中断的次数
+- 各CPU列为在该CPU上触发中断的次数
 - 最后一列为关联的硬件设备或中断类型
 - 中间几列为处理中断的可编程中断控制器
 
@@ -3945,6 +3945,19 @@ intr 2586828620 0 9 0 0 24 0 3 0 0 0 0 0 15 0 34688478 0 0 0 0 0 0 0 0 0 50 5390
 
 ### 12.3 中断的注册
 
+在Linux内核中，注册(安装)中断例程需要使用如下的API：
 
+```C
+#include <linux/interrupts.h>
+int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, const char *name, void *dev);
+```
+
+其中：
+
+| <center>参数</center>     | <center>含义</center> |
+| ----------------------- | ------------------- |
+| `unsigned int irq`      | 使用的中断号              |
+| `irq_handler_t handler` |                     |
+|                         |                     |
 
 

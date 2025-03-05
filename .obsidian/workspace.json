@@ -161,8 +161,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 317.5,
-    "collapsed": true
+    "width": 317.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -179,7 +178,7 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "0f291e55cd167cc5",
+  "active": "2162c057cdd38397",
   "lastOpenFiles": [
     "Readme.md",
     "机器学习/深度学习/CV/Tricks/注意力机制.md",
