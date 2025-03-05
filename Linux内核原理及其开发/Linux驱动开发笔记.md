@@ -3990,7 +3990,15 @@ int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, co
 	- `IRQF_IRQPOLL` ：中断用于轮询模式优化，用于需要频繁轮询的中断。
 	- `IRQF_ONESHOT` ：单次启动中断，表示中断在执行完成后必须显式的重新启用。
 	- `IRQF_NO_THREAD` ：禁止线程化中断，强制使用原子上下文处理程序，用于极低延迟或不可睡眠的中断处理。
-	- `IRQF_NO_AUTOEN` ：不自动启用中断，需手动调用 `enable_irq()` ，可以
+	- `IRQF_NO_AUTOEN` ：不自动启用中断，需手动调用 `enable_irq()` ，可以灵活控制中断启用时机，例如初始化阶段延迟启用。
+4. 休眠与唤醒管理：
+	- `IRQF_NO_SUSPEND` ：在系统挂起期间不关闭此中断，用于电源按钮、RTC等外部唤醒设备。
+		- 该中断不保证中断能唤醒系统，需结合设备唤醒能力配置。
+	- `IRQF_FORCE_RESUME` ：在系统唤醒后强制重新启用中断，修复某些休眠后中断未正确恢复的场景。
+	- `IRQF_EARLY_RESUME` ：在系统唤醒早期阶段恢复中断
+	- `IRQF_COND_SUSPEND` ：用于共享设备的条件性挂起，
+
+
 
 #### 12.3.2 中断号选用原则 ^adyua2
 
