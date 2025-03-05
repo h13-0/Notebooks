@@ -3891,9 +3891,9 @@ in_interrupt();
 #### 12.1.2 中断上下文中的注意事项 ^fw453g
 
 在中断上下文中时需要注意：
-5. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为不在进程上下文中。
-6. 用于指向当前进程的 `current` 指针也无效。
-7. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
+1. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为不在进程上下文中。
+2. 用于指向当前进程的 `current` 指针也无效。
+3. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
 
 #### 12.1.3 查询当前是否在原子上下文中
 
@@ -3903,7 +3903,28 @@ in_atpmic();
 ```
 
 在原子上下文中时需要注意：
-8. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为可能引起调度。
-9. `current` 指针可用，但是不能访问用户空间。
+1. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为可能引起调度。
+2. `current` 指针可用，但是不能访问用户空间。
 
+### 12.2 查看系统当前已注册中断
+
+使用 `cat /proc/interrupts` 命令，有：
+
+```Shell
+          CPU0
+ 1:          9   IO-APIC   1-edge      i8042
+ 4:         24   IO-APIC   4-edge      ttyS0
+ 6:          3   IO-APIC   6-edge      floppy
+ 8:          0   IO-APIC   8-edge      rtc0
+ 9:          0   IO-APIC   9-fasteoi   acpi
+11:          0   IO-APIC  11-fasteoi   virtio2, uhci_hcd:usb1
+12:         15   IO-APIC  12-edge      i8042
+14:   34687446   IO-APIC  14-edge      ata_piix
+15:          0   IO-APIC  15-edge      ata_piix
+...
+```
+
+上述内容中：
+- 第一列为中断号
+- 各 CPU
 
