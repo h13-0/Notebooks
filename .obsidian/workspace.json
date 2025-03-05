@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "计算机组成原理/第三章 存储系统/第三章 存储系统.md",
+                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "第三章 存储系统"
+              "title": "Linux驱动开发笔记"
             }
           }
         ]
@@ -123,12 +123,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "计算机组成原理/第三章 存储系统/第三章 存储系统.md",
+                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from 第三章 存储系统"
+              "title": "Outgoing links from Linux驱动开发笔记"
             }
           },
           {
@@ -137,13 +137,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "计算机组成原理/第三章 存储系统/第三章 存储系统.md",
+                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of 第三章 存储系统"
+              "title": "Outline of Linux驱动开发笔记"
             }
           },
           {
@@ -181,10 +181,10 @@
   },
   "active": "0f291e55cd167cc5",
   "lastOpenFiles": [
-    "Resources/Pasted image 20250305160216.png",
-    "Resources/Pasted image 20250305160157.png",
-    "机器学习/Resources/Pasted image 20250304200626.png",
+    "计算机组成原理/Resources/Pasted image 20250305160216.png",
+    "计算机组成原理/Resources/Pasted image 20250305160157.png",
     "计算机组成原理/第三章 存储系统/第三章 存储系统.md",
+    "机器学习/Resources/Pasted image 20250304200626.png",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "Readme.md",
     "机器学习/深度学习/CV/Tricks/注意力机制.md",
@@ -217,7 +217,6 @@
     "生活常识/Resources/车外视角.jpg",
     "生活常识/Resources/电池混用.jpg",
     "生活常识/Resources/车外视角2.jpg",
-    "生活常识/Resources/车座筒视角.jpg",
     "STM32开发/Readme.md",
     "STM32开发/Resources/STM32F10x中文参考手册_V10.pdf",
     "嵌入式基础/接口技术/DCMI",

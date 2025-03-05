@@ -3985,7 +3985,7 @@ int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, co
 		- 可以与 `IRQF_ONESHOT` 重复设置，但没有必要。
 3. 中断处理与调度控制：
 	- `IRQF_TIMER` ：标记为定时器中断，优先处理以保障精度。
-	- `IRQF_PERCPU` ：标记为per-CPU中断，每CPU核心独立中断，
+	- `IRQF_PERCPU` ：标记为per-CPU中断，每个CPU核心独立注册并处理该中断，通常用于ARM的每个CPU的本地计时器，或
 	- `IRQF_NOBALANCING` ：禁止中断负载均衡，用于将中断绑定到一个特定的CPU上。
 	- `IRQF_IRQPOLL` ：中断用于轮询模式优化，用于需要频繁轮询的中断。
 	- `IRQF_ONESHOT` ：单次启动中断，表示中断在执行完成后必须显式的重新启用。
