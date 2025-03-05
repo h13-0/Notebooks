@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Readme.md",
+                "file": "STM32开发/查阅性基础.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Readme"
+              "title": "查阅性基础"
             }
           }
         ]
@@ -195,8 +195,12 @@
   },
   "active": "60a856eef9431298",
   "lastOpenFiles": [
-    "生活常识/二手购物/电动车.md",
+    "STM32开发/STM32内存、储存模型/STM32内存模型.md",
+    "STM32开发/STM32内存、储存模型/STM32内置Flash模型.md",
+    "Resources/chrome_QXgvHAMLdc.png",
+    "Resources/chrome_Py5x2smZiO.png",
     "Readme.md",
+    "生活常识/二手购物/电动车.md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "计算机组成原理/Resources/Pasted image 20250305160216.png",
     "计算机组成原理/Resources/Pasted image 20250305160157.png",
@@ -219,8 +223,6 @@
     "STM32开发/OTA&Bootloader/STM32 OTA&Bootloader开发.md",
     "STM32开发/OTA&Bootloader/STM32启动流程.md",
     "生活常识/电子电气/电池/磷酸铁锂.md",
-    "STM32开发/STM32内存、储存模型/STM32内存模型.md",
-    "STM32开发/STM32内存、储存模型/STM32内置Flash模型.md",
     "STM32开发/STM32配置与API手册/外设接口/STM32内置Flash读写.md",
     "STM32开发/STM32配置与API手册/通用配置/通用配置.md",
     "嵌入式基础/接口技术/串口/串口总线标准.md",
@@ -229,8 +231,6 @@
     "STM32开发/Resources/chrome_guClhcVZRT.png",
     "STM32开发/查阅性基础.md",
     "生活常识/Resources/车外视角.jpg",
-    "生活常识/Resources/电池混用.jpg",
-    "生活常识/Resources/车外视角2.jpg",
     "STM32开发/Readme.md",
     "STM32开发/Resources/STM32F10x中文参考手册_V10.pdf",
     "嵌入式基础/接口技术/DCMI",
