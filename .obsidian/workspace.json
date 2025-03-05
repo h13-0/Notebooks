@@ -162,7 +162,7 @@
             }
           },
           {
-            "id": "b266dac2d0b442cd",
+            "id": "2162c057cdd38397",
             "type": "leaf",
             "state": {
               "type": "smtcmp-chat-view",
@@ -193,7 +193,7 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "b266dac2d0b442cd",
+  "active": "2162c057cdd38397",
   "lastOpenFiles": [
     "Readme.md",
     "机器学习/深度学习/CV/Tricks/注意力机制.md",
