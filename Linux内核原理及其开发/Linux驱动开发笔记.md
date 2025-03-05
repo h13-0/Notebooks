@@ -3966,7 +3966,16 @@ int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, co
 
 常用的中断管理掩码有：
 1. 中断触发方式掩码：
-
+	- `IRQF_TRIGGER_NONE` ：不指定触发方式，沿用硬件或固件的当前配置。
+	- `IRQF_TRIGGER_RISING` ：上升沿触发
+	- `IRQF_TRIGGER_FALLING` ：下降沿触发
+	- `IRQF_TRIGGER_HIGH` ：高电平触发
+	- `IRQF_TRIGGER_LOW` ：低电平触发
+	- `IRQF_TRIGGER_PROBE` ：自动探测触发(慎用，且整个内核原码中尚无使用)
+2. 中断共享控制掩码：
+	- `IRQF_SHARED` ：共享中断
+	- 
+3. 中断处理与调度控制
 
 #### 12.3.2 中断号选用原则 ^adyua2
 
