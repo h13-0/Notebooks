@@ -6,7 +6,7 @@
 
 在线访问：[https://notebooks.h13.tech/](https://notebooks.h13.tech/).
 
-![](./Resources/chrome_QXgvHAMLdc.png)  
+![](./Resources/chrome_Py5x2smZiO.png)  
 注：
 - 如果功能不正常请尝试使用科学上网并清除缓存。建议在无痕窗口中使用以避免经常手动清除缓存。  
 * 若已经使用科学上网并且加载不全，则大概率笔记有更新，多次刷新即可。  
@@ -24,4 +24,4 @@
 ## 声明
 
 自用笔记，如有错误请提issue。  
-<!--<font color="#ffffff">真的只是一个笔记而已...</font>-->
+<!--<font color="#ffffff">菜鸡的一个小笔记</font>-->
