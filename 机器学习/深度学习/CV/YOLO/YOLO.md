@@ -62,6 +62,8 @@ YOLO v1的主干网络是普通CNN网络，各层信息如下表所示：
 
 ### 3.4 Head
 
+#### 3.4.1 Head基本结构及输出
+
 YOLO v1的Head使用的是全连接网络，其网络结构如下：
 
 | Layer | Input                  | Output                                                                        |
@@ -69,13 +71,24 @@ YOLO v1的Head使用的是全连接网络，其网络结构如下：
 | FC 1  | $7\times 7\times 1024$ | $4096\times 1$                                                                |
 | FC 2  | $4096\times 1$         | $S\times S\times (B\times 5+C)$ <br>VOC数据集中为 $7\times 7\times (2\times 5+20)$ |
 其中：
-- $S$ ：图像被划分的网格数
-- 
+- $S$ ：图像被划分的网格数，默认为7。
+- $B$ ：每个网格预测的Box数量，被设置为2。
+	- 存储<font color="#c00000">Box位置大小信息</font>，以及<font color="#c00000">Box存在概率</font>，即 $[x, y, w, h, prob]$ 。因此B的系数为5。
+- $C$ ：预测任务的种类数，VOC数据集中为20。
+	- <font color="#c00000">存储每个类别的概率</font>
+
+#### 3.4.2 后处理(非极大值抑制，nms)
 
 
-### 3.5 YOLO v2
 
-### 3.6 Head
+
+
+
+## 4 YOLO v2
+
+### 4.1 Head
+
+
 
 
 
