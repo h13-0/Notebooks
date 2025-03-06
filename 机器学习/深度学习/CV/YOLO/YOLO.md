@@ -46,16 +46,31 @@ number headings: auto, first-level 2, max 6, 1.1
 
 YOLO v1的主干网络是普通CNN网络，各层信息如下表所示：
 
-| Layer | Input | Output |
-| ----- | ----- | ------ |
-|       |       |        |
+| Layer       | Input                    | Layer_info      | Output                   |
+| ----------- | ------------------------ | --------------- | ------------------------ |
+| Input       |                          |                 | $448\times 448\times 3$  |
+| Conv 1      | $448\times 448\times 3$  | k=7x7, stride=2 | $224\times 224\times 64$ |
+| Max_Pooling | $224\times 224\times 64$ | k=7x7, stride=2 | $112\times 112\times 64$ |
+| Conv 2      | $112\times 112\times 64$ |                 |                          |
+|             |                          |                 |                          |
+|             |                          |                 |                          |
+|             |                          |                 |                          |
+|             |                          |                 |                          |
+| Conv        |                          |                 | $7\times 7\times 1024$   |
 
-
-
+最终的输出是1024个通道的 $7\times 7$ 的特征图。
 
 ### 3.4 Head
 
-YOLO v1的Head使用的是全连接网络，
+YOLO v1的Head使用的是全连接网络，其网络结构如下：
+
+| Layer | Input                  | Output                                                                        |
+| ----- | ---------------------- | ----------------------------------------------------------------------------- |
+| FC 1  | $7\times 7\times 1024$ | $4096\times 1$                                                                |
+| FC 2  | $4096\times 1$         | $S\times S\times (B\times 5+C)$ <br>VOC数据集中为 $7\times 7\times (2\times 5+20)$ |
+其中：
+- $S$ ：图像被划分的网格数
+- 
 
 
 ### 3.5 YOLO v2
