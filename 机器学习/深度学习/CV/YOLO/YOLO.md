@@ -32,22 +32,35 @@ number headings: auto, first-level 2, max 6, 1.1
 	- ![[Pasted image 20250306200752.png]]
 	- 则：
 		- $IoU(A, B)=\displaystyle \frac{|A\cap B|}{|A \cup B|}, IoU\in [0, 1]$
-- $F_1-Score$：
-	- $F$
-
-
+- $F_1$ 分数： $F_1-Score$
+	- $F_1-Score=(\displaystyle \frac{Recall^{-1}+Precision^{-1}}{2})^{-1}$
+- <font color="#9bbb59">平均精准度</font>： $AP$，同一模型的 $Precision$ - $Recall$ 曲线与坐标轴围成的面积。
+	- ![[Pasted image 20250306201232.png]]
+	- $AP=\displaystyle \int^{1}_{0}{Precision(r)dr}$
+- <font color="#9bbb59">平均精度均值</font>： $mAP$。
+	- $mAP=\displaystyle \sum^{n}_{k=1}{AP_k}$
 
 ### 3.2 主要改进
 
+### 3.3 Backbone
 
-### 3.3 Head
+YOLO v1的主干网络是普通CNN网络，各层信息如下表所示：
+
+| Layer | Input | Output |
+| ----- | ----- | ------ |
+|       |       |        |
+
+
+
+
+### 3.4 Head
 
 YOLO v1的Head使用的是全连接网络，
 
 
-### 3.4 YOLO v2
+### 3.5 YOLO v2
 
-### 3.5 Head
+### 3.6 Head
 
 
 
