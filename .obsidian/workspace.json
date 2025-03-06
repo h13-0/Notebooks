@@ -35,8 +35,7 @@
               "title": "应试笔记与八股"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -208,8 +207,9 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "0172800d91dfae5a",
+  "active": "60a856eef9431298",
   "lastOpenFiles": [
+    "计算机网络/基础应试学习/第三章 数据链路层/第三章 数据链路层.md",
     "嵌入式基础/应试笔记与八股.md",
     "STM32开发/应试笔记与八股.md",
     "STM32开发/查阅性基础.md",
@@ -244,7 +244,6 @@
     "STM32开发/OTA&Bootloader/STM32 OTA&Bootloader开发.md",
     "STM32开发/OTA&Bootloader/STM32启动流程.md",
     "生活常识/电子电气/电池/磷酸铁锂.md",
-    "STM32开发/STM32配置与API手册/外设接口/STM32内置Flash读写.md",
     "STM32开发/Resources/msedge_lNBTjFOTWK.png",
     "STM32开发/Resources/chrome_guClhcVZRT.png",
     "生活常识/Resources/车外视角.jpg",
