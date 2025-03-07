@@ -3956,16 +3956,13 @@ int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, co
 
 其中：
 
-| <center>参数</center>     | <center>含义</center>                                                                                                   |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `unsigned int irq`      | 选用的中断号，选用原则见：[[Linux驱动开发笔记#^adyua2\|中断号选用原则]]                                                                         |
-| `irq_handler_t handler` | 中断处理函数指针，原型为：`(*irq_handler_t)(int irq, void *dev)` <br>其中：<br>- `irq` 为中断号，同参数1<br>- `dev` 为指向私有数据区的指针，同参数5<br>fan'h |
-| `unsigned long flags`   | 中断管理掩码                                                                                                                |
-| `const char *name`      | 中断号拥有者，会在 `/proc/interrupts` 中显示                                                                                      |
-| `void *dev`             | 可以用于指向私有数据区                                                                                                           |
-上表中：
-- `irq_handler_t` 的定义为：`(*irq_handler_t)(int irq, void *dev)` 
-
+| <center>参数</center>     | <center>含义</center>                                                                                                                                                                                                                                   |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `unsigned int irq`      | 选用的中断号，选用原则见：[[Linux驱动开发笔记#^adyua2\|中断号选用原则]]                                                                                                                                                                                                         |
+| `irq_handler_t handler` | 中断处理函数指针，原型为：`(*irq_handler_t)(int irq, void *dev)` <br>其中：<br>- `irq` 为中断号，同参数1<br>- `dev` 为指向私有数据区的指针，同参数5<br>返回值 `irq_handler_t` 可选：<br>- `IRQ_NONE` ：中断未由本设备触发<br>- `IRQ_HANDLED` ：中断已被处理<br>- `IRQ_WAKE_THREAD` ：需要唤醒线程化处理(结合 `IRQF_ONESHOT` 使用) |
+| `unsigned long flags`   | 中断管理掩码                                                                                                                                                                                                                                                |
+| `const char *name`      | 中断号拥有者，会在 `/proc/interrupts` 中显示                                                                                                                                                                                                                      |
+| `void *dev`             | 可以用于指向私有数据区                                                                                                                                                                                                                                           |
 
 常用的中断管理掩码有：
 1. 中断触发方式掩码：
@@ -4043,6 +4040,20 @@ int pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs, unsigned i
 int pci_irq_vector(struct pci_dev *dev, unsigned int nr);
 ```
 
+#### 12.3.3 禁用和启用中断
 
+```C
+#include <linux/interrupts.h>
 
+//
+void disable_irq(unsigned int irq);
+void disable_irq_nosync(unsigned int irq);
+bool disable_hardirq(unsigned int irq);
+
+void disable_percpu_irq(unsigned int irq);
+void enable_irq(unsigned int irq);
+void enable_percpu_irq(unsigned int irq, unsigned int type);
+```
+
+上述函数会修改可编程中断控制器指定中断的掩码，从而在所有的处理器上禁用或启用中断。
 
