@@ -3962,7 +3962,7 @@ int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, co
 | `irq_handler_t handler` | 中断处理函数指针，原型为：`(*irq_handler_t)(int irq, void *dev)` <br>其中：<br>- `irq` 为中断号，同参数1<br>- `dev` 为指向私有数据区的指针，同参数5<br>返回值 `irq_handler_t` 可选：<br>- `IRQ_NONE` ：中断未由本设备触发<br>- `IRQ_HANDLED` ：中断已被处理<br>- `IRQ_WAKE_THREAD` ：需要唤醒线程化处理(结合 `IRQF_ONESHOT` 使用) |
 | `unsigned long flags`   | 中断管理掩码                                                                                                                                                                                                                                                |
 | `const char *name`      | 中断号拥有者，会在 `/proc/interrupts` 中显示                                                                                                                                                                                                                      |
-| `void *dev`             | 可以用于指向私有数据区                                                                                                                                                                                                                                           |
+| `void *dev`             | 可以用于指向私有数据区。<br>在非共享中断也可以设置为 `NULL` ，但不建议，<span style="background:#fff88f"><font color="#c00000">最好保持全内核唯一性</font></span>(所以一般指向 `dev` )。<br><font color="#c00000">因为该值在内核中断管理的数据结构中起到了类似Key值的作用</font>。<br>具体可见[[Linux驱动开发笔记#^rqxyj6\|关于dev参数的说明]]。  |
 
 常用的中断管理掩码有：
 1. 中断触发方式掩码：
@@ -4042,10 +4042,17 @@ int pci_irq_vector(struct pci_dev *dev, unsigned int nr);
 
 #### 12.3.3 中断的取消注册
 
+中断取消应当使用如下的API：
+
 ```C
 #include <linux/interrupt.h>
-const void *free_irq(unsigned int irq, void *dev);
+void *free_irq(unsigned int irq, void *dev_id);
 ```
+
+关于 `dev` 参数的说明： ^rqxyj6
+1. 该 `dev` 参数必须和中断注册时的 `dev` 参数保持一致。
+2. 该 `dev` 参数必须全内核中唯一，否则会冲突(因此通常取dev对象的指针)。
+3. 
 
 
 ### 12.4 禁用和启用中断
