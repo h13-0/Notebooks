@@ -11,12 +11,14 @@
             "id": "781e9fbea1a182b9",
             "type": "leaf",
             "state": {
-              "type": "image",
+              "type": "markdown",
               "state": {
-                "file": "Resources/Pasted image 20250307164714.png"
+                "file": "计算机组成原理/第三章 存储系统/第三章 存储系统.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-image",
-              "title": "Pasted image 20250307164714"
+              "icon": "lucide-file",
+              "title": "第三章 存储系统"
             }
           }
         ]
@@ -102,6 +104,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "计算机组成原理/第三章 存储系统/第三章 存储系统.md",
                 "collapseAll": true,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -111,7 +114,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks"
+              "title": "Backlinks for 第三章 存储系统"
             }
           },
           {
@@ -120,11 +123,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "计算机组成原理/第三章 存储系统/第三章 存储系统.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links"
+              "title": "Outgoing links from 第三章 存储系统"
             }
           },
           {
@@ -133,13 +137,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Resources/Pasted image 20250307165331.png",
+                "file": "计算机组成原理/第三章 存储系统/第三章 存储系统.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Pasted image 20250307165331"
+              "title": "Outline of 第三章 存储系统"
             }
           },
           {
@@ -188,11 +192,11 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "7ddc64b2e3c9b5c8",
+  "active": "781e9fbea1a182b9",
   "lastOpenFiles": [
     "Resources/Pasted image 20250307164714.png",
-    "计算机组成原理/第三章 存储系统/第三章 存储系统.md",
     "Resources/Pasted image 20250307165331.png",
+    "计算机组成原理/第三章 存储系统/第三章 存储系统.md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "STM32开发/OTA&Bootloader/STM32 OTA&Bootloader开发.md",
     "机器学习/Resources/Pasted image 20250306200752.png",
