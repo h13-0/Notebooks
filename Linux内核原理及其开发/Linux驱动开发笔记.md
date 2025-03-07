@@ -4085,7 +4085,19 @@ void local_irq_enable(void);
 
 ### 12.6 中断共享
 
+如前文中断的注册章节所述，共享中断注册使用如下API时：
 
+```C
+#include <linux/interrupts.h>
+int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, const char *name, void *dev);
+```
 
-
-
+参数：
+- `handle` ：必须可以识别属于自己的zhong
+- `flags` ：
+	- 必须选择 `IRQF_SHARED` 等中断共享控制掩码
+	- 中断触发方式的掩码必须一致
+- `dev` ：<font color="#c00000">必须唯一</font>，且不可为NULL。通常指向模块的地址空间。
+且成功注册的条件必须为如下之一：
+1. 中断线空闲
+2. 已经注册为共享的中断线，且触发方式一致
