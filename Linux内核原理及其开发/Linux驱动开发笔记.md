@@ -4040,6 +4040,14 @@ int pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs, unsigned i
 int pci_irq_vector(struct pci_dev *dev, unsigned int nr);
 ```
 
+#### 12.3.3 中断的取消注册
+
+```C
+#include <linux/interrupt.h>
+const void *free_irq(unsigned int irq, void *dev);
+```
+
+
 ### 12.4 禁用和启用中断
 
 #### 12.4.1 禁用启用单个中断
