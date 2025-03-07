@@ -4049,11 +4049,13 @@ int pci_irq_vector(struct pci_dev *dev, unsigned int nr);
 void disable_irq(unsigned int irq);
 void disable_irq_nosync(unsigned int irq);
 bool disable_hardirq(unsigned int irq);
-
 void disable_percpu_irq(unsigned int irq);
+
+// 
 void enable_irq(unsigned int irq);
 void enable_percpu_irq(unsigned int irq, unsigned int type);
 ```
 
-上述函数会修改可编程中断控制器指定中断的掩码，从而在所有的处理器上禁用或启用中断。
+在Linux内核内部维护了一个计数器，只有中断启用次数大于等于禁用次数时，中断才会被启动(当启用大于禁用时，会抛WARN日志)。而平台的中断启停实现则是修改可编程中断控制器指定中断的掩码，从而在所有的处理器上禁用或启用中断。
+
 
