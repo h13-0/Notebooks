@@ -3213,7 +3213,7 @@ int timer_pending(const struct timer_list * timer);
 #### 9.4.2 内核定时器的实现(了解)
 
 
-### 9.5 tasklet(即将被移除)
+### 9.5 tasklet(即将被移除) ^meiuw1
 
 tasklet机制即小任务机制，其特性有：
 1. <span style="background:#fff88f"><font color="#c00000">始终在中断期间运行</font></span>，具体注意事项应见[[Linux驱动开发笔记#12 1 2 中断上下文中的注意事项 fw453g|中断上下文中的注意事项]]。
@@ -4077,5 +4077,4 @@ void local_irq_enable(void);
 
 ### 12.5 顶半部和底半部
 
-
-
+通常来说，可以把，这部分讨论可见 [[Linux驱动开发笔记#^meiuw1|tasklet机制]]章节
