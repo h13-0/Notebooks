@@ -104,7 +104,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "嵌入式基础/软件层技术/应用层通信协议/Modbus.md",
+                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
                 "collapseAll": true,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -114,7 +114,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Modbus 的反向链接列表"
+              "title": "Backlinks for Linux驱动开发笔记"
             }
           },
           {
@@ -172,12 +172,11 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
-    "width": 317.5,
-    "collapsed": true
+    "width": 317.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -193,7 +192,7 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "66a3886f2f43bb2c",
+  "active": "21dd06d587b3ddc7",
   "lastOpenFiles": [
     "STM32开发/OTA&Bootloader/STM32 OTA&Bootloader开发.md",
     "机器学习/Resources/Pasted image 20250306200752.png",
