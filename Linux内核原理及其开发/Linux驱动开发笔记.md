@@ -4003,11 +4003,9 @@ int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, co
 #### 12.3.2 中断号选用原则 ^adyua2
 
 Linux内核中，并非所有的中断都可以自由选择中断号：
-- 部分中断的中断号是由硬件进行编码
+- 部分中断的中断号是由硬件进行编码，一般在设备树文件中
 - 现代的PCI、USB设备通常支持灵活的中断分配
-
-
-例如在 `rk3588-base.dtsi` 中的如下片段：
+以RK3588为例， `rk3588-base.dtsi` 中有如下片段
 
 ```dts
 uart0: serial@fd890000 {  
@@ -4026,4 +4024,22 @@ uart0: serial@fd890000 {
 };
 ```
 
-该片段将 `uart0` 的中断定义到了共享外设中断( `SPI` )
+该片段将 `uart0` 的中断定义到了共享外设中断( `GIC_SPI` )的331号中断中。
+因此在进行驱动程序编写时，<span style="background:#fff88f"><font color="#c00000">需要使用如下的API进行中断号获取</font></span>：
+- 对于通用设备，可以使用如下的API获取中断号：
+```C
+#include <linux/platform_device.h>
+int platform_get_irq(struct platform_device *dev, unsigned int );
+```
+- 对于PCI设备，可以使用如下的API获取中断向量：
+```C
+#include <linux/pci.h>
+// 申请含有指定中断数量的中断向量
+int pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs, unsigned int max_vecs, unsigned int flags);
+// 获取中断向量中的第nr个中断号
+int pci_irq_vector(struct pci_dev *dev, unsigned int nr);
+```
+
+
+
+
