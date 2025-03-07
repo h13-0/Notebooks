@@ -4006,3 +4006,24 @@ Linux内核中，并非所有的中断都可以自由选择中断号：
 - 部分中断的中断号是由硬件进行编码
 - 现代的PCI、USB设备通常支持灵活的中断分配
 
+
+例如在 `rk3588-base.dtsi` 中的如下片段：
+
+```dts
+uart0: serial@fd890000 {  
+    compatible = "rockchip,rk3588-uart", "snps,dw-apb-uart";  
+    reg = <0x0 0xfd890000 0x0 0x100>;  
+    interrupts = <GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH 0>;  
+    clocks = <&cru SCLK_UART0>, <&cru PCLK_UART0>;  
+    clock-names = "baudclk", "apb_pclk";  
+    dmas = <&dmac0 6>, <&dmac0 7>;  
+    dma-names = "tx", "rx";  
+    pinctrl-0 = <&uart0m1_xfer>;  
+    pinctrl-names = "default";  
+    reg-shift = <2>;  
+    reg-io-width = <4>;  
+    status = "disabled";  
+};
+```
+
+该片段将 `uart0` 的中断定义到了共享外设中断( `SPI` )
