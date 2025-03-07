@@ -3916,6 +3916,7 @@ in_atpmic();
  1:         10          0     IR-IO-APIC    1-edge      i8042
  8:          1          0     IR-IO-APIC    8-edge      rtc0
  9:        214          0     IR-IO-APIC    9-fasteoi   acpi
+11:          0          0     IO-APIC  11-fasteoi   virtio2, uhci_hcd:usb1
 12:        124          0     IR-IO-APIC   12-edge      i8042
 16:       3589          0     IR-IO-APIC   16-fasteoi   ehci_hcd:usb1
 24:          0        652     IR-PCI-MSI 32768-edge      xhci_hcd
@@ -3925,7 +3926,7 @@ in_atpmic();
 上述内容中：
 - 第一列为中断号
 - 各CPU列为在该CPU上触发中断的次数
-- 最后一列为关联的硬件设备或中断类型
+- 最后一列为关联的硬件设备或中断类型，如果由逗号分隔的表示是共享中断
 - 中间几列为处理中断的可编程中断控制器
 
 需要补充的是：
@@ -4046,14 +4047,18 @@ int pci_irq_vector(struct pci_dev *dev, unsigned int nr);
 
 ```C
 #include <linux/interrupt.h>
-void *free_irq(unsigned int irq, void *dev_id);
+const void *free_irq(unsigned int irq, void *dev_id);
 ```
 
-关于 `dev` 参数的说明： ^rqxyj6
-1. 该 `dev` 参数必须和中断注册时的 `dev` 参数保持一致。
-2. 该 `dev` 参数必须全内核中唯一，否则会冲突(因此通常取dev对象的指针)。
-3. 
+关于 `free_irq` 函数的说明：
+1. 调用该函数时，内核会等待并保证当前正在运行的中断处理例程退出。
+2. <font color="#c00000">调用该函数之前</font>，<font color="#c00000">必须保证设备已停止触发该中断</font>。
+3. 保证该函数执行周期内，`dev_id` 指向的数据(如有)有效。
 
+关于 `dev` 参数的说明： ^rqxyj6
+1. 该 `dev_id` 参数必须和中断注册时的 `dev` 参数保持一致。
+2. 该 `dev_id` 参数必须全内核中唯一，否则会冲突(因此通常取dev对象的指针)。
+3. 该 `dev_id` 参数<span style="background:#fff88f"><font color="#c00000">用于在内核的中断管理数据结构</font></span>( `desc` )<span style="background:#fff88f"><font color="#c00000">中当作Key值</font></span>。
 
 ### 12.4 禁用和启用中断
 
@@ -4099,6 +4104,8 @@ void local_irq_enable(void);
 此外使用[[Linux驱动开发笔记#^qihja2|工作队列]]机制也可以完成同步功能。
 
 ### 12.6 中断共享
+
+anchor ^c8eb6k
 
 如前文中断的注册章节所述，共享中断注册使用如下API时：
 
