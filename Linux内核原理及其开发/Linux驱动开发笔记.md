@@ -4002,6 +4002,7 @@ int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, co
 
 #### 12.3.2 中断号选用原则 ^adyua2
 
-
-
+Linux内核中，并非所有的中断都可以自由选择中断号：
+- 部分中断的中断号是由硬件进行编码
+- 现代的PCI、USB设备通常支持灵活的中断分配
 
