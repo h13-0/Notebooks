@@ -4029,7 +4029,7 @@ uart0: serial@fd890000 {
 - 对于通用设备，可以使用如下的API获取中断号：
 ```C
 #include <linux/platform_device.h>
-int platform_get_irq(struct platform_device *dev, unsigned int );
+int platform_get_irq(struct platform_device *dev, unsigned int n);
 ```
 - 对于PCI设备，可以使用如下的API获取中断向量：
 ```C
