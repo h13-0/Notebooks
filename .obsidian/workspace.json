@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "9ecf1e1104d030b5",
+        "id": "c44a660efce0d9ef",
         "type": "tabs",
         "children": [
           {
-            "id": "781e9fbea1a182b9",
+            "id": "8c357abb9d15f609",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -192,13 +192,13 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "1bc30e82fd7b9190",
+  "active": "7ddc64b2e3c9b5c8",
   "lastOpenFiles": [
-    "Resources/Pasted image 20250307171710.png",
-    "Resources/Pasted image 20250307171658.png",
+    "计算机组成原理/Resources/Pasted image 20250307171658.png",
+    "计算机组成原理/Resources/Pasted image 20250307171710.png",
+    "计算机组成原理/第三章 存储系统/第三章 存储系统.md",
     "计算机组成原理/Resources/Pasted image 20250307164714.png",
     "Resources/Pasted image 20250307165331.png",
-    "计算机组成原理/第三章 存储系统/第三章 存储系统.md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "STM32开发/OTA&Bootloader/STM32 OTA&Bootloader开发.md",
     "机器学习/Resources/Pasted image 20250306200752.png",
@@ -223,7 +223,6 @@
     "Linux内核原理及其开发/应试笔记与八股.md",
     "STM32开发/STM32内存、储存模型/STM32内存模型.md",
     "STM32开发/STM32内存、储存模型/STM32内置Flash模型.md",
-    "Resources/chrome_QXgvHAMLdc.png",
     "Readme.md",
     "机器学习/深度学习/CV/Tricks/注意力机制.md",
     "机器学习/深度学习/CV/Tricks/多尺度图像特征融合.md",
