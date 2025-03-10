@@ -93,8 +93,10 @@ YOLO v1的Head使用的是全连接网络，其网络结构如下：
 ### 4.1 Head
 
 
+#### 4.1.1 anchor初始化
 
-anchor选取：
+anchor的确定主要有如下三种方式：
+1. 
 
 
 
@@ -105,9 +107,15 @@ anchor选取：
 YOLO v2的主干网络被切换为Darknet-19：
 	![[Pasted image 20250310183902.png]]
 相比于YOLO v1的类似于GoogLeNet的Backbone，Darknet的主要改进为：
-1. 
+1. 为每一个卷积层添加[[YOLO#^frk3ft|批量归一化(BN)]]。
 2. 替换全连接为1x1的Conv
 
+
+
+
+### 4.3 其他改进点
+
+#### 4.3.1 批量归一化(Batch Normalization，BN) ^frk3ft
 
 
 
