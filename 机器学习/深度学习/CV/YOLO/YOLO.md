@@ -77,7 +77,9 @@ YOLO v1的Head使用的是全连接网络，其网络结构如下：
 - $C$ ：预测任务的种类数，VOC数据集中为20。
 	- <font color="#c00000">存储每个类别的概率</font>
 
-根据Head的Output定义，其可以
+根据Head的Output定义，其可以理解为：
+- Head使用了两层全连接将7x7x1024的特征图转化为了7x7x30的"特征图"，如下：
+	![[Pasted image 20250310184415.png]]
 
 #### 3.4.2 后处理(非极大值抑制，nms)
 
@@ -94,8 +96,9 @@ YOLO v1的Head使用的是全连接网络，其网络结构如下：
 
 YOLO v2的主干网络被切换为Darknet-19：
 	![[Pasted image 20250310183902.png]]
-
-
+相比于YOLO v1的类似于GoogLeNet的Backbone，Darknet的主要改进为：
+1. 
+2. 替换全连接为1x1的Conv
 
 
 
