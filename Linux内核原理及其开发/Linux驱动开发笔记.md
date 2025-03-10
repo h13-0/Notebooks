@@ -4149,7 +4149,13 @@ int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, co
 1. <font color="#c00000">在新代码中</font>推荐使用 `<linux/types.h>` 中的 `u8` 、 `s8` 等，但也允许使用 `<stdint.h>` 中的 `uint8_t` 和 `int8_t`
 2. <span style="background:#fff88f"><font color="#c00000">在老代码中一定要和原代码中的风格保持一致</font></span>，不可混用。
 
-### 13.2 其他若干问题
+### 13.2 基本数据结构
+
+基本索引：
+- [[内核基本数据结构(types.h部分)]]
+	- [[内核基本数据结构(types.h部分)#3 链表锚点 xl7wru|链表锚点]]
+
+### 13.3 其他若干问题
 
 直接参考[Linux 内核代码风格 — The Linux Kernel documentation](https://www.kernel.org/doc/html/latest/translations/zh_CN/process/coding-style.html)(中文版)即可。
 
@@ -4159,11 +4165,10 @@ int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, co
 ## 15 USB驱动程序
 
 
-
 ## 16 Linux设备模型
 
 
-
+## 17 内存映射和
 
 
 
