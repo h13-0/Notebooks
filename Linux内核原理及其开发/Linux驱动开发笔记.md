@@ -4146,8 +4146,8 @@ int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, co
 > When editing existing code which already uses one or the other set of types, you should conform to the existing choices in that code.
 
 即：
-1. 在新代码中推荐使用 `<linux/types.h>` 中的 `u8` 、 `s8` 等，但也允许使用 ``
-
+1. <font color="#c00000">在新代码中</font>推荐使用 `<linux/types.h>` 中的 `u8` 、 `s8` 等，但也允许使用 `<stdint.h>` 中的 `uint8_t` 和 `int8_t`
+2. <span style="background:#fff88f"><font color="#c00000">在老代码中一定要和原代码中的风格保持一致</font></span>，不可混用。
 
 ## 14 PCI驱动程序
 
