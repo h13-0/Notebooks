@@ -38,6 +38,8 @@ Output\_size=\frac{input\_size+2\times padding - k}{stride}+1
 $$
 
 Demo：
-
+- 
 
 ### 2.2 二维形式
+
+
