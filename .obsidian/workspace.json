@@ -88,7 +88,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 286.5
+    "width": 286.5,
+    "collapsed": true
   },
   "right": {
     "id": "989a0ed08fe1a7b2",
@@ -168,15 +169,15 @@
                 "searchQuery": ""
               },
               "icon": "lucide-tags",
-              "title": "标签"
+              "title": "Tags"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "horizontal",
-    "width": 317.5
+    "width": 317.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -192,7 +193,7 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "7ddc64b2e3c9b5c8",
+  "active": "8c357abb9d15f609",
   "lastOpenFiles": [
     "计算机组成原理/Resources/Pasted image 20250307171658.png",
     "计算机组成原理/Resources/Pasted image 20250307171710.png",
