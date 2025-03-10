@@ -34,5 +34,10 @@ number headings: auto, first-level 2, max 6, 1.1
 1. 数学上的 `kernel` 需要在第一步中进行左右翻转，但是CV中通常不用。
 2. 输出尺寸为：
 $$
-Output\_size=input\_size-2\times k
+Output\_size=\frac{input\_size+2\times padding - k}{stride}+1
 $$
+
+Demo：
+
+
+### 2.2 二维形式
