@@ -35,8 +35,7 @@
               "title": "1989 LeNet(CNN)"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -207,8 +206,9 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "a1b9c6142b33d37d",
+  "active": "2868a10b88db287e",
   "lastOpenFiles": [
+    "机器学习/深度学习/CV/文章笔记/1989 LeNet(CNN).md",
     "机器学习/深度学习/CV/Componets/CNN卷积算子.md",
     "机器学习/深度学习/CV/Componets/注意力机制.md",
     "机器学习/深度学习/CV/YOLO/YOLO.md",
@@ -227,7 +227,6 @@
     "计算机组成原理/Resources/Pasted image 20250310150039.png",
     "计算机组成原理/Resources/Pasted image 20250310145259.png",
     "STM32开发/OTA&Bootloader/STM32 OTA&Bootloader开发.md",
-    "机器学习/深度学习/CV/文章笔记/1989 LeNet(CNN).md",
     "机器学习/深度学习/CV/YOLO",
     "生活常识/电子电气/电池/铅蓄电池.md",
     "生活常识/二手购物/电动车.md",
