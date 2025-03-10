@@ -94,7 +94,8 @@ YOLO v1的Head使用的是全连接网络，其网络结构如下：
 
 #### 4.1.1 Head结构
 
-在YOLO v2中，Head接收的特征图尺寸为 $7\times 7$ ，
+在YOLO v2中，Head接收的特征图尺寸为 $7\times 7\times 1024$ (与YOLO v1一致)，但是其Head结构变化为：
+
 
 
 #### 4.1.2 anchor的引入
