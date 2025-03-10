@@ -77,6 +77,8 @@ YOLO v1的Head使用的是全连接网络，其网络结构如下：
 - $C$ ：预测任务的种类数，VOC数据集中为20。
 	- <font color="#c00000">存储每个类别的概率</font>
 
+根据Head的Output定义，其可以
+
 #### 3.4.2 后处理(非极大值抑制，nms)
 
 
@@ -87,6 +89,12 @@ YOLO v1的Head使用的是全连接网络，其网络结构如下：
 ## 4 YOLO v2
 
 ### 4.1 Head
+
+### 4.2 Backbone
+
+YOLO v2的主干网络被切换为Darknet-19：
+	![[Pasted image 20250310183902.png]]
+
 
 
 
