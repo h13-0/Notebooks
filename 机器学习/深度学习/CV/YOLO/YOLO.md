@@ -92,6 +92,14 @@ YOLO v1的Head使用的是全连接网络，其网络结构如下：
 
 ### 4.1 Head
 
+
+
+anchor选取：
+
+
+
+
+
 ### 4.2 Backbone
 
 YOLO v2的主干网络被切换为Darknet-19：
