@@ -4131,6 +4131,22 @@ int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, co
 
 ## 13 内核的数据类型
 
+本章并无太多难点，更多的是使用规范类问题。
+参考资料：
+- [Linux kernel coding style — The Linux Kernel documentation](https://www.kernel.org/doc/html/latest/process/coding-style.html)
+
+### 13.1 整型及位宽
+
+关于 `u8` 、 `s8` 与 `uint8_t` 、`int8_t` ：
+
+> Although it would only take a short amount of time for the eyes and brain to become accustomed to the standard types like `uint32_t`, some people object to their use anyway.
+> 
+> Therefore, the Linux-specific `u8/u16/u32/u64` types and their signed equivalents which are identical to standard types are permitted -- although they are not mandatory in new code of your own.
+> 
+> When editing existing code which already uses one or the other set of types, you should conform to the existing choices in that code.
+
+即：
+1. 在新代码中推荐使用 `<linux/types.h>` 中的 `u8` 、 `s8` 等，但也允许使用 ``
 
 
 ## 14 PCI驱动程序
