@@ -117,14 +117,12 @@ anchor的确定主要有如下三种方式：
 
 在YOLO v1中，Bounding box的输出是直接由神经网络输出的 $[x, y, w, h]$ 四个参数进行确定。
 而在引入了anchor box的YOLO v2中，Bouding box的确定变成了 $[t_x, t_y, t_w, t_h, t_o]$ 五个参数，其到Bounding box之间的关系为：
-- $$
-
-
-![[Pasted image 20250311185133.png]]
-
-
-
-
+- $Sigmoid(t_x)=\Delta x$，为Bounding box中心距离Grid cell左上角的距离，值域 $[0, 1]$
+- $Sigmoid(t_y)=\Delta y$
+- $\displaystyle e^{\displaystyle t_w}=k_w$，为相对anchor box宽度的倍数
+- $\displaystyle e^{\displaystyle t_h}=k_h$
+则具体的Bounding box换算规则如下图所示：
+	![[Pasted image 20250311185133.png]]
 
 #### 4.1.4 Head结构
 
@@ -132,6 +130,7 @@ anchor的确定主要有如下三种方式：
 
 其中，在Bounding Box的回归上，不再使用YOLO v1的直接回归，而是与预测检测框(anchor框)的偏差进行回归，并且每个网络制定n个anchor box，且在训练时只有最接近ground truth的检测框进行损失的计算
 
+#TODO
 
 ### 4.2 Backbone
 
