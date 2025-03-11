@@ -97,19 +97,11 @@ YOLO v1的主要问题有：
 
 ### 4.1 Head
 
-#### 4.1.1 Head结构
-
-在YOLO v2中，Head接收的特征图尺寸为 $7\times 7\times 1024$ (与YOLO v1一致)，但是其Head结构变化为：
+#### 4.1.1 anchor的引入
 
 
 
-其中，在Bounding Box的回归上，不再使用YOLO v1的直接回归，而是与预测检测框(anchor框)的偏差进行回归，并且每个网络制定n个anchor box，且在训练时只有最接近ground truth的检测框进行损失的计算
-
-#### 4.1.2 anchor的引入
-
-
-
-#### 4.1.3 anchor初始化
+#### 4.1.2 anchor初始化
 
 anchor的确定主要有如下三种方式：
 1. 人为经验选取
@@ -121,13 +113,35 @@ anchor的确定主要有如下三种方式：
 明显地，anchor数量越多，定位精度越高，最终作者选定k=5进行聚类。
 	![[Pasted image 20250310204250.png]]
 
+#### 4.1.3 anchor box与bounding box
 
+对于
+
+![[Pasted image 20250311185133.png]]
+
+
+
+
+
+#### 4.1.4 Head结构
+
+在YOLO v2中，Head接收的特征图尺寸为 $13\times 13\times 1024$ ，其每个grid cell设置了k=5个anchor，则共计会检出 $13\times 13\times 5=845$ 个检测框，$Recall$ 相比YOLO v1大幅提升。
+
+其中，在Bounding Box的回归上，不再使用YOLO v1的直接回归，而是与预测检测框(anchor框)的偏差进行回归，并且每个网络制定n个anchor box，且在训练时只有最接近ground truth的检测框进行损失的计算
 
 
 ### 4.2 Backbone
 
 YOLO v2的主干网络被切换为Darknet-19：
 	![[Pasted image 20250310183902.png]]
+注：
+- 上图Darknet-19的：
+	- 输入尺寸为 $224\times 224$ 
+	- 输出尺寸为 $7\times 7$
+	但是在YOLO v2的Backbone中：
+	- 输入为 $416\times 416$
+	- 输出尺寸为 $13\times 13$
+
 相比于YOLO v1的类似于GoogLeNet的Backbone，Darknet的主要改进为：
 1. 为每一个卷积层添加[[YOLO#^frk3ft|批量归一化(BN)]]。
 2. 替换全连接为1x1的Conv
