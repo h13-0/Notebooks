@@ -5,7 +5,7 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ## 1 Note
 
-本笔记是主线YOLO的学习笔记，不包含分支版本。
+本笔记是主线YOLO的学习笔记，不包含分非主线版本。
 
 ## 2 目录
 
