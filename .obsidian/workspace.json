@@ -4,33 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "350e150f8841ec44",
+        "id": "12ea56053c92841e",
         "type": "tabs",
         "children": [
           {
-            "id": "2868a10b88db287e",
-            "type": "leaf",
-            "state": {
-              "type": "image",
-              "state": {
-                "file": "机器学习/Resources/Pasted image 20250310183902.png"
-              },
-              "icon": "lucide-image",
-              "title": "Pasted image 20250310183902"
-            }
-          },
-          {
-            "id": "a1b9c6142b33d37d",
+            "id": "de5bbaa3490d834c",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "机器学习/深度学习/CV/文章笔记/1989 LeNet(CNN).md",
+                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "1989 LeNet(CNN)"
+              "title": "Linux驱动开发笔记"
             }
           }
         ]
@@ -204,15 +192,15 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "7ddc64b2e3c9b5c8",
+  "active": "de5bbaa3490d834c",
   "lastOpenFiles": [
+    "机器学习/Resources/Pasted image 20250310183902.png",
     "机器学习/深度学习/CV/YOLO/YOLO.md",
     "机器学习/Resources/Pasted image 20250310204250.png",
     "机器学习/深度学习/CV/Componets/CNN卷积算子.md",
     "机器学习/深度学习/CV/文章笔记/1989 LeNet(CNN).md",
     "机器学习/深度学习/CV/Componets/注意力机制.md",
     "机器学习/Resources/Pasted image 20250310184415.png",
-    "机器学习/Resources/Pasted image 20250310183902.png",
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "Linux内核原理及其开发/应试笔记与八股.md",
