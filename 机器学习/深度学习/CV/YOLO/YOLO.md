@@ -115,7 +115,10 @@ anchor的确定主要有如下三种方式：
 
 #### 4.1.3 anchor box与bounding box
 
-对于
+在YOLO v1中，Bounding box的输出是直接由神经网络输出的 $[x, y, w, h]$ 四个参数进行确定。
+而在引入了anchor box的YOLO v2中，Bouding box的确定变成了 $[t_x, t_y, t_w, t_h, t_o]$ 五个参数，其到Bounding box之间的关系为：
+- $$
+
 
 ![[Pasted image 20250311185133.png]]
 
