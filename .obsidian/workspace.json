@@ -102,7 +102,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 286.5
+    "width": 286.5,
+    "collapsed": true
   },
   "right": {
     "id": "989a0ed08fe1a7b2",
@@ -208,6 +209,8 @@
   },
   "active": "de5bbaa3490d834c",
   "lastOpenFiles": [
+    "Resources/Pasted image 20250311160941.png",
+    "Resources/Pasted image 20250311160623.png",
     "生活常识/数码/RAID技术.md",
     "计算机组成原理/第三章 存储系统/第三章 存储系统.md",
     "操作系统/基础应试学习/第一章 计算机系统概述/第一章 计算机系统概述.md",
@@ -229,7 +232,6 @@
     "Linux内核原理及其开发/内核原理专题/基本数据结构专题/内核基本数据结构(types.h部分).md",
     "Linux内核原理及其开发/应试笔记与八股.md",
     "计算机组成原理/Resources/Pasted image 20250310155642.png",
-    "计算机组成原理/Resources/Pasted image 20250310160127.png",
     "STM32开发/OTA&Bootloader/STM32 OTA&Bootloader开发.md",
     "机器学习/深度学习/CV/YOLO",
     "生活常识/电子电气/电池/铅蓄电池.md",
@@ -244,7 +246,6 @@
     "嵌入式基础/Readme.md",
     "STM32开发/STM32内存、储存模型/STM32内存模型.md",
     "STM32开发/STM32内存、储存模型/STM32内置Flash模型.md",
-    "Readme.md",
     "机器学习/深度学习/CV/Componets",
     "计算机组成原理/第三章 存储系统",
     "STM32开发/Resources/STM32F10x中文参考手册_V10.pdf",
