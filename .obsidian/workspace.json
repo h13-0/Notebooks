@@ -11,10 +11,14 @@
             "id": "68e67d1d1bbdf9e7",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "机器学习/深度学习/CV/YOLO/YOLO.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "YOLO"
             }
           }
         ]
@@ -190,6 +194,7 @@
   },
   "active": "68e67d1d1bbdf9e7",
   "lastOpenFiles": [
+    "Resources/Pasted image 20250311183521.png",
     "计算机组成原理/Resources/Pasted image 20250311144507.png",
     "计算机组成原理/第三章 存储系统/第三章 存储系统.md",
     "生活常识/数码/RAID技术.md",
