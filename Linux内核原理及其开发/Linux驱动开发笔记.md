@@ -4168,7 +4168,14 @@ int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, co
 ## 16 Linux设备模型
 
 
-## 17 内存映射和
+## 17 内存映射和DMA
+
+
+
+
+## 18 块设备驱动程序
+
+
 
 
 
