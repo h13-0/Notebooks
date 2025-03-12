@@ -74,8 +74,12 @@ number headings: auto, first-level 2, max 6, 1.1
 SVC用于完成用户态的系统调用请求。其主要由如下几个部分组成：
 - SVC指令：用于在用户态唤起内核提供的系统调用，在调用SVC指令时，必须附加目标系统调用对应的SVC服务编号参数。
 - SVC中断：当用户态调用SVC指令后，CPU会产生SVC中断。
-- SVC中断响应例程：操作系统会根据SVC传递来的SVC服务编号完成对应的系统调用。
-![[msedge_7IxSZn3kFG.png]]
+- SVC中断响应例程：
+	1. 在进入操作系统的SVC中断响应例程后，响应例程会判断 `LR` 的第2个bit判断其使用的是主栈(MSP)还是进程栈(PSP)
+	2. 从目标栈中提取 `PC` 对应地址的数据，该数据的第一个字节为SVC服务编号，第二个字节为SVC指令
+	3. 在缺第该SVC服务编号后，操作系统会完成对应的系统调用。
+	![[msedge_7IxSZn3kFG.png]]
+	![[msedge_nMuZYtBq4X.png]]
 
 
 需要注意的是，CM3内核在SVC中断产生时，会检测当前能否正常响应SVC中断：
