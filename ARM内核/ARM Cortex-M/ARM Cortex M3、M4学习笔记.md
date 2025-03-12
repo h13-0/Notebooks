@@ -65,12 +65,16 @@ number headings: auto, first-level 2, max 6, 1.1
 ### 8.6 SVC和PendSV
 
 基本概念：
-- <font color="#9bbb59">SVC</font>：系统服务调用
+- <font color="#9bbb59">SVC</font>：Supervisor Call，系统服务调用。
 - <font color="#9bbb59">PendSV</font>：可悬起系统调用
+上述两个中断的区别就在于能否得到延缓执行。
 
 SVC用于产生系统函数的调用请求，当用户发起系统调用请求时，会产生SVC异常，然后操作系统提供的SVC异常服务例程会得到执行，它再调用相关的操作系统函数，后者完成用户程序请求的服务。
 
 ![[msedge_KRuwi11Lur.png]]
+
+在用户态程序申请系统调用时，会通过SVC指令完成对应的调用，该指令要求提供与欲调用的系统调用对应的立即数。
+
 
 
 
