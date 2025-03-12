@@ -89,16 +89,20 @@ SVC用于完成用户态的系统调用请求。其主要由如下几个部分�
 
 需要注意的是，CM3内核在SVC中断产生时，会检测当前能否正常响应SVC中断：
 1. 若SVC被屏蔽(例如 `PRIMASK=1`)，则无法响应SVC中断
-2. 正在运行更高优先级的中断时无法响应SVC中断，见[[ARM Cortex M3、M4学习笔记#^eoeevc|注2]]。
+2. 正在运行更高优先级的中断时无法响应SVC中断(此情况正常情况下不会发生，见[[ARM Cortex M3、M4学习笔记#^eoeevc|注2]])。
 <font color="#c00000">即当前内核无法响应SVC中断时，内核会触发</font>[[ARM Cortex M3、M4学习笔记#^h6lmyb|UsageFault]]，且若未使能UsageFault，则会变成HardFault。即<span style="background:#fff88f"><font color="#c00000">SVC系统服务调用必须在可以得到响应时才能被调用，否则会触发异常</font></span>。<font color="#c00000">并且SVC需要占用高优先级中断</font>。
 
 需要注意的是：
 1. 在关键代码段关闭中断时，需要注意禁止关闭SVC中断。
-2. <font color="#c00000">在比SVC优先级更高的中断中</font><span style="background:#fff88f"><font color="#c00000"><b>严禁</b></font></span><font color="#c00000">触发SVC中断</font>。<font color="#c00000">而在多核CPU中，每个CPU都有自己独立的SVC中断</font>。因此：^eoeevc
+2. <font color="#c00000">在比SVC优先级更高的中断中</font><span style="background:#fff88f"><font color="#c00000"><b>严禁</b></font></span><font color="#c00000">触发SVC中断</font>。<font color="#c00000">而在多核CPU中，<u>每个CPU都有自己独立的SVC中断</u></font>。因此：^eoeevc
 	1. <font color="#c00000">所有用户可以访问的中断，其优先级均应小于SVC的优先级</font>。
-	2. 当CPU在处理更高级中断时，用户不可能触发SVC调用；而内核代码只要做到上述原则，就不会出现问题。
+	2. 当CPU在处理更高级中断时，用户不可能触发SVC调用；而内核代码只要做到上述原则，<font color="#c00000">就不会出现正在运行更高优先级的中断时无法响应SVC中断的问题</font>。
 3. 因此SVC中断优先级应尽可能的高，这样可以提高SVC的响应速度，并且更容易的将需要访问SVC的中断放到比SVC低的优先级中。
 
+但是再考虑这样一个场景：
+1. 
+
+![[msedge_BfDyMgQBmP.png]]
 
 
 
