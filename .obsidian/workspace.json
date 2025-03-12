@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "ARM内核/应试笔记与八股.md",
+                "file": "ARM内核/ARM Cortex-M/ARM Cortex M3、M4学习笔记.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "应试笔记与八股"
+              "title": "ARM Cortex M3、M4学习笔记"
             }
           },
           {
@@ -35,8 +35,7 @@
               "title": "应试笔记与八股"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -207,17 +206,17 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "7ddc64b2e3c9b5c8",
+  "active": "0a46c57651af4ea9",
   "lastOpenFiles": [
+    "ARM内核/应试笔记与八股.md",
+    "FreeRTOS/应试笔记与八股.md",
     "CPP/应试笔记与八股.md",
     "FreeRTOS/FreeRTOS应用及原理分析/FreeRTOS工程创建与移植.md",
     "FreeRTOS/FreeRTOS应用及原理分析/多任务与调度.md",
     "ARM内核/Resources/msedge_7IxSZn3kFG.png",
     "ARM内核/Resources/msedge_nMuZYtBq4X.png",
     "FreeRTOS/Readme.md",
-    "FreeRTOS/应试笔记与八股.md",
     "ARM内核/ARM Cortex-M/ARM Cortex M3、M4学习笔记.md",
-    "ARM内核/应试笔记与八股.md",
     "STM32开发/Resources/STM32F10x中文参考手册_V10.pdf",
     "STM32开发/Resources/stm32cubeide_FfvAsuGt5H.png",
     "Resources/msedge_KRuwi11Lur.png",
