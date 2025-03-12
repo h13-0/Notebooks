@@ -35,8 +35,7 @@
               "title": "应试笔记与八股"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -207,10 +206,10 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "d9bf3acb9853596e",
+  "active": "0a46c57651af4ea9",
   "lastOpenFiles": [
-    "ARM内核/应试笔记与八股.md",
     "FreeRTOS/应试笔记与八股.md",
+    "ARM内核/应试笔记与八股.md",
     "ARM内核/ARM Cortex-M/ARM Cortex M3、M4学习笔记.md",
     "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "机器学习/Resources/Pasted image 20250311183521.png",
