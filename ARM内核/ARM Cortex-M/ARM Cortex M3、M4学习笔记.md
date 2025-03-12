@@ -57,7 +57,10 @@ number headings: auto, first-level 2, max 6, 1.1
 
 #### 8.5.2 存储器管理Faults
 
-#### 8.5.3 用法Faults
+#### 8.5.3 UsageFault ^h6lmyb
+
+
+
 
 #### 8.5.4 硬Faults
 
@@ -85,7 +88,7 @@ SVC用于完成用户态的系统调用请求。其主要由如下几个部分�
 需要注意的是，CM3内核在SVC中断产生时，会检测当前能否正常响应SVC中断：
 1. 若SVC被屏蔽(例如 `PRIMASK=1` )，则无法响应SVC中断
 2. 正在运行更高优先级的中断时无法响应SVC中断
-当当前内核无法响应SVC中断时，内核会触发 `UsageFault` 
+<font color="#c00000">即当前内核无法响应SVC中断时，内核会触发</font>[[ARM Cortex M3、M4学习笔记#^h6lmyb|UsageFault]]，且若未使能UsageFault，则会变成
 即<span style="background:#fff88f"><font color="#c00000">SVC系统服务调用必须在可以得到响应时才能被调用，否则会触发异常</font></span>。
 
 
