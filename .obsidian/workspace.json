@@ -192,8 +192,10 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "c95889cf1ac18828",
+  "active": "7ddc64b2e3c9b5c8",
   "lastOpenFiles": [
+    "Linux内核原理及其开发/驱动开发专题/V4L2",
+    "Linux内核原理及其开发/驱动开发专题",
     "计算机组成原理/Resources/Pasted image 20250313113706.png",
     "计算机组成原理/第三章 存储系统/第三章 存储系统.md",
     "计算机组成原理/Resources/Pasted image 20250313094236.png",
@@ -239,7 +241,6 @@
     "计算机组成原理/第三章 存储系统",
     "嵌入式基础/接口技术/DCMI",
     "ESP32开发笔记/Resources",
-    "ESP32开发笔记",
     "嵌入式基础/接口技术/未命名.canvas"
   ]
 }
