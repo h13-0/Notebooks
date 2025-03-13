@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux内核原理及其开发/Linux驱动开发笔记.md",
+                "file": "Linux内核原理及其开发/驱动开发专题/V4L2/Untitled.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Linux驱动开发笔记"
+              "title": "Untitled"
             }
           }
         ]
@@ -192,8 +192,10 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "7ddc64b2e3c9b5c8",
+  "active": "c95889cf1ac18828",
   "lastOpenFiles": [
+    "Linux内核原理及其开发/Linux驱动开发笔记.md",
+    "Linux内核原理及其开发/驱动开发专题/V4L2/Untitled.md",
     "Linux内核原理及其开发/驱动开发专题/V4L2",
     "Linux内核原理及其开发/驱动开发专题",
     "计算机组成原理/Resources/Pasted image 20250313113706.png",
@@ -202,7 +204,6 @@
     "计算机组成原理/Resources/Pasted image 20250313100638.png",
     "计算机组成原理/Resources/Pasted image 20250313095944.png",
     "ARM内核/ARM Cortex-M/ARM Cortex M3、M4学习笔记.md",
-    "Linux内核原理及其开发/Linux驱动开发笔记.md",
     "FreeRTOS/应试笔记与八股.md",
     "FreeRTOS/FreeRTOS应用及原理分析/多任务与调度.md",
     "ARM内核/Resources/msedge_BfDyMgQBmP.png",
@@ -240,7 +241,6 @@
     "机器学习/深度学习/CV/Componets",
     "计算机组成原理/第三章 存储系统",
     "嵌入式基础/接口技术/DCMI",
-    "ESP32开发笔记/Resources",
     "嵌入式基础/接口技术/未命名.canvas"
   ]
 }
