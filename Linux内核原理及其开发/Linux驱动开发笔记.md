@@ -17,7 +17,8 @@ number headings: auto, first-level 2, max 6, 1.1
 ### 1.1 Linux版本编号规则
 
 Linux版本编号规则为：
-```
+
+```text
 VERSION.PATCHLEVEL.SUBLEVEL[-EXTRAVERSION]
 ```
 
@@ -503,7 +504,7 @@ static int var_name __initdata = 0;
 
 ###### 4.3.7.1.1 Ubuntu
 
-Ubuntu可以使用 `apt` 和 `git` 两种方式获取源码。
+Ubuntu可以使用 `apt` 和 `git` 两种方式获取源码，也可以使用当前系统配合主线版本内核进行编译。
 
 **使用apt获取源码**：
 直接搜索linux内核，并找出当前使用的内核包名
@@ -570,6 +571,13 @@ git checkout FETCH_HEAD
 以上述命令为例，截止2024年05月30日：
 - 完整clone共计10192670个object
 - 只clone目标版本共计88631个object。
+
+**提取当前内核配置并使用主线内核代码**：
+主线代码获取方式略。在获取到主线内核代码后，可以使用如下方式获取当前系统的config：
+
+```Shell
+cp -v /boot/config-$(uname -r) .config
+```
 
 ##### 4.3.7.2 普通模块示例
 
