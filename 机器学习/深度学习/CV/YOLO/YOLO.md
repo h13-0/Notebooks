@@ -146,7 +146,12 @@ YOLO v2的主干网络被切换为Darknet-19：
 
 相比于YOLO v1的类似于GoogLeNet的Backbone，Darknet的主要改进为：
 1. 为每一个卷积层添加[[YOLO#^frk3ft|批量归一化(BN)]]。
-2. 替换全连接为1x1的Conv
+2. 替换全连接层为BatchNormalization+1x1的Conv，需要注意：
+	- 1x1 Conv参数设置：
+		- 输入张量为 `[1, 1, input_channels]`
+		- 输出张量为 `[1, 1, output_channels]`
+		- 输入输出特征图均为 $1\times 1$
+	- 性能对比可见[[BN_Conv与FCN性能对比]]。
 
 
 
