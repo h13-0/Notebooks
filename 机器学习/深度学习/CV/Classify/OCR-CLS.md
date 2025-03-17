@@ -38,4 +38,10 @@ number headings: auto, first-level 2, max 6, 1.1
 	- 而假设：
 		- 输入图像 $(w, h)=(160, 32)$ ，则其特征向量为 `[Channel, height, width]=[512, 1, 40]` 
 		- 输入图像 $(w, h)=(224, 32)$ ，则其特征向量为 `[Channel, height, width]=[512, 1, 56]` 
-2. 
+2. RNN部分：
+	1. 在CRNN中，其使用的RNN网络类型为LSTM：
+		1. 由于LSTM是单向的，其只依赖于过去的时间步，必须遵循时间步顺序进行递推。而OCR中字体左右半部及其特征是互相作用的，因此RCNN将两个LSTM按照相反的方向组装为一个双向LSTM。
+		2. RCNN使用了两层双向LSTM以增强对抽象特征的理解，其每层各256个单元双向LSTM单元。
+
+
+
