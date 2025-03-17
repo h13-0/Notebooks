@@ -45,7 +45,7 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ### 3.1 总结
 
-使用了RNN去做不定长的分类结果输出。
+使用了RNN去做不定长的分类结果输出，同时可以在一定程度上学习到字符间的分布特征。
 
 ## 4 TrOCR
 
