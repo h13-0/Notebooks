@@ -14,5 +14,6 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ## 3 CRNN
 
+论文：[An End-to-End Trainable Neural Network for Image-based Sequence Recognition and Its Application to Scene Text Recognition](https://arxiv.org/abs/1507.05717)。
 
-
+简单来讲CRNN就是CNN和RNN的结合体，具体可见下图：
