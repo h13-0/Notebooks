@@ -69,7 +69,7 @@ I2C总线的电气特性被规定为：
 2. NACK应答信号：此时数据接收方会将SDA控制为高电平，表示<span style="background:#fff88f">"<font color="#c00000">不再接收更多数据</font>"</span>。
 
 注意：
-1. <span style="background:#fff88f"><font color="#c00000">应答信号必须由接收方主动发送</font></span>，<font color="#c00000">发送方仅能决定是否等待ACK</font>。
+1. <span style="background:#fff88f"><font color="#c00000">应答信号必须由接收方主动发送</font></span>，且可以不立即ACK。<font color="#c00000">但是从机可以使用I2C时钟延长特性</font>，<font color="#c00000">主动拉低SCL延长该时钟周期</font>，到准备好ACK时再放开。也就是说<span style="background:#fff88f"><font color="#c00000">ACK依旧必定在第九个时钟周期内完成传输</font></span>，只是该时钟周期可以被从机主动延长。
 2. <font color="#c00000">应答信号必须在</font><span style="background:#fff88f"><font color="#c00000">SCL的某个下降沿后</font></span>(可以不立即ACK)，<span style="background:#fff88f"><font color="#c00000">上升沿前进入低电平</font></span>，<font color="#c00000">且必须在SCL高电平时长内一直维持低电平</font>。
 3. 对于上一条，<font color="#c00000">ACK信号必须在其包含的SCL高电平时段内永久保持</font>，<span style="background:#fff88f"><font color="#c00000">无论该高电平时长有多长</font></span>。这也是I2C死锁的一个来源[[嵌入式基础/应试笔记与八股#^mxles1|I2C死锁问题]]。
 
