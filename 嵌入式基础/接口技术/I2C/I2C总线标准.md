@@ -71,7 +71,7 @@ I2C总线的电气特性被规定为：
 注意：
 1. <span style="background:#fff88f"><font color="#c00000">应答信号必须由接收方主动发送</font></span>，<font color="#c00000">发送方仅能决定是否等待ACK</font>。
 2. <font color="#c00000">应答信号必须在</font><span style="background:#fff88f"><font color="#c00000">SCL的某个下降沿后</font></span>(可以不立即ACK)，<span style="background:#fff88f"><font color="#c00000">上升沿前进入低电平</font></span>，<font color="#c00000">且必须在SCL高电平时长内一直维持低电平</font>。
-3. 对于上一条，ACK信号必须在其包含的SCL这也是I2C死锁的一个来源。
+3. 对于上一条，<font color="#c00000">ACK信号必须在其包含的SCL高电平时段内永久保持</font>，<span style="background:#fff88f"><font color="#c00000">无论该高电平时长有多长</font></span>。这也是I2C死锁的一个来源[[嵌入式基础/应试笔记与八股#^mxles1|I2C死锁问题]]。
 
 
 ### 2.3 I2C传输的总体流程 ^odt3ol
@@ -113,6 +113,6 @@ I2C支持7位和10位的地址模式，10位的地址模式在I2C传输的第一
 
 ## 3 I2C关键特性思考与八股
 
-
-
+1. I2C的SCL脉冲由谁控制：[[嵌入式基础/应试笔记与八股#^ax59kk|I2C的SCL脉冲由谁控制]]。
+2. I2C死锁问题：[[嵌入式基础/应试笔记与八股#2 1 2 9 I2C死锁是什么，如何解决 mxles1|I2C死锁是什么，如何解决]]。
 
