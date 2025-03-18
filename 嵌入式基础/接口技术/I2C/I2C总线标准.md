@@ -68,6 +68,12 @@ I2C总线的电气特性被规定为：
 1. ACK应答信号：此时数据接收方会将<font color="#c00000">SDA</font>控制为低电平，表示<span style="background:#fff88f">"<font color="#c00000">数据接收成功，并且期待接收下一字节</font>"</span>
 2. NACK应答信号：此时数据接收方会将SDA控制为高电平，表示<span style="background:#fff88f">"<font color="#c00000">不再接收更多数据</font>"</span>。
 
+注意：
+1. <span style="background:#fff88f"><font color="#c00000">应答信号必须由接收方主动发送</font></span>，<font color="#c00000">发送方仅能决定是否等待ACK</font>。
+2. <font color="#c00000">应答信号必须在</font><span style="background:#fff88f"><font color="#c00000">SCL的某个下降沿后</font></span>(可以不立即ACK)，<span style="background:#fff88f"><font color="#c00000">上升沿前进入低电平</font></span>，<font color="#c00000">且必须在SCL高电平时长内一直维持低电平</font>。
+3. 对于上一条，ACK信号必须在其包含的SCL这也是I2C死锁的一个来源。
+
+
 ### 2.3 I2C传输的总体流程 ^odt3ol
 
 通常来说，嵌入式开发框架会同时提供普通的基本环节操作和封装好的数据传输操作，以分别应用于非标准的和标准的I2C硬件模型。
