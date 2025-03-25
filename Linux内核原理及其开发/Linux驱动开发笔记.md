@@ -808,10 +808,10 @@ make install
 
 ###### 4.3.7.2.3 测试内核模块
 
-<span style="background:#fff88f"><font color="#c00000">开启一个新的终端</font></span>监视 `printk` 信息：
+使用 `dmesg` 抓取当前日志：
 
 ```Shell
-cat /proc/kmsg
+dmesg
 ```
 
 在原终端加载模块：
@@ -820,7 +820,7 @@ cat /proc/kmsg
 insmod hello_module.ko
 ```
 
-无报错，且监视终端会输出日志：
+无报错，再使用 `dmesg` 抓取当前日志，会发现新增：
 
 ```Shell
 [   85.532987] Hello module inited.
@@ -860,6 +860,10 @@ dmesg | grep hello
 ```Makefile
 CONFIG_MODULE_SIG=n
 ```
+
+注：
+- 若使用 `cat /proc/kmsg` 无输出，则可以使用 `lsof /proc/kmsg` 检查是否有进程在不停获取该文件输出
+- 若 `dmesg` 也无输出，则应当检查内核编译时是否开启 `CONFIG_PRINTK`
 
 ##### 4.3.7.3 字符驱动模块示例
 
