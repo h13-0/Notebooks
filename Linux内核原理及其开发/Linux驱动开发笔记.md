@@ -846,7 +846,7 @@ rmmod hello_module
 [  411.289281] Hello module exited.
 ```
 
-再次使用 `lsmod | grep hellod` 则无结果。
+再次使用 `lsmod | grep hello` 则无结果。
 
 若抓取日志，会发现一个警告，是由于没有签名造成的：
 
