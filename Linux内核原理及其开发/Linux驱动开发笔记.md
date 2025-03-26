@@ -4173,15 +4173,17 @@ int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, co
 
 ## 14 PCI驱动程序
 
-PCI的总线拓扑结构为
+PCI的总线拓扑结构如下图所示：
+	![[Pasted image 20250326165450.png]]
 
 
 几个关键概念：
 - PCI根复合体(Root Complex)：是CPU和PCI设备的连接枢纽，其负责如下的功能：
 	- 组织PCI拓扑结构，管理PCI根总线
-	- 直接与PCI根复合体相连接的总线为PCI根总线。
+	- 内存访问路由：确保 PCIe 设备的读写请求正确映射到系统内存地址空间。
 - PCI根总线：是PCI拓扑的起点
 
+需要注意的是：直接与PCI根复合体相连接的总线为PCI根总线。
 
 在早期计算机中，PCI根复合体往往集成在北桥中。而在现代计算机中，每个物理CPU往往都会集成一个PCI根复合体。
 
