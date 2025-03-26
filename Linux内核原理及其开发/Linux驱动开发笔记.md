@@ -4173,8 +4173,14 @@ int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, co
 
 ## 14 PCI驱动程序
 
+PCI的总线拓扑结构为
 
 
+
+
+
+
+使用 `lspci` 指令
 
 
 
