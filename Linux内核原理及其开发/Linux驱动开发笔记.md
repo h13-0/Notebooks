@@ -4176,6 +4176,14 @@ int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, co
 PCI的总线拓扑结构为
 
 
+几个关键概念：
+- PCI根复合体(Root Complex)：是CPU和PCI设备的连接枢纽，其负责如下的功能：
+	- 组织PCI拓扑结构，管理PCI根总线
+	- 直接与PCI根复合体相连接的总线为PCI根总线。
+- PCI根总线：是PCI拓扑的起点
+
+
+在早期计算机中，PCI根复合体往往集成在北桥中。而在现代计算机中，每个物理CPU往往都会集成一个PCI根复合体。
 
 
 
