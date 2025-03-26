@@ -6,6 +6,9 @@ number headings: auto, first-level 2, max 6, 1.1
 ## 1 Note
 
 本笔记是主线YOLO的学习笔记，不包含分非主线版本。
+参考资料：
+- 若干主线YOLO论文
+- YOLO目标检测(杨建华 李瑞峰)
 
 ## 2 目录
 
@@ -78,6 +81,7 @@ YOLO v1的Head使用的是全连接网络，其网络结构如下：
 	- <font color="#c00000">存储每个类别的概率</font>
 
 根据Head的Output定义，其可以理解为：
+	![[Pasted image 20250326193709.png]]
 - Head使用了两层全连接将7x7x1024的特征图转化为了7x7x30的"特征图"，如下：
 	![[Pasted image 20250310184415.png]]
 - 也可以理解为分别使用全连接输出到类别和bounding box：
