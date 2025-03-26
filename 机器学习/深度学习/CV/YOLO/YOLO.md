@@ -165,6 +165,11 @@ YOLO v2的主干网络被切换为Darknet-19：
 #### 4.3.1 批量归一化(Batch Normalization，BN) ^frk3ft
 
 
+#### 4.3.2 降采样
+
+![[Pasted image 20250326195338.png]]
+![[2025_3_26.jpg]]
+
 
 
 
