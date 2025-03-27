@@ -847,10 +847,13 @@ dmesg
 在原终端加载模块：
 
 ```Shell
-insmod hello_module.ko
+# 使用ismod或modprobe均可
+# insmod hello_module.ko
+# 但是推荐使用modprobe，因为modprobe会自动安装目标模块所依赖的模块，而ismod不能
+modprobe hello_module.ko
 ```
 
-无报错，再使用 `dmesg` 抓取当前日志，会发现新增：
+无报错，再使用 `dmesg` 抓取当前日志，会发现新增日志：
 
 ```Shell
 [   85.532987] Hello module inited.
