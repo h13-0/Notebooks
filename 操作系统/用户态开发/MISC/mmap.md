@@ -10,7 +10,10 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ## 2 函数原型及用户态调用
 
-mmap即内存映射技术，其
+mmap即内存映射技术，其可以将物理文件-内存区域或内存区域-内存区域之间建立映射关系。
+#TODO 
+
+
 
 
 
