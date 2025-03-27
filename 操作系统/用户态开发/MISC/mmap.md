@@ -14,6 +14,15 @@ mmap即内存映射技术，其可以将物理文件-内存区域或内存区域
 #TODO 
 
 
+```C
+#include <sys/mman.h>
+
+void *mmap(void addr[.length], size_t length, int prot, int flags,
+    int fd, off_t offset);
+
+int munmap(void addr[.length], size_t length);
+```
+
 
 
 
