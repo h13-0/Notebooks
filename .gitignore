@@ -5,3 +5,4 @@ github_token.txt
 .obsidian/plugins/smart-composer/data.json
 .smtcmp_chat_histories/
 .smtcmp*
+*.svg.bkp
