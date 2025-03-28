@@ -1141,7 +1141,7 @@ void device_destroy(const struct class *cls, dev_t devt);
 	- `const struct class *cls` ：设备所属类型
 	- `dev_t devt` ：需要销毁的设备节点的设备号
 
-### 5.5 绑定文件操作(file_operations 数据结构)
+### 5.5 绑定文件操作(file_operations 数据结构) ^u7i5mc
 
 如上述章节所述， `struct file_operations` 用于建立文件操作和驱动程序操作的连接，该数据结构的定义如下(Linux 6.10版本)：
 
