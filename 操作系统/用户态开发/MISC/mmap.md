@@ -10,7 +10,19 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ## 2 函数原型及用户态调用
 
-mmap即内存映射技术，<font color="#c00000">其可以将</font><span style="background:#fff88f"><font color="#c00000">文件</font></span><font color="#c00000">映射到程序的</font><span style="background:#fff88f"><font color="#c00000">内存空间</font></span>中。而在Linux中，<span style="background:#fff88f"><font color="#c00000">万物皆文件</font></span>。因此mmap实际上并不只是一个内存映射函数，而是可以将任何在 `file_operations` 结构体中提供了 `mmap` 实现的fd映射到用户空间中。`file_operations` 可见[[Linux驱动开发笔记#^u7i5mc|绑定文件操作(file_operations 数据结构)]]。
+mmap即内存映射技术，<font color="#c00000">其可以将</font><span style="background:#fff88f"><font color="#c00000">文件</font></span><font color="#c00000">映射到程序的</font><span style="background:#fff88f"><font color="#c00000">内存空间</font></span>中。而在Linux中，<span style="background:#fff88f"><font color="#c00000">万物皆文件</font></span>。因此mmap实际上并不只是一个内存映射函数，而是可以将任何在 `file_operations` 结构体中提供了 `mmap` 实现的fd映射到用户空间中。
+用户态 `mmap` 常用的fd来源(或 `mmap` 能提供的功能)有：
+- 常规文件
+- 设备文件
+- 共享内存
+- 匿名映射
+
+
+
+-  `file_operations` 结构体可见[[Linux驱动开发笔记#^u7i5mc|file_operations 数据结构]]。
+
+至于 `file_operations` 中的 `mmap` 实现，其有如下原理概述：
+- 无论用户操作的fd是常规文件、字符设备、块设备、匿名映射、共享内存还是虚拟设备，其内核提供的 `mmap` 后端实现一定是将<span style="background:#fff88f"><font color="#c00000">内核管理的一片内存</font></span><font color="#c00000">映射到用户空间中</font>，而无法不使用内核管理的内存。
 
 
 
