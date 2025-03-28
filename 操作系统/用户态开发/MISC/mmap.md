@@ -50,11 +50,15 @@ int munmap(void addr[.length], size_t length);
 			- `MAP_ANONYMOUS` ：映射匿名内存(不需要文件)，此时 `fd` 应设为 `-1`，`offset` 为 `0`。
 			- `MAP_FIXED` ：强制使用指定的 `addr` ，可能覆盖已有映射。
 			- `MAP_LOCKED` ：锁定页面在内存中(避免换出到交换分区，需权限)
-			- `MAP_POPULATE` ：提前预加载映射的物理内存
+			- `MAP_POPULATE` ：提前预加载映射的物理内存，跳过按需缺页。
 			- `MAP_NORESERVE` ：不预留交换空间，可能导致内存耗尽时触发 `OOM` 。
-	- `fd` ：
+	- `fd` ：需要操作的文件描述符，需要注意：
+		- 当 `flags` 包含 `MAP_ANONYMOUS` 时，此时 `fd` 应设为 `-1` 。
+		- 即使有 `fd` ，<font color="#c00000">映射的生命周期与文件描述符无关</font>，<span style="background:#fff88f"><font color="#c00000">关闭fd不影响已映射的内存</font></span>。
 	- `offset` ：从fd的 `offset` 处开始映射
 - 返回值：
+	- 成功时返回映射区域的起始地址，<span style="background:#fff88f"><font color="#c00000">地址可能不等于</font></span> `addr` ，<font color="#c00000">除非明确使用</font> `MAP_FIXED` 。成功后可使用 `*(addr + offset)` 操作内存。
+	- 失败时返回 `MAP_FAILED` ，并设置 `errno` 。
 
 
 
