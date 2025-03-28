@@ -8,7 +8,7 @@ number headings: auto, first-level 2, max 6, 1.1
 ```toc
 ```
 
-## 2 函数原型及用户态调用
+## 2 函数原型及用户态调用 ^go6lxw
 
 mmap即内存映射技术，<font color="#c00000">其可以将</font><span style="background:#fff88f"><font color="#c00000">文件</font></span><font color="#c00000">映射到程序的</font><span style="background:#fff88f"><font color="#c00000">内存空间</font></span>中。而在Linux中，<span style="background:#fff88f"><font color="#c00000">万物皆文件</font></span>。因此mmap实际上并不只是一个内存映射函数，而是可以将任何在[[Linux驱动开发笔记#^u7i5mc|file_operations结构体]]中提供了 `mmap` 实现的fd映射到用户空间中。
 
