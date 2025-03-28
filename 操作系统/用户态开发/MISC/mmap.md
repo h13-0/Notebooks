@@ -38,7 +38,22 @@ int munmap(void addr[.length], size_t length);
 	- `addr` ：允许用户指定一片内存，若用户不指定则该函数会分配并返回一个地址。
 	- `length` ：用户指定的内存区域大小
 	- `prot` ：用户想要获取的内存权限，包含：
-		- 
+		- `PROT_READ`
+		- `PROT_WRITE`
+		- `PROT_EXEC` ，如映射JIT编译生成的机器码
+		- `PROT_NONE` ，禁止访问，访问时会触发 `SIGSEGV`
+	- `flags` ：
+		- 核心标志，选一个使用：
+			- `MAP_SHARED` ：映射可被多进程共享，对fd的修改
+			- `MAP_PRIVATE` ：
+		- 可选标志，可组合使用：
+			- `MAP_ANONYMOUS` ：映射匿名内存(不需要文件)，此时 `fd` 应设为 `-1`，`offset` 为 `0`。
+			- `MAP_FIXED` ：强制使用指定的 `addr` ，可能覆盖已有映射。
+			- `MAP_LOCKED` ：锁定页面在内存中(避免换出到交换分区，需权限)
+			- `MAP_POPULATE` ：提前预加载映射的物理内存
+			- `MAP_NORESERVE` ：不预留交换空间，可能导致内存耗尽时触发 `OOM` 。
+	- `fd` ：
+	- `offset` ：从fd的 `offset` 处开始映射
 - 返回值：
 
 
