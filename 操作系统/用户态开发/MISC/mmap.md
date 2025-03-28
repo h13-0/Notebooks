@@ -45,7 +45,7 @@ int munmap(void addr[.length], size_t length);
 	- `flags` ：
 		- 核心标志，选一个使用：
 			- `MAP_SHARED` ：映射可被多进程共享，对fd的修改
-			- `MAP_PRIVATE` ：对于文件系统，。对于设备文件，驱动通常不支持。
+			- `MAP_PRIVATE` ：对于文件系统，该选项会<font color="#c00000">创建写时复制的副本</font>(或<font color="#c00000">私有映射</font>)，随后通过mmap的内存区域对文件的<font color="#c00000">修改不会同步到原文件</font>。对于设备文件，驱动通常不支持。
 		- 可选标志，可组合使用：
 			- `MAP_ANONYMOUS` ：映射匿名内存(不需要文件)，此时 `fd` 应设为 `-1`，`offset` 为 `0`。
 			- `MAP_FIXED` ：强制使用指定的 `addr` ，可能覆盖已有映射。
