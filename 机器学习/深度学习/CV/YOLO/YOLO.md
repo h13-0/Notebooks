@@ -182,3 +182,11 @@ YOLO v2的主干网络被切换为Darknet-19：
 ### 5.2 Head
 
 #### 5.2.1 Distribution Focal Loss
+
+在以往的模型中，检测框的坐标通常被认为是一个确定的值，概率仅分布在一个点上。该概率分布为狄拉克分布(Dirac分布)，其数学表示为：
+$$
+\varphi(x)=0, x\neq x_0
+$$
+$$
+\int_{-\infty}^{+\infty}{\varphi(x)}dx=1
+$$
