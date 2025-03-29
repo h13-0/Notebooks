@@ -181,4 +181,4 @@ YOLO v2的主干网络被切换为Darknet-19：
 
 ### 5.2 Head
 
-
+#### 5.2.1 Distribution Focal Loss
