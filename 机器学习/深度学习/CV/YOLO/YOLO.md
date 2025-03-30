@@ -206,6 +206,11 @@ $$
 - 上述概率分布为网络输出，而非实际概率。
 - 上述<font color="#6425d0">紫色箭头所匹配的边界和概率分布</font>为明确边界及其概率分布，<font color="#c00000">红色箭头所匹配的边界和概率分布</font>为模糊边界及其概率分布
 
+而在YOLO v8中，每个Bounding box包含 $(Left, Top, Right, Button)$ 信息的向量，切针对L、T、R、B中的每个值，网络都会输出 $reg\_max$ 个值，并使用 $Softmax$ 计算每个值对应的概率，最终对离散值及其概率进行累加得预测结果：
+	![[chrome_9g0W2nHoap.png]]
+明显地，该向量解码后的值域为 $[0, 15]$ ，
+
+
 因此，DFL
 
 
@@ -219,13 +224,20 @@ YOLO v8使用了三个尺度的特征图(80x80、40x40、20x20)，这些特征�
 $$
 4\times reg\_max+1+Classes
 $$ 其定义如下：
-- Bounding box：包含 $(Left, Top, Right, Button)$ 信息的向量，切针对L、T、R、B中的每个值，网络都会输出 $reg\_max$ 个值，并使用 $Softmax$ 计算每个值对应的概率，最终对离散值及其概率进行累加得预测结果：
-	![[chrome_9g0W2nHoap.png]]
+- Bounding box：
 - 含物体概率：表示该box含有物体的概率，使用 $Sigmoid$ 激活
 - 类别概率：每个类别一个值，使用 $Sigmoid$ 激活
 
 即：
 - 在 $640\times 640$ 输入时(即默认情况)，YOLO v8会输出 $80\times 80+40\times 40+20\times 20$ 个预测框。
 - 在 $w\times h; w, h=k\times 32$ 时，YOLO v8会输出 $(4k)^2+(2k)^2+k^2=21k^2$ 个预测框。
+
+
+
+#### Head基本结构
+
+
+经过cv2、cv3的运算后，其输出的张量为：(1, 144, h, w)
+
 
 
