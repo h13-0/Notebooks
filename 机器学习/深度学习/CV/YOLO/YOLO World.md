@@ -57,3 +57,16 @@ Ultralytics版本的YOLO World的主要改进集中于检测头。在[[YOLO#^2jv
 	- ![[yoloword_bus_mix.jpg]]
 - "people"：
 	- ![[yoloword_people_mix.jpg]]
+
+## 5 Appendix
+
+### 5.1 训练
+
+观察上述网络结构，不难发现，训练YOLO World只需要在普通的训练脚本前加一行：
+
+```Python
+model.set_classes(["..", ...])
+```
+
+即可。
+
