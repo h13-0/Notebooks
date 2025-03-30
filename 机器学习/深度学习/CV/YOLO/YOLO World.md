@@ -35,8 +35,26 @@ Ultralytics版本的YOLO World的主要改进集中于检测头。在[[YOLO#^2jv
 	![[msedge_T0wwVlfWlG.png]]
 	此时特征图上每个Pixel(或者说Grid cell)都是一个512维度的特征向量
 2. 然后将上述特征图上的每个Pixel的512维特征向量与文本特征的512维向量相乘并统一线性缩放( `WorldDetector.cv4` )：
-	![[msedge_JLMKBihelO.png]]
+	![[msedge_pEeefPS9jB.png]]
 	此时就已经拥有了与普通YOLO v8一致的张量输出，后续处理与YOLO v8完全一致。
 
 最终结构为：[[YOLO-World Head结构.drawio.svg]]
 ![[YOLO-World Head结构.drawio.svg]]
+
+## 4 可视化实验
+
+
+用官方的示例图进行实验：
+- 输入texts：`["person", "building", "bus", "tree", "tree with little flowers"]`
+- 输入图像：
+	- ![[bus.jpg]]
+- 检测结果：
+	- ![[yoloword_demo.jpg]]
+上述 `WorldDetector.cv4` 输出的相似度张量可视化为(经过转置回 $(w, h)$ 顺序)：
+- 
+
+
+
+
+
+
