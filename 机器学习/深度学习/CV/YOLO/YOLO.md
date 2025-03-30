@@ -242,7 +242,7 @@ $$
 - 在 $640\times 640$ 输入时(即默认情况)，YOLO v8会输出 $80\times 80+40\times 40+20\times 20=8400$ 个预测框。
 - 在 $w\times h; w, h=k\times 32$ 时，YOLO v8会输出 $(4k)^2+(2k)^2+k^2=21k^2$ 个预测框。
 
-#### 5.2.3 Head基本结构
+#### 5.2.3 Head基本结构 ^2jvvoq
 
 YOLO v8 Head基本结构及部分细节应当参照下图，Obsidian可能无法正常渲染该图，可能需要单独查看[[YOLO v8 Head结构.svg]]：
 ![[YOLO v8 Head结构.svg]]

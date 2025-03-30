@@ -21,4 +21,18 @@ YOLO World目前主要有两个实现：
 
 ## 3 YOLO World Head
 
-YOLO World的主要改进集中于检测头
+Ultralytics版本的YOLO World的主要改进集中于检测头。在[[YOLO#^2jvvoq|YOLO v8 Head]]中已经提到，YOLO v8的检测头是解耦和形式的：
+	![[Pasted image 20250311183521.png]]
+而YOLO World<span style="background:#fff88f"><font color="#c00000">只修改了Classifier分支</font></span>。在YOLO v8中，假定输入固定为 $(h, w)=(640, 640)$ ，Classifier分支(在Ultralytics代码中为 `Detector.cv3` )的主要张量流如下：
+1. 输入三组不同尺寸的特征张量
+2. 使用两次3x3卷积和一次1x1卷积将输出维度改变到 `num_cls` ，即sh
+3. 使用 $Sigmoid$ 
+4. 
+
+
+
+
+
+
+最终结构为：[[YOLO-World Head结构.drawio.svg]]
+![[YOLO-World Head结构.drawio.svg]]
