@@ -184,7 +184,6 @@ YOLO v2的主干网络被切换为Darknet-19：
 - Tensor(batch, 192, h/16, w/16)，下采样16倍
 - Tensor(batch, 192, h/32, w/32)，下采样32倍
 
-
 ### 5.2 Head
 
 #### 5.2.1 Distribution Focal Loss
@@ -246,6 +245,3 @@ $$
 
 YOLO v8 Head基本结构及部分细节应当参照下图，Obsidian可能无法正常渲染该图，可能需要单独查看[[YOLO v8 Head结构.svg]]：
 ![[YOLO v8 Head结构.svg]]
-
-
-

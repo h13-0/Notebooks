@@ -12,7 +12,7 @@ number headings: auto, first-level 2, max 6, 1.1
 YOLO World目前主要有两个实现：
 - YOLO World的官方实现：[https://github.com/AILab-CVC/YOLO-World](https://github.com/AILab-CVC/YOLO-World)
 - YOLO World的Ultralytics版本可直接参见：[https://github.com/ultralytics/ultralytics](https://github.com/ultralytics/ultralytics)
-推荐使用后者，本文也是基于Ultralytics实现进行分析。
+推荐使用后者，本文也是基于Ultralytics的YOLO World v2实现进行分析。
 
 ## 2 目录
 
@@ -34,13 +34,9 @@ Ultralytics版本的YOLO World的主要改进集中于检测头。在[[YOLO#^2jv
 1. 先使用卷积将输入特征维度对齐到512维( `WorldDetector.cv3` )：
 	![[msedge_T0wwVlfWlG.png]]
 	此时特征图上每个Pixel(或者说Grid cell)都是一个512维度的特征向量
-2. 然后将上述特征图上的每个Pixel的512维特征向量与文本特征的512维向量相乘，并缩放( `WorldDetector.cv4` )：
-	![[msedge_Mhu6eOX6Ed.png]]
-
-
-
-
-
+2. 然后将上述特征图上的每个Pixel的512维特征向量与文本特征的512维向量相乘并统一线性缩放( `WorldDetector.cv4` )：
+	![[msedge_JLMKBihelO.png]]
+	此时就已经拥有了与普通YOLO v8一致的张量输出，后续处理与YOLO v8完全一致。
 
 最终结构为：[[YOLO-World Head结构.drawio.svg]]
 ![[YOLO-World Head结构.drawio.svg]]
