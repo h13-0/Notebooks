@@ -179,6 +179,11 @@ YOLO v2的主干网络被切换为Darknet-19：
 
 ![[Pasted image 20250329224715.png]]
 
+记输入图像尺寸为 $(w, h)$ ，则其Neck传递给Head的Tensor及其尺寸、<font color="#c00000">下采样倍率</font>分别为： ^v0lzhq
+- Tensor(batch, 192, h/8, w/8)，下采样8倍
+- Tensor(batch, 192, h/16, w/16)，下采样16倍
+- Tensor(batch, 192, h/32, w/32)，下采样32倍
+
 
 ### 5.2 Head
 
@@ -209,7 +214,12 @@ $$
 
 而在YOLO v8中，每个Bounding box包含 $(Left, Top, Right, Button)$ 信息的向量，切针对L、T、R、B中的每个值，网络都会输出 $reg\_max$ 个值，并使用 $Softmax$ 计算每个值对应的概率，最终对离散值及其概率进行累加得预测结果：
 	![[chrome_9g0W2nHoap.png]]
-明显地，该向量解码后的值域为 $[0, 15]$ ，
+明显地，该向量解码后的值域为 $[0, 15]$ ，<font color="#c00000">直接使用时无法覆盖到足够大的目标</font>。而YOLO v8的解决方法是：
+$$LTBR预测值=DFL预测值\times 下采样倍数$$
+其中：
+- [[YOLO#^v0lzhq|下采样倍数]]指从输入图像开始，到传入Head的特征图为止的下采样倍数。
+需要注意：
+1. 当待检测物体的<font color="#c00000">二分之一宽度或高度</font>接近
 
 
 因此，DFL
