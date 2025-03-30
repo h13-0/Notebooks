@@ -12,7 +12,7 @@ number headings: auto, first-level 2, max 6, 1.1
 YOLO World目前主要有两个实现：
 - YOLO World的官方实现：[https://github.com/AILab-CVC/YOLO-World](https://github.com/AILab-CVC/YOLO-World)
 - YOLO World的Ultralytics版本可直接参见：[https://github.com/ultralytics/ultralytics](https://github.com/ultralytics/ultralytics)
-推荐使用后者。
+推荐使用后者，本文也是基于Ultralytics实现进行分析。
 
 ## 2 目录
 
