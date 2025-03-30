@@ -1,7 +1,7 @@
 ---
 number headings: auto, first-level 2, max 6, 1.1
 ---
-#机器学习 #CV
+#机器学习 #CV #YOLO 
 
 ## 1 Note
 
