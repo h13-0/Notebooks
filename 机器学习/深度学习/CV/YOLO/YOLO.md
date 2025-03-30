@@ -183,28 +183,35 @@ YOLO v2的主干网络被切换为Darknet-19：
 
 #### 5.2.1 Distribution Focal Loss
 
+![[chrome_mNpFBgaj14.png]]
+
 在以往的模型中，检测框的坐标通常被认为是一个确定的值，概率仅分布在一个点上。该概率分布为狄拉克分布(Dirac分布)，其数学表示为：
 $$
 \begin{equation}
 \varphi(x)=\left\{
-             \begin{array}{lr}
-             0, x\neq x_0, &\\
-			+\infty  
-             \end{array}
+    \begin{array}{lr}
+	0&, x\neq x_0, \\
+	+\infty&, x=x_0  
+    \end{array}
 \right.
 \end{equation}
 $$
 $$
 \int_{-\infty}^{+\infty}{\varphi(x)}dx=1
 $$
+而在复杂场景中，边界往往难以精确给出，例如如下两个例子：
+![[chrome_p00Lh2rL0S.png]]
+![[chrome_UqLOn0s4ga.png]]
+
+
+
 #### 5.2.2 Grid cell输出
 
 YOLO v8使用了三个尺度的特征图(80x80、40x40、20x20)，这些特征图上的<font color="#c00000">每个Grid cell会预测输出一个Bounding box</font>，其每个Grid cell输出尺寸为：
 $$
 4\times reg\_max+1+Classes
 $$ 其定义如下：
-- Bounding box：
-	
+- Bounding box：包含 $(Left, Top, Right, Button)$ 信息的向量，切针对L、T、R、B中的每个值，网络都会输出 $reg\_max$ 个值，
 
 - 含物体概率：表示该box含有物体的概率，使用 $Sigmoid$ 激活
 - 类别概率：每个类别一个值，使用 $Sigmoid$ 激活
