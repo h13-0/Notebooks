@@ -9,9 +9,7 @@ number headings: auto, first-level 2, max 6, 1.1
 参考资料：
 - 若干主线YOLO论文
 - YOLO目标检测(杨建华 李瑞峰)
-YOLO 
-
-
+本笔记仅用于本人硕士研究方向的学习。YOLO v7及以前的主线YOLO模型的学习应当参考 *YOLO目标检测(杨建华李瑞峰)* 而非本笔记。
 
 ## 2 目录
 
@@ -240,7 +238,7 @@ $$
 
 #### 5.2.3 Head基本结构
 
-YOLO Head结构图可见[[YOLO v8 Head结构.svg]]：
+YOLO v8 Head基本结构及部分细节应当参照下图，Obsidian可能无法正常渲染该图，可能需要单独查看[[YOLO v8 Head结构.svg]]：
 ![[YOLO v8 Head结构.svg]]
 
 
