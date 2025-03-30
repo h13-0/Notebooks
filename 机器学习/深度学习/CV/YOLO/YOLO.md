@@ -9,7 +9,7 @@ number headings: auto, first-level 2, max 6, 1.1
 参考资料：
 - 若干主线YOLO论文
 - YOLO目标检测(杨建华 李瑞峰)
-本笔记仅用于本人硕士研究方向的学习。YOLO v7及以前的主线YOLO模型的学习应当参考 *YOLO目标检测(杨建华李瑞峰)* 而非本笔记。
+本笔记仅用于本人硕士研究方向的学习，故无需保证准确性和严谨性。YOLO v7及以前的主线YOLO模型的学习应当参考 *YOLO目标检测(杨建华李瑞峰)* 而非本笔记。
 
 ## 2 目录
 
@@ -214,20 +214,14 @@ $$
 
 而在YOLO v8中，每个Bounding box包含 $(Left, Top, Right, Button)$ 信息的向量，切针对L、T、R、B中的每个值，网络都会输出 $reg\_max$ 个值，并使用 $Softmax$ 计算每个值对应的概率，最终对离散值及其概率进行累加得预测结果：
 	![[chrome_9g0W2nHoap.png]]
-明显地，该向量解码后的值域为 $[0, 15]$ ，<font color="#c00000">直接使用时无法覆盖到足够大的目标</font>。而YOLO v8的解决方法是：
+在YOLO v8中，$reg\_max$ 的默认值为16。明显地，该向量解码后的值域为 $[0, 15]$ ，<font color="#c00000">直接使用时无法覆盖到足够大的目标</font>。而YOLO v8的解决方法是：
 $$LTBR预测值=DFL预测值\times 下采样倍数$$
 其中：
 - [[YOLO#^v0lzhq|下采样倍数]]指从输入图像开始，到传入Head的特征图为止的下采样倍数。
 需要注意：
-1. 当待检测物体的<font color="#c00000">二分之一宽度或高度</font>接近 
+1. 当待检测物体的<font color="#c00000">二分之一宽度或高度</font>接近或超过 $32\times 15=480$ 时，<span style="background:#fff88f"><font color="#c00000">需要增加</font></span> $reg\_max$ <span style="background:#fff88f"><font color="#c00000">的值</font></span>。
 
-
-因此，DFL
-
-
-
-模型对于上述概率进行学习时，会使用交叉熵来定义损失函数。
-
+而Distribution Focal Loss本质是一个损失函数，其基于交叉熵来定义。
 
 #### 5.2.2 Grid cell输出
 
@@ -236,15 +230,17 @@ $$
 4\times reg\_max+1+Classes
 $$
 其定义如下：
-- Bounding box：
+- Bounding box：$4\times reg\_max$
+	- Left：网络输出 $reg\_max$ 个Left的预测值，并计算期望值作为边框左侧的输出。
+	- Top
+	- Right
+	- Button
 - 含物体概率：表示该box含有物体的概率，使用 $Sigmoid$ 激活
 - 类别概率：每个类别一个值，使用 $Sigmoid$ 激活
 
 即：
 - 在 $640\times 640$ 输入时(即默认情况)，YOLO v8会输出 $80\times 80+40\times 40+20\times 20=8400$ 个预测框。
 - 在 $w\times h; w, h=k\times 32$ 时，YOLO v8会输出 $(4k)^2+(2k)^2+k^2=21k^2$ 个预测框。
-
-
 
 #### 5.2.3 Head基本结构
 
