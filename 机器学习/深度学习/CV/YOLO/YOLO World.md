@@ -30,7 +30,7 @@ Ultralytics版本的YOLO World的主要改进集中于检测头。在[[YOLO#^2jv
 3. 使用 $Sigmoid$ 将输出映射到值域 $[0, 1]$ 中
 4. 使用NMS对结果进行后处理
 
-而YOLO World<span style="background:#fff88f"><font color="#c00000">只修改了Classifier分支</font></span>，其把文本的语义向量融合进了 `Detector.cv3` 中。假设输入目标提示词共计 $k$ 个，则这 $k$ 个提示词分别对应 $k$ 个Classes，经过CLIP后会生成 `[Batch, k, 512]` 的张量，并开始运算：
+而YOLO World<span style="background:#fff88f"><font color="#c00000">只修改了Classifier分支</font></span>，其把文本的语义向量融合进了Classifier分支中。假设输入目标提示词共计 $k$ 个，则这 $k$ 个提示词分别对应 $k$ 个Classes，经过CLIP后会生成 `[Batch, k, 512]` 的张量，并开始运算：
 1. 先使用卷积将输入特征维度对齐到512维( `WorldDetector.cv3` )：
 	![[msedge_T0wwVlfWlG.png]]
 	此时特征图上每个Pixel(或者说Grid cell)都是一个512维度的特征向量
