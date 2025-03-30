@@ -192,8 +192,16 @@ $$
 $$
 #### 5.2.2 Grid cell输出
 
-YOLO v8使用了三个尺度的特征图(80x80、40x40、20x20)，这些特征图上的<font color="#c00000">每个Grid cell会预测输出一个Bounding box</font>，其每个Grid cell输出尺寸为 $4+1+Classes$ ，定义如下：
+YOLO v8使用了三个尺度的特征图(80x80、40x40、20x20)，这些特征图上的<font color="#c00000">每个Grid cell会预测输出一个Bounding box</font>，其每个Grid cell输出尺寸为：
+$$
+4\times reg\_max+1+Classes
+$$ 其定义如下：
 - Bounding box:
+
+
+
+
+
 	- $x_{center}$ ：目标中心相对于grid cell的偏移量
 	- $y_{center}$
 	- $width$ ：边界框的宽度(相对于输入图像宽度的归一化值)
@@ -203,4 +211,6 @@ YOLO v8使用了三个尺度的特征图(80x80、40x40、20x20)，这些特征�
 
 即：
 - 在 $640\times 640$ 输入时(即默认情况)，YOLO v8会输出 $80\times 80+40\times 40+20\times 20$ 个预测框。
-- 在 $w\times h; w, h=k\times 32$ 时，YOLO v8会输出 $(4k)^2+(2k)^2+k$
+- 在 $w\times h; w, h=k\times 32$ 时，YOLO v8会输出 $(4k)^2+(2k)^2+k^2$ 个预测框。
+
+
