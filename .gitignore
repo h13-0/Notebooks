@@ -6,3 +6,4 @@ github_token.txt
 .smtcmp_chat_histories/
 .smtcmp*
 *.svg.bkp
+*.svg.dtmp

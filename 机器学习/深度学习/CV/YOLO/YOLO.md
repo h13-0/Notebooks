@@ -223,7 +223,8 @@ $$
 YOLO v8使用了三个尺度的特征图(80x80、40x40、20x20)，这些特征图上的<font color="#c00000">每个Grid cell会预测输出一个Bounding box</font>，其每个Grid cell输出尺寸为：
 $$
 4\times reg\_max+1+Classes
-$$ 其定义如下：
+$$
+其定义如下：
 - Bounding box：
 - 含物体概率：表示该box含有物体的概率，使用 $Sigmoid$ 激活
 - 类别概率：每个类别一个值，使用 $Sigmoid$ 激活
@@ -234,8 +235,9 @@ $$ 其定义如下：
 
 
 
-#### Head基本结构
+#### 5.2.3 Head基本结构
 
+YOLO Head结构图可见[[YOLO v8 Head结构.svg]]：
 ![[YOLO v8 Head结构.svg]]
 
 
