@@ -4293,7 +4293,7 @@ struct cdev {
 ```
 
 通过"继承"该 `kobject` ，Linux内核可以完成统一的引用计数、sysfs表述、热拔插处理等特性。
-与[[内核基本数据结构(types.h部分)#3 链表锚点 xl7wru|链表锚点]]等数据结构相同的是，可以使用 `container_of` 宏查找 `kobject` 的host数据结构，详见下方。
+与[[内核基本数据结构(types.h部分)#3 链表锚点 xl7wru|链表锚点]]等数据结构相同的是，可以使用 `container_of` 宏查找 `kobject` 的host数据结构，详见下方子章节。
 
 #### 16.1.1 相关API
 
@@ -4305,7 +4305,7 @@ struct cdev {
 
 
 
-`kobject` 的
+`kobject` 的宿主容器
 
 
 ## 17 内存映射和DMA
