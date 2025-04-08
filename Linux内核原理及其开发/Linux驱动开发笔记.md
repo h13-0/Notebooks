@@ -4251,6 +4251,12 @@ PCI的总线拓扑结构如下图所示：
 
 ## 16 Linux设备模型
 
+在学习Linux设备模型之前，应当简单了解一些Linux内核如何管理"对象"，即 `kobject` 。
+
+### 16.1 kobject
+
+`kobject` 被定义于 `linux/kobject.h` 中，其定义如下：
+
 
 
 
