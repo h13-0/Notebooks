@@ -4305,7 +4305,7 @@ void kobject_init(struct kobject *kobj, const struct kobj_type *ktype);
 ```
 
 其中：
-- `kobj_type` 是一个复杂的结构体，可以完成众多标准化行为，但是必不可少的属性为：
+- `kobj_type` 是kobject中的一个复杂的结构体，可以完成众多标准化行为，其必不可少的属性为：
 	- `kobj_type.release` ：当引用计数为0时会被调用。
 	其他成员可暂时先不用了解
 - <span style="background:#fff88f"><font color="#c00000">引用计数器会被设置为1</font></span>。
@@ -4320,32 +4320,12 @@ struct kobject * __must_check kobject_get_unless_zero(struct kobject *kobj);
 void kobject_put(struct kobject *kobj);
 ```
 
-`kobject` 的宿主容器：
-
-```C
-/**
- * container_of - cast a member of a structure out to the containing structure
- * @ptr:	the pointer to the member.
- * @type:	the type of the container struct this is embedded in.
- * @member:	the name of the member within the struct.
- *
- */
-#define container_of(ptr, type, member) ({			\
-	const typeof( ((type *)0)->member ) *__mptr = (ptr);	\
-	(type *)( (char *)__mptr - offsetof(type,member) );})
-```
-
-例如：
-
-```C
-struct cdev* dev = container_of(kobj_p, struct cdev, kobj)
-```
+#### 16.1.2 kobj_type结构体
 
 
 
 
-
-
+### 16.2 kobject层次结构、kset和子系统
 
 
 
