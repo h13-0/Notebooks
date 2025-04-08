@@ -4305,24 +4305,25 @@ void kobject_init(struct kobject *kobj, const struct kobj_type *ktype);
 ```
 
 其中：
-- `kobj_type` 是一个复杂的结构体，可以完成众多标准化行为，但是最重要的
-- 
-- 
-- 
-- 中需要提供 `release` 和 `sysfs` 等接口，其作用分别为：
-	- `kobj_type.release` ：当引用计数为0时会被调用
-	- `kobj_type.sysfs` ：提供读写接口
+- `kobj_type` 是一个复杂的结构体，可以完成众多标准化行为，但是必不可少的属性为：
+	- `kobj_type.release` ：当引用计数为0时会被调用。
+	其他成员可暂时先不用了解
 
+`kobject` 的引用计数：
 
+```C
+// 增加引用计数
+struct kobject *kobject_get(struct kobject *kobj);
+struct kobject * __must_check kobject_get_unless_zero(struct kobject *kobj);
+// 释放引用计数
+void kobject_put(struct kobject *kobj);
+```
 
+`kobject` 的宿主容器：
 
+```C
 
-`kobject` 的引用计数
-
-
-
-`kobject` 的宿主容器
-
+```
 
 ## 17 内存映射和DMA
 
