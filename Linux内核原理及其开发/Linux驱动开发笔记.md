@@ -4257,9 +4257,55 @@ PCI的总线拓扑结构如下图所示：
 
 `kobject` 被定义于 `linux/kobject.h` 中，其定义如下：
 
+```C
+struct kobject {
+	const char		*name;
+	struct list_head	entry;
+	struct kobject		*parent;
+	struct kset		*kset;
+	const struct kobj_type	*ktype;
+	struct kernfs_node	*sd; /* sysfs directory entry */
+	struct kref		kref;
+
+	unsigned int state_initialized:1;
+	unsigned int state_in_sysfs:1;
+	unsigned int state_add_uevent_sent:1;
+	unsigned int state_remove_uevent_sent:1;
+	unsigned int uevent_suppress:1;
+
+#ifdef CONFIG_DEBUG_KOBJECT_RELEASE
+	struct delayed_work	release;
+#endif
+};
+```
+
+在C语言中并没有提供继承关系，因此其需要在其他的结构体中嵌入该结构体，例如字符设备的 `cdev` ：
+
+```C
+struct cdev {
+	struct kobject kobj;
+	struct module *owner;
+	const struct file_operations *ops;
+	struct list_head list;
+	dev_t dev;
+	unsigned int count;
+} __randomize_layout;
+```
+
+通过"继承"该 `kobject` ，Linux内核可以完成统一的引用计数、sysfs表述、热拔插处理等特性。
+与[[内核基本数据结构(types.h部分)#3 链表锚点 xl7wru|链表锚点]]等数据结构相同的是，可以使用 `container_of` 宏查找 `kobject` 的host数据结构，详见下方。
+
+#### 16.1.1 相关API
+
+`kobject` 的初始化
 
 
 
+`kobject` 的引用计数
+
+
+
+`kobject` 的
 
 
 ## 17 内存映射和DMA

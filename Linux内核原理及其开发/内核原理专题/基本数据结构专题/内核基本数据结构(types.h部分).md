@@ -144,6 +144,9 @@ struct my_data_list *entry = list_entry(
 )
 ```
 
+需要注意的是：
+-  `container_of` <font color="#c00000">并非链表锚点的专属功能</font>，<font color="#c00000">其功能本质为根据key值查找host的入口指针</font>。在
+
 #### 3.1.5 向指定节点后添加一个节点 list_add(list_head \*new, list_head \*head)
 
 `list_add` 函数的定义为：
