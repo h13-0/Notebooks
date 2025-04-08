@@ -4307,7 +4307,7 @@ void kobject_init(struct kobject *kobj, const struct kobj_type *ktype);
 其中：
 - `kobj_type` 中需要提供 `release` 和 `sysfs` 等接口，其作用分别为：
 	- `kobj_type.release` ：当引用计数为0时会被调用
-
+	- `kobj_type.sysfs` ：提供读写接口
 
 
 
