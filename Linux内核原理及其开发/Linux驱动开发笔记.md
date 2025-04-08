@@ -4299,6 +4299,10 @@ struct cdev {
 
 `kobject` 的初始化
 
+```C
+#include 
+
+```
 
 
 `kobject` 的引用计数
