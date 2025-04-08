@@ -4297,12 +4297,19 @@ struct cdev {
 
 #### 16.1.1 相关API
 
-`kobject` 的初始化
+`kobject` 的初始化：
 
 ```C
-#include 
-
+#include <linux/kobject.h>
+void kobject_init(struct kobject *kobj, const struct kobj_type *ktype);
 ```
+
+其中：
+- `kobj_type` 中
+
+
+
+
 
 
 `kobject` 的引用计数
