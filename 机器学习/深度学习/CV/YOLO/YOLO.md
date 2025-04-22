@@ -248,5 +248,12 @@ YOLO v8 Head基本结构及部分细节应当参照下图，Obsidian可能无法
 
 ### 5.3 LOSS
 
-
+YOLO v8的损失函数主要由如下几个部分组成：
+$$
+Loss=Focal\ Loss+IoU\ Loss+Objectness\ Loss
+$$
+其中：
+- $Focal\ Loss$：改进了交叉熵损失，解决类别不平衡问题，降低了简单样本的权重，使模型专注于难以分类的样本。
+- $IoU\ Loss$：
+- 
 
