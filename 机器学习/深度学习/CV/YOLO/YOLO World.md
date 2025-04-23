@@ -92,6 +92,20 @@ model.train(data=data, trainer=WorldTrainerFromScratch)
 
 #### 5.1.1 训练
 
+在训练开始时， `WorldTrainer` 会按照 `val` 中数据集类型名称进行 `model.set_classes` ：
+
+```python
+def on_pretrain_routine_end(trainer):
+    """Callback to set up model classes and text encoder at the end of the pretrain routine."""
+    if RANK in {-1, 0}:
+        # Set class names for evaluation
+        names = [name.split("/")[0] for name in list(trainer.test_loader.dataset.data["names"].values())]
+        de_parallel(trainer.ema.ema).set_classes(names, cache_clip_model=False)
+    device = next(trainer.model.parameters()).device
+    trainer.text_model, _ = trainer.clip.load("ViT-B/32", device=device)
+    for p in trainer.text_model.parameters():
+        p.requires_grad_(False)
+```
 
 
 
