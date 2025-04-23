@@ -90,7 +90,7 @@ model.train(data=data, trainer=WorldTrainerFromScratch)
 - `lvis` 也为普通YOLO类型数据集
 上述数据集可以直接替换为同类型数据集。
 
-#### 训练
+#### 5.1.1 训练
 
 
 
