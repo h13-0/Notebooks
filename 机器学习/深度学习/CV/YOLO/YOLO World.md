@@ -60,7 +60,36 @@ Ultralytics版本的YOLO World的主要改进集中于检测头。在[[YOLO#^2jv
 
 ## 5 Appendix
 
-### 5.1 训练
+### 5.1 开放训练
+
+Ultralytics提供的开放集训练的参考示例为：
+
+```python
+model = YOLO(r'.\ultralytics\cfg\models\v8\yolov8s-worldv2.yaml')  
+  
+data = dict(  
+    train=dict(  
+        yolo_data=["Objects365.yaml"], #可以改用任意的多类别yolo数据集进行训练
+        grounding_data=[  
+            dict(  
+                img_path="../datasets/flickr30k/images",  
+                json_file="../datasets/final_flickr_separateGT_train.json",  
+            ),  
+        ],  
+    ),  
+    val=dict(yolo_data=["lvis.yaml"]),  #可以改用任意yolo数据集进行验证
+)  
+  
+model = YOLOWorld("yolov8s-worldv2.yaml")  
+model.train(data=data, trainer=WorldTrainerFromScratch)
+```
+
+其中：
+- 
+
+
+
+### 5.2 封闭集训练
 
 观察上述网络结构，不难发现，训练YOLO World只需要在普通的训练脚本前加一行：
 
