@@ -85,7 +85,14 @@ model.train(data=data, trainer=WorldTrainerFromScratch)
 ```
 
 其中：
-- 
+- `Objects365` 为包含365类目标的YOLO类型数据集
+- `flickr30k` 为包含BoundingBox、Prompt的数据集
+- `lvis` 也为普通YOLO类型数据集
+上述数据集可以直接替换为同类型数据集。
+
+#### 训练
+
+
 
 
 
