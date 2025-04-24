@@ -75,7 +75,7 @@ data = dict(
             ),  
         ],  
     ),  
-    val=dict(yolo_data=["lvis.yaml"]),  #可以改用任意yolo数据集进行验证
+    val=dict(yolo_data=["lvis.yaml"]),  #可以改用任意yolo数据集进行验证，但是种类数需要大于等于80(即VOC不可用)
 )
 
 model = YOLOWorld("yolov8s-worldv2.yaml")  
