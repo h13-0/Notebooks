@@ -88,7 +88,6 @@ model.train(data=data, trainer=WorldTrainerFromScratch)
 - `lvis` 也为普通YOLO类型数据集
 上述数据集可以直接替换为同类型数据集。
 
-
 #### 5.1.1 训练
 
 在训练开始时， `WorldTrainer` 会按照 `val` 中数据集类型名称进行 `model.set_classes` ：
@@ -112,12 +111,15 @@ def on_pretrain_routine_end(trainer):
 	- `category_names` ：list，合并重复项后的提示语句，共计94185条。
 		![[Pasted image 20250424100941.png]]
 	- `im_files` ：list，图像文件路径，共计148116条。
-	- `labels` ：每张图片中所包含的BoundingBox、text等。
+	- `labels` ：list，元素为每张图片中所包含的BoundingBox、text等信息，共计148116条。
+		![[Pasted image 20250424102112.png]]
 		- `im_file` ：图像文件路径
 		- `shape` ：图像尺寸
 		- `cls` ：list，元素为对应到 `texts` 中的index
-		- `segments` ：
-		- `texts` ：
+		- `bboxes` ：np.ndarray，数据为BoundingBox
+			![[Pasted image 20250424102514.png]]
+		- `texts` ：list，元素为包含提示的list
+			![[Pasted image 20250424102300.png]]
 
 
 ### 5.2 封闭集训练
