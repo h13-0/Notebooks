@@ -105,7 +105,6 @@ def on_pretrain_routine_end(trainer):
         p.requires_grad_(False)
 ```
 
-
 加载后的数据集数据内容为：
 - `flickr30k` 加载后为 `GroundingDataset` ：
 	- `category_names` ：list，合并重复项后的提示语句，共计94185条。
