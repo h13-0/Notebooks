@@ -88,6 +88,7 @@ model.train(data=data, trainer=WorldTrainerFromScratch)
 - `lvis` 也为普通YOLO类型数据集
 上述数据集可以直接替换为同类型数据集。
 
+
 #### 5.1.1 训练
 
 在训练开始时， `WorldTrainer` 会按照 `val` 中数据集类型名称进行 `model.set_classes` ：
@@ -106,6 +107,7 @@ def on_pretrain_routine_end(trainer):
 ```
 
 
+加载后d
 
 
 ### 5.2 封闭集训练
