@@ -77,7 +77,7 @@ data = dict(
     ),  
     val=dict(yolo_data=["lvis.yaml"]),  #可以改用任意yolo数据集进行验证
 )
-  
+
 model = YOLOWorld("yolov8s-worldv2.yaml")  
 model.train(data=data, trainer=WorldTrainerFromScratch)
 ```
