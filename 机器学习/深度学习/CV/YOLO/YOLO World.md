@@ -107,7 +107,17 @@ def on_pretrain_routine_end(trainer):
 ```
 
 
-加载后d
+加载后的数据集数据内容为：
+- `flickr30k` 加载后为 `GroundingDataset` ：
+	- `category_names` ：list，合并重复项后的提示语句，共计94185条。
+		![[Pasted image 20250424100941.png]]
+	- `im_files` ：list，图像文件路径，共计148116条。
+	- `labels` ：每张图片中所包含的BoundingBox、text等。
+		- `im_file` ：图像文件路径
+		- `shape` ：图像尺寸
+		- `cls` ：list，元素为对应到 `texts` 中的index
+		- `segments` ：
+		- `texts` ：
 
 
 ### 5.2 封闭集训练
