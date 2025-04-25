@@ -4333,8 +4333,8 @@ int kobject_set_name(struct kobject *kobj, const char *name, ...);
 而 `kobject` 的名称会直接决定：
 - 文件系统中，`/sys` <font color="#c00000">下的任意一个路径及子路径名均由kobject的name决定</font>，<font color="#c00000">递归关系与继承关系保持一致</font>。
 	- 许多用户态工具(例如 `lsusb` `lspci` 等均依赖于此)
-
-
+	- 而子路径下还通常会保留一些文件，这些文件可以是由驱动程序进行添加，也可以由设备模型的 `ktype` 提供默认属性自动创建。
+- `kobject` 的名称在调试和日志追踪中也会被使用。
 
 
 
