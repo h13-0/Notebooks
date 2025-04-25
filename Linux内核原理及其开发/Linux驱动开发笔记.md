@@ -4297,7 +4297,7 @@ struct cdev {
 
 #### 16.1.1 kobject相关API ^blb9e0
 
-`kobject` 的初始化：
+##### 16.1.1.1 kobject的初始化
 
 ```C
 #include <linux/kobject.h>
@@ -4310,7 +4310,7 @@ void kobject_init(struct kobject *kobj, const struct kobj_type *ktype);
 	其他成员可暂时先不用了解
 - <span style="background:#fff88f"><font color="#c00000">引用计数器会被设置为1</font></span>。
 
-`kobject` 的引用计数：
+##### 16.1.1.2 kobject的引用计数
 
 ```C
 // 增加引用计数
@@ -4319,6 +4319,18 @@ struct kobject * __must_check kobject_get_unless_zero(struct kobject *kobj);
 // 释放引用计数，如果释放后为0则调用上述的kobj_type.release
 void kobject_put(struct kobject *kobj);
 ```
+
+##### 16.1.1.3 kobject设置名字
+
+```C
+#include <linux/kobject.h>
+int kobject_set_name(struct kobject *kobj, const char *name, ...);
+```
+
+该函数可能会设置失败，例如：
+- 当可变参数与其 `fmt` 中预留类型不一致
+- 
+
 
 #### 16.1.2 kobj_type结构体
 
