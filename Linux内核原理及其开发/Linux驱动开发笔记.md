@@ -4330,6 +4330,12 @@ int kobject_set_name(struct kobject *kobj, const char *name, ...);
 该函数可能会设置失败，例如：
 - 当可变参数与其 `fmt` 中预留类型不一致
 - 
+而 `kobject` 的名称会直接决定：
+- 文件系统中，`/sys` <font color="#c00000">下的任意一个路径及子路径名均由kobject的name决定</font>，<font color="#c00000">递归关系与继承关系保持一致</font>。
+	- 许多用户态工具(例如 `lsusb` `lspci` 等均依赖于此)
+
+
+
 
 
 #### 16.1.2 kobj_type结构体
