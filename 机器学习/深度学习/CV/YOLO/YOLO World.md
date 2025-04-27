@@ -106,7 +106,7 @@ def on_pretrain_routine_end(trainer):
 ```
 
 `model.set_classes` 执行了如下的操作：
-1. 计算text prompt的特征向量，并存入 `self.txt_feats`
+1. 计算text prompt的特征向量，并存入 `self.txt_feats` (仅在验证时会使用 `self.txt_feats` ，训练时实时传入特征向量)
 2. <font color="#c00000">将当前模型的</font> `nc` <font color="#c00000">设置为传入文本段的个数</font>
 
 加载后的数据集数据内容为：
