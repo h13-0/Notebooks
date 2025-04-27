@@ -4355,7 +4355,18 @@ int kobject_set_name(struct kobject *kobj, const char *name, ...);
 
 kset有如后续字章节所示的常用接口。
 
-##### 16.2.1.1 将kobject添加到内核模型中(sysfs和kset中)
+##### 16.2.1.1 kset的普通初始化和设置接口
+
+```C
+void kset_init(struct kset *k);
+
+```
+
+注：
+- 由于 `kset` 内嵌了 `kobject` ，因此为 `kset` 设置名字的方法依旧使用 `kobject` 对应的方法。
+- 
+
+##### 16.2.1.2 将kobject添加到内核模型中(sysfs和kset中)
 
 函数原型：
 
@@ -4365,12 +4376,20 @@ int kobject_add(struct kobject *kobj, struct kobject *parent, const char *fmt, .
 ```
 
 其中：
-- `kobj` 需要添加到内核模型中的 `kobject` 指针，<span style="background:#fff88f"><font color="#c00000">必须</font></span>：
+- `kobj` ：需要添加到内核模型中的 `kobject` 指针，<span style="background:#fff88f"><font color="#c00000">必须</font></span>：
 	- <font color="#c00000">已通过</font> `kobject_init()` <font color="#c00000">初始化</font>
 	- <font color="#c00000">设置好其</font> `ktype` 
-	- 设置好其 `k`
+	- <font color="#c00000">设置好其</font> `kset` 
+- `parent` ：父 `kobject` 的指针，用于构建层次结构。若为 `NULL` 则会：
+  - 使用 `kobj->parent` 中的值，若仍为 `NULL` 则视为根节点，创建于 `/sys` 下。
+- `fmt` ：格式化字符串，用于生成 `kobj` 在sysfs中的目录名称。
 
-例如：
+本函数会：
+1. 向 `kobj->set` 中添加本obj。
+2. 在sysfs中的父obj对应目录下注册节点。
+3. <font color="#c00000">增加对父对象的引用计数</font>。
+
+例如基础例子：
 
 ```C
 my_kobj = kzalloc(sizeof(*my_kobj), GFP_KERNEL); 
@@ -4378,10 +4397,34 @@ kobject_init(my_kobj, &my_ktype); // 定义 my_ktype 的 release 方法
 kobject_add(my_kobj, NULL, "my_custom_object"); // 在 sysfs 根目录下创建目录
 ```
 
+稍微复杂一点的例子：
+
+```C
+// 创建 kset
+my_kset = kset_create_and_add("my_kset", NULL, NULL);
+if (!my_kset)
+    return -ENOMEM;
+// 创建并初始化 kobject
+struct kobject *kobj = kzalloc(sizeof(*kobj), GFP_KERNEL);
+if (!kobj) {
+    kset_unregister(my_kset);
+    return -ENOMEM;
+}
+kobject_init(kobj, &my_ktype);
+kobj->kset = my_kset; // 关联到 kset(但此时并未实际添加)
+
+// 添加到 sysfs、kset、parent中。
+int ret = kobject_add(kobj, parent, "my_object");
+if (ret) {
+    kobject_put(kobj);
+    kset_unregister(my_kset);
+    return ret;
+}
+```
 
 注：
 - 执行本步骤<font color="#c00000">之前</font>，<font color="#c00000">需要手动配置</font> `kobject` <font color="#c00000">中的</font> `kset` <font color="#c00000">成员</font>，随后在本步骤中才会向kset所维护的循环链表中添加元素。
-- `kobject_add` 会增加引用计数，释放时需要调用 `kobject_put` 移除
+
 
 
 
