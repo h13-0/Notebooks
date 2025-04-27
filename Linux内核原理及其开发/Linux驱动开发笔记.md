@@ -4344,29 +4344,40 @@ int kobject_set_name(struct kobject *kobj, const char *name, ...);
 
 ### 16.2 kobject层次结构、kset和子系统
 
-在内核中，各个模块之间有层次结构关系。也正如前文所述，kobject可以提供统一的引用计数、sysfs表述、热拔插处理等特性。而在层次结构管理上，内核为kobject提供了两种独立的机制：
+### 16.3 kobject层次结构
+
+在内核中，各个模块之间有层次结构关系。也正如前文所述，kobject可以提供统一的引用计数、sysfs表述、热拔插处理等特性。而在层次结构管理上，内核为kobject提供了两种<font color="#c00000">独立的</font>机制：
 - parent指针：指向其父对象<u>的kobject节点</u>
-- kset：往往(并不绝对)就是该object的父对象
+- kset：往往(并不绝对，这也是所谓的 "独立")就是该object的父对象
 其数据结构表示为：
 	![[msedge_X79BSHCPBB.png]]
 (注意有深浅两条线，深虚线指向父对象的 `kobject` 成员，浅虚线指向父对象)
 
-#### 16.2.1 kset
+#### 16.3.1 kset
 
 kset有如后续字章节所示的常用接口。
 
-##### 16.2.1.1 kset的普通初始化和设置接口
+##### 16.3.1.1 kset的普通初始化和设置接口
 
 ```C
+// 一次性完成 `kset` 的分配、初始化、添加到 sysfs：
+struct kset *kset_create_and_add(const char *name,  
+    const struct kset_uevent_ops *uevent_ops,  
+    struct kobject *parent_kobj);
+    
+// 分步完成
 void kset_init(struct kset *k);
+int kset_register(struct kset *k);
 
+// 引用计数
+struct kset *kset_get(struct kset *k);
+void kset_put(struct kset *k);
 ```
 
 注：
 - 由于 `kset` 内嵌了 `kobject` ，因此为 `kset` 设置名字的方法依旧使用 `kobject` 对应的方法。
-- 
 
-##### 16.2.1.2 将kobject添加到内核模型中(sysfs和kset中)
+##### 16.3.1.2 将kobject添加到内核模型中(sysfs和kset中)
 
 函数原型：
 
@@ -4425,7 +4436,9 @@ if (ret) {
 注：
 - 执行本步骤<font color="#c00000">之前</font>，<font color="#c00000">需要手动配置</font> `kobject` <font color="#c00000">中的</font> `kset` <font color="#c00000">成员</font>，随后在本步骤中才会向kset所维护的循环链表中添加元素。
 
+#### 16.3.2 子系统
 
+在Linux内核中，若干kset聚类后被封装为一个 "z"
 
 
 
