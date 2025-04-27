@@ -4345,8 +4345,10 @@ int kobject_set_name(struct kobject *kobj, const char *name, ...);
 ### 16.2 kobject层次结构、kset和子系统
 
 在内核中，各个模块之间有层次结构关系。也正如前文所述，kobject可以提供统一的引用计数、sysfs表述、热拔插处理等特性。而在层次结构管理上，内核为kobject提供了两种独立的机制：
-- parent指针
-- kset
+- parent指针：指向其父对象<u>的kobject节点</u>
+- kset：往往(并不绝对)就是该object的父对象
+其数据结构表示为：
+	![[msedge_X79BSHCPBB.png]]
 
 
 
