@@ -4353,13 +4353,21 @@ int kobject_set_name(struct kobject *kobj, const char *name, ...);
 
 #### 16.2.1 kset
 
-kset有如下常用的接口：
+kset有如后续字章节所示的常用接口。
+
+##### 16.2.1.1 添加到
 
 ```C
-
+int kobject_add(struct kobject *kobj, struct kobject *parent, const char *fmt, ...);
 ```
 
+例如：
 
+```C
+my_kobj = kzalloc(sizeof(*my_kobj), GFP_KERNEL); 
+kobject_init(my_kobj, &my_ktype); // 定义 my_ktype 的 release 方法 
+kobject_add(my_kobj, NULL, "my_custom_object"); // 在 sysfs 根目录下创建目录
+```
 
 
 
