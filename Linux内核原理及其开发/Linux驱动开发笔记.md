@@ -4355,11 +4355,20 @@ int kobject_set_name(struct kobject *kobj, const char *name, ...);
 
 kset有如后续字章节所示的常用接口。
 
-##### 16.2.1.1 添加到
+##### 16.2.1.1 将kobject添加到内核模型中(sysfs和kset中)
+
+函数原型：
 
 ```C
+#include "linux/kobject.h"
 int kobject_add(struct kobject *kobj, struct kobject *parent, const char *fmt, ...);
 ```
+
+其中：
+- `kobj` 需要添加到内核模型中的 `kobject` 指针，<span style="background:#fff88f"><font color="#c00000">必须</font></span>：
+	- <font color="#c00000">已通过</font> `kobject_init()` <font color="#c00000">初始化</font>
+	- <font color="#c00000">设置好其</font> `ktype` 
+	- 设置好其 `k`
 
 例如：
 
@@ -4370,7 +4379,9 @@ kobject_add(my_kobj, NULL, "my_custom_object"); // 在 sysfs 根目录下创建�
 ```
 
 
-
+注：
+- 执行本步骤<font color="#c00000">之前</font>，<font color="#c00000">需要手动配置</font> `kobject` <font color="#c00000">中的</font> `kset` <font color="#c00000">成员</font>，随后在本步骤中才会向kset所维护的循环链表中添加元素。
+- `kobject_add` 会增加引用计数，释放时需要调用 `kobject_put` 移除
 
 
 
