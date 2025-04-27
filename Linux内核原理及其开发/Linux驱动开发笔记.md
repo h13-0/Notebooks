@@ -4349,8 +4349,11 @@ int kobject_set_name(struct kobject *kobj, const char *name, ...);
 - kset：往往(并不绝对)就是该object的父对象
 其数据结构表示为：
 	![[msedge_X79BSHCPBB.png]]
+(注意有深浅两条线，深虚线指向父对象的 `kobject` 成员，浅虚线指向父对象)
 
+#### 16.2.1 kset
 
+kset有如下常用的接口：
 
 
 
