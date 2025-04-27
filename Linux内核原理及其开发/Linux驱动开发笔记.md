@@ -4393,7 +4393,7 @@ int kobject_add(struct kobject *kobj, struct kobject *parent, const char *fmt, .
 	- <font color="#c00000">设置好其</font> `kset` 
 - `parent` ：父 `kobject` 的指针，用于构建层次结构。若为 `NULL` 则会：
   - 使用 `kobj->parent` 中的值，若仍为 `NULL` 则视为根节点，创建于 `/sys` 下。
-- `fmt` ：格式化字符串，用于生成 `kobj` 在sysfs中的目录名称。
+- `fmt` ：格式化字符串，用于生成 `kobj` 在sysfs中的目录名称(直接在/sys中创建新的文件目录<font color="#c00000">需三思</font>，详见子系统章节)。
 
 本函数会：
 1. 向 `kobj->set` 中添加本obj。
@@ -4438,7 +4438,16 @@ if (ret) {
 
 #### 16.3.2 子系统
 
-在Linux内核中，若干kset聚类后被封装为一个 "z"
+在Linux内核中，若干kset聚类后被封装为一个"子系统"，例如"块设备子系统"、"总线子系统"、"设备分类子系统"等。
+
+Linux的子系统通常会显示在sysfs的顶层(但不绝对)，例如上述子系统：
+- `/sys/block` ：块设备子系统
+- `/sys/bus` ：总线子系统
+- `/sys/class` ：设备分类子系统
+
+
+
+
 
 
 
