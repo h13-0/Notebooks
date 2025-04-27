@@ -75,7 +75,7 @@ data = dict(
             ),  
         ],  
     ),  
-    val=dict(yolo_data=["lvis.yaml"]),  #可以改用任意yolo数据集进行验证，但是种类数需要大于等于80(即VOC不可用)
+    val=dict(yolo_data=["lvis.yaml"]),  #可以改用任意yolo数据集进行验证，但是种类数需要大于等于训练集中 `yolo_data` 的种类数，具体可见下一子章节的 `model.set_classes`
 )
 
 model = YOLOWorld("yolov8s-worldv2.yaml")  
@@ -104,6 +104,10 @@ def on_pretrain_routine_end(trainer):
     for p in trainer.text_model.parameters():
         p.requires_grad_(False)
 ```
+
+`model.set_classes` 执行了如下的操作：
+1. 计算text prompt的特征向量，并存入 `self.txt_feats`
+2. <font color="#c00000">将当前模型的</font> `nc` <font color="#c00000">设置为传入文本段的个数</font>
 
 加载后的数据集数据内容为：
 - `flickr30k` 加载后为 `GroundingDataset` ：
