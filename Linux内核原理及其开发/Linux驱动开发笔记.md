@@ -4330,12 +4330,17 @@ int kobject_set_name(struct kobject *kobj, const char *name, ...);
 该函数可能会设置失败，例如：
 - 当可变参数与其 `fmt` 中预留类型不一致
 - 无法成功分配内存时
+- 名称不合法时
 
 而 `kobject` 的名称会直接决定：
 - 文件系统中，`/sys` <font color="#c00000">下的任意一个路径及子路径名均由kobject的name决定</font>，<font color="#c00000">递归关系与继承关系保持一致</font>。
 	- 许多用户态工具(例如 `lsusb` `lspci` 等均依赖于此)
 	- 而子路径下还通常会保留一些文件，这些文件可以是由驱动程序进行添加，也可以由设备模型的 `ktype` 提供默认属性自动创建。
 - `kobject` 的名称在调试和日志追踪中也会被使用。
+
+因此，`kobject` 的名称应当：
+- 不能包含反斜杠
+- 强烈拒绝使用空格
 
 #### 16.1.2 kobj_type结构体
 
@@ -4344,7 +4349,7 @@ int kobject_set_name(struct kobject *kobj, const char *name, ...);
 
 ### 16.2 kobject层次结构、kset和子系统
 
-### 16.3 kobject层次结构
+#### 16.2.1 kobject层次结构
 
 在内核中，各个模块之间有层次结构关系。也正如前文所述，kobject可以提供统一的引用计数、sysfs表述、热拔插处理等特性。而在层次结构管理上，内核为kobject提供了两种<font color="#c00000">独立的</font>机制：
 - parent指针：指向其父对象<u>的kobject节点</u>
@@ -4353,11 +4358,11 @@ int kobject_set_name(struct kobject *kobj, const char *name, ...);
 	![[msedge_X79BSHCPBB.png]]
 (注意有深浅两条线，深虚线指向父对象的 `kobject` 成员，浅虚线指向父对象)
 
-#### 16.3.1 kset
+#### 16.2.2 kset
 
 kset有如后续字章节所示的常用接口。
 
-##### 16.3.1.1 kset的普通初始化和设置接口
+##### 16.2.2.1 kset的普通初始化和设置接口
 
 ```C
 // 一次性完成 `kset` 的分配、初始化、添加到 sysfs：
@@ -4377,7 +4382,7 @@ void kset_put(struct kset *k);
 注：
 - 由于 `kset` 内嵌了 `kobject` ，因此为 `kset` 设置名字的方法依旧使用 `kobject` 对应的方法。
 
-##### 16.3.1.2 将kobject添加到内核模型中(sysfs和kset中)
+##### 16.2.2.2 将kobject添加到内核模型中(sysfs和kset中)
 
 函数原型：
 
@@ -4436,7 +4441,7 @@ if (ret) {
 注：
 - 执行本步骤<font color="#c00000">之前</font>，<font color="#c00000">需要手动配置</font> `kobject` <font color="#c00000">中的</font> `kset` <font color="#c00000">成员</font>，随后在本步骤中才会向kset所维护的循环链表中添加元素。
 
-#### 16.3.2 子系统
+#### 16.2.3 子系统
 
 在Linux内核中，若干kset聚类后被封装为一个"子系统"，例如"块设备子系统"、"总线子系统"、"设备分类子系统"等。
 
@@ -4445,10 +4450,16 @@ Linux的子系统通常会显示在sysfs的顶层(但不绝对)，例如上述�
 - `/sys/bus` ：总线子系统
 - `/sys/class` ：设备分类子系统
 
+在早期的Linux版本(Linux2.6以前)中，子系统有专门的数据结构 `struct subsystem` ，但是在新版本的Linux中完全依赖于 `kset` 和 `kobject` 进行实现。如下是普通 `kset` 和子系统之间的区别：
 
+| <center>特征</center> | <center>子系统</center>            | <center>普通 `kset`</center> |
+| ------------------- | ------------------------------- | -------------------------- |
+| 注册位置                | 通常直接挂载到 `sysfs` 根目录下            | 挂载到其他 `kobject/kset` 的子目录  |
+| 功能角色                | 管理一类核心硬件或内核功能（如总线、设备类）          | 用于组织局部对象（如一个设备驱动管理的子设备）    |
+| 初始化时机               | 内核启动早期由核心模块初始化（如 `init/main.c`） | 动态创建（如模块加载时）               |
+| 父对象                 | 父 `kobject` 通常为 `NULL` 或内核根对象   | 父对象明确指向某个子系统或设备            |
 
-
-
+因此现在的子系统更是一个逻辑概念。
 
 
 ## 17 内存映射和DMA
