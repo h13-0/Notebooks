@@ -4483,7 +4483,6 @@ struct kobj_type {
 
 而除了文件夹以外，sysfs下还有很多普通文件或链接文件。其中，大部分普通文件反映了 `kobject` 所暴露的属性，这些属性就是由 `kobj_type` 中的 `default_groups` 成员记录，该成员的定义如下：
 
-
 ```C
 /**
  * struct attribute_group - data structure used to declare an attribute group.
