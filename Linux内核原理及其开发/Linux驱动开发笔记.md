@@ -4332,7 +4332,7 @@ int kobject_set_name(struct kobject *kobj, const char *name, ...);
 - 名称不合法时
 
 而 `kobject` 的名称会直接决定：
-- 文件系统中，`/sys` <font color="#c00000">下的任意一个路径及子路径名均由kobject的name决定</font>，<font color="#c00000">递归关系与继承关系保持一致</font>。
+- 文件系统中，`/sys` <font color="#c00000">下的绝大多数路径及子路径名由kobject的name决定</font>，<font color="#c00000">递归关系与继承关系保持一致</font>。
 	- 许多用户态工具(例如 `lsusb` `lspci` 等均依赖于此)
 	- 而子路径下还通常会保留一些文件，这些文件可以是由驱动程序进行添加，也可以由设备模型的 `ktype` 提供默认属性自动创建。
 - `kobject` 的名称在调试和日志追踪中也会被使用。
@@ -4340,11 +4340,6 @@ int kobject_set_name(struct kobject *kobj, const char *name, ...);
 因此，`kobject` 的名称应当：
 - 不能包含反斜杠
 - 强烈拒绝使用空格
-
-#### 16.1.2 kobj_type结构体
-
-
-
 
 ### 16.2 kobject层次结构、kset和子系统
 
@@ -4459,6 +4454,13 @@ Linux的子系统通常会显示在sysfs的顶层(但不绝对)，例如上述�
 | 父对象                 | 父 `kobject` 通常为 `NULL` 或内核根对象    | 父对象明确指向某个子系统或设备            |
 
 因此现在的子系统更是一个逻辑概念。
+
+### 16.3 kobj_type
+
+正如前文章节所述，sysfs下绝大多数的文件夹是由kobject的层次结构决定(或者说文件夹反映了层次结构)。
+而除了文件夹以外，s'y
+
+
 
 
 ## 17 内存映射和DMA
