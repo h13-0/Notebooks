@@ -4480,8 +4480,65 @@ struct kobj_type {
 #### 16.3.1 默认属性
 
 正如前文章节所述，sysfs下绝大多数的文件夹是由kobject的层次结构决定(或者说文件夹反映了层次结构)。
-而除了文件夹以外，sysfs下还有很多普通文件或链接文件。其中，大部分普通文件反映了kobject所暴露的属性，这些属性就是由 `kobj_type` 中的
 
+而除了文件夹以外，sysfs下还有很多普通文件或链接文件。其中，大部分普通文件反映了 `kobject` 所暴露的属性，这些属性就是由 `kobj_type` 中的 `default_groups` 成员记录，该成员的定义如下：
+
+
+```C
+/**
+ * struct attribute_group - data structure used to declare an attribute group.
+ * @name:	Optional: Attribute group name
+ *		If specified, the attribute group will be created in a
+ *		new subdirectory with this name. Additionally when a
+ *		group is named, @is_visible and @is_bin_visible may
+ *		return SYSFS_GROUP_INVISIBLE to control visibility of
+ *		the directory itself.
+ * @is_visible:	Optional: Function to return permissions associated with an
+ *		attribute of the group. Will be called repeatedly for
+ *		each non-binary attribute in the group. Only read/write
+ *		permissions as well as SYSFS_PREALLOC are accepted. Must
+ *		return 0 if an attribute is not visible. The returned
+ *		value will replace static permissions defined in struct
+ *		attribute. Use SYSFS_GROUP_VISIBLE() when assigning this
+ *		callback to specify separate _group_visible() and
+ *		_attr_visible() handlers.
+ * @is_bin_visible:
+ *		Optional: Function to return permissions associated with a
+ *		binary attribute of the group. Will be called repeatedly
+ *		for each binary attribute in the group. Only read/write
+ *		permissions as well as SYSFS_PREALLOC (and the
+ *		visibility flags for named groups) are accepted. Must
+ *		return 0 if a binary attribute is not visible. The
+ *		returned value will replace static permissions defined
+ *		in struct bin_attribute. If @is_visible is not set, Use
+ *		SYSFS_GROUP_VISIBLE() when assigning this callback to
+ *		specify separate _group_visible() and _attr_visible()
+ *		handlers.
+ * @bin_size:
+ *		Optional: Function to return the size of a binary attribute
+ *		of the group. Will be called repeatedly for each binary
+ *		attribute in the group. Overwrites the size field embedded
+ *		inside the attribute itself.
+ * @attrs:	Pointer to NULL terminated list of attributes.
+ * @bin_attrs:	Pointer to NULL terminated list of binary attributes.
+ *		Either attrs or bin_attrs or both must be provided.
+ */
+struct attribute_group {
+	const char		*name;
+	umode_t			(*is_visible)(struct kobject *,
+					      struct attribute *, int);
+	umode_t			(*is_bin_visible)(struct kobject *,
+						  const struct bin_attribute *, int);
+	size_t			(*bin_size)(struct kobject *,
+					    const struct bin_attribute *,
+					    int);
+	struct attribute	**attrs;
+	union {
+		struct bin_attribute		**bin_attrs;
+		const struct bin_attribute	*const *bin_attrs_new;
+	};
+};
+```
 
 
 
