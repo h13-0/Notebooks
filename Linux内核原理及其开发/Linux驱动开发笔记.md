@@ -4457,13 +4457,37 @@ Linux的子系统通常会显示在sysfs的顶层(但不绝对)，例如上述�
 
 ### 16.3 kobj_type
 
-上述的 `kobject` 和 `kset` 很好地处理了内核对象之间的层次关系
+上述的 `kobject` 和 `kset` 很好地处理了内核对象之间的层次关系。而 `kobject` 被设计用于嵌入各类具体的内核对象中，但上述设计并不负责实现各类内核对象的具体实现。
+各类 `kobject` 内核对象的具体实现被交由 `kobj_type` 进行管理，其定义如下：
 
+```C
+struct kobj_type {
+	// 释放资源函数
+	void (*release)(struct kobject *kobj);
+	// sysfs 文件操作函数
+	const struct sysfs_ops *sysfs_ops;
+	// 默认属性组(替代 default_attrs)
+	const struct attribute_group **default_groups;
+	// 子对象命名空间类型
+	const struct kobj_ns_type_operations *(*child_ns_type)(const struct kobject *kobj);
+	// 命名空间回调
+	const void *(*namespace)(const struct kobject *kobj);
+	// 文件权限
+	void (*get_ownership)(const struct kobject *kobj, kuid_t *uid, kgid_t *gid);
+};
+```
 
-#### 16.3.1 
+#### 16.3.1 暴露属性
 
 正如前文章节所述，sysfs下绝大多数的文件夹是由kobject的层次结构决定(或者说文件夹反映了层次结构)。
 而除了文件夹以外，sysfs下还有很多普通文件或链接文件。其中，大部分普通文件反映了kobject所暴露的属性。
+
+
+
+
+
+
+
 
 
 
