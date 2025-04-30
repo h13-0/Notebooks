@@ -4464,7 +4464,7 @@ Linux的子系统通常会显示在sysfs的顶层(但不绝对)，例如上述�
 struct kobj_type {
 	// 释放资源函数
 	void (*release)(struct kobject *kobj);
-	// sysfs 文件操作函数
+	// 仅服务默认属性组中的普通属性的文本编解码接口
 	const struct sysfs_ops *sysfs_ops;
 	// 默认属性组(替代 default_attrs)
 	const struct attribute_group **default_groups;
@@ -4567,6 +4567,16 @@ struct attribute_group {
 	- `umode` ：默认权限，会被上述 `is_visible` 覆盖。
 		- 该设计并非冗余设计，在不需要动态权限或未提供 `is_visible` 时则可以直接使用静态权限。
 3. 二进制属性的数据结构中记录了部分VFS的函数接口，用于给内核提供二进制实现。
+4. 关于"为什么二进制属性的数据结构中记录了操作函数，而普通属性却没有"：
+	1. 普通属性被设计用于轻量级的数据操作，其绕开了VFS的文件操作抽象层，例如：
+		1. <font color="#c00000">不需要</font> `open` <font color="#c00000">/</font> `release` <font color="#c00000">的生命周期管理，直接操作缓冲区</font>
+		2. <font color="#c00000">无须维护和操作</font><span style="background:#fff88f"><font color="#c00000">每个属性唯一的</font></span> `file_p` <font color="#c00000">句柄</font>
+		3. <span style="background:#fff88f"><font color="#c00000">因此没必要每个属性单独使用一个服务函数</font></span>，可以将若干个属性共用一个。
+	2. 二进制属性要完全经过VFS，依旧需要按照普通文件接口设计。
+
+#### 16.3.2 普通属性的文本编解码接口(sysfs_ops)
+
+正如上一章节所述，`ktype.sysfs_ops` <font color="#c00000">仅服务于</font>普通属性。
 
 
 
