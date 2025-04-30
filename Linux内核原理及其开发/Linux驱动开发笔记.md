@@ -4564,7 +4564,7 @@ struct attribute_group {
 		- `bin_attrs`
 2. 普通属性的数据结构中仅仅记录了 `name` 和 `umode` 两个成员，其通过上述 `kobject.ktype.sysfs_ops` 中记录的 `show` 和 `restore` 函数进行文本编解码。其中上述成员的作用如下：
 	- `name` ：属性名。
-	- `umode` ：默认权限，会被上述 `is_visible` 覆盖。
+	- `umode` ：默认权限，<font color="#c00000">会被上述</font> `is_visible` <font color="#c00000">覆盖</font>。
 		- 该设计并非冗余设计，在不需要动态权限或未提供 `is_visible` 时则可以直接使用静态权限。
 3. 二进制属性的数据结构中记录了部分VFS的函数接口，用于给内核提供二进制实现。
 4. 关于"为什么二进制属性的数据结构中记录了操作函数，而普通属性却没有"：
@@ -4572,11 +4572,22 @@ struct attribute_group {
 		1. <font color="#c00000">不需要</font> `open` <font color="#c00000">/</font> `release` <font color="#c00000">的生命周期管理，直接操作缓冲区</font>
 		2. <font color="#c00000">无须维护和操作</font><span style="background:#fff88f"><font color="#c00000">每个属性唯一的</font></span> `file_p` <font color="#c00000">句柄</font>
 		3. <span style="background:#fff88f"><font color="#c00000">因此没必要每个属性单独使用一个服务函数</font></span>，可以将若干个属性共用一个。
-	2. 二进制属性要完全经过VFS，依旧需要按照普通文件接口设计。
+	2. 二进制属性要完全经过VFS，依旧需要按照普通文件接口设计，故需要内置一些VFS的调用函数。
 
-#### 16.3.2 普通属性的文本编解码接口(sysfs_ops)
+##### 16.3.1.1 普通属性
+
+###### 16.3.1.1.1 普通属性的文本编解码接口(sysfs_ops)
 
 正如上一章节所述，`ktype.sysfs_ops` <font color="#c00000">仅服务于</font>普通属性。
+
+
+
+
+
+
+##### 16.3.1.2 二进制属性
+
+
 
 
 
