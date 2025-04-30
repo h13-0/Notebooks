@@ -4481,8 +4481,9 @@ struct kobj_type {
 
 正如前文章节所述，sysfs下绝大多数的文件夹是由kobject的层次结构决定(或者说文件夹反映了层次结构)。
 
-而除了文件夹以外，sysfs下还有很多普通文件或链接文件。其中，大部分普通文件反映了 `kobject` 所暴露的属性，这些属性就是由 `kobj_type` 中的 `default_groups` 成员记录。<font color="#c00000">不过该数据结构用于管理一组属性而非一个属性</font>。
-该成员的定义如下：
+而除了文件夹以外，sysfs下还有很多普通文件或链接文件。其中，大部分普通文件反映了 `kobject` 所暴露的属性，这些属性就是由 `kobj_type` 中的 `default_groups` 成员记录。<font color="#c00000">不过该数据结构用于管理两组属性而非一个属性</font>。
+
+尽管还有很多细节暂未解释，但是不妨先看定义：
 
 ```C
 /**
@@ -4545,16 +4546,26 @@ struct attribute_group {
 | <center>成员</center> | <center>作用</center>                                                                              |
 | ------------------- | ------------------------------------------------------------------------------------------------ |
 | `name`              | 属性组的名称：<br>- 若指定name，属性组会创建一个同名的子目录，所有属性文件将位于此目录下<br>- 若不指定name，属性文件直接位于父 `kobject` 的目录下，无中间子目录。 |
-| `is_visible`        | 动态控制普通属性的可见性和权限。返回 `0` 表示属性不可见，返回权限掩码(如 `0644`)确定可见性及权限。                                         |
-| `is_bin_visible`    | 动态控制二进制属性的可见性和权限，逻辑同 `is_visible`。                                                               |
-| `bin_size`          | 动态设置二进制属性的大小，覆盖 `struct bin_attribute` 中静态定义的 `size` 字段。                                         |
-| `attrs`             | 指向以 `NULL` 结尾的普通属性数组。每个属性对应一个 sysfs 文件。                                                          |
-| `bin_attrs`         | 指向以 `NULL` 结尾的二进制属性数组。使用联合体是为了兼容新旧内核的 API 差异。                                                    |
+| `is_visible`        | 动态控制<font color="#9bbb59">普通属性</font>的可见性和权限。返回 `0` 表示属性不可见，返回权限掩码(如 `0644`)确定可见性及权限。            |
+| `is_bin_visible`    | 动态控制<font color="#9bbb59">二进制属性</font>的可见性和权限，逻辑同 `is_visible`。                                  |
+| `bin_size`          | 动态设置<font color="#9bbb59">二进制属性</font>的大小，覆盖 `struct bin_attribute` 中静态定义的 `size` 字段。            |
+| `attrs`             | 指向以 `NULL` 结尾的<font color="#9bbb59">普通属性</font>数组。每个属性对应一个 sysfs 文件。                             |
+| `bin_attrs`         | 指向以 `NULL` 结尾的<font color="#9bbb59">二进制属性</font>数组。使用联合体是为了兼容新旧内核的 API 差异。                       |
+
 
 注：
-1. 两种属性( `attrs` 和 `bin_attrs` )都只是用于标记名称和
-	1. 普通属性(即 `attrs` )对应普通的字符串属性，内核
-	2. 而二进制属性对应二进制数据。
+1. 可以看到，上述属性组主要被分为了普通属性(即 `attrs` )和二进制属性( `bin_attrs` )两组：
+	1. <font color="#9bbb59">普通属性</font>对应普通的字符串属性，内核。服务普通属性的成员有：
+		 - `is_visible`
+		 - `attrs`
+	2. <font color="#9bbb59">二进制属性</font>对应二进制数据。服务二进制属性的成员有：
+		- `is_bin_visible`
+		- `bin_size`
+		- `bin_attrs`
+2. 普通属性
+3. 二进制属性的数据结构中记录了
+4. 
+5. 两种属性( `attrs` 和 `bin_attrs` )都只是用于标记名称和默认权限，并不提供动态的回调函数，
 
 
 
