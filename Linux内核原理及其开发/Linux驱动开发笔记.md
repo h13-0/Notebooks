@@ -4555,14 +4555,14 @@ struct attribute_group {
 
 注：
 1. 可以看到，上述属性组主要被分为了普通属性(即 `attrs` )和二进制属性( `bin_attrs` )两组：
-	1. <font color="#9bbb59">普通属性</font>对应普通的字符串属性，可以使用文本编码非文本信息进行传输。不过内核并未强制或检查实际传输的数据是文本还是二进制。<font color="#c00000">具体编码和解码分别通过</font> `show` <font color="#c00000">和</font> `restore` <font color="#c00000">函数实现</font>，<span style="background:#fff88f"><font color="#c00000">这两个函数存储于</font></span> `kobject.ktype.sysfs_ops` <span style="background:#fff88f"><font color="#c00000">中</font></span>。服务普通属性的成员有：
+	1. <font color="#9bbb59">普通属性</font>对应普通的字符串属性，可以使用文本编码非文本信息进行传输。不过内核并未强制或检查实际传输的数据是文本还是二进制。<font color="#c00000">具体编码和解码分别通过</font> `show` <font color="#c00000">和</font> `store` <font color="#c00000">函数实现</font>，<span style="background:#fff88f"><font color="#c00000">这两个函数存储于</font></span> `kobject.ktype.sysfs_ops` <span style="background:#fff88f"><font color="#c00000">中</font></span>。服务普通属性的成员有：
 		 - `is_visible`
 		 - `attrs`
 	2. <font color="#9bbb59">二进制属性</font>对应二进制数据。服务二进制属性的成员有：
 		- `is_bin_visible`
 		- `bin_size`
 		- `bin_attrs`
-2. 普通属性的数据结构中仅仅记录了 `name` 和 `umode` 两个成员，其通过上述 `kobject.ktype.sysfs_ops` 中记录的 `show` 和 `restore` 函数进行文本编解码。其中上述成员的作用如下：
+2. 普通属性的数据结构中仅仅记录了 `name` 和 `umode` 两个成员，其通过上述 `kobject.ktype.sysfs_ops` 中记录的 `show` 和 `store` 函数进行文本编解码。其中上述成员的作用如下：
 	- `name` ：属性名。
 	- `umode` ：默认权限，<font color="#c00000">会被上述</font> `is_visible` <font color="#c00000">覆盖</font>。
 		- 该设计并非冗余设计，在不需要动态权限或未提供 `is_visible` 时则可以直接使用静态权限。
@@ -4582,13 +4582,15 @@ struct attribute_group {
 
 ```C
 struct sysfs_ops {
-	ssize_t	(*show)(struct kobject *, struct attribute *, char *);
-	ssize_t	(*store)(struct kobject *, struct attribute *, const char *, size_t);
+	ssize_t	(*show)(struct kobject *kobj, struct attribute *attr, char *buffer);
+	ssize_t	(*store)(struct kobject *kobj, struct attribute *attr, const char *buffer, size_t size);
 };
 ```
 
-
-
+其中：
+- `show` 函数用于将属性转换为人眼可阅读的值，并要求：
+	- 返回值为实际字符串长度，<font color="#c00000">并要求长度小于一个</font> `PAGE_SIZE` <font color="#c00000">大小</font>。若超过此大小则需要拆分成多个属性。
+- `store` 函数用于将缓冲区中的数据解码，并在 `size` 中传入了数据的长度(依旧小于 `PAGE_SIZE` )。
 
 
 
