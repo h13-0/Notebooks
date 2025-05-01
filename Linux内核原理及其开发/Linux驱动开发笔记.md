@@ -4578,7 +4578,14 @@ struct attribute_group {
 
 ###### 16.3.1.1.1 普通属性的文本编解码接口(sysfs_ops)
 
-正如上一章节所述，`ktype.sysfs_ops` <font color="#c00000">仅服务于</font>普通属性。
+正如上一章节所述，`ktype.sysfs_ops` <font color="#c00000">仅服务于</font>普通属性。该数据结构的定义如下：
+
+```C
+struct sysfs_ops {
+	ssize_t	(*show)(struct kobject *, struct attribute *, char *);
+	ssize_t	(*store)(struct kobject *, struct attribute *, const char *, size_t);
+};
+```
 
 
 
