@@ -4599,9 +4599,20 @@ struct sysfs_ops {
 
 #### 16.3.2 动态属性 ^dvhzcw
 
-正如上述章节所述，<span style="background:#fff88f"><font color="#c00000">默认属性仅能在初始化时被注册</font></span>，<font color="#c00000">无法在运行时动态创建</font>。
+正如上述章节所述，<span style="background:#fff88f"><font color="#c00000">默认属性仅能在初始化时被注册</font></span>，<font color="#c00000">无法在运行时动态创建</font>，<span style="background:#fff88f"><font color="#c00000">且严禁在运行时删除</font></span>(不过可以隐藏)。而动态属性可以满足上述需求：
 
+```C
+#include <linux/sysfs.h>
+int __must_check sysfs_create_file(struct kobject *kobj,  
+                                            const struct attribute *attr);
 
+void sysfs_remove_file(struct kobject *kobj,  
+                                  const struct attribute *attr);
+```
+
+在上述接口中需注意：
+1. 其
+2. 调用 `sysfs_remove_file` 后，sysfs中的入口会立即消失
 
 
 
