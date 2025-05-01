@@ -4483,8 +4483,8 @@ struct kobj_type {
 
 而除了文件夹以外，sysfs下还有很多普通文件或链接文件。其中，大部分普通文件反映了 `kobject` 所暴露的属性，这些属性可以按照如下两种方式划分：
 1. 按数据类型划分：
-	1. [[Linux驱动开发笔记#^6qh3el|普通属性]]
-	2. [[Linux驱动开发笔记#^fo54b5|二进制属性]]
+	1. [[Linux驱动开发笔记#^6qh3el|普通属性]]：人眼可阅读的属性，通过字符串进行编解码表述，可以承载各种可由文本编码的信息。
+	2. [[Linux驱动开发笔记#^fo54b5|二进制属性]]：二进制属性。
 2. 按属性功能划分：
 	1. [[Linux驱动开发笔记#^dt7ny4|默认属性组]]：在kobject初始化时创建，不可动态增删
 	2. [[Linux驱动开发笔记#16 3 2 动态属性 dvhzcw|动态属性]]：在kobject运行时创建，可以动态增删
@@ -4536,9 +4536,10 @@ struct sysfs_ops {
 		2. <font color="#c00000">无须维护和操作</font><span style="background:#fff88f"><font color="#c00000">每个属性唯一的</font></span> `file_p` <font color="#c00000">句柄</font>
 		3. <span style="background:#fff88f"><font color="#c00000">因此没必要每个属性单独使用一个服务函数</font></span>，可以将若干个属性共用一个。
 	2. 二进制属性要完全经过VFS，依旧需要按照普通文件接口设计，故需要内置一些VFS的调用函数。
-3. 更多注意点见后续章节。
+3. 每次调用能操作的最大数据量是一页。
+4. 更多注意点见后续章节。
 
-##### 16.3.1.3 默认属性组 ^dt7ny4
+#### 16.3.2 默认属性组 ^dt7ny4
 
 默认属性的最大特性是<span style="background:#fff88f"><font color="#c00000">其只能在kobject初始化时创建，不可动态增删</font></span>。这些属性由 `kobj_type` 中的 `default_groups` 成员记录：
 
@@ -4612,11 +4613,11 @@ struct attribute_group {
 注：
 1. 关于"默认属性组"，该属性组寄生于 `kobject.ktype.default_groups` 中，<span style="background:#fff88f"><font color="#c00000">并<u>仅能</u>在</font></span> `kobject` <span style="background:#fff88f"><font color="#c00000">初始化时注册</font></span>。<font color="#c00000">运行时注册需要依赖</font>[[Linux驱动开发笔记#^dvhzcw|动态属性]]<font color="#c00000">接口</font>。
 
-#### 16.3.2 动态属性 ^dvhzcw
+#### 16.3.3 动态属性 ^dvhzcw
 
 正如上述章节所述，<span style="background:#fff88f"><font color="#c00000">默认属性仅能在初始化时被注册</font></span>，<font color="#c00000">无法在运行时动态创建</font>，<span style="background:#fff88f"><font color="#c00000">且严禁在运行时删除</font></span>(不过可以隐藏)。而动态属性可以满足上述需求，具体见子章节。
 
-##### 16.3.2.1 普通属性
+##### 16.3.3.1 普通属性
 
 ```C
 #include <linux/sysfs.h>
@@ -4630,7 +4631,7 @@ void sysfs_remove_file(struct kobject *kobj,
 在上述接口中需注意：
 1. 调用 `sysfs_remove_file` 后，sysfs中的入口会立即消失。<span style="background:#fff88f"><font color="#c00000">但是在这之前已经打开了该文件的程序依旧可以正常访问</font></span>，<span style="background:#fff88f"><font color="#c00000">因此在show和store函数中需要正确处理这种情况</font></span>。 ^rw06xj
 
-##### 16.3.2.2 二进制属性
+##### 16.3.3.2 二进制属性
 
 ```C
 #include <linux/sysfs.h>
@@ -4643,7 +4644,11 @@ void sysfs_remove_bin_file(struct kobject *kobj,
 
 注意：
 1. 同上一章节注意点1。
-2. 
+
+#### 16.3.4 符号链接
+
+sysfs被设计为一个树结构，但是
+
 
 
 ## 17 内存映射和DMA
