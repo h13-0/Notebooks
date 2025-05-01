@@ -4483,7 +4483,54 @@ struct kobj_type {
 
 而除了文件夹以外，sysfs下还有很多普通文件或链接文件。其中，大部分普通文件反映了 `kobject` 所暴露的属性，这些属性就是由 `kobj_type` 中的 `default_groups` 成员记录。<font color="#c00000">不过该数据结构用于管理两组属性而非一个属性</font>。
 
-尽管还有很多细节暂未解释，但是不妨先看定义：
+##### 16.3.1.1 普通属性
+
+###### 16.3.1.1.1 普通属性的文本编解码接口(sysfs_ops)
+
+正如上一章节所述，`ktype.sysfs_ops` <font color="#c00000">仅服务于</font>普通属性。该数据结构的定义如下：
+
+```C
+struct sysfs_ops {
+	ssize_t	(*show)(struct kobject *kobj, struct attribute *attr, char *buffer);
+	ssize_t	(*store)(struct kobject *kobj, struct attribute *attr, const char *buffer, size_t size);
+};
+```
+
+其中：
+- `show` 函数用于将属性转换为人眼可阅读的值，并要求：
+	- 返回值为实际字符串长度，<font color="#c00000">并要求长度小于一个</font> `PAGE_SIZE` <font color="#c00000">大小</font>。若超过此大小则需要拆分成多个属性。
+- `store` 函数用于将缓冲区中的数据解码，并在 `size` 中传入了数据的长度(依旧小于 `PAGE_SIZE` )，并需注意：
+	- 如果输入的数据与预期不符，则应当返回一个负的错误码。
+- 需要注意[[Linux驱动开发笔记#16 3 2 动态属性 dvhzcw|动态属性]]中的情况：![[Linux驱动开发笔记#^rw06xj]]
+
+##### 16.3.1.2 二进制属性
+
+
+先说明两个关键定义：
+- <font color="#9bbb59">普通属性</font>：
+	- <font color="#9bbb59">普通属性</font>对应普通的字符串属性，可以使用文本编码非文本信息进行传输。不过内核并未强制或检查实际传输的数据是文本还是二进制。<font color="#c00000">具体编码和解码分别通过</font> `show` <font color="#c00000">和</font> `store` <font color="#c00000">函数实现</font>，<span style="background:#fff88f"><font color="#c00000">这两个函数存储于</font></span> `kobject.ktype.sysfs_ops` <span style="background:#fff88f"><font color="#c00000">中</font></span>。服务普通属性的成员有：
+		- `is_visible`
+		- `attrs`
+- <font color="#9bbb59">二进制属性</font>：
+	- <font color="#9bbb59">二进制属性</font>对应二进制数据。二进制属性的成员有：
+		- `is_bin_visible`
+		- `bin_size` ：<font color="#c00000">二进制属性大小，若没有上限则设置为0</font>。
+		- `bin_attrs`
+
+需要注意：
+1. 普通属性的数据结构中仅仅记录了 `name` 和 `umode` 两个成员，其通过上述 `kobject.ktype.sysfs_ops` 中记录的 `show` 和 `store` 函数进行文本编解码。其中上述成员的作用如下：
+	- `name` ：属性名。
+	- `umode` ：默认权限，<font color="#c00000">会被上述</font> `is_visible` <font color="#c00000">覆盖</font>。
+		- 该设计并非冗余设计，在不需要动态权限或未提供 `is_visible` 时则可以直接使用静态权限。
+2. 二进制属性的数据结构中记录了部分VFS的函数接口，用于给内核提供二进制实现。
+3. 关于"为什么二进制属性的数据结构中记录了操作函数，而普通属性却没有"：
+	1. 普通属性被设计用于轻量级的数据操作，其绕开了VFS的文件操作抽象层，例如：
+		1. <font color="#c00000">不需要</font> `open` <font color="#c00000">/</font> `release` <font color="#c00000">的生命周期管理，直接操作缓冲区</font>
+		2. <font color="#c00000">无须维护和操作</font><span style="background:#fff88f"><font color="#c00000">每个属性唯一的</font></span> `file_p` <font color="#c00000">句柄</font>
+		3. <span style="background:#fff88f"><font color="#c00000">因此没必要每个属性单独使用一个服务函数</font></span>，可以将若干个属性共用一个。
+	2. 二进制属性要完全经过VFS，依旧需要按照普通文件接口设计，故需要内置一些VFS的调用函数。
+
+上述解释通常难以直接接受，但是不妨看完 `ktype` 定义后再看上方注意点。
 
 ```C
 /**
@@ -4552,54 +4599,16 @@ struct attribute_group {
 | `attrs`             | 指向以 `NULL` 结尾的<font color="#9bbb59">普通属性</font>数组。每个属性对应一个 sysfs 文件。                             |
 | `bin_attrs`         | 指向以 `NULL` 结尾的<font color="#9bbb59">二进制属性</font>数组。使用联合体是为了兼容新旧内核的 API 差异。                       |
 
-
 注：
-1. 可以看到，上述属性组主要被分为了普通属性(即 `attrs` )和二进制属性( `bin_attrs` )两组：
-	1. <font color="#9bbb59">普通属性</font>对应普通的字符串属性，可以使用文本编码非文本信息进行传输。不过内核并未强制或检查实际传输的数据是文本还是二进制。<font color="#c00000">具体编码和解码分别通过</font> `show` <font color="#c00000">和</font> `store` <font color="#c00000">函数实现</font>，<span style="background:#fff88f"><font color="#c00000">这两个函数存储于</font></span> `kobject.ktype.sysfs_ops` <span style="background:#fff88f"><font color="#c00000">中</font></span>。服务普通属性的成员有：
-		 - `is_visible`
-		 - `attrs`
-	2. <font color="#9bbb59">二进制属性</font>对应二进制数据。服务二进制属性的成员有：
-		- `is_bin_visible`
-		- `bin_size`
-		- `bin_attrs`
-2. 普通属性的数据结构中仅仅记录了 `name` 和 `umode` 两个成员，其通过上述 `kobject.ktype.sysfs_ops` 中记录的 `show` 和 `store` 函数进行文本编解码。其中上述成员的作用如下：
-	- `name` ：属性名。
-	- `umode` ：默认权限，<font color="#c00000">会被上述</font> `is_visible` <font color="#c00000">覆盖</font>。
-		- 该设计并非冗余设计，在不需要动态权限或未提供 `is_visible` 时则可以直接使用静态权限。
-3. 二进制属性的数据结构中记录了部分VFS的函数接口，用于给内核提供二进制实现。
-4. 关于"为什么二进制属性的数据结构中记录了操作函数，而普通属性却没有"：
-	1. 普通属性被设计用于轻量级的数据操作，其绕开了VFS的文件操作抽象层，例如：
-		1. <font color="#c00000">不需要</font> `open` <font color="#c00000">/</font> `release` <font color="#c00000">的生命周期管理，直接操作缓冲区</font>
-		2. <font color="#c00000">无须维护和操作</font><span style="background:#fff88f"><font color="#c00000">每个属性唯一的</font></span> `file_p` <font color="#c00000">句柄</font>
-		3. <span style="background:#fff88f"><font color="#c00000">因此没必要每个属性单独使用一个服务函数</font></span>，可以将若干个属性共用一个。
-	2. 二进制属性要完全经过VFS，依旧需要按照普通文件接口设计，故需要内置一些VFS的调用函数。
-5. 关于"默认属性组"，该属性组寄生于 `kobject.ktype.default_groups` 中，<span style="background:#fff88f"><font color="#c00000">并<u>仅能</u>在</font></span> `kobject` <span style="background:#fff88f"><font color="#c00000">初始化时注册</font></span>。<font color="#c00000">运行时注册需要依赖</font>[[Linux驱动开发笔记#^dvhzcw|动态属性]]<font color="#c00000">接口</font>。
+1. 关于"默认属性组"，该属性组寄生于 `kobject.ktype.default_groups` 中，<span style="background:#fff88f"><font color="#c00000">并<u>仅能</u>在</font></span> `kobject` <span style="background:#fff88f"><font color="#c00000">初始化时注册</font></span>。<font color="#c00000">运行时注册需要依赖</font>[[Linux驱动开发笔记#^dvhzcw|动态属性]]<font color="#c00000">接口</font>。
 
-##### 16.3.1.1 普通属性
 
-###### 16.3.1.1.1 普通属性的文本编解码接口(sysfs_ops)
-
-正如上一章节所述，`ktype.sysfs_ops` <font color="#c00000">仅服务于</font>普通属性。该数据结构的定义如下：
-
-```C
-struct sysfs_ops {
-	ssize_t	(*show)(struct kobject *kobj, struct attribute *attr, char *buffer);
-	ssize_t	(*store)(struct kobject *kobj, struct attribute *attr, const char *buffer, size_t size);
-};
-```
-
-其中：
-- `show` 函数用于将属性转换为人眼可阅读的值，并要求：
-	- 返回值为实际字符串长度，<font color="#c00000">并要求长度小于一个</font> `PAGE_SIZE` <font color="#c00000">大小</font>。若超过此大小则需要拆分成多个属性。
-- `store` 函数用于将缓冲区中的数据解码，并在 `size` 中传入了数据的长度(依旧小于 `PAGE_SIZE` )，并需注意：
-	- 如果输入的数据与预期不符，则应当返回一个负的错误码。
-- 需要注意[[Linux驱动开发笔记#16 3 2 动态属性 dvhzcw|动态属性]]中的情况：![[Linux驱动开发笔记#^rw06xj]]
-
-##### 16.3.1.2 二进制属性
 
 #### 16.3.2 动态属性 ^dvhzcw
 
-正如上述章节所述，<span style="background:#fff88f"><font color="#c00000">默认属性仅能在初始化时被注册</font></span>，<font color="#c00000">无法在运行时动态创建</font>，<span style="background:#fff88f"><font color="#c00000">且严禁在运行时删除</font></span>(不过可以隐藏)。而动态属性可以满足上述需求：
+正如上述章节所述，<span style="background:#fff88f"><font color="#c00000">默认属性仅能在初始化时被注册</font></span>，<font color="#c00000">无法在运行时动态创建</font>，<span style="background:#fff88f"><font color="#c00000">且严禁在运行时删除</font></span>(不过可以隐藏)。而动态属性可以满足上述需求，具体见子章节。
+
+##### 16.3.2.1 普通属性
 
 ```C
 #include <linux/sysfs.h>
@@ -4613,7 +4622,20 @@ void sysfs_remove_file(struct kobject *kobj,
 在上述接口中需注意：
 1. 调用 `sysfs_remove_file` 后，sysfs中的入口会立即消失。<span style="background:#fff88f"><font color="#c00000">但是在这之前已经打开了该文件的程序依旧可以正常访问</font></span>，<span style="background:#fff88f"><font color="#c00000">因此在show和store函数中需要正确处理这种情况</font></span>。 ^rw06xj
 
+##### 16.3.2.2 二进制属性
 
+```C
+#include <linux/sysfs.h>
+int sysfs_create_bin_file(struct kobject *kobj,  
+                                    const struct bin_attribute *attr);
+
+void sysfs_remove_bin_file(struct kobject *kobj,  
+                                     const struct bin_attribute *attr);
+```
+
+注意：
+1. 同上一章节注意点1。
+2. 
 
 
 ## 17 内存映射和DMA
