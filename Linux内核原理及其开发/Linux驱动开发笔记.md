@@ -4591,9 +4591,9 @@ struct sysfs_ops {
 其中：
 - `show` 函数用于将属性转换为人眼可阅读的值，并要求：
 	- 返回值为实际字符串长度，<font color="#c00000">并要求长度小于一个</font> `PAGE_SIZE` <font color="#c00000">大小</font>。若超过此大小则需要拆分成多个属性。
-- `store` 函数用于将缓冲区中的数据解码，并在 `size` 中传入了数据的长度(依旧小于 `PAGE_SIZE` )。
-
-
+- `store` 函数用于将缓冲区中的数据解码，并在 `size` 中传入了数据的长度(依旧小于 `PAGE_SIZE` )，并需注意：
+	- 如果输入的数据与预期不符，则应当返回一个负的错误码。
+- 需要注意[[Linux驱动开发笔记#16 3 2 动态属性 dvhzcw|动态属性]]中的情况：![[Linux驱动开发笔记#^rw06xj]]
 
 ##### 16.3.1.2 二进制属性
 
@@ -4611,8 +4611,7 @@ void sysfs_remove_file(struct kobject *kobj,
 ```
 
 在上述接口中需注意：
-1. 其
-2. 调用 `sysfs_remove_file` 后，sysfs中的入口会立即消失
+1. 调用 `sysfs_remove_file` 后，sysfs中的入口会立即消失。<span style="background:#fff88f"><font color="#c00000">但是在这之前已经打开了该文件的程序依旧可以正常访问</font></span>，<span style="background:#fff88f"><font color="#c00000">因此在show和store函数中需要正确处理这种情况</font></span>。 ^rw06xj
 
 
 
