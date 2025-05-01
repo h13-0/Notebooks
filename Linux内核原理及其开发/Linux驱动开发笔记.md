@@ -4573,6 +4573,7 @@ struct attribute_group {
 		2. <font color="#c00000">无须维护和操作</font><span style="background:#fff88f"><font color="#c00000">每个属性唯一的</font></span> `file_p` <font color="#c00000">句柄</font>
 		3. <span style="background:#fff88f"><font color="#c00000">因此没必要每个属性单独使用一个服务函数</font></span>，可以将若干个属性共用一个。
 	2. 二进制属性要完全经过VFS，依旧需要按照普通文件接口设计，故需要内置一些VFS的调用函数。
+5. 关于"默认属性组"，该属性组寄生于 `kobject.ktype.default_groups` 中，<span style="background:#fff88f"><font color="#c00000">并<u>仅能</u>在</font></span> `kobject` <span style="background:#fff88f"><font color="#c00000">初始化时注册</font></span>。<font color="#c00000">运行时注册需要依赖</font>[[Linux驱动开发笔记#^dvhzcw|动态属性]]<font color="#c00000">接口</font>。
 
 ##### 16.3.1.1 普通属性
 
@@ -4595,6 +4596,10 @@ struct sysfs_ops {
 
 
 ##### 16.3.1.2 二进制属性
+
+#### 16.3.2 动态属性 ^dvhzcw
+
+正如上述章节所述，<span style="background:#fff88f"><font color="#c00000">默认属性仅能在初始化时被注册</font></span>，<font color="#c00000">无法在运行时动态创建</font>。
 
 
 
