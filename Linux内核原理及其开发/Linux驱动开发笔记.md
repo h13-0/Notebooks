@@ -4477,13 +4477,30 @@ struct kobj_type {
 };
 ```
 
-#### 16.3.1 默认属性组
+#### 16.3.1 属性
 
 正如前文章节所述，sysfs下绝大多数的文件夹是由kobject的层次结构决定(或者说文件夹反映了层次结构)。
 
-而除了文件夹以外，sysfs下还有很多普通文件或链接文件。其中，大部分普通文件反映了 `kobject` 所暴露的属性，这些属性就是由 `kobj_type` 中的 `default_groups` 成员记录。<font color="#c00000">不过该数据结构用于管理两组属性而非一个属性</font>。
+而除了文件夹以外，sysfs下还有很多普通文件或链接文件。其中，大部分普通文件反映了 `kobject` 所暴露的属性，这些属性可以按照如下两种方式划分：
+1. 按数据类型划分：
+	1. [[Linux驱动开发笔记#^6qh3el|普通属性]]
+	2. [[Linux驱动开发笔记#^fo54b5|二进制属性]]
+2. 按属性功能划分：
+	1. [[Linux驱动开发笔记#^dt7ny4|默认属性组]]：在kobject初始化时创建，不可动态增删
+	2. [[Linux驱动开发笔记#16 3 2 动态属性 dvhzcw|动态属性]]：在kobject运行时创建，可以动态增删
 
-##### 16.3.1.1 普通属性
+##### 16.3.1.1 普通属性 ^6qh3el
+
+<font color="#9bbb59">普通属性</font>：
+- <font color="#9bbb59">普通属性</font>对应普通的字符串属性，可以使用文本编码非文本信息进行传输。不过内核并未强制或检查实际传输的数据是文本还是二进制。<font color="#c00000">具体编码和解码分别通过</font> `show` <font color="#c00000">和</font> `store` <font color="#c00000">函数实现</font>，<span style="background:#fff88f"><font color="#c00000">这两个函数存储于</font></span> `kobject.ktype.sysfs_ops` <span style="background:#fff88f"><font color="#c00000">中</font></span>。服务普通属性的成员有：
+	- `is_visible`
+	- `attrs`
+
+需要注意：
+1. 普通属性的数据结构中仅仅记录了 `name` 和 `umode` 两个成员，其通过上述 `kobject.ktype.sysfs_ops` 中记录的 `show` 和 `store` 函数进行文本编解码。其中上述成员的作用如下：
+	- `name` ：属性名。
+	- `umode` ：默认权限，<font color="#c00000">会被上述</font> `is_visible` <font color="#c00000">覆盖</font>。
+		- 该设计并非冗余设计，在不需要动态权限或未提供 `is_visible` 时则可以直接使用静态权限。
 
 ###### 16.3.1.1.1 普通属性的文本编解码接口(sysfs_ops)
 
@@ -4501,36 +4518,29 @@ struct sysfs_ops {
 	- 返回值为实际字符串长度，<font color="#c00000">并要求长度小于一个</font> `PAGE_SIZE` <font color="#c00000">大小</font>。若超过此大小则需要拆分成多个属性。
 - `store` 函数用于将缓冲区中的数据解码，并在 `size` 中传入了数据的长度(依旧小于 `PAGE_SIZE` )，并需注意：
 	- 如果输入的数据与预期不符，则应当返回一个负的错误码。
-- 需要注意[[Linux驱动开发笔记#16 3 2 动态属性 dvhzcw|动态属性]]中的情况：![[Linux驱动开发笔记#^rw06xj]]
+- 其他若干注意点见后续章节。
 
-##### 16.3.1.2 二进制属性
+##### 16.3.1.2 二进制属性 ^fo54b5
 
-
-先说明两个关键定义：
-- <font color="#9bbb59">普通属性</font>：
-	- <font color="#9bbb59">普通属性</font>对应普通的字符串属性，可以使用文本编码非文本信息进行传输。不过内核并未强制或检查实际传输的数据是文本还是二进制。<font color="#c00000">具体编码和解码分别通过</font> `show` <font color="#c00000">和</font> `store` <font color="#c00000">函数实现</font>，<span style="background:#fff88f"><font color="#c00000">这两个函数存储于</font></span> `kobject.ktype.sysfs_ops` <span style="background:#fff88f"><font color="#c00000">中</font></span>。服务普通属性的成员有：
-		- `is_visible`
-		- `attrs`
-- <font color="#9bbb59">二进制属性</font>：
-	- <font color="#9bbb59">二进制属性</font>对应二进制数据。二进制属性的成员有：
-		- `is_bin_visible`
-		- `bin_size` ：<font color="#c00000">二进制属性大小，若没有上限则设置为0</font>。
-		- `bin_attrs`
+<font color="#9bbb59">二进制属性</font>：
+- <font color="#9bbb59">二进制属性</font>对应二进制数据。二进制属性的成员有：
+	- `is_bin_visible`
+	- `bin_size` ：<font color="#c00000">二进制属性大小，若没有上限则设置为0</font>。
+	- `bin_attrs`
 
 需要注意：
-1. 普通属性的数据结构中仅仅记录了 `name` 和 `umode` 两个成员，其通过上述 `kobject.ktype.sysfs_ops` 中记录的 `show` 和 `store` 函数进行文本编解码。其中上述成员的作用如下：
-	- `name` ：属性名。
-	- `umode` ：默认权限，<font color="#c00000">会被上述</font> `is_visible` <font color="#c00000">覆盖</font>。
-		- 该设计并非冗余设计，在不需要动态权限或未提供 `is_visible` 时则可以直接使用静态权限。
-2. 二进制属性的数据结构中记录了部分VFS的函数接口，用于给内核提供二进制实现。
-3. 关于"为什么二进制属性的数据结构中记录了操作函数，而普通属性却没有"：
+1. 二进制属性的数据结构中记录了部分VFS的函数接口，用于向内核提供二进制实现。
+2. 关于"为什么二进制属性的数据结构中记录了操作函数，而普通属性却没有"：
 	1. 普通属性被设计用于轻量级的数据操作，其绕开了VFS的文件操作抽象层，例如：
 		1. <font color="#c00000">不需要</font> `open` <font color="#c00000">/</font> `release` <font color="#c00000">的生命周期管理，直接操作缓冲区</font>
 		2. <font color="#c00000">无须维护和操作</font><span style="background:#fff88f"><font color="#c00000">每个属性唯一的</font></span> `file_p` <font color="#c00000">句柄</font>
 		3. <span style="background:#fff88f"><font color="#c00000">因此没必要每个属性单独使用一个服务函数</font></span>，可以将若干个属性共用一个。
 	2. 二进制属性要完全经过VFS，依旧需要按照普通文件接口设计，故需要内置一些VFS的调用函数。
+3. 更多注意点见后续章节。
 
-上述解释通常难以直接接受，但是不妨看完 `ktype` 定义后再看上方注意点。
+##### 16.3.1.3 默认属性组 ^dt7ny4
+
+默认属性的最大特性是<span style="background:#fff88f"><font color="#c00000">其只能在kobject初始化时创建，不可动态增删</font></span>。这些属性由 `kobj_type` 中的 `default_groups` 成员记录：
 
 ```C
 /**
@@ -4601,8 +4611,6 @@ struct attribute_group {
 
 注：
 1. 关于"默认属性组"，该属性组寄生于 `kobject.ktype.default_groups` 中，<span style="background:#fff88f"><font color="#c00000">并<u>仅能</u>在</font></span> `kobject` <span style="background:#fff88f"><font color="#c00000">初始化时注册</font></span>。<font color="#c00000">运行时注册需要依赖</font>[[Linux驱动开发笔记#^dvhzcw|动态属性]]<font color="#c00000">接口</font>。
-
-
 
 #### 16.3.2 动态属性 ^dvhzcw
 
