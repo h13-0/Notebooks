@@ -4585,13 +4585,12 @@ struct sysfs_ops {
 struct attribute_group {
 	const char		*name;
 	umode_t			(*is_visible)(struct kobject *,
-					      struct attribute *, int);
+					              struct attribute *, int);
 	umode_t			(*is_bin_visible)(struct kobject *,
-						  const struct bin_attribute *, int);
+						              const struct bin_attribute *, int);
 	size_t			(*bin_size)(struct kobject *,
-					    const struct bin_attribute *,
-					    int);
-	struct attribute	**attrs;
+					            const struct bin_attribute *,
+					            int);
 	union {
 		struct bin_attribute		**bin_attrs;
 		const struct bin_attribute	*const *bin_attrs_new;
@@ -4622,10 +4621,10 @@ struct attribute_group {
 ```C
 #include <linux/sysfs.h>
 int __must_check sysfs_create_file(struct kobject *kobj,  
-                                            const struct attribute *attr);
+                                   const struct attribute *attr);
 
 void sysfs_remove_file(struct kobject *kobj,  
-                                  const struct attribute *attr);
+                       const struct attribute *attr);
 ```
 
 在上述接口中需注意：
@@ -4636,10 +4635,10 @@ void sysfs_remove_file(struct kobject *kobj,
 ```C
 #include <linux/sysfs.h>
 int sysfs_create_bin_file(struct kobject *kobj,  
-                                    const struct bin_attribute *attr);
+                          const struct bin_attribute *attr);
 
 void sysfs_remove_bin_file(struct kobject *kobj,  
-                                     const struct bin_attribute *attr);
+                           const struct bin_attribute *attr);
 ```
 
 注意：
@@ -4647,7 +4646,24 @@ void sysfs_remove_bin_file(struct kobject *kobj,
 
 #### 16.3.4 符号链接
 
-sysfs被设计为一个树结构，但是
+sysfs被设计为一个树结构，但是树形结构并不能满足所有需求，例如：
+	某个USB摄像头位于 `/sys/device` 目录下(例如 `/sys/device/.../usb1/1-1/1-1.2` 下)，但是处于设计便利性考虑，其依旧需要在 `/sys/class/video4linux/` 目录下暴露该摄像头从而方便用户态程序访问，而无须遍历复杂的目录结构。
+上述需求就需要使用符号链接特性完成，但是注意<font color="#c00000">符号链接</font><span style="background:#fff88f"><font color="#c00000">只能用于创建一个指向某个kobject(即对应目录)的目录</font></span>，<span style="background:#fff88f"><font color="#c00000">无法对某个其他kobject的某个属性创建符号链接</font></span>。
+
+```C
+#include <linux/sysfs.h>
+int sysfs_create_link(struct kobject *kobj,
+				      struct kobject *target, const char *name);
+```
+
+### 16.4 热拔插事件的产生
+
+
+
+
+
+
+
 
 
 
