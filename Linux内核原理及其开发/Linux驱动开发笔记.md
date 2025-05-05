@@ -4830,13 +4830,7 @@ struct bus_type {
 
 上述数据结构中，基本信息成员有：
 - `name` ：总线类型的名称，在 `/sys/bus/` 下显示
-- `dev_name` ：设备命名模板，例如 `usb%u` ，其占位符规则有：
-	- `%u` ：设备ID或自增序号，无符号整数
-	- `%s` ：
-	- `%d` ：设备序号。可能为负数(罕见)
-	- `%x` ：十六进制整数(设备地址)
-	- 具体含义由总线或设备驱动定义
-	- 此外还有一些总线的特殊占位符，例如PCI的 `%04x:%02x` 表示域和插槽号
+- `dev_name` ：总线下的子设备命名模板，<font color="#c00000">该成员并非强制</font>，<span style="background:#fff88f"><font color="#c00000">且通常用于定义常量设备名</font></span>，具体命名规则取决于总线代码实现，详见[[Linux驱动开发笔记#^4d2k0x|drv_name]]。
 - `bus_groups` ：总线自身的默认属性组
 - `dev_groups` ：总线下所有设备的默认属性组
 - `drv_groups` ：总线下所有驱动的默认属性组
@@ -4861,6 +4855,17 @@ struct bus_type {
 - `dma_cleanup` ：清除设备的DMA配置
 其他配置：
 - `need_parent_lock` ：指定在探测或移除设备时，是否需要锁定父设备的互斥量。
+
+##### 16.5.1.1 drv_name ^4d2k0x
+
+该成员并非强制的，例如PCI总线中就未从该成员导入模板，而是用 `dev_set_name` 为设备设置名称时，使用了常量字符串的模板：
+
+```C
+dev_set_name(&dev->dev, "%04x:%02x:%02x.%d", pci_domain_nr(bus),
+	dev->bus->number, PCI_SLOT(devfn), PCI_FUNC(devfn));
+```
+
+其具体模板命名规则取决于总线代码实现，上述
 
 
 ## 17 内存映射和DMA
