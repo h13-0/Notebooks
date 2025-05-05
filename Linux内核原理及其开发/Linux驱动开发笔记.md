@@ -4832,6 +4832,7 @@ struct bus_type {
 
 需要注意：
 1. <font color="#c00000">该数据结构描述的是总线</font><span style="background:#fff88f"><font color="#c00000">类型</font></span>，在系统中无论该总线<span style="background:#fff88f"><font color="#c00000">是否有多个</font></span>，是否被热拔插，其<span style="background:#fff88f"><font color="#c00000">在内核初始化阶段</font></span><font color="#c00000">一定会被实例化一个</font>，<span style="background:#fff88f"><font color="#c00000">且只会被实例化一个</font></span>。该数据结构为总线类型(PCI、USB等)的抽象。
+2. 该结构体将与总线实例无关的特性统一管理到一起，增加了可移植性(例如 `.match` 成员)
 
 上述数据结构中，基本信息成员有：
 - `name` ：总线类型的名称，在 `/sys/bus/` 下显示。
@@ -4877,8 +4878,77 @@ dev_set_name(&dev->dev, "usb%d", ...);
 
 ###### 16.5.1.1.2 bus_type.match ^d8ytfa
 
-如上述章节所述，<span style="background:#fff88f"><font color="#c00000">该函数用于匹配设备和驱动程序</font></span>(即匹配 `struct device` 和 `struct driver` )。<font color="#c00000">当一个总线上的新设备或新驱动程序被添加时</font>，<font color="#c00000">内核会一次或多次调用该函数</font>。
+如上述章节所述，<span sle="background:#fff88f"><font color="#c00000">该函数用于匹配设备和驱动程序</font></span>(即匹配 `struct device` 和 `struct driver` )。
+
+<font color="#c00000">当一个总线上的新设备或新驱动程序被添加时</font>，<font color="#c00000">内核会一次或多次调用该函数</font>。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 该函数由总线提供，其决定宏观上的正确匹配逻辑。
+
+
+
+以PCI总线的 `match` 为例：
+
+```C
+/**
+ * pci_bus_match - Tell if a PCI device structure has a matching PCI device id structure
+ * @dev: the PCI device structure to match against
+ * @drv: the device driver to search for matching PCI device id structures
+ *
+ * Used by a driver to check whether a PCI device present in the
+ * system is in its list of supported devices. Returns the matching
+ * pci_device_id structure or %NULL if there is no match.
+ */
+static int pci_bus_match(struct device *dev, struct device_driver *drv)
+{
+	struct pci_dev *pci_dev = to_pci_dev(dev);
+	struct pci_driver *pci_drv;
+	const struct pci_device_id *found_id;
+
+	if (!pci_dev->match_driver)
+		return 0;
+
+	pci_drv = to_pci_driver(drv);
+	found_id = pci_match_device(pci_drv, pci_dev);
+	if (found_id)
+		return 1;
+
+	return 0;
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ##### 16.5.1.2 总线实例抽象()
 
