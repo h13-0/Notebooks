@@ -4741,7 +4741,7 @@ enum kobject_action {
 
 ##### 16.5.1.1 总线类型抽象(bus_type)
 
-<font color="#c00000">总线</font><span style="background:#fff88f"><font color="#c00000">类型</font></span>的数据结构定义如下，不过通常总线的具体实现对大多数驱动程序开发者并不必要。
+<font color="#c00000">总线</font><span style="background:#fff88f"><font color="#c00000">类型</font></span>的数据结构定义如下，不过总线的具体实现对大多数驱动程序开发者并不必要。
 
 ```C
 #include <linux/device/bus.h>
@@ -4837,13 +4837,13 @@ struct bus_type {
 上述数据结构中，基本信息成员有：
 - `name` ：总线类型的名称，在 `/sys/bus/` 下显示。
 - `dev_name` ：总线下的子设备命名模板，<font color="#c00000">该成员并非强制</font>，<span style="background:#fff88f"><font color="#c00000">且通常用于定义常量设备名</font></span>，具体命名规则取决于总线代码实现，详见[[Linux驱动开发笔记#^4d2k0x|bus_type.drv_name]]。
-- `bus_groups` ：总线自身的默认属性组
-- `dev_groups` ：总线下所有设备的默认属性组
-- `drv_groups` ：总线下所有驱动的默认属性组
+- `bus_groups` ：总线自身的默认属性组，详见[[Linux驱动开发笔记#^xdmvsy|总线属性]]。
+- `dev_groups` ：总线下所有设备的默认属性组，详见[[Linux驱动开发笔记#^xdmvsy|总线属性]]。
+- `drv_groups` ：总线下所有驱动的默认属性组，详见[[Linux驱动开发笔记#^xdmvsy|总线属性]]。
 核心回调函数成员有：
 - `match` ：<span style="background:#fff88f"><font color="#c00000">设备和驱动匹配的函数逻辑</font></span>，详见：[[Linux驱动开发笔记#^d8ytfa|bus_type.match]]
 - `uevent` ：处理热拔插事件
-- `probe` ：<span style="background:#fff88f"><font color="#c00000">设备探测入口函数</font></span>，当 `match` 成功匹配到设备和驱动后，会调用驱动的 `probe` 函数<font color="#c00000">对设备进行初始化等</font>。
+- `probe` ：<span style="background:#fff88f"><font color="#c00000">设备探测入口函数</font></span>，当 `match` 成功匹配到设备和驱动后，会调用驱动的 `probe` 函数<font color="#c00000">对设备进行初始化等</font>，详见：[[Linux驱动开发笔记#^y39y0v|bus_type.probe]]
 - `sync_state` ：同步设备状态，在所有依赖该设备的对象(例如驱动、软件或硬件实体)绑定完成后调用(如果驱动未加载或返回错误，则不会触发该函数)。
 - `remove` ：设备移除时调用的函数
 - `shutdown` ：系统关机时调用的函数，用于安全停止设备
@@ -4884,7 +4884,9 @@ dev_set_name(&dev->dev, "usb%d", ...);
 int (*match)(struct device *dev, struct device_driver *drv);
 ```
 
-该函数会接收一个 `struct device` 实例和一个 `struct device_driver` 实例，用于检测这两个实例是否匹配。那么明显地，当一个总线上的新设备或新驱动程序被添加时，内核会一次或多次调用该函数。以PCI总线的 `match` 为例：
+该函数会接收一个 `struct device` 实例和一个 `struct device_driver` 实例，用于检测这两个实例是否匹配。那么明显地，当一个总线上的新设备或新驱动程序被添加时，内核会一次或多次调用该函数。<span style="background:#fff88f"><font color="#c00000">当该函数返回非零值时表示匹配成功</font></span>。
+
+以PCI总线的 `match` 为例：
 
 ```C
 /**
@@ -4912,13 +4914,68 @@ static int pci_bus_match(struct device *dev, struct device_driver *drv)
 
 	return 0;
 }
+
+/**
+ * pci_match_device - See if a device matches a driver's list of IDs
+ * @drv: the PCI driver to match against
+ * @dev: the PCI device structure to match against
+ *
+ * Used by a driver to check whether a PCI device is in its list of
+ * supported devices or in the dynids list, which may have been augmented
+ * via the sysfs "new_id" file.  Returns the matching pci_device_id
+ * structure or %NULL if there is no match.
+ */
+static const struct pci_device_id *pci_match_device(struct pci_driver *drv,
+						    struct pci_dev *dev)
+{
+	struct pci_dynid *dynid;
+	const struct pci_device_id *found_id = NULL, *ids;
+
+	/* When driver_override is set, only bind to the matching driver */
+	if (dev->driver_override && strcmp(dev->driver_override, drv->name))
+		return NULL;
+
+	/* Look at the dynamic ids first, before the static ones */
+	spin_lock(&drv->dynids.lock);
+	list_for_each_entry(dynid, &drv->dynids.list, node) {
+		if (pci_match_one_device(&dynid->id, dev)) {
+			found_id = &dynid->id;
+			break;
+		}
+	}
+	spin_unlock(&drv->dynids.lock);
+
+	if (found_id)
+		return found_id;
+
+	for (ids = drv->id_table; (found_id = pci_match_id(ids, dev));
+	     ids = found_id + 1) {
+		/*
+		 * The match table is split based on driver_override.
+		 * In case override_only was set, enforce driver_override
+		 * matching.
+		 */
+		if (found_id->override_only) {
+			if (dev->driver_override)
+				return found_id;
+		} else {
+			return found_id;
+		}
+	}
+
+	/* driver_override will always match, send a dummy id */
+	if (dev->driver_override)
+		return &pci_device_id_any;
+	return NULL;
+}
 ```
 
+其直接将设备的ID与驱动所支持的ID进行匹配，当匹配到时则返回非零值。
+
+###### 16.5.1.1.3 bus_type.probe ^y39y0v
 
 
-
-
-
+###### 16.5.1.1.4 总线属性 ^xdmvsy
 
 
 
