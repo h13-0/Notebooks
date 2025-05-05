@@ -4660,8 +4660,27 @@ int sysfs_create_link(struct kobject *kobj,
 
 通常来说内核态程序(例如驱动、模块等)均可以调用 `kobject_event` 触发事件，但是在设计约束中需要遵循设备模型规范，避免破坏系统稳定性。
 
+#### 16.4.1 热拔插事件的触发
 
-#### 16.4.1 用户空间设备管理(udev、mdev)
+热拔插事件的触发使用 `kobject_uevent` 接口：
+
+```C
+#include <linux/kobject.h>
+/**
+ * kobject_uevent - notify userspace by sending an uevent
+ *
+ * @kobj: struct kobject that the action is happening to
+ * @action: action that is happening
+ *
+ * Returns 0 if kobject_uevent() is completed with success or the
+ * corresponding error when it fails.
+ */
+int kobject_uevent(struct kobject *kobj, enum kobject_action action);
+```
+
+gai j
+
+#### 16.4.2 用户空间设备管理(udev、mdev)
 
 
 
