@@ -4849,18 +4849,18 @@ struct bus_type {
 - `remove` ：设备移除时调用的函数
 - `shutdown` ：系统关机时调用的函数，用于安全停止设备
 电源管理成员有：
-- `suspend` ：
-- `resume` ：
-- `pm` ：
+- `suspend` ：设备进入睡眠模式前的回调，可用于保存寄存器状态等。
+- `resume` ：设备从睡眠模式唤醒后的回调，可用于恢复寄存器状态等。
+- `pm` ：总线级别的电源管理操作集，例如 `suspend_late` 、 `resume_early` 等。
 设备状态管理成员有：
-- `online` ：
-- `offline` ：
+- `online` ：将设备重新上线，例如热插入
+- `offline` ：将设备下线，准备热移除，但可能因为设备占用无法移除。
 高级功能：
-- `num_vf` ：
-- `dma_configure` ：
-- `dma_cleanup` ：
+- `num_vf` ：查询设备支持的虚拟函数数量
+- `dma_configure` ：配置设备的DMA参数，例如IOMMU映射
+- `dma_cleanup` ：清除设备的DMA配置
 其他配置：
-- `need_parent_lock` ：
+- `need_parent_lock` ：指定在探测或移除设备时，是否需要锁定父设备的互斥量。
 
 
 ## 17 内存映射和DMA
