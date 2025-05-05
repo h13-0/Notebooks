@@ -4739,7 +4739,9 @@ enum kobject_action {
 - <font color="#c00000">负责设备与驱动匹配</font>：当设备或驱动注册时，总线尝试匹配并绑定二者。
 - 热拔插事件处理：
 
-总线的数据结构定义如下，不过通常总线的具体实现对大多数驱动程序开发者并不必要。
+##### 16.5.1.1 总线类型抽象(bus_type)
+
+<font color="#c00000">总线</font><span style="background:#fff88f"><font color="#c00000">类型</font></span>的数据结构定义如下，不过通常总线的具体实现对大多数驱动程序开发者并不必要。
 
 ```C
 #include <linux/device/bus.h>
@@ -4828,6 +4830,9 @@ struct bus_type {
 };
 ```
 
+需要注意：
+1. <font color="#c00000">该数据结构描述的是总线</font><span style="background:#fff88f"><font color="#c00000">类型</font></span>，在系统中无论该总线<span style="background:#fff88f"><font color="#c00000">是否有多个</font></span>，是否被热拔插，其<span style="background:#fff88f"><font color="#c00000">在内核初始化阶段</font></span><font color="#c00000">一定会被实例化一个</font>，<span style="background:#fff88f"><font color="#c00000">且只会被实例化一个</font></span>。该数据结构为总线类型(PCI、USB等)的抽象。
+
 上述数据结构中，基本信息成员有：
 - `name` ：总线类型的名称，在 `/sys/bus/` 下显示。
 - `dev_name` ：总线下的子设备命名模板，<font color="#c00000">该成员并非强制</font>，<span style="background:#fff88f"><font color="#c00000">且通常用于定义常量设备名</font></span>，具体命名规则取决于总线代码实现，详见[[Linux驱动开发笔记#^4d2k0x|bus_type.drv_name]]。
@@ -4855,7 +4860,7 @@ struct bus_type {
 其他配置：
 - `need_parent_lock` ：指定在探测或移除设备时，是否需要锁定父设备的互斥量。
 
-##### 16.5.1.1 bus_type.drv_name ^4d2k0x
+###### 16.5.1.1.1 bus_type.drv_name ^4d2k0x
 
 该成员并非强制的，例如PCI总线中就未从该成员导入模板，而是用 `dev_set_name` 为设备设置名称时，使用了常量字符串的模板：
 
@@ -4870,10 +4875,13 @@ dev_set_name(&dev->dev, "%04x:%02x:%02x.%d", pci_domain_nr(bus),
 dev_set_name(&dev->dev, "usb%d", ...);
 ```
 
-##### 16.5.1.2 bus_type.match ^d8ytfa
+###### 16.5.1.1.2 bus_type.match ^d8ytfa
 
-如上述章节所述，<span style="background:#fff88f"><font color="#c00000">该函数用于匹配设备和驱动程序</font></span>。<font color="#c00000">当一个总线上的新设备或新驱动程序被添加时</font>，<font color="#c00000">内核会一次或多次调用该函数</font>。
+如上述章节所述，<span style="background:#fff88f"><font color="#c00000">该函数用于匹配设备和驱动程序</font></span>(即匹配 `struct device` 和 `struct driver` )。<font color="#c00000">当一个总线上的新设备或新驱动程序被添加时</font>，<font color="#c00000">内核会一次或多次调用该函数</font>。
 该函数由总线提供，其决定宏观上的正确匹配逻辑。
+
+##### 16.5.1.2 总线实例抽象()
+
 
 
 
