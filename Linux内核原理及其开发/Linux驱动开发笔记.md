@@ -4878,28 +4878,13 @@ dev_set_name(&dev->dev, "usb%d", ...);
 
 ###### 16.5.1.1.2 bus_type.match ^d8ytfa
 
-如上述章节所述，<span sle="background:#fff88f"><font color="#c00000">该函数用于匹配设备和驱动程序</font></span>(即匹配 `struct device` 和 `struct driver` )。
+正如该成员的类型定义所示：
 
-<font color="#c00000">当一个总线上的新设备或新驱动程序被添加时</font>，<font color="#c00000">内核会一次或多次调用该函数</font>。
+```C
+int (*match)(struct device *dev, struct device_driver *drv);
+```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-该函数由总线提供，其决定宏观上的正确匹配逻辑。
-
-
-
-以PCI总线的 `match` 为例：
+该函数会接收一个 `struct device` 实例和一个 `struct device_driver` 实例，用于检测这两个实例是否匹配。那么明显地，当一个总线上的新设备或新驱动程序被添加时，内核会一次或多次调用该函数。以PCI总线的 `match` 为例：
 
 ```C
 /**
