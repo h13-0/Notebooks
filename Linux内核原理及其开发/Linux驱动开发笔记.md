@@ -4713,7 +4713,21 @@ enum kobject_action {
 ### 16.5 总线、设备和驱动程序 ^ygjg2l
 
 基本概念：
-- <font color="#9bbb59">总线</font>：
+- <font color="#9bbb59">总线</font>(bus)：总线是处理器与一个或多个设备之间的通道。在设备模型中，所有的设备都通过总线相连，且总线之间可以互相插入(例如一个USB控制器通常是一个PCI设备)。
+- <font color="#9bbb59">设备</font>(device)：描述硬件实体，是硬件实体的抽象。
+	- 职责：
+		- 描述硬件属性(地址、型号、状态等)
+		- 通过 `struct device` 表示
+- <font color="#9bbb59">驱动</font>(driver)：描述如何控制硬件
+	- 职责：
+		- 实现硬件的操作方法
+		- 通过 `struct device_driver` 表示
+
+#### 16.5.1 总线
+
+不过通常总线的具体实现对大多数驱动程序开发者并不必要。
+
+
 
 
 
