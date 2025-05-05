@@ -4831,34 +4831,36 @@ struct bus_type {
 上述数据结构中，基本信息成员有：
 - `name` ：总线类型的名称，在 `/sys/bus/` 下显示
 - `dev_name` ：设备命名模板，例如 `usb%u` ，其占位符规则有：
-	- `%u` ：设备ID，无符号整数
+	- `%u` ：设备ID或自增序号，无符号整数
 	- `%s` ：
-	- `%d` ：
+	- `%d` ：设备序号。可能为负数(罕见)
 	- `%x` ：十六进制整数(设备地址)
+	- 具体含义由总线或设备驱动定义
 	- 此外还有一些总线的特殊占位符，例如PCI的 `%04x:%02x` 表示域和插槽号
 - `bus_groups` ：总线自身的默认属性组
 - `dev_groups` ：总线下所有设备的默认属性组
 - `drv_groups` ：总线下所有驱动的默认属性组
 核心回调函数成员有：
-- `match` ：<span style="background:#fff88f"><font color="#c00000">设备和驱动匹配的函数逻辑</font></span>，
+- `match` ：<span style="background:#fff88f"><font color="#c00000">设备和驱动匹配的函数逻辑</font></span>，<span style="background:#fff88f"><font color="#c00000">其逻辑如下</font></span>：
+	- 当设备注册到总线时，总线会遍历所有已注册的驱动，依次调用其 `match` 方法，检查设备与驱动的兼容性。
 - `uevent` ：处理热拔插事件
-- `probe` ：<span style="background:#fff88f"><font color="#c00000">设备探测入口函数</font></span>，
-- `sync_state` ：同步设备状态，在所有依赖该设备的对象(例如驱动、软件或硬件实体)绑定完成后调用。
+- `probe` ：<span style="background:#fff88f"><font color="#c00000">设备探测入口函数</font></span>，当 `match` 成功匹配到设备和驱动后，会调用驱动的 `probe` 函数<font color="#c00000">对设备进行初始化等</font>。
+- `sync_state` ：同步设备状态，在所有依赖该设备的对象(例如驱动、软件或硬件实体)绑定完成后调用(如果驱动未加载或返回错误，则不会触发该函数)。
 - `remove` ：设备移除时调用的函数
 - `shutdown` ：系统关机时调用的函数，用于安全停止设备
 电源管理成员有：
-- `suspend`
-- `resume`
-- `pm`
+- `suspend` ：
+- `resume` ：
+- `pm` ：
 设备状态管理成员有：
-- `online`
-- `offline`
+- `online` ：
+- `offline` ：
 高级功能：
-- `num_vf` 
-- `dma_configure`
-- `dma_cleanup`
+- `num_vf` ：
+- `dma_configure` ：
+- `dma_cleanup` ：
 其他配置：
-- `need_parent_lock`
+- `need_parent_lock` ：
 
 
 ## 17 内存映射和DMA
