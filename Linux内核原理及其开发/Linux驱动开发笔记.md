@@ -4829,14 +4829,13 @@ struct bus_type {
 ```
 
 上述数据结构中，基本信息成员有：
-- `name` ：总线类型的名称，在 `/sys/bus/` 下显示
-- `dev_name` ：总线下的子设备命名模板，<font color="#c00000">该成员并非强制</font>，<span style="background:#fff88f"><font color="#c00000">且通常用于定义常量设备名</font></span>，具体命名规则取决于总线代码实现，详见[[Linux驱动开发笔记#^4d2k0x|drv_name]]。
+- `name` ：总线类型的名称，在 `/sys/bus/` 下显示。
+- `dev_name` ：总线下的子设备命名模板，<font color="#c00000">该成员并非强制</font>，<span style="background:#fff88f"><font color="#c00000">且通常用于定义常量设备名</font></span>，具体命名规则取决于总线代码实现，详见[[Linux驱动开发笔记#^4d2k0x|bus_type.drv_name]]。
 - `bus_groups` ：总线自身的默认属性组
 - `dev_groups` ：总线下所有设备的默认属性组
 - `drv_groups` ：总线下所有驱动的默认属性组
 核心回调函数成员有：
-- `match` ：<span style="background:#fff88f"><font color="#c00000">设备和驱动匹配的函数逻辑</font></span>，<span style="background:#fff88f"><font color="#c00000">其逻辑如下</font></span>：
-	- 当设备注册到总线时，总线会遍历所有已注册的驱动，依次调用其 `match` 方法，检查设备与驱动的兼容性。
+- `match` ：<span style="background:#fff88f"><font color="#c00000">设备和驱动匹配的函数逻辑</font></span>，详见：[[Linux驱动开发笔记#^d8ytfa|bus_type.match]]
 - `uevent` ：处理热拔插事件
 - `probe` ：<span style="background:#fff88f"><font color="#c00000">设备探测入口函数</font></span>，当 `match` 成功匹配到设备和驱动后，会调用驱动的 `probe` 函数<font color="#c00000">对设备进行初始化等</font>。
 - `sync_state` ：同步设备状态，在所有依赖该设备的对象(例如驱动、软件或硬件实体)绑定完成后调用(如果驱动未加载或返回错误，则不会触发该函数)。
@@ -4856,7 +4855,7 @@ struct bus_type {
 其他配置：
 - `need_parent_lock` ：指定在探测或移除设备时，是否需要锁定父设备的互斥量。
 
-##### 16.5.1.1 drv_name ^4d2k0x
+##### 16.5.1.1 bus_type.drv_name ^4d2k0x
 
 该成员并非强制的，例如PCI总线中就未从该成员导入模板，而是用 `dev_set_name` 为设备设置名称时，使用了常量字符串的模板：
 
@@ -4865,7 +4864,17 @@ dev_set_name(&dev->dev, "%04x:%02x:%02x.%d", pci_domain_nr(bus),
 	dev->bus->number, PCI_SLOT(devfn), PCI_FUNC(devfn));
 ```
 
-其具体模板命名规则取决于总线代码实现，上述
+其具体模板命名规则取决于总线代码实现，例如USB通常为：
+
+```C
+dev_set_name(&dev->dev, "usb%d", ...);
+```
+
+##### 16.5.1.2 bus_type.match ^d8ytfa
+
+如上述章节所述，<span style="background:#fff88f"><font color="#c00000">该函数用于匹配设备和驱动程序</font></span>。<font color="#c00000">当一个总线上的新设备或新驱动程序被添加时</font>，<font color="#c00000">内核会一次或多次调用该函数</font>。
+该函数由总线提供，其决定宏观上的正确匹配逻辑。
+
 
 
 ## 17 内存映射和DMA
