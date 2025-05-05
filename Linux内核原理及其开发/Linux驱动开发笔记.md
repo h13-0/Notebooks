@@ -4710,9 +4710,10 @@ enum kobject_action {
 
 #TODO
 
-### 16.5 总线、设备和驱动程序
+### 16.5 总线、设备和驱动程序 ^ygjg2l
 
-
+基本概念：
+- <font color="#9bbb59">总线</font>：
 
 
 
