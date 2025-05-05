@@ -4656,10 +4656,13 @@ int sysfs_create_link(struct kobject *kobj,
 				      struct kobject *target, const char *name);
 ```
 
-### 16.4 热拔插事件的产生
+### 16.4 热拔插
+
+通常来说内核态程序(例如驱动、模块等)均可以调用 `kobject_event` 触发事件，但是
 
 
 
+#### 16.4.1 udev
 
 
 
