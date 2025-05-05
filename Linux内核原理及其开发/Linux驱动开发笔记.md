@@ -4739,7 +4739,6 @@ enum kobject_action {
 - <font color="#c00000">负责设备与驱动匹配</font>：当设备或驱动注册时，总线尝试匹配并绑定二者。
 - 热拔插事件处理：
 
-
 总线的数据结构定义如下，不过通常总线的具体实现对大多数驱动程序开发者并不必要。
 
 ```C
@@ -4829,8 +4828,18 @@ struct bus_type {
 };
 ```
 
-
-
+上述数据结构中：
+- `name` ：总线类型的名称，在 `/sys/bus/` 下显示
+- `dev_name` ：设备命名模板，例如 `usb%u` 
+- `bus_groups` ：总线自身的默认属性组
+- `dev_groups` ：总线下所有设备的默认属性组
+- `drv_groups` ：总线下所有驱动的默认属性组
+- `match` ：<span style="background:#fff88f"><font color="#c00000">设备和驱动匹配的函数逻辑</font></span>，
+- `uevent` ：处理热拔插事件
+- `probe` ：<span style="background:#fff88f"><font color="#c00000">设备探测入口函数</font></span>，
+- `remove` ：
+- `shutdown`
+- `sync_state` 
 
 ## 17 内存映射和DMA
 
