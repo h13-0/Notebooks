@@ -4843,7 +4843,7 @@ struct bus_type {
 核心回调函数成员有：
 - `match` ：<span style="background:#fff88f"><font color="#c00000">设备和驱动匹配的函数逻辑</font></span>，详见：[[Linux驱动开发笔记#^d8ytfa|bus_type.match]]
 - `uevent` ：处理热拔插事件
-- `probe` ：<span style="background:#fff88f"><font color="#c00000">设备探测入口函数</font></span>，当 `match` 成功匹配到设备和驱动后，会调用驱动的 `probe` 函数<font color="#c00000">对设备进行初始化等</font>，详见：[[Linux驱动开发笔记#^y39y0v|bus_type.probe]]
+- `probe` ：<span style="background:#fff88f"><font color="#c00000">设备探测入口函数</font></span>，当 `match` 成功匹配到设备和驱动后，会调用驱动的 `probe` 函数<font color="#c00000">对设备进行初始化等</font>，详见：[[Linux驱动开发笔记#^y39y0v|bus_type.probe]]。
 - `sync_state` ：同步设备状态，在所有依赖该设备的对象(例如驱动、软件或硬件实体)绑定完成后调用(如果驱动未加载或返回错误，则不会触发该函数)。
 - `remove` ：设备移除时调用的函数
 - `shutdown` ：系统关机时调用的函数，用于安全停止设备
@@ -4998,6 +4998,13 @@ static const struct pci_device_id *pci_match_device(struct pci_driver *drv,
 
 
 
+
+
+#### 16.5.2 设备
+
+
+
+#### 16.5.3 设备驱动程序
 
 
 
