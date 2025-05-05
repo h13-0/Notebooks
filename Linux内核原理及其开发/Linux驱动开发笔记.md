@@ -4678,11 +4678,39 @@ int sysfs_create_link(struct kobject *kobj,
 int kobject_uevent(struct kobject *kobj, enum kobject_action action);
 ```
 
-gai j
+该接口触发时需要指定事件类型，属于热拔插事件的有：
+- `KOBJ_ADD`
+- `KOBJ_REMOVE`
+此外，该接口可以触发的其他事件还有：
+
+```C
+/*
+ * The actions here must match the index to the string array
+ * in lib/kobject_uevent.c
+ *
+ * Do not add new actions here without checking with the driver-core
+ * maintainers. Action strings are not meant to express subsystem
+ * or device specific properties. In most cases you want to send a
+ * kobject_uevent_env(kobj, KOBJ_CHANGE, env) with additional event
+ * specific variables added to the event environment.
+ */
+enum kobject_action {
+	KOBJ_ADD,        // 设备首次注册到内核
+	KOBJ_REMOVE,     // 设备从内核注销
+	KOBJ_CHANGE,     // 设备属性或状态变化(如磁盘容量更新、电源状态变更)
+	KOBJ_MOVE,       // 设备路径或名称变更(如设备重命名)
+	KOBJ_ONLINE,     // 设备逻辑上线(如启用离线硬盘)
+	KOBJ_OFFLINE,    // 设备逻辑下线(如禁用硬盘)
+	KOBJ_BIND,       // 设备与驱动绑定(如手动绑定驱动)
+	KOBJ_UNBIND,     // 设备与驱动解绑(如手动卸载驱动)
+};
+```
 
 #### 16.4.2 用户空间设备管理(udev、mdev)
 
+#TODO
 
+### 16.5 总线、设备和驱动程序
 
 
 
