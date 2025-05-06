@@ -5264,13 +5264,21 @@ struct device {
 - `kobj` ：内嵌的 `kobject`，用于管理设备的生命周期、sysfs目录和引用计数。
 - `parent` ：指向父设备，构成设备树层次结构(例如将USB设备挂到USB控制器下)。
 	- 该成员与 `kobj->parent` 的区别点在于：
-		- `kobj->parent` 
+		- `kobj->parent` 用于表示sysfs的层次结构
+		- 本 `parent` 成员用于描述设备的层次关系
+	- <font color="#c00000">在事实上两者通常一致</font>，但是内核允许解耦和，例如：
+		- 虚拟设备或内存设备可能没有物理父设备，但是也不能直接
 - `init_name` ：设备的初始名称，总线和驱动可覆盖此名称
 - `bus` ：设备所属的总线类型，例如 `&platform_bus_type`
-- `driver` ：当前绑定到设备的驱动，
+- `driver` ：当前绑定到设备的驱动，在设备与驱动匹配成功后由总线设置。
 - `type` ：设备的类型
 - `devt` ：设备号
-- `id` ：设备的唯一标识符
+- `id` ：设备的唯一标识符，不同设备类型的ID生成规则不一致，例如：
+	- 平台设备：可以显式指定，或使用 `PLATFORM_DEVID_AUTO` 自动设置
+	- PCI设备：由PCI位置(总线号、设备号、功能号)哈希生成唯一ID
+	- 字符设备、块设备：由设备号转换而来。
+	- ACPI设备：使用ACPI的 `_UID` 方法或固件提供的唯一标识符
+	- 设备树设备：通过节点路径或 `reg` 属性生成
 - `class` ：设备所属的类别，例如 `&input_class` ，用于分类管理
 - `platform_data` ：平台相关的私有数据，
 - `driver_data` ：驱动私有数据，通过 `dev_get_drvdata` 访问
