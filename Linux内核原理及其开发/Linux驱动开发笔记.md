@@ -4974,17 +4974,8 @@ static const struct pci_device_id *pci_match_device(struct pci_driver *drv,
 
 ###### 16.5.1.1.3 bus_type.probe ^y39y0v
 
-当上述 `match` 函数返回非零值时，内核会尝试调用驱动的 `probe` 函数完成设备初始化。
-
-
-
-
-
-
-
-
-
-
+当上述 `match` 函数返回非零值时，内核会尝试调用总线的 `probe` 函数，在总线的 `probe` 函数中，会对设备进行总线层面的配置，并调用驱动对应的 `probe` 函数。
+以PCI总线为例
 
 ```C
 static int pci_device_probe(struct device *dev)
