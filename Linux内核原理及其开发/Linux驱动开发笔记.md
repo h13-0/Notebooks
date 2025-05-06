@@ -4980,6 +4980,11 @@ static const struct pci_device_id *pci_match_device(struct pci_driver *drv,
 
 
 
+
+
+
+
+
 ```C
 static int pci_device_probe(struct device *dev)
 {
@@ -5006,6 +5011,8 @@ static int pci_device_probe(struct device *dev)
 	return error;
 }
 ```
+
+> 有时驱动程序探测顺序很重要，但内核并不总是有依赖关系信息，这意味着在它所依赖的资源可用之前，一些驱动程序会被探测。例如，SDHCI驱动器在初始化之前可能首先需要来自i2c GPIO控制器的GPIO线。如果所需的资源还不可用，驱动程序可以通过从其探测挂钩返回-EPROBE_DEFER来请求推迟探测
 
 
 
