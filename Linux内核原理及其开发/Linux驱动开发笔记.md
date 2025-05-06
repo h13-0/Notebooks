@@ -5041,6 +5041,8 @@ static int pci_device_probe(struct device *dev)
 
 #### 16.5.2 设备
 
+##### 16.5.2.1 设备对象的数据结构
+
 设备的数据结构定义如下：
 
 ```C
@@ -5257,6 +5259,63 @@ struct device {
 #endif
 };
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##### 16.5.2.2 注册设备
+
+Linux提供了多种设备的注册接口，例如：
+
+###### 16.5.2.2.1 注册通用设备
+
+```C
+#include <linux/device.h>
+
+/**
+ * device_register - register a device with the system.
+ * @dev: pointer to the device structure
+ *
+ * This happens in two clean steps - initialize the device
+ * and add it to the system. The two steps can be called
+ * separately, but this is the easiest and most common.
+ * I.e. you should only call the two helpers separately if
+ * have a clearly defined need to use and refcount the device
+ * before it is added to the hierarchy.
+ *
+ * For more information, see the kerneldoc for device_initialize()
+ * and device_add().
+ *
+ * NOTE: _Never_ directly free @dev after calling this function, even
+ * if it returned an error! Always use put_device() to give up the
+ * reference initialized in this function instead.
+ */
+int device_register(struct device *dev);
+```
+
+
+###### 16.5.2.2.2 注册平台设备
+
+
+
+
+
 
 
 
