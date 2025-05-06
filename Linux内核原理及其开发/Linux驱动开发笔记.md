@@ -5267,7 +5267,7 @@ struct device {
 		- `kobj->parent` 用于表示sysfs的层次结构
 		- 本 `parent` 成员用于描述设备的层次关系
 	- <font color="#c00000">在事实上两者通常一致</font>，但是内核允许解耦和，例如：
-		1. <font color="#c00000">虚拟设备</font>(例如 `/dev/null` 或内存设备)<font color="#c00000">可能没有物理父设备</font>,其 `device.parent` 就为NULL。但是在sysfs里也不能直接挂到根目录中，因此其 `device.kobj.parent` 通常设置到 `virtual_device_class` 
+		1. <font color="#c00000">虚拟设备</font>(例如 `/dev/null` 或内存设备)<font color="#c00000">可能没有物理父设备</font>,其 `device.parent` 就为NULL。但是在sysfs里也不能直接挂到根目录中，因此其 `device.kobj.parent` 设置到该类别所属的kobj上，例如内存设备设置到了 `mem_class` 。
 		2. 有时sysfs规范和实际设备关系不符，例如网络设备需要放到 `/sys/class/net` ，但是其设备层次上的父设备是物理总线控制器。
 		3. 还有设备树的层级覆盖等问题。
 - `init_name` ：设备的初始名称，总线和驱动可覆盖此名称
@@ -5282,8 +5282,8 @@ struct device {
 	- ACPI设备：使用ACPI的 `_UID` 方法或固件提供的唯一标识符
 	- 设备树设备：通过节点路径或 `reg` 属性生成
 - `class` ：设备所属的类别，例如 `&input_class` ，用于分类管理
-- `platform_data` ：平台相关的私有数据，
-- `driver_data` ：驱动私有数据，通过 `dev_get_drvdata` 访问
+- `platform_data` ：<font color="#c00000">平台相关的私有数据</font>(即板级代码，即BSP的代码)，例如某一个具体平台的硬件相关数据，例如寄存器、中断号等...
+- `driver_data` ：驱动私有数据，通过 `dev_get_drvdata` 访问。
 - `mutex` ：互斥锁
 - `dma_mask` ：DMA地址掩码，限制设备可访问的物理地址范围
 - `dma_parms` ：DMA参数，用于优化DMA传输
