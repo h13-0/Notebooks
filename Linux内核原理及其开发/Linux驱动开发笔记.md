@@ -5267,7 +5267,7 @@ struct device {
 		- `kobj->parent` 用于表示sysfs的层次结构
 		- 本 `parent` 成员用于描述设备的层次关系
 	- <font color="#c00000">在事实上两者通常一致</font>，但是内核允许解耦和，例如：
-		- 虚拟设备或内存设备可能没有物理父设备，但是也不能直接
+		- 虚拟设备(例如 `/dev/null` 或内存设备)可能没有物理父设备,其 `device.parent` 就为NULL。但是在sysfs里也不能直接挂到根目录中，因此其 `device.kobj.parent` 通常设置到 `virtual_device_class` 
 - `init_name` ：设备的初始名称，总线和驱动可覆盖此名称
 - `bus` ：设备所属的总线类型，例如 `&platform_bus_type`
 - `driver` ：当前绑定到设备的驱动，在设备与驱动匹配成功后由总线设置。
