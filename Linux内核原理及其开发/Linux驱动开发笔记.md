@@ -5261,12 +5261,27 @@ struct device {
 ```
 
 上述数据结构中，其成员：
-- `kobj` ：内嵌的 `kobject`，用于管理设备的生命周期、sysfs目录和引用计数
-- `parent` ：指向父设备，构成设备树层次结构(例如将USB设备挂到USB控制器下)
+- `kobj` ：内嵌的 `kobject`，用于管理设备的生命周期、sysfs目录和引用计数。
+- `parent` ：指向父设备，构成设备树层次结构(例如将USB设备挂到USB控制器下)。
+	- 该成员与 `kobj->parent` 的区别点在于：
+		- `kobj->parent` 
 - `init_name` ：设备的初始名称，总线和驱动可覆盖此名称
 - `bus` ：设备所属的总线类型，例如 `&platform_bus_type`
 - `driver` ：当前绑定到设备的驱动，
-- `type` ：
+- `type` ：设备的类型
+- `devt` ：设备号
+- `id` ：设备的唯一标识符
+- `class` ：设备所属的类别，例如 `&input_class` ，用于分类管理
+- `platform_data` ：平台相关的私有数据，
+- `driver_data` ：驱动私有数据，通过 `dev_get_drvdata` 访问
+- `mutex` ：互斥锁
+- `dma_mask` ：DMA地址掩码，限制设备可访问的物理地址范围
+- `dma_parms` ：DMA参数，用于优化DMA传输
+- `of_node` ：关联的设备树节点
+- `fwnode` ：固件抽象节点，统一处理不同固件源的设备描述
+- `power` ：电源管理状态
+- `pm_domain` ：
+- 
 
 
 ##### 16.5.2.2 设备结构的嵌入
