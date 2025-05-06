@@ -4975,7 +4975,16 @@ static const struct pci_device_id *pci_match_device(struct pci_driver *drv,
 ###### 16.5.1.1.3 bus_type.probe ^y39y0v
 
 当上述 `match` 函数返回非零值时，内核会尝试调用总线的 `probe` 函数，在总线的 `probe` 函数中，会对设备进行总线层面的配置，并调用驱动对应的 `probe` 函数。
-以PCI总线为例
+
+以PCI总线为例，其 `probe` 函数主要有如下流程：
+1. 检查设备是否允许 `probe`
+2. 为设备分配PCI中断号
+3. 管理设备计数
+4. 为设备和驱动执行 `probe` ：
+	1. 检测驱动是否注册了 `probe` 方法
+	2. 再次运行 `pci_match_device` 
+	3. 按照调用栈间接调用驱动提供的 `probe` 方法：
+		`pci_call_probe` -> `local_pci_probe` -> `rc = pci_drv->probe(pci_dev, ddi->id);` 
 
 ```C
 static int pci_device_probe(struct device *dev)
