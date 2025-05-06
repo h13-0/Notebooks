@@ -5313,7 +5313,17 @@ int device_register(struct device *dev);
 ###### 16.5.2.2.2 注册平台设备
 
 
-
+```C
+/**
+ * platform_device_register - add a platform-level device
+ * @pdev: platform device we're adding
+ *
+ * NOTE: _Never_ directly free @pdev after calling this function, even if it
+ * returned an error! Always use platform_device_put() to give up the
+ * reference initialised in this function instead.
+ */
+int platform_device_register(struct platform_device *pdev);
+```
 
 
 
