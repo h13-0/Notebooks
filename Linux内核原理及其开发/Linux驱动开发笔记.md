@@ -5444,6 +5444,8 @@ struct device_driver {
 - `mod_name` ：
 - `suppress_bind_attrs` ：是否允许通过sysfs进行绑定/解绑
 - `of_match_table` ：设备树匹配表，用于声明驱动支持的设备树节点
+- `acpi_match_table` ：
+- `probe`
 
 
 ## 17 内存映射和DMA
