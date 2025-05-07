@@ -5444,7 +5444,7 @@ struct device_driver {
 - `bus` ：指向驱动所属的总线类型，例如 `&platform_bus_type` 、 `&i2c_bus_type` 。在注册后会挂载到总线的驱动列表中。
 - `owner` ：通常指向 `THIS_MODULE` 
 - `mod_name` ：
-- `suppress_bind_attrs` ：是否允许通过sysfs进行绑定/解绑。但该成员<font color="#c00000">仅限制用户手动热拔插操作</font>。
+- `suppress_bind_attrs` ：是否允许通过sysfs进行绑定/解绑。但该成员<font color="#c00000">仅限制用户通过sysfs进行热拔插操作</font>。
 	- 注：
 		1. Linux的设备支持通过 `sysfs` 进行绑定/解绑，例如：
 			- `echo ${device_id} > /sys/bus/.../drivers/${driver}/bind`
@@ -5453,7 +5453,12 @@ struct device_driver {
 			1. 硬件支持热拔插
 			2. 总线实现了热拔插事件通知
 			3. 驱动提供了正确的 `probe` 和 `remove` 方法
-			4. 
+		3. 除了sysfs进行热拔插以外，Linux中还有如下的常见热拔插机制：
+			1. 直接拔，拔完之后总线通知驱动(例如USB)。
+			2. 通过专用接口/方法进行弹出设备，例如：
+				- `nvme ns-rescan /dev/nvme0`
+				- `usbip unbind -b 1-2.3`
+			3. 直接重启需要拔出的设备，例如网卡的 `ip link set dev eth0 down`
 - `of_match_table` ：设备树匹配表，用于声明驱动支持的设备树节点
 - `acpi_match_table` ：
 - `probe` ：
