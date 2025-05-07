@@ -5291,8 +5291,20 @@ struct device {
 - `fwnode` ：固件抽象节点，统一处理不同固件源的设备描述
 - `power` ：电源管理状态
 - `pm_domain` ：
-- 
-
+- `dma_coherent` ：
+- `dma_ops` ：
+- `cma_area` ：
+- `devres_head` ：
+- `release` ：资源释放函数，当该设备的引用计数为0时，内核会调用此方法
+- `links` ：
+- `physical_location` ：
+- `groups` ：
+- `iommu_group` ：
+- `numa_node` ：设备所属的NUMA节点，优化内存访问局部性
+在上述成员中，<span style="background:#fff88f"><font color="#c00000">必须配置的有</font></span>：
+- `parent`
+- `release`
+- `init_name` 
 
 ##### 16.5.2.2 设备结构的嵌入
 
