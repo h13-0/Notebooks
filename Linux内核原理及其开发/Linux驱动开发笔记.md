@@ -5348,8 +5348,7 @@ struct usb_device {
 
 ###### 16.5.2.2.1 平台设备
 
-
-
+与PCI、USB设备不同的是，<font color="#9bbb59">平台设备</font>指的是<font color="#c00000">不通过任何总线</font>，<font color="#c00000">直接连接到处理器的一种设备</font>。
 
 
 
