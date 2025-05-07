@@ -61,4 +61,13 @@ struct platform_device {
 int platform_device_register(struct platform_device *pdev);
 ```
 
+#### 4.1.3 平台设备的驱动匹配机制 ^76yg8m
+
+驱动匹配时机：
+- 当有新设备或新驱动被注册时，平台总线遍历已注册的设备，寻找匹配项。
+
+驱动匹配条件：
+1. 名称匹配方式：
+	- 该方式要求设备对象会在 `platform_device.name` 和驱动对象在 `platform_driver.driver.name` 中声明一致的字符串。
+2. 
 
