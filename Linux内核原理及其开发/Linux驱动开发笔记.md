@@ -5351,10 +5351,12 @@ struct usb_device {
 <font color="#9bbb59">平台设备</font>(<font color="#9bbb59">platform device</font>)，重点在于嵌软层面的"platform"。与PCI、USB设备不同的是，<font color="#9bbb59">平台设备</font>指的是<font color="#c00000">不通过任何总线</font>，<font color="#c00000">直接连接到处理器的一种设备</font>。
 
 平台设备的特性还有：
-1. 通常不具备传统总线的自动枚举能力，需要在内核中静态配置
-2. 
+1. <font color="#c00000">通常不具备</font>传统总线的<font color="#c00000">自动枚举能力</font>，需要在内核中静态配置
+2. <font color="#c00000">资源固定</font>，硬件所需要的资源(内存地址、寄存器、中断)在硬件设计时已确定
+3. 在驱动开发时，其 `device.bus` 指向 `platform_bus_type`
+4. <u>通常</u>依赖设备树进行配置
 
-
+相关使用和API可见：
 
 
 
