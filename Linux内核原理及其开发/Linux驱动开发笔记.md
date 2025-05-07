@@ -5344,11 +5344,15 @@ struct usb_device {
 	- `platform_device_register` 和 `platform_device_unregister`
 等。
 
-在后续字章节中将简单介绍几个常用且重要的延伸高级设备。
+在后续字章节中将<u>简单介绍</u>几个常用且重要的延伸高级设备，详细的讲解可见[[Linux设备模型]]。
 
 ###### 16.5.2.2.1 平台设备
 
-与PCI、USB设备不同的是，<font color="#9bbb59">平台设备</font>指的是<font color="#c00000">不通过任何总线</font>，<font color="#c00000">直接连接到处理器的一种设备</font>。
+<font color="#9bbb59">平台设备</font>(<font color="#9bbb59">platform device</font>)，重点在于嵌软层面的"platform"。与PCI、USB设备不同的是，<font color="#9bbb59">平台设备</font>指的是<font color="#c00000">不通过任何总线</font>，<font color="#c00000">直接连接到处理器的一种设备</font>。
+
+平台设备的特性还有：
+1. 通常不具备传统总线的自动枚举能力，需要在内核中静态配置
+2. 
 
 
 
