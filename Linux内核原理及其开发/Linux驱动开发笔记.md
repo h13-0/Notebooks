@@ -5336,65 +5336,22 @@ struct usb_device {
 }
 ```
 
-而嵌入了
+而嵌入了 `struct device` 的设备对象往往都有其专属的API来代替默认接口，例如：
+- 设备注册和释放接口(`device_register` 和 `device_unregister`)被替代为：
+	- `pci_register_device` 和 `pci_unregister_device`
+	- `usb_register_dev` 和 `usb_deregister_dev`
+	- `i2c_new_device` 和 `i2c_unregister_device`
+	- `platform_device_register` 和 `platform_device_unregister`
+等。
+
+在后续字章节中将简单介绍几个常用且重要的延伸高级设备。
+
+###### 16.5.2.2.1 平台设备
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-##### 16.5.2.3 注册设备
-
-
-###### 16.5.2.3.1 注册通用设备
-
-```C
-#include <linux/device.h>
-
-/**
- * device_register - register a device with the system.
- * @dev: pointer to the device structure
- *
- * This happens in two clean steps - initialize the device
- * and add it to the system. The two steps can be called
- * separately, but this is the easiest and most common.
- * I.e. you should only call the two helpers separately if
- * have a clearly defined need to use and refcount the device
- * before it is added to the hierarchy.
- *
- * For more information, see the kerneldoc for device_initialize()
- * and device_add().
- *
- * NOTE: _Never_ directly free @dev after calling this function, even
- * if it returned an error! Always use put_device() to give up the
- * reference initialized in this function instead.
- */
-int device_register(struct device *dev);
-```
-
-
-###### 16.5.2.3.2 注册平台设备
-
-
-```C
-/**
- * platform_device_register - add a platform-level device
- * @pdev: platform device we're adding
- *
- * NOTE: _Never_ directly free @pdev after calling this function, even if it
- * returned an error! Always use platform_device_put() to give up the
- * reference initialised in this function instead.
- */
-int platform_device_register(struct platform_device *pdev);
-```
 
 
 
