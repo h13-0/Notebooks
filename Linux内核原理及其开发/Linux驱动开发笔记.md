@@ -5315,10 +5315,28 @@ struct device {
 
 ##### 16.5.2.2 高级设备与设备结构的嵌入
 
-如上述数据结构所示， `struct device` 仅仅表示了一个基础的、通用的数据结构。和其他基础结构一样， `struct device` 也经常嵌入高级结构表示高级设备。
+如上述数据结构所示， `struct device` 仅仅表示了一个基础的、通用的数据结构。和其他基础结构一样， `struct device` 也经常嵌入高级结构表示高级设备。例如块设备、PCI设备、USB设备中都要嵌入该设备结构：
 
+```C
+struct block_device {
+	...
+	struct device		bd_device;
+} __randomize_layout;
 
+struct pci_dev {
+	...
+	struct device	dev;			/* Generic device interface */
+	...
+}
 
+struct usb_device {
+	...
+	struct device dev;
+	...
+}
+```
+
+而嵌入了
 
 
 
