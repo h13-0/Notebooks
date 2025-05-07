@@ -16,12 +16,38 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ## 4 设备
 
-### 4.1 平台设备
+### 4.1 平台设备 ^wahyvw
 
-anchor ^wahyvw
+#### 4.1.1 平台设备的数据结构
+
+```C
+struct platform_device {
+	const char	*name;
+	int		id;
+	bool		id_auto;
+	struct device	dev;
+	u64		platform_dma_mask;
+	struct device_dma_parameters dma_parms;
+	u32		num_resources;
+	struct resource	*resource;
+
+	const struct platform_device_id	*id_entry;
+	/*
+	 * Driver name to force a match.  Do not set directly, because core
+	 * frees it.  Use driver_set_override() to set or clear it.
+	 */
+	const char *driver_override;
+
+	/* MFD cell pointer */
+	struct mfd_cell *mfd_cell;
+
+	/* arch specific additions */
+	struct pdev_archdata	archdata;
+};
+```
 
 
-平台设备的注册：
+#### 4.1.2 平台设备的注册
 
 ```C
 /**
