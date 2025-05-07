@@ -5435,13 +5435,15 @@ struct device_driver {
 
 	struct driver_private *p;
 };
-
 ```
 
-
-
-
-
+其成员：
+- `name` ：驱动的名称，会在sysfs( `/sys/bus/.../drivers/` )中进行显示
+- `bus` ：指向驱动所属的总线类型，例如 `&platform_bus_type` 、 `&i2c_bus_type` 。在注册后会挂载到总线的驱动列表中。
+- `owner` ：通常指向 `THIS_MODULE` 
+- `mod_name` ：
+- `suppress_bind_attrs` ：是否允许通过sysfs进行绑定/解绑
+- `of_match_table` ：设备树匹配表，用于声明驱动支持的设备树节点
 
 
 ## 17 内存映射和DMA
