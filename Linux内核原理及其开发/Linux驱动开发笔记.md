@@ -4712,6 +4712,8 @@ enum kobject_action {
 
 ### 16.5 总线、设备和驱动程序 ^ygjg2l
 
+Linux的总线-设备-驱动程序模型是一个复杂的机制，本章节仅做基础概览，详细可见[[Linux设备模型]]。
+
 基本概念：
 - <font color="#9bbb59">总线</font>(bus)：总线是处理器与一个或多个设备之间的通道。其描述了设备如何连接到系统。
 	- 在设备模型中，所有的设备都通过总线相连，且总线之间可以互相插入(例如一个USB控制器通常是一个PCI设备)。
@@ -5438,11 +5440,20 @@ struct device_driver {
 ```
 
 其成员：
-- `name` ：驱动的名称，会在sysfs( `/sys/bus/.../drivers/` )中进行显示。其与 `device_driver.kobj.name` 必须保持一致(但是无须手动为 `kobj.name` 赋值，注册驱动时)。
+- `name` ：驱动的名称，会在sysfs( `/sys/bus/.../drivers/` )中进行显示。其与 `device_driver.kobj.name` 必须保持一致(但是无须手动为 `kobj.name` 赋值，注册驱动时内核自动完成)。
 - `bus` ：指向驱动所属的总线类型，例如 `&platform_bus_type` 、 `&i2c_bus_type` 。在注册后会挂载到总线的驱动列表中。
 - `owner` ：通常指向 `THIS_MODULE` 
 - `mod_name` ：
-- `suppress_bind_attrs` ：是否允许通过sysfs进行绑定/解绑
+- `suppress_bind_attrs` ：是否允许通过sysfs进行绑定/解绑。但该成员<font color="#c00000">仅限制用户手动热拔插操作</font>。
+	- 注：
+		1. Linux的设备支持通过 `sysfs` 进行绑定/解绑，例如：
+			- `echo ${device_id} > /sys/bus/.../drivers/${driver}/bind`
+			- `echo ${device_id} > /sys/bus/.../drivers/${driver}/unbind`
+		2. 设备热拔插功能需要满足如下条件：
+			1. 硬件支持热拔插
+			2. 总线实现了热拔插事件通知
+			3. 驱动提供了正确的 `probe` 和 `remove` 方法
+			4. 
 - `of_match_table` ：设备树匹配表，用于声明驱动支持的设备树节点
 - `acpi_match_table` ：
 - `probe` ：
