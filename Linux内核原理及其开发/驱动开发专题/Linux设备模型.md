@@ -2,23 +2,43 @@
 number headings: auto, first-level 2, max 6, 1.1
 ---
 
-## 1 目录
+## 1 Readme
+
+学习本内容需要至少完成[[Linux驱动开发笔记#^drcdil|Linux驱动开发笔记.Linux设备模型]]的学习。
+
+## 2 目录
 
 ```toc
 ```
 
-## 2 Linux设备模型
+## 3 Linux设备模型
+
+### 3.1 驱动匹配机制
+
+#### 3.1.1 compatible机制 ^1wbp4g
+
+在设备树中，可以通过向节点添加 `compatible` 属性来给出设备支持的驱动列表，例如：
+
+```dts
+uart0: serial@10000000 {
+    compatible = "vendor,uart-2000", "generic-uart";
+    reg = <0x10000000 0x1000>;
+};
+```
 
 
-## 3 总线
 
 
 
-## 4 设备
+## 4 总线
 
-### 4.1 平台设备 ^wahyvw
 
-#### 4.1.1 平台设备的数据结构
+
+## 5 设备
+
+### 5.1 平台设备 ^wahyvw
+
+#### 5.1.1 平台设备的数据结构
 
 ```C
 struct platform_device {
@@ -47,7 +67,7 @@ struct platform_device {
 ```
 
 
-#### 4.1.2 平台设备的注册
+#### 5.1.2 平台设备的注册
 
 ```C
 /**
@@ -61,7 +81,7 @@ struct platform_device {
 int platform_device_register(struct platform_device *pdev);
 ```
 
-#### 4.1.3 平台设备的驱动匹配机制 ^76yg8m
+#### 5.1.3 平台设备的驱动匹配机制 ^76yg8m
 
 驱动匹配时机：
 - 当有新设备或新驱动被注册时，平台总线遍历已注册的设备，寻找匹配项。

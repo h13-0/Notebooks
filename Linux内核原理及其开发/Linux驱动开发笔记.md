@@ -4249,7 +4249,7 @@ PCI的总线拓扑结构如下图所示：
 ## 15 USB驱动程序
 
 
-## 16 Linux设备模型
+## 16 Linux设备模型 ^drcdil
 
 ### 16.1 kobject
 
@@ -5467,8 +5467,8 @@ struct device_driver {
 				- 例如 `.name = "uart0"` 匹配dts中的节点 `uart0`
 			- `char type[32]` ：设备类型，通过设备树节点中的 `device_type` 键值进行匹配。<font color="#c00000">极少使用</font>，通常只用于定义CPU或内存节点。
 				- 例如 `.type = "cpu"`
-			- `char compatible[128]` ：<span style="background:#fff88f"><font color="#c00000">设备兼容性字符串</font></span>，现在最为常用的fa。支持设备和驱动同时选择多个志愿进行匹配。
-			- `const void *data` ：私有数据指针
+			- `char compatible[128]` ：<span style="background:#fff88f"><font color="#c00000">设备兼容性字符串</font></span>，现在最为常用的方式。支持设备和驱动同时选择多个志愿进行匹配。规则详见[[Linux设备模型#^1wbp4g|compatible机制]]。
+			- `const void *data` ：私有数据指针。
 - `acpi_match_table` ：
 - `probe` ：
 - `remove` ：
