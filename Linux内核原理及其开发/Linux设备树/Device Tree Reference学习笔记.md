@@ -330,11 +330,11 @@ CPU的 `compatible` 填写格式也必须为 `<manufacturer>,<model>` ，该值�
 
 注：
 1. 此时该设备树依旧是无效的设备树，其还缺少一些设备之间的连接信息
-2. 每个节点都有 `compatible` 属性，具体可详见章节[[Device Tree Reference学习笔记#2 2 2 compatible属性|compatible属性]]
+2. 每个节点都有 `compatible` 属性，具体可详见章节[[Device Tree Reference学习笔记#^740spc|compatible属性]]
 3. flash节点中 `compatible` 属性有两个字符串
 4. 节点的名称应当反应设备的类型，而非具体的型号。ePAPR 2.2.2章节中已定义通用节点名称的列表。
 
-#### 2.2.2 compatible属性
+#### 2.2.2 compatible属性 ^740spc
 
 compatible属性是<span style="background:#fff88f"><font color="#c00000">操作系统选择设备驱动时使用的key值</font></span>，因此其基本要求为：
 1. 树中每个节点都应当指定compatible属性。
@@ -346,7 +346,10 @@ compatible属性是<span style="background:#fff88f"><font color="#c00000">操作
 		- 注：理论上 `ns16550` 也应当遵守 `<manufacturer>,<model>` 格式，但是由于历史原因没有保留制造商前缀。
 	- 该做法允许将现有设备驱动程序绑定到较新的设备，同时仍唯一标识确切的硬件。
 	- 注：
-		- <span style="background:#fff88f"><font color="#c00000">请勿使用通配兼容型号来实现设备树</font></span>，例如 `"fsl,mpc8349-uart"` 不可写为 `"fsl,mpc83xx-uart"` 。因为即使现在mpc83xx的所有型号都互相兼容，<font color="#c00000">但是不能保证该制造商<u>未来的</u>所有mpc83xx型号依旧会兼容该驱动程序</font>(通常来说，编写设备树的不一定是设备制造商自己。甚至设备制造商自己也无法做到向前兼容，例如如果遇到重大设计问题导致不得不改版等)。
+		- <span style="background:#fff88f"><font color="#c00000">请勿使用通配兼容型号来实现设备树</font></span>，例如 `"fsl,mpc8349-uart"` 不可写为 `"fsl,mpc83xx-uart"` 。因为：
+			1. 即使现在mpc83xx的所有型号都互相兼容，<font color="#c00000">但是不能保证该制造商<u>未来的</u>所有mpc83xx型号依旧会兼容该驱动程序</font>(通常来说，编写设备树的不一定是设备制造商自己。甚至设备制造商自己也无法做到向前兼容，例如如果遇到重大设计问题导致不得不改版等)。
+			2. `compatible` 的匹配规则是字符串完全一致，而非模糊匹配。
+
 <font color="#c00000">在compatible匹配通过后，会执行驱动的probe函数</font>。
 
 ### 2.3 寻址的工作原理
