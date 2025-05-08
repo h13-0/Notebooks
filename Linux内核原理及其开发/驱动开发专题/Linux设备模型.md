@@ -17,6 +17,8 @@ number headings: auto, first-level 2, max 6, 1.1
 
 #### 3.1.1 compatible机制 ^1wbp4g
 
+##### 3.1.1.1 compatible的基本匹配机制
+
 在设备树中，可以通过向节点添加 `compatible` 属性来给出设备支持的驱动列表，例如：
 
 ```dts
@@ -26,9 +28,25 @@ uart0: serial@10000000 {
 };
 ```
 
-而驱动中需要定义 `device_driver.of_match_table[i].compatible` 字段
+而驱动中需要定义 `device_driver.of_match_table[i].compatible` 字段，例如：
+
+```C
+static const struct of_device_id uart_driver_ids[] = {
+    { .compatible = "vendor,uart-2000" },  // 高优先级匹配
+    { .compatible = "generic-uart" },      // 低优先级匹配
+    { /* Sentinel */ }
+};
+```
+
+则<span style="background:#fff88f"><font color="#c00000">当且仅当两个字符串完全一致时</font></span>，驱动得以成功匹配。
+
+例如：
+- 设备：
+- 设备：
+- 
 
 
+[[Device Tree Reference学习笔记#2 2 2 compatible属性|compatible属性]]
 
 ## 4 总线
 
