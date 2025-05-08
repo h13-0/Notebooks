@@ -19,7 +19,13 @@ number headings: auto, first-level 2, max 6, 1.1
 
 
 
-`probe` 之所以被命名为 `probe` 而非 `init` ，是因为其承担了
+
+
+
+
+
+
+`probe` 之所以被命名为 `probe` 而非 `init` ，是因为其承担了远比初始化更复杂的任务。
 
 
 #### 3.1.2 compatible机制 ^1wbp4g
