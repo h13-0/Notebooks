@@ -5459,7 +5459,14 @@ struct device_driver {
 				- `nvme ns-rescan /dev/nvme0`
 				- `usbip unbind -b 1-2.3`
 			3. 直接重启需要拔出的设备，例如网卡的 `ip link set dev eth0 down`
-- `of_match_table` ：设备树匹配表，用于声明驱动支持的设备树节点
+- `of_match_table` ：设备树匹配表(数组)，用于声明驱动支持的设备树节点。
+	- 注：
+		- 数组的最后一个成员的所有key值均为 `0x00` 用于标记结尾。
+		- 数组成员的键值如下：
+			- `char name[32]` ：设备名称，用于早期内核中，设备树节点的 `name` 
+			- `char type[32]` ：
+			- `char compatible[128]` ：<span style="background:#fff88f"><font color="#c00000">设备兼容性字符串</font></span>，
+			- `const void *data` ：私有数据指针
 - `acpi_match_table` ：
 - `probe` ：
 - `remove` ：
