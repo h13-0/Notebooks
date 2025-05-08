@@ -5463,9 +5463,11 @@ struct device_driver {
 	- 注：
 		- 数组的最后一个成员的所有key值均为 `0x00` 用于标记结尾。
 		- 数组成员的键值如下：
-			- `char name[32]` ：设备名称，用于早期内核中，设备树节点的 `name` 
-			- `char type[32]` ：
-			- `char compatible[128]` ：<span style="background:#fff88f"><font color="#c00000">设备兼容性字符串</font></span>，
+			- `char name[32]` ：设备名称，用于早期内核中通过设备树节点的 `name` 进行匹配的方式。现逐渐被弃用。
+				- 例如 `.name = "uart0"` 匹配dts中的节点 `uart0`
+			- `char type[32]` ：设备类型，通过设备树节点中的 `device_type` 键值进行匹配。<font color="#c00000">极少使用</font>，通常只用于定义CPU或内存节点。
+				- 例如 `.type = "cpu"`
+			- `char compatible[128]` ：<span style="background:#fff88f"><font color="#c00000">设备兼容性字符串</font></span>，现在最为常用的fa。支持设备和驱动同时选择多个志愿进行匹配。
 			- `const void *data` ：私有数据指针
 - `acpi_match_table` ：
 - `probe` ：
