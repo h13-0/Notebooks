@@ -26,7 +26,7 @@ uart0: serial@10000000 {
 };
 ```
 
-
+而驱动中需要定义 `device_driver.of_match_table[i].compatible` 字段
 
 
 
