@@ -5469,18 +5469,18 @@ struct device_driver {
 				- 例如 `.type = "cpu"`
 			- `char compatible[128]` ：<span style="background:#fff88f"><font color="#c00000">设备兼容性字符串</font></span>，现在最为常用的方式。支持设备和驱动同时选择多个志愿进行匹配。规则和例子详见[[Linux设备模型#^1wbp4g|compatible机制]]。
 			- `const void *data` ：私有数据指针。
-- `acpi_match_table` ：
-- `probe` ：
-- `remove` ：
-- `shutdown` ：
-- `suspend` 
-- `resume` 
-- `sync_state` 
-- `groups` 
-- `dev_groups` 
-- `pm` 
-- `coredump` 
-- `p` 
+- `acpi_match_table` ：ACPI匹配表，用于ACPI固件设备的匹配(与设备树类似)
+- `probe` ：当总线匹配到设备时调用，<font color="#c00000">负责初始化设备、分配资源、注册操作接口等</font>
+- `remove` ：设备移除或驱动卸载时调用，释放资源、注销设备。
+- `shutdown` ：系统关闭时调用，确保设备安全断电
+- `suspend` ：设备休眠回调
+- `resume` ：设备唤醒回调
+- `sync_state` ：在所有设备状态跟踪组件绑定完成后调用，用于同步硬件与软件状态
+- `groups` ：驱动在sysfs中暴露的属性组。
+- `dev_groups` ：设备的属性组，每个设备独立维护。
+- `pm` ：指向电源管理操作集，其内部记录了众多电源管理函数，例如 `prepare` 、`suspend` 、`resume` 等。
+- `coredump` ：
+- `p` ：
 
 
 ## 17 内存映射和DMA
