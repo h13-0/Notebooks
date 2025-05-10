@@ -41,7 +41,13 @@ Ultralytics版本的YOLO World的主要改进集中于检测头。在[[YOLO#^2jv
 最终结构为：[[YOLO-World Head结构.drawio.svg]]
 ![[YOLO-World Head结构.drawio.svg]]
 
-## 4 可视化实验
+## 4 loss
+
+
+
+
+
+## 5 可视化实验
 
 
 用官方的示例图进行实验：
@@ -58,9 +64,14 @@ Ultralytics版本的YOLO World的主要改进集中于检测头。在[[YOLO#^2jv
 - "people"：
 	- ![[yoloword_people_mix.jpg]]
 
-## 5 Appendix
+## 6 Appendix
 
-### 5.1 开放训练
+### 6.1 开放训练
+
+#### 6.1.1 Ultralytics实现
+
+> [!attention]
+> 截止2025-05-10，Ultralytics中的损失函数计算与原论文不符，其依旧使用传统YOLO的损失函数设计。且训练结果异常。
 
 Ultralytics提供的开放集训练的参考示例为：
 
@@ -88,7 +99,7 @@ model.train(data=data, trainer=WorldTrainerFromScratch)
 - `lvis` 也为普通YOLO类型数据集
 上述数据集可以直接替换为同类型数据集。
 
-#### 5.1.1 训练
+##### 6.1.1.1 训练
 
 在训练开始时， `WorldTrainer` 会按照 `val` 中数据集类型名称进行 `model.set_classes` ：
 
@@ -125,7 +136,7 @@ def on_pretrain_routine_end(trainer):
 			![[Pasted image 20250424102300.png]]
 
 
-### 5.2 封闭集训练
+### 6.2 封闭集训练
 
 观察上述网络结构，不难发现，训练YOLO World只需要在普通的训练脚本前加一行：
 
