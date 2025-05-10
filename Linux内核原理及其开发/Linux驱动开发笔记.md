@@ -5280,7 +5280,7 @@ struct device {
 - `bus` ：设备所属的总线类型，例如 `&platform_bus_type`
 - `driver` ：当前绑定到设备的驱动，在设备与驱动匹配成功后由总线设置。
 - `type` ：设备的类型
-- `devt` ：设备号
+- `devt` ：设备号，<span style="background:#fff88f"><font color="#c00000">总线内唯一</font></span>，总线外没有限制。
 - `id` ：设备的唯一标识符，不同设备类型的ID生成规则不一致，例如：
 	- 平台设备：可以显式指定，或使用 `PLATFORM_DEVID_AUTO` 自动设置
 	- PCI设备：由PCI位置(总线号、设备号、功能号)哈希生成唯一ID
