@@ -68,6 +68,8 @@ Ultralytics版本的YOLO World的主要改进集中于检测头。在[[YOLO#^2jv
 
 ### 4.3 预训练
 
+论文中的预训练即是训练为开放集。
+
 在预训练阶段，作者采用AdamW优化器，初始学习率为0.002，权重衰减为0.05。YOLO-World在32张NVIDIA V100 GPU上预训练100个epoch，总批次大小(batch size)为512。
 
 其训练的数据集包含：
