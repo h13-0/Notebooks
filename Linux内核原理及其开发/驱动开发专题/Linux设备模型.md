@@ -13,9 +13,14 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ## 3 Linux设备模型
 
-### 3.1 驱动匹配机制
+### 3.1 总线
 
-#### 3.1.1 Linux设备的流程及生命周期
+在Linux中
+
+
+### 3.2 驱动匹配机制
+
+#### 3.2.1 Linux设备的流程及生命周期
 
 
 
@@ -28,9 +33,9 @@ number headings: auto, first-level 2, max 6, 1.1
 `probe` 之所以被命名为 `probe` 而非 `init` ，是因为其承担了远比初始化更复杂的任务。
 
 
-#### 3.1.2 compatible机制 ^1wbp4g
+#### 3.2.2 compatible机制 ^1wbp4g
 
-##### 3.1.2.1 compatible的基本匹配机制
+##### 3.2.2.1 compatible的基本匹配机制
 
 在设备树中，可以通过向节点添加 `compatible` 属性来给出设备支持的驱动列表，例如：
 
@@ -60,7 +65,7 @@ static const struct of_device_id uart_driver_ids[] = {
 - 设备：`"manufactuerA, deviceA"` ，驱动：`"manufactuerA,deviceA"` -> <span style="background:#fff88f"><font color="#c00000">无法匹配</font></span>
 
 而compatible属性的基本规定可见[[Device Tree Reference学习笔记#^740spc|compatible属性]]：![[Device Tree Reference学习笔记#2 2 2 compatible属性 740spc]]
-##### 3.1.2.2 匹配的优先级原则
+##### 3.2.2.2 匹配的优先级原则
 
 
 
