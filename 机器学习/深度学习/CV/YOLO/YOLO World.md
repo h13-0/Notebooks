@@ -80,7 +80,6 @@ Ultralytics版本的YOLO World的主要改进集中于检测头。在[[YOLO#^2jv
 
 ## 5 可视化实验
 
-
 用官方的示例图进行实验：
 - 输入texts：`["person", "building", "bus", "tree", "tree with little flowers"]`
 - 输入图像：
