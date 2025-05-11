@@ -246,7 +246,7 @@ $$
 YOLO v8 Head基本结构及部分细节应当参照下图，Obsidian可能无法正常渲染该图，可能需要单独查看[[YOLO v8 Head结构.svg]]：
 ![[YOLO v8 Head结构.svg]]
 
-### 5.3 LOSS
+### 5.3 Loss
 
 YOLO v8的损失函数主要由如下几个部分组成：
 $$
