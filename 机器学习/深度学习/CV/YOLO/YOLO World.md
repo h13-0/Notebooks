@@ -107,11 +107,11 @@ Ultralytics版本的YOLO World的主要改进集中于检测头。在[[YOLO#^2jv
 Ultralytics提供的开放集训练的参考示例为：
 
 ```python
-data = dict(  
-    train=dict(  
+data = dict(
+    train=dict(
         yolo_data=["Objects365.yaml"], #可以改用任意的多类别yolo数据集进行训练
-        grounding_data=[  
-            dict(  
+        grounding_data=[
+            dict(
                 img_path="../datasets/flickr30k/images",  
                 json_file="../datasets/final_flickr_separateGT_train.json",  
             ),  
