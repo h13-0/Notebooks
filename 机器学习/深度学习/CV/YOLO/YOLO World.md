@@ -43,9 +43,6 @@ Ultralytics版本的YOLO World的主要改进集中于检测头。在[[YOLO#^2jv
 
 ## 4 loss&Train
 
-> [!attention]
-> 截止2025-05-10，Ultralytics中的损失函数计算与原论文不符，其依旧使用传统YOLO的损失函数设计。且训练结果异常。故本章节为原论文中的loss设计。
-
 ### 4.1 总损失函数设计
 
 
@@ -101,7 +98,7 @@ Ultralytics版本的YOLO World的主要改进集中于检测头。在[[YOLO#^2jv
 #### 6.1.1 Ultralytics实现
 
 > [!attention]
-> 截止2025-05-10，Ultralytics中的损失函数计算与原论文不符，其依旧使用传统YOLO的损失函数设计。且训练结果异常。
+> Ultralytics中修改了原论文的Vision-Language PAN结构，且训练结果异常。可参考YOLO-E中的Residual结构。
 
 Ultralytics提供的开放集训练的参考示例为：
 
