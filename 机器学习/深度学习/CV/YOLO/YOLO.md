@@ -251,9 +251,16 @@ YOLO v8 Head基本结构及部分细节应当参照下图，Obsidian可能无法
 Detect头输出尺寸为 `list{[batch, reg_max * 4, h, w]}` ，将其转换为BoudingBox后，每个Grid ceil会输出一个目标的预测框，不过该目标不是训练中的class类别，而是物体的边缘与位置回归。
 
 例如：
-1. 下采样倍率为8，Gridceil=80\*80
+1. 下采样倍率为8，共计80x80个Gridceil，每个Gridceil尺寸8像素。
 	![[scale8_52_43.jpg]]
-2. 
+	![[scale8_1_33.jpg]]
+2. 下采样倍率为16，共计40x40个Gridceil，每个Gridceil尺寸16像素。
+	
+3. 下采样倍率为32，共计20x20个Gridceil，每个Gridceil尺寸32像素。
+	![[scale32_7_12.jpg]]
+注：
+- 上述图像中，红框为Gridceil，绿框为预测框
+- 可以明显的观察到，小的Gridceil和大的Gridceil预测框尺寸有明显差异。
 
 ### 5.3 Loss
 
