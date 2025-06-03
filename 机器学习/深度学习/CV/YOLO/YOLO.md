@@ -255,11 +255,12 @@ Detect头输出尺寸为 `list{[batch, reg_max * 4, h, w]}` ，将其转换为Bo
 	![[scale8_52_43.jpg]]
 	![[scale8_1_33.jpg]]
 2. 下采样倍率为16，共计40x40个Gridceil，每个Gridceil尺寸16像素。
-	
-3. 下采样倍率为32，共计20x20个Gridceil，每个Gridceil尺寸32像素。
+	![[scale16_6_1.jpg]]
+	![[scale16_6_23.jpg]]
+4. 下采样倍率为32，共计20x20个Gridceil，每个Gridceil尺寸32像素。
 	![[scale32_7_12.jpg]]
 注：
-- 上述图像中，红框为Gridceil，绿框为预测框
+- 上述图像中，红框为Gridceil，绿框为预测框。
 - 可以明显的观察到，小的Gridceil和大的Gridceil预测框尺寸有明显差异。
 
 ### 5.3 Loss
