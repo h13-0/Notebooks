@@ -285,7 +285,8 @@ $$
 #### 5.3.1 cls损失 ^l1xvd0
 
 在YOLO v8中，cls损失使用的是[[图像分类#^gbazcn|BCEWithLogitsLoss]]损失，在其计算时传入各个尺寸的Grid Cell输出的cls张量和目标cls张量进行计算损失。
+对于默认的网络尺寸，模型输出的cls张量和目标cls张量的尺寸均为 `[batch, 8400, cls]` ，
 
-对于默认的网络尺寸，模型输出的cls张量和目标cls张量的尺寸均为 `[batch, 8400, cls]` 。
 
-
+其需要拟合的target并非是每个Grid Cell中的类别ID，其计算步骤为：
+1. 计算对齐分数：
