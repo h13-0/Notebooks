@@ -270,7 +270,19 @@ $$
 Loss=Focal\ Loss+IoU\ Loss+Objectness\ Loss
 $$
 其中：
-- $Focal\ Loss$：改进了交叉熵损失，解决类别不平衡问题，降低了简单样本的权重，使模型专注于难以分类的样本。
+- $Focal\ Loss$：即[[YOLO#^l1xvd0|cls损失]]。改进了交叉熵损失，解决类别不平衡问题，降低了简单样本的权重，使模型专注于难以分类的样本。
 - $IoU\ Loss$：
 - 
+
+#### 5.3.1 cls损失 ^l1xvd0
+
+在YOLO v8中，cls损失使用的是[[图像分类#^gbazcn|BCEWithLogitsLoss]]损失，在其计算时传入各个尺寸的Grid Cell的cls输出和
+
+
+
+
+
+
+对于默认的网络尺寸，其cls输出的张量尺寸为 `[batch, 8400, cls]` 。 
+
 
