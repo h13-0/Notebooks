@@ -289,4 +289,8 @@ $$
 
 
 其需要拟合的target并非是每个Grid Cell中的类别ID，其计算步骤为：
-1. 计算对齐分数：
+1. 计算对齐分数：$aligned\_metric=s^\alpha\times u^\beta$ 其中：
+	- $s$ 为预测框对真实类别的置信度
+	- $u$ 为预测框与真实框的 $IoU$ 
+	- $\alpha, \beta$ 为超参数，默认值为 $\alpha=0.5, \beta=6.0$
+	- 其含义为当前与预测框的匹配程度
