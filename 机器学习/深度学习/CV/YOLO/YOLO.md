@@ -272,17 +272,20 @@ $$
 其中：
 - $Focal\ Loss$：即[[YOLO#^l1xvd0|cls损失]]。改进了交叉熵损失，解决类别不平衡问题，降低了简单样本的权重，使模型专注于难以分类的样本。
 - $IoU\ Loss$：
-- 
+- $Objectness\ Loss$：
+
+
+正如前文所述，YOLO模型的输出张量为 `list{[batch, reg_max * 4 + cls, h, w]}` 。在实际运算时，该张量会被拆分回两个检测头的原输出：
+- `pred_distri` ：shape为 `[batch, 8400, reg_max * 4]` ，
+- `pred_scores` ：shape为 `[batch, 8400, cls]` ，
+
+
+
 
 #### 5.3.1 cls损失 ^l1xvd0
 
-在YOLO v8中，cls损失使用的是[[图像分类#^gbazcn|BCEWithLogitsLoss]]损失，在其计算时传入各个尺寸的Grid Cell的cls输出和
+在YOLO v8中，cls损失使用的是[[图像分类#^gbazcn|BCEWithLogitsLoss]]损失，在其计算时传入各个尺寸的Grid Cell输出的cls张量和目标cls张量进行计算损失。
 
-
-
-
-
-
-对于默认的网络尺寸，其cls输出的张量尺寸为 `[batch, 8400, cls]` 。 
+对于默认的网络尺寸，模型输出的cls张量和目标cls张量的尺寸均为 `[batch, 8400, cls]` 。
 
 
