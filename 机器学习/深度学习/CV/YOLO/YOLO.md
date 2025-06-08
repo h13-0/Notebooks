@@ -290,6 +290,23 @@ $$
 
 ##### 5.3.1.1 target_score计算逻辑 ^35wd8x
 
+
+对于默认的网络尺寸，模型输出的cls张量和目标cls张量的尺寸均为 `[batch, 8400, cls]` ，
+
+
+其需要拟合的target并非是每个Grid Cell中的类别ID，其计算步骤为：
+1. 计算对齐分数：$aligned\_metric=s^\alpha\times IoU(pred, gt)^\beta$ 其中：
+	- $s$ 为预测框对真实类别的置信度
+	- $\alpha, \beta$ 为超参数，默认值为 $\alpha=0.5, \beta=6.0$
+	- 其含义为当前与预测框的匹配程度
+
+
+#### 5.3.2 分配器耦合流程
+
+在学习本章节时，必须提前学习如下章节：
+- [[YOLO#5 3 1 1 target_score计算逻辑 35wd8x|target_score计算逻辑]]
+
+
 1. 选中<span style="background:#fff88f"><font color="#c00000">所有在真实标注框中的锚点</font></span>(即阳性锚点)，存储到 `mask_in_gts` 中，<font color="#c00000">值为0或1</font>。
 	- `mask_in_gts.shape=[batch, max_box_num, 8400]`
 	- `torch.nonzero(mask_in_gts).shape=[anchor_num, 3]`
@@ -307,22 +324,29 @@ $$
 		4. 选出 `mask_in_gts` 中Grid Cell预测到的bbox，存储于 `pd_boxes`
 		5. 选出 `mask_in_gts` 中Grid Cell<font color="#c00000">标注的</font>bbox，存储于 `pd_boxes` 
 			- 具体步骤为：
-				- 使用 `Torch.expand` 方法将bbox从1拓展到8400(并非复制，是重复引用)
-				- 将 `mask_in_gts` 中每个标注的bbox所包含的anchor对应的cell
-					- 例如：
-						- 
+				- 使用 `Torch.expand` 方法将bbox从1拓展到8400(并非复制，是重复引用)，此时张量形状为 `[batch, max_box_num, 8400, 4]`
+				- 使用 `mask_gt.bool()` 对拓展后的张量进行广播
+				- <font color="#c00000">等效于将</font> `mask_in_gts` <font color="#c00000">中每个标注的bbox复制其所包含的</font> `num(anchor)` <font color="#c00000">次，添加到张量</font> `gt_boxes` 
+					- <span style="background:#fff88f"><font color="#c00000">例如</font></span>：
+						- 第0个标注bbox包含了720个anchor，那么 `gt_boxes` 前720个数据均为对应的bbox的xyxy坐标，坐标值介于 $[0, 640]$
+						- 第1个标注bbox包含了202个anchor，那么 `gt_boxes` 的第721到922个数据均为对应的bbox坐标。
+		6. 计算 `mask_in_gts` 中预测和标注的bbox的IoU，存储到 `overlaps` 。
+			- 对于不在 `mask_in_gts` 中的Cell，IoU=0
+		7. 按照公式 $aligned\_metric=s^\alpha\times IoU(pred, gt)^\beta$ <font color="#c00000">计算每个cell的对齐分数</font>
+			- 其中：
+				- $s$ 为预测框对真实类别的置信度
+				- $\alpha, \beta$ 为超参数，默认值为 $\alpha=0.5, \beta=6.0$
+				- <font color="#c00000">对齐分数的含义为当前与预测框的匹配程度</font>
 3. 
 4. 
-5. `Asigner.get_targets` 获取 `target_bboxes`
-6. `target_scores = target_scores * norm_align_metric`
+5. 
+6. `Asigner.get_targets` 获取 `target_bboxes`
+7. `target_scores = target_scores * norm_align_metric`
 
 注：
 - `max_box_num` 为batch中所有样本的最大标注方框数
 
 
-#### 5.3.2 分配器耦合流程
-
-在学习本章节时，必须
 
 
 
@@ -341,11 +365,3 @@ $$
 
 
 
-对于默认的网络尺寸，模型输出的cls张量和目标cls张量的尺寸均为 `[batch, 8400, cls]` ，
-
-
-其需要拟合的target并非是每个Grid Cell中的类别ID，其计算步骤为：
-1. 计算对齐分数：$aligned\_metric=s^\alpha\times IoU(pred, gt)^\beta$ 其中：
-	- $s$ 为预测框对真实类别的置信度
-	- $\alpha, \beta$ 为超参数，默认值为 $\alpha=0.5, \beta=6.0$
-	- 其含义为当前与预测框的匹配程度
