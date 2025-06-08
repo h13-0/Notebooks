@@ -337,8 +337,14 @@ $$
 				- $s$ 为预测框对真实类别的置信度
 				- $\alpha, \beta$ 为超参数，默认值为 $\alpha=0.5, \beta=6.0$
 				- <font color="#c00000">对齐分数的含义为当前与预测框的匹配程度</font>
-3. 
-4. 
+3. 计算每个真实标注框的 `topk` 个最佳 `align_metric` 对应的cell，存储于 `mask_topk`
+	- `mask_topk.shape=[batch, max_box_num, 8400]` ，值为0或1
+	- 该过程由 `Assigner.select_topk_candidates` 提供
+	- 具体步骤略，主要是从上一步骤的包含处理中选取最佳匹配的cell
+4. 从 `mask_topk` 选取最佳 `n_max_boxes` 个
+	- 该过程由 `Assigner.select_highest_overlaps` 提供。
+	- 具体步骤为：
+		1. 计算每个
 5. 
 6. `Asigner.get_targets` 获取 `target_bboxes`
 7. `target_scores = target_scores * norm_align_metric`
