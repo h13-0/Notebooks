@@ -363,8 +363,9 @@ $$
 			- 在 `num_cls` 的维度上有且仅有一个 `1` (即one-hot编码)
 	- 此时 `target_scores` 张量值为0或1，含义为每个 `target_gt_idx` 对应的cell及其cls的置信度。
 6. 使用 `mask_pos` 筛选匹配程度 `align_metric`
-7. 找到<font color="#c00000">每个cell的</font>筛选后的 `align_metric` 和 `overlap` <font color="#c00000">的最大值</font>，
-8. 使用 `target_scores` 对
+7. 找到<font color="#c00000">每个cell的</font>筛选后的 `align_metric` 和 `overlap` <font color="#c00000">的最大值</font>
+8. 
+9. 使用 `target_scores` 对归一化之后的 `align_metric` 进行筛选，即得最终 `target_score`
 
 注：
 - `max_box_num` 为batch中所有样本的最大标注方框数
