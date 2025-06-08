@@ -341,7 +341,7 @@ $$
 	- `mask_pos.shape=[batch, max_box_num, 8400]` ，值为0或1
 	- 该过程由 `Assigner.select_topk_candidates` 提供
 	- 具体步骤略，主要是从上一步骤的包含处理中选取最佳匹配的cell
-4. 从 `mask_pos` 保留至少 `n_max_boxes` 个最高IoU的方框
+4. 从 `mask_pos` 保留至少 `n_max_boxes` 个最高IoU的方框，存储到`target_gt_idx` 中
 	- 该过程由 `Assigner.select_highest_overlaps` 提供。
 	- 张量值介于 $[0, n\_max\_boxes]$ 。<font color="#7f7f7f">当没有一个cell对应多个标注框的情况时，保留</font> `topk` <font color="#7f7f7f">个bbox</font>
 	- 具体步骤为：
@@ -350,7 +350,7 @@ $$
 			- 修改 `mask_pos` ，只保留多个框中IoU最大的框
 			- 该步骤会使其保留最多 `n_max_boxes` 个方框
 		3. 在上一步处理后，已经确保 `mask_pos` 中每个cell只会对应一个最大IoU的bbox。随后将其bbox引索存储到 `target_gt_idx` 中(值介于 $[0, n\_max\_boxes]$ )
-5. .
+5. 在cls维度生成one-hot编码，并填充到 `target_scores`
 	- 该过程由 `Assigner.get_targets` 提供。
 	- 具体步骤为：
 		1. 将 `target_gt_idx` 中的batch内bbox引索重新编码到<font color="#c00000">全局bbox引索</font>(值介于 $[0, n\_max\_boxes \times batch - 1]$)，使其唯一。
@@ -361,10 +361,10 @@ $$
 		3. 为每个cell生成目标分数(one-hot编码)，存储于 `target_scores`
 			- `target_scores.shape=[batch, 8400, num_cls]` 
 			- 在 `num_cls` 的维度上有且仅有一个 `1` (即one-hot编码)
-		4. 
-6. 
-7. `Asigner.get_targets` 获取 `target_bboxes`
-8. `target_scores = target_scores * norm_align_metric`
+	- 此时 `target_scores` 张量值为0或1，含义为每个 `target_gt_idx` 对应的cell及其cls的置信度。
+6. 使用 `mask_pos` 筛选匹配程度 `align_metric`
+7. 找到<font color="#c00000">每个cell的</font>筛选后的 `align_metric` 和 `overlap` <font color="#c00000">的最大值</font>，
+8. 使用 `target_scores` 对
 
 注：
 - `max_box_num` 为batch中所有样本的最大标注方框数
