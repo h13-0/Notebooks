@@ -341,10 +341,11 @@ $$
 	- `mask_topk.shape=[batch, max_box_num, 8400]` ，值为0或1
 	- 该过程由 `Assigner.select_topk_candidates` 提供
 	- 具体步骤略，主要是从上一步骤的包含处理中选取最佳匹配的cell
-4. 从 `mask_topk` 选取最佳 `n_max_boxes` 个
+4. 从 `mask_topk` 选取IoU最高的 `n_max_boxes` 个
 	- 该过程由 `Assigner.select_highest_overlaps` 提供。
 	- 具体步骤为：
-		1. 计算每个
+		1. 计算每个grid cell中的标注框个数，存储于 `fg_mask` 
+		2. 处理一个cell对应多个标注框的情况
 5. 
 6. `Asigner.get_targets` 获取 `target_bboxes`
 7. `target_scores = target_scores * norm_align_metric`
