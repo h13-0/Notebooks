@@ -337,15 +337,19 @@ $$
 				- $s$ 为预测框对真实类别的置信度
 				- $\alpha, \beta$ 为超参数，默认值为 $\alpha=0.5, \beta=6.0$
 				- <font color="#c00000">对齐分数的含义为当前与预测框的匹配程度</font>
-3. 计算每个真实标注框的 `topk` 个最佳 `align_metric` 对应的cell，存储于 `mask_topk`
-	- `mask_topk.shape=[batch, max_box_num, 8400]` ，值为0或1
+3. 计算每个真实标注框的 `topk` 个最佳 `align_metric` 对应的cell，存储于 `mask_pos`
+	- `mask_pos.shape=[batch, max_box_num, 8400]` ，值为0或1
 	- 该过程由 `Assigner.select_topk_candidates` 提供
 	- 具体步骤略，主要是从上一步骤的包含处理中选取最佳匹配的cell
-4. 从 `mask_topk` 选取IoU最高的 `n_max_boxes` 个
+4. 从 `mask_pos` 保留至少 `n_max_boxes` 个最高IoU的方框
 	- 该过程由 `Assigner.select_highest_overlaps` 提供。
+	- ，值介于 $[0, n\_max\_boxes]$ 
 	- 具体步骤为：
 		1. 计算每个grid cell中的标注框个数，存储于 `fg_mask` 
-		2. 处理一个cell对应多个标注框的情况
+		2. 处理一个cell对应多个标注框的情况：
+			- 修改 `mask_pos` ，只保留多个框中IoU最大的框
+			- 该步骤会使其保留最多 `n_max_boxes` 个方框
+		3. 在上一步处理后，已经确保 `mask_pos` 中每个cell只会对应一个最大IoU的bbox。随后将其bbox引索存储到 `target_gt_idx` 中(值介于 $[0, n\_max\_boxes]$ )
 5. 
 6. `Asigner.get_targets` 获取 `target_bboxes`
 7. `target_scores = target_scores * norm_align_metric`
