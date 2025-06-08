@@ -343,16 +343,24 @@ $$
 	- 具体步骤略，主要是从上一步骤的包含处理中选取最佳匹配的cell
 4. 从 `mask_pos` 保留至少 `n_max_boxes` 个最高IoU的方框
 	- 该过程由 `Assigner.select_highest_overlaps` 提供。
-	- ，值介于 $[0, n\_max\_boxes]$ 
+	- 张量值介于 $[0, n\_max\_boxes]$ 。<font color="#7f7f7f">当没有一个cell对应多个标注框的情况时，保留</font> `topk` <font color="#7f7f7f">个bbox</font>
 	- 具体步骤为：
 		1. 计算每个grid cell中的标注框个数，存储于 `fg_mask` 
 		2. 处理一个cell对应多个标注框的情况：
 			- 修改 `mask_pos` ，只保留多个框中IoU最大的框
 			- 该步骤会使其保留最多 `n_max_boxes` 个方框
 		3. 在上一步处理后，已经确保 `mask_pos` 中每个cell只会对应一个最大IoU的bbox。随后将其bbox引索存储到 `target_gt_idx` 中(值介于 $[0, n\_max\_boxes]$ )
-5. 
-6. `Asigner.get_targets` 获取 `target_bboxes`
-7. `target_scores = target_scores * norm_align_metric`
+5. .
+	- 该过程由 `Assigner.get_targets` 提供。
+	- 具体步骤为：
+		1. 将 `target_gt_idx` 中的batch内bbox引索重新编码到全局bbox引索(值介于 $[0, n\_max\_boxes \times batch - 1]$)，使其唯一。
+			- 重新编码后的 `target_gt_idx` 必须使用 `fg_mask` 进行访问，因为原先背景cell的引索为0，重新编码后不为0。
+			- 虽然重新编码前也必须使用 `fg_mask` 进行访问。
+		2. 使用 `target_gt_idx` 广播得到每个cell对应的 `target_labels` 
+		3. 
+6. 
+7. `Asigner.get_targets` 获取 `target_bboxes`
+8. `target_scores = target_scores * norm_align_metric`
 
 注：
 - `max_box_num` 为batch中所有样本的最大标注方框数
