@@ -353,11 +353,15 @@ $$
 5. .
 	- 该过程由 `Assigner.get_targets` 提供。
 	- 具体步骤为：
-		1. 将 `target_gt_idx` 中的batch内bbox引索重新编码到全局bbox引索(值介于 $[0, n\_max\_boxes \times batch - 1]$)，使其唯一。
+		1. 将 `target_gt_idx` 中的batch内bbox引索重新编码到<font color="#c00000">全局bbox引索</font>(值介于 $[0, n\_max\_boxes \times batch - 1]$)，使其唯一。
 			- 重新编码后的 `target_gt_idx` 必须使用 `fg_mask` 进行访问，因为原先背景cell的引索为0，重新编码后不为0。
 			- 虽然重新编码前也必须使用 `fg_mask` 进行访问。
+			- 后续主要利用 `tensor.view` 操作和全局bbox索引进行广播操作。
 		2. 使用 `target_gt_idx` 广播得到每个cell对应的 `target_labels` 
-		3. 
+		3. 为每个cell生成目标分数(one-hot编码)，存储于 `target_scores`
+			- `target_scores.shape=[batch, 8400, num_cls]` 
+			- 在 `num_cls` 的维度上有且仅有一个 `1` (即one-hot编码)
+		4. 
 6. 
 7. `Asigner.get_targets` 获取 `target_bboxes`
 8. `target_scores = target_scores * norm_align_metric`
