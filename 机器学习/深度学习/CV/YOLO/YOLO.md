@@ -305,7 +305,12 @@ $$
 			- `bbox_scores.shape=[batch, max_box_num, 8400]` 
 			- 不在 `mask_in_gts` 中的Grid Cell的真实cls对应分类分数为0
 		4. 选出 `mask_in_gts` 中Grid Cell预测到的bbox，存储于 `pd_boxes`
-		5. 选出 `mask_in_gts` 中Grid Cell预测到的bbox，存储于 `pd_boxes`
+		5. 选出 `mask_in_gts` 中Grid Cell<font color="#c00000">标注的</font>bbox，存储于 `pd_boxes` 
+			- 具体步骤为：
+				- 使用 `Torch.expand` 方法将bbox从1拓展到8400(并非复制，是重复引用)
+				- 将 `mask_in_gts` 中每个标注的bbox所包含的anchor对应的cell
+					- 例如：
+						- 
 3. 
 4. 
 5. `Asigner.get_targets` 获取 `target_bboxes`
