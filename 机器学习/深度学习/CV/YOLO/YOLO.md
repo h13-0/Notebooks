@@ -285,6 +285,39 @@ $$
 #### 5.3.1 cls损失 ^l1xvd0
 
 在YOLO v8中，cls损失使用的是[[图像分类#^gbazcn|BCEWithLogitsLoss]]损失，在其计算时传入各个尺寸的Grid Cell输出的cls张量和目标cls张量进行计算损失。
+
+在YOLO v8中，该cls的损失并非直接和one hot编码的cls做对比，而是有着极为复杂的分配逻辑。对于cls损失，其只需要关心每个grid cell的目标分数输出 `target_scores` 即可。
+
+##### 5.3.1.1 target_score计算逻辑 ^35wd8x
+
+1. 从标注框中
+	- 
+	- 该过程由 `Assigner.get_pos_mask` 提供。
+2. `Asigner.get_targets` 获取 `target_bboxes`
+3. `target_scores = target_scores * norm_align_metric`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 对于默认的网络尺寸，模型输出的cls张量和目标cls张量的尺寸均为 `[batch, 8400, cls]` ，
 
 
