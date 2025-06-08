@@ -290,13 +290,22 @@ $$
 
 ##### 5.3.1.1 target_score计算逻辑 ^35wd8x
 
-1. 从标注框中
-	- 
-	- 该过程由 `Assigner.get_pos_mask` 提供。
-2. `Asigner.get_targets` 获取 `target_bboxes`
-3. `target_scores = target_scores * norm_align_metric`
+1. 选中<font color="#c00000">所有在真实标注框中的锚点</font>，存储到 `mask_in_gts` 中，值为0或1。
+	- `mask_in_gts.shape=[batch, max_box_num, 8400]`
+	- 该过程由 `Assigner.get_pos_mask` 提供
+2. 计算对齐分数 `align_metric` 和IoU `overlaps` 
+	- 该过程由 `Assigner.get_box_metrics` 提供
+	- 具体步骤为：
+		1. 构造 `ind[0].shape=[batch, max_box_num]=[4, 8]` ，值为batch的index
+		![[pycharm64_lNpFFzKm2E.png]]
+		2. 构造 `ind[1].shape=[batch, max_box_num]` ，值为
+3. 
+4. 
+5. `Asigner.get_targets` 获取 `target_bboxes`
+6. `target_scores = target_scores * norm_align_metric`
 
-
+注：
+- `max_box_num` 为batch中所有样本的最大标注方框数
 
 
 #### 5.3.2 分配器耦合流程
