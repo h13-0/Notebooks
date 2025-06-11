@@ -306,7 +306,6 @@ $$
 在学习本章节时，必须提前学习如下章节：
 - [[YOLO#5 3 1 1 target_score计算逻辑 35wd8x|target_score计算逻辑]]
 
-
 1. 选中<span style="background:#fff88f"><font color="#c00000">所有在真实标注框中的锚点</font></span>(即阳性锚点)，存储到 `mask_in_gts` 中，<font color="#c00000">值为0或1</font>。
 	- `mask_in_gts.shape=[batch, max_box_num, 8400]`
 	- `torch.nonzero(mask_in_gts).shape=[anchor_num, 3]`
