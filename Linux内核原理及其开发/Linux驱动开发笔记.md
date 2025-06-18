@@ -5281,7 +5281,15 @@ struct device {
 ```
 
 上述数据结构中，其成员：
-- `kobj` ：内嵌的 `kobject`，用于管理设备的生命周期、sysfs目录和引用计数。
+- `struct kobject kobj` ：
+	- 功能含义：内嵌的 `kobject` 提供sysfs表示、引用计数器等核心内核对象特性
+	- 维护方：
+- `struct device *parent` ：
+	- 功能含义：
+- 
+- 
+- 
+- 内嵌的 `kobject`，用于管理设备的生命周期、sysfs目录和引用计数。
 - `parent` ：指向父设备，构成设备树层次结构(例如将USB设备挂到USB控制器下)。
 	- 该成员在部分总线下是自动生成的，在部分总线下是可以手动指定的。
 	- 该成员与 `kobj->parent` 的区别点在于：
