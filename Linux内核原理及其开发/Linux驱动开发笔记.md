@@ -5311,13 +5311,37 @@ struct device {
 	- 功能含义：当前设备绑定的驱动
 	- 维护方：总线自动配置，驱动只读访问
 - `void *platform_data` ：
+	- 功能含义：<font color="#c00000">平台相关的私有数据</font>(即板级代码，即BSP的代码)，例如某一个具体平台的硬件相关数据，例如寄存器、中断号等...
+	- 维护方：驱动可选设置
+- `void *driver_data` ：
+	- 功能含义：驱动私有数据
+		- 可通过 `dev_get_drvdata` 接口访问
+	- 维护方：驱动可选设置和维护
+- `struct mutex mutex` ：
+	- 功能含义：设备操作互斥锁
+	- 维护方：驱动按需设置
+- `struct dev_links_info links` 
+- `struct dev_pm_info power` ：
+	- 功能含义：电源管理状态
+- `struct dev_pm_domain *pm_domain` ：
+	- 
+- `struct em_perf_domain *em_pd` ：
 	- 功能含义：
+- `struct dev_pin_info *pins` ：
+- `struct dev_msi_info msi` ：
+- `const struct dma_map_ops *dma_ops` ：
+- `u64 *dma_mask` ：
+	- 功能含义：DMA地址掩码，限制设备可访问的物理地址范围
+- `u64 coherent_dma_mask` ：
+- `u64 bus_dma_limit`
+- `const struct bus_dma_region *dma_range_map` ：
+- 
 
 
 
 
 - `bus` ：设备所属的总线类型，例如 `&platform_bus_type`
-- `driver` ：当前绑定到设备的驱动，在设备与驱动匹配成功后由总线设置。
+
 - `type` ：设备的类型
 - `devt` ：设备号，<font color="#c00000">仅当需要暴露字符设备接口或块设备接口时才需要配置</font>。
 - `id` ：设备的唯一标识符，不同设备类型的ID生成规则不一致，例如：
@@ -5327,10 +5351,6 @@ struct device {
 	- ACPI设备：使用ACPI的 `_UID` 方法或固件提供的唯一标识符
 	- 设备树设备：通过节点路径或 `reg` 属性生成
 - `class` ：设备所属的类别，例如 `&input_class` ，用于分类管理
-- `platform_data` ：<font color="#c00000">平台相关的私有数据</font>(即板级代码，即BSP的代码)，例如某一个具体平台的硬件相关数据，例如寄存器、中断号等...
-- `driver_data` ：驱动私有数据，通过 `dev_get_drvdata` 访问。
-- `mutex` ：互斥锁
-- `dma_mask` ：DMA地址掩码，限制设备可访问的物理地址范围
 - `dma_parms` ：DMA参数，用于优化DMA传输
 - `of_node` ：关联的设备树节点
 - `fwnode` ：固件抽象节点，统一处理不同固件源的设备描述
@@ -5349,7 +5369,6 @@ struct device {
 在上述成员中，<span style="background:#fff88f"><font color="#c00000">必须配置的有</font></span>：
 - `parent`
 - `release`
-- `init_name` 
 在特定总线中需要配置的有：
 
 - `class`
