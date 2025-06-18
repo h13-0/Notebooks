@@ -5285,21 +5285,37 @@ struct device {
 	- 功能含义：内嵌的 `kobject` 提供sysfs表示、引用计数器等核心内核对象特性
 	- 维护方：
 - `struct device *parent` ：
+	- 功能含义：指向父设备(通常是总线/主机控制器)，构成设备树层次结构(例如将USB设备挂到USB控制器下)。
+		- 该成员在部分总线下是自动生成的，在部分总线下是可以手动指定的。
+		- 该成员与 `kobj->parent` 的区别点在于：
+			 - `kobj->parent` 用于表示sysfs的层次结构
+			 - 本 `parent` 成员用于描述设备的层次关系
+		- <font color="#c00000">在事实上两者通常一致</font>，但是内核允许解耦和，例如：
+			 1. <font color="#c00000">虚拟设备</font>(例如 `/dev/null` 或内存设备)<font color="#c00000">可能没有物理父设备</font>,其 `device.parent` 就为NULL。但是在sysfs里也不能直接挂到根目录中，因此其 `device.kobj.parent` 设置到该类别所属的kobj上，例如内存设备设置到了 `mem_class` 。
+			 2. 有时sysfs规范和实际设备关系不符，例如网络设备需要放到 `/sys/class/net` ，但是其设备层次上的父设备是物理总线控制器。
+			 3. 还有设备树的层级覆盖等问题。
+	- 维护方：<font color="#c00000">驱动必须在注册前设置</font>
+- `struct device_private *p` ：
+	- 功能含义：驱动私有数据
+	- 维护方：驱动可选设置和维护
+- `const char *init_name` ：
+	- 功能含义：设备的初始名称，总线和驱动可覆盖此名称
+	- 维护方：驱动可选设置
+- `const struct device_type *type` ：
+	- 功能含义：设备的特定类型信息
+	- 维护方：驱动可选设置
+- `const struct bus_type *bus` ：
+	- 功能含义：设备所属的总线类型
+	- 维护方：<font color="#c00000">驱动必须设置</font>
+- `struct device_driver *driver` ：
+	- 功能含义：当前设备绑定的驱动
+	- 维护方：总线自动配置，驱动只读访问
+- `void *platform_data` ：
 	- 功能含义：
-- 
-- 
-- 
-- 内嵌的 `kobject`，用于管理设备的生命周期、sysfs目录和引用计数。
-- `parent` ：指向父设备，构成设备树层次结构(例如将USB设备挂到USB控制器下)。
-	- 该成员在部分总线下是自动生成的，在部分总线下是可以手动指定的。
-	- 该成员与 `kobj->parent` 的区别点在于：
-		- `kobj->parent` 用于表示sysfs的层次结构
-		- 本 `parent` 成员用于描述设备的层次关系
-	- <font color="#c00000">在事实上两者通常一致</font>，但是内核允许解耦和，例如：
-		1. <font color="#c00000">虚拟设备</font>(例如 `/dev/null` 或内存设备)<font color="#c00000">可能没有物理父设备</font>,其 `device.parent` 就为NULL。但是在sysfs里也不能直接挂到根目录中，因此其 `device.kobj.parent` 设置到该类别所属的kobj上，例如内存设备设置到了 `mem_class` 。
-		2. 有时sysfs规范和实际设备关系不符，例如网络设备需要放到 `/sys/class/net` ，但是其设备层次上的父设备是物理总线控制器。
-		3. 还有设备树的层级覆盖等问题。
-- `init_name` ：设备的初始名称，总线和驱动可覆盖此名称
+
+
+
+
 - `bus` ：设备所属的总线类型，例如 `&platform_bus_type`
 - `driver` ：当前绑定到设备的驱动，在设备与驱动匹配成功后由总线设置。
 - `type` ：设备的类型
@@ -5335,7 +5351,7 @@ struct device {
 - `release`
 - `init_name` 
 在特定总线中需要配置的有：
-- `bus`
+
 - `class`
 
 ##### 16.5.2.2 高级设备与设备结构的嵌入
