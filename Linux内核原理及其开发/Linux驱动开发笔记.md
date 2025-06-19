@@ -5371,7 +5371,7 @@ struct device {
 	- 功能含义：设备所属的类别，例如 `&input_class` ，用于分类管理
 - `const struct attribute_group **groups`
 - `void (*release)(struct device *dev)` ：
-	- 功能含义：资源释放函数，当该设备的引用计数为0时，内核会调用此方法
+	- 功能含义：资源释放函数，<font color="#c00000"><u>当该设备的引用计数为0时</u></font>，内核会调用此方法
 	- 维护方：<font color="#c00000">内核必须实现</font>
 - `struct iommu_group *iommu_group`
 - `struct dev_iommu *iommu`
