@@ -5283,7 +5283,7 @@ struct device {
 上述数据结构中，其成员：
 - `struct kobject kobj` ：
 	- 功能含义：内嵌的 `kobject` 提供sysfs表示、引用计数器等核心内核对象特性
-	- 维护方：
+	- 维护方：Linux设备模型自动维护，驱动不应直接操作
 - `struct device *parent` ：
 	- 功能含义：指向父设备(通常是总线/主机控制器)，构成设备树层次结构(例如将USB设备挂到USB控制器下)。
 		- 该成员在部分总线下是自动生成的，在部分总线下是可以手动指定的。
@@ -5302,8 +5302,9 @@ struct device {
 	- 功能含义：设备的初始名称，总线和驱动可覆盖此名称
 	- 维护方：驱动可选设置
 - `const struct device_type *type` ：
-	- 功能含义：设备的特定类型信息，例如PCI桥、USB控制器等
-	- 维护方：驱动可选设置
+	- 功能含义：设备的特定类型信息，例如PCI设备( `pci_dev_type` )、蓝牙主机( `bt_host` )等，通常在总线实现中定义与配置。
+	- 维护方：
+		- 标准总线设备通常由总线进行配置(最常见，例如PCI、USB、Plat
 - `const struct bus_type *bus` ：
 	- 功能含义：设备所属的总线类型，例如`&platform_bus_type`
 	- 维护方：<font color="#c00000">驱动必须设置</font>
@@ -5335,7 +5336,8 @@ struct device {
 - `u64 coherent_dma_mask` ：
 - `u64 bus_dma_limit`
 - `const struct bus_dma_region *dma_range_map` ：
-- `struct device_dma_parameters *dma_parms`
+- `struct device_dma_parameters *dma_parms` ：
+	- 功能含义：DMA参数，用于优化DMA传输
 - `struct list_head dma_pools`
 - `struct dma_coherent_mem *dma_mem`
 - `struct cma *cma_area`
@@ -5344,9 +5346,12 @@ struct device {
 - `spinlock_t dma_io_tlb_lock`
 - `bool dma_uses_io_tlb`
 - `struct dev_archdata archdata`
-- `struct device_node *of_node`
-- `struct fwnode_handle *fwnode`
-- `int numa_node`
+- `struct device_node *of_node` ：
+	- 功能含义：关联的设备树节点
+- `struct fwnode_handle *fwnode` ：
+	- 功能含义：固件抽象节点，统一处理不同固件源的设备描述
+- `int numa_node` ：
+	- 功能含义：设备所属的NUMA节点，优化内存访问局部性
 - `dev_t devt` ：
 	- 功能含义：设备号
 	- 维护方：<font color="#c00000">仅当需要暴露字符设备接口或块设备接口时才需要配置</font>。
@@ -5363,7 +5368,9 @@ struct device {
 - `const struct class *class`
 	- 功能含义：设备所属的类别，例如 `&input_class` ，用于分类管理
 - `const struct attribute_group **groups`
-- `void (*release)(struct device *dev)`
+- `void (*release)(struct device *dev)` ：
+	- 功能含义：资源释放函数，当该设备的引用计数为0时，内核会调用此方法
+	- 维护方：<font color="#c00000">内核必须实现</font>
 - `struct iommu_group *iommu_group`
 - `struct dev_iommu *iommu`
 - `struct device_physical_location *physical_location`
@@ -5378,30 +5385,6 @@ struct device {
 - `bool dma_skip_sync:1`
 - `bool dma_iommu:1`
 
-
-- `type` ：设备的类型
-
-- `dma_parms` ：DMA参数，用于优化DMA传输
-- `of_node` ：关联的设备树节点
-- `fwnode` ：固件抽象节点，统一处理不同固件源的设备描述
-- `power` ：电源管理状态
-- `pm_domain` ：
-- `dma_coherent` ：
-- `dma_ops` ：
-- `cma_area` ：
-- `devres_head` ：
-- `release` ：资源释放函数，当该设备的引用计数为0时，内核会调用此方法
-- `links` ：
-- `physical_location` ：
-- `groups` ：
-- `iommu_group` ：
-- `numa_node` ：设备所属的NUMA节点，优化内存访问局部性
-在上述成员中，<span style="background:#fff88f"><font color="#c00000">必须配置的有</font></span>：
-- `parent`
-- `release`
-在特定总线中需要配置的有：
-
-- `class`
 
 ##### 16.5.2.2 高级设备与设备结构的嵌入
 
