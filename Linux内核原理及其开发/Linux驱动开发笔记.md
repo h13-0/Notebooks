@@ -5269,7 +5269,7 @@ struct device {
 	bool			dma_coherent:1;
 #endif
 #ifdef CONFIG_DMA_OPS_BYPASS
-	bool			dma_ops_bypass : 1;
+	bool			dma_ops_bypass:1;
 #endif
 #ifdef CONFIG_DMA_NEED_SYNC
 	bool			dma_skip_sync:1;
@@ -5302,10 +5302,10 @@ struct device {
 	- 功能含义：设备的初始名称，总线和驱动可覆盖此名称
 	- 维护方：驱动可选设置
 - `const struct device_type *type` ：
-	- 功能含义：设备的特定类型信息
+	- 功能含义：设备的特定类型信息，例如PCI桥、USB控制器等
 	- 维护方：驱动可选设置
 - `const struct bus_type *bus` ：
-	- 功能含义：设备所属的总线类型
+	- 功能含义：设备所属的总线类型，例如`&platform_bus_type`
 	- 维护方：<font color="#c00000">驱动必须设置</font>
 - `struct device_driver *driver` ：
 	- 功能含义：当前设备绑定的驱动
@@ -5361,23 +5361,26 @@ struct device {
 - `spinlock_t devres_lock`
 - `struct list_head devres_head`
 - `const struct class *class`
+	- 功能含义：设备所属的类别，例如 `&input_class` ，用于分类管理
 - `const struct attribute_group **groups`
 - `void (*release)(struct device *dev)`
 - `struct iommu_group *iommu_group`
 - `struct dev_iommu *iommu`
 - `struct device_physical_location *physical_location`
 - `enum device_removable removable`
+- `bool offline_disabled:1`
+- `bool offline:1`
+- `bool of_node_reused:1`
+- `bool state_synced:1`
+- `bool can_match:1`
+- `bool dma_coherent:1`
+- `bool dma_ops_bypass:1`
+- `bool dma_skip_sync:1`
+- `bool dma_iommu:1`
 
-
-
-
-
-
-- `bus` ：设备所属的总线类型，例如
 
 - `type` ：设备的类型
 
-- `class` ：设备所属的类别，例如 `&input_class` ，用于分类管理
 - `dma_parms` ：DMA参数，用于优化DMA传输
 - `of_node` ：关联的设备树节点
 - `fwnode` ：固件抽象节点，统一处理不同固件源的设备描述
