@@ -5304,7 +5304,9 @@ struct device {
 - `const struct device_type *type` ：
 	- 功能含义：设备的特定类型信息，例如PCI设备( `pci_dev_type` )、蓝牙主机( `bt_host` )等，通常在总线实现中定义与配置。
 	- 维护方：
-		- 标准总线设备通常由总线进行配置(最常见，例如PCI、USB、Plat
+		- <font color="#c00000">标准总线设备通常由总线进行配置</font>(最常见，例如PCI、USB、Platfrom等)
+		- 设备树或ACPI定义的硬件往往由设备树描述或固件配置
+		- 特殊设备可在设备驱动程序的 `probe` 函数中配置
 - `const struct bus_type *bus` ：
 	- 功能含义：设备所属的总线类型，例如`&platform_bus_type`
 	- 维护方：<font color="#c00000">驱动必须设置</font>
@@ -5384,7 +5386,6 @@ struct device {
 - `bool dma_ops_bypass:1`
 - `bool dma_skip_sync:1`
 - `bool dma_iommu:1`
-
 
 ##### 16.5.2.2 高级设备与设备结构的嵌入
 
