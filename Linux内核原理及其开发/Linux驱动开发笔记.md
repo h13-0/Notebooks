@@ -5335,8 +5335,18 @@ struct device {
 - `u64 coherent_dma_mask` ：
 - `u64 bus_dma_limit`
 - `const struct bus_dma_region *dma_range_map` ：
-- 
-
+- `struct device_dma_parameters *dma_parms`
+- `struct list_head dma_pools`
+- `struct dma_coherent_mem *dma_mem`
+- `struct cma *cma_area`
+- `struct io_tlb_mem *dma_io_tlb_mem`
+- `struct list_head dma_io_tlb_pools`
+- `spinlock_t dma_io_tlb_lock`
+- `bool dma_uses_io_tlb`
+- `struct dev_archdata archdata`
+- `struct device_node *of_node`
+- `struct fwnode_handle *fwnode`
+- `int numa_node`
 - `dev_t devt` ：
 	- 功能含义：设备号
 	- 维护方：<font color="#c00000">仅当需要暴露字符设备接口或块设备接口时才需要配置</font>。
@@ -5348,10 +5358,22 @@ struct device {
 		- ACPI设备：使用ACPI的 `_UID` 方法或固件提供的唯一标识符
 		- 设备树设备：通过节点路径或 `reg` 属性生成
 	- 维护方：
+- `spinlock_t devres_lock`
+- `struct list_head devres_head`
+- `const struct class *class`
+- `const struct attribute_group **groups`
+- `void (*release)(struct device *dev)`
+- `struct iommu_group *iommu_group`
+- `struct dev_iommu *iommu`
+- `struct device_physical_location *physical_location`
+- `enum device_removable removable`
 
 
 
-- `bus` ：设备所属的总线类型，例如 `&platform_bus_type`
+
+
+
+- `bus` ：设备所属的总线类型，例如
 
 - `type` ：设备的类型
 
