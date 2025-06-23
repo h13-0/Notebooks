@@ -265,11 +265,14 @@ STL容器主要有如下三类：
 | --- | --- | --- |
 |     |     |     |
 
-#### 4.1.3 std::unordered_map(哈希表)
+#### 4.1.3 std::unordered_map
 
-``
+`std::unordered_map` <font color="#c00000">基于哈希表实现</font>，内部元素无序存储。
 
 ##### 4.1.3.1 构造函数
+
+
+
 
 
 
