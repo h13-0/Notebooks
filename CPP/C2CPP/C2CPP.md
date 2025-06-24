@@ -272,7 +272,13 @@ STL容器主要有如下三类：
 ##### 4.1.3.1 构造函数
 
 ```CPP
-
+template<
+  class Key,
+  class T,
+  class Hash = std::hash<Key>,
+  class KeyEqual = std::equal_to<Key>,
+  class Allocator = std::allocator<std::pair<const Key, T>>
+> class unordered_map;
 ```
 
 
