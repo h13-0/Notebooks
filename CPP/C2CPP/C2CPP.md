@@ -188,6 +188,13 @@ comp1.operator==(comp2);
 
 <span style="background:#fff88f"><font color="#c00000">需要注意的是，函数重载的方式不同，其对应的显示调用方式也不同。</font></span>
 
+#### 2.1.3 模板
+
+
+
+
+
+
 ## 3 新增基本类型(不含STL)
 
 ### 3.1 string类
