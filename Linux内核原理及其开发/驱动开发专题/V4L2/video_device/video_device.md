@@ -12,4 +12,693 @@ number headings: auto, first-level 2, max 6, 1.1
 
 
 
+### 2.1 视频设备用户态开发概述(/dev/video*)
+
+视频设备基础开发流程图如下：
+	![[V4L2用户态流程.svg]]
+
+### 2.2 基础视频设备操作
+
+#### 2.2.1 打开设备节点
+
+和普通字符设备一样，使用Linux操作摄像头时，第一步依旧是打开摄像头对应的文件节点。
+
+```C
+#include <fcntl.h>
+#include <stdio.h>
+
+int fd = open(device, O_RDWR);  
+if(fd < 0) {  
+    printf("open device: %s failed.\r\n", device);  
+}
+```
+
+#### 2.2.2 查询设备能力 ^vda0ux
+
+一些设备往往能够同时输出不知一种数据类型，例如一个电视采集卡可以将有线电视的信号转化为linux的音视频输入：
+	![[Pasted image 20250326133304.png]]
+
+而当我们想要确认该设备是否有需要的输出能力、或可能需要该设备同时输出多种数据类型时，就需要查询设备能力( `capability` )从而做进一步判断。
+查询API为：
+
+```C
+#include <sys/ioctl.h>
+struct v4l2_capability cap = { 0 };  
+int ret = ioctl(fd, VIDIOC_QUERYCAP, &cap);  
+if(ret < 0) {  
+    printf("get v4l2_capability failed");  
+}
+```
+
+参考查询结果：
+	![[Pasted image 20250325165307.png]]
+
+上述查询结果可以按照如下方式使用：
+
+```C
+#include <sys/ioctl.h>
+struct v4l2_capability cap = { 0 };  
+int ret = ioctl(fd, VIDIOC_QUERYCAP, &cap);  
+if(ret < 0) {  
+    printf("get v4l2_capability failed.\r\n");  
+}
+
+if (cap.capabilities & V4L2_CAP_VIDEO_CAPTURE)  
+    printf("Support video capture.\r\n");  
+  
+if (cap.capabilities & V4L2_CAP_AUDIO)  
+    printf("Support audio input.\r\n");  
+  
+if (cap.capabilities & V4L2_CAP_RADIO)  
+    printf("Support radio input.\r\n");
+
+...
+```
+
+#### 2.2.3 枚举输出格式
+
+在V4L2中，获取一个设备支持的所有输出格式需要依靠类似于遍历的方法实现(该方法被称为枚举、Enumeration)，其示例如下：
+
+```C
+struct v4l2_fmtdesc fmtdesc = { 0 };
+fmtdesc.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+//fmtdesc.index = 0;
+while (1) {
+    ret = ioctl(fd, VIDIOC_ENUM_FMT, &fmtdesc);
+    if (ret == 0)
+    {
+        // 输出获取到的格式列表
+        printf("-----------------------------------------------\r\n");
+        printf("fmtdesc.index=%d\r\n", fmtdesc.index);
+        printf("fmtdesc.type=%d\r\n", fmtdesc.type);
+        printf("fmtdesc.flags=%d\r\n", fmtdesc.flags);
+        printf("fmtdesc.description=%s\r\n", fmtdesc.description);
+        printf("fmtdesc.pixelformat=%c.%c.%c.%c\r\n",
+            fmtdesc.pixelformat >> 0  & 0xff,
+            fmtdesc.pixelformat >> 8  & 0xff,
+            fmtdesc.pixelformat >> 16 & 0xff,
+            fmtdesc.pixelformat >> 24 & 0xff
+        );
+
+        // 4. 枚举指定视频格式支持的分辨率(暂时注释，需要结合下一章节)
+        // enum_frame_size(fd, fmtdesc.pixelformat);
+    } else {
+        printf("video format enumeration end.\r\n");
+        break;
+    }
+    fmtdesc.index ++;
+}
+```
+
+注：
+- 该API的文档可见[7.14. ioctl VIDIOC_ENUM_FMT — The Linux Kernel documentation](https://www.kernel.org/doc/html/latest/userspace-api/media/v4l/vidioc-enum-fmt.html)。
+
+示例输出为：
+
+```text
+-----------------------------------------------
+fmtdesc.index=0
+fmtdesc.type=1
+fmtdesc.flags=0
+fmtdesc.description=32-bit BGRA/X 8-8-8-8
+fmtdesc.pixelformat=B.G.R.4
+-----------------------------------------------
+fmtdesc.index=1
+fmtdesc.type=1
+fmtdesc.flags=0
+fmtdesc.description=32-bit A/XRGB 8-8-8-8
+fmtdesc.pixelformat=R.G.B.4
+-----------------------------------------------
+fmtdesc.index=2
+fmtdesc.type=1
+fmtdesc.flags=0
+fmtdesc.description=24-bit BGR 8-8-8
+fmtdesc.pixelformat=B.G.R.3
+-----------------------------------------------
+fmtdesc.index=3
+fmtdesc.type=1
+fmtdesc.flags=0
+fmtdesc.description=24-bit RGB 8-8-8
+fmtdesc.pixelformat=R.G.B.3
+...
+```
+
+#### 2.2.4 枚举指定输出格式的分辨率
+
+与枚举输出格式类似，枚举分辨率也需要进行类似的操作，其需要指定：
+- `frame_size.pixel_format` ：要查询的目标格式
+且需要注意Linux支持如下三种分辨率步进方式：
+1. 离散分辨率，即设备只支持几个特定的离散分辨率。
+	- 此时  `frame_size.type=V4L2_FRMSIZE_TYPE_DISCRETE` 。
+	- 此时该 `ioctl` 操作需要多次枚举，每次会得到一个离散分辨率。
+2. 连续分辨率，设备支持在该分辨率范围内任意指定。
+	- 此时 `frame_size.type=V4L2_FRMSIZE_TYPE_CONTINUOUS` 。
+	- 通常只需要一次枚举。
+3. 步进分辨率，设备只能在该分辨率范围内步进选择。
+	- 此时 `frame_size.type=V4L2_FRMSIZE_TYPE_STEPWISE` 。
+	- 在不同长宽比例下需要多次枚举。
+
+示例程序：
+
+```C
+void enum_frame_size(int fd, uint32_t format)
+{
+    struct v4l2_frmsizeenum frame_size = { 0 };
+    frame_size.pixel_format = format;
+    int ret = 0;
+    while (1)
+    {
+        ret = ioctl(fd, VIDIOC_ENUM_FRAMESIZES, &frame_size);
+        if (ret == 0)
+        {
+            switch (frame_size.type) {
+            case V4L2_FRMSIZE_TYPE_DISCRETE:
+                // 设备支持的帧尺寸是离散的
+                printf("frame_size.type=V4L2_FRMSIZE_TYPE_DISCRETE\r\n");
+                printf("frame_size.discrete.width=%d\r\n", frame_size.discrete.width);
+                printf("frame_size.discrete.height=%d\r\n", frame_size.discrete.height);
+                break;
+
+            case V4L2_FRMSIZE_TYPE_CONTINUOUS:
+                // 设备支持连续的帧尺寸范围
+                printf("frame_size.type=V4L2_FRMSIZE_TYPE_CONTINUOUS\r\n");
+                printf("frame_size.stepwise.min_width=%d\r\n", frame_size.stepwise.min_width);
+                printf("frame_size.stepwise.max_width=%d\r\n", frame_size.stepwise.max_width);
+                printf("frame_size.stepwise.step_width=%d\r\n", frame_size.stepwise.step_width);
+                printf("frame_size.stepwise.min_height=%d\r\n", frame_size.stepwise.min_height);
+                printf("frame_size.stepwise.max_height=%d\r\n", frame_size.stepwise.max_height);
+                printf("frame_size.stepwise.step_height=%d\r\n", frame_size.stepwise.step_height);
+                break;
+
+            case V4L2_FRMSIZE_TYPE_STEPWISE:
+                // 设备支持的帧尺寸在一个范围内，并且可以按特定步长进行调整
+                printf("frame_size.type=V4L2_FRMSIZE_TYPE_STEPWISE\r\n");
+                printf("frame_size.stepwise.min_width=%d\r\n", frame_size.stepwise.min_width);
+                printf("frame_size.stepwise.max_width=%d\r\n", frame_size.stepwise.max_width);
+                printf("frame_size.stepwise.step_width=%d\r\n", frame_size.stepwise.step_width);
+                printf("frame_size.stepwise.min_height=%d\r\n", frame_size.stepwise.min_height);
+                printf("frame_size.stepwise.max_height=%d\r\n", frame_size.stepwise.max_height);
+                printf("frame_size.stepwise.step_height=%d\r\n", frame_size.stepwise.step_height);
+                break;
+
+            default:
+                break;
+            }
+        } else {
+            printf("frame size enumeration end.\r\n");
+            break;
+        }
+        frame_size.index ++;
+    }
+}
+```
+
+示例输出如下：
+
+```text
+frame_size.type=V4L2_FRMSIZE_TYPE_CONTINUOUS
+frame_size.stepwise.min_width=2
+frame_size.stepwise.max_width=8192
+frame_size.stepwise.step_width=1
+frame_size.stepwise.min_height=1
+frame_size.stepwise.max_height=8192
+frame_size.stepwise.step_height=1
+frame size enumeration end.
+```
+
+#### 2.2.5 设置指定的视频格式和分辨率
+
+示例如下：
+
+```C
+struct v4l2_format fmt = { 0 };
+fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+fmt.fmt.pix.width = 1920;
+fmt.fmt.pix.height = 1080;
+fmt.fmt.pix.pixelformat = v4l2_fourcc('R', 'G', 'B', '3'); // RGB 8-8-8
+
+// 需要注意当分辨率设置错误等情况时，可能并不会按照你的目标分辨率进行设置。
+printf("try to set pix.width=%d\r\n", fmt.fmt.pix.width);
+printf("try to set pix.height=%d\r\n", fmt.fmt.pix.height);
+printf("try to set pix.height=%d\r\n", fmt.fmt.pix.height);
+printf("try to set pix.pixelformat=%c.%c.%c.%c\r\n",
+       fmt.fmt.pix.pixelformat >> 0  & 0xff,
+       fmt.fmt.pix.pixelformat >> 8  & 0xff,
+       fmt.fmt.pix.pixelformat >> 16 & 0xff,
+       fmt.fmt.pix.pixelformat >> 24 & 0xff
+);
+
+ret = ioctl(fd, VIDIOC_S_FMT, &fmt);
+if(ret < 0) {
+    printf("exec ioctl(fd, VIDIOC_S_FMT) failed with ret %d.\r\n", ret);
+}
+
+// 需要检查实际分辨率等信息
+printf("get pix.width=%d\r\n", fmt.fmt.pix.width);
+printf("get pix.height=%d\r\n", fmt.fmt.pix.height);
+printf("get pix.pixelformat=%c.%c.%c.%c\r\n",
+       fmt.fmt.pix.pixelformat >> 0  & 0xff,
+       fmt.fmt.pix.pixelformat >> 8  & 0xff,
+       fmt.fmt.pix.pixelformat >> 16 & 0xff,
+       fmt.fmt.pix.pixelformat >> 24 & 0xff
+);
+```
+
+需要注意当分辨率等信息设置错误时，驱动可能会调整你的分辨率，从而导致实际分辨率和目标分辨率不一致的情况，因此设置完毕后需要再校验一下结果。
+
+若图像格式设置错误，则通常会操作失败。
+
+#### 2.2.6 申请缓冲区
+
+V4L2框架一共提供了如下三种缓冲区：
+- `V4L2_MEMORY_MMAP` ：使用 `mmap` 将内核分配的DMA缓冲区映射到用户空间
+	- 数据流动：`硬件 -(DMA)-> DMA缓冲区 <-(内存映射)->用户空间`
+	- 在用户态编程时，[[mmap#^go6lxw|mmap]]<font color="#c00000">的操作对象是将一个fd的offset处映射到指定内存区域</font>，因此在使用mmap方式操作缓冲区时也是<font color="#c00000">获取到缓冲区</font><span style="background:#fff88f"><font color="#c00000">相对于fd的offset</font></span>后进行操作。
+	- 无需拷贝，性能较好。
+- `V4L2_MEMORY_USERPTR` ：用户提供缓冲区，驱动直接通过DMA将数据写入这些缓冲区，而无需CPU介入。
+	- 标准语义的数据流动：`硬件 -(DMA)-> 离散的用户空间`
+	- 部分CPU可能不支持直接DMA到可能离散的用户内存空间。
+	- V4L2的标准语义中也明确排除了使用CPU模拟拷贝的实现。大多数驱动实现也通常会直接拒绝提供该方法而非使用CPU模拟。
+- `V4L2_MEMORY_DMABUF` ：允许用户直接使用DMA句柄，可以实现跨设备传输
+	- 数据流动：`硬件 -(DMA)-> DMA句柄对应的缓冲区` ，允许多个设备公用一个DMA句柄。
+	- 减少跨设备内存拷贝
+上述三种缓冲区并非所有设备都支持，通常来说：
+- `V4L2_MEMORY_MMAP` ：一定支持，这是V4L2的基础模式。
+- `V4L2_MEMORY_USERPTR` ：由于用户空间内存不连续，需要额外拷贝。
+- `V4L2_MEMORY_DMABUF` ：依赖内核DMA-BUF框架和硬件IOMMU，只有现代SoC支持。
+
+查询支持能力可以使用如下的方法查询：
+
+```C
+if (cap.capabilities & V4L2_BUF_CAP_SUPPORTS_MMAP)
+    printf("Support MMAP.\r\n");
+
+if (cap.capabilities & V4L2_BUF_CAP_SUPPORTS_USERPTR)
+    printf("Support USERPTR.\r\n");
+
+if (cap.capabilities & V4L2_BUF_CAP_SUPPORTS_DMABUF)
+    printf("Support DMABUF.\r\n");
+```
+
+随后使用如下API完成缓冲区申请：
+
+```C
+// 6. 申请缓冲区，缓冲区类型为队列
+struct v4l2_requestbuffers req_buffers = { 0 };
+req_buffers.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+req_buffers.count = 4;  // 缓冲区数量通常大于2
+req_buffers.memory = V4L2_MEMORY_MMAP;
+
+ret = ioctl(fd, VIDIOC_REQBUFS, &req_buffers);
+if(ret < 0) {
+    printf("request buffer failed with msg: %s.\r\n", strerror(errno));
+}
+// 需要注意获得的缓冲区数量不等于申请到的缓冲区数量
+printf("The number of obtained buffers=%d.\r\n", req_buffers.count);
+```
+
+需要注意：
+1. <span style="background:#fff88f"><font color="#c00000">获得的缓冲区数量不一定等于申请到的缓冲区数量</font></span>(并且很常见)。驱动会设定总缓冲区数量上限，并借此限制缓冲区数量上限(必然不会让用户态程序随便拉满缓冲区数量)。
+2. 执行 `ioctl(fd, VIDIOC_REQBUFS, &req_buffers);` ，有如下逻辑：
+	1. 释放旧缓冲区
+	2. 当缓冲区类型：
+		1. 为 `V4L2_MEMORY_MMAP` 时，内核会分配指定数量的内存。
+		2. 为 `V4L2_MEMORY_USERPTR` 时，内核会进行虚拟地址记录，暂不分配物理内存。在后续 `VIDIOC_QBUF` 调用时，会PIN住该内存页防止换出。
+		3. 为 `V4L2_MEMORY_DMABUF` 时，注册外部DMA句柄。在后续 `VIDIOC_QBUF` 调用时会传递句柄。
+	3. 准备硬件资源，例如DMA
+
+#### 2.2.7 将缓存加入缓存队列
+
+将缓存加入缓存队列的目的是： ^iuf8ml
+- 显式的避免用户和内核同时操作同一片缓冲区，避免用户态访问到被内核正在使用且保护的缓冲区导致用户态挂掉。
+- 提供一种用户态-内核态的缓冲区同步机制，该机制如下：
+	1. 用户态将空的/使用过的缓冲区塞入内核态队列
+	2. 用户态通过系统调用使得内核态将填满数据的[[V4L2概述#^qftknt|缓冲区出队]]并返回给用户态
+
+因此，在用户态初始化V4L2摄像头时，其操作如下：
+
+```C
+struct v4l2_buffer buffer = { 0 };
+buffer.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+buffer.memory = V4L2_MEMORY_MMAP;
+for(int i = 0; i < req_buffers.count; i++)
+{
+    buffer.index = i;
+    ret = ioctl(fd, VIDIOC_QBUF, &buffer);
+    if(ret < 0) {
+        printf("Enqueue buffer failed with msg: %s\r\n", strerror(errno));
+    }
+}
+```
+
+而在后续获取图像时，图像会通过缓冲区返回给用户态。用户态图像接收完毕后也需要将缓冲区重新塞回队列中。
+
+#### 2.2.8 mmap映射缓存
+
+如前文所述，[[mmap#^go6lxw|mmap]]<font color="#c00000">的操作对象是将一个fd的offset处映射到指定内存区域</font>。
+在这里需要的操作对象就是：
+- 设备文件fd
+- 使用 `VIDIOC_QUERYBUF` 查询得到的offset
+
+示例如下：
+
+```C
+void* addr[req_buffers.count];
+memset(addr, 0, sizeof addr);
+// 查询缓存信息
+for(int i = 0; i < req_buffers.count; i++)
+{
+    buffer.index = i;
+    ret = ioctl(fd, VIDIOC_QUERYBUF, &buffer);
+    if(ret < 0) {
+        printf("Query buffer failed with msg: %s\r\n", strerror(errno));
+    } else {
+        printf("V4L2 MMAP buffer[%d] offset=%d\r\n", i, buffer.m.offset);
+        // mmap
+        addr[i] = mmap(NULL /* start anywhere */ ,
+                    buffer.length, PROT_READ | PROT_WRITE, MAP_SHARED,
+                    fd, buffer.m.offset);
+    }
+}
+```
+
+#### 2.2.9 开启流传输
+
+```C
+enum v4l2_buf_type type = V4L2_BUF_TYPE_VIDEO_CAPTURE;  
+ret = ioctl(fd, VIDIOC_STREAMON, &type);  
+if(ret < 0) {  
+    printf("VIDIOC_STREAMON failed with msg: %s\r\n", strerror(errno));  
+}
+```
+
+#### 2.2.10 缓冲区出队 ^qftknt
+
+当驱动采集到图像后，就会将图像放入缓冲区，再将缓冲区放入队列中。
+而用户态想要读取图像时，就可以使用如下的方法将已经完成数据填装的缓冲区从队列中出队：
+
+```C
+memset(&buffer, 0x00, sizeof buffer);  
+buffer.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;  
+int frame_id = 0;  
+while(!exit)  
+{  
+    // 缓冲区出队  
+    ret = ioctl(fd, VIDIOC_DQBUF, &buffer);  
+    if(ret < 0) {  
+        printf("VIDIOC_DQBUF failed with msg: %s\r\n", strerror(errno));  
+    } else {  
+        printf("VIDIOC_DQBUF get buffer index=%d, frame_nums=%d\r\n", buffer.index, frame_id);  
+        
+        do_sth(...);
+        
+        frame_id++;  
+        // 重新将frame塞回队列中  
+        ret = ioctl(fd, VIDIOC_QBUF, &buffer);  
+        if(ret < 0) {  
+            printf("Enqueue buffer failed with msg: %s\r\n", strerror(errno));  
+        }  
+    }  
+}
+```
+
+注：
+- `buffer.type` 字段需要设置。
+
+#### 2.2.11 完整示例代码
+
+```C
+#include <linux/videodev2.h>
+
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <sys/mman.h>
+
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <errno.h>
+#include <stdbool.h>
+
+const char* device = "/dev/video1";
+
+void enum_frame_size(int fd, uint32_t format)
+{
+    struct v4l2_frmsizeenum frame_size = { 0 };
+    frame_size.pixel_format = format;
+    int ret = 0;
+    while (1)
+    {
+        ret = ioctl(fd, VIDIOC_ENUM_FRAMESIZES, &frame_size);
+        if (ret == 0)
+        {
+            switch (frame_size.type) {
+            case V4L2_FRMSIZE_TYPE_DISCRETE:
+                // 设备支持的帧尺寸是离散的
+                printf("frame_size.type=V4L2_FRMSIZE_TYPE_DISCRETE\r\n");
+                printf("frame_size.discrete.width=%d\r\n", frame_size.discrete.width);
+                printf("frame_size.discrete.height=%d\r\n", frame_size.discrete.height);
+                break;
+
+            case V4L2_FRMSIZE_TYPE_CONTINUOUS:
+                // 设备支持连续的帧尺寸范围
+                printf("frame_size.type=V4L2_FRMSIZE_TYPE_CONTINUOUS\r\n");
+                printf("frame_size.stepwise.min_width=%d\r\n", frame_size.stepwise.min_width);
+                printf("frame_size.stepwise.max_width=%d\r\n", frame_size.stepwise.max_width);
+                printf("frame_size.stepwise.step_width=%d\r\n", frame_size.stepwise.step_width);
+                printf("frame_size.stepwise.min_height=%d\r\n", frame_size.stepwise.min_height);
+                printf("frame_size.stepwise.max_height=%d\r\n", frame_size.stepwise.max_height);
+                printf("frame_size.stepwise.step_height=%d\r\n", frame_size.stepwise.step_height);
+                break;
+
+            case V4L2_FRMSIZE_TYPE_STEPWISE:
+                // 设备支持的帧尺寸在一个范围内，并且可以按特定步长进行调整
+                printf("frame_size.type=V4L2_FRMSIZE_TYPE_STEPWISE\r\n");
+                printf("frame_size.stepwise.min_width=%d\r\n", frame_size.stepwise.min_width);
+                printf("frame_size.stepwise.max_width=%d\r\n", frame_size.stepwise.max_width);
+                printf("frame_size.stepwise.step_width=%d\r\n", frame_size.stepwise.step_width);
+                printf("frame_size.stepwise.min_height=%d\r\n", frame_size.stepwise.min_height);
+                printf("frame_size.stepwise.max_height=%d\r\n", frame_size.stepwise.max_height);
+                printf("frame_size.stepwise.step_height=%d\r\n", frame_size.stepwise.step_height);
+                break;
+
+            default:
+                break;
+            }
+        } else {
+            printf("frame size enumeration end.\r\n");
+            break;
+        }
+        frame_size.index ++;
+    }
+}
+
+
+int main(int argc, char **argv)
+{
+    // 0. 准备必要变量
+    bool exit = false;
+
+
+    // 1. 打开设备文件
+    int fd = open(device, O_RDWR);
+    if(fd < 0) {
+        printf("open device: %s failed.\r\n", device);
+        return -1;
+    }
+
+    // 2. 查询设备能力(设备能否提供视频输入、音频输入、收音功能等)
+    struct v4l2_capability cap = { 0 };
+    int ret = ioctl(fd, VIDIOC_QUERYCAP, &cap);
+    if(ret < 0) {
+        printf("get v4l2_capability failed.\r\n");
+        return -2;
+    }
+
+    if (cap.capabilities & V4L2_CAP_VIDEO_CAPTURE)
+        printf("Support video capture.\r\n");
+
+    if (cap.capabilities & V4L2_CAP_AUDIO)
+        printf("Support audio input.\r\n");
+
+    if (cap.capabilities & V4L2_CAP_RADIO)
+        printf("Support radio input.\r\n");
+
+    if (cap.capabilities & V4L2_CAP_STREAMING)
+        printf("Support streaming I/O.\r\n");
+
+    if (cap.capabilities & V4L2_CAP_READWRITE)
+        printf("Support read/write I/O.\r\n");
+
+    if (cap.capabilities & V4L2_BUF_CAP_SUPPORTS_MMAP)
+        printf("Support MMAP.\r\n");
+
+    if (cap.capabilities & V4L2_BUF_CAP_SUPPORTS_USERPTR)
+        printf("Support USERPTR.\r\n");
+
+    if (cap.capabilities & V4L2_BUF_CAP_SUPPORTS_DMABUF)
+        printf("Support DMABUF.\r\n");
+
+    // 3. 枚举所支持的视频格式
+    struct v4l2_fmtdesc fmtdesc = { 0 };
+    fmtdesc.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    //fmtdesc.index = 0;
+    while (1) {
+        ret = ioctl(fd, VIDIOC_ENUM_FMT, &fmtdesc);
+        if (ret == 0)
+        {
+            // 输出获取到的格式列表
+            printf("-----------------------------------------------\r\n");
+            printf("fmtdesc.index=%d\r\n", fmtdesc.index);
+            printf("fmtdesc.type=%d\r\n", fmtdesc.type);
+            printf("fmtdesc.flags=%d\r\n", fmtdesc.flags);
+            printf("fmtdesc.description=%s\r\n", fmtdesc.description);
+            printf("fmtdesc.pixelformat=%c.%c.%c.%c\r\n",
+                fmtdesc.pixelformat >> 0  & 0xff,
+                fmtdesc.pixelformat >> 8  & 0xff,
+                fmtdesc.pixelformat >> 16 & 0xff,
+                fmtdesc.pixelformat >> 24 & 0xff
+            );
+
+            // 4. 枚举指定视频格式支持的分辨率
+            enum_frame_size(fd, fmtdesc.pixelformat);
+        } else {
+            printf("video format enumeration end.\r\n");
+            break;
+        }
+        fmtdesc.index ++;
+    }
+
+    // 5. 设置视频格式和分辨率
+    struct v4l2_format fmt = { 0 };
+    fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    fmt.fmt.pix.width = 1920;
+    fmt.fmt.pix.height = 1080;
+    fmt.fmt.pix.pixelformat = v4l2_fourcc('M', 'G', 'P', 'G'); // RGB 8-8-8
+
+    // 需要注意当分辨率设置错误等情况时，可能并不会按照你的目标分辨率进行设置。
+    printf("try to set pix.width=%d\r\n", fmt.fmt.pix.width);
+    printf("try to set pix.height=%d\r\n", fmt.fmt.pix.height);
+    printf("try to set pix.height=%d\r\n", fmt.fmt.pix.height);
+    printf("try to set pix.pixelformat=%c.%c.%c.%c\r\n",
+           fmt.fmt.pix.pixelformat >> 0  & 0xff,
+           fmt.fmt.pix.pixelformat >> 8  & 0xff,
+           fmt.fmt.pix.pixelformat >> 16 & 0xff,
+           fmt.fmt.pix.pixelformat >> 24 & 0xff
+    );
+
+    ret = ioctl(fd, VIDIOC_S_FMT, &fmt);
+    if(ret < 0) {
+        printf("exec ioctl(fd, VIDIOC_S_FMT) failed with msg: %s.\r\n", strerror(errno));
+        return -5;
+    }
+
+    // 需要检查实际分辨率等信息
+    printf("get pix.width=%d\r\n", fmt.fmt.pix.width);
+    printf("get pix.height=%d\r\n", fmt.fmt.pix.height);
+    printf("get pix.height=%d\r\n", fmt.fmt.pix.height);
+    printf("get pix.pixelformat=%c.%c.%c.%c\r\n",
+        fmt.fmt.pix.pixelformat >> 0  & 0xff,
+        fmt.fmt.pix.pixelformat >> 8  & 0xff,
+        fmt.fmt.pix.pixelformat >> 16 & 0xff,
+        fmt.fmt.pix.pixelformat >> 24 & 0xff
+    );
+
+    // 6. 申请缓冲区，缓冲区类型为队列
+    struct v4l2_requestbuffers req_buffers = { 0 };
+    req_buffers.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    req_buffers.count = 4;  // 缓冲区数量通常大于2
+    req_buffers.memory = V4L2_MEMORY_MMAP;
+
+    ret = ioctl(fd, VIDIOC_REQBUFS, &req_buffers);
+    if(ret < 0) {
+        printf("request buffer failed with msg: %s.\r\n", strerror(errno));
+        return -6;
+    }
+    // 需要注意获得的缓冲区数量不等于申请到的缓冲区数量
+    printf("The number of obtained buffers=%d.\r\n", req_buffers.count);
+
+    // 7. 将申请到的缓冲加入到驱动队列
+    struct v4l2_buffer buffer = { 0 };
+    buffer.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    buffer.memory = V4L2_MEMORY_MMAP;
+    for(int i = 0; i < req_buffers.count; i++)
+    {
+        buffer.index = i;
+        ret = ioctl(fd, VIDIOC_QBUF, &buffer);
+        if(ret < 0) {
+            printf("Enqueue buffer failed with msg: %s\r\n", strerror(errno));
+            return -7;
+        }
+    }
+
+    // 8. 映射缓存
+    void* addr[req_buffers.count];
+    memset(addr, 0, sizeof addr);
+    // 8.1 查询缓存信息
+    for(int i = 0; i < req_buffers.count; i++)
+    {
+        buffer.index = i;
+        ret = ioctl(fd, VIDIOC_QUERYBUF, &buffer);
+        if(ret < 0) {
+            printf("Query buffer failed with msg: %s\r\n", strerror(errno));
+            return -8;
+        } else {
+            printf("V4L2 MMAP buffer[%d] offset=%d\r\n", i, buffer.m.offset);
+
+            // 8.2 mmap
+            addr[i] = mmap(NULL /* start anywhere */ ,
+                        buffer.length, PROT_READ | PROT_WRITE, MAP_SHARED,
+                        fd, buffer.m.offset);
+        }
+    }
+
+    // 9. 开启流传输
+    enum v4l2_buf_type type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    ret = ioctl(fd, VIDIOC_STREAMON, &type);
+    if(ret < 0) {
+        printf("VIDIOC_STREAMON failed with msg: %s\r\n", strerror(errno));
+        return -9;
+    }
+
+    // 10. 循环获取图像
+    memset(&buffer, 0x00, sizeof buffer);
+    buffer.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    int frame_id = 0;
+    while(!exit)
+    {
+        // 10.1 缓冲区出队
+        ret = ioctl(fd, VIDIOC_DQBUF, &buffer);
+        if(ret < 0) {
+            printf("VIDIOC_DQBUF failed with msg: %s\r\n", strerror(errno));
+        } else {
+            // TODO
+            printf("VIDIOC_DQBUF get buffer index=%d, frame_nums=%d\r\n", buffer.index, frame_id);
+
+            frame_id++;
+
+            // 重新将frame塞回队列中
+            ret = ioctl(fd, VIDIOC_QBUF, &buffer);
+            if(ret < 0) {
+                printf("Enqueue buffer failed with msg: %s\r\n", strerror(errno));
+            }
+        }
+    }
+
+    return 0;
+}
+
+```
+
+
+### 2.3 video_device用户态工具
+
+
+
+## 3 video_device内核态开发
+
+内核态
+
+### 3.1 
+
 
