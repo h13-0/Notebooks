@@ -1043,5 +1043,208 @@ struct vim2m_ctx {
 	- 不可存其他数据，也不可不存，因为V4L2内部要使用该数据。可见章节[[V4L2概述#^3kv1kh|上下文实例]]。
 3. 注册上下文句柄( `v4l2_fh_add` )
 
+### 3.2 内存到内存设备(v4l2_m2m_dev) ^vvh0h5
+
+V4L2的内存到内存设备模型<span style="background:#fff88f"><font color="#c00000">适用于一进一出或多进多出</font></span>的<font color="#c00000">视频转换设备</font>，例如：
+- 视频编解码器
+- 视频格式转换
+- 图像处理设备
+等，此类设备通常涉及视频编解码、图像缩放、色彩空间转换等。<span style="background:#fff88f"><font color="#c00000">不适用于</font></span>视频输出设备、视频生成设备等。
+
+因此，V4L2的基本模型包含了一进一出两个数据队列，并为该模型提供了若干通用机制。
+
+#### 3.2.1 M2M设备模型及机制
+
+V4L2 M2M设备的基本模型如下图([[V4L2_M2M设备.drawio.svg]])所示：
+	![[V4L2_M2M设备.drawio.svg]]
+
+M2M设备模型主要提供了如下的机制及支持：
+1. 完成了设备的异步处理机制
+2. 提供缓冲区管理机制
+3. 提供作业调度和同步服务
+
+上述许多机制具有不错的泛用性。但是对于物理摄像头等，应当使用对应的 `videobuf2` 等专用机制。
+
+##### 3.2.1.1 队列初始化机制
 
 
+
+
+
+
+在程序实现方面，M2M基本特性有：
+- M2M模型中，驱动需要提供如下接口：
+	- `deice_run` \[<font color="#c00000">必须</font>\]：当队列中有需要处理的数据时，V4L2框架会调用该回调。
+	- `job_ready` ：
+	具体可见[[V4L2概述#3 1 4 3 m2m设备操作回调 v4l2_m2m_ops r39fw1|M2M设备操作回调]]。
+- 每一个V4L2 M2M设备可以被多个用户空间实例打开(多个进程或多个线程)，具体使用[[V4L2概述#^eienff|多实例成员]]进行实现。
+
+#### 3.2.2 数据结构定义
+
+```C
+/**
+ * struct v4l2_m2m_dev - per-device context
+ * @source:		&struct media_entity pointer with the source entity
+ *				Used only when the M2M device is registered via
+ *				v4l2_m2m_register_media_controller().
+ * @source_pad:		&struct media_pad with the source pad.
+ *				Used only when the M2M device is registered via
+ *				v4l2_m2m_register_media_controller().
+ * @sink:		&struct media_entity pointer with the sink entity
+ *				Used only when the M2M device is registered via
+ *				v4l2_m2m_register_media_controller().
+ * @sink_pad:	&struct media_pad with the sink pad.
+ *				Used only when the M2M device is registered via
+ *				v4l2_m2m_register_media_controller().
+ * @proc:		&struct media_entity pointer with the M2M device itself.
+ * @proc_pads:	&struct media_pad with the @proc pads.
+ *				Used only when the M2M device is registered via
+ *				v4l2_m2m_unregister_media_controller().
+ * @intf_devnode:	&struct media_intf devnode pointer with the interface
+ *					with controls the M2M device.
+ * @curr_ctx:		currently running instance
+ * @job_queue:		instances queued to run
+ * @job_spinlock:	protects job_queue
+ * @job_work:		worker to run queued jobs.
+ * @job_queue_flags:	flags of the queue status, %QUEUE_PAUSED.
+ * @m2m_ops:		driver callbacks
+ */
+struct v4l2_m2m_dev {
+	struct v4l2_m2m_ctx	*curr_ctx;
+#ifdef CONFIG_MEDIA_CONTROLLER
+	struct media_entity	*source;
+	struct media_pad	source_pad;
+	struct media_entity	sink;
+	struct media_pad	sink_pad;
+	struct media_entity	proc;
+	struct media_pad	proc_pads[2];
+	struct media_intf_devnode *intf_devnode;
+#endif
+
+	struct list_head	job_queue;
+	spinlock_t		job_spinlock;
+	struct work_struct	job_work;
+	unsigned long		job_queue_flags;
+
+	const struct v4l2_m2m_ops *m2m_ops;
+};
+```
+
+其成员：
+- 与当前运行实例相关的成员： ^eienff
+	- `struct v4l2_m2m_ctx *curr_ctx` 
+		- 功能含义：当前正在运行的实例信息，其包含文件句柄、输出队列、捕获队列、驱动私有指针等数据。
+		- 维护方：由V4L2框架管理
+	- `struct list_head job_queue` 
+		- 功能含义：正在等待处理的实例信息链表，先进先出。
+			- 通常驱动不需要手动操作该数据结构。当需要操作时，V4L2也有专用的辅助函数而不需要手动操作(例如 `v4l2_m2m_cleanup_queue` )。
+		- 维护方：由V4L2框架管理
+	- `spinlock_t job_spinlock` 
+		- 功能含义：任务队列的自旋锁。
+			- 通常驱动不需要手动操作该数据结构，操作时也通常直接使用辅助函数。
+		- 维护方：由V4L2框架管理
+	- `struct work_struct job_work` 
+		- 功能含义：工作队列的工作项。当有任务需要处理时，V4L2框架会调度这个工作项，它最终会调用驱动提供的操作来响应任务。
+		- 维护方：由V4L2框架管理
+	- `unsigned long job_queue_flags` 
+		- 功能含义：标记任务队列的状态，目前只有 `QUEUE_PAUSED` 这一种状态，表示队列被暂停，不再处理新任务。
+		- 维护方：由V4L2框架管理，驱动可以通过 `v4l2_m2m_job_finish` 等函数间接影响状态。
+- 操作回调成员：
+	- `const struct v4l2_m2m_ops *m2m_ops`
+		- 功能含义：指向驱动实现的操作回调函数集的指针。
+			- 具体可见[[V4L2概述#^r39fw1|m2m设备操作回调]]。
+			- 至少提供 `device_run` 回调。
+		- 维护方：<font color="#c00000">必须由驱动设置</font>。
+- 媒体控制器相关成员：
+	- `struct media_entity *source` 
+		- 功能含义：输入数据源媒体的实例
+		- 维护方：使用媒体控制器功能时由驱动设置
+	- `struct media_pad source_pad`
+		- 功能含义：输入数据源的媒体接口
+		- 维护方：使用媒体控制器功能时由驱动设置
+	- `struct media_entity sink`
+		- 功能含义：输出目标的媒体实体
+		- 维护方：与sink配对使用
+	- `struct media_pad sink_pad`
+		- 功能含义：输出目标的媒体接口
+		- 维护方：使用媒体控制器功能时由驱动设置
+	- `struct media_entity proc`
+		- 功能含义：M2M设备自身的处理实体
+		- 维护方：使用媒体控制器功能时由驱动设置
+	- `struct media_pad proc_pads[2]`
+		- 功能含义：处理实体的接口
+		- 维护方：与proc配对使用
+	- `struct media_intf_devnode *intf_devnode`
+		- 功能含义：控制M2M设备的接口节点
+		- 维护方：使用媒体控制器功能时由驱动设置
+
+#### 3.2.3 M2M设备操作回调(v4l2_m2m_ops) ^r39fw1
+
+该数据结构定义为：
+
+```C
+/**
+ * struct v4l2_m2m_ops - mem-to-mem device driver callbacks
+ * @device_run:	required. Begin the actual job (transaction) inside this
+ *		callback.
+ *		The job does NOT have to end before this callback returns
+ *		(and it will be the usual case). When the job finishes,
+ *		v4l2_m2m_job_finish() or v4l2_m2m_buf_done_and_job_finish()
+ *		has to be called.
+ * @job_ready:	optional. Should return 0 if the driver does not have a job
+ *		fully prepared to run yet (i.e. it will not be able to finish a
+ *		transaction without sleeping). If not provided, it will be
+ *		assumed that one source and one destination buffer are all
+ *		that is required for the driver to perform one full transaction.
+ *		This method may not sleep.
+ * @job_abort:	optional. Informs the driver that it has to abort the currently
+ *		running transaction as soon as possible (i.e. as soon as it can
+ *		stop the device safely; e.g. in the next interrupt handler),
+ *		even if the transaction would not have been finished by then.
+ *		After the driver performs the necessary steps, it has to call
+ *		v4l2_m2m_job_finish() or v4l2_m2m_buf_done_and_job_finish() as
+ *		if the transaction ended normally.
+ *		This function does not have to (and will usually not) wait
+ *		until the device enters a state when it can be stopped.
+ */
+struct v4l2_m2m_ops {
+	void (*device_run)(void *priv);
+	int (*job_ready)(void *priv);
+	void (*job_abort)(void *priv);
+};
+```
+
+其成员：
+- `void (*device_run)(void *priv)`
+	- 功能含义：驱动处理实际具体M2M任务的<font color="#c00000">入口</font>(也就是说通常不把实际的任务放到这里)。
+		- 该函数需要从 `void *priv` 中找到 `v4l2_m2m_dev->curr_ctx` ，并从中找到当前实例正在处理的队列，并执行对应方法。
+	- 被执行时机(条件)，需要同时满足：
+		1. 已调用 `VIDIOC_STREAMON` 启动 `OUTPUT` 和 `CAPTURE` 队列
+		2. 两个队列中都有可用缓冲区(除非 `job_ready` 自定义条件)
+		3. 设备当前空闲(无运行中任务)
+		4. (如果实现) `job_ready` 返回 `true`
+	- 维护方：<span style="background:#fff88f"><font color="#c00000">必须实现</font></span>
+	- <span style="background:#fff88f"><font color="#c00000">关键规则</font></span>：
+		- <span style="background:#fff88f"><font color="#c00000">该函数禁止阻塞、休眠</font></span>
+		- <font color="#c00000">任务完成后通过中断通知</font>(异步，这也是为什么说该函数是入口的原因)，需要调用 `v4l2_m2m_job_finish` 或 ` v4l2_m2m_buf_done_and_job_finish ` 来通知V4L2框架对应任务已经执行完毕。
+		- 若任务失败，则调用 `v4l2_m2m_buf_done_and_job_finish(..., VB2_BUF_STATE_ERROR)` 来通知V4L2任务失败。
+- `int (*job_ready)(void *priv)`
+	- 功能含义：询驱动(设备)当前能否<font color="#c00000">立即</font>开启新任务
+	- 维护方：可选
+	- <span style="background:#fff88f"><font color="#c00000">关键规则</font></span>：
+		- <span style="background:#fff88f"><font color="#c00000">该函数禁止阻塞、休眠</font></span>
+		- 该函数应当快速返回
+- `void (*job_abort)(void *priv)`
+	- 功能含义：任务紧急终止
+	- 被执行时机(下列之一)：
+		- 用户空间调用 `VIDIOC_STREAMOFF` 停止流
+		- 设备文件描述符关闭( `close(fd)` )
+		- 模块卸载/设备移除
+		- 严重错误发生(如DMA错误)
+	- 维护方：可选
+	- 关键规则：
+		- 该函数禁止等待，必须立即返回，无须等待设备停止(类似于设置 `exit_flag` )：
+			- 通常需要通知硬件停止，并将缓冲区标记为错误状态。
+		- <font color="#c00000">运行完成后必须调用</font>`v4l2_m2m_job_finish()` <font color="#c00000">或变体</font>
+		- 该操作需要注意和保证硬件安全
+		- 在该函数调用时，`device_run` 可能还在运行，需要注意并发问题。
