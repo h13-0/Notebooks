@@ -1248,3 +1248,150 @@ struct v4l2_m2m_ops {
 		- <font color="#c00000">运行完成后必须调用</font>`v4l2_m2m_job_finish()` <font color="#c00000">或变体</font>
 		- 该操作需要注意和保证硬件安全
 		- 在该函数调用时，`device_run` 可能还在运行，需要注意并发问题。
+
+
+#### 3.2.4 M2M实例分析
+
+为了方便分析，本章节选用 `/drivers/media/test-drivers/vim2m.c` 进行分析。
+
+在该驱动中同时实现了一个设备( `vim2m_pdev` )和一个驱动( `vim2m_pdrv` )，并使用对应API进行了注册：
+
+```C
+static struct platform_driver vim2m_pdrv = {
+	.probe		= vim2m_probe,
+	.remove_new	= vim2m_remove,
+	.driver		= {
+		.name	= MEM2MEM_NAME,
+	},
+};
+
+static struct platform_device vim2m_pdev = {
+	.name		= MEM2MEM_NAME,
+	.dev.release	= vim2m_dev_release,
+};
+
+static int __init vim2m_init(void)
+{
+	int ret;
+
+	ret = platform_device_register(&vim2m_pdev);
+	if (ret)
+		return ret;
+
+	ret = platform_driver_register(&vim2m_pdrv);
+	if (ret)
+		platform_device_unregister(&vim2m_pdev);
+
+	return ret;
+}
+```
+
+其所实现的设备为平台设备，平台设备会在设备或驱动注册时触发[[Linux设备模型#^76yg8m|平台设备驱动匹配机制]]。在本例中，通过将平台设备和平台驱动的 `name` 字段设置为同一个字符串从而进行匹配。
+
+在上述驱动及设备实现的方法中，仅需要关注 `probe` 函数的实现，剩下的 `remove` 和 `release` 则是水到渠成的析构方法。
+
+```C
+static int vim2m_probe(struct platform_device *pdev)
+{
+	struct vim2m_dev *dev;
+	struct video_device *vfd;
+	int ret;
+
+	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
+	if (!dev)
+		return -ENOMEM;
+
+	ret = v4l2_device_register(&pdev->dev, &dev->v4l2_dev);
+	if (ret)
+		goto error_free;
+
+	atomic_set(&dev->num_inst, 0);
+	mutex_init(&dev->dev_mutex);
+
+	dev->vfd = vim2m_videodev;
+	vfd = &dev->vfd;
+	vfd->lock = &dev->dev_mutex;
+	vfd->v4l2_dev = &dev->v4l2_dev;
+
+	video_set_drvdata(vfd, dev);
+	v4l2_info(&dev->v4l2_dev,
+		  "Device registered as /dev/video%d\n", vfd->num);
+
+	platform_set_drvdata(pdev, dev);
+
+	dev->m2m_dev = v4l2_m2m_init(&m2m_ops);
+	if (IS_ERR(dev->m2m_dev)) {
+		v4l2_err(&dev->v4l2_dev, "Failed to init mem2mem device\n");
+		ret = PTR_ERR(dev->m2m_dev);
+		dev->m2m_dev = NULL;
+		goto error_dev;
+	}
+
+#ifdef CONFIG_MEDIA_CONTROLLER
+	dev->mdev.dev = &pdev->dev;
+	strscpy(dev->mdev.model, "vim2m", sizeof(dev->mdev.model));
+	strscpy(dev->mdev.bus_info, "platform:vim2m",
+		sizeof(dev->mdev.bus_info));
+	media_device_init(&dev->mdev);
+	dev->mdev.ops = &m2m_media_ops;
+	dev->v4l2_dev.mdev = &dev->mdev;
+#endif
+
+	ret = video_register_device(vfd, VFL_TYPE_VIDEO, 0);
+	if (ret) {
+		v4l2_err(&dev->v4l2_dev, "Failed to register video device\n");
+		goto error_m2m;
+	}
+
+#ifdef CONFIG_MEDIA_CONTROLLER
+	ret = v4l2_m2m_register_media_controller(dev->m2m_dev, vfd,
+						 MEDIA_ENT_F_PROC_VIDEO_SCALER);
+	if (ret) {
+		v4l2_err(&dev->v4l2_dev, "Failed to init mem2mem media controller\n");
+		goto error_v4l2;
+	}
+
+	ret = media_device_register(&dev->mdev);
+	if (ret) {
+		v4l2_err(&dev->v4l2_dev, "Failed to register mem2mem media device\n");
+		goto error_m2m_mc;
+	}
+#endif
+	return 0;
+
+#ifdef CONFIG_MEDIA_CONTROLLER
+error_m2m_mc:
+	v4l2_m2m_unregister_media_controller(dev->m2m_dev);
+#endif
+error_v4l2:
+	video_unregister_device(&dev->vfd);
+	/* vim2m_device_release called by video_unregister_device to release various objects */
+	return ret;
+error_m2m:
+	v4l2_m2m_release(dev->m2m_dev);
+error_dev:
+	v4l2_device_unregister(&dev->v4l2_dev);
+error_free:
+	kfree(dev);
+
+	return ret;
+}
+```
+
+注：
+- 上述 `vim2m_probe` 函数第24行 `v4l2_info(&dev->v4l2_dev, "Device registered as /dev/video%d\n", vfd->num);` 应当移动到第47行 `video_register_device` 之后。该bug已经在Linux 6.16被修复。
+
+忽略其错误及垃圾清理，其流程如下：
+1. 初始化私有结构体
+2. 调用 `v4l2_device_register` 完成：
+	1. 初始化指定的 `v4l2_device` 对象
+	2. 将 `v4l2_device` 记录到 `device.driver_data`
+3. 初始化互斥锁和实例计数器
+4. 初始化并配置video设备：
+	1. 
+5. 初始化内存到内存框架(m2m)
+6. 注册video设备到内核
+
+
+
+
