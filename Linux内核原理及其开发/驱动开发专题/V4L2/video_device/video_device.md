@@ -1176,9 +1176,77 @@ struct media_device_ops {
 	- 标准语义：
 		- 该函数不能失败(因为已经被 `req_validate` 验证)
 
+
+#### 3.3.4 通用文件句柄管理(v4l2_fh) ^kyd4a1
+
+
+#### 3.3.5 v4l2-ioctl
+
+
+##### 3.3.5.1 v4l2_ioctl_ops ^r8lfyg
+
+
+
+其中：
+- 设备能力和基本信息查询：
+	- `int (*vidioc_querycap)(struct file *file, void *fh, struct v4l2_capability *cap)` ：
+		- 功能含义：用户空间调用 `VIDIOC_QUERYCAP` 时触发回调
+		- 标准语义：
+			- 需要在 `cap` 中存放设备的基本信息，通常包含：
+				- 驱动名(例如 `bttv` )
+				- 板卡名(例如 `Hauppauge WinTV` )
+				- 总线名(例如 `"PCI:" + pci_name(pci_dev)` )
+			- 当成功时返回0
+- 格式枚举类回调( `vidioc_enum_fmt_*` )：
+	- `int (*vidioc_enum_fmt_vid_cap)(...)` ：
+		- 功能含义：视频捕获( `VideoCapture` )所支持的<font color="#c00000">像素格式</font>枚举回调
+		- 注：
+			1. 本类别回调函数的参数均为 `struct file *file, void *fh, struct v4l2_fmtdesc *f` 
+			2. V4L2将设备能力的枚举拆分主要是为了兼容历史代码和方便驱动实现。
+			3. 后续类似枚举回调与本回调类似。
+		- 标准语义：
+			- 参数 `struct v4l2_fmtdesc *f` 的 `f->index` 成员为用户空间枚举的引索。
+		- 维护方：驱动按需维护
+	- `int (*vidioc_enum_fmt_vid_overlay)(...)` ：
+		- 功能含义：视频覆盖所支持的像素格式枚举回调
+	- `int (*vidioc_enum_fmt_vid_out)(...)` ：
+		- 功能含义：视频输出所支持的像素格式枚举回调
+	- `int (*vidioc_enum_fmt_sdr_cap)(...)` ：
+		- 功能含义：SDR捕获所支持的像素格式枚举回调
+	- `int (*vidioc_enum_fmt_sdr_out)(...)` ：
+		- 功能含义：SDR输出所支持的格式枚举回调
+	- `int (*vidioc_enum_fmt_meta_cap)(...)` ：
+		- 功能含义：元数据捕获所支持的格式枚举回调
+	- `int (*vidioc_enum_fmt_meta_out)(...)` ：
+		- 功能含义：元数据输出所支持的格式枚举回调
+- 获取/设置格式类回调( `vidioc_s_fmt_*` / `vidioc_g_fmt_*` )：
+	- `int (*vidioc_g_fmt_vid_cap)(...)`
+		- <span style="background:#fff88f"><font color="#c00000">注意</font></span>：
+			1. 在<span style="background:#fff88f"><font color="#c00000">所有</font></span><font color="#c00000">获取/设置格式类</font>回调的标准行为定义中，<span style="background:#fff88f"><font color="#c00000">当且仅当</font></span> `v4l2_format.type` <font color="#c00000">非法时才可以返回错误值</font>，<font color="#c00000">其他情况下应当由驱动修改到可接受的格式类型</font><span style="background:#fff88f"><font color="#c00000">并返回成功</font></span>。
+				- 原文(`Documentation/userspace-api/media/v4l/vidioc-g-fmt.rst`)： `Drivers should not return an error code unless the type field is invalid`
+			2. 获取/设置格式类回调文档可见 `Documentation/userspace-api/media/v4l/vidioc-g-fmt.rst`
+	- `int (*vidioc_g_fmt_vid_overlay)(...)`
+	- `int (*vidioc_g_fmt_vid_out)(...)`
+	- 
+- 缓冲区管理：
+- 分辨率枚举：
+	- `int (*vidioc_enum_framesizes)(struct file *file, void *fh, struct v4l2_frmsizeenum *fsize)` ：
+		- 功能含义：用户态的分辨率枚举功能 `ioctl(VIDIOC_ENUM_FRAMESIZES)` 的回调
+		- 注：
+			1. 分辨率枚举文档可见 `Documentation/userspace-api/media/v4l/vidioc-enum-framesizes.rst`
+- 帧率枚举：
+
+
 ### 3.4 功能模型
 
-#### 3.4.1 内存到内存设备(v4l2_m2m_dev) ^vvh0h5
+#### 3.4.1 
+
+
+
+
+
+
+#### 3.4.2 内存到内存设备(v4l2_m2m_dev) ^vvh0h5
 
 V4L2的内存到内存设备模型<span style="background:#fff88f"><font color="#c00000">适用于一进一出或多进多出</font></span>的<font color="#c00000">视频转换设备</font>，例如：
 - 视频编解码器
@@ -1188,7 +1256,7 @@ V4L2的内存到内存设备模型<span style="background:#fff88f"><font color="
 
 因此，V4L2的基本模型包含了一进一出两个数据队列，并为该模型提供了若干通用机制。
 
-##### 3.4.1.1 M2M设备模型及机制
+##### 3.4.2.1 M2M设备模型及机制
 
 V4L2 M2M设备的基本模型如下图([[V4L2_M2M设备.drawio.svg]])所示：
 	![[V4L2_M2M设备.drawio.svg]]
@@ -1200,21 +1268,7 @@ M2M设备模型主要提供了如下的机制及支持：
 
 上述许多机制具有不错的泛用性。但是对于物理摄像头等，应当使用对应的 `videobuf2` 等专用机制。
 
-###### 3.4.1.1.1 队列初始化机制
-
-
-
-
-
-
-在程序实现方面，M2M基本特性有：
-- M2M模型中，驱动需要提供如下接口：
-	- `deice_run` \[<font color="#c00000">必须</font>\]：当队列中有需要处理的数据时，V4L2框架会调用该回调。
-	- `job_ready` ：
-	具体可见[[V4L2概述#3 1 4 3 m2m设备操作回调 v4l2_m2m_ops r39fw1|M2M设备操作回调]]。
-- 每一个V4L2 M2M设备可以被多个用户空间实例打开(多个进程或多个线程)，具体使用[[V4L2概述#^eienff|多实例成员]]进行实现。
-
-##### 3.4.1.2 数据结构定义
+##### 3.4.2.2 数据结构定义
 
 ```C
 /**
@@ -1313,7 +1367,7 @@ struct v4l2_m2m_dev {
 		- 功能含义：控制M2M设备的接口节点
 		- 维护方：使用媒体控制器功能时由驱动设置
 
-##### 3.4.1.3 M2M设备操作回调(v4l2_m2m_ops) ^r39fw1
+##### 3.4.2.3 M2M设备操作回调(v4l2_m2m_ops) ^r39fw1
 
 该数据结构定义为：
 
@@ -1384,7 +1438,26 @@ struct v4l2_m2m_ops {
 		- 该操作需要注意和保证硬件安全
 		- 在该函数调用时，`device_run` 可能还在运行，需要注意并发问题。
 
-##### 3.4.1.4 M2M实例分析
+##### 3.4.2.4 队列初始化机制
+
+正如上述章节所述，M2M设备拥有输入输出两个队列。
+
+
+
+
+
+
+
+
+在程序实现方面，M2M基本特性有：
+- M2M模型中，驱动需要提供如下接口：
+	- `deice_run` \[<font color="#c00000">必须</font>\]：当队列中有需要处理的数据时，V4L2框架会调用该回调。
+	- `job_ready` ：
+	具体可见[[V4L2概述#3 1 4 3 m2m设备操作回调 v4l2_m2m_ops r39fw1|M2M设备操作回调]]。
+- 每一个V4L2 M2M设备可以被多个用户空间实例打开(多个进程或多个线程)，具体使用[[V4L2概述#^eienff|多实例成员]]进行实现。
+
+
+##### 3.4.2.5 M2M实例分析
 
 为了方便分析，本章节选用 `/drivers/media/test-drivers/vim2m.c` 进行分析。
 
