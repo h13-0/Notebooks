@@ -14,12 +14,24 @@ number headings: auto, first-level 2, max 6, 1.1
 
 本章节的基础知识无序排列。
 
-#### 2.1.1 平面(planes)
+#### 2.1.1 颜色空间
 
-平面是指像素的排列交织的方式，例如：
+##### 2.1.1.1 YUV
+
+YUV通常用于模拟视频领域，且其能很好的兼容黑白视频和彩色视频。
 
 
 
+#### 2.1.2 平面(planes) ^29c6mw
+
+平面是指像素数据的排列交织的方式，也就是内存布局的平面数，例如：
+
+| <center>格式类型</center> | <center>示例格式</center> | 平面数 | <center>内存布局</center>                   |
+| --------------------- | --------------------- | --- | --------------------------------------- |
+| RGB打包                 | RGB24, BGR32          | 1   | `[RGBRGBRGB...]`                        |
+| YUV打包                 | YUYV, UYVY            | 1   | `[YUYVYUYV...]`                         |
+| YUV平面                 | NV12, YUV420          | 2-3 | `[YYYY...]` + `[UVUV...]`               |
+| YUV完全平面               | YUV420P               | 3   | `[YYYY...]` + `[UUUU...]` + `[VVVV...]` |
 
 
 
@@ -1240,8 +1252,8 @@ struct vb2_ops {
 	- 功能含义：队列配置回调，在 `VIDIOC_REQBUFS` 或 `VIDIOC_CREATE_BUFS` 时调用
 	- 参数：
 		- `struct vb2_queue *q` ：
-		- `unsigned int *num_buffers` ：驱动所需缓冲区数量
-		- `unsigned int *num_planes` ：驱动所需平面数量
+		- `unsigned int *num_buffers` ：驱动所需的缓冲区数量
+		- `unsigned int *num_planes` ：驱动所需的[[video_device#^29c6mw|平面]]数量
 		- 
 
 
