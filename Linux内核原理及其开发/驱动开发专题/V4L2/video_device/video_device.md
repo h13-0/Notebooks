@@ -1223,7 +1223,13 @@ struct vb2_ops {
 ```
 
 其成员：
-- 
+- `int (*queue_setup)(...)` 
+	- 功能含义：队列配置回调，在 `VIDIOC_REQBUFS` 或 `VIDIOC_CREATE_BUFS` 时调用
+	- 参数：
+		- `struct vb2_queue *q` ：
+		- `unsigned int *num_buffers` ：驱动所需缓冲区数量
+		- `unsigned int *num_planes` ：驱动所需平面数量
+		- 
 
 
 ##### 3.3.1.2 相关API
