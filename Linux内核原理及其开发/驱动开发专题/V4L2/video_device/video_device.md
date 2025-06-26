@@ -730,7 +730,8 @@ enum vfl_devnode_type {
 - `VFL_TYPE_VBI` ：垂直消隐期设备： `/dev/vbi*`
 - `VFL_TYPE_RADIO` ：收音机设备： `/dev/radio*` 
 - `VFL_TYPE_SDR` ：软件无线电： `/dev/swradio*` 
-- `VFL_TYPE_TOUCH` ：
+- `VFL_TYPE_TOUCH` ：基于视频的触摸设备(例如红外触摸屏)： `/dev/v4l-touch*`
+其通过在[[video_device#^cjcnad|注册video_device设备]]时指定参数来确定其设备类型。
 
 ### 3.2 video_device基础特性
 
@@ -941,7 +942,7 @@ struct video_device {
 
 #### 3.2.1 相关API
 
-##### 3.2.1.1 注册video_device设备
+##### 3.2.1.1 注册video_device设备 ^cjcnad
 
 ```C
 #include <media/v4l2-dev.h>

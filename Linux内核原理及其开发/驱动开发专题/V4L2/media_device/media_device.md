@@ -9,8 +9,6 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ## 2 媒体控制器
 
-
-
 正如章节[[V4L2概述#^5ppocs|V4L2设备层级结构]]所述，一个V4L2设备的物理拓扑关系会很复杂，使用简单的扁平容器( `v4l2_device` )难以表达类似于下方的复杂拓扑结构：
 ```mermaid
 graph LR
@@ -44,7 +42,7 @@ graph LR
 	```
 不过媒体管理器不支持跨 `v4l2_device` 的拓扑描述或链路更改。
 
-##### 2.1.1.1 基本模型定义
+### 2.1 基本模型定义
 
 为了描述上述拓扑关系，支持动态链路等功能，其设计了如下三种基础类型：
 - 媒体设备：
@@ -68,7 +66,7 @@ graph LR
 
 学习时建议按照焊盘->链接->实体->媒体设备的顺序学习。
 
-###### 2.1.1.1.1 焊盘(media_pad) ^ouhrtb
+#### 2.1.1 焊盘(media_pad) ^ouhrtb
 
 焊盘表示该模块的数入输出"引脚"，如上文所述，该焊盘有引脚号、引脚所连链路数、引脚传递的信号类型、数据方向等属性。
 
@@ -144,7 +142,7 @@ struct media_pad {
 	- 规则：
 		- 禁止驱动直接访问，应当使用其访问器( `media_entity_pipeline` )访问
 
-###### 2.1.1.1.2 链路(media_link) ^hcefzg
+#### 2.1.2 链路(media_link) ^hcefzg
 
 如上述章节所述，链路主要承担如下特性的实现：
 - 可选的动态链路变更
@@ -221,7 +219,7 @@ struct media_link {
 	- 功能含义：当该连接为反向连接时为 `true`
 	- 维护方：V4L2框架自动管理
 
-###### 2.1.1.1.3 实体(media_entity) ^xup1xx
+#### 2.1.3 实体(media_entity) ^xup1xx
 
 实体可以代表该物理设备的任何V4L2的软硬件模块，一个设备、节点或模块只对应一个实体。
 
@@ -361,7 +359,7 @@ struct media_entity {
 	- 功能含义：设备节点信息(已不再使用，保留是为了兼容旧驱动)
 	- 维护方：不再使用
 
-###### 2.1.1.1.4 媒体设备(media_device) ^elqnrp
+#### 2.1.4 媒体设备(media_device) ^elqnrp
 
 在Linux中，媒体设备被挂载于 `/dev/mediaX` 下，其抽象的是整个多媒体系统。一个 `v4l2_device` 只能有一个媒体设备。而该模型是更高级拓扑结构的抽象表示，其支持动态链路等功能。
 
@@ -553,9 +551,9 @@ struct media_device {
 	- 功能含义：请求ID生成器
 	- 维护方：V4L2自动管理
 
-##### 2.1.1.2 相关API
+### 2.2 相关API
 
-###### 2.1.1.2.1 初始化media_device
+#### 2.2.1 初始化media_device
 
 `media_device` 在构造时需要分为两步：
 1. 使用 `media_device_init` 初始化 `media_device` 结构
@@ -595,20 +593,20 @@ void media_device_init(struct media_device *mdev);
 1. <font color="#c00000">在调用本函数前必须将</font> `media_device.dev` <font color="#c00000">指向其父设备</font>
 2. <font color="#c00000">在调用本函数前必须配置设备型号</font> `media_device.model`
 
-###### 2.1.1.2.2 注册media_device
+#### 2.2.2 注册media_device
 
 
 
 
-### 2.2 V4L2机制模型
+### 2.3 V4L2机制模型
 
-#### 2.2.1 视频缓冲区队列(struct vb2_queue)
+#### 2.3.1 视频缓冲区队列(struct vb2_queue)
 
 
 
-#### 2.2.2 源控制 ^8230im
+#### 2.3.2 源控制 ^8230im
 
-#### 2.2.3 媒体请求(media_request) ^dhev4l
+#### 2.3.3 媒体请求(media_request) ^dhev4l
 
 在用户态章节编程中已经提到，用户可以使用 `ioctl` 进行媒体设备配置，例如：
 
@@ -638,7 +636,7 @@ request_add_operation(request, VIDIOC_QBUF, &buffer);
 ioctl(fd, MEDIA_REQUEST_IOC_QUEUE, &request); 
 ```
 
-##### 2.2.3.1 媒体请求操作回调(media_device_ops) ^xvploq
+##### 2.3.3.1 媒体请求操作回调(media_device_ops) ^xvploq
 
 媒体请求回调( `media_device_ops` )的数据结构定义如下：
 
