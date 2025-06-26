@@ -1072,7 +1072,113 @@ struct vim2m_ctx {
 	- 不可存其他数据，也不可不存，因为V4L2内部要使用该数据。可见章节[[V4L2概述#^3kv1kh|上下文实例]]。
 3. 注册上下文句柄( `v4l2_fh_add` )
 
-### 3.3 内存到内存设备(v4l2_m2m_dev) ^vvh0h5
+### 3.3 机制模型
+
+#### 3.3.1 视频缓冲区队列(struct vb2_queue)
+
+
+
+#### 3.3.2 源控制 ^8230im
+
+
+
+
+#### 3.3.3 媒体请求(media_request) ^dhev4l
+
+在用户态章节编程中已经提到，用户可以使用 `ioctl` 进行媒体设备配置，例如：
+
+```C
+ioctl(fd, VIDIOC_S_FMT, &fmt);       // 设置分辨率
+ioctl(fd, VIDIOC_S_CTRL, &exposure); // 设置曝光
+ioctl(fd, VIDIOC_QBUF, &buffer);     // 提交缓冲区
+```
+
+但是考虑如下的需求与情景：
+1. 上述demo中，如果分辨率设置成功，曝光设置失败，如何fallback
+2. 部分硬件要求分辨率与帧率同时设置(例如不能同时高分辨率和高帧率)
+3. 当用户要求两个ioctl指令同时生效时应当如何实现
+
+因此在保留原有ioctl机制的基础上，V4L2又设计了媒体请求机制，其允许将一系列请求按顺序包装为一个媒体请求对象，<font color="#c00000">原子地执行更改</font>：
+
+```C
+// 创建媒体请求对象
+struct media_request request = create_request();
+
+// 将操作绑定至请求（尚未生效）
+request_add_operation(request, VIDIOC_S_FMT, &fmt);      
+request_add_operation(request, VIDIOC_S_CTRL, &exposure);
+request_add_operation(request, VIDIOC_QBUF, &buffer);
+
+// 原子提交（全成功或全回滚）
+ioctl(fd, MEDIA_REQUEST_IOC_QUEUE, &request); 
+```
+
+##### 3.3.3.1 媒体请求操作回调(media_device_ops) ^xvploq
+
+媒体请求回调( `media_device_ops` )的数据结构定义如下：
+
+```C
+/**
+ * struct media_device_ops - Media device operations
+ * @link_notify: Link state change notification callback. This callback is
+ *		 called with the graph_mutex held.
+ * @req_alloc: Allocate a request. Set this if you need to allocate a struct
+ *	       larger then struct media_request. @req_alloc and @req_free must
+ *	       either both be set or both be NULL.
+ * @req_free: Free a request. Set this if @req_alloc was set as well, leave
+ *	      to NULL otherwise.
+ * @req_validate: Validate a request, but do not queue yet. The req_queue_mutex
+ *	          lock is held when this op is called.
+ * @req_queue: Queue a validated request, cannot fail. If something goes
+ *	       wrong when queueing this request then it should be marked
+ *	       as such internally in the driver and any related buffers
+ *	       must eventually return to vb2 with state VB2_BUF_STATE_ERROR.
+ *	       The req_queue_mutex lock is held when this op is called.
+ *	       It is important that vb2 buffer objects are queued last after
+ *	       all other object types are queued: queueing a buffer kickstarts
+ *	       the request processing, so all other objects related to the
+ *	       request (and thus the buffer) must be available to the driver.
+ *	       And once a buffer is queued, then the driver can complete
+ *	       or delete objects from the request before req_queue exits.
+ */
+struct media_device_ops {
+	int (*link_notify)(struct media_link *link, u32 flags,
+			   unsigned int notification);
+	struct media_request *(*req_alloc)(struct media_device *mdev);
+	void (*req_free)(struct media_request *req);
+	int (*req_validate)(struct media_request *req);
+	void (*req_queue)(struct media_request *req);
+};
+```
+
+该结构体有如下的成员：
+- `int (*link_notify)(struct media_link *link, u32 flags, unsigned int notification)`
+	- 功能含义：媒体链路变更通知回调
+	- 标准语义：
+		- 返回0时表示成功，其他值表示失败并组织非法配置
+	- 维护方：驱动可选实现
+- `struct media_request *(*req_alloc)(struct media_device *mdev)`
+	- 功能含义：更高级的自定义的 `media_request` 对象内存实现
+		- "更高级"指：
+			- 使用DMA内存(则此时无法使用 `kmalloc` 的默认实现)
+			- 分配比标准 `media_device` 更大的内存，例如驱动定义了一个继承自 `media_device` 的更大的对象时
+	- 必须和 `req_free` 同时定义或缺省
+	- 维护方：驱动可选实现
+- `void (*req_free)(struct media_request *req)`
+	- 功能含义：`req_alloc` 对应的资源回收函数
+	- 维护方：驱动可选实现
+- `int (*req_validate)(struct media_request *req)`
+	- 功能含义：验证媒体请求( `media_request` )的合法性
+	- 标准语义：
+		- 返回0时表示请求合法，非0非法
+- `void (*req_queue)(struct media_request *req)`
+	- 功能含义：提交已经验证的媒体请求到硬件执行
+	- 标准语义：
+		- 该函数不能失败(因为已经被 `req_validate` 验证)
+
+### 3.4 功能模型
+
+#### 3.4.1 内存到内存设备(v4l2_m2m_dev) ^vvh0h5
 
 V4L2的内存到内存设备模型<span style="background:#fff88f"><font color="#c00000">适用于一进一出或多进多出</font></span>的<font color="#c00000">视频转换设备</font>，例如：
 - 视频编解码器
@@ -1082,7 +1188,7 @@ V4L2的内存到内存设备模型<span style="background:#fff88f"><font color="
 
 因此，V4L2的基本模型包含了一进一出两个数据队列，并为该模型提供了若干通用机制。
 
-#### 3.3.1 M2M设备模型及机制
+##### 3.4.1.1 M2M设备模型及机制
 
 V4L2 M2M设备的基本模型如下图([[V4L2_M2M设备.drawio.svg]])所示：
 	![[V4L2_M2M设备.drawio.svg]]
@@ -1094,7 +1200,7 @@ M2M设备模型主要提供了如下的机制及支持：
 
 上述许多机制具有不错的泛用性。但是对于物理摄像头等，应当使用对应的 `videobuf2` 等专用机制。
 
-##### 3.3.1.1 队列初始化机制
+###### 3.4.1.1.1 队列初始化机制
 
 
 
@@ -1108,7 +1214,7 @@ M2M设备模型主要提供了如下的机制及支持：
 	具体可见[[V4L2概述#3 1 4 3 m2m设备操作回调 v4l2_m2m_ops r39fw1|M2M设备操作回调]]。
 - 每一个V4L2 M2M设备可以被多个用户空间实例打开(多个进程或多个线程)，具体使用[[V4L2概述#^eienff|多实例成员]]进行实现。
 
-#### 3.3.2 数据结构定义
+##### 3.4.1.2 数据结构定义
 
 ```C
 /**
@@ -1207,7 +1313,7 @@ struct v4l2_m2m_dev {
 		- 功能含义：控制M2M设备的接口节点
 		- 维护方：使用媒体控制器功能时由驱动设置
 
-#### 3.3.3 M2M设备操作回调(v4l2_m2m_ops) ^r39fw1
+##### 3.4.1.3 M2M设备操作回调(v4l2_m2m_ops) ^r39fw1
 
 该数据结构定义为：
 
@@ -1278,8 +1384,7 @@ struct v4l2_m2m_ops {
 		- 该操作需要注意和保证硬件安全
 		- 在该函数调用时，`device_run` 可能还在运行，需要注意并发问题。
 
-
-#### 3.3.4 M2M实例分析
+##### 3.4.1.4 M2M实例分析
 
 为了方便分析，本章节选用 `/drivers/media/test-drivers/vim2m.c` 进行分析。
 

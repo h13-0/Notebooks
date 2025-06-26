@@ -7,3 +7,4 @@ github_token.txt
 .smtcmp*
 *.svg.bkp
 *.svg.dtmp
+/Resources/Statistics/Notebooks

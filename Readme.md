@@ -10,6 +10,10 @@
 
 此笔记的Gitee镜像为：[https://gitee.com/h13/Notebooks](https://gitee.com/h13/Notebooks).  
 
+## 统计信息
+
+![](./Resources/Statistics.svg)
+
 ## Obsidian部署
 
 ### 字体
