@@ -700,10 +700,37 @@ int main(int argc, char **argv)
 
 ### 3.1 video_device设备类型(enum vfl_devnode_type) ^4ac1hk
 
-正如[[V4L2概述#2 2 1 基础设备模型 4783s6|基础设备模型]]所述， `video_device` 包含了多种子设备类型，例如视频设备、收音机设备等。在内核中
+正如[[V4L2概述#2 2 V4L2设备模型概述 4783s6|V4L2设备模型概述]]所述， `video_device` 包含了多种子设备类型，例如视频设备、收音机设备等。在内核中通过 `enum vfl_devnode_type` 进行区分，其定义如下：
 
+```C
+/**
+ * enum vfl_devnode_type - type of V4L2 device node
+ *
+ * @VFL_TYPE_VIDEO:	for video input/output devices
+ * @VFL_TYPE_VBI:	for vertical blank data (i.e. closed captions, teletext)
+ * @VFL_TYPE_RADIO:	for radio tuners
+ * @VFL_TYPE_SUBDEV:	for V4L2 subdevices
+ * @VFL_TYPE_SDR:	for Software Defined Radio tuners
+ * @VFL_TYPE_TOUCH:	for touch sensors
+ * @VFL_TYPE_MAX:	number of VFL types, must always be last in the enum
+ */
+enum vfl_devnode_type {
+	VFL_TYPE_VIDEO,
+	VFL_TYPE_VBI,
+	VFL_TYPE_RADIO,
+	VFL_TYPE_SUBDEV,
+	VFL_TYPE_SDR,
+	VFL_TYPE_TOUCH,
+	VFL_TYPE_MAX /* Shall be the last one */
+};
+```
 
-
+其分别有如下对应关系：
+- `VFL_TYPE_VIDEO` ：视频设备 `/dev/video*` 
+- `VFL_TYPE_VBI` ：垂直消隐期设备： `/dev/vbi*`
+- `VFL_TYPE_RADIO` ：收音机设备： `/dev/radio*` 
+- `VFL_TYPE_SDR` ：软件无线电： `/dev/swradio*` 
+- `VFL_TYPE_TOUCH` ：
 
 ### 3.2 video_device基础特性
 
