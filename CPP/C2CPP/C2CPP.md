@@ -423,19 +423,27 @@ void insert( std::initializer_list<value_type> ilist );
 - 无返回值
 - 特性/语义：
 	- 若参数中有重复键，则只插入第一个
-	- 
+	- 不会修改已有键值
 
 ###### 4.2.4.3.2.3 批量插入(通过迭代器)
 
-
-
-
-
-
+```C
+template< class InputIt >
+void insert( InputIt first, InputIt last );
+```
 
 
 
 ###### 4.2.4.3.2.4 带位置提示的插入
+
+##### 4.2.4.3.3 删除元素(erase)
+
+
+
+
+
+##### 4.2.4.3.4 合并
+
 
 
 ### 4.2.5 std::map
