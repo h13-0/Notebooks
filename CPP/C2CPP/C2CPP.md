@@ -459,10 +459,10 @@ iterator erase( iterator pos );
 ```
 
 其中：
-- 参数为要删除元素的迭代器
+- 参数:
+	- `pos` 为要删除元素的迭代器，<span style="background:#fff88f"><font color="#c00000">且不能为</font></span> `end()` <span style="background:#fff88f"><font color="#c00000">!!!</font></span>
+		- 因为<font color="#c00000">只要map不为空</font>，<font color="#c00000">其最后一个元素就不是</font> `end()` ，所以<font color="#c00000">非空时</font>删除最后一个元素应当使用 `map.erase(std::prev(map.end()))`
 - 返回值为被删除元素之后元素的迭代器。如果删除的是最后一个元素，则返回 `end()` 。
-- 
-
 
 ###### 4.2.4.3.3.3 通过迭代器范围删除元素
 
@@ -485,7 +485,11 @@ iterator erase( const_iterator first, const_iterator last );
 
 ##### 4.2.4.3.4 查询
 
+###### 4.2.4.3.4.1 at
 
+
+
+###### 4.2.4.3.4.2 operator\[\]
 
 
 
