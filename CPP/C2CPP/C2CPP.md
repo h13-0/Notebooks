@@ -16,7 +16,18 @@ number headings: auto, first-level 2, max 6, 1.1
 
 通用部分参见：[[面相对象的程序设计]]
 
-此外，需要额外说明的是在C++中，
+此外，需要额外说明的是在C++中规定：<span style="background:#fff88f"><font color="#c00000">任何可以被解析为函数声明的代码都会被解析为函数声明</font></span>。因此在类的定义中，有如下注意事项：
+
+```CPP
+// 正确：调用默认构造函数
+ClassName obj;
+
+// 错误：声明一个返回值为ClassName的函数，函数名为obj
+ClassName obj();
+
+// C++11及以后正确：使用花括号避免歧义
+ClassName obj{};
+```
 
 #### 2.1.2 重载运算符
 
@@ -301,9 +312,17 @@ template<
 
 ```CPP
 unordered_map();
-
 ```
 
+##### 4.1.3.3 常用方法
+
+###### 4.1.3.3.1 清空容器(clear)
+
+```CPP
+void clear() noexcept;
+```
+
+###### 4.1.3.3.2 插入元素(insert)
 
 
 
