@@ -16,6 +16,8 @@ number headings: auto, first-level 1, max 6, 1.1
 
 通用部分参见：[[面相对象的程序设计]]
 
+#### 2.1.1.1 对象的构造
+
 此外，需要额外说明的是在C++中规定：<span style="background:#fff88f"><font color="#c00000">任何可以被解析为函数声明的代码都会被解析为函数声明</font></span>。因此在类的定义中，有如下注意事项：
 
 ```CPP
@@ -294,7 +296,8 @@ STL容器主要有如下三类：
 
 ### 4.2.3 std::initializer_list
 
-`initializer_list` 是一个轻量化的<span style="background:#fff88f"><font color="#c00000">只读容器</font></span>，<font color="#c00000">通常其只能通过特殊的构造函数构造</font>。
+<font color="#9bbb59">初始化列表</font>( `initializer_list` )是一个轻量化的<span style="background:#fff88f"><font color="#c00000">只读容器</font></span>，<font color="#c00000">通常其只能通过特殊的构造函数构造</font>。
+需注意的是，<font color="#9bbb59">初始化列表</font>和构造函数的<font color="#9bbb59">成员初始化列表</font>是不同的概念。
 
 #### 4.2.3.1 模板定义
 
@@ -398,7 +401,8 @@ std::pair<iterator, bool> insert( value_type&& value );
 - 返回值为 `std::pair<iterator, bool>` ：
 	- 第一个参数为指向插入键的迭代器
 	- 第二个参数为该键是否插入成功
-- <font color="#c00000">若原容器中已有相同键值，则插入失败</font>
+- 特性/语义：
+	- <font color="#c00000">若原容器中已有相同键值，则插入失败</font>
 
 其示例为：
 
@@ -408,17 +412,30 @@ auto ret1 = map.insert({1, "one"});               // ret1.second == true
 auto ret2 = map.insert(std::make_pair(1, "one")); // 此时ret2.second为false
 ```
 
-###### 4.2.4.3.2.2 批量插入
+###### 4.2.4.3.2.2 批量插入(通过初始化列表)
 
 ```CPP
 void insert( std::initializer_list<value_type> ilist );
 ```
 
 其：
-- 参数类型为
+- 参数类型为键值对构成的初始化列表( `{{key1, value1}, {key2, value2}, ...}` )
+- 无返回值
+- 特性/语义：
+	- 若参数中有重复键，则只插入第一个
+	- 
+
+###### 4.2.4.3.2.3 批量插入(通过迭代器)
 
 
-###### 4.2.4.3.2.3 带位置提示的插入
+
+
+
+
+
+
+
+###### 4.2.4.3.2.4 带位置提示的插入
 
 
 ### 4.2.5 std::map
