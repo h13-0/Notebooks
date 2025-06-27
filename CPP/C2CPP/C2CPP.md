@@ -300,6 +300,15 @@ class initializer_list;
 initializer_list() noexcept;
 ```
 
+尽管C++只提供了默认构造函数，
+
+
+
+但是语言为其提供了专属的构造方式：
+
+```CPP
+std::initializer_list<int> list{1, 2, 3};
+```
 
 
 ### 4.1.4 std::unordered_map
