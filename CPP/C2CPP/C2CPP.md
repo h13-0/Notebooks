@@ -438,11 +438,55 @@ void insert( InputIt first, InputIt last );
 
 ##### 4.2.4.3.3 删除元素(erase)
 
+###### 4.2.4.3.3.1 通过key值删除
+
+```CPP
+size_type erase( const Key& key );
+```
+
+其中：
+- 参数为需要删除的键值对的键
+- 返回值为被删除的元素数量，值为0或1
+
+时间复杂度：
+- 平均 $O(1)$
+- 最坏 $O(size)$
+
+###### 4.2.4.3.3.2 通过迭代器删除单个元素
+
+```CPP
+iterator erase( iterator pos );
+```
+
+其中：
+- 参数为要删除元素的迭代器
+- 返回值为被删除元素之后元素的迭代器。如果删除的是最后一个元素，则返回 `end()` 。
+- 
+
+
+###### 4.2.4.3.3.3 通过迭代器范围删除元素
+
+```CPP
+iterator erase( const_iterator first, const_iterator last );
+```
+
+其中：
+- 参数：
+	- `first` 为第一个要删除的元素
+	- `last` 为删除范围后的一个元素(`last` <span style="background:#fff88f"><font color="#c00000">不会被删除</font></span>)
+	- 其删除范围为 $[first, last)$ 
+- 返回值：
+	- 返回 `last` 迭代器指向的位置(即被删除的最后一个元素的下一个元素)。
+	- 如果 `last` 是 `end()` ，则返回 `end()` 。
+
+时间复杂度：
+- 平均 $O(n)$
+- 最坏 $O(n\times size)$
+
+##### 4.2.4.3.4 查询
 
 
 
-
-##### 4.2.4.3.4 合并
 
 
 
