@@ -276,7 +276,7 @@ STL容器主要有如下三类：
 
 `std::unordered_map` <font color="#c00000">基于哈希表实现</font>，内部元素无序存储。
 
-##### 4.1.3.1 构造函数
+##### 4.1.3.1 模板定义
 
 ```CPP
 template<
@@ -289,7 +289,18 @@ template<
 ```
 
 上述模板中：
--  `Key` 
+- `class Key` 为键类型
+- `class T` 为值类型
+- `class Hash` 为哈希函数对象类型
+- `class KeyEqual` 为键值比较函数对象类型
+- `class Allocator` 为内存分配器类型
+
+##### 4.1.3.2 构造函数
+
+
+
+
+
 
 
 #### 4.1.4 std::map
