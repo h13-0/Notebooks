@@ -287,6 +287,8 @@ STL容器主要有如下三类：
 
 ### 4.1.3 std::initializer_list
 
+`initializer_list` 是一个轻量化的<span style="background:#fff88f"><font color="#c00000">只读容器</font></span>，<font color="#c00000">通常其只能通过特殊的构造函数构造</font>。
+
 #### 4.1.3.1 模板定义
 
 ```CPP
@@ -300,15 +302,23 @@ class initializer_list;
 initializer_list() noexcept;
 ```
 
-尽管C++只提供了默认构造函数，
-
-
-
-但是语言为其提供了专属的构造方式：
+正如章节开头所述， `initializer_list` 是一个只读容器，因此其必须在构造时赋值。而上述的默认构造函数明显无法完成该需求。所以C++和编译器就为其提供了独有的构造方式：
 
 ```CPP
 std::initializer_list<int> list{1, 2, 3};
 ```
+
+而实际上，其shi'y
+
+语言为其提供了专属的构造函数：
+
+```C
+private:
+	constexpr initializer_list(const E* first, size_t count) 
+		: begin_(first), size_(count) {}
+```
+
+
 
 
 ### 4.1.4 std::unordered_map
