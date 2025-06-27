@@ -314,6 +314,11 @@ template<
 unordered_map();
 ```
 
+其定义了如下的成员：
+- `key_type` ：即 `class Key` ，键类型
+- `mapped_type` ：即 `class T` ，值类型
+- `value_type` ：`std::pair<const Key, T>` ^o36e6j 
+
 ##### 4.1.3.3 常用方法
 
 ###### 4.1.3.3.1 清空容器(clear)
@@ -324,8 +329,26 @@ void clear() noexcept;
 
 ###### 4.1.3.3.2 插入元素(insert)
 
+插入单个元素的重载有：
 
+```CPP
+std::pair<iterator, bool> insert( const value_type& value ); std::pair<iterator, bool> insert( value_type&& value );
+```
 
+其：
+- 返回值为 `std::pair<iterator, bool>` ：
+	- 第一个参数为指向插入键的迭代器
+	- 第二个参数为该键是否插入成功
+- 参数类型为[[C2CPP#^o36e6j|value_type]]，即键值对
+- 若
+
+其示例为：
+
+```CPP
+std::unordered_map<int, std::string> map;
+auto ret1 = map.insert({1, "one"});               // ret1.second == true
+auto ret2 = map.insert(std::make_pair(1, "one")); // 此时ret2.second为false
+```
 
 #### 4.1.4 std::map
 
