@@ -210,20 +210,20 @@ comp1.operator==(comp2);
 
 
 
-# 3 新增基本类型(不含STL)
+## 2.2 新增基本类型(不含STL)
 
-## 3.1 string类
+### 2.2.1 string类
 
-### 3.1.1 sizeof(string)
+#### 2.2.1.1 sizeof(string)
 
 在x86架构下，`sizeof(std::string) = 28`；
 在x86_64架构下，`sizeof(std::string) = 40`；
 而 `sizeof(std::string)` 的值<u><font color="#c00000">不随字符串内容发生改变</font></u>。
-### 3.1.2 string作为struct的成员时
+#### 2.2.1.2 string作为struct的成员时
 
 string可以作为struct的成员，其size计算符合内存对齐等要求。
 
-### 3.1.3 常用方法
+#### 2.2.1.3 常用方法
 
 | <center>方法</center>      | <center>含义</center>        | <center>备注</center> |
 | ------------------------ | -------------------------- | ------------------- |
@@ -232,7 +232,7 @@ string可以作为struct的成员，其size计算符合内存对齐等要求。
 |                          |                            |                     |
 |                          |                            |                     |
 
-# 4 STL
+# 3 STL
 
 STL全名为Standard Template Library，意为标准模板库或泛型库，是C++中的一个重要组件。其主要包含如下组件：
 - 容器(Containers)
@@ -241,14 +241,14 @@ STL全名为Standard Template Library，意为标准模板库或泛型库，是C
 - 函数对象(Function Objects)
 - 适配器(Adapters)
 
-## 4.1 迭代器
+## 3.1 迭代器
 
 
 
 
 
 
-## 4.2 容器
+## 3.2 容器
 
 STL容器主要有如下三类：
 1. 序列容器
@@ -267,20 +267,20 @@ STL容器主要有如下三类：
 	3. `std::unordered_map`
 	4. `std::unordered_multimap`
 
-### 4.2.1 array
+### 3.2.1 array
 
-### 4.2.2 vector
+### 3.2.2 vector
 
 `std::vector` 是C++的动态大小的数组实现，其元素被顺序存储，因此其可以被迭代器和引索顺序访问。其会自动扩展其所需要的内存空间，并且通常其所占用的内存比同大小的静态数组要多。其空间的动态分配仅会发生在其所保留的额外空间耗尽时触发。
 
-#### 4.2.2.1 常用操作的时间复杂度
+#### 3.2.2.1 常用操作的时间复杂度
 
 <font color="#c00000">vector的常用操作的时间复杂度</font>：
 - 随机访问：$O(1)$
 - 在末尾插入或删除元素：平均$O(1)$
 - 在末尾的倒数第n个位置插入或删除元素：$O(n)$
 
-#### 4.2.2.2 模板类型
+#### 3.2.2.2 模板类型
 
 <font color="#c00000">vector中的模板类型需要满足如下要求</font>：
 - 可以拷贝赋值
@@ -288,25 +288,25 @@ STL容器主要有如下三类：
 
 但是需要注意<span style="background:#fff88f"><font color="#c00000">慎用bool类型作为vector的元素</font></span>，除非明确地要使用 `vector<bool>` 的特性。
 
-#### 4.2.2.3 常用方法
+#### 3.2.2.3 常用方法
 
 
 
 
 
-### 4.2.3 std::initializer_list
+### 3.2.3 std::initializer_list
 
 <font color="#9bbb59">初始化列表</font>( `initializer_list` )是一个轻量化的<span style="background:#fff88f"><font color="#c00000">只读容器</font></span>，<font color="#c00000">通常其只能通过特殊的构造函数构造</font>。
 需注意的是，<font color="#9bbb59">初始化列表</font>和构造函数的<font color="#9bbb59">成员初始化列表</font>是不同的概念。
 
-#### 4.2.3.1 模板定义
+#### 3.2.3.1 模板定义
 
 ```CPP
 template< class T >
 class initializer_list;
 ```
 
-#### 4.2.3.2 常用构造函数
+#### 3.2.3.2 常用构造函数
 
 ```CPP
 initializer_list() noexcept;
@@ -328,9 +328,9 @@ private:
 		: begin_(first), size_(count) {}
 ```
 
-#### 4.2.3.3 常用方法
+#### 3.2.3.3 常用方法
 
-##### 4.2.3.3.1 查询元素数量(size)
+##### 3.2.3.3.1 查询元素数量(size)
 
 ```CPP
 size_type size() const noexcept;
@@ -338,18 +338,18 @@ size_type size() const noexcept;
 
 其实际上返回的是表达式 `std::distance(begin(), end())` 的值，类型为 `std::size_t` 。
 
-##### 4.2.3.3.2 迭代器(begin、end)
+##### 3.2.3.3.2 迭代器(begin、end)
 
 ```CPP
 const T* begin() const noexcept;
 const T* end() const noexcept;
 ```
 
-### 4.2.4 std::unordered_map
+### 3.2.4 std::unordered_map
 
 `std::unordered_map` <font color="#c00000">基于哈希表实现</font>，内部元素无序存储。
 
-#### 4.2.4.1 模板定义
+#### 3.2.4.1 模板定义
 
 ```CPP
 template<
@@ -368,7 +368,7 @@ template<
 - `class KeyEqual` 为键值比较函数对象类型
 - `class Allocator` 为内存分配器类型
 
-#### 4.2.4.2 常用构造函数
+#### 3.2.4.2 常用构造函数
 
 ```CPP
 unordered_map();
@@ -379,17 +379,17 @@ unordered_map();
 - `mapped_type` ：即 `class T` ，值类型
 - `value_type` ：`std::pair<const Key, T>` ^o36e6j 
 
-#### 4.2.4.3 常用方法
+#### 3.2.4.3 常用方法
 
-##### 4.2.4.3.1 清空容器(clear)
+##### 3.2.4.3.1 清空容器(clear)
 
 ```CPP
 void clear() noexcept;
 ```
 
-##### 4.2.4.3.2 插入元素(insert)
+##### 3.2.4.3.2 插入元素(insert)
 
-###### 4.2.4.3.2.1 插入单个元素
+###### 3.2.4.3.2.1 插入单个元素
 
 ```CPP
 std::pair<iterator, bool> insert( const value_type& value ); 
@@ -412,7 +412,7 @@ auto ret1 = map.insert({1, "one"});               // ret1.second == true
 auto ret2 = map.insert(std::make_pair(1, "one")); // 此时ret2.second为false
 ```
 
-###### 4.2.4.3.2.2 批量插入(通过初始化列表)
+###### 3.2.4.3.2.2 批量插入(通过初始化列表)
 
 ```CPP
 void insert( std::initializer_list<value_type> ilist );
@@ -425,7 +425,7 @@ void insert( std::initializer_list<value_type> ilist );
 	- 若参数中有重复键，则只插入第一个
 	- 不会修改已有键值
 
-###### 4.2.4.3.2.3 批量插入(通过迭代器)
+###### 3.2.4.3.2.3 批量插入(通过迭代器)
 
 ```C
 template< class InputIt >
@@ -434,11 +434,11 @@ void insert( InputIt first, InputIt last );
 
 
 
-###### 4.2.4.3.2.4 带位置提示的插入
+###### 3.2.4.3.2.4 带位置提示的插入
 
-##### 4.2.4.3.3 删除元素(erase)
+##### 3.2.4.3.3 删除元素(erase)
 
-###### 4.2.4.3.3.1 通过key值删除
+###### 3.2.4.3.3.1 通过key值删除
 
 ```CPP
 size_type erase( const Key& key );
@@ -452,7 +452,7 @@ size_type erase( const Key& key );
 - 平均 $O(1)$
 - 最坏 $O(size)$
 
-###### 4.2.4.3.3.2 通过迭代器删除单个元素
+###### 3.2.4.3.3.2 通过迭代器删除单个元素
 
 ```CPP
 iterator erase( iterator pos );
@@ -464,7 +464,7 @@ iterator erase( iterator pos );
 		- 因为<font color="#c00000">只要map不为空</font>，<font color="#c00000">其最后一个元素就不是</font> `end()` ，所以<font color="#c00000">非空时</font>删除最后一个元素应当使用 `map.erase(std::prev(map.end()))`
 - 返回值为被删除元素之后元素的迭代器。如果删除的是最后一个元素，则返回 `end()` 。
 
-###### 4.2.4.3.3.3 通过迭代器范围删除元素
+###### 3.2.4.3.3.3 通过迭代器范围删除元素
 
 ```CPP
 iterator erase( const_iterator first, const_iterator last );
@@ -483,17 +483,17 @@ iterator erase( const_iterator first, const_iterator last );
 - 平均 $O(n)$
 - 最坏 $O(n\times size)$
 
-##### 4.2.4.3.4 查询
+##### 3.2.4.3.4 查询(at)
 
-###### 4.2.4.3.4.1 at
-
-
-
-###### 4.2.4.3.4.2 operator\[\]
+###### 3.2.4.3.4.1 
 
 
 
+##### 3.2.4.3.5 operator\[\]
 
-### 4.2.5 std::map
+
+
+
+### 3.2.5 std::map
 
 `std::map` 内部通常基于红黑树实现，<font color="#c00000">元素始终按键的升序排序</font>。
