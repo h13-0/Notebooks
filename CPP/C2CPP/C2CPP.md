@@ -201,27 +201,27 @@ comp1.operator==(comp2);
 
 <span style="background:#fff88f"><font color="#c00000">需要注意的是，函数重载的方式不同，其对应的显示调用方式也不同。</font></span>
 
-### 2.1.2.7 模板
+### 2.1.3 模板
 
 
 
 
 
 
-## 2.2 新增基本类型(不含STL)
+# 3 新增基本类型(不含STL)
 
-### 2.2.1 string类
+## 3.1 string类
 
-#### 2.2.1.1 sizeof(string)
+### 3.1.1 sizeof(string)
 
 在x86架构下，`sizeof(std::string) = 28`；
 在x86_64架构下，`sizeof(std::string) = 40`；
 而 `sizeof(std::string)` 的值<u><font color="#c00000">不随字符串内容发生改变</font></u>。
-#### 2.2.1.2 string作为struct的成员时
+### 3.1.2 string作为struct的成员时
 
 string可以作为struct的成员，其size计算符合内存对齐等要求。
 
-#### 2.2.1.3 常用方法
+### 3.1.3 常用方法
 
 | <center>方法</center>      | <center>含义</center>        | <center>备注</center> |
 | ------------------------ | -------------------------- | ------------------- |
@@ -230,7 +230,7 @@ string可以作为struct的成员，其size计算符合内存对齐等要求。
 |                          |                            |                     |
 |                          |                            |                     |
 
-## 2.3 STL
+# 4 STL
 
 STL全名为Standard Template Library，意为标准模板库或泛型库，是C++中的一个重要组件。其主要包含如下组件：
 - 容器(Containers)
@@ -239,7 +239,7 @@ STL全名为Standard Template Library，意为标准模板库或泛型库，是C
 - 函数对象(Function Objects)
 - 适配器(Adapters)
 
-### 2.3.1 STL容器
+## 4.1 STL容器
 
 STL容器主要有如下三类：
 1. 序列容器
@@ -258,20 +258,20 @@ STL容器主要有如下三类：
 	3. `std::unordered_map`
 	4. `std::unordered_multimap`
 
-#### 2.3.1.1 array
+### 4.1.1 array
 
-#### 2.3.1.2 vector
+### 4.1.2 vector
 
 `std::vector` 是C++的动态大小的数组实现，其元素被顺序存储，因此其可以被迭代器和引索顺序访问。其会自动扩展其所需要的内存空间，并且通常其所占用的内存比同大小的静态数组要多。其空间的动态分配仅会发生在其所保留的额外空间耗尽时触发。
 
-##### 2.3.1.2.1 常用操作的时间复杂度
+#### 4.1.2.1 常用操作的时间复杂度
 
 <font color="#c00000">vector的常用操作的时间复杂度</font>：
 - 随机访问：$O(1)$
 - 在末尾插入或删除元素：平均$O(1)$
 - 在末尾的倒数第n个位置插入或删除元素：$O(n)$
 
-##### 2.3.1.2.2 模板类型
+#### 4.1.2.2 模板类型
 
 <font color="#c00000">vector中的模板类型需要满足如下要求</font>：
 - 可以拷贝赋值
@@ -279,17 +279,34 @@ STL容器主要有如下三类：
 
 但是需要注意<span style="background:#fff88f"><font color="#c00000">慎用bool类型作为vector的元素</font></span>，除非明确地要使用 `vector<bool>` 的特性。
 
-##### 2.3.1.2.3 常用方法
+#### 4.1.2.3 常用方法
 
-| 方法  | 含义  | 备注  |
-| --- | --- | --- |
-|     |     |     |
 
-#### 2.3.1.3 std::unordered_map
+
+
+
+### 4.1.3 std::initializer_list
+
+#### 4.1.3.1 模板定义
+
+```CPP
+template< class T >
+class initializer_list;
+```
+
+#### 4.1.3.2 常用构造函数
+
+```CPP
+initializer_list() noexcept;
+```
+
+
+
+### 4.1.4 std::unordered_map
 
 `std::unordered_map` <font color="#c00000">基于哈希表实现</font>，内部元素无序存储。
 
-##### 2.3.1.3.1 模板定义
+#### 4.1.4.1 模板定义
 
 ```CPP
 template<
@@ -308,7 +325,7 @@ template<
 - `class KeyEqual` 为键值比较函数对象类型
 - `class Allocator` 为内存分配器类型
 
-##### 2.3.1.3.2 常用构造函数
+#### 4.1.4.2 常用构造函数
 
 ```CPP
 unordered_map();
@@ -319,17 +336,17 @@ unordered_map();
 - `mapped_type` ：即 `class T` ，值类型
 - `value_type` ：`std::pair<const Key, T>` ^o36e6j 
 
-##### 2.3.1.3.3 常用方法
+#### 4.1.4.3 常用方法
 
-###### 2.3.1.3.3.1 清空容器(clear)
+##### 4.1.4.3.1 清空容器(clear)
 
 ```CPP
 void clear() noexcept;
 ```
 
-###### 2.3.1.3.3.2 插入元素(insert)
+##### 4.1.4.3.2 插入元素(insert)
 
-插入单个元素的重载有：
+###### 4.1.4.3.2.1 插入单个元素
 
 ```CPP
 std::pair<iterator, bool> insert( const value_type& value ); 
@@ -351,8 +368,18 @@ auto ret1 = map.insert({1, "one"});               // ret1.second == true
 auto ret2 = map.insert(std::make_pair(1, "one")); // 此时ret2.second为false
 ```
 
+###### 4.1.4.3.2.2 批量插入
+
+```CPP
+void insert( std::initializer_list<value_type> ilist );
+```
 
 
-#### 2.3.1.4 std::map
+
+
+###### 4.1.4.3.2.3 带位置提示的插入
+
+
+### 4.1.5 std::map
 
 `std::map` 内部通常基于红黑树实现，<font color="#c00000">元素始终按键的升序排序</font>。
