@@ -8,11 +8,15 @@
 
 ![Web预览图像](./Resources/chrome_dUPIIswVmr.png)  
 
-此笔记的Gitee镜像为：[https://gitee.com/h13/Notebooks](https://gitee.com/h13/Notebooks).  
-
 ## 统计信息
 
 ![统计信息图像](https://notebooks.h13.tech/resources/statistics.svg)
+
+## 笔记仓库
+
+笔记仓库：
+- Github：[h13-0/Notebooks](https://github.com/h13-0/Notebooks) 
+- Gitee：[https://gitee.com/h13/Notebooks](https://gitee.com/h13/Notebooks) 
 
 ## Obsidian部署
 
