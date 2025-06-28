@@ -6,13 +6,13 @@
 
 在线访问：[https://notebooks.h13.tech/](https://notebooks.h13.tech/).
 
-![](./Resources/chrome_dUPIIswVmr.png)  
+![Web预览图像](./Resources/chrome_dUPIIswVmr.png)  
 
 此笔记的Gitee镜像为：[https://gitee.com/h13/Notebooks](https://gitee.com/h13/Notebooks).  
 
 ## 统计信息
 
-![](./Resources/Statistics.svg)
+![统计信息图像](https://notebooks.h13.tech/resources/statistics.svg)
 
 ## Obsidian部署
 

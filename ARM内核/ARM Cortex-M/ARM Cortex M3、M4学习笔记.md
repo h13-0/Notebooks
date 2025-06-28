@@ -63,11 +63,6 @@ Cortex M3有如下16个寄存器：
 	- `CONTROL[1]=1` 时为进程堆栈指针PSP
 - `CONTROL[2:31]` ：保留
 
-
-
-
-
-
 ## 2.3 操作模式与特权模式
 
 在[[ARM Cortex M3、M4学习笔记#^19zgcv|CONTROL 控制寄存器]]中已经讲了Cortex M3所支持的两种特权模式，其主要决定了对应模式下可执行的指令与访问的空间。
@@ -80,6 +75,17 @@ Cortex M3有如下16个寄存器：
 
 注：
 - 在 `handler mode` <font color="#c00000">时</font><span style="background:#fff88f"><font color="#c00000">永远为特权级</font></span>，而无论 `CONTROL` 寄存器的状态。
+
+## 2.4 嵌套向量中断控制器(NVIC)
+
+嵌套向量中断控制器(Nested Vectored Interrupt Controller)提供了如下的功能：
+- 可嵌套中断支持
+- 向量中断支持
+- 动态优先级调整支持
+- 较低的中断响应时长
+- 中断的可屏蔽特性
+
+
 
 
 
