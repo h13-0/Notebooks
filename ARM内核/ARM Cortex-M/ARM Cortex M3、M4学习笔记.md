@@ -6,6 +6,8 @@ number headings: auto, first-level 1, max 6, 1.1
 参考书籍：
 - Cortex-M3 权威指南，Joseph Yiu著；宋岩译。
 - ARM Cortex-M3与Cortex-M4权威指南(第3版)，Joseph Yiu著；吴常玉，曹孟娟，王丽红译。
+- The Cortex-M3 Technical Reference Manual
+- The ARMv7-M Architecture Application Level Reference Manual
 
 # 1 目录
 
@@ -14,7 +16,7 @@ number headings: auto, first-level 1, max 6, 1.1
 
 # 2 ARM Cortex-M处理器简介
 
-Arm Cortex M3是哈佛架构，有独立的指令总线和数据总线，指令和数据共享同一个存储器空间。
+Arm Cortex M3是Arm v7中M系列的一个分支，其是哈佛架构，有独立的指令总线和数据总线，指令和数据共享同一个存储器空间。
 
 ## 2.1 核心寄存器组
 
@@ -39,9 +41,7 @@ Cortex M3有如下16个寄存器：
 - `BASEPRI` 为屏蔽优先级低于某个具体数值的寄存器
 - `CONTROL` 定义特权状态，并决定使用哪一个R13堆栈指针寄存器
 
-### 2.2.1 CONTROL特权状态寄存器
-
-
+### 2.2.1 CONTROL 特权状态寄存器 ^19zgcv
 
 
 
@@ -54,6 +54,13 @@ Cortex M3支持的特权分级有：
 - 非特权级：。非特权级的代码只能通过操作SVC指令，从而触发SVC异常才可重新回到特权
 
 Cortex M3复位后的状态为thread mode、特权级访问
+
+
+## 2.3 操作模式与特权模式
+
+在[[ARM Cortex M3、M4学习笔记#^19zgcv]]
+
+
 
 
 # 3 技术综述
