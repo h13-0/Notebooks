@@ -49,8 +49,12 @@ Cortex M3有如下16个寄存器：
 - 非特权级：。非特权级的代码只能通过操作SVC指令，从而触发SVC异常才可重新回到特权
 
 在Cortex M3中，CONTROL寄存器被用于<font color="#c00000">定义特权特权级别</font>和<font color="#c00000">选择当前使用的堆栈指针</font>，其基础区位为：
-- `CONTROL[0]` ：
+- `CONTROL[0]` ：<font color="#c00000">异常服务例程外</font>的特权级别选择(异常服务例程中永远为特权级)
+	- `CONTROL[0]=0` 时为特权级
+	- `CONTROL[0]=1` 时为用户级(非特权级)
 - `CONTROL[1]` ：堆栈指针选择
+	- `CONTROL[1]=0` 时为主堆栈指针MSP
+	- `CONTROL[1]=1` 时为进程堆栈指针PSP
 - `CONTROL[2:31]` ：保留
 
 
@@ -63,10 +67,13 @@ Cortex M3有如下16个寄存器：
 在[[ARM Cortex M3、M4学习笔记#^19zgcv|CONTROL 控制寄存器]]中已经讲了Cortex M3所支持的两种特权模式，其主要决定了对应模式下可执行的指令与访问的空间。
 
 而Cortex M3还定义了如下两种不同的操作模式：
-- handler mode：异常服务例程代码的执行模式，在响应异常时自动进入。<font color="#c00000">该模式下的代码总是特权级</font>。
-- thread mode：普通应用程序代码的执行模式。该模式下的代码可以是特权级，也可以是非特权级。
+- `handler mode` ：异常服务例程代码的执行模式，在响应异常时自动进入。<font color="#c00000">该模式下的代码总是特权级</font>。
+- `thread mode` ：普通应用程序代码的执行模式。该模式下的代码可以是特权级，也可以是非特权级。
 
 不过与特权模式不同的是，操作模式并不由某个具体的寄存器反应或改变，其是一种CPU状态。当其在异常服务例程中时，CPU会自动变为handler mode和特权级，退出服务例程时会自动退出handler mode。
+
+注：
+- 在 `handler mode` <font color="#c00000">时</font><span style="background:#fff88f"><font color="#c00000">永远为特权级</font></span>，而无论 `CONTROL` 寄存器的状态。
 
 
 
