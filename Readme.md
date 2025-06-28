@@ -6,7 +6,7 @@
 
 在线访问：[https://notebooks.h13.tech/](https://notebooks.h13.tech/).
 
-![](./Resources/chrome_Py5x2smZiO.png)  
+![](./Resources/chrome_dUPIIswVmr.png)  
 
 此笔记的Gitee镜像为：[https://gitee.com/h13/Notebooks](https://gitee.com/h13/Notebooks).  
 
