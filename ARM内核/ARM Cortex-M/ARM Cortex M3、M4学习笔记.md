@@ -36,18 +36,17 @@ Cortex M3有如下16个寄存器：
 特殊寄存器包含如下五个寄存器：
 	![[msedge_5GBhP6gh2m.png]]
 其中：
-- `xPSR` 为状态字寄存器
+- `xPSR` 为程序状态寄存器
 - `PRIMASK` 为所有可屏蔽中断的屏蔽寄存器
 - `FAULTMASL` 为所有fault的屏蔽寄存器
 - `BASEPRI` 为屏蔽优先级低于某个具体数值的寄存器
 - `CONTROL` 定义特权状态，并决定使用哪一个R13堆栈指针寄存器
 
-### 2.2.1 xPSR 状态字寄存器
+### 2.2.1 xPSR 程序状态寄存器
 
 状态字寄存器xPSR的结构如下：
-
-
-状态字寄存器按照功能可以拆分为：
+	![[msedge_AkXI5N77wZ.png]]
+其按照功能可以拆分为：
 - 应用程序PSR(APSR)
 - 中断号PSR(IPSR)
 - 执行PSR(EPSR)
