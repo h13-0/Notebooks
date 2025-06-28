@@ -14,6 +14,8 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ## 2 ARM Cortex-M处理器简介
 
+Arm Cortex M3是哈佛架构，有独立的指令总线和数据总线，指令和数据共享同一个存储器空间。
+
 ## 3 技术综述
 ## 4 嵌入式软件开发简介
 
