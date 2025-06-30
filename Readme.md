@@ -4,13 +4,13 @@
 
 ## Web访问
 
-在线访问：[https://notebooks.h13.tech/](https://notebooks.h13.tech/).
+在线访问：[http://notebooks.h13.tech/](http://notebooks.h13.tech/).
 
 ![Web预览图像](./Resources/chrome_dUPIIswVmr.png)  
 
 ## 统计信息
 
-![统计信息图像](https://notebooks.h13.tech/resources/statistics.svg)
+![统计信息图像](http://notebooks.h13.tech/resources/statistics.svg)
 
 ## 笔记仓库
 
