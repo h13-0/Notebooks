@@ -58,7 +58,7 @@ class RepoStatistics:
         return sum(statistics.line_count for statistics in self._doc_statistics)
 
 def plot_repo_stats(daily_line_count, daily_word_count, daily_commit_count, 
-                    figsize=(12, 6), linewidth=2):
+                    figsize=(15, 6), linewidth=2):
     """
     绘制代码库统计数据的曲线图
     
@@ -105,10 +105,7 @@ def plot_repo_stats(daily_line_count, daily_word_count, daily_commit_count,
         
         # 处理提交次数(不存在则为0)
         commit_counts.append(daily_commit_count.get(day, 0))
-    
-    # 3. 创建图表
-    plt.figure(figsize=figsize)
-    
+
     # 创建主Y轴(用于行数和字数)
     fig, ax1 = plt.subplots(figsize=figsize)
     
@@ -119,8 +116,10 @@ def plot_repo_stats(daily_line_count, daily_word_count, daily_commit_count,
     
     # 设置左轴标签
     ax1.set_xlabel('date')
-    ax1.set_ylabel('lines / words', color='g-')
-    ax1.tick_params(axis='y', labelcolor='g-')
+    ax1.set_ylabel('lines / words', color='g')
+    ax1.tick_params(axis='y', labelcolor='g')
+    ax1.set_ylim(0, max(list(daily_word_count.values())) * 1.1)
+    ax1.set_xlim(start_date, end_date + (end_date - start_date) * 0.05)
     
     # 创建右轴(用于提交次数)
     ax2 = ax1.twinx()
@@ -131,6 +130,7 @@ def plot_repo_stats(daily_line_count, daily_word_count, daily_commit_count,
     ax2.set_ylabel('commits per day', color='r')
     ax2.tick_params(axis='y', labelcolor='r')
     ax2.set_ylim(0, 100)
+
     
     # 4. 格式化日期轴
     interval = 60
@@ -151,6 +151,7 @@ def plot_repo_stats(daily_line_count, daily_word_count, daily_commit_count,
     ax1.grid(True, linestyle='--', alpha=0.7)
     plt.title('Notebooks Statistics')
     plt.tight_layout()
+    plt.savefig("./Statistics.svg")
     
     # 显示图表
     plt.show()
@@ -182,6 +183,7 @@ def main():
         except Exception as e:
             repo.git.checkout("master")
             print(f"Error checking out commit {commit.hexsha}: {e}")
+
 
     # 按日计算总行数、总字数和当日提交数
     daily_line_count = {}
