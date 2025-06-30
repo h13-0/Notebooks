@@ -485,9 +485,40 @@ iterator erase( const_iterator first, const_iterator last );
 
 ##### 3.2.4.3.4 查询(at)
 
-###### 3.2.4.3.4.1 
+###### 3.2.4.3.4.1 普通查找
+
+普通查找有如下两个不同的成员函数：
+
+```CPP
+T& at( const Key& key );
+const T& at( const Key& key ) const;
+```
+
+上述两个成员函数是由编译器根据被提取变量的常量性来自动选区的，例如：
+
+```CPP
+std::unordered_map<int, std::string> map;
+// 存入常量(但是bing'bu'y'x)
+map.emplace(1, "Hello");
 
 
+
+```
+
+
+###### 3.2.4.3.4.2 异构查找(C++26)
+
+在普通查找时，其参数只能为Key的类型，而不能是可以和Key透明比较的类型。例如：
+
+```CPP
+// C++11 传统方法：有性能损耗
+// 创建临时 std::string 对象 → 内存分配 + 复制
+int value1 = traditional_map.at("view"); 
+
+// C++26 异构方法：零开销
+// 直接使用 string_view 查找 → 无临时对象
+int value2 = transparent_map.at(std::string_view("view"));
+```
 
 ##### 3.2.4.3.5 operator\[\]
 
