@@ -551,6 +551,9 @@ T& operator[]( Key&& key );
 
 ### 3.3.1 排序
 
+#### 3.3.1.1 std::sort(混合排序)
 
+`std::sort` 使用的排序方法会根据需要排序的元素数量动态切换排序方式，是<span style="background:#fff88f"><font color="#c00000">不稳定</font></span><font color="#c00000">排序</font>。其先使用快速排序对数据进行分段，
+- 
 
 
