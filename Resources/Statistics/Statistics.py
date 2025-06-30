@@ -159,7 +159,7 @@ def plot_repo_stats(daily_line_count, daily_word_count, daily_commit_count,
 
 def main():
     repo = git.Repo(r"./Notebooks")
-    #repo.git.pull()
+    repo.git.pull()
     repo_status = []
 
     d = deque(repo.iter_commits())
