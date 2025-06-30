@@ -491,6 +491,12 @@ iterator erase( const_iterator first, const_iterator last );
 
 ##### 3.2.4.3.5 operator\[\]
 
+###### 3.2.4.3.5.1 与at的对比
+
+| 特性     | `at()` | `operator[]` |
+| ------ | ------ | ------------ |
+| 键值不存在时 | 抛出异常   | 插入新元素        |
+| 只读访问   | 可用     | 不可，会插入新元素    |
 
 
 
