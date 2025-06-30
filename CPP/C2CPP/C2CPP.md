@@ -498,13 +498,14 @@ const T& at( const Key& key ) const;
 
 ```CPP
 std::unordered_map<int, std::string> map;
-// 存入常量(但是bing'bu'y'x)
+// 存入常量(但是并不影响at使用哪个方法)
 map.emplace(1, "Hello");
 
-
-
+// 使用非const变量提取元素，自动使用非常量版本的at函数
+std::string& ref = map.at(1);
+// 使用const变量提取元素，自动使用常量版本的at函数
+const std::string& cref = const_map.at(1);
 ```
-
 
 ###### 3.2.4.3.4.2 异构查找(C++26)
 
@@ -520,14 +521,25 @@ int value1 = traditional_map.at("view");
 int value2 = transparent_map.at(std::string_view("view"));
 ```
 
-##### 3.2.4.3.5 operator\[\]
+##### 3.2.4.3.5 查询/新增(operator\[\])
 
-###### 3.2.4.3.5.1 与at的对比
+其对应的运算符重载函数签名为：
+
+```CPP
+T& operator[]( const Key& key );
+T& operator[]( Key&& key );
+```
+
+与at的对比：
 
 | 特性     | `at()` | `operator[]` |
 | ------ | ------ | ------------ |
 | 键值不存在时 | 抛出异常   | 插入新元素        |
 | 只读访问   | 可用     | 不可，会插入新元素    |
+
+##### 3.2.4.3.6 
+
+
 
 
 
