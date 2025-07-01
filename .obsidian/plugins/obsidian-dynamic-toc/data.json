@@ -1,6 +1,6 @@
 {
   "style": "bullet",
-  "min_depth": 2,
+  "min_depth": 1,
   "max_depth": 6,
   "externalStyle": "None",
   "supportAllMatchers": false,
