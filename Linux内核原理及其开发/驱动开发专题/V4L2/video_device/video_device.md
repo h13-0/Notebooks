@@ -1290,12 +1290,16 @@ struct vb2_ops {
 	- 被调用时机： `REQBUFS` 或 `CREATE_BUFS` 时调用
 	- 
 - `int (*buf_prepare)(struct vb2_buffer *vb)` 
-	- 功能含义：在每次将缓冲区加入队列( `QBUF` )前调用
+	- 功能含义：在每次将缓冲区加入队列( `QBUF` )前调用，用于验证和准备缓冲区(如检查大小、填充数据等)
 - `void (*buf_finish)(struct vb2_buffer *vb)` 
-	- 功能含义：在缓冲区从队列中取出( `DQBUF` )后调用
+	- 功能含义：在缓冲区从队列中取出( `DQBUF` )后调用，用于在返回缓冲区给用户空间之前做后处理(如更新元数据)
 - `void (*buf_cleanup)(struct vb2_buffer *vb)` 
+	- 功能含义：当缓冲区被释放( `REQBUFS(0)` 或关闭)时调用，用于清理驱动私有的缓冲区资源
 - `int (*prepare_streaming)(struct vb2_queue *q)` 
-	- 功能含义：在进入流状态前调用，用于准备工作
+	- 功能含义：在进入流状态前调用，用于检查硬件和配置是否就绪
+- `int (*start_streaming)(struct vb2_queue *q, unsigned int count)` 
+- `void (*stop_streaming)(struct vb2_queue *q)` 
+- `void (*unprepare_streaming)(struct vb2_queue *q)` 
 - `void (*buf_queue)(struct vb2_buffer *vb)` 
 	- 功能含义<font color="#c00000">[重要]</font>：用户空间使用 `VIDIOC_QBUF` 将缓冲区放会队列后框架会调用该函数，驱动应当在此启动硬件操作。当硬件操作完毕后，驱动必须调用 `vb2_buffer_done` 通知V4L2缓冲区已处理完成(状态为 `DONE` 或 `ERROR` )
 - `void (*buf_request_complete)(struct vb2_buffer *vb)` 
