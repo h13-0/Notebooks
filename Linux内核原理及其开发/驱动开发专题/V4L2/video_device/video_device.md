@@ -1280,14 +1280,19 @@ struct vb2_ops {
 		- `struct device *alloc_devs[]` ：存储每个平面所分配的设备，尺寸与 `sizes` 一致，通常在分配特殊内存时使用。
 - `void (*wait_prepare)(struct vb2_queue *q)` 
 	- 功能含义：当vb2需要等待事件时，V4L2框架会先调用 `wait_prepare` ，然后等待结束后调用 `wait_finish` 
-		- 在驱动实现中，通常会在该函数中分别尝试获取和释放( `dev->mutex` )，从而避免死锁。
+		- 在驱动实现中，通常会在该函数中分别尝试获取和释放互斥锁，从而避免死锁。
 - `void (*wait_finish)(struct vb2_queue *q)` 
 	- 功能含义：同上。
 - `int (*buf_out_validate)(struct vb2_buffer *vb)` 
 	- 功能含义：校验输出缓冲区的配置是否有效
 - `int (*buf_init)(struct vb2_buffer *vb)` 
 	- 功能含义：在缓冲区初始化时被调用，用于驱动对缓冲区进行额外的初始化
+	- 被调用时机： `REQBUFS` 或 `CREATE_BUFS` 时调用
+	- 
 - `int (*buf_prepare)(struct vb2_buffer *vb)` 
+	- 功能含义：在每次将缓冲区加入队列( `QBUF` )前调用
+- `void (*buf_finish)(struct vb2_buffer *vb)` 
+	- 功能含义：在缓冲区从队列中取出( `DQBUF` )后调用
 - `void (*buf_cleanup)(struct vb2_buffer *vb)` 
 - `int (*prepare_streaming)(struct vb2_queue *q)` 
 	- 功能含义：在进入流状态前调用，用于准备工作
