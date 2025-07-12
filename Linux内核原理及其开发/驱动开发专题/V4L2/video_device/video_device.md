@@ -1292,7 +1292,8 @@ struct vb2_ops {
 - `int (*prepare_streaming)(struct vb2_queue *q)` 
 	- 功能含义：在进入流状态前调用，用于准备工作
 - `void (*buf_queue)(struct vb2_buffer *vb)` 
-
+	- 功能含义<font color="#c00000">[重要]</font>：用户空间使用 `VIDIOC_QBUF` 将缓冲区放会队列后框架会调用该函数，驱动应当在此启动硬件操作。当硬件操作完毕后，驱动必须调用 `vb2_buffer_done` 通知V4L2缓冲区已处理完成(状态为 `DONE` 或 `ERROR` )
+- `void (*buf_request_complete)(struct vb2_buffer *vb)` 
 
 
 
