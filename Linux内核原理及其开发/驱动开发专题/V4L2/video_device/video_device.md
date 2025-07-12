@@ -1264,8 +1264,10 @@ struct vb2_ops {
 	- 参数：
 		- `struct vb2_queue *q` ：需要配置的vb2缓冲区指针
 		- `unsigned int *num_buffers` ：驱动所需的缓冲区数量
-		- `unsigned int *num_planes` ：驱动所需的[[video_device#^29c6mw|平面]]数量
-		- `unsigned int sizes[]` ：
+		- `unsigned int *num_planes` ：驱动所需的[[video_device#^29c6mw|平面]]数量，其：
+			- 当其在 `VIDIOC_REQBUFS` 调用时， `num_planes` 为0，需要驱动根据 `q->format` 配置所需平面数
+			- 在 `VIDIOC_CREATE_BUFS` 调用时， `num_planes` 为用户所请求的平面数，驱动可更改，但通常遵守用户的请求
+		- `unsigned int sizes[]` ：存储每个平面的总字节数，由驱动指定；数组的大小和 `num_planes` 一致。
 		- `struct device *alloc_devs[]` ：
 
 
