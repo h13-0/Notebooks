@@ -1262,10 +1262,11 @@ struct vb2_ops {
 - `int (*queue_setup)(...)` 
 	- 功能含义：队列配置回调，在 `VIDIOC_REQBUFS` 或 `VIDIOC_CREATE_BUFS` 时调用
 	- 参数：
-		- `struct vb2_queue *q` ：
+		- `struct vb2_queue *q` ：需要配置的vb2缓冲区指针
 		- `unsigned int *num_buffers` ：驱动所需的缓冲区数量
 		- `unsigned int *num_planes` ：驱动所需的[[video_device#^29c6mw|平面]]数量
-		- 
+		- `unsigned int sizes[]` ：
+		- `struct device *alloc_devs[]` ：
 
 
 ##### 3.3.1.2 相关API
