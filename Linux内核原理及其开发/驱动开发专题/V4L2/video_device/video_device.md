@@ -46,6 +46,8 @@ YUV的UV分量可视化图如下：
 相比于RGB的单平面，YUV等多平面可以带来更多的兼容性优势。
 并且也有一些硬件多平面数据处理。
 
+在Linux中，默认最大平面数为8( `VIDEO_MAX_PLANES` )。
+
 ### 2.2 视频设备用户态开发(/dev/video*)
 
 #### 2.2.1 基本工作流程
@@ -1261,17 +1263,19 @@ struct vb2_ops {
 其成员：
 - `int (*queue_setup)(...)` 
 	- 功能含义：队列配置回调，在 `VIDIOC_REQBUFS` 或 `VIDIOC_CREATE_BUFS` 时调用
-	- 调用时机：
-		1. 第一次调用：由驱动计算所需缓冲区数量( `num_buffers` )和平面数量( `num_planes` )
-		2. 第二次调用：给定实际申请下来的缓冲区数量，
+	- 被调用时机：
+		- 在 `VIDIOC_REQBUFS` 中会被调用两次：
+			1. 第一次调用：由驱动计算所需缓冲区数量( `num_buffers` )和平面数量( `num_planes` )，并指定每个平面的总字节数( `sizes` 参数)。
+			2. 第二次调用：给定实际申请下来的缓冲区数量，驱动校验是否满足期望。
+		- 在
 	- 参数：
 		- `struct vb2_queue *q` ：需要配置的vb2缓冲区指针
 		- `unsigned int *num_buffers` ：驱动所需的缓冲区数量
 		- `unsigned int *num_planes` ：驱动所需的[[video_device#^29c6mw|平面]]数量，其：
 			- 当其在 `VIDIOC_REQBUFS` 调用时， `num_planes` 为0，需要驱动根据 `q->format` 配置所需平面数
 			- 在 `VIDIOC_CREATE_BUFS` 调用时， `num_planes` 为用户所请求的平面数，
-		- `unsigned int sizes[]` ：存储每个平面的总字节数，由驱动指定；数组的大小和 `num_planes` 一致。
-			- 维护方：
+		- `unsigned int sizes[]` ：存储每个平面的总字节数，由驱动指定；数组由V4L2提前分配，数组长度为 `VIDEO_MAX_PLANES` (通常为8)。
+			- 维护方：V4L2框架
 		- `struct device *alloc_devs[]` ：
 
 
