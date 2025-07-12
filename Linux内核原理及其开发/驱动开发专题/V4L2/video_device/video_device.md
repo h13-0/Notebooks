@@ -1278,6 +1278,13 @@ struct vb2_ops {
 		- `unsigned int sizes[]` ：存储每个平面的总字节数，由驱动指定；数组由V4L2提前分配，数组长度为 `VIDEO_MAX_PLANES` (通常为8)。
 			- 维护方：V4L2框架
 		- `struct device *alloc_devs[]` ：存储每个平面所分配的设备，尺寸与 `sizes` 一致，通常在分配特殊内存时使用。
+- `void (*wait_prepare)(struct vb2_queue *q)` 
+	- 功能含义：当vb2需要等待事件时，V4L2框架会先调用 `wait_prepare` ，然后等待结束后调用 `wait_finish` 
+		- 在驱动实现中，通常会在该函数中分别尝试获取和释放( `dev->mutex` )，从而避免死锁。
+- `void (*wait_finish)(struct vb2_queue *q)` 
+	- 功能含义：同上。
+- `int (*buf_out_validate)(struct vb2_buffer *vb)` 
+	- 功能含义：
 
 
 ##### 3.3.1.2 相关API
