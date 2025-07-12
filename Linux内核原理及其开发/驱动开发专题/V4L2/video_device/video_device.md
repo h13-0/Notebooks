@@ -1285,6 +1285,15 @@ struct vb2_ops {
 	- 功能含义：同上。
 - `int (*buf_out_validate)(struct vb2_buffer *vb)` 
 	- 功能含义：
+- `int (*buf_init)(struct vb2_buffer *vb)` 
+	- 功能含义：在缓冲区初始化时被调用，用于驱动对缓冲区进行额外的初始化
+- `int (*buf_prepare)(struct vb2_buffer *vb)` 
+- `void (*buf_cleanup)(struct vb2_buffer *vb)` 
+- `int (*prepare_streaming)(struct vb2_queue *q)` 
+	- 功能含义：在进入流状态前调用，用于准备工作
+- `void (*buf_queue)(struct vb2_buffer *vb)` 
+
+
 
 
 ##### 3.3.1.2 相关API
