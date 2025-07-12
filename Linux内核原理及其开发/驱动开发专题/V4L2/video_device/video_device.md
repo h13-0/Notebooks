@@ -1155,7 +1155,216 @@ struct vim2m_ctx {
 
 #### 3.3.2 数据结构
 
+```C
+/**
+ * struct vb2_queue - a videobuf2 queue.
+ *
+ * @type:	private buffer type whose content is defined by the vb2-core
+ *		caller. For example, for V4L2, it should match
+ *		the types defined on &enum v4l2_buf_type.
+ * @io_modes:	supported io methods (see &enum vb2_io_modes).
+ * @dev:	device to use for the default allocation context if the driver
+ *		doesn't fill in the @alloc_devs array.
+ * @dma_attrs:	DMA attributes to use for the DMA.
+ * @bidirectional: when this flag is set the DMA direction for the buffers of
+ *		this queue will be overridden with %DMA_BIDIRECTIONAL direction.
+ *		This is useful in cases where the hardware (firmware) writes to
+ *		a buffer which is mapped as read (%DMA_TO_DEVICE), or reads from
+ *		buffer which is mapped for write (%DMA_FROM_DEVICE) in order
+ *		to satisfy some internal hardware restrictions or adds a padding
+ *		needed by the processing algorithm. In case the DMA mapping is
+ *		not bidirectional but the hardware (firmware) trying to access
+ *		the buffer (in the opposite direction) this could lead to an
+ *		IOMMU protection faults.
+ * @fileio_read_once:		report EOF after reading the first buffer
+ * @fileio_write_immediately:	queue buffer after each write() call
+ * @allow_zero_bytesused:	allow bytesused == 0 to be passed to the driver
+ * @quirk_poll_must_check_waiting_for_buffers: Return %EPOLLERR at poll when QBUF
+ *              has not been called. This is a vb1 idiom that has been adopted
+ *              also by vb2.
+ * @supports_requests: this queue supports the Request API.
+ * @requires_requests: this queue requires the Request API. If this is set to 1,
+ *		then supports_requests must be set to 1 as well.
+ * @uses_qbuf:	qbuf was used directly for this queue. Set to 1 the first
+ *		time this is called. Set to 0 when the queue is canceled.
+ *		If this is 1, then you cannot queue buffers from a request.
+ * @uses_requests: requests are used for this queue. Set to 1 the first time
+ *		a request is queued. Set to 0 when the queue is canceled.
+ *		If this is 1, then you cannot queue buffers directly.
+ * @allow_cache_hints: when set user-space can pass cache management hints in
+ *		order to skip cache flush/invalidation on ->prepare() or/and
+ *		->finish().
+ * @non_coherent_mem: when set queue will attempt to allocate buffers using
+ *		non-coherent memory.
+ * @lock:	pointer to a mutex that protects the &struct vb2_queue. The
+ *		driver can set this to a mutex to let the v4l2 core serialize
+ *		the queuing ioctls. If the driver wants to handle locking
+ *		itself, then this should be set to NULL. This lock is not used
+ *		by the videobuf2 core API.
+ * @owner:	The filehandle that 'owns' the buffers, i.e. the filehandle
+ *		that called reqbufs, create_buffers or started fileio.
+ *		This field is not used by the videobuf2 core API, but it allows
+ *		drivers to easily associate an owner filehandle with the queue.
+ * @ops:	driver-specific callbacks
+ * @mem_ops:	memory allocator specific callbacks
+ * @buf_ops:	callbacks to deliver buffer information.
+ *		between user-space and kernel-space.
+ * @drv_priv:	driver private data.
+ * @subsystem_flags: Flags specific to the subsystem (V4L2/DVB/etc.). Not used
+ *		by the vb2 core.
+ * @buf_struct_size: size of the driver-specific buffer structure;
+ *		"0" indicates the driver doesn't want to use a custom buffer
+ *		structure type. In that case a subsystem-specific struct
+ *		will be used (in the case of V4L2 that is
+ *		``sizeof(struct vb2_v4l2_buffer)``). The first field of the
+ *		driver-specific buffer structure must be the subsystem-specific
+ *		struct (vb2_v4l2_buffer in the case of V4L2).
+ * @timestamp_flags: Timestamp flags; ``V4L2_BUF_FLAG_TIMESTAMP_*`` and
+ *		``V4L2_BUF_FLAG_TSTAMP_SRC_*``
+ * @gfp_flags:	additional gfp flags used when allocating the buffers.
+ *		Typically this is 0, but it may be e.g. %GFP_DMA or %__GFP_DMA32
+ *		to force the buffer allocation to a specific memory zone.
+ * @min_queued_buffers: the minimum number of queued buffers needed before
+ *		@start_streaming can be called. Used when a DMA engine
+ *		cannot be started unless at least this number of buffers
+ *		have been queued into the driver.
+ *		VIDIOC_REQBUFS will ensure at least @min_queued_buffers + 1
+ *		buffers will be allocated. Note that VIDIOC_CREATE_BUFS will not
+ *		modify the requested buffer count.
+ * @min_reqbufs_allocation: the minimum number of buffers to be allocated when
+ *		calling VIDIOC_REQBUFS. Note that VIDIOC_CREATE_BUFS will *not*
+ *		modify the requested buffer count and does not use this field.
+ *		Drivers can set this if there has to be a certain number of
+ *		buffers available for the hardware to work effectively.
+ *		This allows calling VIDIOC_REQBUFS with a buffer count of 1 and
+ *		it will be automatically adjusted to a workable	buffer count.
+ *		If set, then @min_reqbufs_allocation must be larger than
+ *		@min_queued_buffers + 1.
+ *		If this field is > 3, then it is highly recommended that the
+ *		driver implements the V4L2_CID_MIN_BUFFERS_FOR_CAPTURE/OUTPUT
+ *		control.
+ * @alloc_devs:	&struct device memory type/allocator-specific per-plane device
+ */
+/*
+ * Private elements (won't appear at the uAPI book):
+ * @mmap_lock:	private mutex used when buffers are allocated/freed/mmapped
+ * @memory:	current memory type used
+ * @dma_dir:	DMA mapping direction.
+ * @bufs:	videobuf2 buffer structures. If it is non-NULL then
+ *		bufs_bitmap is also non-NULL.
+ * @bufs_bitmap: bitmap tracking whether each bufs[] entry is used
+ * @max_num_buffers: upper limit of number of allocated/used buffers.
+ *		     If set to 0 v4l2 core will change it VB2_MAX_FRAME
+ *		     for backward compatibility.
+ * @queued_list: list of buffers currently queued from userspace
+ * @queued_count: number of buffers queued and ready for streaming.
+ * @owned_by_drv_count: number of buffers owned by the driver
+ * @done_list:	list of buffers ready to be dequeued to userspace
+ * @done_lock:	lock to protect done_list list
+ * @done_wq:	waitqueue for processes waiting for buffers ready to be dequeued
+ * @streaming:	current streaming state
+ * @start_streaming_called: @start_streaming was called successfully and we
+ *		started streaming.
+ * @error:	a fatal error occurred on the queue
+ * @waiting_for_buffers: used in poll() to check if vb2 is still waiting for
+ *		buffers. Only set for capture queues if qbuf has not yet been
+ *		called since poll() needs to return %EPOLLERR in that situation.
+ * @waiting_in_dqbuf: set by the core for the duration of a blocking DQBUF, when
+ *		it has to wait for a buffer to become available with vb2_queue->lock
+ *		released. Used to prevent destroying the queue by other threads.
+ * @is_multiplanar: set if buffer type is multiplanar
+ * @is_output:	set if buffer type is output
+ * @is_busy:	set if at least one buffer has been allocated at some time.
+ * @copy_timestamp: set if vb2-core should set timestamps
+ * @last_buffer_dequeued: used in poll() and DQBUF to immediately return if the
+ *		last decoded buffer was already dequeued. Set for capture queues
+ *		when a buffer with the %V4L2_BUF_FLAG_LAST is dequeued.
+ * @fileio:	file io emulator internal data, used only if emulator is active
+ * @threadio:	thread io internal data, used only if thread is active
+ * @name:	queue name, used for logging purpose. Initialized automatically
+ *		if left empty by drivers.
+ */
+struct vb2_queue {
+	unsigned int			type;
+	unsigned int			io_modes;
+	struct device			*dev;
+	unsigned long			dma_attrs;
+	unsigned int			bidirectional:1;
+	unsigned int			fileio_read_once:1;
+	unsigned int			fileio_write_immediately:1;
+	unsigned int			allow_zero_bytesused:1;
+	unsigned int		   quirk_poll_must_check_waiting_for_buffers:1;
+	unsigned int			supports_requests:1;
+	unsigned int			requires_requests:1;
+	unsigned int			uses_qbuf:1;
+	unsigned int			uses_requests:1;
+	unsigned int			allow_cache_hints:1;
+	unsigned int			non_coherent_mem:1;
 
+	struct mutex			*lock;
+	void				*owner;
+
+	const struct vb2_ops		*ops;
+	const struct vb2_mem_ops	*mem_ops;
+	const struct vb2_buf_ops	*buf_ops;
+
+	void				*drv_priv;
+	u32				subsystem_flags;
+	unsigned int			buf_struct_size;
+	u32				timestamp_flags;
+	gfp_t				gfp_flags;
+	u32				min_queued_buffers;
+	u32				min_reqbufs_allocation;
+
+	struct device			*alloc_devs[VB2_MAX_PLANES];
+
+	/* private: internal use only */
+	struct mutex			mmap_lock;
+	unsigned int			memory;
+	enum dma_data_direction		dma_dir;
+	struct vb2_buffer		**bufs;
+	unsigned long			*bufs_bitmap;
+	unsigned int			max_num_buffers;
+
+	struct list_head		queued_list;
+	unsigned int			queued_count;
+
+	atomic_t			owned_by_drv_count;
+	struct list_head		done_list;
+	spinlock_t			done_lock;
+	wait_queue_head_t		done_wq;
+
+	unsigned int			streaming:1;
+	unsigned int			start_streaming_called:1;
+	unsigned int			error:1;
+	unsigned int			waiting_for_buffers:1;
+	unsigned int			waiting_in_dqbuf:1;
+	unsigned int			is_multiplanar:1;
+	unsigned int			is_output:1;
+	unsigned int			is_busy:1;
+	unsigned int			copy_timestamp:1;
+	unsigned int			last_buffer_dequeued:1;
+
+	struct vb2_fileio_data		*fileio;
+	struct vb2_threadio_data	*threadio;
+
+	char				name[32];
+
+#ifdef CONFIG_VIDEO_ADV_DEBUG
+	/*
+	 * Counters for how often these queue-related ops are
+	 * called. Used to check for unbalanced ops.
+	 */
+	u32				cnt_queue_setup;
+	u32				cnt_wait_prepare;
+	u32				cnt_wait_finish;
+	u32				cnt_prepare_streaming;
+	u32				cnt_start_streaming;
+	u32				cnt_stop_streaming;
+	u32				cnt_unprepare_streaming;
+#endif
+};
+```
 
 
 ##### 3.3.2.1 相关回调函数(struct vb2_ops)
@@ -1315,14 +1524,14 @@ struct vb2_ops {
 			- 维护方：V4L2框架
 		- `struct device *alloc_devs[]` ：存储每个平面所分配的设备，尺寸与 `sizes` 一致，通常在分配特殊内存时使用。
 - `void (*wait_prepare)(struct vb2_queue *q)` 
-	- 功能含义：当vb2需要等待事件时，V4L2框架会先调用 `wait_prepare` ，然后等待结束后调用 `wait_finish` 
+	- 功能含义：在即将让用户态线程进入等待事件和阻塞之前，驱动所需要完成的准备的处理回调。
 	- 等待事件举例：
 		- 当用户已经把队列中所有缓冲区都读取了，并且请求下一个缓冲区时，用户态进入等待事件
 		- 当队列已经填满，且用户申请入队下一个缓冲区时，用户态进入等待事件
 		- 在 `streamon` 时，如果设置了 `min_buffers` 并且当前入队的缓冲区数量不足，可能会等待
 	- <span style="background:#fff88f"><font color="#c00000">机制及触发流程</font></span>：
 		1. 用户申请入队/出队操作
-		2. <font color="#c00000">V4L2框架获取设备的锁</font>，从而进行设备状态的互斥管理，并进入驱动回调
+		2. <font color="#c00000">V4L2框架获取设备的锁</font>( `vb2_queue.lock` 中指定的互斥锁)，从而进行设备状态的互斥管理，并进入驱动回调
 		3. 在驱动的入队/出队回调中，若：
 			1. 不满足出入队条件(队满入队、队空出队)时返回 `-EAGAIN` 
 			2. 满足出入队条件时将缓冲区填入参数的指针中，并返回 `0` 
@@ -1335,9 +1544,11 @@ struct vb2_ops {
 		10. 如果因为一些条件(如队满入队、队空出队)从而不满足
 		11. 
 		12. 总结：<font color="#c00000">该设计确保等待时间期间</font>，<font color="#c00000">新的中断事件中不会等待</font> `wait_prepare/finish` <font color="#c00000">操作组中操作的互斥锁</font>(避免了死锁)。
+	- 当vb2需要等待事件时，V4L2框架会先调用 `wait_prepare` ，然后等待结束后调用 `wait_finish` 对
+		- 在 `wait_prepare` 中通常只需要对 `vb2_queue.lock` 进行解锁，但是对于复杂设备，可能还需要同步解除I2C等子系统的互斥锁，并让硬件恢复到一个安全状态。
 	- 可选性：
 - `void (*wait_finish)(struct vb2_queue *q)` 
-	- 功能含义：同上。
+	- 功能含义：用户态线程完成等待事件之后的回调
 	- 可选性：同上。
 - `int (*buf_out_validate)(struct vb2_buffer *vb)` 
 	- 功能含义：<span style="background:#fff88f"><font color="#c00000">专用于输出设备(用户->设备)</font></span><font color="#c00000">的校验回调函数</font>，校验输出缓冲区的数据是否有效(例如校验缓冲区长度是否足够、元数据格式、DMA地址、时间戳等)
