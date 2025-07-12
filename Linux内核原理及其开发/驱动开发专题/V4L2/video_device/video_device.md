@@ -48,6 +48,10 @@ YUV的UV分量可视化图如下：
 
 在Linux中，默认最大平面数为8( `VIDEO_MAX_PLANES` )。
 
+#### 2.1.3 元数据 ^h63jbf
+
+除了图像像素数据之外，与视频帧相关的附加信息
+
 ### 2.2 视频设备用户态开发(/dev/video*)
 
 #### 2.2.1 基本工作流程
@@ -1284,7 +1288,8 @@ struct vb2_ops {
 - `void (*wait_finish)(struct vb2_queue *q)` 
 	- 功能含义：同上。
 - `int (*buf_out_validate)(struct vb2_buffer *vb)` 
-	- 功能含义：校验输出缓冲区的配置是否有效
+	- 功能含义：<span style="background:#fff88f"><font color="#c00000">专用于输出设备(用户->设备)</font></span><font color="#c00000">的校验回调函数</font>，校验输出缓冲区的数据是否有效(例如校验缓冲区长度是否足够、元数据格式、DMA地址、时间戳等)
+	- 被调用时机：用户态使用 `VIDEOC_QBUF` 输出数据之后
 - `int (*buf_init)(struct vb2_buffer *vb)` 
 	- 功能含义：在缓冲区初始化时被调用，用于驱动对缓冲区进行额外的初始化
 	- 被调用时机： `REQBUFS` 或 `CREATE_BUFS` 时调用
@@ -1298,7 +1303,9 @@ struct vb2_ops {
 - `int (*prepare_streaming)(struct vb2_queue *q)` 
 	- 功能含义：在进入流状态前调用，用于检查硬件和配置是否就绪
 - `int (*start_streaming)(struct vb2_queue *q, unsigned int count)` 
+	- 功能含义：在用户态调用 `STREAMON` 且队列至少有一个缓冲区时被调用
 - `void (*stop_streaming)(struct vb2_queue *q)` 
+	- 功能含义：当用户态调用 `STREAMOFF` 时被调用，用于停止流传输
 - `void (*unprepare_streaming)(struct vb2_queue *q)` 
 - `void (*buf_queue)(struct vb2_buffer *vb)` 
 	- 功能含义<font color="#c00000">[重要]</font>：用户空间使用 `VIDIOC_QBUF` 将缓冲区放会队列后框架会调用该函数，驱动应当在此启动硬件操作。当硬件操作完毕后，驱动必须调用 `vb2_buffer_done` 通知V4L2缓冲区已处理完成(状态为 `DONE` 或 `ERROR` )
