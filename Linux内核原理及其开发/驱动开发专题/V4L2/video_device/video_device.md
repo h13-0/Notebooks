@@ -1547,7 +1547,7 @@ struct vb2_ops {
 			2. 满足出入队条件时将缓冲区填入参数的指针中，并返回 `0` 
 				1. 对于满足出入队条件的分支，则不会调用 `wait_prepare/finish` 操作，并且立即释放 `vb2_queue.lock` 并进行后处理
 		4. 目的：<font color="#c00000">该设计确保等待期间</font>，<font color="#c00000">新的中断事件中不会等待</font> `wait_prepare/finish` <font color="#c00000">操作组中操作的互斥锁</font>(避免了死锁)，并且设备可以安全处理中断事件。
-	- 可选性：
+	- 可选性：驱动可选实现，若不实现则使用默认行为(解锁 `vb2_queue.lock` )
 - `void (*wait_finish)(struct vb2_queue *q)` 
 	- 功能含义：用户态线程完成等待事件之后的回调。
 	- 被调用时机：
