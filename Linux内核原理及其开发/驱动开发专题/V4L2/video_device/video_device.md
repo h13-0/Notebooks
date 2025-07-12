@@ -1153,7 +1153,12 @@ struct vim2m_ctx {
 - DMA支持
 等。
 
-##### 3.3.1.1 相关回调函数(struct vb2_ops)
+#### 3.3.2 数据结构
+
+
+
+
+##### 3.3.2.1 相关回调函数(struct vb2_ops)
 
 视频缓冲区队列有如下的回调函数：
 
@@ -1315,12 +1320,21 @@ struct vb2_ops {
 		- 当用户已经把队列中所有缓冲区都读取了，并且请求下一个缓冲区时，用户态进入等待事件
 		- 当队列已经填满，且用户申请入队下一个缓冲区时，用户态进入等待事件
 		- 在 `streamon` 时，如果设置了 `min_buffers` 并且当前入队的缓冲区数量不足，可能会等待
-	- <span style="background:#fff88f"><font color="#c00000">注</font></span>：
-		1. 在上述等待事件的用户操作的处理中，均会尝试保持某个锁来进行管理设备状态
-		2. 如果因为一些条件(如队满入队、dui)
-		3. 设计目的：<font color="#c00000">确保等待时间期间</font>，<font color="#c00000">新的中断事件中不会等待</font> `wait_prepare/finish` <font color="#c00000">操作组中操作的互斥锁</font>(避免了死锁)。
+	- <span style="background:#fff88f"><font color="#c00000">机制及触发流程</font></span>：
+		1. 用户申请入队/出队操作
+		2. <font color="#c00000">V4L2框架获取设备的锁</font>，从而进行设备状态的互斥管理，并进入驱动回调
+		3. 在驱动的入队/出队回调中，若：
+			1. 不满足出入队条件(队满入队、队空出队)时返回 `-EAGAIN` 
+			2. 满足出入队条件时将缓冲区填入参数的指针中，并返回 `0` 
 		4. 
 		5. 
+		6. 
+		7. 对于不满足出入队条件的分支
+		8. 在上述等待事件的用户操作的处理中，均会<font color="#c00000">尝试保持某个锁</font>来进行管理设备状态
+		9. 
+		10. 如果因为一些条件(如队满入队、队空出队)从而不满足
+		11. 
+		12. 总结：<font color="#c00000">该设计确保等待时间期间</font>，<font color="#c00000">新的中断事件中不会等待</font> `wait_prepare/finish` <font color="#c00000">操作组中操作的互斥锁</font>(避免了死锁)。
 	- 可选性：
 - `void (*wait_finish)(struct vb2_queue *q)` 
 	- 功能含义：同上。
@@ -1361,23 +1375,23 @@ struct vb2_ops {
 	- 功能含义：
 	- 可选性：当需要支持请求API(request)时驱动需要实现
 
-##### 3.3.1.2 相关API
+##### 3.3.2.2 相关API
 
 
 
 
-##### 3.3.1.3 提供的机制
+##### 3.3.2.3 提供的机制
 
 
 
 
 
-#### 3.3.2 源控制 ^8230im
+#### 3.3.3 源控制 ^8230im
 
 
 
 
-#### 3.3.3 媒体请求(media_request) ^dhev4l
+#### 3.3.4 媒体请求(media_request) ^dhev4l
 
 在用户态章节编程中已经提到，用户可以使用 `ioctl` 进行媒体设备配置，例如：
 
@@ -1407,7 +1421,7 @@ request_add_operation(request, VIDIOC_QBUF, &buffer);
 ioctl(fd, MEDIA_REQUEST_IOC_QUEUE, &request); 
 ```
 
-##### 3.3.3.1 媒体请求操作回调(media_device_ops) ^xvploq
+##### 3.3.4.1 媒体请求操作回调(media_device_ops) ^xvploq
 
 媒体请求回调( `media_device_ops` )的数据结构定义如下：
 
@@ -1471,13 +1485,13 @@ struct media_device_ops {
 		- 该函数不能失败(因为已经被 `req_validate` 验证)
 
 
-#### 3.3.4 通用文件句柄管理(v4l2_fh) ^kyd4a1
+#### 3.3.5 通用文件句柄管理(v4l2_fh) ^kyd4a1
 
 
-#### 3.3.5 v4l2-ioctl
+#### 3.3.6 v4l2-ioctl
 
 
-##### 3.3.5.1 v4l2_ioctl_ops ^r8lfyg
+##### 3.3.6.1 v4l2_ioctl_ops ^r8lfyg
 
 
 
@@ -1886,4 +1900,8 @@ error_free:
 4. 初始化并配置video设备：
 	1. 
 5. 初始化内存到内存框架(m2m)
-6. 注册video设备�
+6. 注册video设备到内核
+
+
+
+
