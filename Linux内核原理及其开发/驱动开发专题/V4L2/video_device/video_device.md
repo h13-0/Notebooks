@@ -70,8 +70,13 @@ YUV的UV分量可视化图如下：
 等。
 元数据的传递方式有：
 1. 附加平面(最常见)
-2. 拓展控制
-3. 元数据zhuan
+2. 拓展控制( `VIDEOC_G_EXT_CTRLS` )
+3. 元数据专用队列
+
+其数据结构的定义通常通过有如下方式共享：
+1. 头文件共享
+2. 使用标准化的描述符( `V4L2_META_FMT_*` )
+3. 使用 `ioctl` 查询元数据格式
 
 ### 2.2 视频设备用户态开发(/dev/video*)
 
@@ -1294,6 +1299,7 @@ struct vb2_ops {
 			2. 第二次调用：给定实际申请下来的缓冲区数量，驱动校验是否满足期望。
 		- 在 `VIDIOC_CREATE_BUFS` 中只会被调用一次，且晚于 `VIDIOC_REQBUFS` 。
 		- 也就是说当且仅当 `num_planes=0` 时为第一次调用，此时驱动应当指定若干参数；<font color="#c00000">后续调用中</font> `num_planes!=0` <font color="#c00000">且只能做参数校验</font>。
+	- 可选性：<font color="#c00000">驱动必须实现</font>
 	- 参数：
 		- `struct vb2_queue *q` ：需要配置的vb2缓冲区指针
 		- `unsigned int *num_buffers` ：驱动所需的缓冲区数量
@@ -1311,24 +1317,34 @@ struct vb2_ops {
 - `int (*buf_out_validate)(struct vb2_buffer *vb)` 
 	- 功能含义：<span style="background:#fff88f"><font color="#c00000">专用于输出设备(用户->设备)</font></span><font color="#c00000">的校验回调函数</font>，校验输出缓冲区的数据是否有效(例如校验缓冲区长度是否足够、元数据格式、DMA地址、时间戳等)
 	- 被调用时机：用户态使用 `VIDEOC_QBUF` 输出数据之后
+	- 可选性：输出设备驱动可选实现
 - `int (*buf_init)(struct vb2_buffer *vb)` 
 	- 功能含义：在缓冲区初始化时被调用，用于驱动对缓冲区进行额外的初始化
 	- 被调用时机： `REQBUFS` 或 `CREATE_BUFS` 时调用
+	- 可选性：驱动可选实现
 - `int (*buf_prepare)(struct vb2_buffer *vb)` 
 	- 功能含义：在每次将缓冲区加入队列( `QBUF` )前调用，用于验证和准备缓冲区(如检查大小、填充数据等)
+	- 可选性：驱动可选实现
 - `void (*buf_finish)(struct vb2_buffer *vb)` 
 	- 功能含义：在缓冲区从队列中取出( `DQBUF` )后调用，用于在返回缓冲区给用户空间之前做后处理(如更新元数据)
+	- 可选性：驱动可选实现
 - `void (*buf_cleanup)(struct vb2_buffer *vb)` 
 	- 功能含义：当缓冲区被释放( `REQBUFS(0)` 或关闭)时调用，用于清理驱动私有的缓冲区资源
+	- 可选性：驱动可选实现
 - `int (*prepare_streaming)(struct vb2_queue *q)` 
 	- 功能含义：在进入流状态前调用，用于检查硬件和配置是否就绪
+	- 可选性：驱动可选实现
 - `int (*start_streaming)(struct vb2_queue *q, unsigned int count)` 
 	- 功能含义：在用户态调用 `STREAMON` 且队列至少有一个缓冲区时被调用
+	- 可选性：<font color="#c00000">驱动必须实现</font>
 - `void (*stop_streaming)(struct vb2_queue *q)` 
 	- 功能含义：当用户态调用 `STREAMOFF` 时被调用，用于停止流传输
+	- 可选性：<font color="#c00000">驱动必须实现</font>
 - `void (*unprepare_streaming)(struct vb2_queue *q)` 
+	- 可选性：驱动可选实现
 - `void (*buf_queue)(struct vb2_buffer *vb)` 
 	- 功能含义<font color="#c00000">[重要]</font>：用户空间使用 `VIDIOC_QBUF` 将缓冲区放会队列后框架会调用该函数，驱动应当在此启动硬件操作。当硬件操作完毕后，驱动必须调用 `vb2_buffer_done` 通知V4L2缓冲区已处理完成(状态为 `DONE` 或 `ERROR` )
+	- 可选性：驱动b xi实现
 - `void (*buf_request_complete)(struct vb2_buffer *vb)` 
 
 
