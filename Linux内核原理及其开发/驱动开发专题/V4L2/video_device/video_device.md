@@ -1525,10 +1525,15 @@ struct vb2_ops {
 		- `struct device *alloc_devs[]` ：存储每个平面所分配的设备，尺寸与 `sizes` 一致，通常在分配特殊内存时使用。
 - `void (*wait_prepare)(struct vb2_queue *q)` 
 	- 功能含义：在即将让用户态线程进入等待事件和阻塞之前，驱动所需要完成的准备的处理回调。
+		- 在该回调中：
+			- 驱动<font color="#c00000">通常需要</font>对 `vb2_queue.lock` 进行解锁
+			- 驱动可能需要同步解除I2C等子系统的互斥锁，并让硬件恢复到一个安全状态
 	- 等待事件举例：
 		- 当用户已经把队列中所有缓冲区都读取了，并且请求下一个缓冲区时，用户态进入等待事件
 		- 当队列已经填满，且用户申请入队下一个缓冲区时，用户态进入等待事件
 		- 在 `streamon` 时，如果设置了 `min_buffers` 并且当前入队的缓冲区数量不足，可能会等待
+	- 被调用时机：
+		- 在触发等待事件后，即将阻塞用户态进程之前
 	- <span style="background:#fff88f"><font color="#c00000">机制及触发流程</font></span>：
 		1. 用户申请入队/出队操作
 		2. <font color="#c00000">V4L2框架获取设备的锁</font>( `vb2_queue.lock` 中指定的互斥锁)，从而进行设备状态的互斥管理，并进入驱动回调
@@ -1543,12 +1548,14 @@ struct vb2_ops {
 		9. 
 		10. 如果因为一些条件(如队满入队、队空出队)从而不满足
 		11. 
-		12. 总结：<font color="#c00000">该设计确保等待时间期间</font>，<font color="#c00000">新的中断事件中不会等待</font> `wait_prepare/finish` <font color="#c00000">操作组中操作的互斥锁</font>(避免了死锁)。
-	- 当vb2需要等待事件时，V4L2框架会先调用 `wait_prepare` ，然后等待结束后调用 `wait_finish` 对
-		- 在 `wait_prepare` 中通常只需要对 `vb2_queue.lock` 进行解锁，但是对于复杂设备，可能还需要同步解除I2C等子系统的互斥锁，并让硬件恢复到一个安全状态。
+		12. 目的：<font color="#c00000">该设计确保等待期间</font>，<font color="#c00000">新的中断事件中不会等待</font> `wait_prepare/finish` <font color="#c00000">操作组中操作的互斥锁</font>(避免了死锁)，并且设备可以安全处理中断事件。
+
+
 	- 可选性：
 - `void (*wait_finish)(struct vb2_queue *q)` 
-	- 功能含义：用户态线程完成等待事件之后的回调
+	- 功能含义：用户态线程完成等待事件之后的回调。
+	- 被调用时机：
+		- 在等待事件完成后，用户态线程被唤醒之后，V4L2后续处理事件之前
 	- 可选性：同上。
 - `int (*buf_out_validate)(struct vb2_buffer *vb)` 
 	- 功能含义：<span style="background:#fff88f"><font color="#c00000">专用于输出设备(用户->设备)</font></span><font color="#c00000">的校验回调函数</font>，校验输出缓冲区的数据是否有效(例如校验缓冲区长度是否足够、元数据格式、DMA地址、时间戳等)
