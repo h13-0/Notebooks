@@ -1284,7 +1284,7 @@ struct vb2_ops {
 - `void (*wait_finish)(struct vb2_queue *q)` 
 	- 功能含义：同上。
 - `int (*buf_out_validate)(struct vb2_buffer *vb)` 
-	- 功能含义：
+	- 功能含义：校验输出缓冲区的配置是否有效
 - `int (*buf_init)(struct vb2_buffer *vb)` 
 	- 功能含义：在缓冲区初始化时被调用，用于驱动对缓冲区进行额外的初始化
 - `int (*buf_prepare)(struct vb2_buffer *vb)` 
