@@ -1268,6 +1268,7 @@ struct vb2_ops {
 			- 当其在 `VIDIOC_REQBUFS` 调用时， `num_planes` 为0，需要驱动根据 `q->format` 配置所需平面数
 			- 在 `VIDIOC_CREATE_BUFS` 调用时， `num_planes` 为用户所请求的平面数，驱动可更改，但通常遵守用户的请求
 		- `unsigned int sizes[]` ：存储每个平面的总字节数，由驱动指定；数组的大小和 `num_planes` 一致。
+			- 维护方：
 		- `struct device *alloc_devs[]` ：
 
 
