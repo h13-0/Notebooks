@@ -1311,11 +1311,16 @@ struct vb2_ops {
 		- `struct device *alloc_devs[]` ：存储每个平面所分配的设备，尺寸与 `sizes` 一致，通常在分配特殊内存时使用。
 - `void (*wait_prepare)(struct vb2_queue *q)` 
 	- 功能含义：当vb2需要等待事件时，V4L2框架会先调用 `wait_prepare` ，然后等待结束后调用 `wait_finish` 
+		- 等待事件举例：
+			- 当用户已经把队列中所有缓冲区都读取了，并且请求下一个缓冲区时，用户态进入等待事件
+			- 当队列已经填满，且用户申请入队下一个缓冲区时，用户态进入等待事件
+			- 在 `streamon` 时，如果设置了 `min_buffers` 并且当前入队的缓冲区数量不足，可能会等待
+		- 
 		- 在驱动实现中，通常会在该函数中分别尝试获取和释放互斥锁，从而避免死锁。
 	- 可选性：
 - `void (*wait_finish)(struct vb2_queue *q)` 
 	- 功能含义：同上。
-	- 可选性：
+	- 可选性：同上。
 - `int (*buf_out_validate)(struct vb2_buffer *vb)` 
 	- 功能含义：<span style="background:#fff88f"><font color="#c00000">专用于输出设备(用户->设备)</font></span><font color="#c00000">的校验回调函数</font>，校验输出缓冲区的数据是否有效(例如校验缓冲区长度是否足够、元数据格式、DMA地址、时间戳等)
 	- 被调用时机：用户态使用 `VIDEOC_QBUF` 输出数据之后
