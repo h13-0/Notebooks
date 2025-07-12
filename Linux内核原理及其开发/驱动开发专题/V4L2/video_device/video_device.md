@@ -1267,7 +1267,8 @@ struct vb2_ops {
 		- 在 `VIDIOC_REQBUFS` 中会被调用两次：
 			1. 第一次调用：由驱动计算所需缓冲区数量( `num_buffers` )和平面数量( `num_planes` )，并指定每个平面的总字节数( `sizes` 参数)。
 			2. 第二次调用：给定实际申请下来的缓冲区数量，驱动校验是否满足期望。
-		- 在
+		- 在 `VIDIOC_CREATE_BUFS` 中只会被调用一次，且晚于 `VIDIOC_REQBUFS` 。
+		- 也就是说当且仅当 `num_planes=0` 时为第一次调用，此时驱动应当指定若干参数；<font color="#c00000">后续调用中</font> `num_planes!=0` <font color="#c00000">且只能做参数校验</font>。
 	- 参数：
 		- `struct vb2_queue *q` ：需要配置的vb2缓冲区指针
 		- `unsigned int *num_buffers` ：驱动所需的缓冲区数量
@@ -1276,7 +1277,7 @@ struct vb2_ops {
 			- 在 `VIDIOC_CREATE_BUFS` 调用时， `num_planes` 为用户所请求的平面数，
 		- `unsigned int sizes[]` ：存储每个平面的总字节数，由驱动指定；数组由V4L2提前分配，数组长度为 `VIDEO_MAX_PLANES` (通常为8)。
 			- 维护方：V4L2框架
-		- `struct device *alloc_devs[]` ：
+		- `struct device *alloc_devs[]` ：存储每个平面所分配的设备，尺寸与 `sizes` 一致，通常在分配特殊内存时使用。
 
 
 ##### 3.3.1.2 相关API
