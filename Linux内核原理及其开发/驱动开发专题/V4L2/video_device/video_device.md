@@ -1312,8 +1312,10 @@ struct vb2_ops {
 - `void (*wait_prepare)(struct vb2_queue *q)` 
 	- 功能含义：当vb2需要等待事件时，V4L2框架会先调用 `wait_prepare` ，然后等待结束后调用 `wait_finish` 
 		- 在驱动实现中，通常会在该函数中分别尝试获取和释放互斥锁，从而避免死锁。
+	- 可选性：
 - `void (*wait_finish)(struct vb2_queue *q)` 
 	- 功能含义：同上。
+	- 可选性：
 - `int (*buf_out_validate)(struct vb2_buffer *vb)` 
 	- 功能含义：<span style="background:#fff88f"><font color="#c00000">专用于输出设备(用户->设备)</font></span><font color="#c00000">的校验回调函数</font>，校验输出缓冲区的数据是否有效(例如校验缓冲区长度是否足够、元数据格式、DMA地址、时间戳等)
 	- 被调用时机：用户态使用 `VIDEOC_QBUF` 输出数据之后
@@ -1341,13 +1343,14 @@ struct vb2_ops {
 	- 功能含义：当用户态调用 `STREAMOFF` 时被调用，用于停止流传输
 	- 可选性：<font color="#c00000">驱动必须实现</font>
 - `void (*unprepare_streaming)(struct vb2_queue *q)` 
+	- 功能含义：
 	- 可选性：驱动可选实现
 - `void (*buf_queue)(struct vb2_buffer *vb)` 
 	- 功能含义<font color="#c00000">[重要]</font>：用户空间使用 `VIDIOC_QBUF` 将缓冲区放会队列后框架会调用该函数，驱动应当在此启动硬件操作。当硬件操作完毕后，驱动必须调用 `vb2_buffer_done` 通知V4L2缓冲区已处理完成(状态为 `DONE` 或 `ERROR` )
-	- 可选性：驱动b xi实现
+	- 可选性：<font color="#c00000">驱动必须实现</font>
 - `void (*buf_request_complete)(struct vb2_buffer *vb)` 
-
-
+	- 功能含义：
+	- 可选性：当需要支持请求API(request)时驱动需要实现
 
 ##### 3.3.1.2 相关API
 
