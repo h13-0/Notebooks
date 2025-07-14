@@ -1383,6 +1383,8 @@ struct vb2_queue {
 	- 功能含义：强制使用DMA双向映射
 	- 维护方：硬件需要同时读写缓冲区时配置
 - `unsigned int fileio_read_once:1` ：
+	- 功能含义：每次 `stream_on` 只能读取一次缓冲区，后续的 `read()` 会返回 `EOF` ，如需要再次读取则需要重新 `stream_on` 
+	- 维护方：
 - `unsigned int fileio_write_immediately:1` 
 - `unsigned int allow_zero_bytesused:1` ：
 	- 功能含义：允许 `bytesused=0` 的缓冲区
