@@ -1366,6 +1366,10 @@ struct vb2_queue {
 };
 ```
 
+其成员：
+- `unsigned int type` ：
+	- 功能含义：缓冲区类型，
+
 
 ##### 3.3.1.2 相关回调函数(struct vb2_ops)
 
