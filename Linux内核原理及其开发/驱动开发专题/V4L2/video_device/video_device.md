@@ -1436,8 +1436,10 @@ struct vb2_queue {
 	- 功能含义：启动流所需的最小缓冲数
 	- 维护方：驱动可选设置，默认为0
 	- 注意：
-		- `VIDIOC_REQBUFS` 操作会分配 `min_queued_buffers+1` 个缓冲区
+		- 该参数并不影响 `VIDIOC_REQBUFS` 的分配数量，<font color="#c00000">其只是流开启前必须排队的缓冲区数量</font>。
+		- 框架实际分配的缓冲区数量为 `max(user, min_reqbufs_allocation)` (即下一成员)
 - `u32 min_reqbufs_allocation` ：
+	- 功能含义：
 - `struct device *alloc_devs[VB2_MAX_PLANES]` ：
 框架管理成员(<font color="#c00000">驱动只读访问</font>)：
 - `unsigned int streaming:1` 
