@@ -1454,10 +1454,11 @@ struct vb2_queue {
 	- 功能含义：启动流所需的最小缓冲数
 	- 维护方：驱动可选设置，默认为0
 	- 注意：
-		- 该参数并不影响 `VIDIOC_REQBUFS` 的分配数量，<font color="#c00000">其只是流开启前必须排队的缓冲区数量</font>。
+		- 该参数并不影响 `VIDIOC_REQBUFS` 的分配数量，<font color="#c00000">其只是流开启前必须排队的缓冲区数量</font>，以及在一定程度上间接影响缓冲区分配数。
 		- 框架实际分配的缓冲区数量为 `max(user, min_reqbufs_allocation)` (即下一成员)
 - `u32 min_reqbufs_allocation` ：
-	- 功能含义：
+	- 功能含义：`REQBUFS` 的最小分配数
+	- 维护方：驱动可选设置，V4L2自动限制到 `min_reqbufs_allocation > min_queued_buffers + 1` 
 - `struct device *alloc_devs[VB2_MAX_PLANES]` ：
 	- 功能含义：每个平面分配的DMA设备，如果没有使用则为NULL
 	- 维护方：驱动可在 `queue_setup` 或注册前按需初始化
@@ -1465,16 +1466,29 @@ private成员(<font color="#c00000">驱动只读访问或禁止访问</font>)：
 - `struct mutex mmap_lock` ：
 	- 功能含义：保护 `mmap` 的互斥锁，V4L2在 `mmap` 调用期间自动加锁解锁。
 	- 驱动访问：禁止访问
-- `unsigned int memory` 
-	- 功能含义：当前队列使用的内存类型
+- `unsigned int memory` ：
+	- 功能含义：当前队列使用的内存类型，例如 `VB2_MEMORY_MMAP` 、 `VB2_MEMORY_USERPTR` 等。
 	- 驱动访问：只读访问
-- `enum dma_data_direction dma_dir` 
-- `struct vb2_buffer **bufs` 
-- `unsigned long *bufs_bitmap` 
-- `unsigned int max_num_buffers` 
-- `struct list_head queued_list` 
-- `unsigned int queued_count` 
-- `atomic_t owned_by_drv_count` 
+- `enum dma_data_direction dma_dir` ：
+	- 功能含义：DMA数据传输方向，V4L2根据 `is_output` 自动设置
+	- 驱动访问：只读访问
+- `struct vb2_buffer **bufs` ：
+	- 功能含义：指向缓冲区指针数组，每个元素代表一个分配的缓冲区
+	- 驱动访问：禁止直接访问，可通过 `vb2_get_buffer` 间接访问
+- `unsigned long *bufs_bitmap` ：
+	- 功能含义：存储 `bufs` 中已被使用的索引的位图
+	- 驱动访问：禁止访问
+- `unsigned int max_num_buffers` ：
+	- 功能含义：队列支持的最大缓冲区数量
+	- 驱动访问：只读访问
+- `struct list_head queued_list` ：
+	- 功能含义：已被用户塞入队列但未被驱动处理的缓冲去链表
+	- 驱动访问：禁止直接遍历，应在 `buf_queue` 回调中处理单个缓冲区
+- `unsigned int queued_count` ：
+	- 功能含义：`queued_list` 中的缓冲区数量
+	- 驱动访问：只读
+- `atomic_t owned_by_drv_count` ：
+	- 功能han
 - `struct list_head done_list` 
 	- 功能含义：
 - `spinlock_t done_lock` 
