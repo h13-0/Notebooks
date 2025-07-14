@@ -1488,35 +1488,54 @@ private成员(<font color="#c00000">驱动只读访问或禁止访问</font>)：
 	- 功能含义：`queued_list` 中的缓冲区数量
 	- 驱动访问：只读
 - `atomic_t owned_by_drv_count` ：
-	- 功能han
-- `struct list_head done_list` 
-	- 功能含义：
-- `spinlock_t done_lock` 
-- `wait_queue_head_t done_wq` 
+	- 功能含义：驱动当前拥有的缓冲区计数，也就是已传递给驱动但驱动未处理完成的缓冲区数
+		- 当驱动通过 `buf_queue` 接收缓冲区时原子+1
+		- 当驱动调用 `vb2_buffer_done()` 时原子-1
+	- 驱动访问：只读
+- `struct list_head done_list` ：
+	- 功能含义：驱动已完成并等待出队的缓冲区列表
+	- 驱动访问：禁止访问，`vb2_buffer_done()` 会使缓冲进入该队列
+- `spinlock_t done_lock` ：
+	- 功能含义：保护 `done_list` 的自旋锁，V4L2/VB2框架在添加/移除缓冲区时使用
+	- 驱动访问：禁止访问
+- `wait_queue_head_t done_wq` ：
+	- 功能含义：等待队列，阻塞在 `DQBUF` 的进程
+	- 驱动访问：禁止访问，`vb2_buffer_done()` 间接触发
 - `unsigned int streaming:1` 
 	- 功能含义：当前是否在流状态
 - `unsigned int start_streaming_called:1`
 	- 功能含义：`start_streaming` 是否被成功调用
 - `unsigned int error:1` 
 	- 功能含义：队列是否发生致命错误
-- `unsigned int waiting_for_buffers:1` 
-- `unsigned int waiting_in_dqbuf:1` 
+- `unsigned int waiting_for_buffers:1` ：
+	- 功能含义：用于 `poll()` 系统调用，标记是否在等待缓冲区
+	- 驱动访问：只读
+- `unsigned int waiting_in_dqbuf:1` ：
+	- 功能含义：
 - `unsigned int is_multiplanar:1` 
 	- 功能含义：是否为多平面缓存
 - `unsigned int is_output:1` 
 	- 功能含义：是否为输出队列
 - `unsigned int is_busy:1` 
+	- 功能含义：标记队列是否至少分配过一个缓冲区，当所有缓冲区被释放时清除
+	- 驱动访问：只读
 - `unsigned int copy_timestamp:1` 
+	- 功能含义：是否在 `DQBUF` 时复制时间戳到用户空间
+	- 驱动访问：只读
 - `unsigned int last_buffer_dequeued:1` 
 	- 功能含义：最后一个缓冲是否已出队
 		- 用途：`poll` 和 `DQBUF` 可通过此成员立即返回
-- `struct vb2_fileio_data *fileio` 
-- `struct vb2_threadio_data *threadio` 
-- `char name[32]` 
+	- 驱动访问：只读
+- `struct vb2_fileio_data *fileio` ：
+	- 功能含义：文件I/O模拟器状态数据(当使用 `read()/write()` 而非 `mmap` 时)
+	- 驱动访问：禁止访问
+- `struct vb2_threadio_data *threadio` ：
+	- 功能含义：线程I/O状态数据
+	- 驱动访问：禁止访问
+- `char name[32]` ：
+	- 功能含义：队列名称，用于调试日志输出，框架自动生成
+	- 驱动访问：可直接读取，或通过 `vb2_queue_init_name()` 间接设置
 
-
-
-- 
 
 
 
