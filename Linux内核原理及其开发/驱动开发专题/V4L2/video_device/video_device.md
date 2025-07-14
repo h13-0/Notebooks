@@ -1395,8 +1395,32 @@ struct vb2_queue {
 	- 功能含义：选择是否要求 `Request API` 
 	- 维护方：初始化前驱动可选设置
 - `unsigned int uses_qbuf:1` ：
+- `unsigned int uses_requests:1` 
+- `unsigned int allow_cache_hints:1` 
+- `unsigned int non_coherent_mem:1` 
+- `struct mutex *lock` 
+	- 功能含义：保护vb2队列的互斥锁
+	- 维护方：驱动可选维护，默认设置为 `NULL` 后由V4L2负责管理该锁
+- `void *owner` 
+	- 功能含义：
+- `const struct vb2_ops *ops` ：
+	- 功能含义：vb2相关回调函数，详见[[video_device#^tqizjf|vb2_ops]]。
+	- 维护方：<font color="#c00000">驱动必须配置</font>
+- `const struct vb2_mem_ops *mem_ops` ：
+	- 功能含义：内存分配操作相关回调
+	- 维护方：<font color="#c00000">驱动必须配置</font>
 
-##### 3.3.1.2 相关回调函数(struct vb2_ops)
+
+
+
+
+
+
+
+
+
+
+##### 3.3.1.2 vb2相关回调函数(struct vb2_ops) ^tqizjf
 
 视频缓冲区队列有如下的回调函数：
 
