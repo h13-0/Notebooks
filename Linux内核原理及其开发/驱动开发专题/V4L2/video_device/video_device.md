@@ -1377,6 +1377,13 @@ struct vb2_queue {
 	- 功能含义：默认DMA分配设备
 	- 维护方：当使用DMA时驱动推荐设置
 - `unsigned long dma_attrs` ：
+	- 功能含义：DMA的映射属性
+	- 维护方：驱动可选设置
+- `unsigned int bidirectional:1` ：
+	- 功能含义：强制使用DMA双向映射
+	- 维护方：硬件需要同时读写缓冲区时配置
+- `unsigned int fileio_read_once:1` ：
+- ``
 
 
 ##### 3.3.1.2 相关回调函数(struct vb2_ops)
