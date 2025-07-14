@@ -1383,28 +1383,36 @@ struct vb2_queue {
 	- 功能含义：强制使用DMA双向映射
 	- 维护方：硬件需要同时读写缓冲区时配置
 - `unsigned int fileio_read_once:1` ：
-	- 功能含义：每次 `stream_on` 只能读取一次缓冲区，后续的 `read()` 会返回 `EOF` ，如需要再次读取则需要重新 `stream_on` 
+	- 功能含义：每次 `stream_on` 只能读取一次缓冲区，后续的 `read()` 会返回 `EOF` ，如需要再次读取则需要重新 `stream_on` 。主要用于模拟文件I/O行为。
 	- 维护方：
-- `unsigned int fileio_write_immediately:1` 
+- `unsigned int fileio_write_immediately:1` ：
+	- 功能含义：每次 `write()` 调用都会立即将缓冲区入队。主要用于模拟文件I/O行为。
+	- 维护方：
 - `unsigned int allow_zero_bytesused:1` ：
 	- 功能含义：允许 `bytesused=0` 的缓冲区
 	- 维护方：初始化前驱动可选设置
 - `unsigned int quirk_poll_must_check_waiting_for_buffers:1` ：
+	- 功能含义：旋转是否兼容旧vb1的行为
+		- 在vb1中，用户在 `QBUF` 前调用 ``
+	- 维护方：驱动可选设置
 - `unsigned int supports_requests:1` ：
 	- 功能含义：选择是否支持 `Request API` 
 	- 维护方：初始化前驱动可选设置
 - `unsigned int requires_requests:1` ：
 	- 功能含义：选择是否必须支持 `Request API` 
 	- 维护方：初始化前驱动可选设置
-- `unsigned int uses_qbuf:1` ：
-- `unsigned int uses_requests:1` 
-- `unsigned int allow_cache_hints:1` 
-- `unsigned int non_coherent_mem:1` 
+- `unsigned int allow_cache_hints:1` ：
+	- 功能含义：是否允许用户空间传递缓存管理提示，如用户空间的 `v4l2_buffer.flags` 字段中设置 `V4L2_BUF_FLAG_NO_CACHE_INVALIDATE` 或 `V4L2_BUF_FLAG_NO_CACHE_CLEAN` 。
+	- 维护方：初始化前驱动可选设置，当驱动可以利用该信息优化缓存操作时使用
+- `unsigned int non_coherent_mem:1` ：
+	- 功能含义：指示分配的内存是非一致性的，即内存类型不一致
+	- 维护方：初始化前驱动可选设置
 - `struct mutex *lock` ：
 	- 功能含义：V4L2框架执行下方若干回调时自动上锁、解锁所操作的锁
 	- 维护方：驱动可选维护，默认或设置为 `NULL` 时V4L2将不再带锁运行(如 `queue_setup` 、 `buf_queue` 等操作)
-- `void *owner` 
-	- 功能含义：指向拥有该buffer的filehandle
+- `void *owner` ：
+	- 功能含义：指向拥有该buffer的文件句柄( `struct file` )
+	- 维护方：V4L2框架维护，驱动只读
 - `const struct vb2_ops *ops` ：
 	- 功能含义：vb2相关回调函数，详见[[video_device#^tqizjf|vb2相关回调函数]]。
 	- 维护方：<font color="#c00000">驱动必须配置</font>
@@ -1444,6 +1452,12 @@ struct vb2_queue {
 	- 功能含义：
 - `struct device *alloc_devs[VB2_MAX_PLANES]` ：
 框架管理成员(<font color="#c00000">驱动只读访问</font>)：
+
+- `unsigned int uses_qbuf:1` ：
+	- 功能含义：V4L2框架标记是否使用了 `VIDEOC_QBUF` 而不是通过 `Request API` 。
+- `unsigned int uses_requests:1` 
+	- 功能含义：V4L2框架标记是否使用了 `Request API` 而不是通过 `VIDEOC_QBUF` 。
+
 - `unsigned int streaming:1` 
 	- 功能含义：当前是否在流状态
 - `unsigned int start_streaming_called:1`
