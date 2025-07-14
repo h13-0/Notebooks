@@ -1402,7 +1402,7 @@ struct vb2_queue {
 	- 功能含义：保护vb2队列的互斥锁
 	- 维护方：驱动可选维护，默认设置为 `NULL` 后由V4L2负责管理该锁
 - `void *owner` 
-	- 功能含义：
+	- 功能含义：指向拥有该buffer的filehandle
 - `const struct vb2_ops *ops` ：
 	- 功能含义：vb2相关回调函数，详见[[video_device#^tqizjf|vb2相关回调函数]]。
 	- 维护方：<font color="#c00000">驱动必须配置</font>
@@ -1416,6 +1416,7 @@ struct vb2_queue {
 	- 功能含义：驱动私有数据指针，通常指向包含 `vb2_queue` 的驱动自定义结构体
 	- 维护方：驱动按需配置和管理
 - `u32 subsystem_flags` ：
+	- 功能含义：子系统标志位，用于区分该 `buffer` 被V4L2还是DVB或其他子系统使用。
 - `unsigned int buf_struct_size` ：
 	- 功能含义：自定义缓冲区结构大小
 	- 维护方：驱动可选设置
@@ -1454,9 +1455,21 @@ struct vb2_queue {
 - `struct vb2_threadio_data *threadio` 
 - `char name[32]` 
 框架内部成员(<font color="#c00000">驱动禁止访问</font>)：
+- `struct mutex mmap_lock` ：
+	- 功能含义：保护 `mmap` 的互斥锁
+- `unsigned int memory` 
+- `enum dma_data_direction dma_dir` 
+- `struct vb2_buffer **bufs` 
+- `unsigned long *bufs_bitmap` 
+- `unsigned int max_num_buffers` 
+- `struct list_head queued_list` 
+- `unsigned int queued_count` 
+- `atomic_t owned_by_drv_count` 
 - `struct list_head done_list` 
 	- 功能含义：
-
+- `spinlock_t done_lock` 
+- `wait_queue_head_t done_wq` 
+- 
 
 
 
