@@ -1383,8 +1383,18 @@ struct vb2_queue {
 	- 功能含义：强制使用DMA双向映射
 	- 维护方：硬件需要同时读写缓冲区时配置
 - `unsigned int fileio_read_once:1` ：
-- ``
-
+- `unsigned int fileio_write_immediately:1` 
+- `unsigned int allow_zero_bytesused:1` ：
+	- 功能含义：允许 `bytesused=0` 的缓冲区
+	- 维护方：初始化前驱动可选设置
+- `unsigned int quirk_poll_must_check_waiting_for_buffers:1` ：
+- `unsigned int supports_requests:1` ：
+	- 功能含义：选择是否支持 `Request API` 
+	- 维护方：初始化前驱动可选设置
+- `unsigned int requires_requests:1` ：
+	- 功能含义：选择是否要求 `Request API` 
+	- 维护方：初始化前驱动可选设置
+- `unsigned int uses_qbuf:1` ：
 
 ##### 3.3.1.2 相关回调函数(struct vb2_ops)
 
