@@ -1398,16 +1398,20 @@ struct vb2_queue {
 - `unsigned int uses_requests:1` 
 - `unsigned int allow_cache_hints:1` 
 - `unsigned int non_coherent_mem:1` 
-- `struct mutex *lock` 
-	- 功能含义：保护vb2队列的互斥锁
-	- 维护方：驱动可选维护，默认设置为 `NULL` 后由V4L2负责管理该锁
+- `struct mutex *lock` ：
+	- 功能含义：V4L2框架执行下方若干回调时自动上锁、解锁所操作的锁
+	- 维护方：驱动可选维护，默认或设置为 `NULL` 时V4L2将不再带锁运行(如 `queue_setup` 、 `buf_queue` 等操作)
 - `void *owner` 
 	- 功能含义：指向拥有该buffer的filehandle
 - `const struct vb2_ops *ops` ：
 	- 功能含义：vb2相关回调函数，详见[[video_device#^tqizjf|vb2相关回调函数]]。
 	- 维护方：<font color="#c00000">驱动必须配置</font>
 - `const struct vb2_mem_ops *mem_ops` ：
-	- 功能含义：内存分配操作函数，详见[[video_device#^6l340x|vb2内存操作函数]]。不过该成员存在一些预设配置，如 `vb2_dma_contig_memops`
+	- 功能含义：内存分配操作函数，详见[[video_device#^6l340x|vb2内存操作函数]]。不过该成员存在一些预设配置，如： 
+		- `vb2_vmalloc_memops` ：使用 `vmalloc` 分配内存
+		- `vb2_kmalloc_memops` ：使用 `kmalloc` 分配内存
+		- `vb2_dma_contig_memops` ：分配物理连续的DMA内存
+		- `vb2_dma_sg_memops` ：使用 `scatter-gather` 进行DMA映射，适用于大块非连续内存
 	- 维护方：<font color="#c00000">驱动必须配置</font>
 - `const struct vb2_buf_ops *buf_ops` ：
 	- 功能含义：缓冲区操作函数，详见[[video_device#^6o1wj3|vb2缓冲区操作函数]]。
@@ -1421,7 +1425,9 @@ struct vb2_queue {
 	- 功能含义：自定义缓冲区结构大小
 	- 维护方：驱动可选设置
 - `u32 timestamp_flags` ：
-	- 功能含义：时间戳标志，如 `V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC` ，由驱动设置以指示时间戳的时钟源。
+	- 功能含义：时间戳标志，由驱动设置以指示时间戳的时钟源，可指定：
+		- `V4L2_BUF_FLAG_TIMESTAMP_*` 
+		- `V4L2_BUF_FLAG_TSTAMP_SRC_*` 
 	- 维护方：初始化前由驱动可选配置
 - `gfp_t gfp_flags` ：
 	- 功能含义：分配缓冲区时使用的额外GFP标志，如 `GFP_DMA` 
