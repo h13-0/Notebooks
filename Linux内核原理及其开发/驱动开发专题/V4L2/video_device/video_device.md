@@ -1407,10 +1407,12 @@ struct vb2_queue {
 	- 功能含义：vb2相关回调函数，详见[[video_device#^tqizjf|vb2相关回调函数]]。
 	- 维护方：<font color="#c00000">驱动必须配置</font>
 - `const struct vb2_mem_ops *mem_ops` ：
-	- 功能含义：内存分配操作相关回调，[[video_device#^6l340x]]
+	- 功能含义：内存分配操作函数，详见[[video_device#^6l340x|vb2内存操作函数]]。不过该成员存在一些预设配置，如 `vb2_dma_contig_memops`
 	- 维护方：<font color="#c00000">驱动必须配置</font>
-
-
+- `const struct vb2_buf_ops *buf_ops` ：
+	- 功能含义：缓冲区操作函数，
+	- 维护方：驱动可选配置，通常用 `vb2_common_ops` 
+- 
 
 
 
