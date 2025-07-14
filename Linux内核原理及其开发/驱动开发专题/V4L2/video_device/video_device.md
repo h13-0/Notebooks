@@ -1404,10 +1404,10 @@ struct vb2_queue {
 - `void *owner` 
 	- 功能含义：
 - `const struct vb2_ops *ops` ：
-	- 功能含义：vb2相关回调函数，详见[[video_device#^tqizjf|vb2_ops]]。
+	- 功能含义：vb2相关回调函数，详见[[video_device#^tqizjf|vb2相关回调函数]]。
 	- 维护方：<font color="#c00000">驱动必须配置</font>
 - `const struct vb2_mem_ops *mem_ops` ：
-	- 功能含义：内存分配操作相关回调
+	- 功能含义：内存分配操作相关回调，[[video_device#^6l340x]]
 	- 维护方：<font color="#c00000">驱动必须配置</font>
 
 
@@ -1642,12 +1642,17 @@ struct vb2_ops {
 	- 功能含义：
 	- 可选性：当需要支持请求API(request)时驱动需要实现
 
-##### 3.3.1.3 相关API
+##### 3.3.1.3 vb2内存操作函数 ^6l340x
 
 
 
 
-##### 3.3.1.4 提供的机制
+##### 3.3.1.4 相关API
+
+
+
+
+##### 3.3.1.5 提供的机制
 
 
 
