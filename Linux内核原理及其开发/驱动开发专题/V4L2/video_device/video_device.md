@@ -1368,7 +1368,15 @@ struct vb2_queue {
 
 其成员：
 - `unsigned int type` ：
-	- 功能含义：缓冲区类型，
+	- 功能含义：缓冲区类型，与 `v4l2_buf_type` 枚举匹配
+	- 维护方：初始化前<font color="#c00000">驱动必须配置</font>
+- `unsigned int io_modes` ：
+	- 功能含义：所支持的IO模式，为 `enum vb2_io_modes` 类型(如 `VB2_MMAP` 、 `VB2_USERPTR` 等)
+	- 维护方：初始化前<font color="#c00000">驱动必须配置</font>
+- `struct device *dev` ：
+	- 功能含义：默认DMA分配设备
+	- 维护方：当使用DMA时驱动推荐设置
+- `unsigned long dma_attrs` ：
 
 
 ##### 3.3.1.2 相关回调函数(struct vb2_ops)
