@@ -1153,7 +1153,7 @@ struct vim2m_ctx {
 - DMA支持
 等。
 
-##### 3.3.1.1 数据结构
+##### 3.3.1.1 数据结构(struct vb2_queue)
 
 ```C
 /**
@@ -1371,7 +1371,7 @@ struct vb2_queue {
 	- 功能含义：缓冲区类型，与 `v4l2_buf_type` 枚举匹配
 	- 维护方：初始化前<font color="#c00000">驱动必须配置</font>
 - `unsigned int io_modes` ：
-	- 功能含义：所支持的IO模式，为 `enum vb2_io_modes` 类型(如 `VB2_MMAP` 、 `VB2_USERPTR` 等)
+	- 功能含义：所支持的IO模式，为 `enum vb2_io_modes` 类型(如 `VB2_MMAP` 、 `VB2_USERPTR` 等，可组合使用)
 	- 维护方：初始化前<font color="#c00000">驱动必须配置</font>
 - `struct device *dev` ：
 	- 功能含义：默认DMA分配设备
@@ -1392,7 +1392,7 @@ struct vb2_queue {
 	- 功能含义：选择是否支持 `Request API` 
 	- 维护方：初始化前驱动可选设置
 - `unsigned int requires_requests:1` ：
-	- 功能含义：选择是否要求 `Request API` 
+	- 功能含义：选择是否必须支持 `Request API` 
 	- 维护方：初始化前驱动可选设置
 - `unsigned int uses_qbuf:1` ：
 - `unsigned int uses_requests:1` 
@@ -1410,15 +1410,18 @@ struct vb2_queue {
 	- 功能含义：内存分配操作函数，详见[[video_device#^6l340x|vb2内存操作函数]]。不过该成员存在一些预设配置，如 `vb2_dma_contig_memops`
 	- 维护方：<font color="#c00000">驱动必须配置</font>
 - `const struct vb2_buf_ops *buf_ops` ：
-	- 功能含义：缓冲区操作函数，
+	- 功能含义：缓冲区操作函数，详见[[video_device#^6o1wj3|vb2缓冲区操作函数]]。
 	- 维护方：驱动可选配置，通常用 `vb2_common_ops` 
 - `void *drv_priv` ：
-	- 功能含义：驱动私有数据指针
+	- 功能含义：驱动私有数据指针，通常指向包含 `vb2_queue` 的驱动自定义结构体
+	- 维护方：驱动按需配置和管理
 - `u32 subsystem_flags` ：
 - `unsigned int buf_struct_size` ：
 	- 功能含义：自定义缓冲区结构大小
 	- 维护方：驱动可选设置
 - `u32 timestamp_flags` ：
+	- 功能含义：时间戳标志，如 `V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC` ，由驱动设置以指示时间戳的时钟源。
+	- 维护方：初始化前由驱动可选配置
 - `gfp_t gfp_flags` ：
 	- 功能含义：分配缓冲区时使用的额外GFP标志，如 `GFP_DMA` 
 	- 维护方：
@@ -1661,17 +1664,20 @@ struct vb2_ops {
 	- 功能含义：
 	- 可选性：当需要支持请求API(request)时驱动需要实现
 
-##### 3.3.1.3 vb2内存操作函数 ^6l340x
+##### 3.3.1.3 vb2内存操作函数(struct vb2_buf_ops) ^6l340x
+
+##### 3.3.1.4 缓冲区操作函数(struct vb2_buf_ops) ^6o1wj3
 
 
 
 
-##### 3.3.1.4 相关API
+
+##### 3.3.1.5 相关API
 
 
 
 
-##### 3.3.1.5 提供的机制
+##### 3.3.1.6 提供的机制
 
 
 
