@@ -1153,7 +1153,7 @@ struct vim2m_ctx {
 - DMA支持
 等。
 
-#### 3.3.2 数据结构
+##### 3.3.1.1 数据结构
 
 ```C
 /**
@@ -1367,7 +1367,7 @@ struct vb2_queue {
 ```
 
 
-##### 3.3.2.1 相关回调函数(struct vb2_ops)
+##### 3.3.1.2 相关回调函数(struct vb2_ops)
 
 视频缓冲区队列有如下的回调函数：
 
@@ -1589,23 +1589,23 @@ struct vb2_ops {
 	- 功能含义：
 	- 可选性：当需要支持请求API(request)时驱动需要实现
 
-##### 3.3.2.2 相关API
+##### 3.3.1.3 相关API
 
 
 
 
-##### 3.3.2.3 提供的机制
+##### 3.3.1.4 提供的机制
 
 
 
 
 
-#### 3.3.3 源控制 ^8230im
+#### 3.3.2 源控制 ^8230im
 
 
 
 
-#### 3.3.4 媒体请求(media_request) ^dhev4l
+#### 3.3.3 媒体请求(media_request) ^dhev4l
 
 在用户态章节编程中已经提到，用户可以使用 `ioctl` 进行媒体设备配置，例如：
 
@@ -1635,7 +1635,7 @@ request_add_operation(request, VIDIOC_QBUF, &buffer);
 ioctl(fd, MEDIA_REQUEST_IOC_QUEUE, &request); 
 ```
 
-##### 3.3.4.1 媒体请求操作回调(media_device_ops) ^xvploq
+##### 3.3.3.1 媒体请求操作回调(media_device_ops) ^xvploq
 
 媒体请求回调( `media_device_ops` )的数据结构定义如下：
 
@@ -1699,13 +1699,13 @@ struct media_device_ops {
 		- 该函数不能失败(因为已经被 `req_validate` 验证)
 
 
-#### 3.3.5 通用文件句柄管理(v4l2_fh) ^kyd4a1
+#### 3.3.4 通用文件句柄管理(v4l2_fh) ^kyd4a1
 
 
-#### 3.3.6 v4l2-ioctl
+#### 3.3.5 v4l2-ioctl
 
 
-##### 3.3.6.1 v4l2_ioctl_ops ^r8lfyg
+##### 3.3.5.1 v4l2_ioctl_ops ^r8lfyg
 
 
 
