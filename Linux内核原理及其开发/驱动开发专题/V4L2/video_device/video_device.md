@@ -1393,7 +1393,7 @@ struct vb2_queue {
 	- 维护方：初始化前驱动可选设置
 - `unsigned int quirk_poll_must_check_waiting_for_buffers:1` ：
 	- 功能含义：旋转是否兼容旧vb1的行为
-		- 在vb1中，用户在 `QBUF` 前调用 ``
+		- 在vb1中，用户在 `QBUF` 前调用 `poll` 会报错
 	- 维护方：驱动可选设置
 - `unsigned int supports_requests:1` ：
 	- 功能含义：选择是否支持 `Request API` 
@@ -1401,6 +1401,12 @@ struct vb2_queue {
 - `unsigned int requires_requests:1` ：
 	- 功能含义：选择是否必须支持 `Request API` 
 	- 维护方：初始化前驱动可选设置
+- `unsigned int uses_qbuf:1` ：
+	- 功能含义：V4L2框架标记是否使用了 `VIDEOC_QBUF` 而不是通过 `Request API` 。
+	- 维护方：V4L2配置，驱动只读访问
+- `unsigned int uses_requests:1` 
+	- 功能含义：V4L2框架标记是否使用了 `Request API` 而不是通过 `VIDEOC_QBUF` 。
+	- 维护方：V4L2配置，驱动只读访问
 - `unsigned int allow_cache_hints:1` ：
 	- 功能含义：是否允许用户空间传递缓存管理提示，如用户空间的 `v4l2_buffer.flags` 字段中设置 `V4L2_BUF_FLAG_NO_CACHE_INVALIDATE` 或 `V4L2_BUF_FLAG_NO_CACHE_CLEAN` 。
 	- 维护方：初始化前驱动可选设置，当驱动可以利用该信息优化缓存操作时使用
@@ -1431,8 +1437,10 @@ struct vb2_queue {
 	- 维护方：驱动按需配置和管理
 - `u32 subsystem_flags` ：
 	- 功能含义：子系统标志位，用于区分该 `buffer` 被V4L2还是DVB或其他子系统使用。
+		- 在 `vb2-core` 中没有使用，但是V4L2子系统可能会用
+	- 维护方：由各子系统设置，驱动只读
 - `unsigned int buf_struct_size` ：
-	- 功能含义：自定义缓冲区结构大小
+	- 功能含义：驱动自定义缓冲区结构大小，当为0时使用各子系统默认结构，例如V4L2使用 `struct vb2_v4l2_buffer` ，当非0时驱动必须定义一个结构，该结构的第一个成员必须是子系统特定的结构。
 	- 维护方：驱动可选设置
 - `u32 timestamp_flags` ：
 	- 功能含义：时间戳标志，由驱动设置以指示时间戳的时钟源，可指定：
@@ -1451,12 +1459,23 @@ struct vb2_queue {
 - `u32 min_reqbufs_allocation` ：
 	- 功能含义：
 - `struct device *alloc_devs[VB2_MAX_PLANES]` ：
-框架管理成员(<font color="#c00000">驱动只读访问</font>)：
-
-- `unsigned int uses_qbuf:1` ：
-	- 功能含义：V4L2框架标记是否使用了 `VIDEOC_QBUF` 而不是通过 `Request API` 。
-- `unsigned int uses_requests:1` 
-	- 功能含义：V4L2框架标记是否使用了 `Request API` 而不是通过 `VIDEOC_QBUF` 。
+	- 功能含义：每个平面分配的DMA设备，如果没有使用则为NULL
+	- 维护方：驱动可在 `queue_setup` 或注册前按需初始化
+private成员(<font color="#c00000">驱动只读访问或禁止访问</font>)：
+- `struct mutex mmap_lock` ：
+	- 功能含义：保护 `mmap` 的互斥锁
+- `unsigned int memory` 
+- `enum dma_data_direction dma_dir` 
+- `struct vb2_buffer **bufs` 
+- `unsigned long *bufs_bitmap` 
+- `unsigned int max_num_buffers` 
+- `struct list_head queued_list` 
+- `unsigned int queued_count` 
+- `atomic_t owned_by_drv_count` 
+- `struct list_head done_list` 
+	- 功能含义：
+- `spinlock_t done_lock` 
+- `wait_queue_head_t done_wq` 
 
 - `unsigned int streaming:1` 
 	- 功能含义：当前是否在流状态
@@ -1479,20 +1498,8 @@ struct vb2_queue {
 - `struct vb2_threadio_data *threadio` 
 - `char name[32]` 
 框架内部成员(<font color="#c00000">驱动禁止访问</font>)：
-- `struct mutex mmap_lock` ：
-	- 功能含义：保护 `mmap` 的互斥锁
-- `unsigned int memory` 
-- `enum dma_data_direction dma_dir` 
-- `struct vb2_buffer **bufs` 
-- `unsigned long *bufs_bitmap` 
-- `unsigned int max_num_buffers` 
-- `struct list_head queued_list` 
-- `unsigned int queued_count` 
-- `atomic_t owned_by_drv_count` 
-- `struct list_head done_list` 
-	- 功能含义：
-- `spinlock_t done_lock` 
-- `wait_queue_head_t done_wq` 
+
+
 - 
 
 
