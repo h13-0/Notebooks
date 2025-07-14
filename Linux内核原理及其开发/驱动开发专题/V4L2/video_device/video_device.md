@@ -1366,7 +1366,7 @@ struct vb2_queue {
 };
 ```
 
-其成员：
+其普通公有成员：
 - `unsigned int type` ：
 	- 功能含义：缓冲区类型，与 `v4l2_buf_type` 枚举匹配
 	- 维护方：初始化前<font color="#c00000">驱动必须配置</font>
@@ -1412,7 +1412,24 @@ struct vb2_queue {
 - `const struct vb2_buf_ops *buf_ops` ：
 	- 功能含义：缓冲区操作函数，
 	- 维护方：驱动可选配置，通常用 `vb2_common_ops` 
-- 
+- `void *drv_priv` ：
+	- 功能含义：驱动私有数据指针
+- `u32 subsystem_flags` ：
+- `unsigned int buf_struct_size` ：
+	- 功能含义：自定义缓冲区结构大小
+	- 维护方：驱动可选设置
+- `u32 timestamp_flags` ：
+- `gfp_t gfp_flags` ：
+	- 功能含义：分配缓冲区时使用的额外GFP标志，如 `GFP_DMA` 
+	- 维护方：
+- `u32 min_queued_buffers` ：
+	- 功能含义：启动流所需的最小缓冲数
+	- 维护方：驱动可选设置，默认为0
+	- 注意：
+		- `VIDIOC_REQBUFS` 操作会分配 `min_queued_buffers+1` 个缓冲区
+- `u32 min_reqbufs_allocation` ：
+- `struct device *alloc_devs[VB2_MAX_PLANES]` ：
+框架管理成员(<font color="#c00000">驱动只读访问</font>)：
 
 
 
