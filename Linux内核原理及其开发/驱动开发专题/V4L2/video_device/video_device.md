@@ -1433,10 +1433,29 @@ struct vb2_queue {
 - `u32 min_reqbufs_allocation` ：
 - `struct device *alloc_devs[VB2_MAX_PLANES]` ：
 框架管理成员(<font color="#c00000">驱动只读访问</font>)：
-
-
-
-
+- `unsigned int streaming:1` 
+	- 功能含义：当前是否在流状态
+- `unsigned int start_streaming_called:1`
+	- 功能含义：`start_streaming` 是否被成功调用
+- `unsigned int error:1` 
+	- 功能含义：队列是否发生致命错误
+- `unsigned int waiting_for_buffers:1` 
+- `unsigned int waiting_in_dqbuf:1` 
+- `unsigned int is_multiplanar:1` 
+	- 功能含义：是否为多平面缓存
+- `unsigned int is_output:1` 
+	- 功能含义：是否为输出队列
+- `unsigned int is_busy:1` 
+- `unsigned int copy_timestamp:1` 
+- `unsigned int last_buffer_dequeued:1` 
+	- 功能含义：最后一个缓冲是否已出队
+		- 用途：`poll` 和 `DQBUF` 可通过此成员立即返回
+- `struct vb2_fileio_data *fileio` 
+- `struct vb2_threadio_data *threadio` 
+- `char name[32]` 
+框架内部成员(<font color="#c00000">驱动禁止访问</font>)：
+- `struct list_head done_list` 
+	- 功能含义：
 
 
 
