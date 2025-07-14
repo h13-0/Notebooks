@@ -1463,8 +1463,11 @@ struct vb2_queue {
 	- 维护方：驱动可在 `queue_setup` 或注册前按需初始化
 private成员(<font color="#c00000">驱动只读访问或禁止访问</font>)：
 - `struct mutex mmap_lock` ：
-	- 功能含义：保护 `mmap` 的互斥锁
+	- 功能含义：保护 `mmap` 的互斥锁，V4L2在 `mmap` 调用期间自动加锁解锁。
+	- 驱动访问：禁止访问
 - `unsigned int memory` 
+	- 功能含义：当前队列使用的内存类型
+	- 驱动访问：只读访问
 - `enum dma_data_direction dma_dir` 
 - `struct vb2_buffer **bufs` 
 - `unsigned long *bufs_bitmap` 
@@ -1476,7 +1479,6 @@ private成员(<font color="#c00000">驱动只读访问或禁止访问</font>)：
 	- 功能含义：
 - `spinlock_t done_lock` 
 - `wait_queue_head_t done_wq` 
-
 - `unsigned int streaming:1` 
 	- 功能含义：当前是否在流状态
 - `unsigned int start_streaming_called:1`
@@ -1497,7 +1499,7 @@ private成员(<font color="#c00000">驱动只读访问或禁止访问</font>)：
 - `struct vb2_fileio_data *fileio` 
 - `struct vb2_threadio_data *threadio` 
 - `char name[32]` 
-框架内部成员(<font color="#c00000">驱动禁止访问</font>)：
+
 
 
 - 
