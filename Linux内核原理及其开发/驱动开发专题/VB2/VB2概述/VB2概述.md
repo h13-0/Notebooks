@@ -646,6 +646,14 @@ struct vb2_ops {
 
 ## 2.5 相关API
 
+### 2.5.1 队列初始化函数(vb2_queue_init)
+
+
+
+
+
+
+
 
 
 
