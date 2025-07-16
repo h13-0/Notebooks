@@ -406,10 +406,6 @@ private成员(<font color="#c00000">驱动只读访问或禁止访问</font>)：
 	- 功能含义：队列名称，用于调试日志输出，框架自动生成
 	- 驱动访问：可直接读取，或通过 `vb2_queue_init_name()` 间接设置
 
-
-
-
-
 ## 2.2 vb2相关回调函数(struct vb2_ops) ^tqizjf
 
 视频缓冲区队列有如下的回调函数：
@@ -649,6 +645,8 @@ struct vb2_ops {
 ### 2.5.1 队列初始化函数(vb2_queue_init)
 
 ```C
+#include <media/videobuf2-v4l2.h>
+
 /**
  * vb2_queue_init() - initialize a videobuf2 queue
  * @q:		pointer to &struct vb2_queue with videobuf2 queue.
@@ -663,9 +661,7 @@ struct vb2_ops {
 int __must_check vb2_queue_init(struct vb2_queue *q);
 ```
 
-该函数的：
-- 
-
+该函数通常在 `probe` 或打开设备回调时被驱动调用。当函数执行成功时返回 `0` 。
 
 ### 2.5.2 队列释放函数(vb2_queue_release)
 
