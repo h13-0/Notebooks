@@ -34,7 +34,6 @@ class DocStatistics:
             self.char_count = 0
 
     def _count_words(self, text):
-        # 优化正则表达式性能
         chinese_pattern = re.compile(r'[\u4e00-\u9fff\u3400-\u4dbf\U00020000-\U0002a6df\U0002a700-\U0002b73f\U0002b740-\U0002b81f\U0002b820-\U0002ceaf]')
         english_pattern = re.compile(r'[a-zA-Z]+')
         chinese_count = len(chinese_pattern.findall(text))
@@ -107,25 +106,28 @@ def plot_repo_stats(daily_line_count, daily_word_count, daily_commit_count,
     fig, ax1 = plt.subplots(figsize=figsize)
     
     # 行数和字数曲线
-    line1 = ax1.plot(date_range, line_counts, 'b-', label='lines', linewidth=linewidth, zorder=3)
-    line2 = ax1.plot(date_range, word_counts, 'g-', label='words', linewidth=linewidth, zorder=2)
+    line1 = ax1.plot(date_range, line_counts, 'b-', label='lines', linewidth=linewidth)
+    line2 = ax1.plot(date_range, word_counts, 'g-', label='words', linewidth=linewidth)
     
     ax1.set_xlabel('Date')
     ax1.set_ylabel('Lines / Words', color='g')
     ax1.tick_params(axis='y', labelcolor='g')
-    ax1.set_xlim(start_date, end_date + timedelta(days=1))
+    ax1.set_xlim(start_date, end_date + (end_date - start_date) * 0.05)
+    ax1.set_ylim(0, max(list(daily_word_count.values())) * 1.1)
     
     # 提交次数曲线
     ax2 = ax1.twinx()
     line3 = ax2.plot(date_range, commit_counts, 'r-', label='commits per day', 
-                     linewidth=linewidth, zorder=1, alpha=0.7)
+                     linewidth=linewidth, alpha=0.7)
     
     ax2.set_ylabel('Commits per Day', color='r')
     ax2.tick_params(axis='y', labelcolor='r')
-    ax2.set_ylim(0, max(commit_counts) * 1.2 if commit_counts else 100)
+    ax2.set_ylim(0, 100)
     
     # 设置x轴格式
-    ax1.xaxis.set_major_locator(mdates.MonthLocator())
+    total_months = (end_date.year - start_date.year) * 12 + (end_date.month - start_date.month) + 1
+    interval = max(1, total_months // 16)
+    ax1.xaxis.set_major_locator(mdates.MonthLocator(interval=interval))
     ax1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
     plt.xticks(rotation=45)
     
@@ -180,7 +182,7 @@ def main():
     # 初始化仓库
     repo_path = "./Notebooks"
     repo = git.Repo(repo_path)
-    repo.git.checkout("master")
+    repo.git.checkout("-f", "master")
     repo.git.pull()
     
     # 加载历史统计
@@ -199,7 +201,8 @@ def main():
             continue
             
         try:
-            repo.git.checkout(hexsha)
+            repo.git.checkout("-f", hexsha)
+            repo.submodule_update()
             repo_stats = RepoStatistics(repo_path)
             statistics_cache[hexsha] = {
                 'date': commit.committed_datetime.isoformat(),
@@ -217,7 +220,7 @@ def main():
             logger.error(f"Error processing commit {hexsha[:7]}: {e}")
     
     # 恢复master分支
-    repo.git.checkout("master")
+    repo.git.checkout("-f", "master")
     
     if new_entries:
         logger.info(f"Added {new_entries} new commit statistics")
