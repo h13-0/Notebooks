@@ -794,6 +794,59 @@ enum v4l2_buf_type {
 };
 ```
 
+#### 3.1.2 队列初始化函数(vb2_queue_init)
+
+```C
+#include <media/videobuf2-v4l2.h>
+
+/**
+ * vb2_queue_init() - initialize a videobuf2 queue
+ * @q:		pointer to &struct vb2_queue with videobuf2 queue.
+ *
+ * The vb2_queue structure should be allocated by the driver. The driver is
+ * responsible of clearing it's content and setting initial values for some
+ * required entries before calling this function.
+ * q->ops, q->mem_ops, q->type and q->io_modes are mandatory. Please refer
+ * to the struct vb2_queue description in include/media/videobuf2-core.h
+ * for more information.
+ */
+int __must_check vb2_queue_init(struct vb2_queue *q);
+```
+
+该函数通常在 `probe` 或打开设备回调时被驱动调用。当函数执行成功时返回 `0` 。
+
+#### 3.1.3 队列释放函数(vb2_queue_release)
+
+```C
+/**
+ * vb2_queue_release() - stop streaming, release the queue and free memory
+ * @q:		pointer to &struct vb2_queue with videobuf2 queue.
+ *
+ * This function stops streaming and performs necessary clean ups, including
+ * freeing video buffer memory. The driver is responsible for freeing
+ * the vb2_queue structure itself.
+ */
+void vb2_queue_release(struct vb2_queue *q);
+```
+
+具体看注释。
+
+#### 3.1.4 
+
+```C
+/**
+ * vb2_reqbufs() - Wrapper for vb2_core_reqbufs() that also verifies
+ * the memory and type values.
+ *
+ * @q:		pointer to &struct vb2_queue with videobuf2 queue.
+ * @req:	&struct v4l2_requestbuffers passed from userspace to
+ *		&v4l2_ioctl_ops->vidioc_reqbufs handler in driver.
+ */
+int vb2_reqbufs(struct vb2_queue *q, struct v4l2_requestbuffers *req);
+```
+
+
+
 ### 3.2 video_device设备类型(enum vfl_devnode_type) ^4ac1hk
 
 正如[[V4L2概述#2 2 V4L2设备模型概述 4783s6|V4L2设备模型概述]]所述， `video_device` 包含了多种子设备类型，例如视频设备、收音机设备等。在内核中通过 `enum vfl_devnode_type` 进行区分，其定义如下：
