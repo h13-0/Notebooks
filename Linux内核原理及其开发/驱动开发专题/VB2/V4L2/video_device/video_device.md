@@ -767,7 +767,7 @@ int main(int argc, char **argv)
 - [[VB2概述]]
 - [[V4L2概述#^dyadtz|V4L2基础概述]]
 
-### 3.1 VB2特化
+### 3.1 VB2的v4l2特化
 
 #### 3.1.1 缓冲区类型枚举(enum v4l2_buf_type) ^u8ke9r
 
@@ -831,7 +831,14 @@ void vb2_queue_release(struct vb2_queue *q);
 
 看注释即可。
 
-#### 3.1.4 申请缓冲区(vb2_reqbufs)
+#### 3.1.4 VB2 ioctl helper
+
+
+
+
+#### 3.1.5 手动操作函数
+
+##### 3.1.5.1 申请缓冲区(vb2_reqbufs)
 
 ```C
 /**
@@ -852,7 +859,7 @@ int vb2_reqbufs(struct vb2_queue *q, struct v4l2_requestbuffers *req);
 注：
 - 驱动可以不关心上述逻辑，只需要将 `v4l2_ioctl_ops.vidioc_reqbufs` 指向 `vb2_ioctl_reqbufs` 即可。但也可以自行实现。
 
-#### 3.1.5 查询缓冲区信息(vb2_querybuf)
+##### 3.1.5.2 查询缓冲区信息(vb2_querybuf)
 
 ```C
 /*
