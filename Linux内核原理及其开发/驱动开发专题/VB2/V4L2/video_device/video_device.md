@@ -855,6 +855,8 @@ int vb2_ioctl_remove_bufs(struct file *file, void *priv,
 			  struct v4l2_remove_buffers *p);
 ```
 
+明显地，上述helper通过函数的参数 `struct v4l2_buffer *p` 
+
 其中：
 - 
 
@@ -1439,8 +1441,10 @@ struct media_device_ops {
 - 帧率枚举：
 
 注：
-- v4l2以及VB2提供了多种模型下的
-
+- v4l2以及VB2提供了多种模型下的helper，例如：
+	- [[video_device#^1yz9a7|VB2 v4l2_ioctl_ops helper]]
+	- 
+	等。
 
 ### 3.5 功能模型
 
