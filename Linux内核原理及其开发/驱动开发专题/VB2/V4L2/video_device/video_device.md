@@ -831,9 +831,32 @@ void vb2_queue_release(struct vb2_queue *q);
 
 看注释即可。
 
-#### 3.1.4 VB2 ioctl helper
+#### 3.1.4 VB2 v4l2_ioctl_ops helper ^1yz9a7
 
+VB2框架为V4L2提供了如下的 `v4l2_ioctl_ops` 的预置实现：
 
+```C
+/* struct v4l2_ioctl_ops helpers */
+
+int vb2_ioctl_reqbufs(struct file *file, void *priv,
+			  struct v4l2_requestbuffers *p);
+int vb2_ioctl_create_bufs(struct file *file, void *priv,
+			  struct v4l2_create_buffers *p);
+int vb2_ioctl_prepare_buf(struct file *file, void *priv,
+			  struct v4l2_buffer *p);
+int vb2_ioctl_querybuf(struct file *file, void *priv, struct v4l2_buffer *p);
+int vb2_ioctl_qbuf(struct file *file, void *priv, struct v4l2_buffer *p);
+int vb2_ioctl_dqbuf(struct file *file, void *priv, struct v4l2_buffer *p);
+int vb2_ioctl_streamon(struct file *file, void *priv, enum v4l2_buf_type i);
+int vb2_ioctl_streamoff(struct file *file, void *priv, enum v4l2_buf_type i);
+int vb2_ioctl_expbuf(struct file *file, void *priv,
+	struct v4l2_exportbuffer *p);
+int vb2_ioctl_remove_bufs(struct file *file, void *priv,
+			  struct v4l2_remove_buffers *p);
+```
+
+其中：
+- 
 
 
 #### 3.1.5 手动操作函数
@@ -857,7 +880,7 @@ int vb2_reqbufs(struct vb2_queue *q, struct v4l2_requestbuffers *req);
 2. V4L2框架将ioctl导入[[video_device#^r8lfyg|v4l2_ioctl_ops]]的 `vidioc_reqbufs` 中
 3. 在 `vidioc_reqbufs` 中调用 `vb2_reqbufs` 。
 注：
-- 驱动可以不关心上述逻辑，只需要将 `v4l2_ioctl_ops.vidioc_reqbufs` 指向 `vb2_ioctl_reqbufs` 即可。但也可以自行实现。
+- 驱动可以不关心上述逻辑，只需要使用VB2提供的预置实现即可，后续同类型函数不再赘述。
 
 ##### 3.1.5.2 查询缓冲区信息(vb2_querybuf)
 
@@ -1414,6 +1437,9 @@ struct media_device_ops {
 		- 注：
 			1. 分辨率枚举文档可见 `Documentation/userspace-api/media/v4l/vidioc-enum-framesizes.rst`
 - 帧率枚举：
+
+注：
+- v4l2以及VB2提供了多种模型下的
 
 
 ### 3.5 功能模型
