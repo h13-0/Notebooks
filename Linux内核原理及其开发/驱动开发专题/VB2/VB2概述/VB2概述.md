@@ -323,11 +323,10 @@ struct vb2_queue {
 	- 注意：
 		- 该参数并不影响 `VIDIOC_REQBUFS` 的分配数量，<font color="#c00000">其只是流开启前必须排队的缓冲区数量</font>，以及在一定程度上间接影响缓冲区分配数。
 		- 框架实际分配的缓冲区数量为 `max(user, min_reqbufs_allocation)` (即下一成员)
+		- <font color="#c00000">实际缓冲区大小介于</font> `min_queued_buffers` <font color="#c00000">和</font> `VIDEO_MAX_FRAME` <font color="#c00000">之间</font>
 - `u32 min_reqbufs_allocation` ：
 	- 功能含义：`REQBUFS` 的最小分配数
 	- 维护方：驱动可选设置，V4L2自动限制到 `min_reqbufs_allocation > min_queued_buffers + 1` 
-	- 注意：
-		- <font color="#c00000">实际缓冲区大小介于</font> `min_queued_buffers` <font color="#c00000">和</font> `VIDEO_MAX_FRAME` <font color="#c00000">之间</font>
 - `struct device *alloc_devs[VB2_MAX_PLANES]` ：
 	- 功能含义：每个平面分配的DMA设备，如果没有使用则为NULL
 	- 维护方：驱动可在 `queue_setup` 或注册前按需初始化
