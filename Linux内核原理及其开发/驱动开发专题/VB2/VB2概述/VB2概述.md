@@ -646,11 +646,8 @@ struct vb2_ops {
 ### 2.5.1 
 
 
-vb2_reqbufs
 
-vb2_querybuf
 
-vb2_qbuf
 vb2_dqbuf
 vb2_streamon
 vb2_streamoff
