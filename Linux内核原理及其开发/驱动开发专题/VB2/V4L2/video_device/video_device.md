@@ -831,7 +831,7 @@ void vb2_queue_release(struct vb2_queue *q);
 
 具体看注释。
 
-#### 3.1.4 
+#### 3.1.4 申请缓冲区(vb2_reqbufs)
 
 ```C
 /**
@@ -844,6 +844,9 @@ void vb2_queue_release(struct vb2_queue *q);
  */
 int vb2_reqbufs(struct vb2_queue *q, struct v4l2_requestbuffers *req);
 ```
+
+该函数通常在 `videoc_reqbufs` 回调中被驱动调用，调用链为：
+1. 用户空间使用 ``
 
 
 
