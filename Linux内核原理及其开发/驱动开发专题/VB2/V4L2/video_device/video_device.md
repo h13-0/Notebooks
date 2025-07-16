@@ -855,9 +855,9 @@ int vb2_ioctl_remove_bufs(struct file *file, void *priv,
 			  struct v4l2_remove_buffers *p);
 ```
 
-明显地，上述helper通过函数的参数 `struct v4l2_buffer *p` 
+明显地，上述helpers通过函数的参数 `struct v4l2_buffer *p` 来跳过驱动的数据结构定义来获取需要操作的缓冲对象。
 
-其中：
+在上述helpers中：
 - 
 
 

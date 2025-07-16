@@ -642,19 +642,7 @@ struct vb2_ops {
 
 ## 2.5 相关API
 
-
-### 2.5.1 
-
-
-
-
-vb2_dqbuf
-vb2_streamon
-vb2_streamoff
-vb2_is_streaming
-vb2_queue_error
-
-### 2.5.2 (vb2_buffer_done)
+### 2.5.1 (vb2_buffer_done)
 
 
 
