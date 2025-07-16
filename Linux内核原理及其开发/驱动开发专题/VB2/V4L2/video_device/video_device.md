@@ -829,7 +829,7 @@ int __must_check vb2_queue_init(struct vb2_queue *q);
 void vb2_queue_release(struct vb2_queue *q);
 ```
 
-具体看注释。
+看注释即可。
 
 #### 3.1.4 申请缓冲区(vb2_reqbufs)
 
@@ -847,8 +847,31 @@ int vb2_reqbufs(struct vb2_queue *q, struct v4l2_requestbuffers *req);
 
 该函数通常在 `videoc_reqbufs` 回调中被驱动调用，调用链为：
 1. [[video_device#^2l9q6s|用户空间申请缓冲区]]( `ioctl(fd, VIDIOC_REQBUFS, &req_buffers)` )
-2. V4L2框架将ioctl导入[[video_device#^r8lfyg|v4l2_ioctl_ops]]的 `vb2_ioctl_reqbufs` 中
-3. 在 `vb2_ioctl_reqbufs` 中调用
+2. V4L2框架将ioctl导入[[video_device#^r8lfyg|v4l2_ioctl_ops]]的 `vidioc_reqbufs` 中
+3. 在 `vidioc_reqbufs` 中调用 `vb2_reqbufs` 。
+注：
+- 驱动可以不关心上述逻辑，只需要将 `v4l2_ioctl_ops.vidioc_reqbufs` 指向 `vb2_ioctl_reqbufs` 即可。但也可以自行实现。
+
+#### 3.1.5 查询缓冲区信息(vb2_querybuf)
+
+```C
+/*
+ * vb2_querybuf() - query video buffer information
+ * @q:		vb2 queue
+ * @b:		buffer struct passed from userspace to vidioc_querybuf handler
+ *		in driver
+ *
+ * Should be called from vidioc_querybuf ioctl handler in driver.
+ * This function will verify the passed v4l2_buffer structure and fill the
+ * relevant information for the userspace.
+ *
+ * The return values from this function are intended to be directly returned
+ * from vidioc_querybuf handler in driver.
+ */
+int vb2_querybuf(struct vb2_queue *q, struct v4l2_buffer *b);
+```
+
+
 
 
 ### 3.2 video_device设备类型(enum vfl_devnode_type) ^4ac1hk
