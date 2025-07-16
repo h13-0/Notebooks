@@ -642,36 +642,8 @@ struct vb2_ops {
 
 ## 2.5 相关API
 
-### 2.5.1 队列初始化函数(vb2_queue_init)
 
-```C
-#include <media/videobuf2-v4l2.h>
-
-/**
- * vb2_queue_init() - initialize a videobuf2 queue
- * @q:		pointer to &struct vb2_queue with videobuf2 queue.
- *
- * The vb2_queue structure should be allocated by the driver. The driver is
- * responsible of clearing it's content and setting initial values for some
- * required entries before calling this function.
- * q->ops, q->mem_ops, q->type and q->io_modes are mandatory. Please refer
- * to the struct vb2_queue description in include/media/videobuf2-core.h
- * for more information.
- */
-int __must_check vb2_queue_init(struct vb2_queue *q);
-```
-
-该函数通常在 `probe` 或打开设备回调时被驱动调用。当函数执行成功时返回 `0` 。
-
-### 2.5.2 队列释放函数(vb2_queue_release)
-
-
-```C
-void vb2_queue_release(struct vb2_queue *q);
-```
-
-
-### 2.5.3 
+### 2.5.1 
 
 
 vb2_reqbufs
@@ -685,7 +657,7 @@ vb2_streamoff
 vb2_is_streaming
 vb2_queue_error
 
-### 2.5.4 (vb2_buffer_done)
+### 2.5.2 (vb2_buffer_done)
 
 
 
