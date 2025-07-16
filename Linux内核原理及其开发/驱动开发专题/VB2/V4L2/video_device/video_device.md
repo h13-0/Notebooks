@@ -334,7 +334,7 @@ printf("get pix.pixelformat=%c.%c.%c.%c\r\n",
 
 若图像格式设置错误，则通常会操作失败。
 
-#### 2.2.7 申请缓冲区
+#### 2.2.7 申请缓冲区 ^2l9q6s
 
 V4L2框架一共提供了如下三种缓冲区：
 - `V4L2_MEMORY_MMAP` ：使用 `mmap` 将内核分配的DMA缓冲区映射到用户空间
@@ -846,8 +846,9 @@ int vb2_reqbufs(struct vb2_queue *q, struct v4l2_requestbuffers *req);
 ```
 
 该函数通常在 `videoc_reqbufs` 回调中被驱动调用，调用链为：
-1. 用户空间使用 ``
-
+1. [[video_device#^2l9q6s|用户空间申请缓冲区]]( `ioctl(fd, VIDIOC_REQBUFS, &req_buffers)` )
+2. V4L2框架将ioctl导入[[video_device#^r8lfyg|v4l2_ioctl_ops]]的 `vb2_ioctl_reqbufs` 中
+3. 在 `vb2_ioctl_reqbufs` 中调用
 
 
 ### 3.2 video_device设备类型(enum vfl_devnode_type) ^4ac1hk
@@ -1046,7 +1047,7 @@ struct video_device {
 	- `const struct v4l2_file_operations *fops`
 		- 功能含义：文件操作接口。该成员为 `v4l2_file_operations` 类型。
 			- 相比于普通的 `file_operations` 类型简化了相当多的成员(如 `flush` 、 `fsyns` 、 `read_iter` 等)
-			- 具体可见[[V4L2概述#^r8lfyg|v4l2_ioctl_ops]]
+			- 具体可见[[video_device#^r8lfyg|v4l2_ioctl_ops]]
 		- 维护方：<font color="#c00000">驱动必须定义和提供</font>，必须实现的成员有：
 			- `owner` ：通常指向 `THIS_MODULE`
 			- `open` ：设备打开函数
