@@ -648,13 +648,31 @@ struct vb2_ops {
 
 ### 2.5.1 队列初始化函数(vb2_queue_init)
 
+```C
+int vb2_queue_init(struct vb2_queue *q);
+```
 
 
 
 
+### 2.5.2 队列释放函数(vb2_queue_release)
 
 
+```C
+void vb2_queue_release(struct vb2_queue *q);
+```
 
+
+### 2.5.3 
+
+
+vb2_reqbufs
+
+vb2_querybuf
+
+vb2_qbuf
+vb2_dqbuf
+vb2_streamon
 
 
 ## 2.6 提供的机制
