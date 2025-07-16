@@ -642,31 +642,28 @@ struct vb2_ops {
 
 
 
-## 2.5 (enum v4l2_buf_type)
+## 2.5 缓冲区类型枚举(enum v4l2_buf_type)
 
 ```C
 enum v4l2_buf_type {
-	V4L2_BUF_TYPE_VIDEO_CAPTURE        = 1,
-	V4L2_BUF_TYPE_VIDEO_OUTPUT         = 2,
-	V4L2_BUF_TYPE_VIDEO_OVERLAY        = 3,
-	V4L2_BUF_TYPE_VBI_CAPTURE          = 4,
-	V4L2_BUF_TYPE_VBI_OUTPUT           = 5,
-	V4L2_BUF_TYPE_SLICED_VBI_CAPTURE   = 6,
-	V4L2_BUF_TYPE_SLICED_VBI_OUTPUT    = 7,
-	V4L2_BUF_TYPE_VIDEO_OUTPUT_OVERLAY = 8,
-	V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE = 9,
-	V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE  = 10,
-	V4L2_BUF_TYPE_SDR_CAPTURE          = 11,
-	V4L2_BUF_TYPE_SDR_OUTPUT           = 12,
-	V4L2_BUF_TYPE_META_CAPTURE         = 13,
-	V4L2_BUF_TYPE_META_OUTPUT	   = 14,
+	V4L2_BUF_TYPE_VIDEO_CAPTURE        = 1,  // 视频捕获队列
+	V4L2_BUF_TYPE_VIDEO_OUTPUT         = 2,  // 视频输出队列
+	V4L2_BUF_TYPE_VIDEO_OVERLAY        = 3,  // 视频叠加队列[已过时，现用M2M]
+	V4L2_BUF_TYPE_VBI_CAPTURE          = 4,  // 垂直消隐期(VBI)数据捕获
+	V4L2_BUF_TYPE_VBI_OUTPUT           = 5,  // 垂直消隐期(VBI)数据输出
+	V4L2_BUF_TYPE_SLICED_VBI_CAPTURE   = 6,  // 切片式垂直消隐期数据捕获
+	V4L2_BUF_TYPE_SLICED_VBI_OUTPUT    = 7,  // 切片式垂直消隐期数据输出
+	V4L2_BUF_TYPE_VIDEO_OUTPUT_OVERLAY = 8,  // 视频输出覆盖[已过时，现用M2M等]
+	V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE = 9,  // 多平面视频捕获
+	V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE  = 10, // 多平面视频输出
+	V4L2_BUF_TYPE_SDR_CAPTURE          = 11, // 软件定义无线电(SDR)捕获
+	V4L2_BUF_TYPE_SDR_OUTPUT           = 12, // 软件定义无线电(SDR)输出
+	V4L2_BUF_TYPE_META_CAPTURE         = 13, // 元数据捕获
+	V4L2_BUF_TYPE_META_OUTPUT	       = 14, // 元数据输出
 	/* Deprecated, do not use */
 	V4L2_BUF_TYPE_PRIVATE              = 0x80,
 };
 ```
-
-
-
 
 ## 2.6 相关API
 
