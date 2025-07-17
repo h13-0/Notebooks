@@ -404,6 +404,9 @@ private成员(<font color="#c00000">驱动只读访问或禁止访问</font>)：
 - `char name[32]` ：
 	- 功能含义：队列名称，用于调试日志输出，框架自动生成
 	- 驱动访问：可直接读取，或通过 `vb2_queue_init_name()` 间接设置
+需要着重注意：
+1. <font color="#c00000">建议预先学习</font>[[VB2概述#^nijdvg|VB2缓冲区状态与生命周期]]。
+2. <font color="#c00000">实际上</font> `vb2_queue` <span style="background:#fff88f"><font color="#c00000">维护了两个队列</font></span>，一个是用户对缓冲区处理完后，塞回 `vb2_queue` 后驱动还没来得及取出的 `QUEUED` 队列，一个是驱动已经处理完毕但是用户态还没取出的 `DONE` 队列。
 
 ## 2.2 vb2相关回调函数(struct vb2_ops) ^tqizjf
 
@@ -704,8 +707,9 @@ stateDiagram-v2
 - `ACTIVE` ：正在被驱动操作的状态(通常在填充数据)
 - `DONE` ：驱动数据填充完毕，返回给VB2框架，但是还未被用户出队的缓冲区状态
 
-即有如下规律：
-1. 用户态可访问的缓冲区有且仅有 `DEQUEUED` 状态
+需要注意：
+1. 
+2. 用户态可访问的缓冲区有且仅有 `DEQUEUED` 状态
 
 对应的枚举为：
 
