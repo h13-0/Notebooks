@@ -664,14 +664,14 @@ struct vb2_ops {
 
 # 3 缓冲区(vb2_buffer)
 
-## 3.1 缓冲区状态与生命周期
+## 3.1 缓冲区状态与生命周期 ^nijdvg
 
-对于VB2缓冲区对象，无论其为输入设备还是输出设备，其均有如下的状态转换图：
+对于VB2缓冲区对象，无论其为输入设备还是输出设备，其均有如下的状态转换图： ^pk2zg9
 ```mermaid
 stateDiagram-v2
     [*] --> DEQUEUED
     DEQUEUED --> PREPARING: PREPARE_BUF 或 QBUF(首次)
-    PREPARING --> QUEUED: QBUF
+    PREPARING --> QUEUED: 执行驱动的buf_prepare
     QUEUED --> ACTIVE: 驱动提交硬件
     ACTIVE --> DONE: 硬件完成
     ACTIVE --> ERROR: 硬件错误
@@ -683,8 +683,11 @@ stateDiagram-v2
 ```
 上述各个状态的定义分别为：
 - `DEQUEUED` ：用户态只能访问该状态的缓冲区
-- `PREPARING` ：当
+- `PREPARING` ：当用户空间将某个缓冲区首次加入队列后，该缓冲区需要经过V4L2和驱动的 `buf_prepare()` 初始化的过程中的状态，完成后会自动转化为 `QUEUED` 状态。
 - `IN_REQUEST` ：
+- `QUEUED` ：缓冲区在队列中等待驱动填充数据的状态
+- `ACTIVE` ：正在被驱动操作的状态(通常在填充数据)
+- `DONE` ：驱动数据填充完毕，返回给VB2框架，但是还未被用户出队的缓冲区状态
 
 即有如下规律：
 1. 用户态可访问的缓冲区有且仅有 `DEQUEUED` 状态
