@@ -620,7 +620,11 @@ struct vb2_ops {
 		- `count` 参数为当前已排队的缓冲区数量
 	- 可选性：<font color="#c00000">驱动必须实现</font>
 - `void (*stop_streaming)(struct vb2_queue *q)` 
-	- 功能含义：当用户态调用 `STREAMOFF` 时被调用，用于停止流传输
+	- 功能含义：
+	- 被调用时机：
+		- 当用户态调用 `STREAMOFF` 时被调用，用于停止流传输
+		- 文件句柄被关闭且流还在运行时被调用
+		- 发生不可恢复的错误时由驱动调用触发
 	- 可选性：<font color="#c00000">驱动必须实现</font>
 - `void (*unprepare_streaming)(struct vb2_queue *q)` 
 	- 功能含义：
