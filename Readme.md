@@ -5,8 +5,9 @@
 ## Web访问
 
 在线访问：[http://notebooks.h13.tech/](http://notebooks.h13.tech/).
-
-![Web预览图像](./Resources/chrome_dUPIIswVmr.png)  
+<a href="http://notebooks.h13.tech">
+	<img src="./Resources/chrome_dUPIIswVmr.png" alt="web预览图像">
+</a>
 
 ## 统计信息
 
