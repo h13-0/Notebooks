@@ -682,9 +682,12 @@ stateDiagram-v2
     IN_REQUEST --> QUEUED: 请求提交
 ```
 上述各个状态的定义分别为：
-- `DEQUEUED` ：you q
-- `PREPARING` ：
+- `DEQUEUED` ：用户态只能访问该状态的缓冲区
+- `PREPARING` ：当
 - `IN_REQUEST` ：
+
+即有如下规律：
+1. 用户态可访问的缓冲区有且仅有 `DEQUEUED` 状态
 
 对应的枚举为：
 
