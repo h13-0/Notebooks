@@ -612,7 +612,11 @@ struct vb2_ops {
 	- 功能含义：在进入流状态前调用，用于检查硬件和配置是否就绪
 	- 可选性：驱动可选实现
 - `int (*start_streaming)(struct vb2_queue *q, unsigned int count)` 
-	- 功能含义：在用户态调用 `STREAMON` 且队列至少有满足驱动要求的缓冲区数量时被调用
+	- 功能含义：启动流传输的回调，驱动应当：
+		1. 确保硬件有足够的缓冲区开始工作
+		2. 初始化硬件并启动数据流
+		3. 处理已经入队的缓冲区
+	- 被调用时机：在用户态调用 `STREAMON` 且队列至少有满足驱动要求的缓冲区数量( `min_queued_buffers` )时被调用。
 		- `count` 参数为当前已排队的缓冲区数量
 	- 可选性：<font color="#c00000">驱动必须实现</font>
 - `void (*stop_streaming)(struct vb2_queue *q)` 
