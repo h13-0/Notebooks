@@ -670,13 +670,23 @@ struct vb2_ops {
 ```mermaid
 stateDiagram-v2
     [*] --> DEQUEUED
-    DEQUEUED --> PREPARED: PREPARE_BUF 或 QBUF (首次)
-    PREPARED --> QUEUED: QBUF
-    QUEUED --> ACTIVE: 驱动提交给硬件
+    DEQUEUED --> PREPARING: PREPARE_BUF 或 QBUF(首次)
+    PREPARING --> QUEUED: QBUF
+    QUEUED --> ACTIVE: 驱动提交硬件
     ACTIVE --> DONE: 硬件完成
     ACTIVE --> ERROR: 硬件错误
     DONE --> DEQUEUED: DQBUF
     ERROR --> DEQUEUED: DQBUF
-    PREPARED --> DEQUEUED: REQBUF (重置) 或 STREAMOFF
+    QUEUED --> DEQUEUED: STREAMOFF
+    DEQUEUED --> IN_REQUEST: 加入媒体请求
+    IN_REQUEST --> QUEUED: 请求提交
 ```
+上述各个状态分别为：
+- `preparing` ：
 
+
+对应的枚举为：
+
+```C
+
+`
