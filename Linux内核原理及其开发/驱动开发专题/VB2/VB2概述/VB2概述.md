@@ -612,7 +612,8 @@ struct vb2_ops {
 	- 功能含义：在进入流状态前调用，用于检查硬件和配置是否就绪
 	- 可选性：驱动可选实现
 - `int (*start_streaming)(struct vb2_queue *q, unsigned int count)` 
-	- 功能含义：在用户态调用 `STREAMON` 且队列至少有一个缓冲区时被调用
+	- 功能含义：在用户态调用 `STREAMON` 且队列至少有满足驱动要求的缓冲区数量时被调用
+		- `count` 参数为当前已排队的缓冲区数量
 	- 可选性：<font color="#c00000">驱动必须实现</font>
 - `void (*stop_streaming)(struct vb2_queue *q)` 
 	- 功能含义：当用户态调用 `STREAMOFF` 时被调用，用于停止流传输
