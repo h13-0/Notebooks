@@ -8,7 +8,7 @@ number headings: auto, first-level 1, max 6, 1.1
 ```toc
 ```
 
-# 2 缓冲区队列(vb2_queue)
+# 2 缓冲区队列(vb2_queue) ^muxpzy
 
 vb2_queue(视频缓冲区队列)提供了远超普通队列的功能特性，例如：
 - V4L2所支持的ioctl操作(例如缓冲区申请、流控制等)
@@ -606,8 +606,9 @@ struct vb2_ops {
 	- 功能含义：在每次将缓冲区加入队列( `QBUF` )前调用，用于验证和准备缓冲区(如检查大小、填充数据等)
 	- 可选性：驱动可选实现
 - `void (*buf_finish)(struct vb2_buffer *vb)` 
-	- 功能含义：在缓冲区从队列中取出( `DQBUF` )后调用，用于在返回缓冲区给用户空间之前做后处理(如更新元数据)
+	- 功能含义：驱动完成某个缓冲区后的后处理回调，用于在返回缓冲区给用户空间之前做后处理(如更新元数据)
 	- 可选性：驱动可选实现
+	- 被调用时机：在驱动处理完某个缓冲区后，调用 `vb2_buffer_done` 前，<font color="#c00000">由驱动手动调用</font>。
 - `void (*buf_cleanup)(struct vb2_buffer *vb)` 
 	- 功能含义：当缓冲区被释放( `REQBUFS(0)` 或关闭)时调用，用于清理驱动私有的缓冲区资源
 	- 可选性：驱动可选实现
@@ -641,6 +642,7 @@ struct vb2_ops {
 					- `vb2_buffer_done(vb, VB2_BUF_STATE_ERROR);` 
 					即可。
 			- 可参阅：[[VB2概述#^nijdvg|VB2缓冲区状态与生命周期]]
+		3. 驱动手动调用 `vb2_ops.buf_finish` 进行后处理(如果实现的话)
 	- 被调用时机：
 		- 当用户态调用 `STREAMOFF` 时被调用，用于停止流传输
 		- 文件句柄被关闭且流还在运行时被调用
@@ -650,7 +652,12 @@ struct vb2_ops {
 	- 功能含义：
 	- 可选性：驱动可选实现
 - `void (*buf_queue)(struct vb2_buffer *vb)` 
-	- 功能含义<font color="#c00000">[重要]</font>：用户空间使用 `VIDIOC_QBUF` 将缓冲区放会队列后框架会调用该函数，驱动应当在此启动硬件操作。当硬件操作完毕后，驱动必须调用 `vb2_buffer_done` 通知V4L2缓冲区已处理完成(状态为 `DONE` 或 `ERROR` )
+	- 功能含义<font color="#c00000">[重要]</font>：用户态将缓冲区添加到队列后的回调
+		- 驱动应当在此启动硬件操作。
+		- 当硬件操作完毕后：
+			1. 驱动手动调用 `vb2_ops.buf_finish` 进行后处理(如果实现的话)
+			2. 驱动必须调用 `vb2_buffer_done` 通知V4L2缓冲区已处理完成(状态为 `DONE` 或 `ERROR` )
+	- 被调用时机：用户空间使用 `VIDIOC_QBUF` 将缓冲区放会队列后框架会调用该函数。
 	- 可选性：<font color="#c00000">驱动必须实现</font>
 - `void (*buf_request_complete)(struct vb2_buffer *vb)` 
 	- 功能含义：
@@ -703,12 +710,14 @@ stateDiagram-v2
 - `DEQUEUED` ：用户态只能访问该状态的缓冲区
 - `PREPARING` ：当用户空间将某个缓冲区首次加入队列后，该缓冲区需要经过V4L2和驱动的 `buf_prepare()` 初始化的过程中的状态，完成后会自动转化为 `QUEUED` 状态。
 - `IN_REQUEST` ：
-- `QUEUED` ：缓冲区在队列中等待驱动填充数据的状态
+- `QUEUED` ：缓冲区在队列中等待驱动填充数据的状态，此状态有单独的 `DONE` 队列
 - `ACTIVE` ：正在被驱动操作的状态(通常在填充数据)
 - `DONE` ：驱动数据填充完毕，返回给VB2框架，但是还未被用户出队的缓冲区状态
 
 需要注意：
-1. 
+1. 如章节[[VB2概述#^muxpzy|缓冲区队列(vb2_queue)]]所述，<span style="background:#fff88f"><font color="#c00000">其维护了两个队列</font></span>，其中：
+	1. 缓冲区状态为 `QUEUED` 为一个队列，用户等待驱动处理。
+	2. 缓冲区状态为 `DONE` 的也有一个队列，用于等待用户态申请出队。
 2. 用户态可访问的缓冲区有且仅有 `DEQUEUED` 状态
 
 对应的枚举为：
