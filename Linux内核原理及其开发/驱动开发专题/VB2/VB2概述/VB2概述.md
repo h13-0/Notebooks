@@ -576,13 +576,13 @@ struct vb2_ops {
 		1. 用户申请入队/出队操作
 		2. <font color="#c00000">V4L2框架获取设备的锁</font>( `vb2_queue.lock` 中指定的互斥锁)，从而进行设备状态的互斥管理，并进入驱动回调
 		3. 在驱动的入队/出队回调中，若：
-			1. 不满足出入队条件(队满入队、队空出队)时返回 `-EAGAIN` 
+			1. 不满足出入队条件(队满入队、队空出队)时返回 `-EAGAIN` ：
 				1. 对于不满足出入队条件的分支，则V4L2会调用 `wait_prepare` 完成用户即将进入等待事件的一些准备(具体见功能含义)
 				2. V4L2框架休眠用户线程
 				3. 中断等事件处理完毕，满足入队/出队需求，驱动调用 `vb2_buffer_done` 等告知V4L2框架等待结束
 				4. V4L2框架唤醒用户线程，并调用 `wait_finish` 
 				5. V4L2框架进行后续处理
-			2. 满足出入队条件时将缓冲区填入参数的指针中，并返回 `0` 
+			2. 满足出入队条件时将缓冲区填入参数的指针中，并返回 `0` ：
 				1. 对于满足出入队条件的分支，则不会调用 `wait_prepare/finish` 操作，并且立即释放 `vb2_queue.lock` 并进行后处理
 		4. 目的：<font color="#c00000">该设计确保等待期间</font>，<font color="#c00000">新的中断事件中不会等待</font> `wait_prepare/finish` <font color="#c00000">操作组中操作的互斥锁</font>(避免了死锁)，并且设备可以安全处理中断事件。
 	- 可选性：驱动可选实现，若不实现则使用默认行为(解锁 `vb2_queue.lock` )
@@ -622,13 +622,16 @@ struct vb2_ops {
 - `void (*stop_streaming)(struct vb2_queue *q)` 
 	- 功能含义：终止流传输的回调，驱动应当：
 		1. 停止所有硬件传输(关闭相关中断和DMA)，从而确保不再访问所有缓冲区
-		2. 返回所有缓冲区到 `DEQUEUED` 状态从而方便用户态进行释放：
+		2. 返回<font color="#c00000">已留给驱动的</font>缓冲区到 `DEQUEUED` 状态从而方便用户态进行释放：
 			- 具体而言，此时缓冲区可能有如下几种状态：
 				- `QUEUED` ：已经入队但还未被驱动处理的缓冲区
 				- `ACTIVE` ：硬件正在处理的缓冲区
 				- `DONE` ：已经被驱动处理完成但还未被用户态取走的缓冲区
 				- `DEQUEUED` ：已经被用户态取走的缓冲区
-			- 而本回调需要把所有缓冲区都返回到 `DEQUEUED` 状态
+			- 上述若干状态中，<font color="#c00000">需要处理的缓冲区状态为</font> `QUEUED` <font color="#c00000">和</font> `ACTIVE` ，其均需要通过 `vb2_buffer_done` 返回到 `DEQUEUED` ，<span style="background:#fff88f"><font color="#c00000">且需要注意</font></span>：
+				- `ACTIVE` <span style="background:#fff88f"><font color="#c00000">状态</font></span>必须返回为 `ERROR` <span style="background:#fff88f"><font color="#c00000">状态</font></span>，<font color="#c00000">因为实际上该缓冲区并未正确填充</font>，即：
+					- `vb2_buffer_done(vb, VB2_BUF_STATE_ERROR);`
+				- 对于 `QUEUED` 状态，如果驱动想要保留
 			- 可参阅：[[VB2概述#^nijdvg|VB2缓冲区状态与生命周期]]
 	- 被调用时机：
 		- 当用户态调用 `STREAMOFF` 时被调用，用于停止流传输
