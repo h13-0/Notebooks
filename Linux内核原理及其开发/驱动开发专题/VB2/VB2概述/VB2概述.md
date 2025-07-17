@@ -431,7 +431,7 @@ private成员(<font color="#c00000">驱动只读访问或禁止访问</font>)：
  *			the driver has to use the currently configured format to
  *			determine the plane sizes and \*num_buffers is the total
  *			number of buffers that are being allocated. When called
- *			from VIDIOC_CREATE_BUFS(), \*num_planes != 0 and it
+ *			from VIDIOC_CREATE_BUFS(), \*	num_planes != 0 and it
  *			describes the requested number of planes and sizes\[\]
  *			contains the requested plane sizes. In this case
  *			\*num_buffers are being allocated additionally to
