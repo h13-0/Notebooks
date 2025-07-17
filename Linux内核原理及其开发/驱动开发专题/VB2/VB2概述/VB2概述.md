@@ -622,7 +622,7 @@ struct vb2_ops {
 - `void (*stop_streaming)(struct vb2_queue *q)` 
 	- 功能含义：终止流传输的回调，驱动应当：
 		1. 停止所有硬件传输(关闭相关中断和DMA)，从而确保不再访问所有缓冲区
-		2. 返回<font color="#c00000">已留给驱动的</font>缓冲区到 `DEQUEUED` 状态从而方便用户态进行释放：
+		2. 返回<font color="#c00000">已留给驱动的</font>缓冲区到 `DEQUEUED` 状态从而方便内核和用户态安全释放：
 			- 具体而言，此时缓冲区可能有如下几种状态：
 				- `QUEUED` ：已经入队但还未被驱动处理的缓冲区
 				- `ACTIVE` ：硬件正在处理的缓冲区
@@ -630,10 +630,10 @@ struct vb2_ops {
 				- `DEQUEUED` ：已经被用户态取走的缓冲区
 			- 上述若干状态中，<font color="#c00000">需要处理的缓冲区状态为</font> `QUEUED` <font color="#c00000">和</font> `ACTIVE` ，其均需要通过 `vb2_buffer_done` 返回到 `DEQUEUED` ，<span style="background:#fff88f"><font color="#c00000">且需要注意</font></span>：
 				- `ACTIVE` <span style="background:#fff88f"><font color="#c00000">状态<b>必须</b>返回为</font></span> `ERROR` <span style="background:#fff88f"><font color="#c00000">状态</font></span>，<font color="#c00000">因为实际上该缓冲区并未正确填充</font>，即：
-					- `vb2_buffer_done(vb, VB2_BUF_STATE_ERROR);`
+					- `vb2_buffer_done(vb, VB2_BUF_STATE_ERROR);` 
 				- 对于 `QUEUED` 状态，如果<u>输出设备</u>(用户->驱动)想要在下次启动时保留已经传递进来的数据，则可以手动执行：
-					- `vb->state = VB2_BUF_STATE_DEQUEUED;`
-					- `return_buffer_to_user(vb);`
+					- `vb->state = VB2_BUF_STATE_DEQUEUED;` 
+					- `return_buffer_to_user(vb);` 
 					若不希望保留则直接执行：
 					- `vb2_buffer_done(vb, VB2_BUF_STATE_ERROR);` 
 					即可。
