@@ -747,3 +747,98 @@ enum vb2_buffer_state {
 	VB2_BUF_STATE_ERROR,
 };
 ```
+
+## 3.2 数据结构
+
+```C
+/**
+ * struct vb2_buffer - represents a video buffer.
+ * @vb2_queue:		pointer to &struct vb2_queue with the queue to
+ *			which this driver belongs.
+ * @index:		id number of the buffer.
+ * @type:		buffer type.
+ * @memory:		the method, in which the actual data is passed.
+ * @num_planes:		number of planes in the buffer
+ *			on an internal driver queue.
+ * @timestamp:		frame timestamp in ns.
+ * @request:		the request this buffer is associated with.
+ * @req_obj:		used to bind this buffer to a request. This
+ *			request object has a refcount.
+ */
+struct vb2_buffer {
+	struct vb2_queue	*vb2_queue;
+	unsigned int		index;
+	unsigned int		type;
+	unsigned int		memory;
+	unsigned int		num_planes;
+	u64			timestamp;
+	struct media_request	*request;
+	struct media_request_object	req_obj;
+
+	/* private: internal use only
+	 *
+	 * state:		current buffer state; do not change
+	 * synced:		this buffer has been synced for DMA, i.e. the
+	 *			'prepare' memop was called. It is cleared again
+	 *			after the 'finish' memop is called.
+	 * prepared:		this buffer has been prepared, i.e. the
+	 *			buf_prepare op was called. It is cleared again
+	 *			after the 'buf_finish' op is called.
+	 * copied_timestamp:	the timestamp of this capture buffer was copied
+	 *			from an output buffer.
+	 * skip_cache_sync_on_prepare: when set buffer's ->prepare() function
+	 *			skips cache sync/invalidation.
+	 * skip_cache_sync_on_finish: when set buffer's ->finish() function
+	 *			skips cache sync/invalidation.
+	 * planes:		per-plane information; do not change
+	 * queued_entry:	entry on the queued buffers list, which holds
+	 *			all buffers queued from userspace
+	 * done_entry:		entry on the list that stores all buffers ready
+	 *			to be dequeued to userspace
+	 */
+	enum vb2_buffer_state	state;
+	unsigned int		synced:1;
+	unsigned int		prepared:1;
+	unsigned int		copied_timestamp:1;
+	unsigned int		skip_cache_sync_on_prepare:1;
+	unsigned int		skip_cache_sync_on_finish:1;
+
+	struct vb2_plane	planes[VB2_MAX_PLANES];
+	struct list_head	queued_entry;
+	struct list_head	done_entry;
+#ifdef CONFIG_VIDEO_ADV_DEBUG
+	/*
+	 * Counters for how often these buffer-related ops are
+	 * called. Used to check for unbalanced ops.
+	 */
+	u32		cnt_mem_alloc;
+	u32		cnt_mem_put;
+	u32		cnt_mem_get_dmabuf;
+	u32		cnt_mem_get_userptr;
+	u32		cnt_mem_put_userptr;
+	u32		cnt_mem_prepare;
+	u32		cnt_mem_finish;
+	u32		cnt_mem_attach_dmabuf;
+	u32		cnt_mem_detach_dmabuf;
+	u32		cnt_mem_map_dmabuf;
+	u32		cnt_mem_unmap_dmabuf;
+	u32		cnt_mem_vaddr;
+	u32		cnt_mem_cookie;
+	u32		cnt_mem_num_users;
+	u32		cnt_mem_mmap;
+
+	u32		cnt_buf_out_validate;
+	u32		cnt_buf_init;
+	u32		cnt_buf_prepare;
+	u32		cnt_buf_finish;
+	u32		cnt_buf_cleanup;
+	u32		cnt_buf_queue;
+	u32		cnt_buf_request_complete;
+
+	/* This counts the number of calls to vb2_buffer_done() */
+	u32		cnt_buf_done;
+#endif
+};
+```
+
+其成员
