@@ -873,4 +873,27 @@ struct vb2_buffer {
 	- 功能含义：当前缓冲区状态
 	- 维护方：VB2框架自动管理，驱动<font color="#c00000">禁止直接修改</font>，可用 `vb2_buffer_done` 间接修改
 - `unsigned int synced:1` ：
+	- 功能含义：DMA同步已完成的标志位
+- `unsigned int prepared:1` ：
+	- 功能含义：`buf_perpared` 操作已完成的标志位
+- `unsigned int copied_timestamp:1` ：
+	- 功能含义：
+- `unsigned int skip_cache_sync_on_prepare:1` ：
+	- 功能含义：在
+- `unsigned int skip_cache_sync_on_finish:1`
+- `struct vb2_plane planes[VB2_MAX_PLANES]` ：
+	- 功能含义：存储每个平面的信息
+- `struct list_head queued_entry` ：
+- `struct list_head done_entry` ：
+	- 功能含义：
+调试成员：
+
+
+
+
+# 4 平面信息(vb2_plane)
+
+
+
+
 
