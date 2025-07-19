@@ -897,6 +897,8 @@ struct vb2_buffer {
 ### 3.3.1 获得buffer指定平面的虚拟地址
 
 ```C
+#include <media/videobuf2-core.h>
+
 /**
  * vb2_plane_vaddr() - Return a kernel virtual address of a given plane.
  * @vb:		pointer to &struct vb2_buffer to which the plane in
@@ -917,6 +919,8 @@ void *vb2_plane_vaddr(struct vb2_buffer *vb, unsigned int plane_no);
 ### 3.3.2 获取buffer指定平面的大小
 
 ```C
+#include <media/videobuf2-core.h>
+
 /**
  * vb2_plane_size() - return plane size in bytes.
  * @vb:		pointer to &struct vb2_buffer to which the plane in
@@ -927,6 +931,21 @@ static inline unsigned long
 vb2_plane_size(struct vb2_buffer *vb, unsigned int plane_no)
 ```
 
+### 3.3.3 设置实际使用字节数(通常用于告诉用户空间)
+
+```C
+#include <media/videobuf2-core.h>
+
+/**
+ * vb2_set_plane_payload() - set bytesused for the plane @plane_no.
+ * @vb:		pointer to &struct vb2_buffer to which the plane in
+ *		question belongs to.
+ * @plane_no:	plane number for which payload should be set.
+ * @size:	payload in bytes.
+ */
+static inline void vb2_set_plane_payload(struct vb2_buffer *vb,
+				 unsigned int plane_no, unsigned long size);
+```
 
 
 # 4 平面信息(vb2_plane)
