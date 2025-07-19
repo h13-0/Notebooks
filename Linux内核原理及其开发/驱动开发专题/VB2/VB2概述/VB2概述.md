@@ -892,6 +892,41 @@ struct vb2_buffer {
 调试成员：
 
 
+## 3.3 相关API
+
+### 3.3.1 获得buffer指定平面的虚拟地址
+
+```C
+/**
+ * vb2_plane_vaddr() - Return a kernel virtual address of a given plane.
+ * @vb:		pointer to &struct vb2_buffer to which the plane in
+ *		question belongs to.
+ * @plane_no:	plane number for which the address is to be returned.
+ *
+ * This function returns a kernel virtual address of a given plane if
+ * such a mapping exist, NULL otherwise.
+ */
+void *vb2_plane_vaddr(struct vb2_buffer *vb, unsigned int plane_no);
+```
+
+该函数中：
+- 返回值：
+	- 当映射存在是，返回指定平面的虚拟地址
+	- 否则返回NULL
+
+### 3.3.2 获取buffer指定平面的大小
+
+```C
+/**
+ * vb2_plane_size() - return plane size in bytes.
+ * @vb:		pointer to &struct vb2_buffer to which the plane in
+ *		question belongs to.
+ * @plane_no:	plane number for which size should be returned.
+ */
+static inline unsigned long
+vb2_plane_size(struct vb2_buffer *vb, unsigned int plane_no)
+```
+
 
 
 # 4 平面信息(vb2_plane)
