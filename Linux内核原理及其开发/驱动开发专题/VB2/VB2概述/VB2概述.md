@@ -851,8 +851,26 @@ struct vb2_buffer {
 - `unsigned int type` ：
 	- 功能含义：缓冲区类型，与 `vb2_queue` 中定义相同
 	- 维护方：VB2在 `REQBUFS` 时设置，驱动只读访问
-	- 
+- `unsigned int memory` ：
+	- 功能含义：缓冲区内存模型
 
-
-
+- `unsigned int num_planes` ：
+	- 功能含义：缓冲区的平面数量
+	- 维护方：VB2根据队列信息进行设置，驱动只读
+- `u64 timestamp` ：
+	- 功能含义：时间戳，单位为纳秒
+	- 维护方：
+		- 对于输入设备，驱动在填充数据后应当设置时间戳
+		- 对于输出设备，通常由用户空间设置，驱动读取
+- `struct media_request *request` ：
+	- 功能含义：相关联的媒体请求
+	- 维护方：VB2框架自动管理，驱动只读
+- `struct media_request_object req_obj` ：
+	- 功能含义：绑定缓冲区到媒体请求的对象
+	- 维护方：VB2框架自动管理，驱动只读
+其私有成员：
+- `enum vb2_buffer_state state` ：
+	- 功能含义：当前缓冲区状态
+	- 维护方：VB2框架自动管理，驱动<font color="#c00000">禁止直接修改</font>，可用 `vb2_buffer_done` 间接修改
+- `unsigned int synced:1` ：
 
