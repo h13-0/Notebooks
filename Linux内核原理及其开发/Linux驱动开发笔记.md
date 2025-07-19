@@ -270,8 +270,9 @@ insmod xxx.ko port=value #例如：port=80
 ```
 
 内核模块支持的加载参数列表如下：
-- `bool`
+- `bool` 
 - `invbool` ：<font color="#c00000">关联int型</font>，反转bool值，输入为 `true` 则传入为 `false` 。
+- `byte` 
 - `charp` ：<font color="#c00000">关联char*</font>，<span style="background:#fff88f"><font color="#c00000">内核会为用户提供的字符串分配内存并设置指针</font></span>。
 - `int`
 - `long`
