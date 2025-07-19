@@ -871,21 +871,24 @@ struct vb2_buffer {
 其私有成员：
 - `enum vb2_buffer_state state` ：
 	- 功能含义：当前缓冲区状态
-	- 维护方：VB2框架自动管理，驱动<font color="#c00000">禁止直接修改</font>，可用 `vb2_buffer_done` 间接修改
+	- 驱动访问：驱动<font color="#c00000">禁止直接修改</font>，可用 `vb2_buffer_done` 间接修改
 - `unsigned int synced:1` ：
 	- 功能含义：DMA同步已完成的标志位
+	- 驱动访问：驱动可访问该成员以了解时间戳来源，但禁止修改
 - `unsigned int prepared:1` ：
 	- 功能含义：`buf_perpared` 操作已完成的标志位
 - `unsigned int copied_timestamp:1` ：
-	- 功能含义：
+	- 功能含义：表示该捕获缓冲区的时间戳是从关联的输出缓冲区复制而来，而非由硬件生成
 - `unsigned int skip_cache_sync_on_prepare:1` ：
-	- 功能含义：在
-- `unsigned int skip_cache_sync_on_finish:1`
+	- 功能含义：在 `prepare()` 操作期间跳过缓存同步
+- `unsigned int skip_cache_sync_on_finish:1` ：
+	- 功能含义：在 `finish()` 操作期间跳过缓存同步
 - `struct vb2_plane planes[VB2_MAX_PLANES]` ：
 	- 功能含义：存储每个平面的信息
 - `struct list_head queued_entry` ：
+	- 功能含义：缓冲区在 `queued_entry` 队列中的节点
 - `struct list_head done_entry` ：
-	- 功能含义：
+	- 功能含义：缓冲区在 `done_entry` 队列中的节点
 调试成员：
 
 
