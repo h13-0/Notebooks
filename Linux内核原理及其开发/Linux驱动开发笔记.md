@@ -934,6 +934,18 @@ module-objs += file1.o file2.o ...
 5. <font color="#c00000">一旦用户态驱动被换出磁盘，其响应速度会极其慢</font>。使用特权用户的 `mlock` 或许可以缓解，但是用户态驱动通常会链接多个库，需要占用多个page。
 6. 用户空间无法完成重要设备的驱动，例如网络设备和块设备。
 
+### 4.5 内核开发常用技巧
+
+#### 4.5.1 追踪内存泄露
+
+在编译内核的 `menuconfig` 中，通常在以下路径开启内核内存泄露检测：
+
+```text
+Kernel hacking -> Memory Debugging -> Kernel memory leak detector
+```
+
+即开启了 `CONFIG_DEBUG_KMEMLEAK` 宏。
+
 ## 5 简易的字符设备驱动程序
 
 本章节的字符设备驱动程序将以一个简易的进程间管道通信为例。
