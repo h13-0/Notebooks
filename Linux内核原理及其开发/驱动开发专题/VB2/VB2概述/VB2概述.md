@@ -841,4 +841,18 @@ struct vb2_buffer {
 };
 ```
 
-其成员
+其公开成员：
+- `struct vb2_queue *vb2_queue` ：
+	- 功能含义：该buffer所属的队列
+	- 维护方：VB2框架维护，驱动只读访问
+- `unsigned int index` ：
+	- 功能含义：buffer在队列内的唯一ID，值域为 `[0, num_buffer - 1]` 
+	- 维护方：VB2框架维护，驱动只读访问
+- `unsigned int type` ：
+	- 功能含义：缓冲区类型，与 `vb2_queue` 中定义相同
+	- 维护方：VB2在 `REQBUFS` 时设置，驱动只读访问
+	- 
+
+
+
+
