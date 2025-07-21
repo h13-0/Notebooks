@@ -1181,7 +1181,24 @@ static inline int __must_check video_register_device(
 		int nr);
 ```
 
-##### 3.3.1.2 取消
+##### 3.3.1.2 取消注册video_device设备
+
+```C
+/**
+ * video_unregister_device - Unregister video devices.
+ *
+ * @vdev: &struct video_device to register
+ *
+ * Does nothing if vdev == NULL or if video_is_registered() returns false.
+ */
+void video_unregister_device(struct video_device *vdev);
+```
+
+注：
+1. 该函数的参数可以为 `NULL` 
+2. `video_device` <font color="#c00000">可以反复被该函数取消注册</font>(若传入对象未被注册则直接返回)
+	- 其判断 `video_device` 是否被注册依赖于 `vdev->flags` 中的 `V4L2_FL_REGISTERED` 位
+3. 对于需要取消注册的 `video_device` 对象，其最后会通过调用 `device_unregister` 来管理
 
 ##### 3.3.1.3 向video_device中添加/获取驱动私有数据
 
