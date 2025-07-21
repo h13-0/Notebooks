@@ -719,6 +719,7 @@ stateDiagram-v2
 	1. 缓冲区状态为 `QUEUED` 为一个队列，用户等待驱动处理。
 	2. 缓冲区状态为 `DONE` 的也有一个队列，用于等待用户态申请出队。
 2. 用户态可访问的缓冲区有且仅有 `DEQUEUED` 状态
+3. <span style="background:#fff88f"><font color="#c00000">只有状态为</font></span> `ACTIVE` <span style="background:#fff88f"><font color="#c00000">的缓冲区才可以转变为</font></span> `DONE` 
 
 对应的枚举为：
 
