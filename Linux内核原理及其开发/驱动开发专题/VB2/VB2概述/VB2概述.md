@@ -121,7 +121,7 @@ vb2_queue(视频缓冲区队列)提供了远超普通队列的功能特性，例
  * @bufs_bitmap: bitmap tracking whether each bufs[] entry is used
  * @max_num_buffers: upper limit of number of allocated/used buffers.
  *		     If set to 0 v4l2 core will change it VB2_MAX_FRAME
- *		     for backward compatibility.
+ *		     for backward compat<font color="#c00000">i</font>bility.
  * @queued_list: list of buffers currently queued from userspace
  * @queued_count: number of buffers queued and ready for streaming.
  * @owned_by_drv_count: number of buffers owned by the driver
