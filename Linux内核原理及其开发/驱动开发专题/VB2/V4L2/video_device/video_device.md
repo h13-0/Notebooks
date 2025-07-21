@@ -1201,7 +1201,7 @@ void video_unregister_device(struct video_device *vdev);
 2. `video_device` <font color="#c00000">可以反复被该函数取消注册</font>(若传入对象未被注册则直接返回)
 	- 其判断 `video_device` 是否被注册依赖于 `vdev->flags` 中的 `V4L2_FL_REGISTERED` 位
 3. 对于需要取消注册的 `video_device` 对象，V4L2会自己释放由其负责维护的成员(例如 `dev` 成员)
-4. <font color="#c00000">当</font> `video_device` <font color="#c00000">的引用计数器归0时</font>，其会自动调用 `video_de`
+4. <font color="#c00000">当</font> `video_device` <font color="#c00000">的引用计数器归0时</font>，<span style="background:#fff88f"><font color="#c00000">其会自动调用</font></span> `video_device.release` <span style="background:#fff88f"><font color="#c00000">回调</font></span>，因此在驱动注册设备的错误回滚中需要注意 `fallback` 与 `video_device.release` 的配合。
 
 ##### 3.3.2.3 向video_device中添加/获取驱动私有数据
 
