@@ -1181,7 +1181,9 @@ static inline int __must_check video_register_device(
 		int nr);
 ```
 
-##### 3.3.1.2 向video_device中添加/获取驱动私有数据
+##### 3.3.1.2 取消
+
+##### 3.3.1.3 向video_device中添加/获取驱动私有数据
 
 ```C
 /**
@@ -1210,7 +1212,7 @@ static inline void *video_get_drvdata(struct video_device *vdev)
 
 上述函数操作的是 `vdev->dev->driver_data` 。
 
-##### 3.3.1.3 获取file结构体中的video_device指针
+##### 3.3.1.4 获取file结构体中的video_device指针
 
 ```C
 /**
