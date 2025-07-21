@@ -948,6 +948,8 @@ enum vfl_devnode_type {
 
 正如[[V4L2概述#2 2 1 基础设备模型 4783s6|基础设备模型]]所述，video_device提供了包含视频设备( `/dev/video*` )、收音机设备( `/dev/radio*` )等功能模型。
 
+#### 3.3.1 数据结构
+
 其数据结构定义如下：
 
 ```C
@@ -1090,7 +1092,7 @@ struct video_device {
 - 设备模型及文件接口：
 	- `struct device dev` 
 		- 功能含义：指向V4L2中属于 `video_device` 的独立设备，<span style="background:#fff88f"><b><font color="#c00000">而非父设备</font></b></span>。通常用 `video_device.dev.parent` 指向父设备实例。
-		- 维护方：V4L2框架自动初始化
+		- 维护方：V4L2框架负责维护
 	- `struct device *dev_parent`
 		- 功能含义：可选覆盖的父设备的 `struct device` 指针，可用于配置为非标准父设备结构。
 			- 当需要配置为非标准父设备时，在注册V4L2子设备之前驱动手动设置即可。
@@ -1151,9 +1153,9 @@ struct video_device {
 		- 功能含义：内部调试标志，用于内核开发
 		- 维护方：驱动不应当修改。
 
-#### 3.3.1 相关API
+#### 3.3.2 相关API
 
-##### 3.3.1.1 注册video_device设备 ^cjcnad
+##### 3.3.2.1 注册video_device设备 ^cjcnad
 
 ```C
 #include <media/v4l2-dev.h>
@@ -1181,7 +1183,7 @@ static inline int __must_check video_register_device(
 		int nr);
 ```
 
-##### 3.3.1.2 取消注册video_device设备
+##### 3.3.2.2 取消注册video_device设备
 
 ```C
 /**
@@ -1194,13 +1196,14 @@ static inline int __must_check video_register_device(
 void video_unregister_device(struct video_device *vdev);
 ```
 
-注：
+注意：
 1. 该函数的参数可以为 `NULL` 
 2. `video_device` <font color="#c00000">可以反复被该函数取消注册</font>(若传入对象未被注册则直接返回)
 	- 其判断 `video_device` 是否被注册依赖于 `vdev->flags` 中的 `V4L2_FL_REGISTERED` 位
-3. 对于需要取消注册的 `video_device` 对象，其最后会通过调用 `device_unregister` 来管理
+3. 对于需要取消注册的 `video_device` 对象，V4L2会自己释放由其负责维护的成员(例如 `dev` 成员)
+4. <font color="#c00000">当</font> `video_device` <font color="#c00000">的引用计数器归0时</font>，其会自动调用 `video_de`
 
-##### 3.3.1.3 向video_device中添加/获取驱动私有数据
+##### 3.3.2.3 向video_device中添加/获取驱动私有数据
 
 ```C
 /**
@@ -1229,7 +1232,7 @@ static inline void *video_get_drvdata(struct video_device *vdev)
 
 上述函数操作的是 `vdev->dev->driver_data` 。
 
-##### 3.3.1.4 获取file结构体中的video_device指针
+##### 3.3.2.4 获取file结构体中的video_device指针
 
 ```C
 /**
@@ -1240,9 +1243,9 @@ static inline void *video_get_drvdata(struct video_device *vdev)
 struct video_device *video_devdata(struct file *file);
 ```
 
-#### 3.3.2 模型基本机制
+#### 3.3.3 模型基本机制
 
-##### 3.3.2.1 上下文实例
+##### 3.3.3.1 上下文实例
 
 需要注意的是：
 - <font color="#c00000">V4L2并未提供统一的video_device的上下文实例定义</font>，<font color="#c00000">在V4L2内部只需要操作</font>[[V4L2概述#3 2 4 通用文件句柄管理 v4l2_fh kyd4a1|通用文件管理句柄]]对象，即 `struct v4l2_fh` 。 ^3kv1kh
@@ -1284,7 +1287,7 @@ struct vim2m_ctx {
 };
 ```
 
-##### 3.3.2.2 VFS open请求
+##### 3.3.3.2 VFS open请求
 
 在VFS向 `video_device` 对应的字符设备发起 `open` 请求时，其会被V4L2内部的 `v4l2_open` 函数统一处理，具体机制逻辑为：
 1. 对 `video_device` 管理所用的统一互斥锁 `videodev_lock` 加锁
