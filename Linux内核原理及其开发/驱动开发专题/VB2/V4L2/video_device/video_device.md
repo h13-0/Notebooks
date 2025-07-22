@@ -1241,6 +1241,22 @@ static inline void *video_get_drvdata(struct video_device *vdev)
 struct video_device *video_devdata(struct file *file);
 ```
 
+##### 3.3.2.5 获取设备节点名称
+
+```C
+/**
+ * video_device_node_name - returns the video device name
+ *
+ * @vdev: pointer to &struct video_device
+ *
+ * Returns the device name string
+ */
+static inline const char *video_device_node_name(struct video_device *vdev)
+{
+	return dev_name(&vdev->dev);
+}
+```
+
 #### 3.3.3 模型基本机制
 
 ##### 3.3.3.1 上下文实例
