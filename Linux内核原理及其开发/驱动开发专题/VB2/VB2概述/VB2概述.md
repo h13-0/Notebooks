@@ -547,7 +547,7 @@ struct vb2_ops {
 
 其成员：
 - `int (*queue_setup)(...)` 
-	- 功能含义：队列配置回调，在 `VIDIOC_REQBUFS` 或 `VIDIOC_CREATE_BUFS` 时调用
+	- 功能含义：队列配置回调，在 `VIDIOC_REQBUFS` 或 `VIDIOC_CREATE_BUFS` 的内存分配前被调用。
 	- 被调用时机：
 		- 在 `VIDIOC_REQBUFS` 中会被调用两次：
 			1. 第一次调用：由驱动计算所需缓冲区数量( `num_buffers` )和平面数量( `num_planes` )，并指定每个平面的总字节数( `sizes` 参数)。
