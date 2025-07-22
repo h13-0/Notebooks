@@ -244,6 +244,7 @@ STL全名为Standard Template Library，意为标准模板库或泛型库，是C
 ## 3.1 迭代器
 
 迭代器是C++用于统一迭代(遍历)访问容器的一种对象，通过该对象可以让用户访问容器而不关心内部实现。
+
 其被定义为模板结构体：
 
 ```CPP
@@ -257,24 +258,13 @@ template<
 ```
 
 其中：
-- `Category` ：为迭代器的类别，其拥有如下的几种类型：
-	- 
+- `Category` ：为[[C2CPP#^jhkiyp|迭代器类别]]，定义了迭代器拥有的基本特性。
 - `T` ：为可以通过解引用获得的值的类型
 - `Distance` ：用于标识迭代器距离的类型，通常是有符号的整数类型，如 `long` 或 `long long` 。
 	- 两个迭代器相减，其返回值类型为 `Distance` 
 	- C++17中已弃用。
 - `Pointer` ：定义指向元素的指针的类型，默认填充为 `T*`
 - `Reference` ：定义指向元素的引用的类型，默认填充为 `T&`
-
-
-
-
-
-
-
-
-
-
 
 ### 3.1.1 从容器中获取迭代器
 
@@ -288,7 +278,24 @@ template<
 1. 容器元素数量： `x.end() - x.begin()`
 
 
-### 3.1.2 访问容器的元素(\*iterator)
+### 3.1.2 迭代器类别 ^jhkiyp
+
+标准库定义了如下的迭代器类别：
+- `input_iterator_tag` ：输入迭代器
+- `output_iterator_tag` ：输出迭代器
+- `forward_iterator_tag` ：前向迭代器
+- `bidirectional_iterator_tag` ：双向迭代器
+- `random_access_iterator_tag` ：随机访问迭代器
+- `contiguous_iterator_tag` ：连续迭代器(C++20起)
+具体可见各字章节
+
+#### 3.1.2.1 输入迭代器
+
+
+
+
+
+### 3.1.3 访问容器的元素(\*iterator)
 
 
 
