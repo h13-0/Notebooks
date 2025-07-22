@@ -243,7 +243,7 @@ STL全名为Standard Template Library，意为标准模板库或泛型库，是C
 
 ## 3.1 迭代器
 
-
+迭代器是C++用于统一遍历访问容器的一种
 
 
 
