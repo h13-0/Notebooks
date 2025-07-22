@@ -551,7 +551,7 @@ struct vb2_ops {
 	- 被调用时机：
 		- 在 `VIDIOC_REQBUFS` 中会被调用两次：
 			1. 第一次调用：由驱动计算所需缓冲区数量( `num_buffers` )和平面数量( `num_planes` )，并指定每个平面的总字节数( `sizes` 参数)。
-			2. 第二次调用：给定实际申请下来的缓冲区数量，驱动校验是否满足期望。
+			2. 第二次调用：<font color="#c00000">若实际分配下来的缓冲区数量小于第一次调用指定的数量</font>，则会再次调用从而交由驱动校验是否满足期望。
 		- 在 `VIDIOC_CREATE_BUFS` 中只会被调用一次，且晚于 `VIDIOC_REQBUFS` 。
 		- 也就是说当且仅当 `num_planes=0` 时为第一次调用，此时驱动应当指定若干参数；<font color="#c00000">后续调用中</font> `num_planes!=0` <font color="#c00000">且只能做参数校验</font>。
 	- 可选性：<font color="#c00000">驱动必须实现</font>
