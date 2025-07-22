@@ -663,8 +663,117 @@ struct vb2_ops {
 	- 功能含义：
 	- 可选性：当需要支持请求API(request)时驱动需要实现
 
-## 2.3 vb2内存操作函数(struct vb2_buf_ops) ^6l340x
+## 2.3 vb2内存操作函数(struct vb2_mem_ops) ^6l340x
+```C
+/**
+ * struct vb2_mem_ops - memory handling/memory allocator operations.
+ * @alloc:	allocate video memory and, optionally, allocator private data,
+ *		return ERR_PTR() on failure or a pointer to allocator private,
+ *		per-buffer data on success; the returned private structure
+ *		will then be passed as @buf_priv argument to other ops in this
+ *		structure. The size argument to this function shall be
+ *		*page aligned*.
+ * @put:	inform the allocator that the buffer will no longer be used;
+ *		usually will result in the allocator freeing the buffer (if
+ *		no other users of this buffer are present); the @buf_priv
+ *		argument is the allocator private per-buffer structure
+ *		previously returned from the alloc callback.
+ * @get_dmabuf: acquire userspace memory for a hardware operation; used for
+ *		 DMABUF memory types.
+ * @get_userptr: acquire userspace memory for a hardware operation; used for
+ *		 USERPTR memory types; vaddr is the address passed to the
+ *		 videobuf2 layer when queuing a video buffer of USERPTR type;
+ *		 should return an allocator private per-buffer structure
+ *		 associated with the buffer on success, ERR_PTR() on failure;
+ *		 the returned private structure will then be passed as @buf_priv
+ *		 argument to other ops in this structure.
+ * @put_userptr: inform the allocator that a USERPTR buffer will no longer
+ *		 be used.
+ * @prepare:	called every time the buffer is passed from userspace to the
+ *		driver, useful for cache synchronisation, optional.
+ * @finish:	called every time the buffer is passed back from the driver
+ *		to the userspace, also optional.
+ * @attach_dmabuf: attach a shared &struct dma_buf for a hardware operation;
+ *		   used for DMABUF memory types; dev is the alloc device
+ *		   dbuf is the shared dma_buf; returns ERR_PTR() on failure;
+ *		   allocator private per-buffer structure on success;
+ *		   this needs to be used for further accesses to the buffer.
+ * @detach_dmabuf: inform the exporter of the buffer that the current DMABUF
+ *		   buffer is no longer used; the @buf_priv argument is the
+ *		   allocator private per-buffer structure previously returned
+ *		   from the attach_dmabuf callback.
+ * @map_dmabuf: request for access to the dmabuf from allocator; the allocator
+ *		of dmabuf is informed that this driver is going to use the
+ *		dmabuf.
+ * @unmap_dmabuf: releases access control to the dmabuf - allocator is notified
+ *		  that this driver is done using the dmabuf for now.
+ * @vaddr:	return a kernel virtual address to a given memory buffer
+ *		associated with the passed private structure or NULL if no
+ *		such mapping exists.
+ * @cookie:	return allocator specific cookie for a given memory buffer
+ *		associated with the passed private structure or NULL if not
+ *		available.
+ * @num_users:	return the current number of users of a memory buffer;
+ *		return 1 if the videobuf2 layer (or actually the driver using
+ *		it) is the only user.
+ * @mmap:	setup a userspace mapping for a given memory buffer under
+ *		the provided virtual memory region.
+ *
+ * Those operations are used by the videobuf2 core to implement the memory
+ * handling/memory allocators for each type of supported streaming I/O method.
+ *
+ * .. note::
+ *    #) Required ops for USERPTR types: get_userptr, put_userptr.
+ *
+ *    #) Required ops for MMAP types: alloc, put, num_users, mmap.
+ *
+ *    #) Required ops for read/write access types: alloc, put, num_users, vaddr.
+ *
+ *    #) Required ops for DMABUF types: attach_dmabuf, detach_dmabuf,
+ *       map_dmabuf, unmap_dmabuf.
+ */
+struct vb2_mem_ops {
+	void		*(*alloc)(struct vb2_buffer *vb,
+				  struct device *dev,
+				  unsigned long size);
+	void		(*put)(void *buf_priv);
+	struct dma_buf *(*get_dmabuf)(struct vb2_buffer *vb,
+				      void *buf_priv,
+				      unsigned long flags);
 
+	void		*(*get_userptr)(struct vb2_buffer *vb,
+					struct device *dev,
+					unsigned long vaddr,
+					unsigned long size);
+	void		(*put_userptr)(void *buf_priv);
+
+	void		(*prepare)(void *buf_priv);
+	void		(*finish)(void *buf_priv);
+
+	void		*(*attach_dmabuf)(struct vb2_buffer *vb,
+					  struct device *dev,
+					  struct dma_buf *dbuf,
+					  unsigned long size);
+	void		(*detach_dmabuf)(void *buf_priv);
+	int		(*map_dmabuf)(void *buf_priv);
+	void		(*unmap_dmabuf)(void *buf_priv);
+
+	void		*(*vaddr)(struct vb2_buffer *vb, void *buf_priv);
+	void		*(*cookie)(struct vb2_buffer *vb, void *buf_priv);
+
+	unsigned int	(*num_users)(void *buf_priv);
+
+	int		(*mmap)(void *buf_priv, struct vm_area_struct *vma);
+};
+```
+
+其成员：
+- `alloc` ：
+	- 功能含义：分配视频内存，并可选择分配器私有数据
+	- 返回值：
+		- 成功时返回分配器私有且指向缓冲区数据的指针
+		- 失败时返回 `ERR_PTR()` 
+- 
 
 
 
@@ -707,12 +816,14 @@ stateDiagram-v2
     IN_REQUEST --> QUEUED: 请求提交
 ```
 上述各个状态的定义分别为：
-- `DEQUEUED` ：用户态只能访问该状态的缓冲区
-- `PREPARING` ：当用户空间将某个缓冲区首次加入队列后，该缓冲区需要经过V4L2和驱动的 `buf_prepare()` 初始化的过程中的状态，完成后会自动转化为 `QUEUED` 状态。
-- `IN_REQUEST` ：
+- `DEQUEUED` ：处于用户空间控制下的缓冲区
+- `PREPARING` ：缓冲区在VB2中做准备：
+	- 当用户空间将某个缓冲区首次加入队列后，该缓冲区需要经过V4L2和驱动的 `buf_prepare()` 初始化的过程中的状态，完成后会自动转化为 `QUEUED` 状态。
+- `IN_REQUEST` ：缓冲区正在媒体请求中排队
 - `QUEUED` ：缓冲区在队列中等待驱动填充数据的状态，此状态有单独的 `DONE` 队列
 - `ACTIVE` ：正在被驱动操作的状态(通常在填充数据)
 - `DONE` ：驱动数据填充完毕，返回给VB2框架，但是还未被用户出队的缓冲区状态
+- `ERROR` ：驱动数据填充发生错误，返回给VB2框架，但是还未被用户出队的缓冲区状态
 
 需要注意：
 1. 如章节[[VB2概述#^muxpzy|缓冲区队列(vb2_queue)]]所述，<span style="background:#fff88f"><font color="#c00000">其维护了两个队列</font></span>，其中：
@@ -854,7 +965,6 @@ struct vb2_buffer {
 	- 维护方：VB2在 `REQBUFS` 时设置，驱动只读访问
 - `unsigned int memory` ：
 	- 功能含义：缓冲区内存模型
-
 - `unsigned int num_planes` ：
 	- 功能含义：缓冲区的平面数量
 	- 维护方：VB2根据队列信息进行设置，驱动只读
