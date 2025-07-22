@@ -632,15 +632,9 @@ struct vb2_ops {
 				- `ACTIVE` ：硬件正在处理的缓冲区
 				- `DONE` ：已经被驱动处理完成但还未被用户态取走的缓冲区
 				- `DEQUEUED` ：已经被用户态取走的缓冲区
-			- 上述若干状态中，<font color="#c00000">需要处理的缓冲区状态为</font> `QUEUED` <font color="#c00000">和</font> `ACTIVE` ，其均需要通过 `vb2_buffer_done` 返回到 `DEQUEUED` ，<span style="background:#fff88f"><font color="#c00000">且需要注意</font></span>：
+			- 上述若干状态中，<font color="#c00000">需要处理的缓冲区状态为</font> `ACTIVE` ，其均需要通过 `vb2_buffer_done` 返回到 `DEQUEUED` ，<span style="background:#fff88f"><font color="#c00000">且需要注意</font></span>：
 				- `ACTIVE` <span style="background:#fff88f"><font color="#c00000">状态<b>必须</b>返回为</font></span> `ERROR` <span style="background:#fff88f"><font color="#c00000">状态</font></span>，<font color="#c00000">因为实际上该缓冲区并未正确填充</font>，即：
 					- `vb2_buffer_done(vb, VB2_BUF_STATE_ERROR);` 
-				- 对于 `QUEUED` 状态，如果<u>输出设备</u>(用户->驱动)想要在下次启动时保留已经传递进来的数据，则可以手动执行：
-					- `vb->state = VB2_BUF_STATE_DEQUEUED;` 
-					- `return_buffer_to_user(vb);` 
-					若不希望保留则直接执行：
-					- `vb2_buffer_done(vb, VB2_BUF_STATE_ERROR);` 
-					即可。
 			- 可参阅：[[VB2概述#^nijdvg|VB2缓冲区状态与生命周期]]
 		3. 驱动手动调用 `vb2_ops.buf_finish` 进行后处理(如果实现的话)
 	- 被调用时机：
