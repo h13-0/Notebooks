@@ -243,7 +243,36 @@ STL全名为Standard Template Library，意为标准模板库或泛型库，是C
 
 ## 3.1 迭代器
 
-迭代器是C++用于统一迭代(遍历)访问容器的一种对象，通过该对象可以让用户访问容器而不关心内部实现。
+迭代器是C++用于统一迭代(遍历)访问容器的一种对象，通过该对象可以让用户访问容器而不关心内部实现。其基类定义为：
+
+```CPP
+template<
+    class Category,
+    class T,
+    class Distance = std::ptrdiff_t,
+    class Pointer = T*,
+    class Reference = T&
+> struct iterator;
+```
+
+其中：
+- `Category` ：为迭代器的类别
+- `T` ：为可以通过解引用获得的值的类型
+- `Distance` ：用于标识迭代器距离的类型，C++17中已弃用
+- `Pointer` ：
+- ``
+
+
+
+
+
+
+
+
+
+
+
+
 
 通常来说容器都会提供如下几个迭代器：
 - `.begin()` ：返回指向首元素的迭代器
@@ -251,8 +280,13 @@ STL全名为Standard Template Library，意为标准模板库或泛型库，是C
 - 
 	![[Pasted image 20250722135056.png]]
 
-那么明显的有：
-1. 容器的
+那么明显的有如下特性：
+1. 容器元素数量： `x.end() - x.begin()`
+
+
+### 3.1.1 访问容器的元素(\*iterator)
+
+
 
 
 ## 3.2 容器
