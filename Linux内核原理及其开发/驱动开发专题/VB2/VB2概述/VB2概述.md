@@ -619,7 +619,7 @@ struct vb2_ops {
 	- 功能含义：启动流传输的回调，驱动应当：
 		1. 确保硬件有足够的缓冲区开始工作
 		2. 初始化硬件并启动数据流
-		3. 处理已经入队的缓冲区
+		3. 当驱动程序发生错误时，<font color="#c00000">已经被</font> `buf_queue` <font color="#c00000">取出的缓冲区需要通过</font> `vb2_buffer_done` <font color="#c00000">来标记和归还缓冲区</font>。需要注意，<font color="#c00000">其应当将缓冲区标记为</font> `VB2_BUF_STATE_QUEUED` 。
 	- 被调用时机：在用户态调用 `STREAMON` 且队列至少有满足驱动要求的缓冲区数量( `min_queued_buffers` )时被调用。
 		- `count` 参数为当前已排队的缓冲区数量
 	- 可选性：<font color="#c00000">驱动必须实现</font>
