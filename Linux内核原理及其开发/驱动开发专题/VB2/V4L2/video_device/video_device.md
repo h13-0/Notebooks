@@ -1332,7 +1332,7 @@ struct v4l2_fh {
 	- 功能含义：事件序列号，每当新事件添加到 `available` 链表时，该序列号会递增并作为该事件的序列号。可用于用户空间检测事件丢失。
 	- 维护方：V4L2负责维护
 - `struct v4l2_m2m_ctx *m2m_ctx` ：
-	- 功能含义：转为M2M设备提供的上下文指针，当不为M2M设备时，该指针为 `NULL` 。
+	- 功能含义：专为M2M设备提供的[[video_device#^3axphz|M2M上下文实例]]指针，当不为M2M设备时，该指针为 `NULL` 。
 	- 维护方：
 		- 对于M2M设备，驱动创建 `v4l2_fh` 时就应当创建该成员，关闭该句柄时释放该成员
 		- 对于非M2M设备，保持为 `NULL` 即可。
@@ -1686,7 +1686,71 @@ struct v4l2_m2m_dev {
 		- 功能含义：控制M2M设备的接口节点
 		- 维护方：使用媒体控制器功能时由驱动设置
 
-##### 3.5.1.3 M2M设备操作回调(v4l2_m2m_ops) ^r39fw1
+##### 3.5.1.3 M2M上下文实例 ^3axphz
+
+```C
+/**
+ * struct v4l2_m2m_ctx - Memory to memory context structure
+ *
+ * @q_lock: struct &mutex lock
+ * @new_frame: valid in the device_run callback: if true, then this
+ *		starts a new frame; if false, then this is a new slice
+ *		for an existing frame. This is always true unless
+ *		V4L2_BUF_CAP_SUPPORTS_M2M_HOLD_CAPTURE_BUF is set, which
+ *		indicates slicing support.
+ * @is_draining: indicates device is in draining phase
+ * @last_src_buf: indicate the last source buffer for draining
+ * @next_buf_last: next capture queud buffer will be tagged as last
+ * @has_stopped: indicate the device has been stopped
+ * @ignore_cap_streaming: If true, job_ready can be called even if the CAPTURE
+ *			  queue is not streaming. This allows firmware to
+ *			  analyze the bitstream header which arrives on the
+ *			  OUTPUT queue. The driver must implement the job_ready
+ *			  callback correctly to make sure that the requirements
+ *			  for actual decoding are met.
+ * @m2m_dev: opaque pointer to the internal data to handle M2M context
+ * @cap_q_ctx: Capture (output to memory) queue context
+ * @out_q_ctx: Output (input from memory) queue context
+ * @queue: List of memory to memory contexts
+ * @job_flags: Job queue flags, used internally by v4l2-mem2mem.c:
+ *		%TRANS_QUEUED, %TRANS_RUNNING and %TRANS_ABORT.
+ * @finished: Wait queue used to signalize when a job queue finished.
+ * @priv: Instance private data
+ *
+ * The memory to memory context is specific to a file handle, NOT to e.g.
+ * a device.
+ */
+struct v4l2_m2m_ctx {
+	/* optional cap/out vb2 queues lock */
+	struct mutex			*q_lock;
+
+	bool				new_frame;
+
+	bool				is_draining;
+	struct vb2_v4l2_buffer		*last_src_buf;
+	bool				next_buf_last;
+	bool				has_stopped;
+	bool				ignore_cap_streaming;
+
+	/* internal use only */
+	struct v4l2_m2m_dev		*m2m_dev;
+
+	struct v4l2_m2m_queue_ctx	cap_q_ctx;
+
+	struct v4l2_m2m_queue_ctx	out_q_ctx;
+
+	/* For device job queue */
+	struct list_head		queue;
+	unsigned long			job_flags;
+	wait_queue_head_t		finished;
+
+	void				*priv;
+};
+```
+
+
+
+##### 3.5.1.4 M2M设备操作回调(v4l2_m2m_ops) ^r39fw1
 
 该数据结构定义为：
 
@@ -1758,7 +1822,7 @@ struct v4l2_m2m_ops {
 		- 该操作需要注意和保证硬件安全
 		- 在该函数调用时，`device_run` 可能还在运行，需要注意并发问题。
 
-##### 3.5.1.4 队列初始化机制
+##### 3.5.1.5 队列初始化机制
 
 正如上述章节所述，M2M设备拥有输入输出两个队列。
 
@@ -1777,7 +1841,7 @@ struct v4l2_m2m_ops {
 - 每一个V4L2 M2M设备可以被多个用户空间实例打开(多个进程或多个线程)，具体使用[[video_device#^eienff|多实例成员]]进行实现。
 
 
-##### 3.5.1.5 M2M实例分析
+##### 3.5.1.6 M2M实例分析
 
 为了方便分析，本章节选用 `/drivers/media/test-drivers/vim2m.c` 进行分析。
 
