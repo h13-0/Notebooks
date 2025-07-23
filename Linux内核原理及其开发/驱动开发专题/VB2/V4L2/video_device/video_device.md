@@ -1,22 +1,22 @@
 ---
-number headings: auto, first-level 2, max 6, 1.1
+number headings: auto, first-level 1, max 6, 1.1
 ---
 #嵌入式 #Linux驱动开发 #V4L2 
 
-## 1 目录
+# 1 目录
 
 ```toc
 ```
 
-## 2 video_device用户态开发概述
+# 2 video_device用户态开发概述
 
-### 2.1 基础知识
+## 2.1 基础知识
 
 本章节的基础知识无序排列。
 
-#### 2.1.1 颜色空间
+### 2.1.1 颜色空间
 
-##### 2.1.1.1 YUV
+#### 2.1.1.1 YUV
 
 YUV通常用于模拟视频领域，且其能很好的兼容黑白视频和彩色视频。其通道定义为：
 - Y：明度，单通道使用即为黑白视频
@@ -33,7 +33,7 @@ $$Y\in [0,255], U\in [-112,+112], V\in [-157,+157]$$
 YUV的UV分量可视化图如下：
 	![[Pasted image 20250626172747.png]]
 
-#### 2.1.2 平面(planes) ^29c6mw
+### 2.1.2 平面(planes) ^29c6mw
 
 平面是指像素数据的排列交织的方式，也就是内存布局的平面数，例如：
 
@@ -48,7 +48,7 @@ YUV的UV分量可视化图如下：
 
 在Linux中，默认最大平面数为8( `VIDEO_MAX_PLANES` )。
 
-#### 2.1.3 元数据 ^h63jbf
+### 2.1.3 元数据 ^h63jbf
 
 除了图像像素数据之外，与视频帧相关的附加信息。
 常见元数据有：
@@ -78,14 +78,14 @@ YUV的UV分量可视化图如下：
 2. 使用标准化的描述符( `V4L2_META_FMT_*` )
 3. 使用 `ioctl` 查询元数据格式
 
-### 2.2 视频设备用户态开发(/dev/video*)
+## 2.2 视频设备用户态开发(/dev/video*)
 
-#### 2.2.1 基本工作流程
+### 2.2.1 基本工作流程
 
 视频设备的基本工作流程如下：
 	![[视频设备用户态流程.svg]]
 
-#### 2.2.2 打开设备节点
+### 2.2.2 打开设备节点
 
 和普通字符设备一样，使用Linux操作摄像头时，第一步依旧是打开摄像头对应的文件节点。
 
@@ -99,7 +99,7 @@ if(fd < 0) {
 }
 ```
 
-#### 2.2.3 查询设备能力 ^vda0ux
+### 2.2.3 查询设备能力 ^vda0ux
 
 一些设备往往能够同时输出不知一种数据类型，例如一个电视采集卡可以将有线电视的信号转化为linux的音视频输入：
 	![[Pasted image 20250326133304.png]]
@@ -141,7 +141,7 @@ if (cap.capabilities & V4L2_CAP_RADIO)
 ...
 ```
 
-#### 2.2.4 枚举输出格式
+### 2.2.4 枚举输出格式
 
 在V4L2中，获取一个设备支持的所有输出格式需要依靠类似于遍历的方法实现(该方法被称为枚举、Enumeration)，其示例如下：
 
@@ -209,7 +209,7 @@ fmtdesc.pixelformat=R.G.B.3
 ...
 ```
 
-#### 2.2.5 枚举指定输出格式的分辨率
+### 2.2.5 枚举指定输出格式的分辨率
 
 与枚举输出格式类似，枚举分辨率也需要进行类似的操作，其需要指定：
 - `frame_size.pixel_format` ：要查询的目标格式
@@ -292,7 +292,7 @@ frame_size.stepwise.step_height=1
 frame size enumeration end.
 ```
 
-#### 2.2.6 设置指定的视频格式和分辨率
+### 2.2.6 设置指定的视频格式和分辨率
 
 示例如下：
 
@@ -334,7 +334,7 @@ printf("get pix.pixelformat=%c.%c.%c.%c\r\n",
 
 若图像格式设置错误，则通常会操作失败。
 
-#### 2.2.7 申请缓冲区 ^2l9q6s
+### 2.2.7 申请缓冲区 ^2l9q6s
 
 V4L2框架一共提供了如下三种缓冲区：
 - `V4L2_MEMORY_MMAP` ：使用 `mmap` 将内核分配的DMA缓冲区映射到用户空间
@@ -393,7 +393,7 @@ printf("The number of obtained buffers=%d.\r\n", req_buffers.count);
 		3. 为 `V4L2_MEMORY_DMABUF` 时，注册外部DMA句柄。在后续 `VIDIOC_QBUF` 调用时会传递句柄。
 	3. 准备硬件资源，例如DMA
 
-#### 2.2.8 将缓存加入缓存队列
+### 2.2.8 将缓存加入缓存队列
 
 将缓存加入缓存队列的目的是： ^iuf8ml
 - 显式的避免用户和内核同时操作同一片缓冲区，避免用户态访问到被内核正在使用且保护的缓冲区导致用户态挂掉。
@@ -422,7 +422,7 @@ for(int i = 0; i < req_buffers.count; i++)
 注：
 - 可参阅：[[VB2概述#^nijdvg|VB2缓冲区状态与生命周期]]
 
-#### 2.2.9 mmap映射缓存
+### 2.2.9 mmap映射缓存
 
 如前文所述，[[mmap#^go6lxw|mmap]]<font color="#c00000">的操作对象是将一个fd的offset处映射到指定内存区域</font>。
 在这里需要的操作对象就是：
@@ -451,7 +451,7 @@ for(int i = 0; i < req_buffers.count; i++)
 }
 ```
 
-#### 2.2.10 开启流传输
+### 2.2.10 开启流传输
 
 ```C
 enum v4l2_buf_type type = V4L2_BUF_TYPE_VIDEO_CAPTURE;  
@@ -461,7 +461,7 @@ if(ret < 0) {
 }
 ```
 
-#### 2.2.11 缓冲区出队 ^qftknt
+### 2.2.11 缓冲区出队 ^qftknt
 
 当驱动采集到图像后，就会将图像放入缓冲区，再将缓冲区放入队列中。
 而用户态想要读取图像时，就可以使用如下的方法将已经完成数据填装的缓冲区从队列中出队：
@@ -494,7 +494,7 @@ while(!exit)
 注：
 - `buffer.type` 字段需要设置。
 
-#### 2.2.12 完整示例代码
+### 2.2.12 完整示例代码
 
 ```C
 #include <linux/videodev2.h>
@@ -760,19 +760,19 @@ int main(int argc, char **argv)
 ```
 
 
-### 2.3 video_device用户态工具
+## 2.3 video_device用户态工具
 
 
 
-## 3 video_device内核态开发
+# 3 video_device内核态开发
 
 内核态开发必须拥有如下的基础知识：
 - [[VB2概述]]
 - [[V4L2概述#^dyadtz|V4L2基础概述]]
 
-### 3.1 VB2的v4l2特化
+## 3.1 VB2的v4l2特化
 
-#### 3.1.1 缓冲区类型枚举(enum v4l2_buf_type) ^u8ke9r
+### 3.1.1 缓冲区类型枚举(enum v4l2_buf_type) ^u8ke9r
 
 在[[VB2概述]]中，`vb2_queue` 等通常需要指定
 
@@ -797,7 +797,7 @@ enum v4l2_buf_type {
 };
 ```
 
-#### 3.1.2 队列初始化函数(vb2_queue_init)
+### 3.1.2 队列初始化函数(vb2_queue_init)
 
 ```C
 #include <media/videobuf2-v4l2.h>
@@ -818,7 +818,7 @@ int __must_check vb2_queue_init(struct vb2_queue *q);
 
 该函数通常在 `probe` 或打开设备回调时被驱动调用。当函数执行成功时返回 `0` 。
 
-#### 3.1.3 队列释放函数(vb2_queue_release)
+### 3.1.3 队列释放函数(vb2_queue_release)
 
 ```C
 /**
@@ -834,7 +834,7 @@ void vb2_queue_release(struct vb2_queue *q);
 
 看注释即可。
 
-#### 3.1.4 VB2 v4l2_ioctl_ops helper ^1yz9a7
+### 3.1.4 VB2 v4l2_ioctl_ops helper ^1yz9a7
 
 VB2框架为V4L2提供了如下的 `v4l2_ioctl_ops` 的预置实现：
 
@@ -864,9 +864,9 @@ int vb2_ioctl_remove_bufs(struct file *file, void *priv,
 - 
 
 
-#### 3.1.5 手动操作函数
+### 3.1.5 手动操作函数
 
-##### 3.1.5.1 申请缓冲区(vb2_reqbufs)
+#### 3.1.5.1 申请缓冲区(vb2_reqbufs)
 
 ```C
 /**
@@ -887,7 +887,7 @@ int vb2_reqbufs(struct vb2_queue *q, struct v4l2_requestbuffers *req);
 注：
 - 驱动可以不关心上述逻辑，只需要使用VB2提供的预置实现即可，后续同类型函数不再赘述。
 
-##### 3.1.5.2 查询缓冲区信息(vb2_querybuf)
+#### 3.1.5.2 查询缓冲区信息(vb2_querybuf)
 
 ```C
 /*
@@ -909,7 +909,7 @@ int vb2_querybuf(struct vb2_queue *q, struct v4l2_buffer *b);
 
 
 
-### 3.2 video_device设备类型(enum vfl_devnode_type) ^4ac1hk
+## 3.2 video_device设备类型(enum vfl_devnode_type) ^4ac1hk
 
 正如[[V4L2概述#2 2 V4L2设备模型概述 4783s6|V4L2设备模型概述]]所述， `video_device` 包含了多种子设备类型，例如视频设备、收音机设备等。在内核中通过 `enum vfl_devnode_type` 进行区分，其定义如下：
 
@@ -944,11 +944,11 @@ enum vfl_devnode_type {
 - `VFL_TYPE_TOUCH` ：基于视频的触摸设备(例如红外触摸屏)： `/dev/v4l-touch*`
 其通过在[[video_device#^cjcnad|注册video_device设备]]时指定参数来确定其设备类型。
 
-### 3.3 video_device基础特性
+## 3.3 video_device基础特性
 
 正如[[V4L2概述#2 2 1 基础设备模型 4783s6|基础设备模型]]所述，video_device提供了包含视频设备( `/dev/video*` )、收音机设备( `/dev/radio*` )等功能模型。
 
-#### 3.3.1 数据结构
+### 3.3.1 数据结构
 
 其数据结构定义如下：
 
@@ -1151,9 +1151,9 @@ struct video_device {
 		- 功能含义：内部调试标志，用于内核开发
 		- 维护方：驱动不应当修改。
 
-#### 3.3.2 相关API
+### 3.3.2 相关API
 
-##### 3.3.2.1 注册video_device设备 ^cjcnad
+#### 3.3.2.1 注册video_device设备 ^cjcnad
 
 ```C
 #include <media/v4l2-dev.h>
@@ -1181,7 +1181,7 @@ static inline int __must_check video_register_device(
 		int nr);
 ```
 
-##### 3.3.2.2 取消注册video_device设备
+#### 3.3.2.2 取消注册video_device设备
 
 ```C
 /**
@@ -1201,7 +1201,7 @@ void video_unregister_device(struct video_device *vdev);
 3. 对于需要取消注册的 `video_device` 对象，V4L2会自己释放由其负责维护的成员(例如 `dev` 成员)
 4. <font color="#c00000">当</font> `video_device` <font color="#c00000">的引用计数器归0时</font>，<span style="background:#fff88f"><font color="#c00000">其会自动调用</font></span> `video_device.release` <span style="background:#fff88f"><font color="#c00000">回调</font></span>，因此在驱动注册设备的错误回滚中需要注意 `fallback` 与 `video_device.release` 的配合。
 
-##### 3.3.2.3 向video_device中添加/获取驱动私有数据
+#### 3.3.2.3 向video_device中添加/获取驱动私有数据
 
 ```C
 /**
@@ -1230,7 +1230,7 @@ static inline void *video_get_drvdata(struct video_device *vdev)
 
 上述函数操作的是 `vdev->dev->driver_data` 。
 
-##### 3.3.2.4 获取file结构体中的video_device指针
+#### 3.3.2.4 获取file结构体中的video_device指针
 
 ```C
 /**
@@ -1241,7 +1241,7 @@ static inline void *video_get_drvdata(struct video_device *vdev)
 struct video_device *video_devdata(struct file *file);
 ```
 
-##### 3.3.2.5 获取设备节点名称
+#### 3.3.2.5 获取设备节点名称
 
 ```C
 /**
@@ -1257,9 +1257,9 @@ static inline const char *video_device_node_name(struct video_device *vdev)
 }
 ```
 
-#### 3.3.3 模型基本机制
+### 3.3.3 模型基本机制
 
-##### 3.3.3.1 V4L2上下文实例
+#### 3.3.3.1 V4L2上下文实例
 
 V4L2为每个可以被打开的文件节点(或设备)设计了一个统一的上下文实例，其用于记录每一个用户态打开后的句柄。其基本数据结构为：
 
@@ -1377,7 +1377,7 @@ struct vim2m_ctx {
 };
 ```
 
-##### 3.3.3.2 VFS open请求
+#### 3.3.3.2 VFS open请求
 
 在VFS向 `video_device` 对应的字符设备发起 `open` 请求时，其会被V4L2内部的 `v4l2_open` 函数统一处理，具体机制逻辑为：
 1. 对 `video_device` 管理所用的统一互斥锁 `videodev_lock` 加锁
@@ -1395,14 +1395,14 @@ struct vim2m_ctx {
 	- 不可存其他数据，也不可不存，因为V4L2内部要使用该数据。可见章节[[video_device#^3kv1kh|上下文实例]]。
 3. 注册上下文句柄( `v4l2_fh_add` )
 
-### 3.4 机制模型
+## 3.4 机制模型
 
-#### 3.4.1 源控制 ^8230im
-
-
+### 3.4.1 源控制 ^8230im
 
 
-#### 3.4.2 媒体请求(media_request) ^dhev4l
+
+
+### 3.4.2 媒体请求(media_request) ^dhev4l
 
 在用户态章节编程中已经提到，用户可以使用 `ioctl` 进行媒体设备配置，例如：
 
@@ -1432,7 +1432,7 @@ request_add_operation(request, VIDIOC_QBUF, &buffer);
 ioctl(fd, MEDIA_REQUEST_IOC_QUEUE, &request); 
 ```
 
-##### 3.4.2.1 媒体请求操作回调(media_device_ops) ^xvploq
+#### 3.4.2.1 媒体请求操作回调(media_device_ops) ^xvploq
 
 媒体请求回调( `media_device_ops` )的数据结构定义如下：
 
@@ -1496,13 +1496,13 @@ struct media_device_ops {
 		- 该函数不能失败(因为已经被 `req_validate` 验证)
 
 
-#### 3.4.3 通用文件句柄管理(v4l2_fh) ^kyd4a1
+### 3.4.3 通用文件句柄管理(v4l2_fh) ^kyd4a1
 
 
-#### 3.4.4 v4l2-ioctl
+### 3.4.4 v4l2-ioctl
 
 
-##### 3.4.4.1 v4l2_ioctl_ops ^r8lfyg
+#### 3.4.4.1 v4l2_ioctl_ops ^r8lfyg
 
 
 
@@ -1561,11 +1561,11 @@ struct media_device_ops {
 	- 
 	等。
 
-### 3.5 功能模型
+## 3.5 功能模型
 
 功能模型是指V4L2为一些常见特定设备需求所提供的通用机制。并不是所有的video_device都需要依赖对应的基础机制，使用上述的机制模型也可实现驱动功能。
 
-#### 3.5.1 内存到内存设备(v4l2_m2m_dev) ^vvh0h5
+### 3.5.1 内存到内存设备(v4l2_m2m_dev) ^vvh0h5
 
 V4L2的内存到内存设备模型<span style="background:#fff88f"><font color="#c00000">适用于一进一出或多进多出</font></span>的<font color="#c00000">视频转换设备</font>，例如：
 - 视频编解码器
@@ -1575,7 +1575,7 @@ V4L2的内存到内存设备模型<span style="background:#fff88f"><font color="
 
 因此，V4L2的基本模型包含了一进一出两个数据队列，并为该模型提供了若干通用机制。
 
-##### 3.5.1.1 M2M设备模型及机制
+#### 3.5.1.1 M2M设备模型及机制
 
 V4L2 M2M设备的基本模型如下图([[V4L2_M2M设备.drawio.svg]])所示：
 	![[V4L2_M2M设备.drawio.svg]]
@@ -1587,7 +1587,7 @@ M2M设备模型主要提供了如下的机制及支持：
 
 上述许多机制具有不错的泛用性。但是对于物理摄像头等，应当使用对应的 `videobuf2` 等机制。
 
-##### 3.5.1.2 数据结构定义
+#### 3.5.1.2 数据结构定义
 
 ```C
 /**
@@ -1686,7 +1686,7 @@ struct v4l2_m2m_dev {
 		- 功能含义：控制M2M设备的接口节点
 		- 维护方：使用媒体控制器功能时由驱动设置
 
-##### 3.5.1.3 M2M上下文实例 ^3axphz
+#### 3.5.1.3 M2M上下文实例 ^3axphz
 
 ```C
 /**
@@ -1750,7 +1750,7 @@ struct v4l2_m2m_ctx {
 
 
 
-##### 3.5.1.4 M2M设备操作回调(v4l2_m2m_ops) ^r39fw1
+#### 3.5.1.4 M2M设备操作回调(v4l2_m2m_ops) ^r39fw1
 
 该数据结构定义为：
 
@@ -1822,7 +1822,7 @@ struct v4l2_m2m_ops {
 		- 该操作需要注意和保证硬件安全
 		- 在该函数调用时，`device_run` 可能还在运行，需要注意并发问题。
 
-##### 3.5.1.5 队列初始化机制
+#### 3.5.1.5 队列初始化机制
 
 正如上述章节所述，M2M设备拥有输入输出两个队列。
 
@@ -1841,7 +1841,7 @@ struct v4l2_m2m_ops {
 - 每一个V4L2 M2M设备可以被多个用户空间实例打开(多个进程或多个线程)，具体使用[[video_device#^eienff|多实例成员]]进行实现。
 
 
-##### 3.5.1.6 M2M实例分析
+#### 3.5.1.6 M2M实例分析
 
 为了方便分析，本章节选用 `/drivers/media/test-drivers/vim2m.c` 进行分析。
 
