@@ -399,7 +399,7 @@ printf("The number of obtained buffers=%d.\r\n", req_buffers.count);
 - 显式的避免用户和内核同时操作同一片缓冲区，避免用户态访问到被内核正在使用且保护的缓冲区导致用户态挂掉。
 - 提供一种用户态-内核态的缓冲区同步机制，该机制如下：
 	1. 用户态将空的/使用过的缓冲区塞入内核态队列
-	2. 用户态通过系统调用使得内核态将填满数据的[[V4L2概述#^qftknt|缓冲区出队]]并返回给用户态
+	2. 用户态通过系统调用使得内核态将填满数据的[[video_device#^qftknt|缓冲区出队]]并返回给用户态
 
 因此，在用户态初始化V4L2摄像头时，其操作如下：
 
@@ -1050,7 +1050,7 @@ struct video_device {
 		- 维护方：<font color="#c00000">驱动必须配置</font>
 			- 由驱动方(`struct driver`)设置。
 	- `enum vfl_devnode_type vfl_type`
-		- 功能含义：描述设备类型，详见[[V4L2概述#^4ac1hk|设备类型枚举]]，例如：
+		- 功能含义：描述设备类型，详见[[video_device#^4ac1hk|设备类型枚举]]，例如：
 			- `VFL_TYPE_VIDEO` 视频输入输出设备(`/dev/videox`)
 			- `VFL_TYPE_RADIO` 无线电调谐器(`/dev/radiox`)
 		- 维护方：<font color="#c00000">驱动必须配置</font>
@@ -1073,7 +1073,7 @@ struct video_device {
 		- 功能含义：设备在同一驱动管理的多个设备实例中的index，<font color="#c00000">V4L2可能依赖该值用于生成唯一的设备名或sysfs路径</font>。
 		- 维护方：驱动建议配置。
 	- `u32 device_caps`
-		- 功能含义：描述设备的能力(对应用户态[[V4L2概述#^vda0ux|查询设备能力]])
+		- 功能含义：描述设备的能力(对应用户态[[video_device#^vda0ux|查询设备能力]])
 		- 维护方：<font color="#c00000">驱动必须配置</font>
 	- `void (*release)(struct video_device *vdev)`
 		- 功能含义：设备释放回调
@@ -1316,7 +1316,7 @@ struct vim2m_ctx {
 其对应的最简标准语义应当为：
 1. 为该文件指针分配对应的上下文句柄并初始化( `v4l2_fh_init` 等操作)
 2. 将<font color="#c00000">文件句柄</font> `&ctx->fh` (<span style="background:#fff88f"><font color="#c00000">而非上下文</font></span>) 存入 `filep->private_data` 中。
-	- 不可存其他数据，也不可不存，因为V4L2内部要使用该数据。可见章节[[V4L2概述#^3kv1kh|上下文实例]]。
+	- 不可存其他数据，也不可不存，因为V4L2内部要使用该数据。可见章节[[video_device#^3kv1kh|上下文实例]]。
 3. 注册上下文句柄( `v4l2_fh_add` )
 
 ### 3.4 机制模型
@@ -1584,7 +1584,7 @@ struct v4l2_m2m_dev {
 - 操作回调成员：
 	- `const struct v4l2_m2m_ops *m2m_ops`
 		- 功能含义：指向驱动实现的操作回调函数集的指针。
-			- 具体可见[[V4L2概述#^r39fw1|m2m设备操作回调]]。
+			- 具体可见[[video_device#^r39fw1|m2m设备操作回调]]。
 			- 至少提供 `device_run` 回调。
 		- 维护方：<font color="#c00000">必须由驱动设置</font>。
 - 媒体控制器相关成员：
@@ -1697,7 +1697,7 @@ struct v4l2_m2m_ops {
 	- `deice_run` \[<font color="#c00000">必须</font>\]：当队列中有需要处理的数据时，V4L2框架会调用该回调。
 	- `job_ready` ：
 	具体可见[[V4L2概述#3 1 4 3 m2m设备操作回调 v4l2_m2m_ops r39fw1|M2M设备操作回调]]。
-- 每一个V4L2 M2M设备可以被多个用户空间实例打开(多个进程或多个线程)，具体使用[[V4L2概述#^eienff|多实例成员]]进行实现。
+- 每一个V4L2 M2M设备可以被多个用户空间实例打开(多个进程或多个线程)，具体使用[[video_device#^eienff|多实例成员]]进行实现。
 
 
 ##### 3.5.1.5 M2M实例分析

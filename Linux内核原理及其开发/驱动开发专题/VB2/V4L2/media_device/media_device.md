@@ -538,12 +538,12 @@ struct media_device {
 	- 维护方：驱动按需设置
 - `int (*enable_source)(struct media_entity *entity, struct media_pipeline *pipe) `
 	- 功能含义：激活源实体的回调函数
-	- 维护方：<font color="#c00000">需要使用</font>[[V4L2概述#^8230im|源控制]]<font color="#c00000">的驱动必须实现</font>
+	- 维护方：<font color="#c00000">需要使用</font>[[video_device#^8230im|源控制]]<font color="#c00000">的驱动必须实现</font>
 - `void (*disable_source)(struct media_entity *entity)`
 	- 功能含义：停用源实体的回调函数
 	- 维护方：<font color="#c00000">需要使用源控制的驱动必须实现</font>
 - `const struct media_device_ops *ops`
-	- 功能含义：媒体请求的操作回调。具体可见[[V4L2概述#^xvploq|媒体请求]]。
+	- 功能含义：媒体请求的操作回调。具体可见[[video_device#^xvploq|媒体请求]]。
 	- 维护方：驱动可选实现
 - `struct mutex req_queue_mutex`
 	- 功能含义：请求队列的互斥锁
