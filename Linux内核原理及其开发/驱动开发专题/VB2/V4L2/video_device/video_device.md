@@ -1306,7 +1306,10 @@ struct v4l2_fh {
 	- 维护方：V4L2框架自动维护
 - `struct video_device *vdev` ：
 	- 功能含义：当前文件句柄所关联的 `video_device` 实例
-	- 维护方：<font color="#c00000">由驱动设置</font>(在初始化 `v4l2_fh` 对象)
+	- 维护方：<font color="#c00000">由驱动设置</font>(通常在 `open` 函数初始化 `v4l2_fh` 时设置)
+- `struct v4l2_ctrl_handler *ctrl_handler` ：
+	- 功能含义：指向用户可配置的参数项句柄，例如亮度、对比度等
+	- 维护方：
 
 
 
