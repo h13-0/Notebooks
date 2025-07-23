@@ -1264,8 +1264,49 @@ static inline const char *video_device_node_name(struct video_device *vdev)
 其基本数据结构为：
 
 ```C
+/**
+ * struct v4l2_fh - Describes a V4L2 file handler
+ *
+ * @list: list of file handlers
+ * @vdev: pointer to &struct video_device
+ * @ctrl_handler: pointer to &struct v4l2_ctrl_handler
+ * @prio: priority of the file handler, as defined by &enum v4l2_priority
+ *
+ * @wait: event' s wait queue
+ * @subscribe_lock: serialise changes to the subscribed list; guarantee that
+ *		    the add and del event callbacks are orderly called
+ * @subscribed: list of subscribed events
+ * @available: list of events waiting to be dequeued
+ * @navailable: number of available events at @available list
+ * @sequence: event sequence number
+ *
+ * @m2m_ctx: pointer to &struct v4l2_m2m_ctx
+ */
+struct v4l2_fh {
+	struct list_head	list;
+	struct video_device	*vdev;
+	struct v4l2_ctrl_handler *ctrl_handler;
+	enum v4l2_priority	prio;
 
+	/* Events */
+	wait_queue_head_t	wait;
+	struct mutex		subscribe_lock;
+	struct list_head	subscribed;
+	struct list_head	available;
+	unsigned int		navailable;
+	u32			sequence;
+
+	struct v4l2_m2m_ctx	*m2m_ctx;
+};
 ```
+
+其成员：
+- `struct list_head list` ：
+	- 功能含义：
+	- 维护方：V4L2框架自动维护
+- `struct video_device *vdev` ：
+	- 功能含义：当前文件句柄所关联的 `video_device` 实例
+	- 维护方：<font color="#c00000">由驱动设置</font>(在初始化 `v4l2_fh` 对象)
 
 
 
