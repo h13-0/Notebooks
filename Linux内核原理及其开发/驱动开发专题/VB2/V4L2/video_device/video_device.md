@@ -1261,7 +1261,7 @@ static inline const char *video_device_node_name(struct video_device *vdev)
 
 ##### 3.3.3.1 上下文实例
 
-其基本数据结构为：
+V4L2为每个可以被打开的文件节点(或设备)设计了一个统一的上下文实例，其用于记录每一个用户态打开后的句柄。其基本数据结构为：
 
 ```C
 /**
@@ -1310,12 +1310,13 @@ struct v4l2_fh {
 - `struct v4l2_ctrl_handler *ctrl_handler` ：
 	- 功能含义：指向用户可配置的参数项句柄，例如亮度、对比度等
 	- 维护方：
-
+- `enum v4l2_priority prio` ：
+	- 功能含义：
 
 
 需要注意的是：
 - <font color="#c00000">V4L2并未提供统一的video_device的上下文实例定义</font>，<font color="#c00000">在V4L2内部只需要操作</font>[[V4L2概述#3 2 4 通用文件句柄管理 v4l2_fh kyd4a1|通用文件管理句柄]]对象，即 `struct v4l2_fh` 。 ^3kv1kh
-- 驱动开发者应当根据实际需求自行设计上下文实例，例如添加互斥锁、队列等。
+- 驱动开发者应当根据实际需求自行设计上下文实例，例如添加互斥锁、队列、若干设备参数等。
 
 例如 `vim2m` 设备中的上下文实例定义为：
 
