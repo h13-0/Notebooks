@@ -1259,7 +1259,7 @@ static inline const char *video_device_node_name(struct video_device *vdev)
 
 #### 3.3.3 模型基本机制
 
-##### 3.3.3.1 上下文实例
+##### 3.3.3.1 V4L2上下文实例
 
 V4L2为每个可以被打开的文件节点(或设备)设计了一个统一的上下文实例，其用于记录每一个用户态打开后的句柄。其基本数据结构为：
 
@@ -1302,14 +1302,14 @@ struct v4l2_fh {
 
 其成员：
 - `struct list_head list` ：
-	- 功能含义：
+	- 功能含义：该上下文所在文件上下文链表的<font color="#c00000">节点</font>(而非表头)
 	- 维护方：V4L2框架自动维护
 - `struct video_device *vdev` ：
 	- 功能含义：当前文件句柄所关联的 `video_device` 实例
 	- 维护方：<font color="#c00000">由驱动设置</font>(通常在 `open` 函数初始化 `v4l2_fh` 时设置)
 - `struct v4l2_ctrl_handler *ctrl_handler` ：
 	- 功能含义：指向用户可配置的参数项句柄，例如亮度、对比度等
-	- 维护方：
+	- 维护方：在需要控制项时由驱动管理
 - `enum v4l2_priority prio` ：
 	- 功能含义：表示该句柄的优先级
 	- 维护方：用户空间通过 `VIDIOC_S_PRIORITY` (ioctl)设置，随后框架负责将优先级存储到该字段。内存可能需要读取使用。
@@ -1332,9 +1332,10 @@ struct v4l2_fh {
 	- 功能含义：事件序列号，每当新事件添加到 `available` 链表时，该序列号会递增并作为该事件的序列号。可用于用户空间检测事件丢失。
 	- 维护方：V4L2负责维护
 - `struct v4l2_m2m_ctx *m2m_ctx` ：
-	- 功能含义：转为m2m设备提供的上下文指针，当不为m2m设备时，该指针为 `NULL` 。
+	- 功能含义：转为M2M设备提供的上下文指针，当不为M2M设备时，该指针为 `NULL` 。
 	- 维护方：
-
+		- 对于M2M设备，驱动创建 `v4l2_fh` 时就应当创建该成员，关闭该句柄时释放该成员
+		- 对于非M2M设备，保持为 `NULL` 即可。
 
 需要注意的是：
 - <font color="#c00000">V4L2并未提供统一的video_device的上下文实例定义</font>，<font color="#c00000">在V4L2内部只需要操作</font>[[V4L2概述#3 2 4 通用文件句柄管理 v4l2_fh kyd4a1|通用文件管理句柄]]对象，即 `struct v4l2_fh` 。 ^3kv1kh
