@@ -606,10 +606,45 @@ T& operator[]( Key&& key );
 | 键值不存在时 | 抛出异常   | 插入新元素        |
 | 只读访问   | 可用     | 不可，会插入新元素    |
 
-##### 3.2.4.3.6 原地插入(emplace)
+##### 3.2.4.3.6 查找(find)
+
+`find` 用于查找是否包含对应的键值：
+
+```CPP
+iterator find( const Key& key );
+const_iterator find( const Key& key ) const;
+```
+
+此外C++20开始还有查找可等价比较的元素：
+
+```CPP
+template< class K >  
+iterator find( const K& x );
+template< class K >  
+const_iterator find( const K& x ) const;
+```
+
+该函数的返回值为指向键值对应的元素的迭代器，若没有该元素则返回 `end()` 迭代器
+
+##### 3.2.4.3.7 查找(count)
+
+`count` 也可用于查找是否存在对应的元素，由于hash表特性，其值只能为0或1。
+
+```CPP
+size_type count( const Key& key ) const;
+```
+
+C++20开始的查找可等价比较的元素：
+
+```CPP
+template< class K >
+size_type count( const K& x ) const;
+```
+
+##### 3.2.4.3.8 原地插入(emplace)
 
 
-##### 3.2.4.3.7 迭代器
+##### 3.2.4.3.9 迭代器
 
 `unordered_map` 提供了 `.begin()` 和 `.end()` 两个获取迭代器的方法，返回的类型为前向迭代器。
 
