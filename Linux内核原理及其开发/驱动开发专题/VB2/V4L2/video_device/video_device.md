@@ -1312,7 +1312,16 @@ struct v4l2_fh {
 	- 维护方：
 - `enum v4l2_priority prio` ：
 	- 功能含义：表示该句柄的优先级
-	- 维护方：用户空间通过 `VIDIOC_S_PRIORITY` 设置
+	- 维护方：用户空间通过 `VIDIOC_S_PRIORITY` (ioctl)设置，随后框架负责将优先级存储到该字段。内存可能需要读取使用。
+- `wait_queue_head_t wait` ：
+	- 功能含义：队列等待头，用户空间触发等待事件时会在该队列等待(如 `poll` 等)
+	- 维护方：V4L2负责维护，且在发生自定义事件时驱动可通过该队列唤醒队列
+- `struct mutex subscribe_lock` ：
+	- 功能含义：互斥锁，用于保护下一个成员 `subscribed` 链表
+	- 维护方：V4L2负责维护，驱动不需要访问
+- `struct list_head subscribed` ：
+	- 功能含义：
+
 
 
 需要注意的是：
