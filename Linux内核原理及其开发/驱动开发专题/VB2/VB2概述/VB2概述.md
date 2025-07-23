@@ -780,10 +780,28 @@ struct vb2_mem_ops {
 
 ## 2.5 相关API
 
-### 2.5.1 (vb2_buffer_done)
+### 2.5.1 初始化队列(vb2_queue_init)
 
+### 2.5.2 设置名称并初始化队列(vb2_queue_init_name)
 
+```C
+/**
+ * vb2_queue_init_name() - initialize a videobuf2 queue with a name
+ * @q:		pointer to &struct vb2_queue with videobuf2 queue.
+ * @name:	the queue name
+ *
+ * This function initializes the vb2_queue exactly like vb2_queue_init(),
+ * and additionally sets the queue name. The queue name is used for logging
+ * purpose, and should uniquely identify the queue within the context of the
+ * device it belongs to. This is useful to attribute kernel log messages to the
+ * right queue for m2m devices or other devices that handle multiple queues.
+ */
+int __must_check vb2_queue_init_name(struct vb2_queue *q, const char *name);
+```
 
+本方法会比上一子章节的初始化队列多一个设置名称的方法，对于多queue设备(如M2M)会有助于通过日志定位具体的队列实例。
+
+### 2.5.3 释放队列(vb2_queue_release)
 
 
 ## 2.6 提供的机制
@@ -1051,6 +1069,8 @@ vb2_plane_size(struct vb2_buffer *vb, unsigned int plane_no)
 static inline void vb2_set_plane_payload(struct vb2_buffer *vb,
 				 unsigned int plane_no, unsigned long size);
 ```
+
+### 3.3.4 (vb2_buffer_done)
 
 
 # 4 平面信息(vb2_plane)
