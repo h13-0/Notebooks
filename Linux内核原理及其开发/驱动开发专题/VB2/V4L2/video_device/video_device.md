@@ -1320,8 +1320,20 @@ struct v4l2_fh {
 	- 功能含义：互斥锁，用于保护下一个成员 `subscribed` 链表
 	- 维护方：V4L2负责维护，驱动不需要访问
 - `struct list_head subscribed` ：
-	- 功能含义：
-
+	- 功能含义：用于链接文件句柄所订阅的事件(`struct v4l2_subscribed_event`)
+	- 维护方：V4L2负责维护。
+- `struct list_head available` ：
+	- 功能含义：用于链接存储已经发生但未被用户空间读取(出队)的事件(`struct v4l2_kevent`)，这些事件在链表里按照发生的先后顺序排列。
+	- 维护方：V4L2负责维护，驱动可通过 `v4l2_event_queue` 添加事件。
+- `unsigned int navailable` ：
+	- 功能含义：`available` 中的数量
+	- 维护方：V4L2负责维护
+- `u32 sequence` ：
+	- 功能含义：事件序列号，每当新事件添加到 `available` 链表时，该序列号会递增并作为该事件的序列号。可用于用户空间检测事件丢失。
+	- 维护方：V4L2负责维护
+- `struct v4l2_m2m_ctx *m2m_ctx` ：
+	- 功能含义：转为m2m设备提供的上下文指针，当不为m2m设备时，该指针为 `NULL` 。
+	- 维护方：
 
 
 需要注意的是：
