@@ -1261,6 +1261,14 @@ static inline const char *video_device_node_name(struct video_device *vdev)
 
 ##### 3.3.3.1 上下文实例
 
+其基本数据结构为：
+
+```C
+
+```
+
+
+
 需要注意的是：
 - <font color="#c00000">V4L2并未提供统一的video_device的上下文实例定义</font>，<font color="#c00000">在V4L2内部只需要操作</font>[[V4L2概述#3 2 4 通用文件句柄管理 v4l2_fh kyd4a1|通用文件管理句柄]]对象，即 `struct v4l2_fh` 。 ^3kv1kh
 - 驱动开发者应当根据实际需求自行设计上下文实例，例如添加互斥锁、队列等。
@@ -1648,7 +1656,7 @@ struct v4l2_m2m_ops {
 
 其成员：
 - `void (*device_run)(void *priv)`
-	- 功能含义：驱动处理实际具体M2M任务的<font color="#c00000">入口</font>(也就是说通常不把实际的任务放到这里)。
+	- 功能含义：驱动处理实际具体M2M任务的<font color="#c00000">入口</font>，<font color="#c00000">作业不需要在此回调返回前结束</font>(也就是说通常不把实际的任务放到这里)。
 		- 该函数需要从 `void *priv` 中找到 `v4l2_m2m_dev->curr_ctx` ，并从中找到当前实例正在处理的队列，并执行对应方法。
 	- 被执行时机(条件)，需要同时满足：
 		1. 已调用 `VIDIOC_STREAMON` 启动 `OUTPUT` 和 `CAPTURE` 队列
@@ -1666,6 +1674,7 @@ struct v4l2_m2m_ops {
 	- <span style="background:#fff88f"><font color="#c00000">关键规则</font></span>：
 		- <span style="background:#fff88f"><font color="#c00000">该函数禁止阻塞、休眠</font></span>
 		- 该函数应当快速返回
+		- 返回非0表示设备已经准备好，返回0表示设备尚未ready
 - `void (*job_abort)(void *priv)` 
 	- 功能含义：任务紧急终止
 	- 被执行时机(下列之一)：
@@ -1677,7 +1686,7 @@ struct v4l2_m2m_ops {
 	- 关键规则：
 		- 该函数禁止等待，必须立即返回，无须等待设备停止(类似于设置 `exit_flag` )：
 			- 通常需要通知硬件停止，并将缓冲区标记为错误状态。
-		- <font color="#c00000">运行完成后必须调用</font> `v4l2_m2m_job_finish()` <font color="#c00000">或变体</font>
+		- <font color="#c00000">运行完成后必须调用</font> `v4l2_m2m_job_finish()` <font color="#c00000">或</font> `v4l2_m2m_buf_done_and_job_finish()` 
 		- 该操作需要注意和保证硬件安全
 		- 在该函数调用时，`device_run` 可能还在运行，需要注意并发问题。
 
