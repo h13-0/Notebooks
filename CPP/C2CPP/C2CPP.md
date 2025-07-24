@@ -501,6 +501,11 @@ vector( size_type count, const T& value,
 
 ###### 4.2.3.2.1.3 由输入迭代器构造vector
 
+```C
+template< class InputIt >
+vector( InputIt first, InputIt last,
+        const Allocator& alloc = Allocator() );
+```
 
 
 
