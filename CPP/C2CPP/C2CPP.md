@@ -335,47 +335,19 @@ STL容器主要有如下三类：
 	3. `std::unordered_map`
 	4. `std::unordered_multimap`
 
-### 3.2.1 array
-
-### 3.2.2 vector
-
-`std::vector` 是C++的动态大小的数组实现，其元素被顺序存储，因此其可以被迭代器和引索顺序访问。其会自动扩展其所需要的内存空间，并且通常其所占用的内存比同大小的静态数组要多。其空间的动态分配仅会发生在其所保留的额外空间耗尽时触发。
-
-#### 3.2.2.1 常用操作的时间复杂度
-
-<font color="#c00000">vector的常用操作的时间复杂度</font>：
-- 随机访问：$O(1)$
-- 在末尾插入或删除元素：平均$O(1)$
-- 在末尾的倒数第n个位置插入或删除元素：$O(n)$
-
-#### 3.2.2.2 模板类型
-
-<font color="#c00000">vector中的模板类型需要满足如下要求</font>：
-- 可以拷贝赋值
-- 可以拷贝构造
-
-但是需要注意<span style="background:#fff88f"><font color="#c00000">慎用bool类型作为vector的元素</font></span>，除非明确地要使用 `vector<bool>` 的特性。
-
-#### 3.2.2.3 常用方法
-
-
-##### 3.2.2.3.1 迭代器
-
-`vector` 返回的迭代器为随机访问迭代器，可通过 `.begin()` 、 `.end()` 获取。
-
-### 3.2.3 std::initializer_list
+### 3.2.1 std::initializer_list
 
 <font color="#9bbb59">初始化列表</font>( `initializer_list` )是一个轻量化的<span style="background:#fff88f"><font color="#c00000">只读容器</font></span>，<font color="#c00000">通常其只能通过特殊的构造函数构造</font>。
 需注意的是，<font color="#9bbb59">初始化列表</font>和构造函数的<font color="#9bbb59">成员初始化列表</font>是不同的概念。
 
-#### 3.2.3.1 模板定义
+#### 3.2.1.1 模板定义
 
 ```CPP
 template< class T >
 class initializer_list;
 ```
 
-#### 3.2.3.2 常用构造函数
+#### 3.2.1.2 常用构造函数
 
 ```CPP
 initializer_list() noexcept;
@@ -397,9 +369,9 @@ private:
 		: begin_(first), size_(count) {}
 ```
 
-#### 3.2.3.3 常用方法
+#### 3.2.1.3 常用方法
 
-##### 3.2.3.3.1 查询元素数量(size)
+##### 3.2.1.3.1 查询元素数量(size)
 
 ```CPP
 size_type size() const noexcept;
@@ -407,12 +379,40 @@ size_type size() const noexcept;
 
 其实际上返回的是表达式 `std::distance(begin(), end())` 的值，类型为 `std::size_t` 。
 
-##### 3.2.3.3.2 迭代器(begin、end)
+##### 3.2.1.3.2 迭代器(begin、end)
 
 ```CPP
 const T* begin() const noexcept;
 const T* end() const noexcept;
 ```
+
+### 3.2.2 array
+
+### 3.2.3 vector
+
+`std::vector` 是C++的动态大小的数组实现，其元素被顺序存储，因此其可以被迭代器和引索顺序访问。其会自动扩展其所需要的内存空间，并且通常其所占用的内存比同大小的静态数组要多。其空间的动态分配仅会发生在其所保留的额外空间耗尽时触发。
+
+#### 3.2.3.1 常用操作的时间复杂度
+
+<font color="#c00000">vector的常用操作的时间复杂度</font>：
+- 随机访问：$O(1)$
+- 在末尾插入或删除元素：平均$O(1)$
+- 在末尾的倒数第n个位置插入或删除元素：$O(n)$
+
+#### 3.2.3.2 模板类型
+
+<font color="#c00000">vector中的模板类型需要满足如下要求</font>：
+- 可以拷贝赋值
+- 可以拷贝构造
+
+但是需要注意<span style="background:#fff88f"><font color="#c00000">慎用bool类型作为vector的元素</font></span>，除非明确地要使用 `vector<bool>` 的特性。
+
+#### 3.2.3.3 常用方法
+
+
+##### 3.2.3.3.1 迭代器
+
+`vector` 返回的迭代器为随机访问迭代器，可通过 `.begin()` 、 `.end()` 获取。
 
 ### 3.2.4 std::unordered_map
 
