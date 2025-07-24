@@ -8,15 +8,19 @@ number headings: auto, first-level 1, max 6, 1.1
 ```toc
 ```
 
-# 2 新增基本特性
+# 2 Readme
 
-## 2.1 面向对象
+出于必要性考虑，本笔记不再记录已经被废弃或即将被废弃的C++特性。
 
-### 2.1.1 面向对象基础
+# 3 新增基本特性
+
+## 3.1 面向对象
+
+### 3.1.1 面向对象基础
 
 通用部分参见：[[面相对象的程序设计]]
 
-#### 2.1.1.1 对象的构造
+#### 3.1.1.1 对象的构造
 
 此外，需要额外说明的是在C++中规定：<span style="background:#fff88f"><font color="#c00000">任何可以被解析为函数声明的代码都会被解析为函数声明</font></span>。因此在类的定义中，有如下注意事项：
 
@@ -27,17 +31,20 @@ ClassName obj;
 // 错误：声明一个返回值为ClassName的函数，函数名为obj
 ClassName obj();
 
+// 正确：使用含参构造非法，无歧义
+ClassName obj(123);
+
 // C++11及以后正确：使用花括号避免歧义，本质为使用std::initializer_list
 ClassName obj{};
 ```
 
-### 2.1.2 重载运算符
+### 3.1.2 重载运算符
 
-#### 2.1.2.1 基本定义
+#### 3.1.2.1 基本定义
 
 在C++中，运算符重载是一种形式的多态，允许开发者为已有的运算符赋予自定义的行为。运算符重载的实质是函数重载。重载运算符可以是<font color="#c00000">成员函数</font><span style="background:#fff88f"><font color="#c00000">或</font></span><font color="#c00000">全局函数(友元函数)</font>，但必须至少有一个操作数是用户定义的类型。
 
-#### 2.1.2.2 运算符重载规则
+#### 3.1.2.2 运算符重载规则
 
 1. <span style="background:#fff88f"><font color="#c00000">不可定义新的运算符</font></span>。
 2. <span style="background:#fff88f"><font color="#c00000">不可修改现有运算符的操作数数量</font></span>。
@@ -46,7 +53,7 @@ ClassName obj{};
 5. <span style="background:#fff88f"><font color="#c00000">大多数运算符可以被重载</font></span>，但有一些特例如赋值运算符 `=` ，应该通常作为类的成员函数来重载。
 6. 定义后的运算符功能应与其原先目的相同或相似。
 
-#### 2.1.2.3 运算符重载的定义方式
+#### 3.1.2.3 运算符重载的定义方式
 
 ```CPP
 ReturnType operator${符号}(params...)
@@ -58,7 +65,7 @@ ReturnType operator${符号}(params...)
 
 `${符号}` 为需要重载的运算符，<font color="#c00000">前后可以加空格</font>。
 
-#### 2.1.2.4 可重载和不可重载的运算符
+#### 3.1.2.4 可重载和不可重载的运算符
 
 <font color="#c00000">可以重载的</font>运算符有：
 
@@ -80,7 +87,7 @@ ReturnType operator${符号}(params...)
 4. 条件运算符： `? :`
 5. 空间计算运算符： `sizeof`
 
-#### 2.1.2.5 重载运算符Demo
+#### 3.1.2.5 重载运算符Demo
 
 假设我们需要对如下的虚数类实现其加法运算：
 
@@ -113,7 +120,7 @@ std::string Complex::to_string(void)
 }
 ```
 
-##### 2.1.2.5.1 友元函数实现
+##### 3.1.2.5.1 友元函数实现
 
 基于上述类，可以基于上述类和友元函数实现全局函数定义的运算符 `+` 的重载，Demo如下：
 
@@ -152,7 +159,7 @@ Complex operator+(const Complex& comp1, const Complex& comp2)
 }
 ```
 
-##### 2.1.2.5.2 成员函数实现
+##### 3.1.2.5.2 成员函数实现
 
 <span style="background:#fff88f"><font color="#c00000">与上述友元函数的运算符重载不同的是，成员函数实现的运算符重载不再需要额外传递一次自身。即成员函数实现的运算符重载会比友元函数少一个函数参数。</font></span>
 <font color="#c00000">如果需要重载的运算符为双目运算符，则只需要设置一个参数作为右侧运算量。</font>
@@ -178,7 +185,7 @@ bool Complex::operator==(const Complex& comp)
 }
 ```
 
-#### 2.1.2.6 运算符的隐式和显式调用
+#### 3.1.2.6 运算符的隐式和显式调用
 
 直接使用对若干个对象进行运算就是运算符的隐式调用，例如：
 
@@ -203,27 +210,27 @@ comp1.operator==(comp2);
 
 <span style="background:#fff88f"><font color="#c00000">需要注意的是，函数重载的方式不同，其对应的显示调用方式也不同。</font></span>
 
-### 2.1.3 模板
+### 3.1.3 模板
 
 
 
 
 
 
-## 2.2 新增基本类型(不含STL)
+## 3.2 新增基本类型(不含STL)
 
-### 2.2.1 string类
+### 3.2.1 string类
 
-#### 2.2.1.1 sizeof(string)
+#### 3.2.1.1 sizeof(string)
 
 在x86架构下，`sizeof(std::string) = 28`；
 在x86_64架构下，`sizeof(std::string) = 40`；
 而 `sizeof(std::string)` 的值<u><font color="#c00000">不随字符串内容发生改变</font></u>。
-#### 2.2.1.2 string作为struct的成员时
+#### 3.2.1.2 string作为struct的成员时
 
 string可以作为struct的成员，其size计算符合内存对齐等要求。
 
-#### 2.2.1.3 常用方法
+#### 3.2.1.3 常用方法
 
 | <center>方法</center>      | <center>含义</center>        | <center>备注</center> |
 | ------------------------ | -------------------------- | ------------------- |
@@ -233,17 +240,22 @@ string可以作为struct的成员，其size计算符合内存对齐等要求。
 |                          |                            |                     |
 
 
-## 2.3 新增关键字
+## 3.3 新增关键字
 
-### 2.3.1 explicit 强制显式转换
+### 3.3.1 explicit 强制显式转换
 
-对于没有使用 `explicit` 修饰的类，若其存在<font color="#c00000">只有一个</font><span style="background:#fff88f"><font color="#c00000">非</font></span><font color="#c00000">默认参数</font>的构造函数时，那么该类就允许
+对于没有使用 `explicit` 修饰的类，若其存在<font color="#c00000">只有一个</font><span style="background:#fff88f"><font color="#c00000">非</font></span><font color="#c00000">默认参数</font>的构造函数时，那么该类就允许<font color="#c00000">由一个非默认参数的变量隐式转换为该类</font>。
+
+例如：
 
 ```CPP
 class MyClass {
 public:
-    MyClass(int value) { // 允许隐式转换
+	// 允许隐式转换
+    MyClass(int value)
+    {
         // 构造函数实现
+        ...
     }
 };
 
@@ -251,16 +263,48 @@ void process(MyClass obj) {
     // 处理对象
 }
 
-int main() {
-    MyClass obj1 = 42;  // 隐式转换：int → MyClass
-    process(42);        // 隐式转换：int → MyClass ✅
+int main()
+{
+	// 隐式转换: int -> MyClass
+    MyClass obj1 = 42;
+    // 在函数参数传递中也可以隐式转换
+    process(42);
+    // 当然也可以使用显式转换
+    // MyClass obj2(42); // 合法但不建议
+    MyClass obj2{ 42 };  // 建议使用初始化列表方式避免起义
 }
-
 ```
 
+当使用 `explicit` 修饰后：
 
+```CPP
+class MyClass {
+public:
+	// 不允许隐式转换
+    explicit MyClass(int value)
+    {
+        // 构造函数实现
+        ...
+    }
+};
 
-# 3 STL
+void process(MyClass obj) {
+    // 处理对象
+}
+
+int main()
+{
+	// 非法，编译时报错
+    MyClass obj1 = 42;
+    // 非法，编译时报错
+    process(42);
+    // 此时只可使用显式转换
+    // MyClass obj2(42); // 合法但不建议
+    MyClass obj2{ 42 };  // 建议使用初始化列表方式避免起义
+}
+```
+
+# 4 STL
 
 STL全名为Standard Template Library，意为标准模板库或泛型库，是C++中的一个重要组件。其主要包含如下组件：
 - 容器(Containers)
@@ -269,7 +313,7 @@ STL全名为Standard Template Library，意为标准模板库或泛型库，是C
 - 函数对象(Function Objects)
 - 适配器(Adapters)
 
-## 3.1 迭代器
+## 4.1 迭代器
 
 迭代器是C++用于统一迭代(遍历)访问容器的一种对象，通过该对象可以让用户访问容器而不关心内部实现。
 
@@ -294,7 +338,7 @@ template<
 - `Pointer` ：定义指向元素的指针的类型，默认填充为 `T*`
 - `Reference` ：定义指向元素的引用的类型，默认填充为 `T&`
 
-### 3.1.1 从容器中获取迭代器
+### 4.1.1 从容器中获取迭代器
 
 通常来说容器都会提供如下几个迭代器：
 - `.begin()` ：返回指向首元素的迭代器
@@ -306,7 +350,7 @@ template<
 1. 容器元素数量： `x.end() - x.begin()`
 
 
-### 3.1.2 迭代器类别 ^jhkiyp
+### 4.1.2 迭代器类别 ^jhkiyp
 
 标准库定义了如下的迭代器类别：
 - `input_iterator_tag` ：输入迭代器
@@ -316,7 +360,7 @@ template<
 - `random_access_iterator_tag` ：随机访问迭代器
 - `contiguous_iterator_tag` ：连续迭代器(C++20起)
 
-### 3.1.3 迭代器的基本操作
+### 4.1.3 迭代器的基本操作
 
 |        操作         | 输入  | 输出  | 前向  | 双向  | 随机访问 | 连续  |
 | :---------------: | :-: | :-: | :-: | :-: | :--: | :-: |
@@ -344,7 +388,7 @@ template<
 |    `it >= it2`    |     |     |     |     |  是   |  是  |
 
 
-## 3.2 容器
+## 4.2 容器
 
 STL容器主要有如下三类：
 1. 序列容器
@@ -363,19 +407,19 @@ STL容器主要有如下三类：
 	3. `std::unordered_map`
 	4. `std::unordered_multimap`
 
-### 3.2.1 std::initializer_list
+### 4.2.1 std::initializer_list
 
 <font color="#9bbb59">初始化列表</font>( `initializer_list` )是一个轻量化的<span style="background:#fff88f"><font color="#c00000">只读容器</font></span>，<font color="#c00000">通常其只能通过特殊的构造函数构造</font>。
 需注意的是，<font color="#9bbb59">初始化列表</font>和构造函数的<font color="#9bbb59">成员初始化列表</font>是不同的概念。
 
-#### 3.2.1.1 模板定义
+#### 4.2.1.1 模板定义
 
 ```CPP
 template< class T >
 class initializer_list;
 ```
 
-#### 3.2.1.2 常用构造函数
+#### 4.2.1.2 常用构造函数
 
 ```CPP
 initializer_list() noexcept;
@@ -397,9 +441,9 @@ private:
 		: begin_(first), size_(count) {}
 ```
 
-#### 3.2.1.3 常用方法
+#### 4.2.1.3 常用方法
 
-##### 3.2.1.3.1 查询元素数量(size)
+##### 4.2.1.3.1 查询元素数量(size)
 
 ```CPP
 size_type size() const noexcept;
@@ -407,27 +451,27 @@ size_type size() const noexcept;
 
 其实际上返回的是表达式 `std::distance(begin(), end())` 的值，类型为 `std::size_t` 。
 
-##### 3.2.1.3.2 迭代器(begin、end)
+##### 4.2.1.3.2 迭代器(begin、end)
 
 ```CPP
 const T* begin() const noexcept;
 const T* end() const noexcept;
 ```
 
-### 3.2.2 array
+### 4.2.2 array
 
-### 3.2.3 vector
+### 4.2.3 vector
 
 `std::vector` 是C++的动态大小的数组实现，其元素被顺序存储，因此其可以被迭代器和引索顺序访问。其会自动扩展其所需要的内存空间，并且通常其所占用的内存比同大小的静态数组要多。其空间的动态分配仅会发生在其所保留的额外空间耗尽时触发。
 
-#### 3.2.3.1 常用操作的时间复杂度
+#### 4.2.3.1 常用操作的时间复杂度
 
 <font color="#c00000">vector的常用操作的时间复杂度</font>：
 - 随机访问：$O(1)$
 - 在末尾插入或删除元素：平均$O(1)$
 - 在末尾的倒数第n个位置插入或删除元素：$O(n)$
 
-#### 3.2.3.2 模板类型
+#### 4.2.3.2 模板类型
 
 <font color="#c00000">vector中的模板类型需要满足如下要求</font>：
 - 可以拷贝赋值
@@ -435,10 +479,12 @@ const T* end() const noexcept;
 
 但是需要注意<span style="background:#fff88f"><font color="#c00000">慎用bool类型作为vector的元素</font></span>，除非明确地要使用 `vector<bool>` 的特性。
 
-#### 3.2.3.3 常用方法
+#### 4.2.3.3 常用方法
 
 
-##### 3.2.3.3.1 构造函数
+##### 4.2.3.3.1 构造函数
+
+###### 4.2.3.3.1.1 创建包含n个指定默认元素的vector
 
 ```CPP
 explicit vector( size_type count,
@@ -447,15 +493,15 @@ explicit vector( size_type count,
 
 
 
-##### 3.2.3.3.2 迭代器
+##### 4.2.3.3.2 迭代器
 
 `vector` 返回的迭代器为随机访问迭代器，可通过 `.begin()` 、 `.end()` 获取。
 
-### 3.2.4 std::unordered_map
+### 4.2.4 std::unordered_map
 
 `std::unordered_map` <font color="#c00000">基于哈希表实现</font>，内部元素无序存储。
 
-#### 3.2.4.1 模板定义
+#### 4.2.4.1 模板定义
 
 ```CPP
 template<
@@ -474,9 +520,9 @@ template<
 - `class KeyEqual` 为键值比较函数对象类型
 - `class Allocator` 为内存分配器类型
 
-#### 3.2.4.2 常用方法
+#### 4.2.4.2 常用方法
 
-##### 3.2.4.2.1 构造函数
+##### 4.2.4.2.1 构造函数
 
 ```CPP
 unordered_map();
@@ -487,15 +533,15 @@ unordered_map();
 - `mapped_type` ：即 `class T` ，值类型
 - `value_type` ：`std::pair<const Key, T>` ^o36e6j 
 
-##### 3.2.4.2.2 清空容器(clear)
+##### 4.2.4.2.2 清空容器(clear)
 
 ```CPP
 void clear() noexcept;
 ```
 
-##### 3.2.4.2.3 插入元素(insert)
+##### 4.2.4.2.3 插入元素(insert)
 
-###### 3.2.4.2.3.1 插入单个元素
+###### 4.2.4.2.3.1 插入单个元素
 
 ```CPP
 std::pair<iterator, bool> insert( const value_type& value ); 
@@ -518,7 +564,7 @@ auto ret1 = map.insert({1, "one"});               // ret1.second == true
 auto ret2 = map.insert(std::make_pair(1, "one")); // 此时ret2.second为false
 ```
 
-###### 3.2.4.2.3.2 批量插入(通过初始化列表)
+###### 4.2.4.2.3.2 批量插入(通过初始化列表)
 
 ```CPP
 void insert( std::initializer_list<value_type> ilist );
@@ -531,7 +577,7 @@ void insert( std::initializer_list<value_type> ilist );
 	- 若参数中有重复键，则只插入第一个
 	- 不会修改已有键值
 
-###### 3.2.4.2.3.3 批量插入(通过迭代器)
+###### 4.2.4.2.3.3 批量插入(通过迭代器)
 
 ```C
 template< class InputIt >
@@ -540,11 +586,11 @@ void insert( InputIt first, InputIt last );
 
 
 
-###### 3.2.4.2.3.4 带位置提示的插入
+###### 4.2.4.2.3.4 带位置提示的插入
 
-##### 3.2.4.2.4 删除元素(erase)
+##### 4.2.4.2.4 删除元素(erase)
 
-###### 3.2.4.2.4.1 通过key值删除
+###### 4.2.4.2.4.1 通过key值删除
 
 ```CPP
 size_type erase( const Key& key );
@@ -558,7 +604,7 @@ size_type erase( const Key& key );
 - 平均 $O(1)$
 - 最坏 $O(size)$
 
-###### 3.2.4.2.4.2 通过迭代器删除单个元素
+###### 4.2.4.2.4.2 通过迭代器删除单个元素
 
 ```CPP
 iterator erase( iterator pos );
@@ -570,7 +616,7 @@ iterator erase( iterator pos );
 		- 因为<font color="#c00000">只要map不为空</font>，<font color="#c00000">其最后一个元素就不是</font> `end()` ，所以<font color="#c00000">非空时</font>删除最后一个元素应当使用 `map.erase(std::prev(map.end()))`
 - 返回值为被删除元素之后元素的迭代器。如果删除的是最后一个元素，则返回 `end()` 。
 
-###### 3.2.4.2.4.3 通过迭代器范围删除元素
+###### 4.2.4.2.4.3 通过迭代器范围删除元素
 
 ```CPP
 iterator erase( const_iterator first, const_iterator last );
@@ -589,9 +635,9 @@ iterator erase( const_iterator first, const_iterator last );
 - 平均 $O(n)$
 - 最坏 $O(n\times size)$
 
-##### 3.2.4.2.5 查询(at)
+##### 4.2.4.2.5 查询(at)
 
-###### 3.2.4.2.5.1 普通查找
+###### 4.2.4.2.5.1 普通查找
 
 普通查找有如下两个不同的成员函数：
 
@@ -613,7 +659,7 @@ std::string& ref = map.at(1);
 const std::string& cref = const_map.at(1);
 ```
 
-###### 3.2.4.2.5.2 异构查找(C++26)
+###### 4.2.4.2.5.2 异构查找(C++26)
 
 在普通查找时，其参数只能为Key的类型，而不能是可以和Key透明比较的类型。例如：
 
@@ -627,7 +673,7 @@ int value1 = traditional_map.at("view");
 int value2 = transparent_map.at(std::string_view("view"));
 ```
 
-##### 3.2.4.2.6 查询/新增(operator\[\])
+##### 4.2.4.2.6 查询/新增(operator\[\])
 
 其对应的运算符重载函数签名为：
 
@@ -643,7 +689,7 @@ T& operator[]( Key&& key );
 | 键值不存在时 | 抛出异常   | 插入新元素        |
 | 只读访问   | 可用     | 不可，会插入新元素    |
 
-##### 3.2.4.2.7 查找(find)
+##### 4.2.4.2.7 查找(find)
 
 `find` 用于查找是否包含对应的键值：
 
@@ -663,7 +709,7 @@ const_iterator find( const K& x ) const;
 
 该函数的返回值为指向键值对应的元素的迭代器，若没有该元素则返回 `end()` 迭代器
 
-##### 3.2.4.2.8 查找(count)
+##### 4.2.4.2.8 查找(count)
 
 `count` 也可用于查找是否存在对应的元素，由于hash表特性，其值只能为0或1。
 
@@ -678,22 +724,22 @@ template< class K >
 size_type count( const K& x ) const;
 ```
 
-##### 3.2.4.2.9 原地插入(emplace)
+##### 4.2.4.2.9 原地插入(emplace)
 
 
-##### 3.2.4.2.10 迭代器
+##### 4.2.4.2.10 迭代器
 
 `unordered_map` 提供了 `.begin()` 和 `.end()` 两个获取迭代器的方法，返回的类型为前向迭代器。
 
-### 3.2.5 std::map
+### 4.2.5 std::map
 
 `std::map` 内部通常基于红黑树实现，<font color="#c00000">元素始终按键的升序排序</font>。
 
-## 3.3 算法
+## 4.3 算法
 
-### 3.3.1 排序
+### 4.3.1 排序
 
-#### 3.3.1.1 std::sort(混合排序)
+#### 4.3.1.1 std::sort(混合排序)
 
 `std::sort` 使用的排序方法会根据需要排序的元素数量动态切换排序方式，是<span style="background:#fff88f"><font color="#c00000">不稳定</font></span><font color="#c00000">排序</font>。其先使用快速排序对数据进行分段，
 - 
