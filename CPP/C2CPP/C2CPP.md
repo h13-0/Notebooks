@@ -27,7 +27,7 @@ ClassName obj;
 // 错误：声明一个返回值为ClassName的函数，函数名为obj
 ClassName obj();
 
-// C++11及以后正确：使用花括号避免歧义
+// C++11及以后正确：使用花括号避免歧义，本质为使用std::initializer_list
 ClassName obj{};
 ```
 
@@ -232,6 +232,34 @@ string可以作为struct的成员，其size计算符合内存对齐等要求。
 |                          |                            |                     |
 |                          |                            |                     |
 
+
+## 2.3 新增关键字
+
+### 2.3.1 explicit 强制显式转换
+
+对于没有使用 `explicit` 修饰的类，若其存在<font color="#c00000">只有一个</font><span style="background:#fff88f"><font color="#c00000">非</font></span><font color="#c00000">默认参数</font>的构造函数时，那么该类就允许
+
+```CPP
+class MyClass {
+public:
+    MyClass(int value) { // 允许隐式转换
+        // 构造函数实现
+    }
+};
+
+void process(MyClass obj) {
+    // 处理对象
+}
+
+int main() {
+    MyClass obj1 = 42;  // 隐式转换：int → MyClass
+    process(42);        // 隐式转换：int → MyClass ✅
+}
+
+```
+
+
+
 # 3 STL
 
 STL全名为Standard Template Library，意为标准模板库或泛型库，是C++中的一个重要组件。其主要包含如下组件：
@@ -413,8 +441,8 @@ const T* end() const noexcept;
 ##### 3.2.3.3.1 构造函数
 
 ```CPP
-vector() : vector(Allocator()) {}
-
+explicit vector( size_type count,
+                 const Allocator& alloc = Allocator() );
 ```
 
 
