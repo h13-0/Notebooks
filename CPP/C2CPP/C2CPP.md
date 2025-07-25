@@ -412,6 +412,10 @@ STL容器主要有如下三类：
 		- 若元素数量大于目标容器大小，则删除后续元素并缩小
 		- 若元素数量小于目标容器大小，则填充默认值或指定值
 	- `swap()` 
+	- `operator=` ：容器赋值
+	- `assign()` ：为容器批量赋值
+	- `assign_range()` 
+	- 
 - 容器容量：
 	- `empty()` ：判断是否为空
 	- `size()` ：返回元素成员数量
@@ -537,7 +541,11 @@ vector( InputIt first, InputIt last,
 
 `vector` 返回的迭代器为随机访问迭代器，可通过 `.begin()` 、 `.end()` 获取。
 
-### 4.2.4 string
+### 4.2.4 std::basic_string
+
+`std::basic_string` 为C++为若干种字符串类型(`char` 、 `wchar_t` 、`char32_t` 等)提供的统一容器，用于适配不同的字符串或编码类型。
+
+
 
 #### 4.2.4.1 基本特性
 
