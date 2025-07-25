@@ -545,24 +545,48 @@ vector( InputIt first, InputIt last,
 
 `std::basic_string` 为C++为若干种字符串类型(`char` 、 `wchar_t` 、`char32_t` 等)提供的统一容器，用于适配不同的字符串及编码类型。
 
+#### 4.2.4.1 模板定义
+
+```CPP
+template<
+    class CharT,
+    class Traits = std::char_traits<CharT>,
+    class Allocator = std::allocator<CharT>
+> class basic_string;
+```
+
+基于上述模板，各字符串类型及类定义如下：
+
+| 字符串类型            | <center>类定义</center>          |
+| ---------------- | ----------------------------- |
+| `std::string`    | `std::basic_string<char>`     |
+| `std::u8string`  | `std::basic_string<char8_t>`  |
+| `std::u16string` | `std::basic_string<char16_t>` |
+| `std::u32string` | `std::basic_string<char32_t>` |
+| `std::wstring`   | `std::basic_string<wchar_t>`  |
+
+#### 4.2.4.2 常用方法
+
+###### 4.2.4.2.1.1 
 
 
-#### 4.2.4.1 基本特性
 
-##### 4.2.4.1.1 sizeof(string)
+#### 4.2.4.3 基本特性
+
+##### 4.2.4.3.1 sizeof(string)
 
 在x86架构下，`sizeof(std::string) = 28`；
 在x86_64架构下，`sizeof(std::string) = 40`；
 而 `sizeof(std::string)` 的值<u><font color="#c00000">不随字符串内容发生改变</font></u>。
-##### 4.2.4.1.2 string作为struct的成员时
+##### 4.2.4.3.2 string作为struct的成员时
 
 string可以作为struct的成员，其size计算符合内存对齐等要求。
 
-#### 4.2.4.2 常用方法
+#### 4.2.4.4 常用方法
 
-##### 4.2.4.2.1 构造函数
+##### 4.2.4.4.1 构造函数
 
-###### 4.2.4.2.1.1 构造含有n个指定字符的字符串
+###### 4.2.4.4.1.1 构造含有n个指定字符的字符串
 
 ```CPP
 
