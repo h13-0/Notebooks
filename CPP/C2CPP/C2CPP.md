@@ -543,7 +543,7 @@ vector( InputIt first, InputIt last,
 
 ### 4.2.4 std::basic_string
 
-`std::basic_string` 为C++为若干种字符串类型(`char` 、 `wchar_t` 、`char32_t` 等)提供的统一容器，用于适配不同的字符串或编码类型。
+`std::basic_string` 为C++为若干种字符串类型(`char` 、 `wchar_t` 、`char32_t` 等)提供的统一容器，用于适配不同的字符串及编码类型。
 
 
 
