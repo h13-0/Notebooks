@@ -485,67 +485,11 @@ const T* begin() const noexcept;
 const T* end() const noexcept;
 ```
 
-### 4.2.2 array
-
-### 4.2.3 vector
-
-`std::vector` 是C++的动态大小的数组实现，其元素被顺序存储，因此其可以被迭代器和引索顺序访问。其会自动扩展其所需要的内存空间，并且通常其所占用的内存比同大小的静态数组要多。其空间的动态分配仅会发生在其所保留的额外空间耗尽时触发。
-
-#### 4.2.3.1 模板定义
-
-```CPP
-template<
-    class T,
-    class Allocator = std::allocator<T>
-> class vector;
-```
-
-
-<font color="#c00000">vector中的模板类型需要满足如下要求</font>：
-- 可以拷贝赋值
-- 可以拷贝构造
-
-但是需要注意<span style="background:#fff88f"><font color="#c00000">慎用bool类型作为vector的元素</font></span>，除非明确地要使用 `vector<bool>` 的特性。
-
-#### 4.2.3.2 常用方法
-
-
-##### 4.2.3.2.1 构造函数
-
-###### 4.2.3.2.1.1 创建包含n个指定默认元素的vector
-
-```CPP
-explicit vector( size_type count,
-                 const Allocator& alloc = Allocator() );
-```
-
-###### 4.2.3.2.1.2 创建包含n个指定值的vector
-
-```CPP
-vector( size_type count, const T& value,
-        const Allocator& alloc = Allocator() );
-```
-
-###### 4.2.3.2.1.3 由输入迭代器构造vector
-
-```C
-template< class InputIt >
-vector( InputIt first, InputIt last,
-        const Allocator& alloc = Allocator() );
-```
-
-
-
-
-##### 4.2.3.2.2 迭代器
-
-`vector` 返回的迭代器为随机访问迭代器，可通过 `.begin()` 、 `.end()` 获取。
-
-### 4.2.4 std::basic_string
+### 4.2.2 std::basic_string
 
 `std::basic_string` 为C++为若干种字符串类型(`char` 、 `wchar_t` 、`char32_t` 等)提供的统一容器，用于适配不同的字符串及编码类型。
 
-#### 4.2.4.1 模板定义
+#### 4.2.2.1 模板定义
 
 ```CPP
 template<
@@ -565,9 +509,9 @@ template<
 | `std::u32string` | `std::basic_string<char32_t>` |
 | `std::wstring`   | `std::basic_string<wchar_t>`  |
 
-#### 4.2.4.2 常用方法
+#### 4.2.2.2 常用方法
 
-###### 4.2.4.2.1.1 插入字符(insert)
+###### 4.2.2.2.1.1 插入字符(insert)
 
 插入多个指定字符：
 
@@ -617,24 +561,55 @@ iterator insert( const_iterator pos, InputIt first, InputIt last );
 iterator insert( const_iterator pos, std::initializer_list<CharT> ilist );
 ```
 
-插入并转换为字符串视图(`StringBi`)
+插入并转换为字符串视图(`StringViewLike`)：
 
-#### 4.2.4.3 基本特性
+```CPP
+template< class StringViewLike >
+basic_string& insert( size_type index, const StringViewLike& t );
 
-##### 4.2.4.3.1 sizeof(string)
+template< class StringViewLike >
+basic_string& insert( size_type index, const StringViewLike& t,
+                      size_type t_index, size_type count = npos );
+```
+
+###### 4.2.2.2.1.2 删除字符(erase)
+
+从指定引索开始删除至多指定数量的字符：
+
+```CPP
+basic_string& erase( size_type index = 0, size_type count = npos );
+```
+
+移除迭代器指向的字符：
+
+```CPP
+// 如果 `position` 非可解引用的迭代器，则行为未定义
+iterator erase( const_iterator position );
+```
+
+删除两个迭代器范围内的字符(不含 `last` )：
+
+```CPP
+// 删除[first, last)范围内的字符，若区间无效则行为未定义
+iterator erase( const_iterator first, const_iterator last );
+```
+
+#### 4.2.2.3 基本特性
+
+##### 4.2.2.3.1 sizeof(string)
 
 在x86架构下，`sizeof(std::string) = 28`；
 在x86_64架构下，`sizeof(std::string) = 40`；
 而 `sizeof(std::string)` 的值<u><font color="#c00000">不随字符串内容发生改变</font></u>。
-##### 4.2.4.3.2 string作为struct的成员时
+##### 4.2.2.3.2 string作为struct的成员时
 
 string可以作为struct的成员，其size计算符合内存对齐等要求。
 
-#### 4.2.4.4 常用方法
+#### 4.2.2.4 常用方法
 
-##### 4.2.4.4.1 构造函数
+##### 4.2.2.4.1 构造函数
 
-###### 4.2.4.4.1.1 构造含有n个指定字符的字符串
+###### 4.2.2.4.1.1 构造含有n个指定字符的字符串
 
 ```CPP
 
@@ -648,6 +623,62 @@ string可以作为struct的成员，其size计算符合内存对齐等要求。
 |                          |                            |                     |
 |                          |                            |                     |
 
+
+### 4.2.3 array
+
+### 4.2.4 vector
+
+`std::vector` 是C++的动态大小的数组实现，其元素被顺序存储，因此其可以被迭代器和引索顺序访问。其会自动扩展其所需要的内存空间，并且通常其所占用的内存比同大小的静态数组要多。其空间的动态分配仅会发生在其所保留的额外空间耗尽时触发。
+
+#### 4.2.4.1 模板定义
+
+```CPP
+template<
+    class T,
+    class Allocator = std::allocator<T>
+> class vector;
+```
+
+
+<font color="#c00000">vector中的模板类型需要满足如下要求</font>：
+- 可以拷贝赋值
+- 可以拷贝构造
+
+但是需要注意<span style="background:#fff88f"><font color="#c00000">慎用bool类型作为vector的元素</font></span>，除非明确地要使用 `vector<bool>` 的特性。
+
+#### 4.2.4.2 常用方法
+
+
+##### 4.2.4.2.1 构造函数
+
+###### 4.2.4.2.1.1 创建包含n个指定默认元素的vector
+
+```CPP
+explicit vector( size_type count,
+                 const Allocator& alloc = Allocator() );
+```
+
+###### 4.2.4.2.1.2 创建包含n个指定值的vector
+
+```CPP
+vector( size_type count, const T& value,
+        const Allocator& alloc = Allocator() );
+```
+
+###### 4.2.4.2.1.3 由输入迭代器构造vector
+
+```C
+template< class InputIt >
+vector( InputIt first, InputIt last,
+        const Allocator& alloc = Allocator() );
+```
+
+
+
+
+##### 4.2.4.2.2 迭代器
+
+`vector` 返回的迭代器为随机访问迭代器，可通过 `.begin()` 、 `.end()` 获取。
 
 ### 4.2.5 std::unordered_map
 
