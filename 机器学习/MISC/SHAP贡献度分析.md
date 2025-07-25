@@ -70,24 +70,35 @@ $$
 - 总价值：$v(N)$
 - Shapley值：$\phi_j$
 $$
-\phi_j=v(i)=\sum_{S\subseteq N \setminus \{j\}} {\frac{|S|!(|N|-|S|-1)!}{|N|!} (v(S\cup{j})-v(S))}
+\phi_j=v(j)=\sum_{S\subseteq N \setminus \{j\}} {\frac{|S|!(|N|-|S|-1)!}{|N|!} (v(S\cup{j})-v(S))}
 $$
 其中：
 - $N \setminus \{j\}$ 表示移除了玩家 $j$ 联盟
-- $S\subseteq N \setminus \{j\}$ 表示不包含玩家 $j$ 的联盟
+- $S\subseteq N \setminus \{j\}$ 表示所有不包含玩家 $j$ 的联盟 $S$ 
 - $\displaystyle \frac{|S|!(|N|-|S|-1)!}{|N|!}$ 为权重系数的数学表达
-- $v(S\cup{j})-v(S)$ 为包含玩家 $j$ 与不包含玩家 $j$
-
+- $v(S\cup{j})-v(S)$ 为联盟 $S$ 包含与不包含玩家 $j$ 的价值差异
 
 Shapley值有如下特性：
-- 效率性：所有玩家的总价值等于价值总和
-- 对称性：两个相同的玩家的贡献应当相同
-- 无效玩家特性(Dummy特性)：如果玩家 $j$ 对任何联盟都没有贡献，则其Shapley值等于0
-- 可加性：
+- <font color="#9bbb59">效率性</font>：所有玩家的总价值等于价值总和
+- <font color="#9bbb59">对称性</font>：两个相同的玩家的贡献应当相同
+- <font color="#9bbb59">无效玩家特性</font>(Dummy特性)：如果玩家 $j$ 对<u>任何联盟</u>都没有贡献，则其Shapley值等于0
+- <font color="#9bbb59">可加性</font>：当贡献可以被拆分时，贡献之和等于和贡献，即
+	- $(v_1+v_2)(S)=v_1(S)+v_2(S)$ 
+	- $\phi_{j, v_1+v_2}=\phi_{j, v_1}+\phi_{j, v_2}$
 
 注：
-1. 上述"任何联盟"指由 $N$ 构成的不包含玩家 $j$ 子集
+1. 上述"<u>任何联盟</u>"指由 $N$ 构成的不包含玩家 $j$ 子集，即 $S\subseteq N \setminus \{j\}$
 
 # 3 SHAP贡献度分析
 
+现在将Shapley套用到机器学习中，各定义之间有如下关系：
 
+| 博弈论概念 | 机器学习概念 | 数学符号 |
+| ----- | ------ | ---- |
+| 玩家    |        |      |
+| 联盟    |        |      |
+| 不在联盟中 |        |      |
+| 联盟大小  |        |      |
+| 玩家数量  |        |      |
+| 总支出   |        |      |
+|       |        |      |
