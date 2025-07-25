@@ -143,7 +143,7 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 
 ###### 2.1.3.4.2 reg属性及reg配置项属性
 
-具体原理在[[Device Tree Reference学习笔记#2 3 寻址的工作原理]]，同样建议跳过本字章节顺序学习到链接所述章节后再学习。
+具体原理在[[Device Tree Reference学习笔记#2 3 寻址的工作原理]]，同样建议跳过本子章节顺序学习到链接所述章节后再学习。
 ![[Device Tree Reference学习笔记#^3gtf6k]]
 ![[Device Tree Reference学习笔记#^a6lh1o]]
 ![[Device Tree Reference学习笔记#^t6f0im]]
