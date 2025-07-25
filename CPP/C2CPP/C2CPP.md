@@ -386,6 +386,33 @@ STL容器主要有如下三类：
 	3. `std::unordered_map`
 	4. `std::unordered_multimap`
 
+<span style="background:#fff88f"><font color="#c00000">其常用成员函数有</font></span>：
+- 元素增加：
+	- `insert()` ：插入元素
+	- `insert_range()` 
+	- `emplace()` ：就地构造
+- 元素删除：
+	- `clear()` ：清空容器
+- 元素修改：
+- 元素访问：
+	- `at()` ：访问指定元素，带边界检查
+	- `operator[]` ：访问指定元素
+	- `front()` ：访问第一个元素
+	- `back()` ：访问最后一个元素
+	- `data()` ：直接访问底层的数据存储的连续区域
+- 迭代器：
+	- `begin()` ：获取指向开始的迭代器
+	- `end()` ：获取指向末尾的下一个元素的迭代器
+- 容量：
+	- `empty()` ：判断是否为空
+	- `size()` ：返回元素成员数量
+	- `max_size()` ：返回最大的可能成员数量
+	- `reserve()` ：预留存储空间
+	- `capacity()` ：返回当前已分配空间中可以容纳的元素数量
+	- `shrink_to_fit()` ：通过释放未使用的内存来减少内存占用
+- 
+
+
 ### 4.2.1 std::initializer_list
 
 <font color="#9bbb59">初始化列表</font>( `initializer_list` )是一个轻量化的<span style="background:#fff88f"><font color="#c00000">只读容器</font></span>，<font color="#c00000">通常其只能通过特殊的构造函数构造</font>。
