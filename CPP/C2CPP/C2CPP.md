@@ -567,7 +567,11 @@ template<
 
 #### 4.2.4.2 常用方法
 
-###### 4.2.4.2.1.1 
+###### 4.2.4.2.1.1 插入字符(insert)
+
+```CPP
+basic_string& insert( size_type index, size_type count, CharT ch );
+```
 
 
 
