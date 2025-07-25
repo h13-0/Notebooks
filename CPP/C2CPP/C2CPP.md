@@ -569,11 +569,55 @@ template<
 
 ###### 4.2.4.2.1.1 插入字符(insert)
 
+插入多个指定字符：
+
 ```CPP
 basic_string& insert( size_type index, size_type count, CharT ch );
 ```
 
+插入字符串：
+```CPP
+// 插入的指针指向的字符串必须以结束符结尾
+basic_string& insert( size_type index, const CharT* s );
+// 插入指向字符串的至多count个字符
+basic_string& insert( size_type index, const CharT* s, size_type count );
+// 插入字符串对象
+basic_string& insert( size_type index, const basic_string& str );
+```
 
+插入字符串的字串：
+
+```CPP
+basic_string& insert( size_type index, const basic_string& str,
+                      size_type s_index, size_type count = npos );
+```
+
+在迭代器前插入字符：
+
+```CPP
+iterator insert( const_iterator pos, CharT ch );
+```
+
+在迭代器前插入若干个指定字符：
+
+```CPP
+iterator insert( const_iterator pos, size_type count, CharT ch );
+```
+
+通过迭代器插入字符：
+
+```CPP
+template< class InputIt >
+iterator insert( const_iterator pos, InputIt first, InputIt last );
+```
+
+在迭代器前插入由初始化列表构成的字符：
+
+```CPP
+iterator insert( const_iterator pos, std::initializer_list<CharT> ilist );
+```
+
+插入并转换为字符串视图(`StringBi`)
 
 #### 4.2.4.3 基本特性
 
