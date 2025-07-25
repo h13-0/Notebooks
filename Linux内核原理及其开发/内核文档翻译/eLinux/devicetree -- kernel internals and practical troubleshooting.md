@@ -36,7 +36,7 @@ number headings: auto, first-level 2, max 6, 1.1
 3. bootloader从启动镜像中加载dtb，在经过可选的修改后被存入内存。
 4. 在加载内核时，DTB在内存中的地址会被传递给kernel(通常以启动参数方式传递)。
 5. 内核使用FDT初始化硬件，并生成扩展设备树，该拓展设备树在启动后可以被更改。
-在上图中的若干对象及其表述可见各字章节。
+在上图中的若干对象及其表述可见各子章节。
 
 #### 3.2.1 dts - device tree source file
 
