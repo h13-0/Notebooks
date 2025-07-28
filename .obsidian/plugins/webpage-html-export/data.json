@@ -194,8 +194,8 @@
       "unavailable": false,
       "alwaysEnabled": false,
       "hideSettingsButton": false,
-      "siteUrl": "",
-      "authorName": ""
+      "siteUrl": "notebooks.h13.tech",
+      "authorName": "h13"
     },
     "linkPreviewOptions": {
       "featureId": "link-preview",
@@ -221,7 +221,7 @@
     "faviconPath": "",
     "siteName": "Notebooks",
     "iconEmojiStyle": "Native",
-    "exportRoot": "/",
+    "exportRoot": "",
     "includePluginCss": [],
     "includeStyleCssIds": [],
     "autoDisposeWebpages": true
