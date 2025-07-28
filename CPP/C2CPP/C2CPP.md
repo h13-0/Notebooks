@@ -605,24 +605,6 @@ iterator erase( const_iterator first, const_iterator last );
 
 string可以作为struct的成员，其size计算符合内存对齐等要求。
 
-#### 4.2.2.4 常用方法
-
-##### 4.2.2.4.1 构造函数
-
-###### 4.2.2.4.1.1 构造含有n个指定字符的字符串
-
-```CPP
-
-```
-
-
-| <center>方法</center>      | <center>含义</center>        | <center>备注</center> |
-| ------------------------ | -------------------------- | ------------------- |
-| `string(const char *s);` | 构造方法，用 `c_str` 初始化         |                     |
-| `string(int n,char c);`  | 构造方法，构造一个含有 `n` 个 `c` 的字符串 |                     |
-|                          |                            |                     |
-|                          |                            |                     |
-
 
 ### 4.2.3 array
 
