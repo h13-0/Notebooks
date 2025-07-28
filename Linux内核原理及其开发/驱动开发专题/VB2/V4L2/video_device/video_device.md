@@ -1751,7 +1751,19 @@ struct v4l2_m2m_ctx {
 其成员：
 - `struct mutex *q_lock` ：
 	- 功能含义：保护实例的互斥锁
-	- 维护方：驱动可选维护，当驱动不提供时V4L2会负责维护。
+	- 维护方：驱动可选维护，当驱动不提供时V4L2会负责维护
+- `bool new_frame` ：
+	- 功能含义：在 `device_run` 回调中，用于表示当前处理的缓冲区是否是一个新帧的开始或是已有帧的一个切片。
+		- 只有当设备支持切片功能时，该成员才有可能为 `false` ，否则永远为 `true`
+	- 维护方：V4L2负责维护，驱动读取
+- `bool is_draining` ：
+	- 功能含义：表示当前设备是否在排空状态(`draining`)，
+	
+- `struct vb2_v4l2_buffer *last_src_buf` ：
+	- 功能含义：指向输出队列中的最后一个源缓冲区
+	
+- `bool next_buf_last` ：
+	- 功能含义：
 
 
 
