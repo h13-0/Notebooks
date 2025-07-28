@@ -3,12 +3,7 @@
     "KosmosisDire/obsidian-webpage-export",
     "nothingislost/obsidian-bartender"
   ],
-  "pluginSubListFrozenVersion": [
-    {
-      "repo": "KosmosisDire/obsidian-webpage-export",
-      "version": "1.9.0-3b"
-    }
-  ],
+  "pluginSubListFrozenVersion": [],
   "themesList": [],
   "updateAtStartup": true,
   "updateThemesAtStartup": false,
