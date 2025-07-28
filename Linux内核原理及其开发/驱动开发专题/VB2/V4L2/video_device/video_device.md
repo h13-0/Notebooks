@@ -1568,8 +1568,9 @@ struct media_device_ops {
 ### 3.5.1 内存到内存设备(v4l2_m2m_dev) ^vvh0h5
 
 V4L2的内存到内存设备模型<span style="background:#fff88f"><font color="#c00000">适用于一进一出或多进多出</font></span>的<font color="#c00000">视频转换设备</font>，例如：
-- 视频编解码器
-- 视频格式转换
+- 视频格式转换：
+	- 视频编解码器，例如：
+		- H.264编码器，其输入为普通的 `YUV` 格式的帧，输出为 `H264` 的视频帧
 - 图像处理设备
 等，此类设备通常涉及视频编解码、图像缩放、色彩空间转换等。<span style="background:#fff88f"><font color="#c00000">不适用于</font></span>视频输出设备、视频生成设备等。
 
