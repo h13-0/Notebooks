@@ -594,6 +594,32 @@ iterator erase( const_iterator position );
 iterator erase( const_iterator first, const_iterator last );
 ```
 
+###### 4.2.2.2.1.3 查询/修改元素(operator\[\])
+
+通过index获取字符：
+
+```CPP
+CharT& operator[]( size_type pos );
+const CharT& operator[]( size_type pos ) const;
+```
+
+###### 4.2.2.2.1.4 访问指定位置的字符(at)
+
+
+###### 4.2.2.2.1.5 获取c语言字符串版本指针(c_str)
+
+```CPP
+const CharT* c_str() const;
+```
+
+其返回的指针：
+1. 在 `[c_str(), c_str() + size()]` 的范围内有效
+2. 在原字符串容量被修改前有效
+3. <font color="#c00000">不可通过该指针写入数据</font>(UB)
+
+
+
+
 #### 4.2.2.3 基本特性
 
 ##### 4.2.2.3.1 sizeof(string)
