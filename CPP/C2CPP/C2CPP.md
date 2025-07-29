@@ -623,6 +623,8 @@ const CharT* c_str() const;
 
 ###### 4.2.2.2.1.7 替换字符(replace)
 
+替换指定字符为str：
+
 ```CPP
 
 ```
