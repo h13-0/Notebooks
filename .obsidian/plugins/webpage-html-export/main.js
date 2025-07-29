@@ -73758,6 +73758,8 @@ var _MarkdownRendererInternal;
   _MarkdownRendererInternal2.getIconForFile = getIconForFile;
   async function getTitleForFile(file) {
     var _a3, _b3, _c2;
+    if (!file)
+      return { title: "NULL ERROR", isDefault: true };
     let title = file.name;
     let isDefaultTitle = true;
     if (file instanceof import_obsidian5.TFile) {
@@ -79274,6 +79276,13 @@ var Webpage = class extends Attachment {
     if (!hasMedia)
       return void 0;
     if (!mediaPathStr.startsWith("http") && !mediaPathStr.startsWith("data:")) {
+      const resolvedPath = this.website.getFilePathFromSrc(mediaPathStr, this.source.path);
+      const attachment = this.website.index.getFile(resolvedPath.pathname, true);
+      if (attachment) {
+        mediaPathStr = attachment.targetPath.path;
+      } else {
+        mediaPathStr = resolvedPath.path;
+      }
       const mediaPath = Path.joinStrings((_c2 = this.exportOptions.rssOptions.siteUrl) != null ? _c2 : "", mediaPathStr);
       mediaPathStr = mediaPath.path;
     }
@@ -79408,7 +79417,7 @@ var Webpage = class extends Attachment {
     return this.attachments;
   }
   resolveLink(link, linkEl, preferAttachment = false) {
-    var _a3, _b3, _c2, _d;
+    var _a3, _b3, _c2;
     if (!link)
       return "";
     if (!link.startsWith("app://") && /\w+:(\/\/|\\\\)/.exec(link))
@@ -79417,12 +79426,17 @@ var Webpage = class extends Attachment {
       return;
     if (link == null ? void 0 : link.startsWith("?"))
       return;
+    if (link.startsWith("mailto:"))
+      return;
     if (link.startsWith("#")) {
       let headerText = ((_a3 = linkEl == null ? void 0 : linkEl.getAttribute("data-href")) != null ? _a3 : link).replaceAll(" ", "_").replaceAll(":", "").replaceAll("__", "_").substring(1);
-      let hrefValue = `#${headerText}_${(_b3 = this.headerMap.get(headerText)) != null ? _b3 : 0}`;
-      if (!this.exportOptions.relativeHeaderLinks)
-        hrefValue = this.targetPath + hrefValue;
-      return hrefValue;
+      if (this.headerMap.has(headerText)) {
+        let hrefValue = `#${headerText}_${this.headerMap.get(headerText)}`;
+        if (!this.exportOptions.relativeHeaderLinks)
+          hrefValue = this.targetPath + hrefValue;
+        return hrefValue;
+      }
+      return link;
     }
     const linkSplit = link.split("#")[0].split("?")[0];
     const attachmentPath = this.website.getFilePathFromSrc(linkSplit, this.source.path);
@@ -79431,13 +79445,15 @@ var Webpage = class extends Attachment {
       const resolved = attachmentPath.slugify(this.exportOptions.slugifyPaths).setExtension("html");
       return resolved.path;
     }
-    let hash = (_d = ((_c2 = linkEl == null ? void 0 : linkEl.getAttribute("data-href")) != null ? _c2 : link).split("#")[1]) != null ? _d : "";
+    let hash = (_c2 = ((_b3 = linkEl == null ? void 0 : linkEl.getAttribute("data-href")) != null ? _b3 : link).split("#")[1]) != null ? _c2 : "";
     if (hash != "")
       hash = "#" + hash;
     if (attachment.targetPath.extensionName == "html") {
       const headerText = hash.replaceAll(" ", "_").replaceAll(":", "").replaceAll("__", "_").substring(1);
-      const headerId = this.headerMap.get(headerText);
-      hash = `#${headerText}_${headerId != null ? headerId : 0}`;
+      if (this.headerMap.has(headerText)) {
+        const headerId = this.headerMap.get(headerText);
+        hash = `#${headerText}_${headerId}`;
+      }
     }
     return attachment.targetPath.path + hash;
   }
