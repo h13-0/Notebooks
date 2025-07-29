@@ -665,6 +665,17 @@ basic_string& replace( size_type pos, size_type count,
                        size_type count2, CharT ch );                      
 basic_string& replace( const_iterator first, const_iterator last,
                        size_type count2, CharT ch );
+
+// 替换为迭代器中指向的字符串
+template< class InputIt >
+basic_string& replace( const_iterator first, const_iterator last,
+                       InputIt first2, InputIt last2 );
+
+// 替换为初始化列表中的字符
+basic_string& replace( const_iterator first, const_iterator last,
+                       std::initializer_list<CharT> ilist );
+
+// 替换为字符串视图中的字符串，并
 ```
 
 
