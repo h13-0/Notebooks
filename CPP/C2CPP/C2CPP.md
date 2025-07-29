@@ -625,9 +625,11 @@ const CharT* c_str() const;
 
 需要注意，`replace` 是用于将字符串的指定区间替换为另一个字符串，而非字符或子字符串的匹配替换(该方法为 `std::replace` )。
 
-将指定区域的子字符串替换为指定字符串：
+下列所有函数可以理解为：
+- 将原字符串拆为 `[0, pos)` 、、`, size())` 
 
 ```CPP
+
 basic_string& replace( size_type pos, size_type count,
                        const basic_string& str );
 
