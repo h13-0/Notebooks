@@ -624,6 +624,14 @@ size_type find( const CharT* s, size_type pos = 0 ) const;
 size_type find( CharT ch, size_type pos = 0 ) const;
 ```
 
+查找字符串视图：
+
+```CPP
+template< class StringViewLike >
+size_type find( const StringViewLike& t,
+                size_type pos = 0 ) const noexcept(/* see below */);
+```
+
 ###### 4.2.2.2.1.6 获取c语言字符串版本指针(c_str)
 
 ```CPP
