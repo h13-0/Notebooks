@@ -626,16 +626,45 @@ const CharT* c_str() const;
 需要注意，`replace` 是用于将字符串的指定区间替换为另一个字符串，而非字符或子字符串的匹配替换(该方法为 `std::replace` )。
 
 下列所有函数可以理解为：
-- 将原字符串拆为 `[0, pos)` 、、`, size())` 
+- 位置引索版本将原字符串拆为：
+	- `[0, pos)` 
+	- `[pos, pos + count)`
+	- `[pos + count, size())` 
+	三部分，
+- 迭代器版本将字符串拆分为：
+	- `[begin(), first)`
+	- `[first, last)`
+	- `[last, end())`
+<font color="#c00000">然后将第一部分、目标字符串、第三部分按顺序拼接为新串</font>(<font color="#c00000">第二部分被丢弃</font>)。
+上述区间均为左闭右开。
 
 ```CPP
-
+// 替换为指定字符串
 basic_string& replace( size_type pos, size_type count,
                        const basic_string& str );
-
 basic_string& replace( const_iterator first, const_iterator last,
                        const basic_string& str );                     
 
+// 替换为指定字符串的指定区域(左闭右开)
+basic_string& replace( size_type pos, size_type count,
+                       const basic_string& str,
+                       size_type pos2, size_type count2 = npos );
+
+// 替换为C语言风格的指针形式字符串
+basic_string& replace( size_type pos, size_type count,
+                       const CharT* cstr, size_type count2 );
+basic_string& replace( const_iterator first, const_iterator last,
+                       const CharT* cstr, size_type count2 );
+basic_string& replace( size_type pos, size_type count,
+                       const CharT* cstr );
+basic_string& replace( const_iterator first, const_iterator last,
+                       const CharT* cstr );
+
+// 替换为 `count2` 个 `ch` 字符副本构成的字符串
+basic_string& replace( size_type pos, size_type count,
+                       size_type count2, CharT ch );                      
+basic_string& replace( const_iterator first, const_iterator last,
+                       size_type count2, CharT ch );
 ```
 
 
