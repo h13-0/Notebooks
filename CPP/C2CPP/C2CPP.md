@@ -605,8 +605,26 @@ const CharT& operator[]( size_type pos ) const;
 
 ###### 4.2.2.2.1.4 访问指定位置的字符(at)
 
+###### 4.2.2.2.1.5 查找字符串或字符(find)
 
-###### 4.2.2.2.1.5 获取c语言字符串版本指针(c_str)
+从指定位置开始查找子字符串：
+
+```CPP
+// 从pos开始搜索子字符串
+size_type find( const basic_string& str, size_type pos = 0 ) const;
+
+// 查找C类型指针字符串
+size_type find( const CharT* s, size_type pos, size_type count ) const;
+size_type find( const CharT* s, size_type pos = 0 ) const;
+```
+
+查找字符：
+
+```CPP
+size_type find( CharT ch, size_type pos = 0 ) const;
+```
+
+###### 4.2.2.2.1.6 获取c语言字符串版本指针(c_str)
 
 ```CPP
 const CharT* c_str() const;
@@ -617,11 +635,11 @@ const CharT* c_str() const;
 2. 在原字符串容量被修改前有效
 3. <font color="#c00000">不可通过该指针写入数据</font>(UB)
 
-###### 4.2.2.2.1.6 清空字符串(clear)
+###### 4.2.2.2.1.7 清空字符串(clear)
 
 
 
-###### 4.2.2.2.1.7 替换子字符串(replace)
+###### 4.2.2.2.1.8 替换子字符串(replace)
 
 需要注意，`replace` 是用于将字符串的指定区间替换为另一个字符串，而非字符或子字符串的匹配替换(该方法为 `std::replace` )。
 
@@ -635,7 +653,7 @@ const CharT* c_str() const;
 	- `[begin(), first)`
 	- `[first, last)`
 	- `[last, end())`
-<font color="#c00000">然后将第一部分、目标字符串、第三部分按顺序拼接为新串</font>(<font color="#c00000">第二部分被丢弃</font>)。
+<font color="#c00000">然后将第一部分、目标字符串、第三部分按顺序拼接为新串</font>(<font color="#c00000">第二部分被丢弃</font>)。也就是说无论 `size()` 或 `last - first` 与 `str.size()` 的关系，其都会如此拼接。
 上述区间均为左闭右开。
 
 ```CPP
@@ -675,7 +693,17 @@ basic_string& replace( const_iterator first, const_iterator last,
 basic_string& replace( const_iterator first, const_iterator last,
                        std::initializer_list<CharT> ilist );
 
-// 替换为字符串视图中的字符串，并
+// 替换为字符串视图中的字符串
+template< class StringViewLike >
+basic_string& replace( size_type pos, size_type count,
+                       const StringViewLike& t );
+template< class StringViewLike >
+basic_string& replace( const_iterator first, const_iterator last,
+                       const StringViewLike& t );
+template< class StringViewLike >
+basic_string& replace( size_type pos, size_type count,
+                       const StringViewLike& t,
+                       size_type pos2, size_type count2 = npos );
 ```
 
 
