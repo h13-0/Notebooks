@@ -621,11 +621,18 @@ const CharT* c_str() const;
 
 
 
-###### 4.2.2.2.1.7 替换字符(replace)
+###### 4.2.2.2.1.7 替换子字符串(replace)
 
-替换指定字符为str：
+需要注意，`replace` 是用于将字符串的指定区间替换为另一个字符串，而非字符或子字符串的匹配替换(该方法为 `std::replace` )。
+
+将指定区域的子字符串替换为指定字符串：
 
 ```CPP
+basic_string& replace( size_type pos, size_type count,
+                       const basic_string& str );
+
+basic_string& replace( const_iterator first, const_iterator last,
+                       const basic_string& str );                     
 
 ```
 
@@ -946,5 +953,9 @@ size_type count( const K& x ) const;
 
 `std::sort` 使用的排序方法会根据需要排序的元素数量动态切换排序方式，是<span style="background:#fff88f"><font color="#c00000">不稳定</font></span><font color="#c00000">排序</font>。其先使用快速排序对数据进行分段，
 - 
+
+### 4.3.2 替换
+
+#### 4.3.2.1 std::replace
 
 
