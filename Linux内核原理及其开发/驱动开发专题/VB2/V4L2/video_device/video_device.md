@@ -1796,6 +1796,9 @@ struct v4l2_m2m_ctx {
 - `bool ignore_cap_streaming` ：
 	- 功能含义：是否忽略捕获队列的streaming状态检查
 	- 维护方：驱动可选设置，框架在 `v4l2_m2m_job_ready` 中检查
+- `void *priv` ：
+	- 功能含义：驱动私有数据指针
+	- 维护方：驱动管理与访问
 其私有成员：
 - `struct v4l2_m2m_dev *m2m_dev` ：
 	- 功能含义：指向所述的M2M设备
@@ -1815,9 +1818,8 @@ struct v4l2_m2m_ctx {
 		- `TRANS_RUNNING` ：作业执行中
 		- `TRANS_ABORT` ：作业被终止
 - `wait_queue_head_t finished` ：
-	- 功能含义：作业完成等待队列
+	- 功能含义：作业完成等待队列，通常挂有用户的 `poll` 等系统调用的等待线程。驱动调用 `v4l2_m2m_job_finish()` 后会执行唤醒。
 	- 驱动访问：
-
 
 
 #### 3.5.1.4 M2M设备操作回调(v4l2_m2m_ops) ^r39fw1
