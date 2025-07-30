@@ -1773,7 +1773,7 @@ struct v4l2_m2m_ctx {
 };
 ```
 
-其成员：
+其公有成员：
 - `struct mutex *q_lock` ：
 	- 功能含义：保护实例的互斥锁
 	- 维护方：驱动可选维护，当驱动不提供时V4L2会负责维护
@@ -1789,7 +1789,20 @@ struct v4l2_m2m_ctx {
 	- 维护方：V4L2框架在开始排空时设置，驱动可用于读取或检查
 - `bool next_buf_last` ：
 	- 功能含义：标记下一个缓冲区应当标记为LAST
-	- 维护方：
+	- 维护方：V4L2框架设置
+- `bool has_stopped` ：
+	- 功能含义：设备是否已被停止
+	- 维护方：V4L2框架负责维护
+- `bool ignore_cap_streaming` ：
+	- 功能含义：是否忽略捕获队列的streaming状态检查
+	- 维护方：驱动可选设置，框架在 `v4l2_m2m_job_ready` 中检查
+其私有成员：
+- `struct v4l2_m2m_dev *m2m_dev` ：
+	- 功能含义：指向所述的M2M设备
+	- 驱动访问：只读访问
+- `struct v4l2_m2m_queue_ctx cap_q_ctx` ：
+	- 功能含义：捕获队列上下文
+	- 驱动访问：驱动通过
 
 
 
