@@ -1,5 +1,5 @@
 ---
-number headings: auto, first-level 2, max 6, 1.1
+number headings: auto, first-level 1, max 6, 1.1
 ---
 #嵌入式 #Linux驱动开发 #操作系统
 
@@ -7,14 +7,14 @@ number headings: auto, first-level 2, max 6, 1.1
 - LINUX设备驱动程序（第三版），Jonathan Corbet，Alessandro Rubini，Greg Kroah-Hartman著；魏永明，耿岳，钟书毅译。
 本笔记为入门学习笔记。
 
-# 目录
+# 1 目录
 
 ```toc
 ```
 
-## 1 Linux基础
+# 2 Linux基础
 
-### 1.1 Linux版本编号规则
+## 2.1 Linux版本编号规则
 
 Linux版本编号规则为：
 
@@ -27,22 +27,22 @@ VERSION.PATCHLEVEL.SUBLEVEL[-EXTRAVERSION]
 TODO
 
 
-## 2 驱动设计的硬件基础
-### 2.1 设备的分类及特点
+# 3 驱动设计的硬件基础
+## 3.1 设备的分类及特点
 
 Linux将设备分为了如下三个大类：
 - 字符设备
 - 块设备
 - 网络设备
 
-#### 2.1.1 字符设备
+### 3.1.1 字符设备
 
 字符设备是指必须以<font color="#c00000">字节流顺序访问</font>的设备，如字符终端( `/dev/console` )、串口( `/dev/tty*` )、触摸屏、磁带驱动器、鼠标等。
 - 其驱动程序至少需要实现 `open` 、 `close` 、 `read` 、 `write` 系统调用。
 - 字符设备可以通过文件系统节点来访问(通常在 `/dev` 下)。
 - 字符设备可以使用 `open()` 、 `read()` 、 `write()` 等方式进行访问。
 
-#### 2.1.2 块设备
+### 3.1.2 块设备
 
 块设备允许按照任意顺序进行访问，以块为单位进行操作，如硬盘、eMMC等。
 - 块设备有两种访问方式：
@@ -51,23 +51,23 @@ Linux将设备分为了如下三个大类：
 - 块设备也可以通过文件系统节点来访问(通常在 `/dev` 下)。
 - 块设备可以使用 `open()` 、 `read()` 、 `write()` 等方式进行访问。
 
-#### 2.1.3 网络设备
+### 3.1.3 网络设备
 
 网络设备面向数据包的发送和接收设计，内核与网络设备之间的通信主要使用Socket。
 - 一个纯软件实现的网络设备的例子为回环接口( `loopback` )。
 - 网络设备并不是面向流的设备，因此通常不会被映射到Linux文件系统的文件和目录上，通常会被分配一个唯一的名字，如 `eth0` 。
 - 网络设备会使用另外一套操作函数而不是 `read()` 、 `write()` 等。
 
-### 2.2 处理器
+## 3.2 处理器
 
-#### 2.2.1 通用处理器(GPP)
+### 3.2.1 通用处理器(GPP)
 
 当前的通用处理器主要采用了冯诺依曼架构和哈佛架构两种架构形式，其对应的常见的CPU系列有：
 - 冯诺依曼架构：Intel、ARM7、MIPS
 - 哈佛架构：AVR、ARM9-11、Arm Cortex A
 具体区别可见[[常见CPU架构及其对比]]。
 
-##### 2.2.1.1 不同架构处理器下的数据类型大小
+#### 3.2.1.1 不同架构处理器下的数据类型大小
 
 | arch    | char | short | int | long | ptr | long long | u8  | u16 | u32 | u64 |
 | ------- | :--: | :---: | :-: | :--: | :-: | :-------: | :-: | :-: | :-: | :-: |
@@ -82,19 +82,19 @@ Linux将设备分为了如下三个大类：
 | sparc64 |  1   |   2   |  4  |  8   |  8  |     8     |  1  |  2  |  4  |  8  |
 | x86_64  |  1   |   2   |  4  |  8   |  8  |     8     |  1  |  2  |  4  |  8  |
 
-#### 2.2.2 数字信号处理器(DSP)
+### 3.2.2 数字信号处理器(DSP)
 
 
-### 2.3 存储器
+## 3.3 存储器
 
 常用存储器分类可见[[常用存储器#常用存储器]]。
 
 
-## 3 Linux内核及内核编程
+# 4 Linux内核及内核编程
 
-### 3.1 Linux内核文件结构
+## 4.1 Linux内核文件结构
 
-#### 3.1.1 Linux 6
+### 4.1.1 Linux 6
 
 - arch：与体系结构相关的代码，例如arm、arm64、x86等。
 - block：存放块设备相关代码。
@@ -115,19 +115,19 @@ Linux将设备分为了如下三个大类：
 - usr：
 - virt：
 
-### 3.2 Linux项目组织与编译系统
+## 4.2 Linux项目组织与编译系统
 
-#### 3.2.1 Linux编译系统
+### 4.2.1 Linux编译系统
 
 
 
-#### 3.2.2 Kconfig基础语法
+### 4.2.2 Kconfig基础语法
 
 可见[[Kconfig基础语法]]。
 
-## 4 Linux内核模块
+# 5 Linux内核模块
 
-### 4.1 Linux内核模块简介
+## 5.1 Linux内核模块简介
 
 Linux的组件可以选择编译进Linux内核或者编译为Linux内核模块，编译为Linux内核模块的好处有：
 1. 在<font color="#c00000">系统启动后</font>也可以随时<font color="#c00000">增</font><span style="background:#fff88f"><font color="#c00000">删</font></span><font color="#c00000">功能</font>
@@ -142,7 +142,7 @@ Linux内核模块的加载、卸载以及查看基本信息等操作：
 
 由于Linux内核模块是直接以内核模式运行的，因此可以出于安全考虑，在编译Linux内核时，禁用加载模块功能。
 
-### 4.2 Linux内核的额外注意事项
+## 5.2 Linux内核的额外注意事项
 
 相比于普通的应用程序开发，Linux内核的开发需要额外注意以下几点：
 1. <font color="#c00000">所有资源必须在模块卸载函数中手动释放</font>，操作系统不会帮内核模块管理资源。
@@ -151,7 +151,7 @@ Linux内核模块的加载、卸载以及查看基本信息等操作：
 4. 内核所拥有的栈非常小，模块要和内核共用这些空间。
 5. 内核模块中<font color="#c00000">不建议</font>(<font color="#c00000">且大多数情况下不允许</font>)使用浮点运算，如果需要开启浮点支持，则在某些架构上进入和退出内核空间时需要保存和恢复浮点处理器状态。
 
-### 4.3 Linux内核模块程序结构
+## 5.3 Linux内核模块程序结构
 
 一个Linux内核模块应当具有且实现以下几个组成部分：
 1. 模块加载函数<font color="#c00000">(必须)</font>
@@ -161,7 +161,7 @@ Linux内核模块的加载、卸载以及查看基本信息等操作：
 5. 模块导出符号(可选)
 6. 模块作者信息(可选)
 
-#### 4.3.1 模块加载函数
+### 5.3.1 模块加载函数
 
 ```C
 static int __init init_func(void)
@@ -179,7 +179,7 @@ module_init(init_func);
 - 错误码应当使用 `<linux/errno.h>` 中的错误码，这样方便用户使用 `perror` 之类的函数将错误转换为有意义的字符串。
 - 关于 `__init` 标识符的用途可见章节[[Linux驱动开发笔记#4 3 6 其他常用特性|4.3.6 其他常用特性]]中的解释。
 
-#### 4.3.2 模块卸载函数
+### 5.3.2 模块卸载函数
 
 ```C
 static void __exit exit_function(void)
@@ -194,11 +194,11 @@ module_exit(exit_function);
 - <font color="#c00000">如果未定义模块卸载函数，则内核不允许卸载该模块。</font>
 - 关于 `__exit` 标识符的用途可见章节[[Linux驱动开发笔记#4 3 6 其他常用特性|4.3.6 其他常用特性]]中的解释。
 
-#### 4.3.3 模块参数
+### 5.3.3 模块参数
 
-##### 4.3.3.1 传递单个参数值
+#### 5.3.3.1 传递单个参数值
 
-###### 4.3.3.1.1 传递单个普通参数
+##### 5.3.3.1.1 传递单个普通参数
 
 模块在加载时可以传入一些命令行参数，其主要通过如下方式进行定义与加载：
 
@@ -283,7 +283,7 @@ insmod xxx.ko port=value #例如：port=80
 - `hexint` 
 - `ushort`
 
-###### 4.3.3.1.2 传递单个参数并指定参数名
+##### 5.3.3.1.2 传递单个参数并指定参数名
 
 ```C
 #include "linux/moduleparam.h"
@@ -326,9 +326,9 @@ insmod xxx.ko port=value #例如：port=80
         module_param_named(name, name, type, perm)
 ```
 
-##### 4.3.3.2 传递数组
+#### 5.3.3.2 传递数组
 
-###### 4.3.3.2.1 传递普通数组
+##### 5.3.3.2.1 传递普通数组
 
 普通数组的传递方式如下：
 
@@ -371,7 +371,7 @@ insmod xxx.ko arr=value1,value2,...
 1. 传入数组大小小于等于10个时，参数正常传输，arr_size也为正常大小。
 2. <font color="#c00000">当传入数组大小大于10时</font>，a<font color="#c00000">rr_size为传入数组的大小</font>(<span style="background:#fff88f"><font color="#c00000">会超过10</font></span>)，<font color="#c00000">需要开发者自行处理逻辑</font>。<font color="#c00000">内核只保证前10个数据会被有效接收</font>。
 
-###### 4.3.3.2.2 传递普通数组并指定参数名
+##### 5.3.3.2.2 传递普通数组并指定参数名
 
 ```C
 #include "linux/moduleparam.h"
@@ -396,7 +396,7 @@ module_param_array_named(name, array, type, nump, perm)
 - `type` ：数组中元素的类型
 并在后续章节不再单独拆除普通方式和指定参数名的方式。
 
-###### 4.3.3.2.3 传递字符串
+##### 5.3.3.2.3 传递字符串
 
 ```C
 #include "linux/moduleparam.h"
@@ -420,7 +420,7 @@ module_param_string(name, string, len, perm)
 - `len` ：<font color="#c00000">为最大的可存放的字符串大小</font>，`sizeof(string) - 1` 。
 不过<span style="background:#fff88f"><font color="#c00000">还是推荐使用</font></span> `module_param` 配合 `charp` 的方式，这样不用手动管理内存，也不用提前为字符串分配一个足够大的内存区域，<span style="background:#fff88f"><font color="#c00000">且不需要在模块退出时手动释放这部分内存</font></span>。
 
-##### 4.3.3.3 设置参数提示信息
+#### 5.3.3.3 设置参数提示信息
 
 使用：
 
@@ -436,7 +436,7 @@ MODULE_PARM_DESC(_parm, desc);
 
 <font color="#c00000">随后使用</font> `modinfo` <font color="#c00000">即可查看模块参数提示信息</font>。
 
-#### 4.3.4 模块导出符号
+### 5.3.4 模块导出符号
 
 ```C
 int add_int(int a, int b)
@@ -459,7 +459,7 @@ EXPORT_SYMBOL_GPL(add_int);
 - 使用 `EXPORT_SYMBOL_GPL` 导出的符号不可以被非GPL模块引用。
 - 使用 `cat /proc/kallsyms` 即可查看导出符号表。
 
-#### 4.3.5 模块常用信息
+### 5.3.5 模块常用信息
 
 模块许可证声明：
 
@@ -490,7 +490,7 @@ MODULE_VERSION("V1.0");
 MODULE_ALIAS("...");
 ```
 
-#### 4.3.6 其他常用特性
+### 5.3.6 其他常用特性
 
 1. 定义只在初始化阶段就需要的数据：
 ```C
@@ -499,15 +499,15 @@ static int var_name __initdata = 0;
 上述 `__initdata` 和模块加载函数的 `__init` 都标识<font color="#c00000">在内核被加载完毕后</font>，<font color="#c00000">其所定义的变量或函数会被从内存中扔掉</font>。
 2. 与上一条相似的是，内核中也有 `__exitdata` 与 `__exit` 。上述四个特性均会被放置到特殊ELF端。
 
-#### 4.3.7 简单模块示例与编译
+### 5.3.7 简单模块示例与编译
 
 在为内核编写模块时，<span style="background:#fff88f"><font color="#c00000">一定要选择与目标系统相匹配的内核源码</font></span>，否则生成的模块无法使用。
 TODO: 更新dkms等无需原码的编译方式
 
-##### 4.3.7.1 使用内核源码构建
+#### 5.3.7.1 使用内核源码构建
 
 
-##### 4.3.7.2 使用内核头文件构建
+#### 5.3.7.2 使用内核头文件构建
 
 
 TODO
@@ -533,9 +533,9 @@ TODO
 
 
 
-##### 4.3.7.3 拉取当前系统内核源码
+#### 5.3.7.3 拉取当前系统内核源码
 
-###### 4.3.7.3.1 Ubuntu
+##### 5.3.7.3.1 Ubuntu
 
 Ubuntu可以使用 `apt` 和 `git` 两种方式获取源码，也可以使用当前系统配合主线版本内核进行编译。
 
@@ -612,7 +612,7 @@ git checkout FETCH_HEAD
 cp -v /boot/config-$(uname -r) .config
 ```
 
-##### 4.3.7.4 普通模块示例
+#### 5.3.7.4 普通模块示例
 
 本实例为一个基础普通模块的示例。
 Linux已经在 `lib/test_module.c` 放置了一个基础的Hello World模块，其主要代码如下：
@@ -727,7 +727,7 @@ vermagic:       6.8.1+ SMP preempt mod_unload modversions
 注：
 1. 关于代码中的 `pr_fmt(fmt)` ：[[pr_fmt应用及原理解析]]
 
-###### 4.3.7.4.1 尝试修改vermagic(不推荐)
+##### 5.3.7.4.1 尝试修改vermagic(不推荐)
 
 在上述结果中可以明显地发现<font color="#c00000"><font color="#c00000">即使在下载时内核源码版本匹配</font></font>，<font color="#c00000">但是编译出来的模块的vermagic仍不匹配</font>。
 因此应当直接修改所下载的内核源码中 `include/linux/vermagic.h` 文件的 `vermagic` 定义。首先使用 `lsmod` 列出当前内核已加载的模块，并随便选取一个已加载的模块使用 `modinfo` 查看其模块信息：
@@ -825,7 +825,7 @@ vermagic:       6.8.0-31-generic SMP preempt mod_unload modversions
 与系统中已加载的模块信息一致，但是此时加载仍然报错则证明内核源代码不匹，应当考虑编译安装当前有源代码的内核。
 
 
-###### 4.3.7.4.2 自行编译并安装内核(推荐)
+##### 5.3.7.4.2 自行编译并安装内核(推荐)
 
 通常建议在学习开发Linux内核模块/驱动时使用自己的内核，除了方便版本匹配以外，还有更多的原因：
 	![[Linux驱动开发笔记#^daooag]]
@@ -839,7 +839,7 @@ make install
 
 随后重启，通常不建议卸载原内核，当内核配置出错无法启动后，可以在引导处切换内核。
 
-###### 4.3.7.4.3 测试内核模块
+##### 5.3.7.4.3 测试内核模块
 
 使用 `dmesg` 抓取当前日志：
 
@@ -901,13 +901,13 @@ CONFIG_MODULE_SIG=n
 - 若使用 `cat /proc/kmsg` 无输出，则可以使用 `lsof /proc/kmsg` 检查是否有进程在不停获取该文件输出
 - 若 `dmesg` 也无输出，则应当检查内核编译时是否开启 `CONFIG_PRINTK`
 
-##### 4.3.7.5 字符驱动模块示例
+#### 5.3.7.5 字符驱动模块示例
 
 见章节：[[Linux驱动开发笔记#5 7 字符设备的分配、注册与回收]]
 
-### 4.4 内核模块补充
+## 5.4 内核模块补充
 
-#### 4.4.1 多文件编程
+### 5.4.1 多文件编程
 
 当内核模块 `test_module.ko` 由多个源文件 `file1.c` 、 `file2.c` 、 `...`  构成时，Makefile中可以如下编写：
 
@@ -916,7 +916,7 @@ obj-m += test_module.o
 module-objs += file1.o file2.o ...
 ```
 
-#### 4.4.2 内核态驱动与用户态驱动
+### 5.4.2 内核态驱动与用户态驱动
 
 用户态驱动的优点：
 1. <font color="#c00000">可以链接整个C语言库甚至非标准库</font>。内核中无法使用完整的C语言库。
@@ -934,9 +934,9 @@ module-objs += file1.o file2.o ...
 5. <font color="#c00000">一旦用户态驱动被换出磁盘，其响应速度会极其慢</font>。使用特权用户的 `mlock` 或许可以缓解，但是用户态驱动通常会链接多个库，需要占用多个page。
 6. 用户空间无法完成重要设备的驱动，例如网络设备和块设备。
 
-### 4.5 内核开发常用技巧
+## 5.5 内核开发常用技巧
 
-#### 4.5.1 内核内存泄露检测器 ^s9jjo0
+### 5.5.1 内核内存泄露检测器 ^s9jjo0
 
 在编译内核的 `menuconfig` 中，通常在以下路径开启内核内存泄露检测：
 
@@ -946,14 +946,14 @@ Kernel hacking -> Memory Debugging -> Kernel memory leak detector
 
 即开启了 `CONFIG_DEBUG_KMEMLEAK` 宏。
 
-## 5 简易的字符设备驱动程序
+# 6 简易的字符设备驱动程序
 
 本章节的字符设备驱动程序将以一个简易的进程间管道通信为例。
 基本设定：
 1. 仅支持2个进程访问，超过2个时拒绝打开pipe文件。
 2. 为了简化代码，无需其他鉴权等复杂操作。
 
-### 5.1 主设备号和次设备号
+## 6.1 主设备号和次设备号
 
 可以使用 `cat /proc/devices` 查看当前系统中的设备列表，例如：
 
@@ -1041,7 +1041,7 @@ crw-------   1      root    root     10, 231         Jun  4 01:31 snapshot
 - 对于<font color="#c00000">设备文件</font>，其显示的是 `主设备号, 次设备号`
 在Linux系统中，大多数情况下，<font color="#c00000">主设备号相同的设备使用相同的驱动程序</font>。主次设备号可以用于标识一个设备，同时在Linux内核中，也可以通过次设备号获取对应设备的直接指针。
 
-### 5.2 设备编号的内部表达
+## 6.2 设备编号的内部表达
 
 在Linux 2.6.0到最新的Linux 6.10中， `dev_t` 被定义为一个 `u32` 类型，其：
 - 前12位用于表示主设备号
@@ -1056,11 +1056,11 @@ int minor = MINOR(dev);
 
 在Linux 2.5系列的修改中，设备编号从原先的8+8=16位变成了如今的32位。
 
-### 5.3 分配和释放设备编号
+## 6.3 分配和释放设备编号
 
 分配设备号主要有两种方式，分别为静态分配和动态分配。
 
-#### 5.3.1 静态分配设备号
+### 6.3.1 静态分配设备号
 
 <font color="#c00000">静态分配需要指定主设备号</font>，主设备号的选择可以查看 `Documentation/admin-guide/devices.txt` 中的示例。
 静态分配设备号的<font color="#c00000">前提是要知道哪些设备号可用</font>，再去指定想要申请的设备号。
@@ -1083,7 +1083,7 @@ static inline int register_chrdev(unsigned int major, const char *name,
 
 上述函数的 `struct file_operations` 用于建立文件操作和驱动程序操作的连接。具体可见绑定文件操作章节。
 
-#### 5.3.2 动态分配设备号(推荐)
+### 6.3.2 动态分配设备号(推荐)
 
 动态分配不需要指定主设备号，根据 `Documentation/admin-guide/devices.txt` 中的说明，<font color="#c00000">对于字符设备而言</font>，<font color="#c00000">动态分配的主设备号会从254开始向下分配直到234，分配完毕后再从511开始向下分配直到384</font>。
 
@@ -1105,7 +1105,7 @@ static inline int register_chrdev(unsigned int major, const char *name,
 								 const struct file_operations *fops)
 ```
 
-#### 5.3.3 释放设备编号
+### 6.3.3 释放设备编号
 
 对于上述的所有分配设备编号的方法，均可以使用如下的函数进行释放： 
 
@@ -1113,13 +1113,13 @@ static inline int register_chrdev(unsigned int major, const char *name,
 void unregister_chrdev_region(dev_t from, unsigned count)
 ```
 
-### 5.4 创建设备节点
+## 6.4 创建设备节点
 
 使用上述的注册设备号的方法仅会在系统中注册一个字符设备，但是并不会在文件系统中注册对应的设备。
 
-#### 5.4.1 创建设备节点
+### 6.4.1 创建设备节点
 
-##### 5.4.1.1 device_create
+#### 6.4.1.1 device_create
 
 `device_create` 函数的声明如下：
 
@@ -1141,7 +1141,7 @@ device_create(const struct class *cls, struct device *parent, dev_t devt,
 - 返回值：
 	- 新创建的 `struct device` 指针。出现错误时返回 `NULL` 。
 
-#### 5.4.2 删除设备(device_destroy)
+### 6.4.2 删除设备(device_destroy)
 
 `device_destory` 函数的声明为：
 
@@ -1156,7 +1156,7 @@ void device_destroy(const struct class *cls, dev_t devt);
 	- `const struct class *cls` ：设备所属类型
 	- `dev_t devt` ：需要销毁的设备节点的设备号
 
-### 5.5 绑定文件操作(file_operations 数据结构) ^u7i5mc
+## 6.5 绑定文件操作(file_operations 数据结构) ^u7i5mc
 
 如上述章节所述， `struct file_operations` 用于建立文件操作和驱动程序操作的连接，该数据结构的定义如下(Linux 6.10版本)：
 
@@ -1232,7 +1232,7 @@ struct file_operations {
 注：
 1. 当指定的函数为 `NULL` 时，则会告诉内核该设备不支持对应操作，当用户调用时会抛出错误。
 
-### 5.6 file 数据结构
+## 6.6 file 数据结构
 
 注意本章节所述的 `file` 类型与C标准库的 `FILE` 类型无任何关联。`file` 是内核提供的一个数据结构，不会暴露给用户态程序。而 `FILE` 是C语言标准库中所定义的，不会出现在内核态的代码中。
 在内核中，`struct file` 指针通常被称为 `file` 或 `filep` 。`struct file` 数据结构的定义如下(Linux 6.10版本)：
@@ -1293,7 +1293,7 @@ struct file {
 | `private_data`      |                       |                     | 主要用于跨系统调用时保存或传递相关信息，或存储驱动自身所需要保存的信息。<br><font color="#c00000">该指针所分配的资源需要在release方法中手动释放</font>。                       |
 | `f_dentry`          |                       |                     | 文件对应的目录项结构，大多数设备文件无需关心。                                                                                                |
 
-### 5.7 inode 数据结构
+## 6.7 inode 数据结构
 
 `inode` 即Linux的混合索引分配的节点，不过设备文件通常不需要关心混合索引分配的文件系统管理相关的内容(电科爱考)，因此需要关注的成员主要有如下两个：
 
@@ -1309,7 +1309,7 @@ unsigned int iminor(struct inode *inode);
 unsigned int imajor(struct inode *inode);
 ```
 
-### 5.8 字符设备的分配、注册与回收
+## 6.8 字符设备的分配、注册与回收
 
 通常来说(但不绝对)，注册一个字符设备需要完成<font color="#c00000">申请结构体空间</font>、配置结构体、注册设备、反注册设备、<font color="#c00000">回收空间</font>几个任务。注意错误处理和资源回收即可。字符设备需要使用 `cdev_t` ，其定义于 `<linux/cdev.h>` 中。
 需要注意的是字符设备使用的 `cdev_t` 有两种内存分配方式：
@@ -1370,7 +1370,7 @@ static void __exit mpipe_exit(void)
 }
 ```
 
-### 5.9 open和release方法
+## 6.9 open和release方法
 
 open应当完成如下任务：
 1. 首次open时应当初始化硬件
@@ -1384,7 +1384,7 @@ open应当完成如下任务：
 
 需要注意的是，<font color="#c00000">一旦用户态对某个文件</font><span style="background:#fff88f"><font color="#c00000">发起</font></span><font color="#c00000">close操作</font>(<font color="#c00000">即使close并未完成</font>)，<font color="#c00000">该文件的其他所有操作均会被返回为错误信息</font>。
 
-### 5.10 read和write方法
+## 6.10 read和write方法
 
 read和write方法的函数指针如下所示：
 
@@ -1414,7 +1414,7 @@ unsigned long copy_from_user(void *to, const void __user *from, unsigned long co
 
 上述两个函数在Linux 6.10中均由汇编实现。
 
-#### 5.10.1 read方法返回值
+### 6.10.1 read方法返回值
 
 read方法的返回值应符合如下几种情况：
 1. 当返回值大于0时，其含义为从字符设备读取到的字节数，该值不能大于 `count` 。
@@ -1424,11 +1424,11 @@ read方法的返回值应符合如下几种情况：
 3. 当返回值小于0时，其用于表示错误。错误值定义于 `<linux/errno.h>`
 此外，read方法也可以实现阻塞读取方式。
 
-#### 5.10.2 write方法返回值
+### 6.10.2 write方法返回值
 
 write和read方法的返回值及其注意事项相似。
 
-### 5.11 readv和writev方法
+## 6.11 readv和writev方法
 
 在Linux中已对用户态提供了readv和writev两个批量读写的api。内核驱动可以自行选择是否实现批量版本的读写方法。若内核驱动不实现该方法，则readv和writev会自动<span style="background:#fff88f"><font color="#c00000">在用户态多次调用</font></span>对应的read和write方法进行实现。<font color="#c00000">随之带来的问题就是执行一次readv或writev会多次切换CPU状态</font>。
 而对于用户而言，使用readv、writev而不是read、write的主要原因是前者可以<font color="#c00000">批量复制位于不连续内存空间</font>上的数据。
@@ -1442,9 +1442,9 @@ ssize_t (*writev) (struct file *, const struct iovec *, unsigned long, loff_t *)
 
 <font color="#c00000">上述支持在Linux 2.6.19中已经删除</font>。
 
-## 6 内核调试技术
+# 7 内核调试技术
 
-### 6.1 内核的调试技术支持
+## 7.1 内核的调试技术支持
 
 内核中集成了很多可选的调试技术支持。这些调试技术或多或少的都会对内核的运行速度有所影响，因此<font color="#c00000">通常发行版的Linux一般不会开启这些支持</font>，这也是推荐使用自行编译的内核而非发行版内核的一个原因。 ^daooag
 
@@ -1452,7 +1452,7 @@ ssize_t (*writev) (struct file *, const struct iovec *, unsigned long, loff_t *)
 TODO，用到再说
 
 
-### 6.2 printk调试技术
+## 7.2 printk调试技术
 
 
 
@@ -1470,17 +1470,17 @@ TODO，用到再说
 
 
 
-## 7 并发和竞态
+# 8 并发和竞态
 
 Linux内核驱动的多个函数在实际运行中均非独占运行，一个 `open` 或 `read` 函数均可能会被多个线程的多个不同的上下文同时调用，因此要做好并发环境下的临界区管理。
 在内核程序中通常也会依靠信号量或互斥锁进行临界区访问管理，但是需要注意的是，<span style="background:#fff88f"><font color="#c00000">内核态程序也会随时被切换为休眠状态，即使此时还处于内核的临界区内</font></span>。在执行一些操作时被切换为休眠状态是一个非常危险的事情。而Linux内核也给出了允许进入休眠态的互斥锁和不允许进入休眠态的互斥锁。
 ~~内核程序是这样的，用户态的程序临界区管理只需要上互斥锁就可以，而内核程序需要考虑的就很多了，内核程序在占用互斥锁后退出临界区之前会不会随时被切换为休眠状态、在使用禁止休眠的锁机制的临界区内被调用的其他内核组件会不会被切换为休眠状态等，都是需要考虑的事情。~~
 
-### 7.1 Linux内核信号量与互斥锁的实现
+## 8.1 Linux内核信号量与互斥锁的实现
 
 Linux内核所使用的信号量和互斥锁应当使用头文件 `<asm/semaphore.h>` ，其相关用法见如下几个子章节所述。
 
-#### 7.1.1 普通信号量的初始化
+### 8.1.1 普通信号量的初始化
 
 普通信号量的动态初始化可以用如下的函数进行：
 
@@ -1490,7 +1490,7 @@ void sema_init(struct semaphore *sem, int val);
 
 该函数中的 `val` 为该信号量的初始值。
 
-#### 7.1.2 互斥锁的静态初始化
+### 8.1.2 互斥锁的静态初始化
 
 互斥锁可以按照如下的方式使用静态<font color="#c00000">定义</font>：
 
@@ -1505,7 +1505,7 @@ DECLARE_MUTEX_LOCK(name);
 
 由于该宏的实际用途为定义，但命名却使用了 `DECLARE` ，因此在Linux 2.6.36之后就删除了该接口。
 
-#### 7.1.3 互斥锁的动态初始化
+### 8.1.3 互斥锁的动态初始化
 
 同样的，Linux也提供了互斥锁动态初始化的方法：
 
@@ -1516,7 +1516,7 @@ void init_MUTEX_LOCKED(struct semaphore *sem);
 
 不过这两个函数也在之后的版本被移除。
 
-#### 7.1.4 互斥锁的操作
+### 8.1.4 互斥锁的操作
 
 互斥锁本质就是信号量的增加与减少。互斥锁的减少可以使用如下的函数：
 
@@ -1539,7 +1539,7 @@ int down_trylock(struct semaphore *sem);
 void up(struct semaphore *sem);
 ```
 
-#### 7.1.5 读写锁
+### 8.1.5 读写锁
 
 读写锁与普通的信号量有些不同，因此其需要使用头文件 `<linux/rwsem.h>` ，其初始化方法与操作方法如下：
 
@@ -1560,7 +1560,7 @@ void downgrade_write(struct rw_semaphore *sem);
 
 其中， `downgrade_write` 是<font color="#c00000">将写者降级为读者</font>。
 
-#### 7.1.6 completion事件
+### 8.1.6 completion事件
 
 在内核编程时常用的一个设计方法是在别的线程初始化某个活动，原线程会等待该活动结束后才会继续执行后续任务。尽管使用信号量就可以解决这个需求，但是内核也提供了更好的解决方案，即completion接口，头文件为 `<linux/completion.h>` ，用法如下：
 
@@ -1581,11 +1581,11 @@ void complete(struct completion *c);
 void complete_all(struct completion *c);
 ```
 
-### 7.2 自旋锁
+## 8.2 自旋锁
 
 这里将自旋锁与普通的互斥锁分开讨论的主要原因是由于自旋锁和互斥锁的特性(<font color="#c00000">不可休眠</font>)、实现、应用场景及约定均有所不同，因此在后续的讨论中会将轮询实现的自旋锁和信号量分开讨论。
 
-#### 7.2.1 自旋锁
+### 8.2.1 自旋锁
 
 在用户态，自旋锁主要用于避免快速上锁/释放锁的场景下线程进入阻塞状态后，因调度算法导致进程再次获得处理机所需要的较长时间。而无论内核态还是用户态，<span style="background:#fff88f"><font color="#c00000">自旋锁是都用于避免被阻塞休眠的</font></span>。<font color="#c00000">在内核中，有些工作不能进入阻塞状态，例如中断处理程序等</font>。
 自旋锁的头文件位于 `<linux/spinlock.h>` ，用法如下：
@@ -1647,7 +1647,7 @@ int spin_trylock_bh(spinlock_t *lock);
 
 上述函数在成功获得自旋锁时会返回0，其他情况为非0。
 
-#### 7.2.2 自旋读写锁
+### 8.2.2 自旋读写锁
 
 自旋读写锁的头文件依旧位于 `<linux/spinlock.h>` ，其常用方法如下：
 
@@ -1689,29 +1689,29 @@ void write_unlock_irq(rwlock_t *lock);
 void write_unlock_bh(rwlock_t *lock);
 ```
 
-### 7.3 并发管理的常见问题
+## 8.3 并发管理的常见问题
 
 并发管理向来不是一个轻松的任务，并发及互斥锁的常见问题有如下几个章节：
 
-#### 7.3.1 递归调用问题(可重入锁)
+### 8.3.1 递归调用问题(可重入锁)
 
 在编写代码时，很容易会写出一个已经持有互斥锁的函数去调用另外一个需要持有互斥锁才能运行的函数，这种通常称为递归调用。而在上述给出的并发管理工具中并未给出类似于POSIX中的递归锁或可重入锁，因此在内核编程中应更加着重注意此类问题。<font color="#c00000">通常的做法是在所有暴露给内核的API中做互斥管理，然后在这些API中所调用的内部实现均假设该互斥资源已被占有</font>。
 
-#### 7.3.2 互斥资源的获取顺序问题
+### 8.3.2 互斥资源的获取顺序问题
 
 一个API需要同时获取多个互斥资源是一个很常见的事情，且<font color="#c00000">非常容易触发操作系统中的类似于哲学家吃饭问题的死锁问题</font>，通常的处理方式是一个内核程序统一按照一个有序的方式申请资源(即资源的有序分配法)。
 并且，需要注意的是，在<font color="#c00000">同时应当获得一个信号量和一个自旋锁时</font>，<font color="#c00000"><b>必须</b>优先获取信号量</font>，<font color="#c00000">随后再去申请自旋锁</font>。<font color="#c00000">因为持有自旋锁的进程被信号量阻塞是一件<b>严重错误且非常危险</b>的事情</font>。
 当然，最好的处理此类需要获取多个互斥资源的方法就是尽量避免这种现象。
 
-#### 7.3.3 互斥锁的粒度管理问题
+### 8.3.3 互斥锁的粒度管理问题
 
 关于互斥资源管理的粒度问题，可以直接以Linux对SMP的支持进行举例。
 在第一个支持多处理器的Linux2.0，整个内核有且仅有一个巨大的临界区(<font color="#c00000">BKL</font>，Big Kernel Lock)。当需要操作内核临界区时都需要申请该互斥锁。而在后来的Linux2.2中，互斥锁管理的粒度逐渐细化，例如I/O子系统共用一个互斥锁，网络系统共用一个互斥锁等。到了现在的版本，Linux内核中已经拥有了上千个互斥锁。
 互斥资源管理粒度的细化无疑会提升CPU资源的利用率，但是在实际的工程中，<font color="#c00000">不应当过早的细化互斥资源的管理</font>，<font color="#c00000">因为项目最终的性能瓶颈往往不会出现在互斥资源的管理上</font>。<font color="#c00000">而混乱的互斥资源管理反而会导致更多严重问题的出现</font>。
 
-### 7.4 并发管理的优化
+## 8.4 并发管理的优化
 
-#### 7.4.1 使用原子变量或非锁方法
+### 8.4.1 使用原子变量或非锁方法
 
 例如若要实现一个如下图所示的循环缓冲区，可以使用读写锁，仅使用原子变量表示读写index，并使用该原子index做到[[Berstein条件]]即可。
 	![[msedge_Mbwk30DDuN.png]]
@@ -1758,7 +1758,7 @@ int test_and_change_bit(nr, void* addr);
 
 通常来说并不建议使用原子位操作，而建议改用自旋锁进行操作。
 
-#### 7.4.2 顺序锁(seqlock)
+### 8.4.2 顺序锁(seqlock)
 
 seqlock与信号量不同，其不需要任何阻塞操作。其通常用于处理读者写者问题，但是<font color="#c00000">只能解决仅有一个写者的情况</font>。
 seqlock的使用与原理如下：
@@ -1850,7 +1850,7 @@ void write_sequnlock_irq(seqlock_t *lock);
 void write_sequnlock_bh(seqlock_t *lock);
 ```
 
-#### 7.4.3 RCU方法(读取-复制-更新方法)
+### 8.4.3 RCU方法(读取-复制-更新方法)
 
 RCU方法是一个高级的互斥机制，尽管它很少的被用于驱动程序设计中。不过在路由表和Starmode的射频IP驱动仍使用了该方法。
 RCU是一个支持<font color="#c00000">一个写者</font>和多个读者<font color="#c00000">同时进行操作</font>的一个互斥机制(但不意味着至多只有一个写者)。<font color="#c00000">RCU适用于需要频繁的读取数据</font>，<font color="#c00000">而修改数据并不多的情景</font>。例如在文件系统中，经常需要查找定位目录，而对目录的修改相对来说并不多，这就是RCU发挥作用的最佳场景。
@@ -1877,7 +1877,7 @@ RCU的基本流程：
 void call_rcu(struct rcu_head* head, void(*func)(void *arg), void *arg);
 ```
 
-#### 7.4.4 per-CPU变量 ^3z1la0
+### 8.4.4 per-CPU变量 ^3z1la0
 
 per-CPU变量如字面意思一样，是每个CPU都有一份实例的变量，per-CPU确保这些变量在每个CPU上独立且只能自己可见。若需要进行数据同步操作则需要额外的互斥等机制进行实现。
 
@@ -1896,7 +1896,7 @@ per-CPU变量如字面意思一样，是每个CPU都有一份实例的变量，p
 1. 每个CPU操作自身的副本，无需与其他CPU同步。该变量可以通过存储在每个CPU的私有内存区域中实现，或通过编译器或运行时机制隔离访问实现(例如在其访问时根据当前CPU ID计算偏移量，从而定位实例)
 2. 读写操作时提供禁用抢占的操作方式。
 
-##### 7.4.4.1 静态声明与定义
+#### 8.4.4.1 静态声明与定义
 
 per-CPU变量的声明与定义：
 
@@ -1913,7 +1913,7 @@ DEFINE_PER_CPU(int, my_counter) = 0;
 DEFINE_PER_CPU(int[4], my_array) __cacheline_aligned = { 0 }; 
 ```
 
-##### 7.4.4.2 动态创建与销毁
+#### 8.4.4.2 动态创建与销毁
 
 ```C
 #include "linux/percpu-defs.h"
@@ -1925,7 +1925,7 @@ int __percpu *dyn_counter = alloc_percpu(int);
 
 free_percpu(dyn_counter);
 ```
-##### 7.4.4.3 读写操作
+#### 8.4.4.3 读写操作
 
 <span style="background:#fff88f"><font color="#c00000">在读写per-CPU变量时需要禁用抢占</font></span>，<font color="#c00000">关闭抢占后当前任务不会被其他任务抢占</font>，<font color="#c00000">确保当前任务只会在同一个CPU上运行</font>，例如：
 
@@ -1971,15 +1971,15 @@ do {									\
 
 其主要依靠 `preempt_disable()` 和 `preempt_enable()` 进行管理CPU抢占。
 
-##### 7.4.4.4 注意点
+#### 8.4.4.4 注意点
 
 per-CPU变量需要注意如下的注意点：
 1. 汇总时需要注意CPU热拔插问题。
 2. 必须禁用抢占后才能读取CPU ID，不然可能错位。
 
-## 8 高级字符设备驱动程序
+# 9 高级字符设备驱动程序
 
-### 8.1 ioctl
+## 9.1 ioctl
 
 在第5章讲解了如何编写或实现用户对设备的读取或写入请求，但是在真实的设备中往往还有例如弹出设备、修改波特率等非普通读写操作。而这些方法往往使用ioctl作为操作接口。
 在用户空间中， `ioctl` 的函数原型如下：
@@ -2014,7 +2014,7 @@ long (*compat_ioctl) (struct file *, unsigned int cmd, unsigned long arg);
 
 虽然老的 `ioctl` 接口已不再使用，但是还是要先从老的版本开始讲起。
 
-#### 8.1.1 ioctl接口(Linux 2.6.35及以前)
+### 9.1.1 ioctl接口(Linux 2.6.35及以前)
 
 如上文所述， `ioctl` 的接口定义如下：
 
@@ -2037,7 +2037,7 @@ ioctl是Linux 2.6.35及以前所使用的接口，但是其往往会遇到在不
 
 此外，<span style="background:#fff88f"><font color="#c00000">更大的问题</font></span>在于<font color="#c00000">老的ioctl方法是由内核的大内核锁(BKL)实现并发控制的</font>，驱动在ioctl中较长的占用处理器则会导致无关的进程会被该ioctl产生较长时间的系统调用延迟()。为了解决此问题([[The new way of ioctl()]])，Linux在2.6.11开始引入了 `unlocked_ioctl` 和 `compat_ioctl` ，并在Linux 2.6.36彻底删除了 `ioctl` 接口。
 
-#### 8.1.2 unlocked_ioctl和compat_ioctl(Linux 2.6.36及以后)
+### 9.1.2 unlocked_ioctl和compat_ioctl(Linux 2.6.36及以后)
 
 正如上文所述，在64位系统上运行32位的用户态程序会导致传输传递时字节大小不匹配的问题。因此无论在32位还是64位的系统上都需要分别实现这两个函数。其调用情况为：
 
@@ -2054,9 +2054,9 @@ ioctl是Linux 2.6.35及以前所使用的接口，但是其往往会遇到在不
 	- `compat_ioctl` 意味"兼容性的ioctl"
 	- `unlocked_ioctl` 意味"<font color="#c00000">解锁的ioctl</font>"，<font color="#c00000">此函数不会为内核施加大内核锁</font>，且此时需要驱动程序管理自己的互斥锁。
 
-#### 8.1.3 cmd命令编号
+### 9.1.3 cmd命令编号
 
-##### 8.1.3.1 cmd命令编号的基本原则
+#### 9.1.3.1 cmd命令编号的基本原则
 
 按照规则，ioctl的cmd并不能随意编号，<span style="background:#fff88f"><font color="#c00000">一个基本原则是命令号应当在整个系统范围内唯一</font></span>。该原则的设定主要有如下考虑：
 - <font color="#c00000">避免用户态程序误操作其他设备</font>：若没有该原则，假设用户态同时打开了多个设备，其对设备A的某一cmd进行操作时误选中设备B进行操作，而设备B也有与cmd相对应的命令。则在这种情况下，对设备B的误操作并不会抛出 `-EINVAL` 错误，从而导致错误未被有效暴露。
@@ -2093,7 +2093,7 @@ Linux的cmd命令编号原则应参考 `Documentation/userspace-api/ioctl/ioctl-
 - `_IOC_NR(nr)`
 - `_IOC_SIZE(nr)`
 
-##### 8.1.3.2 预定义命令
+#### 9.1.3.2 预定义命令
 
 除了自己在ioctl的接受函数里预定义的命令以外，Linux还内置了一些通用的预定义命令。<span style="background:#fff88f"><font color="#c00000">这些命令会被Linux系统截断，并不会传递到内核驱动中</font></span>。且应当注意自己的cmd命令编号不应当与系统的预定义命令冲突或重复。
 预定义命令主要可以分为如下三组：
@@ -2107,7 +2107,7 @@ Linux的cmd命令编号原则应参考 `Documentation/userspace-api/ioctl/ioctl-
 - `FIOQSIZE` ：该命令在操作普通文件时会返回文件或目录的大小，但是用于操作设备时会返回 `-ENOTTY` 错误。
 - `FIONBIO` ：允许或禁止一个文件(通常是Socket)的非阻塞模式。不过修改该标志位的方法通常是用 `fnctl` 使用 `F_SETFL` 命令完成。
 
-#### 8.1.4 ioctl传参
+### 9.1.4 ioctl传参
 
 在ioctl传参时，应当注意传递的是实际参数还是指针。传递普通参数时正常实现即可，当传递指针时应当注意该用户空间的指针是否合法，其方法主要分为如下几类：
 1. 传输大批量的内存数据时，使用 `copy_from_user` 或 `copy_to_user` 即可。
@@ -2131,7 +2131,7 @@ int access_ok(int type, const void *addr, unsigned long size);
 <span style="background:#fff88f"><font color="#c00000">注意：2和3仅可用于sizeof为1、2、4、8字节大小的参数传递，其他类型无法使用</font></span>。
 <span style="background:#fff88f"><font color="#c00000">宏函数内置的sizeof是对用户空间的指针所指对象大小进行计算</font></span>(即 `sizeof(*(ptr))` )
 
-#### 8.1.5 权限与操作
+### 9.1.5 权限与操作
 
 在驱动程序中，对设备的操作也应当分为不同的权限等级，例如读取硬盘、写入硬盘以及格式化硬盘本就不应当是同一组权限。而在Linux中也内置了一些权限，例如在 `<linux/capability.h>`
 中预先定义了如下一些可能常用的权限：
@@ -2149,7 +2149,7 @@ int capable(int capability);
 
 对于不满足权限的请求可以返回 `-EPREM` 。
 
-### 8.2 非ioctl类设备控制
+## 9.2 非ioctl类设备控制
 
 并非所有的设备都有必要使用ioctl这种控制方式，例如想要实现一个PWM控制的舵机驱动程序，大可不必使用ioctl实现这类控制，直接使用字符控制即可。例如若实现：
 
@@ -2159,7 +2159,7 @@ echo "90" > /dev/servo0
 
 则比使用 `ioctl` 外加特定的头文件定义 `ioctl` 的 `cmd` 要方便且可移植。类似的例子还有使用 `AT` 指令配置调制解调器等设备。
 
-### 8.3 阻塞型IO
+## 9.3 阻塞型IO
 
 当设备无法立即完成某请求时，常用的做法之一是实现一个阻塞型IO。
 
@@ -2173,22 +2173,22 @@ echo "90" > /dev/servo0
 2. 休眠时允许拥有信号量，则务必关注可能会被该信号量影响的线程，且需要注意不要构成循环等待这种死锁情况。(该线程所持有的信号量所阻塞的线程拥有该线程所等待的资源)
 3. 在进行休眠时，<font color="#c00000">务必确保有其他线程或进程会唤醒本进程</font>。
 
-#### 8.3.1 阻塞型IO的标准语义
+### 9.3.1 阻塞型IO的标准语义
 
 关于阻塞IO和非阻塞IO的相关定义与基础知识可以详见：[[IO模型#3 IO模型]]。
 
-##### 8.3.1.1 open语义
+#### 9.3.1.1 open语义
 
 #TODO 
 
-##### 8.3.1.2 read与write语义
+#### 9.3.1.2 read与write语义
 
 由于无论是否IO为阻塞型IO，read、write的行为必须和poll的行为保持同步，因此此处不详细说明阻塞IO模型下的read与write语义。
 阻塞型IO的read与write语义应详见：
 - [[Linux驱动开发笔记#8 7 1 2 read函数的标准语义]]
 - [[Linux驱动开发笔记#8 7 1 3 write函数的标准语义]]
 
-### 8.4 简单休眠
+## 9.4 简单休眠
 
 在Linux中的头文件 `<linux/wait.h>` 中提供了阻塞与休眠相关的API，其较为重要的使用方法如下：
 1. <font color="#c00000">休眠和唤醒</font>通常通过等待队列来实现，可以通过如下的方法静态或动态的定义一个等待队列：
@@ -2259,7 +2259,7 @@ wake_up_interruptible(x)
 		- 一个使用select/poll/epoll监听多个文件事件的线程在不满足监听条件时会被阻塞，但是阻塞是由内核框架完成的，<font color="#c00000">被设置为可中断的</font><span style="background:#fff88f"><font color="#c00000">普通</font></span><font color="#c00000">休眠</font>。
 		- 而让驱动或内核去把等待poll类函数的线程绑定到若干事件上的程序设计又太过复杂，因此索性设计为只要当可被监听的事件发生，均调用 `wake_up_interruptible()` 唤醒所有普通休眠的线程，自然就包括了被poll类函数阻塞的线程。
 
-### 8.5 高级休眠
+## 9.5 高级休眠
 
 在上一章节的简单休眠中所使用的 `wait_queue_head_t` 的定义如下：
 
@@ -2362,7 +2362,7 @@ do {										\
 	2. 使用 `prepare_to_wait_event` 将等待队列入口添加到等待队列中，同时设置现成的状态。
 	3. 在 `cmd` 中调用 `shedule()` 选择下一个要运行的进程，并进行上下文切换。
 
-#### 8.5.1 独占等待
+### 9.5.1 独占等待
 
 正如章节简单休眠中所述，线程请求简单休眠后，一次 `wake_up` 可能会唤醒多个简单休眠对象，每一个被唤醒的多个简单休眠对象又会重新竞争 `condition` 资源，竞争不到的休眠对象又会被 `schedule` 重新切换到别的进程上，在一定程度上浪费了资源。
 因此linux设计了一种一次只会唤醒一个休眠对象的等待，称为独占等待。
@@ -2385,12 +2385,12 @@ do {										\
 wait_event_exclusive_cmd(wq_head, condition, cmd1, cmd2)
 ```
 
-#### 8.5.2 手工休眠
+### 9.5.2 手工休眠
 
 手工休眠主要工作是将内核提供的宏函数展开并按照需要的逻辑实现。
 #TODO 
 
-### 8.6 唤醒及其相关细节
+## 9.6 唤醒及其相关细节
 
 ```C
 /**
@@ -2448,7 +2448,7 @@ wake_up_interruptible_all(x)
 wake_up_interruptible_sync(x)
 ```
 
-### 8.7 非阻塞型IO
+## 9.7 非阻塞型IO
 
 学习本章前，务必学习[[IO模型]]。
 
@@ -2463,9 +2463,9 @@ fd = open("path", O_RDONLY | O_NONBLOCK)
 随后在内核模块中的后续操作时就应当根据是否定义了该非阻塞标志实现不同的行为。例如当应用程序请求的操作无法执行时，通常返回 `-EAGAIN` (try it again)。
 只有 `read` 、 `write` 和 `open` 文件操作会收非阻塞标志的影响。
 
-#### 8.7.1 非阻塞型IO的标准语义
+### 9.7.1 非阻塞型IO的标准语义
 
-##### 8.7.1.1 poll函数的标准语义
+#### 9.7.1.1 poll函数的标准语义
 
 Linux为[[IO模型#3 3 IO多路复用 IO Multiplexing|IO多路复用模型]]提供了 `select` 、 `poll` 、 `epoll` 三种操作接口。但是这三种操作接口本质都是调用 `file_operations` 结构体中的 `poll` 函数指针实现的。
 
@@ -2556,7 +2556,7 @@ static int mpipe_read(struct file *filep, char __user *, size_t, loff_t *)
 上述的poll函数，除了用于为 `select` 、 `poll` 、 `epoll` 三种操作接口提供后端外，还需要保证<font color="#c00000">在文件的不同状态时</font>与 `read` 、 `write` 函数<span style="background:#fff88f"><font color="#c00000">保持对应匹配的行为</font></span>(<font color="#c00000">即使当前文件被使用阻塞IO打开</font>)，因为对应用程序而言，<span style="background:#fff88f"><font color="#c00000">poll等函数(select、epoll，下同)的返回结果必须保证能够明确接下来的read和write函数是否会遭到阻塞</font></span>。
 具体可见后续章节。
 
-##### 8.7.1.2 read函数的标准语义
+#### 9.7.1.2 read函数的标准语义
 
 从设备读取数据时可以分为如下三种情况进行讨论：
 1. <font color="#c00000">如果输入缓冲区有数据</font>：即可读数据大于等于1byte，则read函数应当立即返回，并读取至少一个字节。
@@ -2569,7 +2569,7 @@ static int mpipe_read(struct file *filep, char __user *, size_t, loff_t *)
 	- read函数必须立即返回0。
 	- <font color="#c00000">无论是否为非阻塞IO</font>，poll函数应当报告 `POLLHUP` 。
 
-##### 8.7.1.3 write函数的标准语义
+#### 9.7.1.3 write函数的标准语义
 
 向设备写入数据时可以分为如下三种情况进行讨论：
 1. <font color="#c00000">如果输出缓冲区有空间</font>：即可写数据大于等于1byte，则：
@@ -2587,7 +2587,7 @@ static int mpipe_read(struct file *filep, char __user *, size_t, loff_t *)
 2. 如果需要保证数据完整性，则可以实现 `fsync` 方法，<span style="background:#fff88f"><font color="#c00000">fsync方法会阻塞直到缓冲区数据被写入设备</font></span>，<font color="#c00000">无论该IO是否被设置为阻塞IO</font>。
 3. 可移除设备应当实现 `fsync` 方法。
 
-##### 8.7.1.4 fsync函数的标准语义
+#### 9.7.1.4 fsync函数的标准语义
 
 `fsync` 函数的声明为：
 
@@ -2603,18 +2603,18 @@ int fsync(struct file *filep, loff_t start, loff_t end, int datasync);
 该函数对操作的时间等没有具体的要求，正常实现即可。
 在大多数情况下，该函数不会出现在字符设备中。但是在块设备中通常都会出现。
 
-##### 8.7.1.5 open函数的标准语义
+#### 9.7.1.5 open函数的标准语义
 
 #TODO 
 
 
-#### 8.7.2 select、poll、epoll的底层原理和数据结构
+### 9.7.2 select、poll、epoll的底层原理和数据结构
 
 详见[[IO多路复用接口(select、poll、epoll)]]。
 
 <font color="#c00000">简单总结版本</font>：[[Linux内核原理及其开发/应试笔记与八股#^uhjg4c]]。
 
-#### 8.7.3 异步通知
+### 9.7.3 异步通知
 
 本章节所讲述的IO模型为[[IO模型#3 4 信号驱动型IO Signal Driven IO|信号驱动型IO]]。
 
@@ -2674,31 +2674,31 @@ int fasync(int fd, struct file *filp, int on);
 		- `int sig` ：驱动程序要发出的信号
 		- `int band` ：
 
-### 8.8 文件操作的用户态和内核态标准语义汇总
+## 9.8 文件操作的用户态和内核态标准语义汇总
 
-#### 8.8.1 open操作
+### 9.8.1 open操作
 
-##### 8.8.1.1 用户态语义
+#### 9.8.1.1 用户态语义
 
 
-##### 8.8.1.2 系统调用操作(sys_open)
+#### 9.8.1.2 系统调用操作(sys_open)
 
 系统调用 `sys_open` 的内部处理详见：[[基础IO打开关闭(open.c)#^qyilk5]]。
 - 该处理可以简述如下： ^dttvnu
 	- 
 
-##### 8.8.1.3 内核态语义
+#### 9.8.1.3 内核态语义
 
 
-#### 8.8.2 close函数
+### 9.8.2 close函数
 
-##### 8.8.2.1 用户态语义
+#### 9.8.2.1 用户态语义
 
 POSIX的用户态 `close` 语义可见：[[IEEE Std 1003.1™-2017 学习笔记#^s5pcbs]]。
 
 
 
-##### 8.8.2.2 系统调用操作(sys_close)
+#### 9.8.2.2 系统调用操作(sys_close)
 
 系统调用 `sys_close` 的内部处理详见：[[基础IO打开关闭(open.c)#^4b5xl4]]。
 - 该处理可以简述如下： ^dqyd87
@@ -2708,23 +2708,23 @@ POSIX的用户态 `close` 语义可见：[[IEEE Std 1003.1™-2017 学习笔记#
 
 
 
-#### 8.8.3 read函数
+### 9.8.3 read函数
 
-##### 8.8.3.1 用户态语义
+#### 9.8.3.1 用户态语义
 
 
-##### 8.8.3.2 系统调用操作(sys_read)
+#### 9.8.3.2 系统调用操作(sys_read)
 
 系统调用 `sys_read` 的内部处理详见：[[基础IO读写(read_write.c)#^4c1l78]]。
 - 该处理可以简述如下： ^rhxomn
 	- 
 
 
-##### 8.8.3.3 内核态语义(f_op->read)
+#### 9.8.3.3 内核态语义(f_op->read)
 
 
 
-### 8.9 高级字符设备驱动程序最终Demo ^qdfcky
+## 9.9 高级字符设备驱动程序最终Demo ^qdfcky
 
 该Demo为一个简易的IPC管道( `mpipe` )，其具备如下基本特性：
 - 基本设备属性：
@@ -2749,19 +2749,19 @@ POSIX的用户态 `close` 语义可见：[[IEEE Std 1003.1™-2017 学习笔记#
 		- `poll` 类操作
 		- `signal` 、 `sigaction`
 
-#### 8.9.1 初步考虑数据结构
+### 9.9.1 初步考虑数据结构
 
-##### 8.9.1.1 管道基础信息结构体( `struct mpipe_info` )
+#### 9.9.1.1 管道基础信息结构体( `struct mpipe_info` )
 
 在内核驱动程序设计中，通常会使用 `filep->private_data` 使得驱动程序可以存储与用户态 `fd` 相绑定的数据信息。
 在本驱动程序设计中，主要用于存储与单端管道相关的数据结构。
 
-##### 8.9.1.2 链表结构体( `struct mpipe_list` )
+#### 9.9.1.2 链表结构体( `struct mpipe_list` )
 
 
 
 
-##### 8.9.1.3 考虑管道状态表示
+#### 9.9.1.3 考虑管道状态表示
 
 | <center>状态</center> | <center>判定方式</center>                                     |
 | ------------------- | --------------------------------------------------------- |
@@ -2772,9 +2772,9 @@ POSIX的用户态 `close` 语义可见：[[IEEE Std 1003.1™-2017 学习笔记#
 
 
 
-#### 8.9.2 初步考虑互斥并发管理
+### 9.9.2 初步考虑互斥并发管理
 
-##### 8.9.2.1 基础互斥并发管理
+#### 9.9.2.1 基础互斥并发管理
 
 针对上述结构体的操作可以考虑如下两种并发管理：
 1. <u>整个驱动程序共用一个锁</u>。Linux的ppdev即使用此方案( `/drivers/char/ppdev.c` )
@@ -2782,7 +2782,7 @@ POSIX的用户态 `close` 语义可见：[[IEEE Std 1003.1™-2017 学习笔记#
 从并发能力来讲，选项2更为优秀。
 但是由于其实现较为繁琐，且需要考虑更多的互斥问题，因此本笔记除了本章节使用方案2以外，后续章节均使用方案1以简化实现方式。
 
-##### 8.9.2.2 死锁预防
+#### 9.9.2.2 死锁预防
 
 在操作系统的学习中我们知道了死锁产生的四个必要条件以及死锁预防的方式：
 
@@ -2793,7 +2793,7 @@ POSIX的用户态 `close` 语义可见：[[IEEE Std 1003.1™-2017 学习笔记#
 1. 必须避免链表锁( `list_spin` )和各节点锁( `mpipe_info.info_spin` )之间的循环等待。<font color="#c00000">即保证先对链表锁加锁，才能对各节点锁加锁</font>。
 2. 必须避免多个节点锁( `mpipe_info.info_spin` )之间的循环等待。<font color="#c00000">即保证现对ID小的基础信息结构体加锁，再对ID大的基础信息结构体加锁</font>。
 
-#### 8.9.3 初步考虑连接建立
+### 9.9.3 初步考虑连接建立
 
 如上述管道的基本特性，两个管道之间要建立连接需要其目标 `mpipe_id` 均为对方的 `mpipe_id` 。则需要考虑如下的几个场景：
 1. 若当前管道未设置目标 `mpipe_id` ，则设置该目标id，同时检测对方的目标id是否为当前管道。
@@ -2808,13 +2808,13 @@ POSIX的用户态 `close` 语义可见：[[IEEE Std 1003.1™-2017 学习笔记#
 		2. 如果是则..
 3. 其他情况。
 
-#### 8.9.4 考虑文件关闭操作
+### 9.9.4 考虑文件关闭操作
 
-##### 8.9.4.1 考虑如下场景
+#### 9.9.4.1 考虑如下场景
 
 由于本子章节并不针对于上述假象设备 `mpipe` ，因此本子章节的设备名均命名为 `mdev` 。
 
-###### 8.9.4.1.1 场景一：正在处理read的过程中，close被调用并执行完毕
+##### 9.9.4.1.1 场景一：正在处理read的过程中，close被调用并执行完毕
 
 在内核中的驱动正在响应用户的操作请求<font color="#c00000">的</font><span style="background:#fff88f"><font color="#c00000">过程中</font></span>， `f_op->release` 被调用，那么仍在处理的操作请求如何完成？
 1. 明显地，直接在 `f_op->release` 中释放 `struct mdev_info` 将无法保证正在执行的操作会被顺利完成，例如下方代码中，在完成 `mdev_read` 中的 `do_operation1` 后被下处理器，并完成 `mdev_release` 函数，随后 `do_operation2` 就会触发错误：
@@ -2924,12 +2924,12 @@ static int mdev_release(struct inode *node, struct file *filep)
 
 针对这个问题，则可以考虑使用[[引用计数器refcount_t(refcount.h)|引用计数器]]管理 `mdev_info` 解决，详见相关API。
 
-#### 8.9.5 考虑断开连接操作
+### 9.9.5 考虑断开连接操作
 
 
 
 
-#### 8.9.6 最终驱动程序和测试程序
+### 9.9.6 最终驱动程序和测试程序
 
 则最终Demo程序如下：
 
@@ -2943,13 +2943,13 @@ static int mdev_release(struct inode *node, struct file *filep)
 
 ```
 
-## 9 时间、延迟及延缓操作
+# 10 时间、延迟及延缓操作
 
-### 9.1 度量时间差(以系统启动时间为基准)
+## 10.1 度量时间差(以系统启动时间为基准)
 
-#### 9.1.1 jiffies计数器
+### 10.1.1 jiffies计数器
 
-##### 9.1.1.1 jiffies_64机制
+#### 10.1.1.1 jiffies_64机制
 
 内核中会定义一个硬件的时钟中断，该中断频率通常为1000hz<font color="#7f7f7f">(软件仿真器中是24hz)</font>，该值不为固定值，可以在编译内核时设置，因此进行内核开发时不应当指定固定值，而应当通过API来获取。且在修改内核中断频率后，必须重新编译并使用新的内核模块。
 该值可在内核态代码中访问，其被定义在 `<linux/param.h>` 中的 `HZ` 中。
@@ -2964,7 +2964,7 @@ u64 get_jiffies_64(void);
 ```
 - 访问 `jiffies` 时可以直接访问。
 
-##### 9.1.1.2 32位CPU下的jiffies及其溢出问题
+#### 10.1.1.2 32位CPU下的jiffies及其溢出问题
 
 在32位平台下，1000hz中断时， `jiffies` 大约50天会溢出一次。但是内核态代码仍然应当谨慎处理该问题。
 而想只用一个32位的计数器完全从根本上解决溢出问题是不现实的(例如32位的 `jiffies_a` 于数百天以前记录，此时和当前 `jiffies` 比较大小或者计算时间差)，因此其被如下设计：
@@ -3011,7 +3011,7 @@ int time_before_eq(unsigned long a, unsigned long b);
 	- 随后130个计数后获取 `b = 128`
 	- 此时 `(char)(b) - (char)(a) = -128 - (-2) = -126` 判定不再准确
 
-##### 9.1.1.3 jiffies与用户态时间互转
+#### 10.1.1.3 jiffies与用户态时间互转
 
 ```C
 #include <linux/time.h>
@@ -3022,9 +3022,9 @@ unsigned long timeval_to_jiffies(struct timeval *value);
 void jiffies_to_timeval(unsigned long jiffies, struct timeval *value);
 ```
 
-#### 9.1.2 平台特有高精度计时寄存器
+### 10.1.2 平台特有高精度计时寄存器
 
-##### 9.1.2.1 通用平台
+#### 10.1.2.1 通用平台
 
 linux内核为所有平台都提供了访问CPU时钟周期数的API，在支持的平台上会返回正确宽度的 `cycles_t` ，但是在不支持的平台上返回结果恒为0。
 
@@ -3033,7 +3033,7 @@ linux内核为所有平台都提供了访问CPU时钟周期数的API，在支持
 cycles_t get_cycles(void);
 ```
 
-##### 9.1.2.2 x86
+#### 10.1.2.2 x86
 
 在Pentium后的所有x86和x86_64的CPU上均会有一个TSC计数器(Timestamp counter)，该计数器会记录CPU的时钟周期数，可以通过如下方式访问：
 
@@ -3048,11 +3048,11 @@ rdtscl(low32);
 rdtscll(var64);
 ```
 
-### 9.2 获取当前时间(绝对时间)
+## 10.2 获取当前时间(绝对时间)
 
 在大多数情况下，内核只需要处理 `jiffies` 就可以满足需求，并且通常会将年月日时分秒的处理留给用户空间进行处理，但是内核依旧提供了一些绝对时间的处理方法。
 
-#### 9.2.1 年月日时分秒转jiffies
+### 10.2.1 年月日时分秒转jiffies
 
 ```C
 #include <linux/time.h>
@@ -3061,7 +3061,7 @@ unsigned long mktime(unsigned int year, unsigned int mon,
 						unsigned int min, unsigned int sec);
 ```
 
-#### 9.2.2 获取UNIX时间戳(以1970年为起始)
+### 10.2.2 获取UNIX时间戳(以1970年为起始)
 
 ```C
 #include <linux/time.h>
@@ -3079,15 +3079,15 @@ void do_gettimeofday(struct timeval *tv);
 struct timespec current_kernel_time(void);
 ```
 
-### 9.3 延迟执行
+## 10.3 延迟执行
 
 在考虑使用延迟执行时，需要根据延迟时间分别考虑使用的API：
 - 当延迟时间大于时钟滴答( `jiffies` )，且<font color="#c00000">可以以一个时钟滴答为单位</font>(<font color="#c00000">通常为若干毫秒</font>)进行延迟时，此时应优先考虑使用 `jiffies` 等待。
 - 当时间延迟小于等于一个时钟滴答，或不能以时钟滴答为单位进行等待时，此时应当使用普通等待。
 
-#### 9.3.1 jiffies等待
+### 10.3.1 jiffies等待
 
-##### 9.3.1.1 忙等(不推荐)
+#### 10.3.1.1 忙等(不推荐)
 
 直接使用：
 
@@ -3100,7 +3100,7 @@ while(time_before(jiffies, target))
 1. <span style="background:#fff88f"><font color="#c00000">在进入该循环之前不可禁止中断</font></span>，不然 `jiffies` 永远无法得到更新，直接陷入死机。
 2. 在对应平台上 `cpu_relax()` 会做出不同的行为(例如在支持超线程的CPU上会让出处理器给其他线程)，但是行为具体做了什么不重要，因为不推荐使用此方式。
 
-##### 9.3.1.2 让出处理器(不推荐)
+#### 10.3.1.2 让出处理器(不推荐)
 
 ```C
 while(time_before(jiffies, target))
@@ -3109,7 +3109,7 @@ while(time_before(jiffies, target))
 
 该方法在大多数情况下并没有什么问题，但<font color="#c00000">依旧不是最好的解决方案</font>。当系统中有别的可运行进程时，该代码可以正常让出处理器；但是当系统中仅剩这一个可运行进程或低负荷情况下， `shedule()` 并不能有效地让出处理器，此时又变成忙等状态。
 
-##### 9.3.1.3 超时(推荐)
+#### 10.3.1.3 超时(推荐)
 
 直接使用休眠章节提到的 `wait_event_*timeout` 函数即可，API如下：
 
@@ -3141,7 +3141,7 @@ wait_event_interruptible_timeout(wq_head, condition, timeout)
 在使用上述API进行等待时只需要把 `condition` 填写为 `0` 并等待超时即可。
 本方法与上述让出处理器的方法的区别仅在于本方法的API还额外设置了任务状态( `TASK_INTERRUPTIBLE` / `TASK_UNINTERRUPTIBLE` )。
 
-#### 9.3.2 绝对时间等待
+### 10.3.2 绝对时间等待
 
 ```C
 #include <linux/delay.h>
@@ -3164,7 +3164,7 @@ unsigned long msleep_interruptible(unsigned int millisecs);
 void ssleep(unsigned int seconds);
 ```
 
-### 9.4 内核定时器
+## 10.4 内核定时器
 
 内核定时器通常有如下的典型应用场景(实际上并不局限于此)：
 1. 对于没有提供外部中断功能的硬件设备，可以使用内核定时器定时轮询。
@@ -3180,7 +3180,7 @@ void ssleep(unsigned int seconds);
 2. <font color="#c00000">定时器函数</font><span style="background:#fff88f"><font color="#c00000">默认</font></span><font color="#c00000">会在注册自己的CPU上重新运行</font>，这样可以尽可能保持缓存的局域性。****
 3. 即使在单处理器上，定时器也是竞态的潜在来源。
 
-#### 9.4.1 内核定时器相关API
+### 10.4.1 内核定时器相关API
 
 内核定时器相关API如下：
 - 数据结构定义：
@@ -3270,10 +3270,10 @@ int timer_pending(const struct timer_list * timer);
 	```
 	- `1 if the timer is pending, 0 if not.`
 
-#### 9.4.2 内核定时器的实现(了解)
+### 10.4.2 内核定时器的实现(了解)
 
 
-### 9.5 tasklet(即将被移除) ^meiuw1
+## 10.5 tasklet(即将被移除) ^meiuw1
 
 tasklet机制即小任务机制，其特性有：
 1. <span style="background:#fff88f"><font color="#c00000">始终在中断期间运行</font></span>，具体注意事项应见[[Linux驱动开发笔记#12 1 2 中断上下文中的注意事项 fw453g|中断上下文中的注意事项]]。
@@ -3310,7 +3310,7 @@ static irqreturn_t my_interrupt_handler(int irq, void *dev_id) {
 }
 ```
 
-#### 9.5.1 tasklet相关API
+### 10.5.1 tasklet相关API
 
 tasklet相关API如下(头文件 `linux/interrupt.h` )：
 - 数据结构定义：
@@ -3352,7 +3352,7 @@ void tasklet_enable(struct tasklet_struct *t);
 	```
 	- 启用被禁用的tasklet
 
-### 9.6 工作队列(workqueue) ^qihja2
+## 10.6 工作队列(workqueue) ^qihja2
 
 workqueue和tasklet<font color="#c00000">都是</font>内核的一种<font color="#c00000">异步执行机制</font>，其区别如下表所示。
 
@@ -3370,7 +3370,7 @@ workqueue和tasklet<font color="#c00000">都是</font>内核的一种<font color
 1. 每个workqueue<span style="background:#fff88f"><font color="#c00000">专用的</font></span><font color="#c00000">一个或多个</font>"内核线程"中
 2. 整个内核共享的workqueue的"内核线程"中
 
-#### 9.6.1 独有工作队列
+### 10.6.1 独有工作队列
 
 workqueue在创建时，可以选择：
 1. 为该workqueue在每个CPU上都创建一个专属的"内核线程"
@@ -3436,7 +3436,7 @@ void destroy_workqueue(struct workqueue_struct *wq);
 		- 使用 `flush_workqueue` 阻塞并等待队列中所有任务完成。
 		- 使用 `flush_work` 阻塞并等待某一个任务完成。
 
-#### 9.6.2 共享队列
+### 10.6.2 共享队列
 
 并不是所有的内核模块都有独立管理一个等待队列的必要，因此内核提供了如下几种共享队列：
 - `system_wq` ：普通优先级的工作队列(默认)。
@@ -3468,18 +3468,18 @@ bool schedule_delayed_work_on(int cpu, struct delayed_work *dwork,
 ```
 - 等待工作完成的接口与上一章节相同。
 
-## 10 内存分配
+# 11 内存分配
 
-### 10.1 Linux内核内存管理概述
+## 11.1 Linux内核内存管理概述
 
-#### 10.1.1 Linux内核内存分配的层次结构
+### 11.1.1 Linux内核内存分配的层次结构
 
 Linux内核的内存分配存在如下的层次结构：
 1. 伙伴系统：负责以page为单位对物理内存进行分割，支持 `alloc_pages` 接口。
 2. slab分配器(SLUB、SLOB)：基于伙伴系统，将page拆分为固定大小的若干小块(8B、16B、...、8KB)。
 3. kmalloc/kfree接口：为大多数开发者提供的接口，底层依赖slab分配器。
 
-#### 10.1.2 Linux内核的内存区段(了解)
+### 11.1.2 Linux内核的内存区段(了解)
 
 Linux的内存区段划分取决于具体的硬件平台，可以使用如下命令查询：
 
@@ -3497,14 +3497,14 @@ Node 0, zone    DMA32  10175   2398    642    372    107     27      4      2   
 
 注：wsl中通常没有该文件。
 
-##### 10.1.2.1 x86架构(32位)
+#### 11.1.2.1 x86架构(32位)
 
 在x86上，Linux内存区段被划分为如下三个区段：
 - `ZONE_DMA` ：物理地址 `0x00000000` 到 `0x00FFFFFF` (0~16 MB)，专供老式ISA设备使用。
 - `ZONE_NORMAL` ：物理地址 `0x01000000` 到 `0x07FFFFFF` (16 MB ~ 896 MB)，内核可直接线性映射到虚拟地址空间的区域。
 - `ZONE_HIGHMEM` ：物理地址 `0x08000000` 及以上(高于896 MB)，供用户空间程序使用，需动态映射到内核空间。
 
-### 10.2 伙伴系统(buddy system)
+## 11.2 伙伴系统(buddy system)
 
 如上述章节，伙伴系统负责以page为单位对物理内存进行分割，则当内核需要分配大块的内存时，直接使用伙伴系统是最优选择。其主要提供了如下的API(均位于 `linux/gfp.h` )：
 - `alloc_pages(gfp_t gfp_mask, unsigned int order)` ：
@@ -3519,7 +3519,7 @@ Node 0, zone    DMA32  10175   2398    642    372    107     27      4      2   
 - `order` <font color="#c00000">为要申请或施放的页面数的</font> $\log_2$ <font color="#c00000">次幂</font>。
 - `gfp_mask` 可见[[Linux驱动开发笔记#^74tb72|kmalloc接口开发调用]]。
 
-### 10.3 后备高速缓存(slab) ^utt6c3
+## 11.3 后备高速缓存(slab) ^utt6c3
 
 slab基于buddy system实现了如下的两种缓存：
 1. 特定对象专用缓存：专为某个类型(如 `struct task_struct`)频繁分配设计（通过 `kmem_cache_create` 创建）。
@@ -3547,7 +3547,7 @@ nf_conntrack         197    264    320   12    1 : tunables    0    0    0 : sla
 au_finfo               0      0    192   21    1 : tunables    0    0    0 : slabdata      0      0      0
 ```
 
-#### 10.3.1 开发调用
+### 11.3.1 开发调用
 
 slab在开发中通常按照如下的方式进行调用：
 1. 使用 `kmem_cache_create` 创建专用slab缓存，函数原型等价于(但不等于)：
@@ -3580,19 +3580,19 @@ void kmem_cache_free(struct kmem_cache *s, void *objp);
 void kmem_cache_destroy(struct kmem_cache *s);
 	```
 
-#### 10.3.2 slab的变种实现或改进
+### 11.3.2 slab的变种实现或改进
 
-##### 10.3.2.1 SLUB
+#### 11.3.2.1 SLUB
 
 SLUB和SLOB均为slab的变种，现代内核默认使用SLUB。
 #TODO 
 
-##### 10.3.2.2 SLOB
+#### 11.3.2.2 SLOB
 
 #TODO 
 
 
-### 10.4 kmalloc接口(最常用)
+## 11.4 kmalloc接口(最常用)
 
 <span style="background:#fff88f"><font color="#c00000">特性</font></span>：
 1. <span style="background:#fff88f"><font color="#c00000">分配得到的内存区域在物理地址上一定连续</font></span>，这是和vmalloc的重要区别，该特性的延申特性有：
@@ -3606,7 +3606,7 @@ SLUB和SLOB均为slab的变种，现代内核默认使用SLUB。
 7. 可以避免休眠。
 8. 销毁 `kmalloc` 申请的内存需要使用 `kfree` 。
 
-#### 10.4.1 开发调用 ^74tb72
+### 11.4.1 开发调用 ^74tb72
 
 函数原型(但实际上并非如此)：
 
@@ -3641,7 +3641,7 @@ void *kmalloc(size_t size, gfp_t gfp);
 cat /proc/slabinfo | grep kmalloc
 ```
 
-#### 10.4.2 原理概述 ^yd7n15
+### 11.4.2 原理概述 ^yd7n15
 
 正如上文所述，`kmalloc` 是基于[[Linux驱动开发笔记#^utt6c3|slab]]实现的，所以其使用的头文件也是 `slab.h` 。
 
@@ -3649,7 +3649,7 @@ cat /proc/slabinfo | grep kmalloc
 
 当发生 `kmalloc` 调用时，其会将 `kmalloc` 中的 `size` 参数<span style="background:#fff88f"><font color="#c00000">向上对齐到最小的缓存块</font></span>，<font color="#c00000">例如 200Byte -> 256Byte</font>。随后根据GFP标志为其分配对象。
 
-### 10.5 vmalloc接口
+## 11.5 vmalloc接口
 
 特性：
 1. 虚拟地址连续，<span style="background:#fff88f"><font color="#c00000">但是物理地址可能离散</font></span>，这是与kmalloc之间最重要的区别。
@@ -3661,7 +3661,7 @@ cat /proc/slabinfo | grep kmalloc
 7. 销毁 `vmalloc` 申请的内存需要使用 `vfree` 。
 8. 使用vmalloc的代码可能会在合并到主线linux时受到冷遇。
 
-#### 10.5.1 vmalloc & kmalloc(slab)特性对比
+### 11.5.1 vmalloc & kmalloc(slab)特性对比
 
 | 特性       | slab-特定对象缓存 | slab-通用对象缓存(kmalloc) | vmalloc                                                                    |
 | -------- | ----------- | -------------------- | -------------------------------------------------------------------------- |
@@ -3670,7 +3670,7 @@ cat /proc/slabinfo | grep kmalloc
 | 能否避免休眠   | 可以避免        | 可以避免                 | <span style="background:#fff88f"><font color="#c00000">不能</font></span>    |
 | 所得内存使用效率 | 高           | 高                    | 一般                                                                         |
 
-#### 10.5.2 开发调用
+### 11.5.2 开发调用
 
 ```C
 #include "linux/vmalloc.h"
@@ -3678,9 +3678,9 @@ cat /proc/slabinfo | grep kmalloc
 void *vmalloc(unsigned long size);
 ```
 
-## 11 与硬件通信
+# 12 与硬件通信
 
-### 11.1 硬件寄存器与常规内存
+## 12.1 硬件寄存器与常规内存
 
 本子章节的学习需要先完成[[内存屏障]]的学习。
 
@@ -3735,7 +3735,7 @@ wmb();
 writel(dev->regs.control, xxx);
 ```
 
-### 11.2 使用IO端口
+## 12.2 使用IO端口
 
 Linux系统的包含串口、PCI bus、DMA等IO端口的分配均在 `/proc/ioports` 中可见，并会列出IO的地址范围，例如：
 
@@ -3832,11 +3832,11 @@ void outsl(unsigned long port, const void *src, unsigned long count);
 	- 此类IO比上述IO多了一个 `_p` 后缀。
 	- 暂停式IO会使用一些延迟方法来等待这些低速设备的响应(通常是延迟1us)。<font color="#c00000">该IO在现代设备中很少使用</font>，在大多数平台上均已被重定向为普通IO(Power-PC仍有延迟)。
 
-#### 11.2.1 实际Demo
+### 12.2.1 实际Demo
 
 #TODO 
 
-### 11.3 使用IO内存
+## 12.3 使用IO内存
 
 CPU硬件或操作系统通常会把硬件的寄存器或内存映射到内存空间当中去。与上一章节的端口IO(Port IO)的区别点在于该内存地址位于内存空间中，称作内存映射IO(Memory-Mapped IO，MMIO)。根据计算机体系结构和目标IO的不同，IO内存<font color="#c00000">可能是</font>、<font color="#c00000">也可能不是经由页表进行的</font>，<font color="#c00000">但是在内核编程时使用的步骤是一致的</font>。
 
@@ -3857,9 +3857,9 @@ MMIO会被设置为不可换出、不可缓存(uncached)，不用担心页面置
 
 在使用IO内存时，基本流程和使用普通内存一致，<font color="#c00000">均为申请-使用-释放的过程</font>，只是使用的API和成功/失败对应的意义不同。
 
-#### 11.3.1 相关API
+### 12.3.1 相关API
 
-##### 11.3.1.1 标注物理内存资源的所有权(request_mem_region) ^x2iaei
+#### 12.3.1.1 标注物理内存资源的所有权(request_mem_region) ^x2iaei
 
 `request_mem_region` 的函数原型可参考(注意并非实际函数原型)：
 
@@ -3872,7 +3872,7 @@ struct resource * request_mem_region(resource_size_t start, resource_size_t n, c
 1. 该函数并不像普通的 `*malloc` 那样分配内存
 2. <span style="background:#fff88f"><font color="#c00000">该函数的目的是确保该物理区域不会被多个驱动冲突访问</font></span>，并不负责权限控制。从技术上来看，即使不使用 `request_mem_region` 进行标记，对应内存区域依旧可以被访问，但是不能确保安全，且无法使用该函数的 `name` 进行追踪。
 3. 使用本函数标记所有权的内存区域需要使用[[Linux驱动开发笔记#^0ucvb2|release_mem_region]]函数释放物理内存的所有权。
-##### 11.3.1.2 将物理内存区域映射到虚拟内存(ioremap) ^p797kv
+#### 12.3.1.2 将物理内存区域映射到虚拟内存(ioremap) ^p797kv
 
 ```C
 #include <asm/io.h>
@@ -3888,14 +3888,14 @@ void __iomem *ioremap_prot(phys_addr_t phys_addr, size_t size, unsigned long pro
 	2. 默认禁用缓存
 	具体的配置需求可使用 `ioremap_prot` 手动配置。
 
-##### 11.3.1.3 取消内存映射(iounmap) ^akiihr
+#### 12.3.1.3 取消内存映射(iounmap) ^akiihr
 
 ```C
 #include <asm/io.h>
 void iounmap(volatile void __iomem *addr);
 ```
 
-##### 11.3.1.4 操作内存区域 ^1udrzm
+#### 12.3.1.4 操作内存区域 ^1udrzm
 
 在部分平台上允许使用普通IO操作来访问这些内存，但是该方法不具备可移植性。应当使用如下的方法族：
 
@@ -3926,7 +3926,7 @@ void memcpy_fromio(void *to, const void *from, unsigned long count);
 void memcpy_toio(void *to, const void *from, unsigned long count);
 ```
 
-##### 11.3.1.5 释放内存资源的所有权(release_mem_region) ^0ucvb2
+#### 12.3.1.5 释放内存资源的所有权(release_mem_region) ^0ucvb2
 
 该函数的参考原型如下(并非实际原型)：
 
@@ -3935,11 +3935,11 @@ void memcpy_toio(void *to, const void *from, unsigned long count);
 void release_mem_region(resource_size_t start, resource_size_t n);
 ```
 
-## 12 中断处理
+# 13 中断处理
 
-### 12.1 当前上下文状态与注意事项 ^h05ata
+## 13.1 当前上下文状态与注意事项 ^h05ata
 
-#### 12.1.1 查询当前是否在中断上下文中
+### 13.1.1 查询当前是否在中断上下文中
 
 ```C
 #include <asm/hardirq.h>
@@ -3948,14 +3948,14 @@ in_interrupt();
 
 当当前上下文为软件或硬件中断时会返回非零值。
 
-#### 12.1.2 中断上下文中的注意事项 ^fw453g
+### 13.1.2 中断上下文中的注意事项 ^fw453g
 
 在中断上下文中时需要注意：
 1. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为不在进程上下文中。
 2. 用于指向当前进程的 `current` 指针也无效。
 3. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
 
-#### 12.1.3 查询当前是否在原子上下文中
+### 13.1.3 查询当前是否在原子上下文中
 
 ```C
 #include <asm/hardirq.h>
@@ -3966,7 +3966,7 @@ in_atpmic();
 1. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为可能引起调度。
 2. `current` 指针可用，但是不能访问用户空间。
 
-### 12.2 查看系统当前已注册中断
+## 13.2 查看系统当前已注册中断
 
 使用 `cat /proc/interrupts` 命令，有：
 
@@ -4006,9 +4006,9 @@ intr 2586828620 0 9 0 0 24 0 3 0 0 0 0 0 15 0 34688478 0 0 0 0 0 0 0 0 0 50 5390
 - 第一个数字为系统触发中断的总次数
 - 后续若干个数字是各个 IRQ 信号线上触发中断的次数(即使没有安装中断处理程序也会计数)
 
-### 12.3 中断的注册
+## 13.3 中断的注册
 
-#### 12.3.1 注册中断(request_irq)
+### 13.3.1 注册中断(request_irq)
 
 在Linux内核中，注册(安装)中断例程需要使用如下的API：
 
@@ -4063,7 +4063,7 @@ int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, co
 		- 使用 `enable_irq_wake(irq)` 可以把该中断作为唤醒中断，从而在系统挂起期间不关闭此中断。
 		- 使用 `disable_irq(irq)` 可以禁用该中断。
 
-#### 12.3.2 中断号选用原则 ^adyua2
+### 13.3.2 中断号选用原则 ^adyua2
 
 Linux内核中，并非所有的中断都可以自由选择中断号：
 - 部分中断的中断号是由硬件进行编码，一般在设备树文件中
@@ -4103,7 +4103,7 @@ int pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs, unsigned i
 int pci_irq_vector(struct pci_dev *dev, unsigned int nr);
 ```
 
-#### 12.3.3 中断的取消注册
+### 13.3.3 中断的取消注册
 
 中断取消应当使用如下的API：
 
@@ -4122,9 +4122,9 @@ const void *free_irq(unsigned int irq, void *dev_id);
 2. 该 `dev_id` 参数必须全内核中唯一，否则会冲突(因此通常取dev对象的指针)。
 3. 该 `dev_id` 参数<span style="background:#fff88f"><font color="#c00000">用于在内核的中断管理数据结构</font></span>( `desc` )<span style="background:#fff88f"><font color="#c00000">中当作Key值</font></span>。
 
-### 12.4 禁用和启用中断
+## 13.4 禁用和启用中断
 
-#### 12.4.1 禁用启用单个中断
+### 13.4.1 禁用启用单个中断
 
 ```C
 #include <linux/interrupts.h>
@@ -4142,7 +4142,7 @@ void enable_percpu_irq(unsigned int irq, unsigned int type);
 
 在Linux内核内部维护了一个计数器，只有中断启用次数大于等于禁用次数时，中断才会被启动(当启用大于禁用时，会抛WARN日志)。而平台的中断启停实现则是修改可编程中断控制器指定中断的掩码，从而在所有的处理器上禁用或启用中断。
 
-#### 12.4.2 禁用启用当前处理器的全部中断
+### 13.4.2 禁用启用当前处理器的全部中断
 
 ```C
 #include <linux/irqflags.h>
@@ -4157,7 +4157,7 @@ void local_irq_enable(void);
 
 与上一子章节不同的是，某个核心全部中断的开启和关闭并没有维护计数器。
 
-### 12.5 顶半部和底半部
+## 13.5 顶半部和底半部
 
 通常来说，可以把必须在中断内快速完成的工作和可以稍微延后到中断外的工作分为中断的顶半部和底半部，从而优化中断例程的运行时间，这部分讨论可见[[Linux驱动开发笔记#^meiuw1|tasklet机制]]章节。不过目前Linux已经不再推荐继续使用tasklet，因此可以考虑使用线程化中断技术：
 - 将快速响应的部分留在中断例程中，从而保证中断响应的实时性
@@ -4165,7 +4165,7 @@ void local_irq_enable(void);
 - 同步机制可以使用自旋锁、信号量等经典机制。
 此外使用[[Linux驱动开发笔记#^qihja2|工作队列]]机制也可以完成同步功能。
 
-### 12.6 中断共享 ^c8eb6k
+## 13.6 中断共享 ^c8eb6k
 
 如前文中断的注册章节所述，共享中断注册使用如下API时：
 
@@ -4189,13 +4189,13 @@ int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, co
 共享中断在 `cat /proc/interrupts` 中的体现如下方的中断号11，由 `virtio2` 和 `USB1` 共享：
 ![[Linux驱动开发笔记#^b47kyp]]
 
-## 13 内核的数据类型
+# 14 内核的数据类型
 
 本章并无太多难点，更多的是使用规范类问题。
 参考资料：
 - [Linux kernel coding style — The Linux Kernel documentation](https://www.kernel.org/doc/html/latest/process/coding-style.html)
 
-### 13.1 整型及位宽
+## 14.1 整型及位宽
 
 关于 `u8` 、 `s8` 与 `uint8_t` 、`int8_t` ：
 
@@ -4209,17 +4209,17 @@ int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, co
 1. <font color="#c00000">在新代码中</font>推荐使用 `<linux/types.h>` 中的 `u8` 、 `s8` 等，但也允许使用 `<stdint.h>` 中的 `uint8_t` 和 `int8_t`
 2. <span style="background:#fff88f"><font color="#c00000">在老代码中一定要和原代码中的风格保持一致</font></span>，不可混用。
 
-### 13.2 基本数据结构
+## 14.2 基本数据结构
 
 基本索引：
 - [[内核基本数据结构(types.h部分)]]
 	- [[内核基本数据结构(types.h部分)#3 链表锚点 xl7wru|链表锚点]]
 
-### 13.3 其他若干问题
+## 14.3 其他若干问题
 
 直接参考[Linux 内核代码风格 — The Linux Kernel documentation](https://www.kernel.org/doc/html/latest/translations/zh_CN/process/coding-style.html)(中文版)即可。
 
-## 14 PCI驱动程序
+# 15 PCI驱动程序
 
 PCI的总线拓扑结构如下图所示：
 	![[Pasted image 20250326165450.png]]
@@ -4261,12 +4261,12 @@ PCI的总线拓扑结构如下图所示：
 
 
 
-## 15 USB驱动程序
+# 16 USB驱动程序
 
 
-## 16 Linux设备模型 ^drcdil
+# 17 Linux设备模型 ^drcdil
 
-### 16.1 kobject
+## 17.1 kobject
 
 在学习Linux设备模型之前，应当简单了解一些Linux内核如何管理"对象"，即 `kobject` 。
 `kobject` 被定义于 `linux/kobject.h` 中，其定义如下：
@@ -4309,9 +4309,9 @@ struct cdev {
 通过"继承"该 `kobject` ，Linux内核可以完成统一的引用计数、sysfs表述、热拔插处理等特性。
 与[[内核基本数据结构(types.h部分)#3 链表锚点 xl7wru|链表锚点]]等数据结构相同的是，可以使用 `container_of` 宏查找 `kobject` 的host数据结构，详见下方子章节。
 
-#### 16.1.1 kobject相关API ^blb9e0
+### 17.1.1 kobject相关API ^blb9e0
 
-##### 16.1.1.1 kobject的初始化
+#### 17.1.1.1 kobject的初始化
 
 ```C
 #include <linux/kobject.h>
@@ -4324,7 +4324,7 @@ void kobject_init(struct kobject *kobj, const struct kobj_type *ktype);
 	其他成员可暂时先不用了解
 - <span style="background:#fff88f"><font color="#c00000">引用计数器会被设置为1</font></span>。
 
-##### 16.1.1.2 kobject的引用计数
+#### 17.1.1.2 kobject的引用计数
 
 ```C
 // 增加引用计数
@@ -4334,7 +4334,7 @@ struct kobject * __must_check kobject_get_unless_zero(struct kobject *kobj);
 void kobject_put(struct kobject *kobj);
 ```
 
-##### 16.1.1.3 kobject设置名字
+#### 17.1.1.3 kobject设置名字
 
 ```C
 #include <linux/kobject.h>
@@ -4356,9 +4356,9 @@ int kobject_set_name(struct kobject *kobj, const char *name, ...);
 - 不能包含反斜杠
 - 强烈拒绝使用空格
 
-### 16.2 kobject层次结构、kset和子系统
+## 17.2 kobject层次结构、kset和子系统
 
-#### 16.2.1 kobject层次结构
+### 17.2.1 kobject层次结构
 
 在内核中，各个模块之间有层次结构关系。也正如前文所述，kobject可以提供统一的引用计数、sysfs表述、热拔插处理等特性。而在层次结构管理上，内核为kobject提供了两种<font color="#c00000">独立的</font>机制：
 - parent指针：指向其父对象<u>的kobject节点</u>
@@ -4367,11 +4367,11 @@ int kobject_set_name(struct kobject *kobj, const char *name, ...);
 	![[msedge_X79BSHCPBB.png]]
 (注意有深浅两条线，深虚线指向父对象的 `kobject` 成员，浅虚线指向父对象)
 
-#### 16.2.2 kset
+### 17.2.2 kset
 
 kset有如后续子章节所示的常用接口。
 
-##### 16.2.2.1 kset的普通初始化和设置接口
+#### 17.2.2.1 kset的普通初始化和设置接口
 
 ```C
 // 一次性完成 `kset` 的分配、初始化、添加到 sysfs：
@@ -4391,7 +4391,7 @@ void kset_put(struct kset *k);
 注：
 - 由于 `kset` 内嵌了 `kobject` ，因此为 `kset` 设置名字的方法依旧使用 `kobject` 对应的方法。
 
-##### 16.2.2.2 将kobject添加到内核模型中(sysfs和kset中)
+#### 17.2.2.2 将kobject添加到内核模型中(sysfs和kset中)
 
 函数原型：
 
@@ -4450,7 +4450,7 @@ if (ret) {
 注：
 - 执行本步骤<font color="#c00000">之前</font>，<font color="#c00000">需要手动配置</font> `kobject` <font color="#c00000">中的</font> `kset` <font color="#c00000">成员</font>，随后在本步骤中才会向kset所维护的循环链表中添加元素。
 
-#### 16.2.3 子系统
+### 17.2.3 子系统
 
 在Linux内核中，若干kset聚类后被封装为一个"子系统"，例如"块设备子系统"、"总线子系统"、"设备分类子系统"等。
 
@@ -4470,7 +4470,7 @@ Linux的子系统通常会显示在sysfs的顶层(但不绝对)，例如上述�
 
 因此现在的子系统更是一个逻辑概念。
 
-### 16.3 kobj_type
+## 17.3 kobj_type
 
 上述的 `kobject` 和 `kset` 很好地处理了内核对象之间的层次关系。而 `kobject` 被设计用于嵌入各类具体的内核对象中，但上述设计并不负责实现各类内核对象的具体实现。
 各类 `kobject` 内核对象的具体实现被交由 `kobj_type` 进行管理，其定义如下：
@@ -4492,7 +4492,7 @@ struct kobj_type {
 };
 ```
 
-#### 16.3.1 属性
+### 17.3.1 属性
 
 正如前文章节所述，sysfs下绝大多数的文件夹是由kobject的层次结构决定(或者说文件夹反映了层次结构)。
 
@@ -4504,7 +4504,7 @@ struct kobj_type {
 	1. [[Linux驱动开发笔记#^dt7ny4|默认属性组]]：在kobject初始化时创建，不可动态增删
 	2. [[Linux驱动开发笔记#16 3 2 动态属性 dvhzcw|动态属性]]：在kobject运行时创建，可以动态增删
 
-##### 16.3.1.1 普通属性 ^6qh3el
+#### 17.3.1.1 普通属性 ^6qh3el
 
 <font color="#9bbb59">普通属性</font>：
 - <font color="#9bbb59">普通属性</font>对应普通的字符串属性，可以使用文本编码非文本信息进行传输。不过内核并未强制或检查实际传输的数据是文本还是二进制。<font color="#c00000">具体编码和解码分别通过</font> `show` <font color="#c00000">和</font> `store` <font color="#c00000">函数实现</font>，<span style="background:#fff88f"><font color="#c00000">这两个函数存储于</font></span> `kobject.ktype.sysfs_ops` <span style="background:#fff88f"><font color="#c00000">中</font></span>。服务普通属性的成员有：
@@ -4517,7 +4517,7 @@ struct kobj_type {
 	- `umode` ：默认权限，<font color="#c00000">会被上述</font> `is_visible` <font color="#c00000">覆盖</font>。
 		- 该设计并非冗余设计，在不需要动态权限或未提供 `is_visible` 时则可以直接使用静态权限。
 
-###### 16.3.1.1.1 普通属性的文本编解码接口(sysfs_ops)
+##### 17.3.1.1.1 普通属性的文本编解码接口(sysfs_ops)
 
 正如上一章节所述，`ktype.sysfs_ops` <font color="#c00000">仅服务于</font>普通属性。该数据结构的定义如下：
 
@@ -4535,7 +4535,7 @@ struct sysfs_ops {
 	- 如果输入的数据与预期不符，则应当返回一个负的错误码。
 - 其他若干注意点见后续章节。
 
-##### 16.3.1.2 二进制属性 ^fo54b5
+#### 17.3.1.2 二进制属性 ^fo54b5
 
 <font color="#9bbb59">二进制属性</font>：
 - <font color="#9bbb59">二进制属性</font>对应二进制数据。二进制属性的成员有：
@@ -4554,7 +4554,7 @@ struct sysfs_ops {
 3. 每次调用能操作的最大数据量是一页。
 4. 更多注意点见后续章节。
 
-#### 16.3.2 默认属性组 ^dt7ny4
+### 17.3.2 默认属性组 ^dt7ny4
 
 默认属性的最大特性是<span style="background:#fff88f"><font color="#c00000">其只能在kobject初始化时创建，不可动态增删</font></span>。这些属性由 `kobj_type` 中的 `default_groups` 成员记录：
 
@@ -4627,11 +4627,11 @@ struct attribute_group {
 注：
 1. 关于"默认属性组"，该属性组寄生于 `kobject.ktype.default_groups` 中，<span style="background:#fff88f"><font color="#c00000">并<u>仅能</u>在</font></span> `kobject` <span style="background:#fff88f"><font color="#c00000">初始化时注册</font></span>。<font color="#c00000">运行时注册需要依赖</font>[[Linux驱动开发笔记#^dvhzcw|动态属性]]<font color="#c00000">接口</font>。
 
-#### 16.3.3 动态属性 ^dvhzcw
+### 17.3.3 动态属性 ^dvhzcw
 
 正如上述章节所述，<span style="background:#fff88f"><font color="#c00000">默认属性仅能在初始化时被注册</font></span>，<font color="#c00000">无法在运行时动态创建</font>，<span style="background:#fff88f"><font color="#c00000">且严禁在运行时删除</font></span>(不过可以隐藏)。而动态属性可以满足上述需求，具体见子章节。
 
-##### 16.3.3.1 普通属性
+#### 17.3.3.1 普通属性
 
 ```C
 #include <linux/sysfs.h>
@@ -4645,7 +4645,7 @@ void sysfs_remove_file(struct kobject *kobj,
 在上述接口中需注意：
 1. 调用 `sysfs_remove_file` 后，sysfs中的入口会立即消失。<span style="background:#fff88f"><font color="#c00000">但是在这之前已经打开了该文件的程序依旧可以正常访问</font></span>，<span style="background:#fff88f"><font color="#c00000">因此在show和store函数中需要正确处理这种情况</font></span>。 ^rw06xj
 
-##### 16.3.3.2 二进制属性
+#### 17.3.3.2 二进制属性
 
 ```C
 #include <linux/sysfs.h>
@@ -4659,7 +4659,7 @@ void sysfs_remove_bin_file(struct kobject *kobj,
 注意：
 1. 同上一章节注意点1。
 
-#### 16.3.4 符号链接
+### 17.3.4 符号链接
 
 sysfs被设计为一个树结构，但是树形结构并不能满足所有需求，例如：
 	某个USB摄像头位于 `/sys/device` 目录下(例如 `/sys/device/.../usb1/1-1/1-1.2` 下)，但是处于设计便利性考虑，其依旧需要在 `/sys/class/video4linux/` 目录下暴露该摄像头从而方便用户态程序访问，而无须遍历复杂的目录结构。
@@ -4671,11 +4671,11 @@ int sysfs_create_link(struct kobject *kobj,
 				      struct kobject *target, const char *name);
 ```
 
-### 16.4 热拔插
+## 17.4 热拔插
 
 通常来说内核态程序(例如驱动、模块等)均可以调用 `kobject_event` 触发事件，但是在设计约束中需要遵循设备模型规范，避免破坏系统稳定性。
 
-#### 16.4.1 热拔插事件的触发
+### 17.4.1 热拔插事件的触发
 
 热拔插事件的触发使用 `kobject_uevent` 接口：
 
@@ -4721,11 +4721,11 @@ enum kobject_action {
 };
 ```
 
-#### 16.4.2 用户空间设备管理(udev、mdev)
+### 17.4.2 用户空间设备管理(udev、mdev)
 
 #TODO
 
-### 16.5 总线、设备和驱动程序 ^ygjg2l
+## 17.5 总线、设备和驱动程序 ^ygjg2l
 
 在上述的Linux字符设备中，我们似乎已经能够通过实现简单的 `cdev` 来实现字符设备的驱动了，而对于块设备等也可以按照此种方式解决。但是不妨思考下面的情况：
 - 某个设备需要依赖总线A，以及需要配置DMA、寄存器、引脚等信息。
@@ -4768,13 +4768,13 @@ Linux设备概览可见下图：
 1. <font color="#c00000">并不是所有的字符设备都符合该模型</font>，<font color="#c00000">简单的字符设备并不符合该模型</font>。
 2. 块设备符合该模型。
 
-#### 16.5.1 总线
+### 17.5.1 总线
 
 总线的主要职责有：
 - <font color="#c00000">负责设备与驱动匹配</font>：当设备或驱动注册时，总线尝试匹配并绑定二者。
 - 热拔插事件处理：
 
-##### 16.5.1.1 总线类型抽象(bus_type)
+#### 17.5.1.1 总线类型抽象(bus_type)
 
 <font color="#c00000">总线</font><span style="background:#fff88f"><font color="#c00000">类型</font></span>的数据结构定义如下，不过总线的具体实现对大多数驱动程序开发者并不必要。
 
@@ -4896,7 +4896,7 @@ struct bus_type {
 其他配置：
 - `need_parent_lock` ：指定在探测或移除设备时，是否需要锁定父设备的互斥量。
 
-###### 16.5.1.1.1 bus_type.drv_name ^4d2k0x
+##### 17.5.1.1.1 bus_type.drv_name ^4d2k0x
 
 该成员并非强制的，例如PCI总线中就未从该成员导入模板，而是用 `dev_set_name` 为设备设置名称时，使用了常量字符串的模板：
 
@@ -4911,7 +4911,7 @@ dev_set_name(&dev->dev, "%04x:%02x:%02x.%d", pci_domain_nr(bus),
 dev_set_name(&dev->dev, "usb%d", ...);
 ```
 
-###### 16.5.1.1.2 bus_type.match ^d8ytfa
+##### 17.5.1.1.2 bus_type.match ^d8ytfa
 
 正如该成员的类型定义所示：
 
@@ -5007,7 +5007,7 @@ static const struct pci_device_id *pci_match_device(struct pci_driver *drv,
 
 其直接将设备的ID与驱动所支持的ID进行匹配，当匹配到时则返回非零值。
 
-###### 16.5.1.1.3 bus_type.probe ^y39y0v
+##### 17.5.1.1.3 bus_type.probe ^y39y0v
 
 当上述 `match` 函数返回非零值时，内核会尝试调用总线的 `probe` 函数，在总线的 `probe` 函数中，会对设备进行总线层面的配置，并调用驱动对应的 `probe` 函数。<font color="#c00000">规定返回值为0时成功</font>，<font color="#c00000">负数时则失败</font>。
 
@@ -5048,7 +5048,7 @@ static int pci_device_probe(struct device *dev)
 }
 ```
 
-###### 16.5.1.1.4 总线属性 ^xdmvsy
+##### 17.5.1.1.4 总线属性 ^xdmvsy
 
 
 
@@ -5058,7 +5058,7 @@ static int pci_device_probe(struct device *dev)
 
 
 
-###### 16.5.1.1.5 总线的驱动匹配与加载
+##### 17.5.1.1.5 总线的驱动匹配与加载
 
 > 有时驱动程序探测顺序很重要，但内核并不总是有依赖关系信息，这意味着在它所依赖的资源可用之前，一些驱动程序会被探测。例如，SDHCI驱动器在初始化之前可能首先需要来自i2c GPIO控制器的GPIO线。如果所需的资源还不可用，驱动程序可以通过从其探测挂钩返回-EPROBE_DEFER来请求推迟探测
 
@@ -5066,7 +5066,7 @@ static int pci_device_probe(struct device *dev)
 
 
 
-##### 16.5.1.2 总线实例抽象()
+#### 17.5.1.2 总线实例抽象()
 
 
 
@@ -5074,9 +5074,9 @@ static int pci_device_probe(struct device *dev)
 
 
 
-#### 16.5.2 设备
+### 17.5.2 设备
 
-##### 16.5.2.1 设备对象的基本数据结构
+#### 17.5.2.1 设备对象的基本数据结构
 
 设备的数据结构定义如下：
 
@@ -5402,18 +5402,18 @@ struct device {
 - `bool dma_skip_sync:1`
 - `bool dma_iommu:1`
 
-##### 16.5.2.2 设备对象的基础API
+#### 17.5.2.2 设备对象的基础API
 
-###### 16.5.2.2.1 注册设备
-
-
-###### 16.5.2.2.2 删除设备
+##### 17.5.2.2.1 注册设备
 
 
-###### 16.5.2.2.3 
+##### 17.5.2.2.2 删除设备
 
 
-##### 16.5.2.3 高级设备与设备结构的嵌入
+##### 17.5.2.2.3 
+
+
+#### 17.5.2.3 高级设备与设备结构的嵌入
 
 如上述数据结构所示， `struct device` 仅仅表示了一个基础的、通用的数据结构。和其他基础结构一样， `struct device` 也经常嵌入高级结构表示高级设备。例如块设备、PCI设备、USB设备中都要嵌入该设备结构：
 
@@ -5446,7 +5446,7 @@ struct usb_device {
 
 在后续子章节中将<u>简单介绍</u>几个常用且重要的延伸高级设备，详细的讲解可见[[Linux设备模型]]。
 
-###### 16.5.2.3.1 平台设备
+##### 17.5.2.3.1 平台设备
 
 <font color="#9bbb59">平台设备</font>(<font color="#9bbb59">platform device</font>)，重点在于嵌软层面的"platform"。与PCI、USB设备不同的是，<font color="#9bbb59">平台设备</font>指的是<font color="#c00000">不通过任何总线</font>，<font color="#c00000">直接连接到处理器的一种设备</font>。
 
@@ -5458,9 +5458,9 @@ struct usb_device {
 
 相关使用和API可见：[[Linux设备模型#^wahyvw|平台设备]]
 
-#### 16.5.3 设备驱动程序
+### 17.5.3 设备驱动程序
 
-##### 16.5.3.1 设备驱动程序的基本数据结构
+#### 17.5.3.1 设备驱动程序的基本数据结构
 
 设备驱动程序的数据结构如下所示：
 
@@ -5582,7 +5582,7 @@ struct device_driver {
 - `coredump` ：用于在设备发生严重故障或需要调试时生成设备相关的核心转储(coredump)信息，在系统崩溃或主动触发调试时，收集设备特定的状态数据，以便后续分析故障原因。
 - `p` ：私有数据。
 
-#### 16.5.4 类
+### 17.5.4 类
 
 
 
@@ -5590,12 +5590,12 @@ struct device_driver {
 
 
 
-## 17 内存映射和DMA
+# 18 内存映射和DMA
 
 
 
 
-## 18 块设备驱动程序
+# 19 块设备驱动程序
 
 
 
