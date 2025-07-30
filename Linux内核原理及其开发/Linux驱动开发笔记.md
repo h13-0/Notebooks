@@ -5456,7 +5456,7 @@ struct usb_device {
 3. 在驱动开发时，其 `device.bus` 指向 `platform_bus_type`
 4. <u>通常</u>依赖设备树进行配置
 
-相关使用和API可见：[[平台设备]]
+相关使用和API可见：[[平台总线]]
 
 ### 17.5.3 设备驱动程序
 
