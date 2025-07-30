@@ -1580,7 +1580,8 @@ struct media_device_ops {
 ### 3.4.6 排空
 
 排空(Draining)状态通常发生在编码器或解码器的终止过程中，其与捕获设备终止过程的区别在于：
-- 用户发起捕获设备的终止时
+- 用户发起捕获设备的终止时，<font color="#c00000">用户通常不需要尚未处理完毕的帧</font>，<span style="background:#fff88f"><font color="#c00000">驱动通常也会将这些帧标记为错误帧</font></span>。
+- 而用户在发起编解码器的终止时，<font color="#c00000">用户往往是因为该视频片段已经完全提交给驱动</font>，<span style="background:#fff88f"><font color="#c00000">并且希望驱动能继续处理已经提交的帧</font></span>。
 
 
 ## 3.5 功能模型
