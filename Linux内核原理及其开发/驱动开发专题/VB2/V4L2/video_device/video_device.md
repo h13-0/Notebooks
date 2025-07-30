@@ -1802,7 +1802,21 @@ struct v4l2_m2m_ctx {
 	- 驱动访问：只读访问
 - `struct v4l2_m2m_queue_ctx cap_q_ctx` ：
 	- 功能含义：捕获队列上下文
-	- 驱动访问：驱动通过
+	- 驱动访问：驱动通过VB2接口进行访问
+- `struct v4l2_m2m_queue_ctx out_q_ctx` ：
+	- 功能含义：输出队列上下文
+	- 驱动访问：驱动通过VB2接口进行访问
+- `struct list_head queue` ：
+	- 功能含义：作业队列的链表头
+	- 驱动访问：
+- `unsigned long job_flags` ：
+	- 功能含义：作业队列状态标志，包含：
+		- `TRANS_QUEUED` ：作业已排队
+		- `TRANS_RUNNING` ：作业执行中
+		- `TRANS_ABORT` ：作业被终止
+- `wait_queue_head_t finished` ：
+	- 功能含义：作业完成等待队列
+	- 驱动访问：
 
 
 
