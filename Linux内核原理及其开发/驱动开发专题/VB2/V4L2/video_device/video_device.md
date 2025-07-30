@@ -1805,22 +1805,23 @@ struct v4l2_m2m_ctx {
 	- 驱动访问：只读访问
 - `struct v4l2_m2m_queue_ctx cap_q_ctx` ：
 	- 功能含义：捕获队列上下文
-	- 驱动访问：驱动通过VB2接口进行访问
+	- 驱动访问：驱动通过VB2接口进行访问其成员 `struct vb2_queue q` 
 - `struct v4l2_m2m_queue_ctx out_q_ctx` ：
 	- 功能含义：输出队列上下文
-	- 驱动访问：驱动通过VB2接口进行访问
+	- 驱动访问：驱动通过VB2接口进行访问其成员 `struct vb2_queue q` 
 - `struct list_head queue` ：
 	- 功能含义：作业队列的链表头
 	- 驱动访问：
 - `unsigned long job_flags` ：
-	- 功能含义：作业队列状态标志，包含：
-		- `TRANS_QUEUED` ：作业已排队
-		- `TRANS_RUNNING` ：作业执行中
-		- `TRANS_ABORT` ：作业被终止
+	- 功能含义：当前作业的状态标志
+		- 当用户态将一对缓冲区分别放到输入和输出队列时就构成了一个任务。
+		- 该标志包含：
+			- `TRANS_QUEUED` ：作业已排队
+			- `TRANS_RUNNING` ：作业执行中
+			- `TRANS_ABORT` ：作业被终止
 - `wait_queue_head_t finished` ：
-	- 功能含义：作业完成等待队列，通常挂有用户的 `poll` 等系统调用的等待线程。驱动调用 `v4l2_m2m_job_finish()` 后会执行唤醒。
-	- 驱动访问：
-
+	- 功能含义：作业完成等待队列，通常挂有用户的 `poll` 等系统调用的等待线程。
+	- 驱动访问：驱动调用 `v4l2_m2m_job_finish()` 后会间接执行唤醒。
 
 #### 3.5.1.4 M2M设备操作回调(v4l2_m2m_ops) ^r39fw1
 
