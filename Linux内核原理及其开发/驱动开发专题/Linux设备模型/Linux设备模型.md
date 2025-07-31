@@ -87,5 +87,10 @@ static const struct of_device_id uart_driver_ids[] = {
 
 ### 3.3.1 电源管理优先级 ^ce9oct
 
-如设备模型中所定义，包含新老电源管理接口在内，其共有如下的电源管理定义：
-
+对于一般的高级驱动模型，其往往提供了如下的电源管理接口：
+- 高级驱动模型： `struct xxx_driver`
+	- 直接定义的老式电源管理接口，如 `struct xxx_driver.suspend` 等
+	- 内嵌基础驱动模型的老式接口，如 `struct xxx_driver.driver.suspend` 等
+	- 内嵌基础驱动模型的现代管理接口：`struct xxx_driver.driver.pm` 
+其调用优先级如下：
+1. 如果有现代接口，则调用现代接口
