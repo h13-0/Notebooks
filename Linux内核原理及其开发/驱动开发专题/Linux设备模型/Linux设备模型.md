@@ -85,6 +85,7 @@ static const struct of_device_id uart_driver_ids[] = {
 ## 3.3 电源管理
 
 
-### 3.3.1 优先级
+### 3.3.1 电源管理优先级 ^ce9oct
 
+如设备模型中所定义，包含新老电源管理接口在内，其共有如下的电源管理定义：
 
