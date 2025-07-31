@@ -80,3 +80,11 @@ static const struct of_device_id uart_driver_ids[] = {
 
 
 ## 3.2 设备
+
+
+## 3.3 电源管理
+
+
+### 3.3.1 优先级
+
+
