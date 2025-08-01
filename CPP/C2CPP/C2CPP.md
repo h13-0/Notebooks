@@ -511,7 +511,7 @@ template<
 
 #### 4.2.2.2 常用方法
 
-###### 4.2.2.2.1.1 插入字符(insert)
+##### 4.2.2.2.1 插入字符(insert)
 
 插入多个指定字符：
 
@@ -572,7 +572,7 @@ basic_string& insert( size_type index, const StringViewLike& t,
                       size_type t_index, size_type count = npos );
 ```
 
-###### 4.2.2.2.1.2 删除字符(erase)
+##### 4.2.2.2.2 删除字符(erase)
 
 从指定引索开始删除至多指定数量的字符：
 
@@ -594,7 +594,7 @@ iterator erase( const_iterator position );
 iterator erase( const_iterator first, const_iterator last );
 ```
 
-###### 4.2.2.2.1.3 查询/修改元素(operator\[\])
+##### 4.2.2.2.3 查询/修改元素(operator\[\])
 
 通过index获取字符：
 
@@ -603,9 +603,9 @@ CharT& operator[]( size_type pos );
 const CharT& operator[]( size_type pos ) const;
 ```
 
-###### 4.2.2.2.1.4 访问指定位置的字符(at)
+##### 4.2.2.2.4 访问指定位置的字符(at)
 
-###### 4.2.2.2.1.5 查找字符串或字符(find)
+##### 4.2.2.2.5 查找字符串或字符(find)
 
 从指定位置开始查找子字符串：
 
@@ -632,7 +632,7 @@ size_type find( const StringViewLike& t,
                 size_type pos = 0 ) const noexcept(/* see below */);
 ```
 
-###### 4.2.2.2.1.6 获取c语言字符串版本指针(c_str)
+##### 4.2.2.2.6 获取c语言字符串版本指针(c_str)
 
 ```CPP
 const CharT* c_str() const;
@@ -643,11 +643,11 @@ const CharT* c_str() const;
 2. 在原字符串容量被修改前有效
 3. <font color="#c00000">不可通过该指针写入数据</font>(UB)
 
-###### 4.2.2.2.1.7 清空字符串(clear)
+##### 4.2.2.2.7 清空字符串(clear)
 
 
 
-###### 4.2.2.2.1.8 替换子字符串(replace)
+##### 4.2.2.2.8 替换子字符串(replace)
 
 需要注意，`replace` 是用于将字符串的指定区间替换为另一个字符串，而非字符或子字符串的匹配替换(该方法为 `std::replace` )。
 
