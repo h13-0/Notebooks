@@ -5062,7 +5062,7 @@ static int pci_device_probe(struct device *dev)
 
 
 
-
+驱动匹配机制的核心实现位于 `dd.c` 中的 `__device_attach` 函数
 
 
 
