@@ -5062,7 +5062,9 @@ static int pci_device_probe(struct device *dev)
 
 
 
-驱动匹配机制的核心实现位于 `dd.c` 中的 `__device_attach` 函数
+驱动匹配机制的核心实现位于 `dd.c` 中的 `__device_attach` 函数，其处理流程如下：
+1. 检测当前设备是否正在处理中或已从系统中删除(通过 `dev->p->dead` )，在该状态下对该设备的任何异步事件都应退出且不采取任何行动。
+2. 
 
 
 
