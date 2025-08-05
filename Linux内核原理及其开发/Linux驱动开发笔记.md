@@ -4919,7 +4919,12 @@ dev_set_name(&dev->dev, "usb%d", ...);
 int (*match)(struct device *dev, struct device_driver *drv);
 ```
 
-该函数会接收一个 `struct device` 实例和一个 `struct device_driver` 实例，用于检测这两个实例是否匹配。那么明显地，当一个总线上的新设备或新驱动程序被添加时，内核会一次或多次调用该函数。<span style="background:#fff88f"><font color="#c00000">当该函数返回非零值时表示匹配成功</font></span>。
+该函数会接收一个 `struct device` 实例和一个 `struct device_driver` 实例，用于检测这两个实例是否匹配。那么明显地，当一个总线上的新设备或新驱动程序被添加时，内核会一次或多次调用该函数。
+
+<span style="background:#fff88f"><font color="#c00000">该函数的返回值含义为</font></span>：
+- 返回值为正数：表示设备与驱动匹配成功
+- 返回值为零：表示设备与驱动不匹配
+- 返回值为负数：表示匹配过程中发生错误
 
 以PCI总线的 `match` 为例：
 
@@ -5072,10 +5077,10 @@ static int pci_device_probe(struct device *dev)
 	1. 增加父设备的PM引用
 	2. <font color="#c00000">遍历总线上所有驱动</font>并进行匹配(即遍历调用 `__device_attach_driver` 方法)：
 		1. 执行 `ret = drv->bus->match` ，且若：
-			1. 返回值(`ret`)为 ` 0 ` ，即匹配成功，并返回 ` 0 `
-			2. 返回值表示延迟探测，则将该设备加入延迟探测队列，并返回 `ret`
-			3. 返回值为<font color="#c00000">其他复值</font>，则向上返回 `ret`
-			4. 返回值大于0, 则检测驱动是否允许延迟探测、
+			1. 返回值(`ret`)为 ` 0 ` ，<font color="#c00000">表示不匹配</font>，向上返回 `0`
+			2. 返回值 `ret == -EPROBE_DEFER`，<font color="#c00000">表示延迟探测</font>，则将该设备加入延迟探测队列，并向上返回 ` ret `
+			3. 返回值为<font color="#c00000">其他负值</font>，<font color="#c00000">表示匹配发生错误</font>，则向上返回 `ret`
+			4. 返回值大于0，<font color="#c00000">表示匹配成功</font>，则检测驱动是否允许延迟探测、
 		2. 执行驱动的 `probe` 方法进行探测
 	3. 若同时满足<font color="#c00000">下方三个条件</font>：
 		- 所有驱动都无法完成匹配
@@ -5089,8 +5094,12 @@ static int pci_device_probe(struct device *dev)
 		1. 让设备进入空闲状态
 		2. 对父设备减少引用计数
 
-
-
+注：
+1. <font color="#c00000">对于步骤2中的"已分配驱动但未绑定驱动"的情况</font>，其可能的原因有：
+	- 手动绑定驱动
+	- 在步骤3.2.1.2中被判定为需要延迟探测
+	- 在步骤3.2.1.4中被判定为需要异步探测
+2. 
 
 
 
