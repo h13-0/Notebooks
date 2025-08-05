@@ -5078,10 +5078,11 @@ static int pci_device_probe(struct device *dev)
 	2. <font color="#c00000">遍历总线上所有驱动</font>并进行匹配(即遍历调用 `__device_attach_driver` 方法)：
 		1. 执行 `ret = drv->bus->match` ，且若：
 			1. 返回值(`ret`)为 ` 0 ` ，<font color="#c00000">表示不匹配</font>，向上返回 `0`
-			2. 返回值 `ret == -EPROBE_DEFER`，<font color="#c00000">表示延迟探测</font>，则将该设备加入延迟探测队列，并向上返回 ` ret `
+			2. 返回值 `ret == -EPROBE_DEFER`，<font color="#c00000">表示延迟探测</font>(通常是依赖的硬件未就绪)，则将该设备加入延迟探测队列，并向上返回 ` ret `
 			3. 返回值为<font color="#c00000">其他负值</font>，<font color="#c00000">表示匹配发生错误</font>，则向上返回 `ret`
-			4. 返回值大于0，<font color="#c00000">表示匹配成功</font>，则检测驱动是否允许延迟探测、
-		2. 执行驱动的 `probe` 方法进行探测
+			4. 返回值大于0，<font color="#c00000">表示匹配成功</font>，进行延迟探测策略检测()：
+				- 若
+		2. 执行驱动的 `probe` 方法进行探测，<font color="#c00000">若成功则完成匹配成功并绑定驱动和设备</font>
 	3. 若同时满足<font color="#c00000">下方三个条件</font>：
 		- 所有驱动都无法完成匹配
 		- 且允许异步探测(`allow_async`)
@@ -5089,7 +5090,7 @@ static int pci_device_probe(struct device *dev)
 	    则：
 		1. 打印调试信息
 		2. 增加设备引用计数
-		3. 标记 `async=true` 等待后续异步探测。
+		3. 标记 `async=true` 等待后续异步探测
 	4. 否则(不同时满足上述三个条件)：
 		1. 让设备进入空闲状态
 		2. 对父设备减少引用计数
@@ -5099,7 +5100,11 @@ static int pci_device_probe(struct device *dev)
 	- 手动绑定驱动
 	- 在步骤3.2.1.2中被判定为需要延迟探测
 	- 在步骤3.2.1.4中被判定为需要异步探测
-2. 
+2. `__device_attach` 函数的返回值：
+	- 为0时表示未匹配或匹配失败，<font color="#c00000">后续会继续遍历下一个驱动</font>
+	- 为1时表示匹配成功且完成设备-驱动绑定，<font color="#c00000">后续结束遍历</font>
+	- 为负值时表示发生错误，<font color="#c00000">后续停止遍历并返回错误</font>。其中：
+		- `-EPROBE_DEFER` 表示需要延迟探测
 
 
 
