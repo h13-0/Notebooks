@@ -1053,13 +1053,13 @@ struct video_device {
 		- 功能含义：描述设备类型，详见[[video_device#^4ac1hk|设备类型枚举]]，例如：
 			- `VFL_TYPE_VIDEO` 视频输入输出设备(`/dev/videox`)
 			- `VFL_TYPE_RADIO` 无线电调谐器(`/dev/radiox`)
-		- 维护方：<font color="#c00000">驱动必须配置</font>
+		- 维护方：通常由驱动在注册 `video_device` 时指定，也可以在注册前配置，并在注册时将对应的参数值指定为 `-1` 从而让v4l2使用该结构体的值
 	- `enum vfl_devnode_direction vfl_dir`
 		- 功能含义：设备数据流向：
 			- `VFL_DIR_RX` 接收(即<span style="background:#fff88f"><font color="#c00000">内核->用户</font></span>，<font color="#c00000">需要以用户态视角来看</font>)
 			- `VFL_DIR_TX` 发送(即用户->内核)
 			- `VFL_DIR_M2M` 内存到内存(常用于硬件编码器)
-		- 维护方：<font color="#c00000">驱动必须配置</font>
+		- 维护方：<font color="#c00000">通常由驱动在注册驱动</font>
 	- `int minor` 
 		- 功能含义：设备节点的次设备号，即 `/dev/videoX` 中的 `X` 。与V4L2子设备类型相关(例如 `struct video_device` 等)
 		- 维护方：V4L2框架自动配置，初始化为 `-1` ，注册设备时填充。
