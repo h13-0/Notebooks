@@ -5627,6 +5627,17 @@ struct device_driver {
 - `coredump` ：用于在设备发生严重故障或需要调试时生成设备相关的核心转储(coredump)信息，在系统崩溃或主动触发调试时，收集设备特定的状态数据，以便后续分析故障原因。
 - `p` ：私有数据。
 
+##### 17.5.3.1.1 device_driver.probe
+
+probe函数表示对指定设备进行探测，其返回值定义如下：
+- <font color="#c00000">成功时返回</font> `0`，设备成功初始化
+- <font color="#c00000">失败时返回值负的错误码</font>，常用值有：
+	- `-ENOMEM` ：内存不足
+	- `-EINVAL` ：无效参数
+	- `-ENODEV` ：设备不存在或不支持
+	- `-EBUSY` ：请求的资源已被占用
+	- `-EPROBE_DEFER` ：<font color="#c00000">表示请求延迟探测</font>
+
 ### 17.5.4 类
 
 
