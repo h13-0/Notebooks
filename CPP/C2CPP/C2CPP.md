@@ -22,6 +22,13 @@ number headings: auto, first-level 1, max 6, 1.1
 
 #### 3.1.1.1 对象的构造
 
+C++中提供了如下几种构造方式：
+1. 
+
+
+
+
+
 此外，需要额外说明的是在C++中规定：<span style="background:#fff88f"><font color="#c00000">任何可以被解析为函数声明的代码都会被解析为函数声明</font></span>。因此在类的定义中，有如下注意事项：
 
 ```CPP
