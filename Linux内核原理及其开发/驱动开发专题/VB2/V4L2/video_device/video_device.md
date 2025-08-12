@@ -1597,6 +1597,7 @@ V4L2的内存到内存设备模型<span style="background:#fff88f"><font color="
 - 视频格式转换：
 	- 视频编解码器，例如：
 		- H.264编码器，其输入为普通的 `YUV` 格式的帧，输出为 `H264` 的视频帧
+	- 虚拟摄像头，例如 `v4l2loopback` 
 - 图像处理设备
 等，此类设备通常涉及视频编解码、图像缩放、色彩空间转换等。<span style="background:#fff88f"><font color="#c00000">不适用于</font></span>视频输出设备、视频生成设备等。
 
@@ -1607,7 +1608,9 @@ V4L2的内存到内存设备模型<span style="background:#fff88f"><font color="
 	1. <font color="#c00000">该对象没有嵌入</font> `struct device` 
 	2. <font color="#c00000">该对象不会注册到sysfs中</font>
 	`v4l2_m2m_dev` <font color="#c00000">应当属于<u>M2M设备上下文</u></font>
-2. 注意区分：
+2. `v4l2_m2m_dev` 独立于 `video_device` ，其允许多个 `video_device` 共享同一个m2m设备(尽管一般不这么做)：
+	- <font color="#c00000">绑定时机并不在</font>m2m实例化或 `video_device` <font color="#c00000">注册时绑定</font>，其在 `video_device` 被打开时，
+3. 注意区分：
 	1. `v4l2_m2m_dev` 为M2M设备上下文：
 		- 每个物理M2M设备只有一个 `v4l2_m2m_dev` 实现
 		- 通常在驱动程序的 `probe` 中通过 `v4l2_m2m_init` 创建
@@ -1735,7 +1738,6 @@ struct v4l2_m2m_dev {
 	- `struct media_intf_devnode *intf_devnode`
 		- 功能含义：控制M2M设备的接口节点
 		- 维护方：使用媒体控制器功能时由驱动设置
-
 
 #### 3.5.1.3 M2M上下文实例 ^3axphz
 
