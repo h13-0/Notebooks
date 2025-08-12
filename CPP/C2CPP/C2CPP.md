@@ -40,6 +40,12 @@ ClassName obj(123);
 ClassName obj{};
 ```
 
+#### 3.1.1.2 struct与class ^of8se6
+
+在C++中，<font color="#c00000">struct与class几乎完全一致</font>，其区别仅在于：
+- class中默认成员访问权限和继承权限为 `private` ，struct中默认成员访问权限和继承权限为 `public` 
+而使用 `struct` 可以很方便的实现[[面相对象的程序设计#^vuawz5|聚合初始化]]功能，而该功能又可以让struct像C语言中的struct一样被简单定义。
+
 ### 3.1.2 重载运算符
 
 #### 3.1.2.1 基本定义
