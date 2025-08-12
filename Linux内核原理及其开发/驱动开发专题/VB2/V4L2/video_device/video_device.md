@@ -1602,11 +1602,25 @@ V4L2的内存到内存设备模型<span style="background:#fff88f"><font color="
 
 因此，V4L2的基本模型包含了一进一出两个数据队列，并为该模型提供了若干通用机制。
 
-
 需要注意：
 1. 与 `video_device` 和 `v4l2_device` 不同的是，`v4l2_m2m_dev` <span style="background:#fff88f"><font color="#c00000">并不是设备</font></span>：
 	1. <font color="#c00000">该对象没有嵌入</font> `struct device` 
 	2. <font color="#c00000">该对象不会注册到sysfs中</font>
+	`v4l2_m2m_dev` <font color="#c00000">应当属于<u>M2M设备上下文</u></font>
+2. 注意区分：
+	1. `v4l2_m2m_dev` 为M2M设备上下文：
+		- 每个物理M2M设备只有一个 `v4l2_m2m_dev` 实现
+		- 通常在驱动程序的 `probe` 中通过 `v4l2_m2m_init` 创建
+		- 不直接与用户交互，而是通过 `video_device` 和 `v4l2_m2m_ctx` 间接交互
+		- 其负责管理M2M设备的资源，包括：
+			- 作业队列
+			- 管理多个用户上下文
+			- 提供硬件回调的注册
+	2. `v4l2_m2m_ctx` 为用户上下文：
+		- M2M设备的每次打开都会有一个 `v4l2_m2m_ctx` 实例
+		- 通常在驱动程序的 `open` 回调中通过 `v4l2_m2m_ctx_init` 创建
+
+
 
 #### 3.5.1.1 M2M模型及机制
 
