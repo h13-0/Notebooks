@@ -1609,7 +1609,7 @@ V4L2的内存到内存设备模型<span style="background:#fff88f"><font color="
 	2. <font color="#c00000">该对象不会注册到sysfs中</font>
 	`v4l2_m2m_dev` <font color="#c00000">应当属于<u>M2M设备上下文</u></font>
 2. `v4l2_m2m_dev` 独立于 `video_device` ，其允许多个 `video_device` 共享同一个m2m设备(尽管一般不这么做)：
-	- <font color="#c00000">绑定时机并不在</font>m2m实例化或 `video_device` <font color="#c00000">注册时绑定</font>，其在 `video_device` 被打开时，
+	- <font color="#c00000">关联时机并不在</font>m2m实例化或 `video_device` <font color="#c00000">注册时绑定</font>，<span style="background:#fff88f"><font color="#c00000">其在</font></span> `video_device` <span style="background:#fff88f"><font color="#c00000">被打开时</font></span>，<font color="#c00000">创建用户上下文实例时关联</font>。
 3. 注意区分：
 	1. `v4l2_m2m_dev` 为M2M设备上下文：
 		- 每个物理M2M设备只有一个 `v4l2_m2m_dev` 实现
