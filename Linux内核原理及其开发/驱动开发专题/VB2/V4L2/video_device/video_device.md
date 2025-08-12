@@ -1591,7 +1591,7 @@ struct media_device_ops {
 
 功能模型是指V4L2为一些常见特定设备需求所提供的通用机制。并不是所有的video_device都需要依赖对应的基础机制，使用上述的机制模型也可实现驱动功能。
 
-### 3.5.1 内存到内存设备(v4l2_m2m_dev) ^vvh0h5
+### 3.5.1 内存到内存模型(v4l2_m2m_dev) ^vvh0h5
 
 V4L2的内存到内存设备模型<span style="background:#fff88f"><font color="#c00000">适用于一进一出或多进多出</font></span>的<font color="#c00000">视频转换设备</font>，例如：
 - 视频格式转换：
@@ -1602,9 +1602,15 @@ V4L2的内存到内存设备模型<span style="background:#fff88f"><font color="
 
 因此，V4L2的基本模型包含了一进一出两个数据队列，并为该模型提供了若干通用机制。
 
-#### 3.5.1.1 M2M设备模型及机制
 
-V4L2 M2M设备的基本模型如下图([[V4L2_M2M设备.drawio.svg]])所示：
+需要注意：
+1. 与 `video_device` 和 `v4l2_device` 不同的是，`v4l2_m2m_dev` <span style="background:#fff88f"><font color="#c00000">并不是设备</font></span>：
+	1. <font color="#c00000">该对象没有嵌入</font> `struct device` 
+	2. <font color="#c00000">该对象不会注册到sysfs中</font>
+
+#### 3.5.1.1 M2M模型及机制
+
+V4L2 M2M模型如[[V4L2_M2M设备.drawio.svg|下图]]所示：
 	![[V4L2_M2M设备.drawio.svg]]
 
 M2M内部使用了输入输出两个队列进行实现，因此其也拥有如下的与普通VB2设备相似的特性：
@@ -1690,7 +1696,7 @@ struct v4l2_m2m_dev {
 		- 功能含义：指向驱动实现的操作回调函数集的指针。
 			- 具体可见[[video_device#^r39fw1|m2m设备操作回调]]。
 			- 至少提供 `device_run` 回调。
-		- 维护方：<font color="#c00000">必须由驱动设置</font>。
+		- 维护方：<font color="#c00000">驱动必须在注册设备时传入该参数</font>(而非直接设置)
 - 媒体控制器相关成员：
 	- `struct media_entity *source` 
 		- 功能含义：输入数据源媒体的实例
@@ -1713,6 +1719,7 @@ struct v4l2_m2m_dev {
 	- `struct media_intf_devnode *intf_devnode`
 		- 功能含义：控制M2M设备的接口节点
 		- 维护方：使用媒体控制器功能时由驱动设置
+
 
 #### 3.5.1.3 M2M上下文实例 ^3axphz
 
