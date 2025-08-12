@@ -1908,6 +1908,15 @@ struct v4l2_m2m_ops {
 ##### 3.5.1.6.1 初始化M2M设备
 
 
-```
-v4l2_m2m_init
+```C
+/**
+ * v4l2_m2m_init() - initialize per-driver m2m data
+ *
+ * @m2m_ops: pointer to struct v4l2_m2m_ops
+ *
+ * Usually called from driver's ``probe()`` function.
+ *
+ * Return: returns an opaque pointer to the internal data to handle M2M context
+ */
+struct v4l2_m2m_dev *v4l2_m2m_init(const struct v4l2_m2m_ops *m2m_ops);
 ```
