@@ -1920,3 +1920,7 @@ struct v4l2_m2m_ops {
  */
 struct v4l2_m2m_dev *v4l2_m2m_init(const struct v4l2_m2m_ops *m2m_ops);
 ```
+
+该函数：
+- 参数为驱动实现的M2M回调
+- 返回值为指针，但是并不能简单的使用 `==NULL` 判定是否成功，其需要使用 `IS_ERR` 宏进行判定
