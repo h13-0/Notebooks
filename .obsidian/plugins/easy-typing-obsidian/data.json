@@ -11,7 +11,7 @@
   "ChineseEnglishSpace": false,
   "ChineseNumberSpace": false,
   "EnglishNumberSpace": false,
-  "ChineseNoSpace": true,
+  "ChineseNoSpace": false,
   "QuoteSpace": true,
   "PunctuationSpace": false,
   "AutoCapital": false,
