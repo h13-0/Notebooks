@@ -10,8 +10,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
 
-# 配置日志
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# 配置日志将在main函数中根据命令行参数完成
 logger = logging.getLogger(__name__)
 
 
@@ -177,7 +176,37 @@ def main():
                         help='Path to save the statistics chart')
     parser.add_argument('--cache', type=str, default='./statistics.json',
                         help='Path to statistics cache file')
+    # 添加日志路径参数
+    parser.add_argument('--log', type=str, default=None,
+                        help='Path to log file (appended mode)')
     args = parser.parse_args()
+
+    # 配置日志
+    log_format = '%(asctime)s - %(levelname)s - %(message)s'
+    if args.log:
+        # 确保日志目录存在
+        log_dir = os.path.dirname(args.log)
+        if log_dir and not os.path.exists(log_dir):
+            os.makedirs(log_dir, exist_ok=True)
+        # 配置文件日志（追加模式）
+        logging.basicConfig(
+            level=logging.INFO,
+            format=log_format,
+            handlers=[
+                logging.FileHandler(args.log, mode='a', encoding='utf-8'),
+                logging.StreamHandler()
+            ]
+        )
+    else:
+        # 只配置控制台日志
+        logging.basicConfig(
+            level=logging.INFO,
+            format=log_format,
+            handlers=[logging.StreamHandler()]
+        )
+    
+    logger.info(f"Starting repository statistics analysis")
+    logger.info(f"Command line arguments: {args}")
 
     # 初始化仓库
     repo_path = "./Notebooks"
@@ -239,7 +268,10 @@ def main():
         daily_commit_count[commit_date] += 1
     
     # 生成图表
-    plot_repo_stats(daily_line_count, daily_word_count, daily_commit_count, args.output)
+    if args.output:
+        plot_repo_stats(daily_line_count, daily_word_count, daily_commit_count, args.output)
+    else:
+        logger.warning("No output path specified, skipping chart generation")
 
 
 if __name__ == "__main__":
