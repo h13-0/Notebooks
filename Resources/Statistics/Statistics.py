@@ -114,10 +114,10 @@ def plot_repo_stats(daily_line_count, daily_word_count, daily_commit_count,
     ax1.set_xlim(start_date, end_date + (end_date - start_date) * 0.05)
     ax1.set_ylim(0, max(list(daily_word_count.values())) * 1.1)
     
-    # 提交次数曲线
+    # 提交次数曲线 - 改为填充区域
     ax2 = ax1.twinx()
-    line3 = ax2.plot(date_range, commit_counts, 'r-', label='commits per day', 
-                     linewidth=linewidth, alpha=0.7)
+    # 使用fill_between代替plot，创建与x轴之间的填充区域
+    ax2.fill_between(date_range, commit_counts, 0, color='red', alpha=0.2, label='commits per day')
     
     ax2.set_ylabel('Commits per Day', color='r')
     ax2.tick_params(axis='y', labelcolor='r')
@@ -131,9 +131,16 @@ def plot_repo_stats(daily_line_count, daily_word_count, daily_commit_count,
     plt.xticks(rotation=45)
     
     # 添加图例和网格
-    lines = line1 + line2 + line3
+    # 获取所有图例元素
+    lines = line1 + line2
     labels = [l.get_label() for l in lines]
-    ax1.legend(lines, labels, loc='upper left')
+    # 添加填充区域的图例（使用Patch）
+    from matplotlib.patches import Patch
+    patch = Patch(facecolor='red', alpha=0.4, label='commits per day')
+    handles = lines + [patch]
+    labels.append('commits per day')
+    
+    ax1.legend(handles, labels, loc='upper left')
     ax1.grid(True, linestyle='--', alpha=0.5)
     
     plt.title('Repository Statistics Over Time')
