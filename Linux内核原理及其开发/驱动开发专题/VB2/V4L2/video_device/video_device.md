@@ -1103,19 +1103,19 @@ struct video_device {
 		- 功能含义：内嵌的字符设备对象，用于在文件系统中暴露 `/dev/videoX`
 		- 维护方：V4L2框架自动创建。
 	- `const struct v4l2_file_operations *fops`
-		- 功能含义：文件操作接口。该成员为 `v4l2_file_operations` 类型。
+		- 功能含义：文件操作接口。
 			- 相比于普通的 `file_operations` 类型简化了相当多的成员(如 `flush` 、 `fsyns` 、 `read_iter` 等)
-			- 具体可见
-		- 维护方：<font color="#c00000">驱动必须定义和提供</font>，
+		- 维护方：<font color="#c00000">驱动必须定义和提供</font>，其中：
 			- <font color="#c00000">必须自行实现的成员有</font>：
 				- `owner` ：通常指向 `THIS_MODULE`
 				- `open` ：设备打开函数
 				- `release` ：设备释放函数
-			- 可直接使用helpers的
-				- `unlocked_ioctl` ：通常指向V4L2实现的 `video_ioctl2`
+			- 可直接使用helpers的有：
+				- `unlocked_ioctl` ：通常指向V4L2实现的 `video_ioctl2` 
+				- `compat_ioctl32` 
 				- `mmap` ：
 	- `const struct v4l2_ioctl_ops *ioctl_ops`
-		- 功能含义：ioctl操作函数表，定义设备支持的 `ioctl` 命令
+		- 功能含义：ioctl操作函数表，定义设备支持的 `ioctl` 命令，具体可见章节：[[video_device#^r8lfyg|v4l2_ioctl_ops]]。
 		- 维护方：<font color="#c00000">驱动必须提供至少如下两个基本命令</font>
 			- `vidioc_querycap` ：查询设备能力(`VIDIOC_QUERYCAP`)
 			- `vidioc_g_fmt_vid_*` ：获取输入或输出设备的当前数据格式(`VIDIOC_G_FMT`)
