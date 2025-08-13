@@ -1506,9 +1506,7 @@ struct media_device_ops {
 
 #### 3.4.4.1 v4l2_ioctl_ops ^r8lfyg
 
-
-
-其中：
+该结构体包含了众多ioctl回调接口(具体可见源码定义)，其主要包括：
 - 设备能力和基本信息查询：
 	- `int (*vidioc_querycap)(struct file *file, void *fh, struct v4l2_capability *cap)` ：
 		- 功能含义：用户空间调用 `VIDIOC_QUERYCAP` 时触发回调
