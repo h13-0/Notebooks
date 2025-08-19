@@ -1340,7 +1340,7 @@ struct v4l2_fh {
 		- 对于非M2M设备，保持为 `NULL` 即可。
 
 需要注意的是：
-- <font color="#c00000">V4L2并未提供统一的video_device的上下文实例定义</font>，<font color="#c00000">在V4L2内部只需要操作</font>[[video_device#^w7oims|]]    [[V4L2概述#3 2 4 通用文件句柄管理 v4l2_fh kyd4a1|通用文件管理句柄]]对象，即 `struct v4l2_fh` 。 ^3kv1kh
+- <font color="#c00000">V4L2并未提供统一的video_device的上下文实例定义</font>，<font color="#c00000">在V4L2内部只需要操作</font>[[video_device#^kyd4a1|通用文件管理句柄]]对象，即 `struct v4l2_fh` 。 ^3kv1kh
 - 驱动开发者应当根据实际需求自行设计上下文实例，例如添加互斥锁、队列、若干设备参数等。
 
 例如 `vim2m` 设备中的上下文实例定义为：
