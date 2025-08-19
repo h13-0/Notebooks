@@ -1971,6 +1971,43 @@ void v4l2_m2m_job_finish(struct v4l2_m2m_dev *m2m_dev,
 ```
 
 该函数：
-- 语义为：通知M2M框架当前硬件作业已完成，框架可以执行清理并调度下一个作业
+- 语义为：
+	- 通知M2M框架当前硬件作业已完成，框架可以执行清理并调度下一个作业
+	- 其必须在 `device_run` 调用完成后被调用(<font color="#c00000">也不可在</font> `device_run` <font color="#c00000">中直接调用</font>)
+	- 随后框架会执行后续清理任务，并调度下一个作业，具体包含：
+		1. 从运行队列移除当前作业
+		2. 减少 `m2m_ctx` 引用计数
+- 注：
+	- 该函数不应当用于支持保持捕获缓冲区的驱动程序，
 
+##### 3.5.1.6.3 完成对缓冲区的处理并通知m2m作业完成
+
+```C
+/**
+ * v4l2_m2m_buf_done_and_job_finish() - return source/destination buffers with
+ * state and inform the framework that a job has been finished and have it
+ * clean up
+ *
+ * @m2m_dev: opaque pointer to the internal data to handle M2M context
+ * @m2m_ctx: m2m context assigned to the instance given by struct &v4l2_m2m_ctx
+ * @state: vb2 buffer state passed to v4l2_m2m_buf_done().
+ *
+ * Drivers that set V4L2_BUF_CAP_SUPPORTS_M2M_HOLD_CAPTURE_BUF must use this
+ * function instead of job_finish() to take held buffers into account. It is
+ * optional for other drivers.
+ *
+ * This function removes the source buffer from the ready list and returns
+ * it with the given state. The same is done for the destination buffer, unless
+ * it is marked 'held'. In that case the buffer is kept on the ready list.
+ *
+ * After that the job is finished (see job_finish()).
+ *
+ * This allows for multiple output buffers to be used to fill in a single
+ * capture buffer. This is typically used by stateless decoders where
+ * multiple e.g. H.264 slices contribute to a single decoded frame.
+ */
+void v4l2_m2m_buf_done_and_job_finish(struct v4l2_m2m_dev *m2m_dev,
+				      struct v4l2_m2m_ctx *m2m_ctx,
+				      enum vb2_buffer_state state);
+```
 
