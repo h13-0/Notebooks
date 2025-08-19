@@ -507,7 +507,28 @@ TODO: 更新dkms等无需原码的编译方式
 #### 5.3.7.1 使用内核源码构建
 
 
+
+
+
+
 #### 5.3.7.2 使用内核头文件构建
+
+对于大多数内核模块，其均可以使用内核头文件进行构建。
+
+
+```Makefile
+obj-m += hello.o
+
+KDIR := /lib/modules/$(shell uname -r)/build
+PWD := $(shell pwd)
+
+all:
+	make -C $(KDIR) M=$(PWD) modules
+
+clean:
+	make -C $(KDIR) M=$(PWD) clean
+```
+
 
 
 TODO
