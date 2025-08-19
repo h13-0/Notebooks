@@ -1261,7 +1261,7 @@ static inline const char *video_device_node_name(struct video_device *vdev)
 
 ### 3.3.3 模型基本机制
 
-#### 3.3.3.1 V4L2上下文实例
+#### 3.3.3.1 V4L2上下文实例 ^kyd4a1
 
 V4L2为每个可以被打开的文件节点(或设备)设计了一个统一的上下文实例，其用于记录每一个用户态打开后的句柄。其基本数据结构为：
 
@@ -1340,7 +1340,7 @@ struct v4l2_fh {
 		- 对于非M2M设备，保持为 `NULL` 即可。
 
 需要注意的是：
-- <font color="#c00000">V4L2并未提供统一的video_device的上下文实例定义</font>，<font color="#c00000">在V4L2内部只需要操作</font>[[V4L2概述#3 2 4 通用文件句柄管理 v4l2_fh kyd4a1|通用文件管理句柄]]对象，即 `struct v4l2_fh` 。 ^3kv1kh
+- <font color="#c00000">V4L2并未提供统一的video_device的上下文实例定义</font>，<font color="#c00000">在V4L2内部只需要操作</font>[[video_device#^w7oims|]]    [[V4L2概述#3 2 4 通用文件句柄管理 v4l2_fh kyd4a1|通用文件管理句柄]]对象，即 `struct v4l2_fh` 。 ^3kv1kh
 - 驱动开发者应当根据实际需求自行设计上下文实例，例如添加互斥锁、队列、若干设备参数等。
 
 例如 `vim2m` 设备中的上下文实例定义为：
@@ -1497,14 +1497,10 @@ struct media_device_ops {
 	- 标准语义：
 		- 该函数不能失败(因为已经被 `req_validate` 验证)
 
-
-### 3.4.3 通用文件句柄管理(v4l2_fh) ^kyd4a1
-
-
-### 3.4.4 v4l2-ioctl
+### 3.4.3 v4l2-ioctl
 
 
-#### 3.4.4.1 v4l2_ioctl_ops ^r8lfyg
+#### 3.4.3.1 v4l2_ioctl_ops ^r8lfyg
 
 该结构体包含了众多ioctl回调接口(具体可见源码定义)，其主要包括：
 - 设备能力和基本信息查询：
@@ -1561,7 +1557,7 @@ struct media_device_ops {
 	- 
 	等。
 
-### 3.4.5 切片特性 ^3vrjl8
+### 3.4.4 切片特性 ^3vrjl8
 
 对于输出设备而言，其一个常见的特性为切片特性，其支持将一个完整帧拆分为若干切片进行分段提交。该特性的几个常见用途有：
 - 对于编码器，部分视频流格式支持将同一个帧切分为多个切片并行处理，可利用该特性提高硬件的并行效率。
@@ -1577,7 +1573,7 @@ struct media_device_ops {
 切片的具体切分方法
 
 
-### 3.4.6 排空 ^u38eft
+### 3.4.5 排空 ^u38eft
 
 排空(Draining)状态通常发生在编码器或解码器的终止过程中，其与捕获设备终止过程的区别在于：
 - 用户发起捕获设备的终止时，<font color="#c00000">用户通常不需要尚未处理完毕的帧</font>，<span style="background:#fff88f"><font color="#c00000">驱动通常也会将这些帧标记为错误帧</font></span>。
