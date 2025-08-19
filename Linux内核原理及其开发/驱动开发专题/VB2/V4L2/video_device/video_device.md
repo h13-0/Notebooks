@@ -2017,4 +2017,4 @@ void v4l2_m2m_buf_done_and_job_finish(struct v4l2_m2m_dev *m2m_dev,
 				      enum vb2_buffer_state state);
 ```
 
-其支持
+其主要用于支持<u>保持捕获缓冲区机制</u>的驱动程序，即支持
