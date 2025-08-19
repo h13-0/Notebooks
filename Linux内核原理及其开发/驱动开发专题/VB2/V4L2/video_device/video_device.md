@@ -1583,6 +1583,14 @@ struct media_device_ops {
 1. 用户通过命令发起排空(`V4L2_ENC_CMD_STOP`)
 2. 当驱动处理完所有帧后，驱动发起 `V4L2_EVENT_EOS` (End Of Stream)事件
 
+### 3.4.6 多输入单输出机制 ^10xf45
+
+多输入单输出机制主要有如下的使用情况：
+1. [[video_device#^3vrjl8|切片处理]]，多个切片处理为一个输出帧
+2. 视频流编码的帧间压缩，例如H264的 `参考帧 + 当前帧 -> 压缩帧` 
+3. 图像合成，例如 `背景层 + 前景层 + 遮罩层 -> 合成图像` 
+4. 视频稳定器，例如 `当前帧 - 运动矢量 -> 稳定帧`  
+5. HDR处理，例如 `短曝光帧 + 长曝光帧 -> HDR 帧` 
 
 ## 3.5 功能模型
 
@@ -2017,4 +2025,6 @@ void v4l2_m2m_buf_done_and_job_finish(struct v4l2_m2m_dev *m2m_dev,
 				      enum vb2_buffer_state state);
 ```
 
-其主要用于支持<u>保持捕获缓冲区机制</u>的驱动程序，即支持
+
+
+[[video_device#^10xf45]]
