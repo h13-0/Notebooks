@@ -1948,8 +1948,29 @@ struct v4l2_m2m_dev *v4l2_m2m_init(const struct v4l2_m2m_ops *m2m_ops);
 - 参数为驱动实现的M2M回调
 - 返回值为指针，但是并不能简单的使用 `==NULL` 判定是否成功，其需要使用 `IS_ERR` 宏进行判定
 
-##### 3.5.1.6.2 队列完成
+##### 3.5.1.6.2 通知m2m作业完成
 
+```C
+/**
+ * v4l2_m2m_job_finish() - inform the framework that a job has been finished
+ * and have it clean up
+ *
+ * @m2m_dev: opaque pointer to the internal data to handle M2M context
+ * @m2m_ctx: m2m context assigned to the instance given by struct &v4l2_m2m_ctx
+ *
+ * Called by a driver to yield back the device after it has finished with it.
+ * Should be called as soon as possible after reaching a state which allows
+ * other instances to take control of the device.
+ *
+ * This function has to be called only after &v4l2_m2m_ops->device_run
+ * callback has been called on the driver. To prevent recursion, it should
+ * not be called directly from the &v4l2_m2m_ops->device_run callback though.
+ */
+void v4l2_m2m_job_finish(struct v4l2_m2m_dev *m2m_dev,
+			 struct v4l2_m2m_ctx *m2m_ctx);
+```
 
+该函数：
+- 语义为：通知M2M框架当前硬件作业已完成，框架可以执行清理并调度下一个作业
 
 
