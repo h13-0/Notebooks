@@ -502,52 +502,28 @@ static int var_name __initdata = 0;
 ### 5.3.7 简单模块示例与编译
 
 进行内核模块编译时，通常有如下几种选择方式：
+1. 直接使用内核源码进行构建
+	- 优点：
+		1. 一定不存在模块代码与内核代码之间的兼容性问题
+		2. 可以根据需求开启部分内核功能，例如内存泄漏检测
+	- 缺点：
+		1. 内核编译极其浪费时间
+		2. 通常还需要用编译好的内核替换当前内核，模块使用的源码必须和当前内核一致
+		3. 可能因为内核配置不当存在性能问题
+		4. 即使只修改了其中一两个模块，但是在一定时间后也需要全量重新编译一遍内核
+2. 使用当前内核自带头文件进行构建
+	- 优点：
+		1. 构建速度快，性能与储存需求低
+	- 缺点：
+		1. 只能编译内核，而无法修改内核配置
+3. DKMS
 
-| 构建方式         | 优点            | 缺点                                           |
-| ------------ | ------------- | -------------------------------------------- |
-| 使用当前内核源码进行构建 | 一定不存在兼容性或意外问题 | 1. 内核编译及其浪费时间<br>2. 编译后还需要替换当前内核<br>3. ke ne |
-|              |               |                                              |
-|              |               |                                              |
-
-1. 直接使用内核源码进行构建，这种方式最安全
-2. 使用当前内核
-
-在为内核编写模块时，<span style="background:#fff88f"><font color="#c00000">一定要选择与目标系统相匹配的内核源码</font></span>，否则生成的模块无法使用。
-TODO: 更新dkms等无需原码的编译方式
 
 #### 5.3.7.1 使用内核源码构建
 
+各发行版修改后的内核源码拉取方式不一致，可见对应子章节，也可以直接使用主线内核。
 
-
-
-
-
-#### 5.3.7.2 使用内核头文件构建
-
-对于大多数内核模块，其均可以使用内核头文件进行构建，只需要使用如下的Makefile即可，其中 `target.o` 为源文件对应的中间文件。
-
-```Makefile
-obj-m += target.o
-
-KDIR := /lib/modules/$(shell uname -r)/build
-PWD := $(shell pwd)
-
-all:
-	make -C $(KDIR) M=$(PWD) modules
-
-clean:
-	make -C $(KDIR) M=$(PWD) clean
-```
-
-在进行驱动开发时，驱动会依赖一些linux的框架，例如摄像头驱动会依赖 `videobuf2` 相关的框架。而这些框架对应的模块通常需要手动加载到内核，这些模块其通常位于包 `linux-modules-extra-$(uname -r)` 中，通常系统会自带这些依赖的模块。若当系统未自带时可直接使用如下的命令进行安装：
-
-```Shell
-sudo apt-get install linux-modules-extra-$(uname -r)
-```
-
-#### 5.3.7.3 拉取当前系统内核源码
-
-##### 5.3.7.3.1 Ubuntu
+##### 5.3.7.1.1 Ubuntu
 
 Ubuntu可以使用 `apt` 和 `git` 两种方式获取源码，也可以使用当前系统配合主线版本内核进行编译。
 
@@ -624,7 +600,42 @@ git checkout FETCH_HEAD
 cp -v /boot/config-$(uname -r) .config
 ```
 
-#### 5.3.7.4 普通模块示例
+通常建议在学习开发Linux内核模块/驱动时使用自己的内核，除了方便版本匹配以外，还有更多的原因：
+	![[Linux驱动开发笔记#^daooag]]
+直接在内核源代码目录下执行：
+
+```Shell
+make modules
+make modules-install
+make install
+```
+
+随后重启，通常不建议卸载原内核，当内核配置出错无法启动后，可以在引导处切换内核。
+
+#### 5.3.7.2 使用内核头文件构建
+
+对于大多数内核模块，其均可以使用内核头文件进行构建，只需要使用如下的Makefile即可，其中 `target.o` 为源文件对应的中间文件。
+
+```Makefile
+obj-m += target.o
+
+KDIR := /lib/modules/$(shell uname -r)/build
+PWD := $(shell pwd)
+
+all:
+	make -C $(KDIR) M=$(PWD) modules
+
+clean:
+	make -C $(KDIR) M=$(PWD) clean
+```
+
+在进行驱动开发时，驱动会依赖一些linux的框架，例如摄像头驱动会依赖 `videobuf2` 相关的框架。而这些框架对应的模块通常需要手动加载到内核，这些模块其通常位于包 `linux-modules-extra-$(uname -r)` 中，通常系统会自带这些依赖的模块。若当系统未自带时可直接使用如下的命令进行安装：
+
+```Shell
+sudo apt-get install linux-modules-extra-$(uname -r)
+```
+
+#### 5.3.7.3 普通模块示例
 
 本实例为一个基础普通模块的示例。
 Linux已经在 `lib/test_module.c` 放置了一个基础的Hello World模块，其主要代码如下：
@@ -739,119 +750,7 @@ vermagic:       6.8.1+ SMP preempt mod_unload modversions
 注：
 1. 关于代码中的 `pr_fmt(fmt)` ：[[pr_fmt应用及原理解析]]
 
-##### 5.3.7.4.1 尝试修改vermagic(不推荐)
-
-在上述结果中可以明显地发现<font color="#c00000"><font color="#c00000">即使在下载时内核源码版本匹配</font></font>，<font color="#c00000">但是编译出来的模块的vermagic仍不匹配</font>。
-因此应当直接修改所下载的内核源码中 `include/linux/vermagic.h` 文件的 `vermagic` 定义。首先使用 `lsmod` 列出当前内核已加载的模块，并随便选取一个已加载的模块使用 `modinfo` 查看其模块信息：
-
-```Shell
-vermagic:       6.8.0-31-generic SMP preempt mod_unload modversions
-```
-
-然后查看 `include/linux/vermagic.h` 中的相关定义。
-
-```C
-/* Simply sanity version stamp for modules. */
-#ifdef CONFIG_SMP
-#define MODULE_VERMAGIC_SMP "SMP "
-#else
-#define MODULE_VERMAGIC_SMP ""
-#endif
-#ifdef CONFIG_PREEMPT_BUILD
-#define MODULE_VERMAGIC_PREEMPT "preempt "
-#elif defined(CONFIG_PREEMPT_RT)
-#define MODULE_VERMAGIC_PREEMPT "preempt_rt "
-#else
-#define MODULE_VERMAGIC_PREEMPT ""
-#endif
-#ifdef CONFIG_MODULE_UNLOAD
-#define MODULE_VERMAGIC_MODULE_UNLOAD "mod_unload "
-#else
-#define MODULE_VERMAGIC_MODULE_UNLOAD ""
-#endif
-#ifdef CONFIG_MODVERSIONS
-#define MODULE_VERMAGIC_MODVERSIONS "modversions "
-#else
-#define MODULE_VERMAGIC_MODVERSIONS ""
-#endif
-#ifdef RANDSTRUCT
-#include <generated/randstruct_hash.h>
-#define MODULE_RANDSTRUCT "RANDSTRUCT_" RANDSTRUCT_HASHED_SEED
-#else
-#define MODULE_RANDSTRUCT
-#endif
-
-#define VERMAGIC_STRING                                                 \
-        UTS_RELEASE " "                                                 \
-        MODULE_VERMAGIC_SMP MODULE_VERMAGIC_PREEMPT                     \
-        MODULE_VERMAGIC_MODULE_UNLOAD MODULE_VERMAGIC_MODVERSIONS       \
-        MODULE_ARCH_VERMAGIC                                            \
-        MODULE_RANDSTRUCT
-```
-
-发现是 `UTS_RELEASE` 字段不匹配，其定义与 `generated/utsrelease.h` 中，是自动生成的头文件。
-回到linux内核源代码根目录的 `Makefile` 文件，定位到两段关键代码：
-
-```Makefile
-VERSION = 6
-PATCHLEVEL = 8
-SUBLEVEL = 1
-EXTRAVERSION =
-NAME = Hurr durr I'ma ninja sloth
-```
-
-```Makefile
-# Read KERNELRELEASE from include/config/kernel.release (if it exists)
-KERNELRELEASE = $(call read-file, include/config/kernel.release)
-KERNELVERSION = $(VERSION)$(if $(PATCHLEVEL),.$(PATCHLEVEL)$(if $(SUBLEVEL),.$(SUBLEVEL)))$(EXTRAVERSION)
-```
-
-可发现将修改第一段的内核版本号即可，修改后如下。
-
-```Makefile
-VERSION = 6
-PATCHLEVEL = 8
-SUBLEVEL = 0
-EXTRAVERSION = -31-generic
-NAME = Hurr durr I'ma ninja sloth
-```
-
-最后的 `+` 号出现条件为：
-- 上次tag之后，<font color="#c00000">代码有所改动</font>
-- <font color="#c00000">并且</font>未定义 `LOCALVERSION` 
-因此直接定义 `LOCALVERSION` 为空即可。
-
-```Bash
-make LOCALVERSION= include/config/kernel.release
-```
-
-综上，当官方提供的内核源代码版本与实际内核不符时，应当：
-1. 修改根目录的 `Makefile` 中的版本号。
-2. 定义 `LOCALVERSION` 为空，<font color="#c00000">或删除</font> `scripts/setlocalversion` <font color="#c00000">中的加号</font>(<font color="#c00000">建议</font>)。
-修改后的vermagic信息为：
-
-```Shell
-vermagic:       6.8.0-31-generic SMP preempt mod_unload modversions
-```
-
-与系统中已加载的模块信息一致，但是此时加载仍然报错则证明内核源代码不匹，应当考虑编译安装当前有源代码的内核。
-
-
-##### 5.3.7.4.2 自行编译并安装内核(推荐)
-
-通常建议在学习开发Linux内核模块/驱动时使用自己的内核，除了方便版本匹配以外，还有更多的原因：
-	![[Linux驱动开发笔记#^daooag]]
-直接在内核源代码目录下执行：
-
-```Shell
-make modules
-make modules-install
-make install
-```
-
-随后重启，通常不建议卸载原内核，当内核配置出错无法启动后，可以在引导处切换内核。
-
-##### 5.3.7.4.3 测试内核模块
+##### 5.3.7.3.1 测试内核模块
 
 使用 `dmesg` 抓取当前日志：
 
@@ -913,7 +812,7 @@ CONFIG_MODULE_SIG=n
 - 若使用 `cat /proc/kmsg` 无输出，则可以使用 `lsof /proc/kmsg` 检查是否有进程在不停获取该文件输出
 - 若 `dmesg` 也无输出，则应当检查内核编译时是否开启 `CONFIG_PRINTK`
 
-#### 5.3.7.5 字符驱动模块示例
+#### 5.3.7.4 字符驱动模块示例
 
 见章节：[[Linux驱动开发笔记#5 7 字符设备的分配、注册与回收]]
 
