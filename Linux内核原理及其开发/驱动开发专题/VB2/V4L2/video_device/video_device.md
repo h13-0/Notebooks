@@ -1982,8 +1982,8 @@ void v4l2_m2m_job_finish(struct v4l2_m2m_dev *m2m_dev,
 		5. 当下一作业存在时，调度下一作业
 - 注：
 	- 该函数不应当用于支持<u>保持捕获缓冲区机制</u>的驱动程序，此类程序应当使用 `v4l2_m2m_buf_done_and_job_finish()` 
-	- 驱动调用该接口后，驱动不再拥有
-	- <font color="#c00000">该接口不负责标记缓冲区状态，需要驱动自行标记</font>
+	- <font color="#c00000">该接口不负责标记缓冲区状态</font>，<font color="#c00000">驱动需要在该接口调用前完成缓冲区标记</font>，<font color="#c00000">并准备释放缓冲区控制权</font>(即调用该接口后，驱动不应当再操作该缓冲区)
+	- 驱动调用该接口后，驱动不再拥有设备控制权(设备控制权按照上下文进行管理，同一时间只能有一个上下文拥有设备控制权)
 
 ##### 3.5.1.6.3 完成对缓冲区的处理并通知m2m作业完成
 
@@ -2016,3 +2016,4 @@ void v4l2_m2m_buf_done_and_job_finish(struct v4l2_m2m_dev *m2m_dev,
 				      enum vb2_buffer_state state);
 ```
 
+其支持
