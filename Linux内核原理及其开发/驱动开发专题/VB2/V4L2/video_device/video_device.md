@@ -1895,6 +1895,8 @@ struct v4l2_m2m_ops {
 其成员：
 - `void (*device_run)(void *priv)`
 	- 功能含义：驱动处理实际具体M2M任务的<font color="#c00000">入口</font>，<font color="#c00000">作业不需要在此回调返回前结束</font>(也就是说通常不把实际的任务放到这里)。
+	- 参数：
+		- `void *priv` ：
 		- 该函数需要从 `void *priv` 中找到 `v4l2_m2m_dev->curr_ctx` ，并从中找到当前实例正在处理的队列，并执行对应方法。
 	- 被执行时机(条件)，需要同时满足：
 		1. 已调用 `VIDIOC_STREAMON` 启动 `OUTPUT` 和 `CAPTURE` 队列
