@@ -3091,11 +3091,11 @@ void ssleep(unsigned int seconds);
 2. <font color="#c00000">定时器函数</font><span style="background:#fff88f"><font color="#c00000">默认</font></span><font color="#c00000">会在注册自己的CPU上重新运行</font>，这样可以尽可能保持缓存的局域性。****
 3. 即使在单处理器上，定时器也是竞态的潜在来源。
 
-### 10.4.1 内核定时器相关API
+### 10.4.1 内核定时器数据结构定义
 
-内核定时器相关API如下：
-- 数据结构定义：
-	```C
+内核定时器的数据结构定义如下：
+
+```C
 struct timer_list {
 	/*
 	 * All fields that change during normal runtime grouped to the
@@ -3110,11 +3110,26 @@ struct timer_list {
 	struct lockdep_map	lockdep_map;
 #endif
 };
-	```
-	- 其中，上述结构体中：
-		- `expires` 表示期望定时器执行时的 `jiffies` 值。
-		- `function` 为抵达 `jiffies` 值时被调用的函数。
-		- `function` 被调用时的参数为该定时器的指针，即内核调用时为 `timer.function(&timer)` 。
+```
+
+其中，上述结构体中：
+- `struct hlist_node entry` ：
+	- 功能含义：哈希链表节点，根据超时值(`expires`)进行hash
+	- 维护方：内核自动维护，驱动不可访问或修改
+- `unsigned long expires` ：
+	- 功能含义：定时器超时时的 `jiffies` 值
+	- 维护方：
+		- 驱动在初始化之前必须配置，配置后不允许直接修改
+		- 内核可能会对临近超时的定时器进行一些优化和分组，但是驱动在此阶段只读
+- `expires` 表示期望定时器执行时的 `jiffies` 值。
+- `function` 为抵达 `jiffies` 值时被调用的函数。
+- `function` 被调用时的参数为该定时器的指针，即内核调用时为 `timer.function(&timer)` 。
+
+### 10.4.2 内核定时器相关API
+
+
+
+内核定时器相关API如下：
 - 静态初始化(头文件 `timer.h` )：
 	```C
 #define __TIMER_INITIALIZER(_function, _flags) {		\
@@ -3181,7 +3196,7 @@ int timer_pending(const struct timer_list * timer);
 	```
 	- `1 if the timer is pending, 0 if not.`
 
-### 10.4.2 内核定时器的实现(了解)
+### 10.4.3 内核定时器的实现(了解)
 
 
 ## 10.5 tasklet(即将被移除) ^meiuw1
