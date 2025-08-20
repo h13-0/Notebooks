@@ -3136,11 +3136,11 @@ struct timer_list {
 
 ### 10.4.2 内核定时器相关API
 
+#### 10.4.2.1 静态初始化
 
+```C
+#include <linux/timer.h>
 
-内核定时器相关API如下：
-- 静态初始化(头文件 `timer.h` )：
-	```C
 #define __TIMER_INITIALIZER(_function, _flags) {		\
 		.entry = { .next = TIMER_ENTRY_STATIC },	\
 		.function = (_function),			\
@@ -3151,11 +3151,18 @@ struct timer_list {
 #define DEFINE_TIMER(_name, _function)				\
 	struct timer_list _name =				\
 		__TIMER_INITIALIZER(_function, 0)
-	```
-	- 在调用时，使用 `DEFINE_TIMER` 定义定时器变量名并传入目标函数即可。
-	- 随后需要使用 `add_timer` 将该定时器加入到内核中。
+```
+
+其中：
+- 在调用时，使用 `DEFINE_TIMER` 定义定时器变量名并传入目标函数即可。
+- 随后需要使用 `add_timer` 将该定时器加入到内核中。
+
+#### 10.4.2.2 动态初始化
+
 - 动态初始化(头文件 `timer.h` )：
-	```C
+```C
+#include <linux/timer.h>
+
 /**
  * timer_setup - prepare a timer for first use
  * @timer: the timer in question
@@ -3171,42 +3178,62 @@ struct timer_list {
 
 #define timer_setup_on_stack(timer, callback, flags)		\
 	__init_timer_on_stack((timer), (callback), (flags))
-	```
-	- 通常的定时器使用 `DEFINE_TIMER` 和 `timer_setup` 即可。
-	- 如需使用栈上定时器则需要使用 `timer_setup_on_stack` ，且有如下的注意事项：
-		- 栈上定时器的生命周期受限于当前函数栈帧，必须在函数返回前删除并释放定时器，仅适用于短期定时操作。
-		- 释放栈上定时器的操作为 `destroy_timer_on_stack` ，在某些内核配置模式下，未调用该释放操作可能会导致内存泄漏。
-	- 上述两个函数的返回值为 `void` 。
-	- 随后需要使用 `add_timer` 将该定时器加入到内核中。
-- 添加定时器到内核的定时器模块中：
-	```C
+```
+
+其中：
+- 通常的定时器使用 `DEFINE_TIMER` 和 `timer_setup` 即可。
+- 如需使用栈上定时器则需要使用 `timer_setup_on_stack` ，且有如下的注意事项：
+	- 栈上定时器的生命周期受限于当前函数栈帧，必须在函数返回前删除并释放定时器，仅适用于短期定时操作。
+	- 释放栈上定时器的操作为 `destroy_timer_on_stack` ，在某些内核配置模式下，未调用该释放操作可能会导致内存泄漏。
+- 上述两个函数的返回值为 `void` 。
+- 随后需要使用 `add_timer` 将该定时器加入到内核中。
+
+#### 10.4.2.3 添加定时器
+
+添加定时器到内核的定时器模块中：
+
+```C
 void add_timer(struct timer_list *timer);
 void add_timer_on(struct timer_list *timer, int cpu);
-	```
-	- 在定时器对象初始化完成后即可使用 `add_timer*` 函数将定时器加入到内核中，其中：
-		- `add_timer` 会将定时器加入到当前CPU中。
-		- `add_timer_on` 会将定时器加入到指定CPU中，可以减少跨CPU的中断和上下文切换开销(例如实现NUMA架构下的局部性优化)。
-- 更新定时器的到期时间：
-	```C
+```
+
+其中：
+- 在定时器对象初始化完成后即可使用 `add_timer*` 函数将定时器加入到内核中，其中：
+	- `add_timer` 会将定时器加入到当前CPU中。
+	- `add_timer_on` 会将定时器加入到指定CPU中，可以减少跨CPU的中断和上下文切换开销(例如实现NUMA架构下的局部性优化)。
+
+#### 10.4.2.4 更新(修改)定时器到期时间
+
+
+```C
 int mod_timer(struct timer_list *timer, unsigned long expires);
 int mod_timer_pending(struct timer_list *timer, unsigned long expires);
-	```
-	- 通常用于延长定时器的到期时间。
-- 删除定时器：
-	```C
+```
+
+其通常用于延长定时器的到期时间。
+
+#### 10.4.2.5 删除定时器
+
+```C
 int del_timer(struct timer_list *timer);
 int del_timer_sync(struct timer_list *timer);
-	```
-	- 从内核中删除定时器。
-		- `del_timer_sync` 可以确保该函数在返回时没有任何CPU在运行定时器的回调函数，在SMP系统上可以用于避免竞态等。
-- 查询定时器是否在等待调度(是否在挂起状态)：
-	```C
+```
+
+其中：
+- `del_timer_sync` 可以确保该函数在返回时没有任何CPU在运行定时器的回调函数，在SMP系统上可以用于避免竞态等。
+
+#### 10.4.2.6 查询定时器是否在等待调度(是否在挂起状态)
+
+```C
 int timer_pending(const struct timer_list * timer);
-	```
-	- `1 if the timer is pending, 0 if not.`
+```
+
+其返回值：
+- `1 if the timer is pending, 0 if not.`
 
 ### 10.4.3 内核定时器的实现(了解)
 
+#TODO 
 
 ## 10.5 tasklet(即将被移除) ^meiuw1
 
