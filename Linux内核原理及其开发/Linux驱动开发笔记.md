@@ -3432,9 +3432,13 @@ workqueue和tasklet<font color="#c00000">都是</font>内核的一种<font color
 
 ### 10.6.3 独有工作队列及相关API ^oyzb5s
 
-
-
 #### 10.6.3.1 定义独有工作队列对象
+
+独有工作队列在创建时，可以选择：
+1. 为该workqueue在每个CPU上都创建一个专属的"内核线程"
+2. 只为该workqueue创建一个"内核线程"，<font color="#c00000">在默认情况下该队列会被绑定到一个具体的CPU上</font>，<font color="#c00000">具体是哪个CPU取决于调度器</font>，但是通常是<font color="#c00000">提交时</font>( `queue_work` )使用的CPU。需要注意：
+	1. 若原先的CPU被弹出或不可用，则会被转移到其他CPU上运行。
+	2. 此外，若多次调度该任务，也会始终在同一个CPU上运行。
 
 ```C
 #include <linux/workqueue.h>
@@ -3467,46 +3471,37 @@ bool queue_delayed_work(struct workqueue_struct *wq,
 	- 如果 `queue_work` 返回 `true`，则在 `queue_work` 调用之前的所有内存写操作( `stores` )对执行 `work` 的CPU是可见的。
 	- 即在 `work` 执行时，可以安全地访问在 `queue_work` 之前写入的数据。
 
+#### 10.6.3.3 提交任务
 
 
 
-workqueue在创建时，可以选择：
-1. 为该workqueue在每个CPU上都创建一个专属的"内核线程"
-2. 只为该workqueue创建一个"内核线程"，<font color="#c00000">在默认情况下该队列会被绑定到一个具体的CPU上</font>，<font color="#c00000">具体是哪个CPU取决于调度器</font>，但是通常是<font color="#c00000">提交时</font>( `queue_work` )使用的CPU。需要注意：
-	1. 若原先的CPU被弹出或不可用，则会被转移到其他CPU上运行。
-	2. 此外，若多次调度该任务，也会始终在同一个CPU上运行。
-独有工作队列的相关API有：
-- 定义工作队列对象
+#### 10.6.3.4 取消任务
+
+
 ```C
-// 静态定义
-#define DECLARE_WORK(name, void (*function)(void*))
-
-// 动态定义
-#define INIT_WORK(_work, _func)
+bool cancel_delayed_work(struct delayed_work *dwork);
 ```
 
+其中：
+- 返回值：
+	- 若任务在开始前被取消则返回 `true`
+- 该函数可以确认任务是否开始。若需要确认任务是否完成，可以用下方的API。
 
+#### 10.6.3.5 等待整个工作队列执行完毕(阻塞)
 
-
-- 取消任务：
-	```C
-bool cancel_delayed_work(struct delayed_work *dwork);
-	```
-	- 其中：
-		- 返回值：
-			- 若任务在开始前被取消则返回 `true`
-		- 该函数可以确认任务是否开始。若需要确认任务是否完成，可以用下方的API。
-- 等待整个工作队列执行完毕(阻塞)：
 ```C
 flush_workqueue(wq);
 ```
-- 释放资源：
-	```C
+
+#### 10.6.3.6 释放工作队列
+
+```C
 void destroy_workqueue(struct workqueue_struct *wq);
-	```
-	- 其中在该接口调用前必须保证队列中所有任务完成，例如：
-		- 使用 `flush_workqueue` 阻塞并等待队列中所有任务完成。
-		- 使用 `flush_work` 阻塞并等待某一个任务完成。
+```
+
+其中在该接口调用前必须保证队列中所有任务完成，例如：
+- 使用 `flush_workqueue` 阻塞并等待队列中所有任务完成。
+- 使用 `flush_work` 阻塞并等待某一个任务完成。
 
 ### 10.6.4 共享队列及其API ^g6drzs
 
@@ -3516,13 +3511,13 @@ void destroy_workqueue(struct workqueue_struct *wq);
 - `system_long_wq` ：适用于执行时间较长的任务。
 
 而对于共享队列来说，其有如下的特性：
-1. 无需使用 `create_workqueue` 或 `destroy_workqueue` 管理队列。
+1. <font color="#c00000">无需</font>使用 `create_workqueue` 或 `destroy_workqueue` <font color="#c00000">创建和销毁队列</font>。
 2. 相较于独有工作队列，其资源消耗更小。
 3. 由于要和其他内核代码共享队列，因此：
 	1. 不能长期占用队列，例如长期休眠等。
 
-其拥有如下的API：
-- 提交工作：
+#### 10.6.4.1 提交工作到共享队列
+
 ```C
 // 提交工作，返回值意义同上一章节
 bool schedule_work(struct work_struct *work);
@@ -3538,7 +3533,14 @@ bool schedule_delayed_work(struct delayed_work *dwork,
 bool schedule_delayed_work_on(int cpu, struct delayed_work *dwork,
 	unsigned long delay)
 ```
-- 等待工作完成的接口与上一章节相同。
+
+#### 10.6.4.2 等待指定工作完成
+
+等待指定工作完成的接口与上一章节相同：
+
+
+
+
 
 # 11 内存分配
 
