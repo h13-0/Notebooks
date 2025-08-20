@@ -3119,9 +3119,12 @@ struct timer_list {
 - `unsigned long expires` ：
 	- 功能含义：定时器超时时的 `jiffies` 值
 	- 维护方：
-		- 驱动在初始化之前必须配置，配置后不允许直接修改
+		- <font color="#c00000">驱动在初始化之前必须配置</font>，<font color="#c00000">配置后不允许直接修改</font>
 		- 内核可能会对临近超时的定时器进行一些优化和分组，但是驱动在此阶段只读
-- `expires` 表示期望定时器执行时的 `jiffies` 值。
+- `void (*function)(struct timer_list *)` ：
+	- 功能含义：当系统时间 `jiffies >= expires` 时，内核<font color="#c00000">在中断上下文</font>调用的函数
+	- 维护方：<font color="#c00000">驱动必须实现</font>
+- 
 - `function` 为抵达 `jiffies` 值时被调用的函数。
 - `function` 被调用时的参数为该定时器的指针，即内核调用时为 `timer.function(&timer)` 。
 
