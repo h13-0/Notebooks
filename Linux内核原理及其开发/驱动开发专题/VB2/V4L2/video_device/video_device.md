@@ -1939,7 +1939,7 @@ struct v4l2_m2m_ops {
 
 #### 3.5.1.6 相关API
 
-##### 3.5.1.6.1 初始化M2M设备
+##### 3.5.1.6.1 初始化M2M对象
 
 ```C
 /**
@@ -1958,11 +1958,28 @@ struct v4l2_m2m_dev *v4l2_m2m_init(const struct v4l2_m2m_ops *m2m_ops);
 - 参数为驱动实现的M2M回调
 - 返回值为指针，但是并不能简单的使用 `==NULL` 判定是否成功，其需要使用 `IS_ERR` 宏进行判定
 
-##### 3.5.1.6.2 初始化m2m设备打开上下文
+##### 3.5.1.6.2 初始化m2m对象的打开上下文
 
+```C
+/**
+ * v4l2_m2m_ctx_init() - allocate and initialize a m2m context
+ *
+ * @m2m_dev: opaque pointer to the internal data to handle M2M context
+ * @drv_priv: driver's instance private data
+ * @queue_init: a callback for queue type-specific initialization function
+ *	to be used for initializing vb2_queues
+ *
+ * Usually called from driver's ``open()`` function.
+ */
+struct v4l2_m2m_ctx *v4l2_m2m_ctx_init(struct v4l2_m2m_dev *m2m_dev,
+		void *drv_priv,
+		int (*queue_init)(void *priv, struct vb2_queue *src_vq, struct vb2_queue *dst_vq));
+```
 
-
-
+该函数：
+- 功能含义：当用户打开了m2m对应的video设备句柄时，需要对打开的[[video_device#^kyd4a1|通用文件管理句柄]]的 `m2m_ctx` 进行初始化。
+- 参数：
+	- 
 
 
 ##### 3.5.1.6.3 通知m2m作业完成
