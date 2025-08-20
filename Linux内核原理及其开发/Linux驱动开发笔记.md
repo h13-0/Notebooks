@@ -3368,17 +3368,63 @@ workqueue和tasklet<font color="#c00000">都是</font>内核的一种<font color
 | 延迟                  | 延迟高                                                                                                     | 延迟很低，实时性高                                           |
 | 延迟控制                | 可以做到指定时间的延迟                                                                                             | 不可指定延迟                                              |
 
+工作实例按照是否需要延迟分可为：
+1. `struct` ：[[Linux驱动开发笔记#^2jgyju|不需要延迟的工作任务]]，需要尽快被调度
+2.  ：[[Linux驱动开发笔记#^l81zqg|需要延迟的工作任务]]，需要在指定时间后被执行
+
+
 如上表所示，workqueue是在"内核线程"中执行的，具体来说其可在如下两种工作队列中执行：
-1. 每个workqueue<span style="background:#fff88f"><font color="#c00000">专用的</font></span><font color="#c00000">一个或多个</font>"内核线程"中
-2. 整个内核共享的workqueue的"内核线程"中
-
-而对应的工作实例也按照是否需要延迟分为：
-1. `struct work_struct` ：不需要延迟的异步任务，需要尽快被调度
-2. `struct delayed_work` ：需要延迟的异步任务，需要在指定时间后被执行
+1. [[Linux驱动开发笔记#^oyzb5s|独有工作队列]]：每个workqueue<span style="background:#fff88f"><font color="#c00000">专用的</font></span><font color="#c00000">一个或多个</font>"内核线程"中
+2. [[Linux驱动开发笔记#^g6drzs|共享工作队列]]：整个内核共享的workqueue的"内核线程"中
 
 
 
-### 10.6.1 独有工作队列及相关API
+### 10.6.1 不需要延迟的工作任务(work_struct) ^2jgyju
+
+
+
+### 10.6.2 需要延迟的工作任务(delayed_work) ^l81zqg
+
+
+
+### 10.6.3 独有工作队列及相关API ^oyzb5s
+
+
+#### 10.6.3.1 定义独有工作队列对象
+
+```C
+#include <linux/workqueue.h>
+
+// 下方两个函数已被宏定义到alloc_workqueue。下方为宏替换后的函数原型，并非实际定义
+
+// 为该队列在每个CPU上都创建一个专属的内核线程
+struct workqueue_struct *create_workqueue(const char *name);
+// 仅创建一个内核线程
+struct workqueue_struct *create_singlethread_workqueue(const char *name);
+```
+
+#### 10.6.3.2 提交工作到独有工作队列
+
+```C
+// 
+bool queue_work(struct workqueue_struct *wq,
+	struct work_struct *work);
+
+// 提交并指定延迟，延迟单位为jiffies
+bool queue_delayed_work(struct workqueue_struct *wq,
+	struct delayed_work *dwork,
+	unsigned long delay);
+```
+其中：
+- <span style="background:#fff88f"><font color="#c00000">返回值</font></span>：
+	- 当任务成功加入队列时返回 `true`
+	- 如果工作项已经在队列中(即重复提交时)返回 `false`
+- 内存顺序保证：
+	- 如果 `queue_work` 返回 `true`，则在 `queue_work` 调用之前的所有内存写操作( `stores` )对执行 `work` 的CPU是可见的。
+	- 即在 `work` 执行时，可以安全地访问在 `queue_work` 之前写入的数据。
+
+
+
 
 workqueue在创建时，可以选择：
 1. 为该workqueue在每个CPU上都创建一个专属的"内核线程"
@@ -3393,37 +3439,11 @@ workqueue在创建时，可以选择：
 
 // 动态定义
 #define INIT_WORK(_work, _func)
-
 ```
-- 创建工作队列
-```C
-#include <linux/workqueue.h>
 
-// 下方两个函数已被宏定义到alloc_workqueue。下方为宏替换后的函数原型，并非实际定义
 
-// 为该队列在每个CPU上都创建一个专属的内核线程
-struct workqueue_struct *create_workqueue(const char *name);
-// 仅创建一个内核线程
-struct workqueue_struct *create_singlethread_workqueue(const char *name);
-```
-- 提交工作到工作队列
-	```C
-// 
-bool queue_work(struct workqueue_struct *wq,
-	struct work_struct *work);
 
-// 提交并指定延迟，延迟单位为jiffies
-bool queue_delayed_work(struct workqueue_struct *wq,
-	struct delayed_work *dwork,
-	unsigned long delay);
-	```
-	- 其中：
-		- <span style="background:#fff88f"><font color="#c00000">返回值</font></span>：
-			- 当任务成功加入队列时返回 `true`
-			- 如果工作项已经在队列中(即重复提交时)返回 `false`
-		- 内存顺序保证：
-			- 如果 `queue_work` 返回 `true`，则在 `queue_work` 调用之前的所有内存写操作( `stores` )对执行 `work` 的CPU是可见的。
-			- 即在 `work` 执行时，可以安全地访问在 `queue_work` 之前写入的数据。
+
 - 取消任务：
 	```C
 bool cancel_delayed_work(struct delayed_work *dwork);
@@ -3444,7 +3464,7 @@ void destroy_workqueue(struct workqueue_struct *wq);
 		- 使用 `flush_workqueue` 阻塞并等待队列中所有任务完成。
 		- 使用 `flush_work` 阻塞并等待某一个任务完成。
 
-### 10.6.2 共享队列
+### 10.6.4 共享队列及其API ^g6drzs
 
 并不是所有的内核模块都有独立管理一个等待队列的必要，因此内核提供了如下几种共享队列：
 - `system_wq` ：普通优先级的工作队列(默认)。
