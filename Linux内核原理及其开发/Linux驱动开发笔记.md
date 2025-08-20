@@ -3271,11 +3271,34 @@ static irqreturn_t my_interrupt_handler(int irq, void *dev_id) {
 }
 ```
 
-### 10.5.1 tasklet相关API
+### 10.5.1 数据结构定义
 
-tasklet相关API如下(头文件 `linux/interrupt.h` )：
-- 数据结构定义：
-	```C
+
+```C
+#include <linux/interrupt.h>
+
+/* Tasklets --- multithreaded analogue of BHs.
+
+   This API is deprecated. Please consider using threaded IRQs instead:
+   https://lore.kernel.org/lkml/20200716081538.2sivhkj4hcyrusem@linutronix.de
+
+   Main feature differing them of generic softirqs: tasklet
+   is running only on one CPU simultaneously.
+
+   Main feature differing them of BHs: different tasklets
+   may be run simultaneously on different CPUs.
+
+   Properties:
+   * If tasklet_schedule() is called, then tasklet is guaranteed
+     to be executed on some cpu at least once after this.
+   * If the tasklet is already scheduled, but its execution is still not
+     started, it will be executed only once.
+   * If this tasklet is already running on another CPU (or schedule is called
+     from tasklet itself), it is rescheduled for later.
+   * Tasklet is strictly serialized wrt itself, but not
+     wrt another tasklets. If client needs some intertask synchronization,
+     he makes it with spinlocks.
+ */
 struct tasklet_struct
 {
 	struct tasklet_struct *next;
@@ -3288,30 +3311,45 @@ struct tasklet_struct
 	};
 	unsigned long data;
 };
-	```
-- 初始化tasklet：
-	```C
+```
+
+### 10.5.2 tasklet相关API
+
+#### 10.5.2.1 初始化tasklet
+
+```C
 void tasklet_init(struct tasklet_struct *t,
 	void (*func)(unsigned long), unsigned long data);
-	```
-	- 本函数的功能是将回调函数、参数填入tasklet对象。
-- 手动调度tasklet(异步，<font color="#c00000">调用后会立即返回</font>)：
-	```C
+```
+
+本函数的功能是将回调函数、参数填入tasklet对象。
+
+#### 10.5.2.2 手动调度tasklet
+
+手动调度tasklet(异步，<font color="#c00000">调用后会立即返回</font>)：
+
+```C
 void tasklet_schedule(struct tasklet_struct *t);
-	```
-- 禁用tasklet：
-	```C
+```
+
+#### 10.5.2.3 禁用tasklet
+
+```C
 void tasklet_disable(struct tasklet_struct *t);
 void tasklet_disable_nosync(struct tasklet_struct *t);
-	```
-	- 禁用该tasklet，并在再次启用前该tasklet不会被调度。其中：
-		- `tasklet_disable` 在该tasklet被执行时调用会忙等直到tasklet退出。
-		- `tasklet_disable_nosync` 在该tasklet被执行时调用操作无效，并且不会忙等。
-- 启用tasklet：
-	```C
+```
+
+禁用该tasklet，并在再次启用前该tasklet不会被调度。其中：
+- `tasklet_disable` 在该tasklet被执行时调用会忙等直到tasklet退出。
+- `tasklet_disable_nosync` 在该tasklet被执行时调用操作无效，并且不会忙等。
+
+#### 10.5.2.4 启用tasklet
+
+启用被禁用的tasklet：
+
+```C
 void tasklet_enable(struct tasklet_struct *t);
-	```
-	- 启用被禁用的tasklet
+```
 
 ## 10.6 工作队列(workqueue) ^qihja2
 
