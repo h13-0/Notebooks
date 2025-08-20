@@ -3371,6 +3371,7 @@ workqueue和tasklet<font color="#c00000">都是</font>内核的一种<font color
 工作实例按照是否需要延迟分可为：
 1. `struct work_struct` ：[[Linux驱动开发笔记#^2jgyju|不需要延迟的工作任务]]，需要尽快被调度
 2. `struct delayed_work` ：[[Linux驱动开发笔记#^l81zqg|需要延迟的工作任务]]，需要在指定时间后被执行
+而上述两个工作队列<font color="#c00000">都允许在</font><span style="background:#fff88f"><font color="#c00000"><B>被执行后</B></font></span><font color="#c00000">反复被添加到工作队列中</font>，这也是其标准用法
 
 而如上文所述，workqueue是在"内核线程"中执行的，具体来说其可在如下两种工作队列中执行：
 1. [[Linux驱动开发笔记#^oyzb5s|独有工作队列]]：每个workqueue<span style="background:#fff88f"><font color="#c00000">专用的</font></span><font color="#c00000">一个或多个</font>"内核线程"中
