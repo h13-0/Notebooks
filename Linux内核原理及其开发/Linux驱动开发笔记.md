@@ -3082,7 +3082,7 @@ void ssleep(unsigned int seconds);
 2. 在完成 `fops->close` 等操作时，使用内核定时器异步完成。
 
 <span style="background:#fff88f"><font color="#c00000">内核定时器是一种软件中断</font></span>，<font color="#c00000">这些代码位于中断上下文中而非进程上下文</font>，此时的注意事项可见[[Linux驱动开发笔记#^fw453g]]：
-![[Linux驱动开发笔记#12 1 2 中断上下文中的注意事项 fw453g]]
+![[Linux驱动开发笔记#13 1 2 中断上下文中的注意事项 fw453g]]
 
 此外内核还提供了一些API可以用于查询当前上下文的状态，API及不同上下文的注意事项可见[[Linux驱动开发笔记#^h05ata|当前上下文状态与注意事项]]。
 
