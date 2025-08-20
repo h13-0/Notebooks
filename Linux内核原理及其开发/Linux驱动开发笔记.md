@@ -3369,8 +3369,8 @@ workqueue和tasklet<font color="#c00000">都是</font>内核的一种<font color
 | 延迟控制                | 可以做到指定时间的延迟                                                                                             | 不可指定延迟                                              |
 
 工作实例按照是否需要延迟分可为：
-1. `struct` ：[[Linux驱动开发笔记#^2jgyju|不需要延迟的工作任务]]，需要尽快被调度
-2.  ：[[Linux驱动开发笔记#^l81zqg|需要延迟的工作任务]]，需要在指定时间后被执行
+1. `struct work_struct` ：[[Linux驱动开发笔记#^2jgyju|不需要延迟的工作任务]]，需要尽快被调度
+2. `struct delayed_work` ：[[Linux驱动开发笔记#^l81zqg|需要延迟的工作任务]]，需要在指定时间后被执行
 
 
 如上表所示，workqueue是在"内核线程"中执行的，具体来说其可在如下两种工作队列中执行：
