@@ -3313,6 +3313,9 @@ struct tasklet_struct
 };
 ```
 
+注意：
+- `tasklet` 不需要也不能手动配置其成员，其应当使用对应API初始化。
+
 ### 10.5.2 tasklet相关API
 
 #### 10.5.2.1 初始化tasklet
