@@ -3122,11 +3122,11 @@ struct timer_list {
 		- <font color="#c00000">驱动在初始化之前必须配置</font>，<font color="#c00000">配置后不允许直接修改</font>
 		- 内核可能会对临近超时的定时器进行一些优化和分组，但是驱动在此阶段只读
 - `void (*function)(struct timer_list *)` ：
-	- 功能含义：当系统时间 `jiffies >= expires` 时，内核<font color="#c00000">在中断上下文</font>调用的函数
+	- 功能含义：当系统时间 `jiffies >= expires` 时，内核<font color="#c00000">在中断上下文</font>调用的函数，参数为当前定时器的指针
 	- 维护方：<font color="#c00000">驱动必须实现</font>
-- 
-- `function` 为抵达 `jiffies` 值时被调用的函数。
-- `function` 被调用时的参数为该定时器的指针，即内核调用时为 `timer.function(&timer)` 。
+- `u32 flags` ：
+	- 功能含义：存储定时器的状态标志位。这些标志位由内核和驱动共同使用，用于控制定时器的状态和行为
+	- 维护方：驱动可通过 `timer_set_flags()` 设置
 
 ### 10.4.2 内核定时器相关API
 
