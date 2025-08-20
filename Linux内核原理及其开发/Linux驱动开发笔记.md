@@ -3204,7 +3204,6 @@ void add_timer_on(struct timer_list *timer, int cpu);
 
 #### 10.4.2.4 更新(修改)定时器到期时间
 
-
 ```C
 int mod_timer(struct timer_list *timer, unsigned long expires);
 int mod_timer_pending(struct timer_list *timer, unsigned long expires);
