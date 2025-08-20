@@ -3372,22 +3372,66 @@ workqueue和tasklet<font color="#c00000">都是</font>内核的一种<font color
 1. `struct work_struct` ：[[Linux驱动开发笔记#^2jgyju|不需要延迟的工作任务]]，需要尽快被调度
 2. `struct delayed_work` ：[[Linux驱动开发笔记#^l81zqg|需要延迟的工作任务]]，需要在指定时间后被执行
 
-
-如上表所示，workqueue是在"内核线程"中执行的，具体来说其可在如下两种工作队列中执行：
+而如上文所述，workqueue是在"内核线程"中执行的，具体来说其可在如下两种工作队列中执行：
 1. [[Linux驱动开发笔记#^oyzb5s|独有工作队列]]：每个workqueue<span style="background:#fff88f"><font color="#c00000">专用的</font></span><font color="#c00000">一个或多个</font>"内核线程"中
 2. [[Linux驱动开发笔记#^g6drzs|共享工作队列]]：整个内核共享的workqueue的"内核线程"中
 
-
-
 ### 10.6.1 不需要延迟的工作任务(work_struct) ^2jgyju
 
+可使用如下的方式进行初始化：
 
+```C
+#include <linux/workqueue.h>
+
+// 静态定义
+#define DECLARE_WORK(n, f)                                         \  
+        struct work_struct n = __WORK_INITIALIZER(n, f)
+
+// 动态定义
+#define INIT_WORK(_work, _func)                                    \  
+        __INIT_WORK((_work), (_func), 0)
+```
+
+其中：
+- `DECLARE_WORK` 中：
+	- `n` 为工作实例的变量名
+	- `f` 为类型为 `void (*work_func_t)(struct work_struct *work)` 的回调函数
+- `INIT_WORK` 中：
+	- `_work` 为 `struct work_struct *` 类型的工作实例
+	- `_func` 为 `void (*work_func_t)(struct work_struct *work)` 类型的回调函数
 
 ### 10.6.2 需要延迟的工作任务(delayed_work) ^l81zqg
 
+静态定义：
 
+```C
+#include <linux/workqueue.h>
+
+#define DECLARE_DELAYED_WORK(n, f)                                  \  
+    struct delayed_work n = __DELAYED_WORK_INITIALIZER(n, f, 0)  
+  
+#define DECLARE_DEFERRABLE_WORK(n, f)                               \  
+    struct delayed_work n = __DELAYED_WORK_INITIALIZER(n, f, TIMER_DEFERRABLE)
+```
+
+其中：
+- `n` 为工作实例的变量名
+- `f` 为类型为 `void (*work_func_t)(struct work_struct *work)` 的回调函数
+- `DEFERRABLE` 表示可推迟的工作实例
+
+动态定义：
+
+```C
+#define INIT_DELAYED_WORK(_work, _func)					\
+	__INIT_DELAYED_WORK(_work, _func, 0)
+```
+
+其中：
+- `_work` 为 `struct work_struct *` 类型的工作实例
+- `_func` 为 `void (*work_func_t)(struct work_struct *work)` 类型的回调函数
 
 ### 10.6.3 独有工作队列及相关API ^oyzb5s
+
 
 
 #### 10.6.3.1 定义独有工作队列对象
