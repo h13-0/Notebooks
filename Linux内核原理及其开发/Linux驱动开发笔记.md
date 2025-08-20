@@ -3130,6 +3130,9 @@ struct timer_list {
 		- `TIMER_PINNED` ：将定时器绑定到当前CPU，即加载到当前CPU的定时器队列中
 		- `TIMER_MIGRATING` ：内核内部使用，表示定时器正在CPU之间迁移
 	- 维护方：驱动可通过 `timer_set_flags()` 设置
+- `struct lockdep_map lockdep_map` ：
+	- 功能含义：内核锁验证器成员，可用于检出锁依赖和死锁问题。
+	- 维护方：在 `CONFIG_LOCKDEP` 开启时，内核会自动配置。
 
 ### 10.4.2 内核定时器相关API
 
