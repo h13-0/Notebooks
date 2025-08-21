@@ -1891,13 +1891,20 @@ struct v4l2_m2m_ctx *v4l2_m2m_ctx_init(struct v4l2_m2m_dev *m2m_dev,
 				3. 通过设备对象指针获取m2m对象实例
 	- `void *drv_priv` ：
 		- 功能含义： 驱动的实例私有数据指针
-			- <span style="background:#fff88f"><font color="#c00000">其值为</font></span> `v4l2_m2m_ops` <span style="background:#fff88f"><font color="#c00000">的三个回调函数的参数</font></span>，通常填入设备zi ding
+			- <span style="background:#fff88f"><font color="#c00000">其值为</font></span> `v4l2_m2m_ops` <span style="background:#fff88f"><font color="#c00000">的三个回调函数的参数</font></span>，<font color="#c00000">通常填入设备自定义的大的上下文实例指针</font>。
 	- `int (*queue_init)(void *priv, struct vb2_queue *src_vq, struct vb2_queue *dst_vq)` ：
-		- 功能含义：该成员为[[video_device#^1knefg|队列初始化回调]]，可见子章节。
+		- 功能含义：该成员为[[video_device#^1knefg|队列初始化回调]]，负责对M2M的两个 `vb2_queue` 进行特定初始化，具体可见子章节。
 
 ###### 3.5.1.3.1.1 队列初始化回调 ^1knefg
 
-
+正如上文所述，`queue_init` 回调会在 `v4l2_m2m_ctx_init` 执行期间被调用，其主要任务包含：
+1. 配置两个缓冲区队列，包含：
+	1. 配置 `vb2_ops` 回调，包含：
+		1. `queue_setup` 回调，主要任务有：
+			1. 配置平面数
+			2. 配置每个平面字节数
+2. 配置内存操作方式等，例如：
+	1. 
 
 
 
