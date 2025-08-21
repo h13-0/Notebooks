@@ -171,7 +171,7 @@ static void func() {
 }
 ```
 
-### 4.1.4 获取宿主链表入口 list_entry/container_of(list_head \*ptr, host_type, member_id)
+### 4.1.4 获取宿主链表入口(list_entry/container_of)
 
 获取宿主链表入口有两个函数 `list_entry` 和 `container_of` ，其本质相同互为别名，定义如下：
 
@@ -210,7 +210,7 @@ struct my_data_list *entry = list_entry(
 需要注意的是：
 -  `container_of` <font color="#c00000">并非链表锚点的专属功能</font>，<font color="#c00000">其功能本质为根据key值查找host的入口指针</font>。
 
-### 4.1.5 向指定节点后添加一个节点 list_add(list_head \*new, list_head \*head)
+### 4.1.5 向指定节点后添加一个节点(list_add)
 
 `list_add` 函数的定义为：
 
@@ -245,7 +245,7 @@ flowchart LR
 list_add(&(node4.list), &(node1.list));
 ```
 
-### 4.1.6 向尾部添加一个节点 list_add_tail(list_head \*new, list_head \*head)
+### 4.1.6 向尾部添加一个节点(list_add_tail)
 
 `list_add_tail` 函数的定义为：
 
@@ -264,7 +264,7 @@ static inline void list_add_tail(struct list_head *new, struct list_head *head)
 }
 ```
 
-### 4.1.7 删除指定节点 list_del(list_head \*entry)
+### 4.1.7 删除指定节点(list_del)
 
 `list_del` 函数的定义为：
 
@@ -299,7 +299,7 @@ flowchart LR
 list_del(node1);
 ```
 
-### 4.1.8 遍历节点 list_for_each(list_head \*pos, list_head \*head)
+### 4.1.8 遍历节点(list_for_each)
 
 `list_for_each` 函数的定义如下：
 
