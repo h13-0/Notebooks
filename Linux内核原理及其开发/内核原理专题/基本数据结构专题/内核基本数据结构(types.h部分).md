@@ -32,7 +32,18 @@ number headings: auto, first-level 1, max 6, 1.1
 	(type *)( (char *)__mptr - offsetof(type,member) );})
 ```
 
+其在使用时只需要分别填入指针、类型和成员即可，例如：
 
+```C
+struct base {
+	int prop;
+}
+
+struct base *prop2base(int *prop)
+{
+	return container_of(prop, struct base, prop);
+}
+```
 
 需要注意的是，其可以<span style="background:#fff88f"><font color="#c00000">连续跨越多级</font></span><font color="#c00000">获得更高级的容器</font>，例如：
 
@@ -64,7 +75,7 @@ struct advance *prop2advance(int *prop)
 	return container_of(prop, struct advance, base_mem.prop);
 }
 
-struct advance *ad
+struct advance *container = prop2advance(prop);
 ```
 
 # 4 原子变量(atomic_t)
