@@ -1,19 +1,67 @@
 ---
-number headings: auto, first-level 2, max 6, 1.1
+number headings: auto, first-level 1, max 6, 1.1
 ---
 #操作系统 #Linux系统原理 #Linux内核开发
 
 
-## 1 目录
+# 1 目录
 
 ```toc
 ```
 
-## 2 Readme
+# 2 Readme
 
 本笔记仅记录 `include/linux/types.h` 下定义的基本数据结构及其设计。
 
-## 3 链表锚点 ^xl7wru
+# 3 原子变量(atomic_t)
+
+## 3.1 相关API
+
+### 3.1.1 初始化原子变量(atomic_init)
+
+
+### 3.1.2 读取原子变量(atomic_read)
+
+
+### 3.1.3 设置原子变量(atomic_set)
+
+
+
+### 3.1.4 加法运算(atomic_add)
+
+
+
+### 3.1.5 减法运算(atomic_sub)
+
+
+
+### 3.1.6 自增运算(atomic_inc)
+
+
+
+### 3.1.7 自减运算(atomic_dec)
+
+### 3.1.8 位运算并返回
+
+
+### 3.1.9 位运算不返回
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 4 链表锚点 ^xl7wru
 
 在C语言大型项目中，<font color="#c00000">往往要使用类型想当繁多的链表</font>。<font color="#c00000">但是如果分别为每一个链表都加入增、删、改、查、搜索、排序等功能的话代码又显得相当繁琐</font>。因此需要将链表的常用操作统一拆分出来。
 
@@ -41,7 +89,7 @@ struct my_data_list {
 	- 优点：任何一个链表都可以定义为其自己的类型，这在大型项目中想当有用。
 	- 缺点：使用了宏。
 
-### 3.1 双向链表锚点(struct list_head)
+## 4.1 双向链表锚点(struct list_head)
 
 `struct list_head` 的定义为：
 
@@ -60,7 +108,7 @@ struct mdata_list {
 }
 ```
 
-#### 3.1.1 基本数据结构
+### 4.1.1 基本数据结构
 
 为了简化程序设计：
 - <font color="#c00000">该链表必须为含有头结点的链表</font>( `list_empty` 等函数要求)
@@ -69,7 +117,7 @@ struct mdata_list {
 - <font color="#c00000">为了方便从尾部插入，其表头的prev指向链表表尾节点，表头的next指向第一个节点</font>：
 	![[Pasted image 20241124170623.png]]
 
-#### 3.1.2 静态创建链表(LIST_HEAD_INIT)
+### 4.1.2 静态创建链表(LIST_HEAD_INIT)
 
 `LIST_HEAD_INIT` 函数的定义为：
 
@@ -86,7 +134,7 @@ static struct mdata_list mdata_list_head = {
 }
 ```
 
-#### 3.1.3 动态创建链表(INIT_LIST_HEAD)
+### 4.1.3 动态创建链表(INIT_LIST_HEAD)
 
 `INIT_LIST_HEAD` 函数的定义为：
 
@@ -108,7 +156,7 @@ static void func() {
 }
 ```
 
-#### 3.1.4 获取宿主链表入口 list_entry/container_of(list_head \*ptr, host_type, member_id)
+### 4.1.4 获取宿主链表入口 list_entry/container_of(list_head \*ptr, host_type, member_id)
 
 获取宿主链表入口有两个函数 `list_entry` 和 `container_of` ，其本质相同互为别名，定义如下：
 
@@ -147,7 +195,7 @@ struct my_data_list *entry = list_entry(
 需要注意的是：
 -  `container_of` <font color="#c00000">并非链表锚点的专属功能</font>，<font color="#c00000">其功能本质为根据key值查找host的入口指针</font>。
 
-#### 3.1.5 向指定节点后添加一个节点 list_add(list_head \*new, list_head \*head)
+### 4.1.5 向指定节点后添加一个节点 list_add(list_head \*new, list_head \*head)
 
 `list_add` 函数的定义为：
 
@@ -182,7 +230,7 @@ flowchart LR
 list_add(&(node4.list), &(node1.list));
 ```
 
-#### 3.1.6 向尾部添加一个节点 list_add_tail(list_head \*new, list_head \*head)
+### 4.1.6 向尾部添加一个节点 list_add_tail(list_head \*new, list_head \*head)
 
 `list_add_tail` 函数的定义为：
 
@@ -201,7 +249,7 @@ static inline void list_add_tail(struct list_head *new, struct list_head *head)
 }
 ```
 
-#### 3.1.7 删除指定节点 list_del(list_head \*entry)
+### 4.1.7 删除指定节点 list_del(list_head \*entry)
 
 `list_del` 函数的定义为：
 
@@ -236,7 +284,7 @@ flowchart LR
 list_del(node1);
 ```
 
-#### 3.1.8 遍历节点 list_for_each(list_head \*pos, list_head \*head)
+### 4.1.8 遍历节点 list_for_each(list_head \*pos, list_head \*head)
 
 `list_for_each` 函数的定义如下：
 
@@ -250,7 +298,7 @@ list_del(node1);
 	for (pos = (head)->next; pos != (head); pos = pos->next)
 ```
 
-### 3.2 单向链表
+## 4.2 单向链表
 
 
 
