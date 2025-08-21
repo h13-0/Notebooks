@@ -1744,7 +1744,7 @@ struct v4l2_m2m_dev {
 		- 功能含义：控制M2M设备的接口节点
 		- 维护方：使用媒体控制器功能时由驱动设置
 
-#### 3.5.1.3 M2M上下文实例 ^3axphz
+#### 3.5.1.3 M2M用户上下文实例 ^3axphz
 
 ```C
 /**
@@ -1855,6 +1855,51 @@ struct v4l2_m2m_ctx {
 - `wait_queue_head_t finished` ：
 	- 功能含义：作业完成等待队列，通常挂有用户的 `poll` 等系统调用的等待线程。
 	- 驱动访问：驱动调用 `v4l2_m2m_job_finish()` 后会间接执行唤醒。
+注：
+- 该对象可不用由驱动手动初始化，直接使用子章节对应的API进行初始化即可
+
+##### 3.5.1.3.1 初始化m2m的打开上下文实例
+
+```C
+/**
+ * v4l2_m2m_ctx_init() - allocate and initialize a m2m context
+ *
+ * @m2m_dev: opaque pointer to the internal data to handle M2M context
+ * @drv_priv: driver's instance private data
+ * @queue_init: a callback for queue type-specific initialization function
+ *	to be used for initializing vb2_queues
+ *
+ * Usually called from driver's ``open()`` function.
+ */
+struct v4l2_m2m_ctx *v4l2_m2m_ctx_init(struct v4l2_m2m_dev *m2m_dev,
+		void *drv_priv,
+		int (*queue_init)(void *priv, struct vb2_queue *src_vq, struct vb2_queue *dst_vq));
+```
+
+该函数：
+- 功能含义：初始化一个[[video_device#^3axphz|m2m用户上下文实例]]
+	- 当用户打开了m2m对应的video设备句柄时(即 `open` 回调中)，除了需要创建一个[[video_device#^kyd4a1|通用文件管理句柄]]以外，还需要专门初始化该句柄的m2m用户上下文实例成员(`v4l2_fh.m2m_ctx`)，而本函数则通常用于负责此部分工作。
+- 参数：
+	- `struct v4l2_m2m_dev *m2m_dev` ：
+		- 功能含义：指向m2m对象实例，其通常通过 `open(struct file *file)` 中的 `file` 指针获取，具体如下：
+			- 在 `probe` 函数中：
+				1. 将 `m2m_dev` 绑定到驱动的设备对象结构体中
+				2. 通过 `video_set_drvdata` 为 `video_device` 绑定设备对象指针
+			- 在 `open` 函数中：
+				1. 通过 `video_devdata(file)` 获取 `video_device` 指针
+				2. 通过 `video_get_drvdata` 获取设备对象指针
+				3. 通过设备对象指针获取m2m对象实例
+	- `void *drv_priv` ：
+		- 功能含义： 驱动的实例私有数据指针
+			- <span style="background:#fff88f"><font color="#c00000">其值为</font></span> `v4l2_m2m_ops` <span style="background:#fff88f"><font color="#c00000">的三个回调函数的参数</font></span>，通常填入设备zi ding
+	- `int (*queue_init)(void *priv, struct vb2_queue *src_vq, struct vb2_queue *dst_vq)` ：
+		- 功能含义：该成员为[[video_device#^1knefg|队列初始化回调]]，可见子章节。
+
+###### 3.5.1.3.1.1 队列初始化回调 ^1knefg
+
+
+
+
 
 #### 3.5.1.4 M2M设备操作回调(v4l2_m2m_ops) ^r39fw1
 
@@ -1950,47 +1995,7 @@ struct v4l2_m2m_dev *v4l2_m2m_init(const struct v4l2_m2m_ops *m2m_ops);
 - 参数为驱动实现的M2M回调
 - 返回值为指针，但是并不能简单的使用 `==NULL` 判定是否成功，其需要使用 `IS_ERR` 宏进行判定
 
-##### 3.5.1.5.2 初始化m2m对象的打开上下文
-
-```C
-/**
- * v4l2_m2m_ctx_init() - allocate and initialize a m2m context
- *
- * @m2m_dev: opaque pointer to the internal data to handle M2M context
- * @drv_priv: driver's instance private data
- * @queue_init: a callback for queue type-specific initialization function
- *	to be used for initializing vb2_queues
- *
- * Usually called from driver's ``open()`` function.
- */
-struct v4l2_m2m_ctx *v4l2_m2m_ctx_init(struct v4l2_m2m_dev *m2m_dev,
-		void *drv_priv,
-		int (*queue_init)(void *priv, struct vb2_queue *src_vq, struct vb2_queue *dst_vq));
-```
-
-该函数：
-- 功能含义：当用户打开了m2m对应的video设备句柄时，需要对打开的[[video_device#^kyd4a1|通用文件管理句柄]]的 `m2m_ctx` 进行初始化。
-- 参数：
-	- `struct v4l2_m2m_dev *m2m_dev` ：
-		- 功能含义：指向m2m对象实例，其通常通过 `open(struct file *file)` 中的 `file` 指针获取，具体如下：
-			- 在 `probe` 函数中：
-				1. 将 `m2m_dev` 绑定到驱动的设备对象结构体中
-				2. 通过 `video_set_drvdata` 为 `video_device` 绑定设备对象指针
-			- 在 `open` 函数中：
-				1. 通过 `video_devdata(file)` 获取 `video_device` 指针
-				2. 通过 `video_get_drvdata` 获取设备对象指针
-				3. 通过设备对象指针获取m2m对象实例
-	- `void *drv_priv`
-	- `int (*queue_init)(void *priv, struct vb2_queue *src_vq, struct vb2_queue *dst_vq)` ：
-		- 功能含义：该成员为[[video_device#^1knefg|队列初始化回调]]，可见子章节。
-
-###### 3.5.1.5.2.1 队列初始化回调 ^1knefg
-
-
-
-
-
-##### 3.5.1.5.3 通知m2m作业完成
+##### 3.5.1.5.2 通知m2m作业完成
 
 ```C
 /**
@@ -2027,7 +2032,7 @@ void v4l2_m2m_job_finish(struct v4l2_m2m_dev *m2m_dev,
 	- <font color="#c00000">该接口不负责标记缓冲区状态</font>，<font color="#c00000">驱动需要在该接口调用前完成缓冲区标记</font>，<font color="#c00000">并准备释放缓冲区控制权</font>(即调用该接口后，驱动不应当再操作该缓冲区)
 	- 驱动调用该接口后，驱动不再拥有设备控制权(设备控制权按照上下文进行管理，同一时间只能有一个上下文拥有设备控制权)
 
-##### 3.5.1.5.4 完成对缓冲区的处理并通知m2m作业完成
+##### 3.5.1.5.3 完成对缓冲区的处理并通知m2m作业完成
 
 ```C
 /**
