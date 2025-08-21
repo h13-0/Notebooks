@@ -3429,7 +3429,8 @@ workqueue和tasklet<font color="#c00000">都是</font>内核的一种<font color
 
 其中：
 - `_work` 为 `struct work_struct *` 类型的工作实例
-- `_func` 为 `void (*work_func_t)(struct work_struct *work)` 类型的回调函数
+- `_func` 为 `void (*work_func_t)(struct work_struct *work)` 类型的回调函数，需要注意：
+	- 回调函数的<font color="#c00000">参数类型为</font> `struct work_struct*` <font color="#c00000">而非</font> `struct delayed_work*` ，其需要使用 `container_of` 来获取 `struct work_struct*` 的上层容器 `struct delayed_work*` 。
 
 ### 10.6.3 独有工作队列及相关API ^oyzb5s
 
