@@ -22,6 +22,21 @@ number headings: auto, first-level 1, max 6, 1.1
 
 ### 3.1.2 读取原子变量(atomic_read)
 
+```C
+/**
+ * atomic_read() - atomic load with relaxed ordering
+ * @v: pointer to atomic_t
+ *
+ * Atomically loads the value of @v with relaxed ordering.
+ *
+ * Unsafe to use in noinstr code; use raw_atomic_read() there.
+ *
+ * Return: The value loaded from @v.
+ */
+static __always_inline int
+atomic_read(const atomic_t *v)
+```
+
 
 ### 3.1.3 设置原子变量(atomic_set)
 
