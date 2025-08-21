@@ -1934,6 +1934,8 @@ struct v4l2_m2m_ops {
 正如上述章节所述，M2M设备拥有输入输出两个队列。
 
 
+##### 3.5.1.5.1 队列初始化回调 ^1knefg
+
 
 
 
@@ -1980,7 +1982,8 @@ struct v4l2_m2m_ctx *v4l2_m2m_ctx_init(struct v4l2_m2m_dev *m2m_dev,
 - 功能含义：当用户打开了m2m对应的video设备句柄时，需要对打开的[[video_device#^kyd4a1|通用文件管理句柄]]的 `m2m_ctx` 进行初始化。
 - 参数：
 	- 
-
+	- `int (*queue_init)(void *priv, struct vb2_queue *src_vq, struct vb2_queue *dst_vq)` ：
+		- 功能含义：该成员为[[video_device#^1knefg|队列初始化回调]]，其需要
 
 ##### 3.5.1.6.3 通知m2m作业完成
 
