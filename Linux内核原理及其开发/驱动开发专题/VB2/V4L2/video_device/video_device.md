@@ -1985,10 +1985,11 @@ struct v4l2_m2m_ctx *v4l2_m2m_ctx_init(struct v4l2_m2m_dev *m2m_dev,
 		- 功能含义：指向m2m对象实例，其通常通过 `open(struct file *file)` 中的 `file` 指针获取，具体如下：
 			- 在 `probe` 函数中：
 				1. 将 `m2m_dev` 绑定到驱动的设备对象结构体中
-				2. 通过 `video_set_drvdata` 为 `video_device` 绑定驱动对象指针
-			- 
-			1. 通过 `video_devdata(file)` 获取 `video_device` 指针
-			2. 
+				2. 通过 `video_set_drvdata` 为 `video_device` 绑定设备对象指针
+			- 在 `open` 函数中：
+				1. 通过 `video_devdata(file)` 获取 `video_device` 指针
+				2. 通过 `video_get_drvdata` 获取设备对象指针
+				3. 通过设备对象指针获取m2m对象实例
 	- `void *drv_priv`
 	- `int (*queue_init)(void *priv, struct vb2_queue *src_vq, struct vb2_queue *dst_vq)` ：
 		- 功能含义：该成员为[[video_device#^1knefg|队列初始化回调]]，其需要
