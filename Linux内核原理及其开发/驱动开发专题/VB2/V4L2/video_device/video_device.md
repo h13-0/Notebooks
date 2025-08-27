@@ -1399,13 +1399,14 @@ struct vim2m_ctx {
 其对应的最简标准语义应当为：
 1. 为该文件指针分配对应的上下文句柄并初始化( `v4l2_fh_init` 等操作)
 2. 将<font color="#c00000">文件句柄</font> `&ctx->fh` (<span style="background:#fff88f"><font color="#c00000">而非上下文</font></span>，虽然通常等价) 存入 `filep->private_data` 中。
-	- 不可存其他数据，也不可不存，因为V4L2内部要使用该数据。可见章节[[video_device#^3kv1kh|上下文实例]]。
 	- 通常 `fh` 会是 `ctx` 的第一个成员，因此通常二者等价。
+	- 虽然v4l2在open回调中允许不使用
 3. 注册上下文句柄( `v4l2_fh_add` )
 
 注意：
 1. 不管 `filep->private_data` 中存入的是什么，<span style="background:#fff88f"><font color="#c00000">该值会出现在</font></span>：
 	- [[video_device#^r8lfyg|v4l2_ioctl_ops]]的所有回调的参数 `void* fh` 中
+		- 该参数指针为 `void*` 而非 `struct v4l2_fh*` 就是因为 `open` 回调中
 
 ## 3.4 机制模型
 
