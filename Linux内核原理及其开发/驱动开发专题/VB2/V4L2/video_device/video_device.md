@@ -494,7 +494,7 @@ while(!exit)
 注：
 - `buffer.type` 字段需要设置。
 
-### 2.2.12 完整示例代码
+### 2.2.12 输入设备完整示例代码
 
 ```C
 #include <linux/videodev2.h>
@@ -758,6 +758,11 @@ int main(int argc, char **argv)
 }
 
 ```
+
+### 2.2.13 输出设备完整示例代码
+
+
+
 
 
 ## 2.3 video_device用户态工具
