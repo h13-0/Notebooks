@@ -1397,14 +1397,15 @@ struct vim2m_ctx {
 8. 将第6步的函数返回值作为 `v4l2_open` 函数的返回值返回。
 
 其对应的最简标准语义应当为：
-1. 为该文件指针分配对应的上下文句柄并初始化( `v4l2_fh_init` 等操作)
-2. 将<font color="#c00000">文件句柄</font> `&ctx->fh` (<span style="background:#fff88f"><font color="#c00000">而非上下文</font></span>，虽然通常等价) 存入 `filep->private_data` 中。
+1. 为该文件指针分配对应的<font color="#c00000">video_device的上下文句柄</font>并初始化其中的[[video_device#^kyd4a1|v4l2上下文实例]]( `v4l2_fh_init` 等操作)
+2. 将[[video_device#^kyd4a1|v4l2上下文实例]](是 `&ctx->fh` <span style="background:#fff88f"><font color="#c00000">而非video_device的上下文</font></span>，虽然通常等价) 存入 `filep->private_data` 中。
 	- 通常 `fh` 会是 `ctx` 的第一个成员，因此通常二者等价。
-	- 虽然v4l2在open回调中允许不使用
-3. 注册上下文句柄( `v4l2_fh_add` )
+	- 虽然v4l2在open回调中允许不使用[[video_device#^kyd4a1|v4l2上下文实例]]，但是其提供的功能需要自行实现，因此通常还是使用该特性。
+3. 注册v4l2上下文实例( `v4l2_fh_add` )
 
 注意：
-1. 不管 `filep->private_data` 中存入的是什么，<span style="background:#fff88f"><font color="#c00000">该值会出现在</font></span>：
+1. 在不使用v4l2上下文实例时，`filep->private_data` 允许存储video_device的上下文句柄。
+2. 不管 `filep->private_data` 中存入的是什么，<span style="background:#fff88f"><font color="#c00000">该值会出现在</font></span>：
 	- [[video_device#^r8lfyg|v4l2_ioctl_ops]]的所有回调的参数 `void* fh` 中
 		- 该参数指针为 `void*` 而非 `struct v4l2_fh*` 就是因为 `open` 回调中
 
@@ -1519,7 +1520,8 @@ struct media_device_ops {
 		- 功能含义：用户空间调用 `VIDIOC_QUERYCAP` 时触发回调
 		- 参数：
 			- `struct file *file` ：用户的打开实例
-			- `void *fh` 为：[[video_device#^qykuuk|open]]回调中设置的 `file->private_data` 的值
+			- `void *fh` 为：[[video_device#^qykuuk|open]]回调中设置的 `file->private_data` 的值，通常为 `struct v4l2_fh` 且与video_device的上下文句柄等价
+			- `struct v4l2_capability *cap` ：
 		- 标准语义：
 			- 需要在 `cap` 中存放设备的基本信息，通常包含：
 				- 驱动名(例如 `bttv` )
