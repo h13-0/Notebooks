@@ -1384,7 +1384,7 @@ struct vim2m_ctx {
 };
 ```
 
-#### 3.3.3.2 VFS open请求
+#### 3.3.3.2 VFS open请求 ^qykuuk
 
 在VFS向 `video_device` 对应的字符设备发起 `open` 请求时，其会被V4L2内部的 `v4l2_open` 函数统一处理，具体机制逻辑为：
 1. 对 `video_device` 管理所用的统一互斥锁 `videodev_lock` 加锁
@@ -1398,9 +1398,14 @@ struct vim2m_ctx {
 
 其对应的最简标准语义应当为：
 1. 为该文件指针分配对应的上下文句柄并初始化( `v4l2_fh_init` 等操作)
-2. 将<font color="#c00000">文件句柄</font> `&ctx->fh` (<span style="background:#fff88f"><font color="#c00000">而非上下文</font></span>) 存入 `filep->private_data` 中。
+2. 将<font color="#c00000">文件句柄</font> `&ctx->fh` (<span style="background:#fff88f"><font color="#c00000">而非上下文</font></span>，虽然通常等价) 存入 `filep->private_data` 中。
 	- 不可存其他数据，也不可不存，因为V4L2内部要使用该数据。可见章节[[video_device#^3kv1kh|上下文实例]]。
+	- 通常 `fh` 会是 `ctx` 的第一个成员，因此通常二者等价。
 3. 注册上下文句柄( `v4l2_fh_add` )
+
+注意：
+1. 不管 `filep->private_data` 中存入的是什么，<span style="background:#fff88f"><font color="#c00000">该值会出现在</font></span>：
+	- [[video_device#^r8lfyg|v4l2_ioctl_ops]]的所有回调的参数 `void* fh` 中
 
 ## 3.4 机制模型
 
@@ -1511,6 +1516,9 @@ struct media_device_ops {
 - 设备能力和基本信息查询：
 	- `int (*vidioc_querycap)(struct file *file, void *fh, struct v4l2_capability *cap)` ：
 		- 功能含义：用户空间调用 `VIDIOC_QUERYCAP` 时触发回调
+		- 参数：
+			- `struct file *file` ：用户的打开实例
+			- `void *fh` 为：[[video_device#^qykuuk|open]]回调中设置的 `file->private_data` 的值
 		- 标准语义：
 			- 需要在 `cap` 中存放设备的基本信息，通常包含：
 				- 驱动名(例如 `bttv` )
