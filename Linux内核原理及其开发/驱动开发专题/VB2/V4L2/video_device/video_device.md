@@ -1555,7 +1555,7 @@ struct media_device_ops {
 		- <span style="background:#fff88f"><font color="#c00000">注意</font></span>：
 			1. 在<span style="background:#fff88f"><font color="#c00000">所有</font></span><font color="#c00000">获取/设置/尝试格式类</font>回调的标准行为定义中，<span style="background:#fff88f"><font color="#c00000">当且仅当</font></span> `v4l2_format.type` <font color="#c00000">非法时才可以返回错误值</font>，<font color="#c00000">其他情况下应当由驱动修改到可接受的格式类型</font><span style="background:#fff88f"><font color="#c00000">并返回成功</font></span>。
 				- 原文(`Documentation/userspace-api/media/v4l/vidioc-g-fmt.rst`)： `Drivers should not return an error code unless the type field is invalid`
-				- 尽管对用户
+				- 尽管对用户层的请求已经做过一次路由转发，<font color="#c00000">但是驱动仍需要检查</font>
 			2. 获取/设置格式类回调文档可见 `Documentation/userspace-api/media/v4l/vidioc-g-fmt.rst`
 	- `int (*vidioc_g_fmt_vid_overlay)(...)`
 	- `int (*vidioc_g_fmt_vid_out)(...)`
