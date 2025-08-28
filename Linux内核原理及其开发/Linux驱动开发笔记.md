@@ -857,6 +857,38 @@ Kernel hacking -> Memory Debugging -> Kernel memory leak detector
 
 即开启了 `CONFIG_DEBUG_KMEMLEAK` 宏。
 
+随后当内存泄露发生时，内核日志会提示： `kmemleak: 11 new suspected memory leaks (see /sys/kernel/debug/kmemleak)` 并在对应文件输出类似如下内容：
+
+```text
+unreferenced object 0xffff9e37cb0b5400 (size 1024):
+  comm "v4l_id", pid 3660, jiffies 4294772526
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace (crc 8c508e7):
+    [<ffffffffa91dbd0a>] kmemleak_alloc+0x4a/0x90
+    [<ffffffffa844c031>] kmalloc_trace+0x2e1/0x390
+    [<ffffffffc0e6a3be>] v4l2_m2m_ctx_init+0x5e/0x160 [v4l2_mem2mem]
+    [<ffffffffc0dc165f>] mm2m_open+0x3f/0x120 [minimal_m2m_device]
+    [<ffffffffc0decabb>] v4l2_open+0x9b/0x160 [videodev]
+    [<ffffffffa84d857f>] chrdev_open+0xcf/0x250
+    [<ffffffffa84c9e6d>] do_dentry_open+0x21d/0x570
+    [<ffffffffa84cc6c3>] vfs_open+0x33/0x50
+    [<ffffffffa84e92a1>] path_openat+0xb11/0x1190
+    [<ffffffffa84ea43f>] do_filp_open+0xaf/0x170
+    [<ffffffffa84cca33>] do_sys_openat2+0xb3/0xe0
+    [<ffffffffa84ccef5>] __x64_sys_openat+0x55/0xa0
+    [<ffffffffa8005eb8>] x64_sys_call+0x1eb8/0x25c0
+    [<ffffffffa91cc4df>] do_syscall_64+0x7f/0x180
+    [<ffffffffa920012b>] entry_SYSCALL_64_after_hwframe+0x73/0x7b
+unreferenced object 0xffff9e37c1d90800 (size 1024):
+  comm "wireplumber", pid 2069, jiffies 4294772531
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+...
+```
+
 # 6 简易的字符设备驱动程序
 
 本章节的字符设备驱动程序将以一个简易的进程间管道通信为例。
