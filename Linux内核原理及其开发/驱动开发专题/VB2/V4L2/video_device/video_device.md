@@ -2096,6 +2096,16 @@ void v4l2_m2m_buf_done_and_job_finish(struct v4l2_m2m_dev *m2m_dev,
 
 其主要用于需要[[video_device#^10xf45|多输入单输出机制]]的设备中，即需要保持捕获缓冲区机制的设备。
 
+##### 3.5.1.5.4 添加缓冲区到对应队列
+
+
+
+
+
+
+
+
+
 
 
 
