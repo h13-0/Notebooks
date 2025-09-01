@@ -2098,7 +2098,18 @@ void v4l2_m2m_buf_done_and_job_finish(struct v4l2_m2m_dev *m2m_dev,
 
 ##### 3.5.1.5.4 添加缓冲区到对应队列
 
-
+```C
+/**
+ * v4l2_m2m_buf_queue() - add a buffer to the proper ready buffers list.
+ *
+ * @m2m_ctx: m2m context assigned to the instance given by struct &v4l2_m2m_ctx
+ * @vbuf: pointer to struct &vb2_v4l2_buffer
+ *
+ * Call from vb2_queue_ops->ops->buf_queue, vb2_queue_ops callback.
+ */
+void v4l2_m2m_buf_queue(struct v4l2_m2m_ctx *m2m_ctx,
+			struct vb2_v4l2_buffer *vbuf);
+```
 
 
 
