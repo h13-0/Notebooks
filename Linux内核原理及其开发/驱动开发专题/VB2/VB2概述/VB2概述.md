@@ -242,7 +242,7 @@ struct vb2_queue {
 	- 维护方：初始化前<font color="#c00000">驱动必须配置</font>
 - `struct device *dev` ：
 	- 功能含义：默认DMA分配设备
-	- 维护方：当使用DMA时驱动推荐设置
+	- 维护方：当使用DMA时驱动推荐设置，存储上下文请用成员 `drv_priv`
 - `unsigned long dma_attrs` ：
 	- 功能含义：DMA的映射属性
 	- 维护方：驱动可选设置
@@ -301,7 +301,7 @@ struct vb2_queue {
 	- 维护方：驱动可选配置，通常用 `vb2_common_ops` 
 - `void *drv_priv` ：
 	- 功能含义：驱动私有数据指针，通常指向包含 `vb2_queue` 的驱动自定义结构体
-	- 维护方：驱动按需配置和管理
+	- 维护方：驱动按需配置和管理，<font color="#c00000">通常用于存储上下文指针</font>
 - `u32 subsystem_flags` ：
 	- 功能含义：子系统标志位，用于区分该 `buffer` 被V4L2还是DVB或其他子系统使用。
 		- 在 `vb2-core` 中没有使用，但是V4L2子系统可能会用
