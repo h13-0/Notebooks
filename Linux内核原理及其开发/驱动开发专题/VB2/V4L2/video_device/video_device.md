@@ -1929,8 +1929,9 @@ int (*queue_init)(void *priv, struct vb2_queue *src_vq, struct vb2_queue *dst_vq
 其中：
 - 参数：
 	- `void* priv` ：为 `v4l2_m2m_ctx_init` 时的 `drv_priv` 参数，指向驱动的私有数据
-	- 
-
+	- `struct vb2_queue *src_vq` ：为源队列指针(用户->内核)，通常为 `OUTPUT` 类型
+	- `struct vb2_queue *dst_vq` ：为目标队列指针(用户<-内核)，通常为 `CAPTURE` 类型
+- 参考语义：正如上文所述，其功能主要为初始化输入输出队列，其
 
 
 
