@@ -2111,6 +2111,9 @@ void v4l2_m2m_buf_queue(struct v4l2_m2m_ctx *m2m_ctx,
 			struct vb2_v4l2_buffer *vbuf);
 ```
 
+该函数：
+- 功能含义：该函数会将传递来的 `vbuf` 添加到对应的就绪队列中
+	- 该函数应当在 `vb2_queue_ops->ops->buf_queue` 中被调用
 
 
 
