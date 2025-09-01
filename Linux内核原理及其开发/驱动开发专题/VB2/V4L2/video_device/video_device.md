@@ -1918,6 +1918,7 @@ struct v4l2_m2m_ctx *v4l2_m2m_ctx_init(struct v4l2_m2m_dev *m2m_dev,
 1. 配置输入输出队列的输入输出方向
 2. 配置缓冲区内存类型(`VB2_MMAP` 、 `VB2_USERPTR` 等)
 3. 配置 `vb2_ops` 回调，可见[[VB2概述#^tqizjf|vb2相关回调函数]] 
+4. 调用 `vb2_queue_init` 初始化配置好的两个缓冲队列
 等，每个队列的初始化与普通摄像头的缓冲区队列初始化类似。
 
 该回调函数的原型应符合如下定义：
