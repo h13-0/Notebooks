@@ -308,6 +308,8 @@ struct vb2_queue {
 	- 维护方：由各子系统设置，驱动只读
 - `unsigned int buf_struct_size` ：
 	- 功能含义：表示在标准的 `struct vb2_buffer` 后，要额外预留多少空间，用于存储驱动的数据。
+		- <font color="#c00000">也就是说可以通过设置比</font> `struct vb2_queue` <font color="#c00000">更大的值</font>，<font color="#c00000">从而附加自己的数据</font>。<font color="#c00000">且自己的数据必须附加在末尾</font>，即自定义的结构体的第一个元素必须是 `struct vb2_queue` 。
+		- 在内核中 `struct v4l2_m2m_buffer` 即是一个附加数据的例子，使用 `struct v4l2_m2m_buffer* buf = (struct v4l2_m2m_buffer*)vb2_buf` 和 `buf.list` 访问自行的数据。
 	- 维护方：驱动可选设置
 - `u32 timestamp_flags` ：
 	- 功能含义：时间戳标志，由驱动设置以指示时间戳的时钟源，可指定：
