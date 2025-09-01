@@ -2096,7 +2096,7 @@ void v4l2_m2m_buf_done_and_job_finish(struct v4l2_m2m_dev *m2m_dev,
 
 其主要用于需要[[video_device#^10xf45|多输入单输出机制]]的设备中，即需要保持捕获缓冲区机制的设备。
 
-##### 3.5.1.5.4 添加缓冲区到对应队列
+##### 3.5.1.5.4 添加用户入队的缓冲区到m2m的对应队列中
 
 ```C
 /**
@@ -2114,7 +2114,9 @@ void v4l2_m2m_buf_queue(struct v4l2_m2m_ctx *m2m_ctx,
 该函数：
 - 功能含义：该函数会将传递来的 `vbuf` 添加到对应的就绪队列中
 	- 该函数应当在 `vb2_queue_ops->ops->buf_queue` 中被调用
-
+- 参数：
+	- `struct v4l2_m2m_ctx *m2m_ctx` ：要添加到的m2m的上下文
+	- `struct vb2_v4l2_buffer *vbuf` ：
 
 
 
