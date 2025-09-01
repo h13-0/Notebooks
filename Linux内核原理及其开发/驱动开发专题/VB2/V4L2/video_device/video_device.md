@@ -1920,6 +1920,20 @@ struct v4l2_m2m_ctx *v4l2_m2m_ctx_init(struct v4l2_m2m_dev *m2m_dev,
 3. 配置 `vb2_ops` 回调，可见[[VB2概述#^tqizjf|vb2相关回调函数]] 
 等，每个队列的初始化与普通摄像头的缓冲区队列初始化类似。
 
+该回调函数的原型应符合如下定义：
+
+```C
+int (*queue_init)(void *priv, struct vb2_queue *src_vq, struct vb2_queue *dst_vq);
+```
+
+其中：
+- 参数：
+	- `void* priv` ：为 `v4l2_m2m_ctx_init` 时的 `drv_priv` 参数，指向驱动的私有数据
+	- 
+
+
+
+
 #### 3.5.1.4 M2M设备操作回调(v4l2_m2m_ops) ^r39fw1
 
 该数据结构定义为：
