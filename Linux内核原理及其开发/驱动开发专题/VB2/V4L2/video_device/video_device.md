@@ -1626,7 +1626,8 @@ V4L2的内存到内存设备模型<span style="background:#fff88f"><font color="
 因此，V4L2的基本模型包含了一进一出两个数据队列，并为该模型提供了若干通用机制。
 
 需要注意：
-1. 与 `video_device` 和 `v4l2_device` 不同的是，`v4l2_m2m_dev` <span style="background:#fff88f"><font color="#c00000">并不是设备</font></span>：
+1. m2m模型是为同一个打开实例设计的，即n
+2. 与 `video_device` 和 `v4l2_device` 不同的是，`v4l2_m2m_dev` <span style="background:#fff88f"><font color="#c00000">并不是设备</font></span>：
 	1. <font color="#c00000">该对象没有嵌入</font> `struct device` 
 	2. <font color="#c00000">该对象不会注册到sysfs中</font>
 	`v4l2_m2m_dev` <font color="#c00000">应当属于<u>M2M设备上下文</u></font>
