@@ -1990,7 +1990,7 @@ struct v4l2_m2m_ops {
 	- <span style="background:#fff88f"><font color="#c00000">关键规则</font></span>：
 		- <span style="background:#fff88f"><font color="#c00000">该函数禁止阻塞、休眠</font></span>
 		- 该函数应当快速返回
-		- 返回非0表示设备已经准备好，返回0表示设备尚未ready
+		- 返回<font color="#c00000">非</font>0表示设备已经准备好，返回0表示设备尚未ready
 - `void (*job_abort)(void *priv)` 
 	- 功能含义：任务紧急终止
 	- 被执行时机(下列之一)：
