@@ -3472,7 +3472,7 @@ workqueue和tasklet<font color="#c00000">都是</font>内核的一种<font color
 1. 为该workqueue在每个CPU上都创建一个专属的"内核线程"
 2. 只为该workqueue创建一个"内核线程"，<font color="#c00000">在默认情况下该队列会被绑定到一个具体的CPU上</font>，<font color="#c00000">具体是哪个CPU取决于调度器</font>，但是通常是<font color="#c00000">提交时</font>( `queue_work` )使用的CPU。需要注意：
 	1. 若原先的CPU被弹出或不可用，则会被转移到其他CPU上运行。
-	2. 此外，若多次调度该任务，也会始终在同一个CPU上运行。
+	2. 实际测试中，即使系统负载不高，<font color="#c00000">也可能会被切换到别的CPU上</font>(也就是不保证始终在同一个CPU上)。
 
 ```C
 #include <linux/workqueue.h>
