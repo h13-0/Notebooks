@@ -1975,7 +1975,7 @@ struct v4l2_m2m_ops {
 	- 功能含义：驱动处理实际具体M2M任务的<font color="#c00000">入口</font>，<font color="#c00000">作业不需要在此回调返回前结束</font>(也就是说通常不把实际的任务放到这里)。
 	- 参数：
 		- `void *priv` ：为 `v4l2_m2m_ctx_init` 时传入的 `drv_priv` 参数
-	- 被执行时机(条件)，需要同时满足：
+	- 被执行时机(条件)，<font color="#c00000">需要同时满足</font>：
 		1. 已调用 `VIDIOC_STREAMON` 启动 `OUTPUT` 和 `CAPTURE` 队列
 		2. 两个队列中都有可用缓冲区(除非 `job_ready` 自定义条件)
 		3. 设备当前空闲(无运行中任务)
