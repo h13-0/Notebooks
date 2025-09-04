@@ -1983,7 +1983,7 @@ struct v4l2_m2m_ops {
 	- 维护方：<span style="background:#fff88f"><font color="#c00000">必须实现</font></span>
 	- <span style="background:#fff88f"><font color="#c00000">关键规则</font></span>：
 		- <span style="background:#fff88f"><font color="#c00000">该函数禁止阻塞、休眠</font></span>
-		- <font color="#c00000">任务完成后通过中断通知</font>(<span style="background:#fff88f"><font color="#c00000">异步</font></span>，这也是为什么说该函数是入口的原因)，需要调用 `v4l2_m2m_job_finish` 或 ` v4l2_m2m_buf_done_and_job_finish ` 来通知V4L2框架对应任务已经执行完毕。
+		- <font color="#c00000">任务完成后必须通过中断通知</font>(<span style="background:#fff88f"><font color="#c00000">异步</font></span>，这也是为什么说该函数是入口的原因)，需要调用 `v4l2_m2m_job_finish` 或 ` v4l2_m2m_buf_done_and_job_finish ` 来通知V4L2框架对应任务已经执行完毕。
 		- 若任务失败，则调用 `v4l2_m2m_buf_done_and_job_finish(..., VB2_BUF_STATE_ERROR)` 来通知V4L2任务失败。
 - `int (*job_ready)(void *priv)` 
 	- 功能含义：询驱动(设备)当前能否<font color="#c00000">立即</font>开启新任务
