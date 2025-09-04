@@ -764,7 +764,7 @@ int main(int argc, char **argv)
 
 ### 2.2.14 m2m设备完整实例代码
 
-可见[[minimal_m2m_device#^j7ak9n|mm2m用户态测试]]。
+可见[[mm2m_device#^j7ak9n|mm2m用户态测试]]。
 
 ## 2.3 video_device用户态工具
 
