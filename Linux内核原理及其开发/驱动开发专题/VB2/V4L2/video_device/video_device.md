@@ -1385,6 +1385,34 @@ struct vim2m_ctx {
 };
 ```
 
+##### 3.3.3.1.1 相关API
+
+###### 3.3.3.1.1.1 初始化文件句柄(v4l2_fh_init)
+
+```C
+/**
+ * v4l2_fh_init - Initialise the file handle.
+ *
+ * @fh: pointer to &struct v4l2_fh
+ * @vdev: pointer to &struct video_device
+ *
+ * Parts of the V4L2 framework using the
+ * file handles should be initialised in this function. Must be called
+ * from driver's v4l2_file_operations->open\(\) handler if the driver
+ * uses &struct v4l2_fh.
+ */
+void v4l2_fh_init(struct v4l2_fh *fh, struct video_device *vdev);
+```
+
+该函数：
+- 功能含义：初始化指针指向的文件句柄，并关联到对应的 `video_device` 
+- 注意事项：
+	1. <font color="#c00000">必须</font>在 `v4l2_file_operations->open()` 中被调用
+	2. <font color="#c00000">必须</font>所有使用 `struct v4l2_fh` 的驱动中都要调用
+	3. 必须在
+
+
+
 #### 3.3.3.2 VFS open请求 ^qykuuk
 
 在VFS向 `video_device` 对应的字符设备发起 `open` 请求时，其会被V4L2内部的 `v4l2_open` 函数统一处理，具体机制逻辑为：
