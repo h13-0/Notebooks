@@ -871,7 +871,7 @@ int vb2_ioctl_remove_bufs(struct file *file, void *priv,
 - 
 
 注意：
-- 上述helpers需要设置 `video`
+- <font color="#c00000">上述helpers需要设置</font> `video_device.queue` <font color="#c00000">后才可以使用</font>
 
 ### 3.1.5 手动操作函数
 
