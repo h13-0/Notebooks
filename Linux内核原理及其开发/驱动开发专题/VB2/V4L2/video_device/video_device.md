@@ -1409,7 +1409,86 @@ void v4l2_fh_init(struct v4l2_fh *fh, struct video_device *vdev);
 - 注意事项：
 	1. <font color="#c00000">必须</font>在 `v4l2_file_operations->open()` 中被调用
 	2. <font color="#c00000">必须</font>所有使用 `struct v4l2_fh` 的驱动中都要调用
-	3. 必须在
+	3. 必须在 `v4l2_fh_add()` 前被调用
+	4. 此函数只初始化文件句柄，并不将其加入到设备列表中(该功能是 `v4l2_fh_add` 负责)
+
+###### 3.3.3.1.1.2 添加文件句柄到设备列表(v4l2_fh_add)
+
+```C
+/**
+ * v4l2_fh_add - Add the fh to the list of file handles on a video_device.
+ *
+ * @fh: pointer to &struct v4l2_fh
+ *
+ * .. note::
+ *    The @fh file handle must be initialised first.
+ */
+void v4l2_fh_add(struct v4l2_fh *fh);
+```
+
+该函数：
+- 功能含义：
+	1. 将文件句柄添加到视频设备的文件句柄列表中
+	2. 使文件句柄能够接收设备事件和通知
+	3. 设置 `struct file.private_data` 指向文件句柄
+- 注意事项：
+	1. 此操作会使文件句柄开始接收设备事件
+
+###### 3.3.3.1.1.3 从设备列表移除文件句柄(v4l2_fh_del)
+
+```C
+/**
+ * v4l2_fh_del - Remove file handle from the list of file handles.
+ *
+ * @fh: pointer to &struct v4l2_fh
+ *
+ * On error filp->private_data will be %NULL, otherwise it will point to
+ * the &struct v4l2_fh.
+ *
+ * .. note::
+ *    Must be called in v4l2_file_operations->release\(\) handler if the driver
+ *    uses &struct v4l2_fh.
+ */
+void v4l2_fh_del(struct v4l2_fh *fh);
+```
+
+该函数：
+- 功能含义：
+	1. 从视频设备的文件句柄列表中移除指定的文件句柄
+	2. 停止文件句柄接收设备事件和通知
+	3. 设置 `struct file.private_data` 为 NULL
+- 注意事项：
+	1. 必须在 `v4l2_file_operations->release()` 中被调用
+	2. 必须在 `v4l2_fh_exit()` 之前调用
+
+###### 3.3.3.1.1.4 释放文件句柄相关资源
+
+```C
+/**
+ * v4l2_fh_exit - Release resources related to a file handle.
+ *
+ * @fh: pointer to &struct v4l2_fh
+ *
+ * Parts of the V4L2 framework using the v4l2_fh must release their
+ * resources here, too.
+ *
+ * .. note::
+ *    Must be called in v4l2_file_operations->release\(\) handler if the
+ *    driver uses &struct v4l2_fh.
+ */
+void v4l2_fh_exit(struct v4l2_fh *fh);
+```
+
+该函数：
+- 功能含义：释放文件句柄
+- 注意事项：
+	1. 必须在 `v4l2_file_operations->release()` 中被调用
+	2. 在 `v4l2_fh_del()` 之后调用
+
+###### 3.3.3.1.1.5 检查某文件句柄是否是设备的唯一句柄(v4l2_fh_is_singular)
+
+
+
 
 
 
