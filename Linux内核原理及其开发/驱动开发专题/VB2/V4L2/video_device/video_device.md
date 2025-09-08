@@ -1487,10 +1487,22 @@ void v4l2_fh_exit(struct v4l2_fh *fh);
 
 ###### 3.3.3.1.1.5 检查某文件句柄是否是设备的唯一句柄(v4l2_fh_is_singular)
 
+```C
+/**
+ * v4l2_fh_is_singular - Returns 1 if this filehandle is the only filehandle
+ *	 opened for the associated video_device.
+ *
+ * @fh: pointer to &struct v4l2_fh
+ *
+ * If @fh is NULL, then it returns 0.
+ */
+int v4l2_fh_is_singular(struct v4l2_fh *fh);
+```
 
-
-
-
+该函数：
+- 功能含义：
+	- 检查给定的文件句柄是否是关联视频设备上唯一打开的文件句柄
+- 返回值：如果该 `fh` 是该设备唯一的打开句柄，则返回 `1` ，否则返回 `0`
 
 #### 3.3.3.2 VFS open请求 ^qykuuk
 

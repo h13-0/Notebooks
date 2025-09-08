@@ -784,6 +784,25 @@ struct vb2_mem_ops {
 
 ### 2.5.1 初始化队列(vb2_queue_init)
 
+```C
+/**
+ * vb2_queue_init() - initialize a videobuf2 queue
+ * @q:		pointer to &struct vb2_queue with videobuf2 queue.
+ *
+ * The vb2_queue structure should be allocated by the driver. The driver is
+ * responsible of clearing it's content and setting initial values for some
+ * required entries before calling this function.
+ * q->ops, q->mem_ops, q->type and q->io_modes are mandatory. Please refer
+ * to the struct vb2_queue description in include/media/videobuf2-core.h
+ * for more information.
+ */
+int __must_check vb2_queue_init(struct vb2_queue *q);
+```
+
+该函数：
+
+
+
 ### 2.5.2 设置名称并初始化队列(vb2_queue_init_name)
 
 ```C
