@@ -800,7 +800,7 @@ int __must_check vb2_queue_init(struct vb2_queue *q);
 ```
 
 该函数：
-
+- 功能含义：初始化一个 `vb2_queue` 
 
 
 ### 2.5.2 设置名称并初始化队列(vb2_queue_init_name)
