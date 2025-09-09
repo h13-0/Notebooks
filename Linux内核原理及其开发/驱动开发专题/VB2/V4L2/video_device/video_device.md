@@ -1684,6 +1684,8 @@ struct media_device_ops {
 	- `int (*vidioc_g_fmt_vid_out)(...)`
 	- 
 - 缓冲区管理：
+	- `int (*vidioc_reqbufs)(struct file *file, void *fh, struct v4l2_requestbuffers *b)` ：
+		- 功能含义：
 - 分辨率枚举：
 	- `int (*vidioc_enum_framesizes)(struct file *file, void *fh, struct v4l2_frmsizeenum *fsize)` ：
 		- 功能含义：用户态的分辨率枚举功能 `ioctl(VIDIOC_ENUM_FRAMESIZES)` 的回调
