@@ -1699,12 +1699,16 @@ struct media_device_ops {
 	- `int (*vidioc_querybuf)(struct file *file, void *fh, struct v4l2_buffer b)` ：
 		- 功能含义：查询已分配缓冲区的信息，如物理地址、长度和偏移量
 		- 参考语义：
-			1. 验证 `b->index` 是否在有效范围内
-			2. 根据内存类型填充相应字段：
+			1. 验证 `b->type` 是否等于 ``
+			2. 验证 `b->index` 是否在有效范围内
+			3. 根据内存类型填充相应字段：
 				- `MMAP` ：`b->m.offset` 、`b->length`
 				- `USERPTR` ：`b->m.userptr` 、`b->length`
 				- `DMABUF` ：`b->m.fd`
-			3. ti n
+			4. 填充其他字段：`b->flags` 、 `b->field` 、`b->timestamp` 等
+		- 返回值：成功时为 `0` ，无效索引返回 `-EINVAL` 
+		- 实现参考：
+			- 
 - 分辨率枚举：
 	- `int (*vidioc_enum_framesizes)(struct file *file, void *fh, struct v4l2_frmsizeenum *fsize)` ：
 		- 功能含义：用户态的分辨率枚举功能 `ioctl(VIDIOC_ENUM_FRAMESIZES)` 的回调
