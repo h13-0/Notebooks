@@ -1683,9 +1683,16 @@ struct media_device_ops {
 	- `int (*vidioc_g_fmt_vid_overlay)(...)`
 	- `int (*vidioc_g_fmt_vid_out)(...)`
 	- 
-- 缓冲区管理：
+- 缓冲区管理(<font color="#c00000">这些回调通常不需要自行实现</font>，参考语义在使用helpers时仅供了解)：
 	- `int (*vidioc_reqbufs)(struct file *file, void *fh, struct v4l2_requestbuffers *b)` ：
-		- 功能含义：
+		- 功能含义：请求分配缓冲区回调
+		- 参考语义：
+			1. 验证 `b->type` 和 `b->memory` 是否受支持
+			2. 如果 `b->count == 0`，则释放所有缓冲区并返回 `0` 
+			3. 分配 `b->count` 个缓冲区
+			4. 设置 `b->count` 为实际分配的缓冲区数量
+			5. 初始化缓冲区队列状态
+		- 返回值：成功时为 `0` ，否则为负的错误码
 - 分辨率枚举：
 	- `int (*vidioc_enum_framesizes)(struct file *file, void *fh, struct v4l2_frmsizeenum *fsize)` ：
 		- 功能含义：用户态的分辨率枚举功能 `ioctl(VIDIOC_ENUM_FRAMESIZES)` 的回调
