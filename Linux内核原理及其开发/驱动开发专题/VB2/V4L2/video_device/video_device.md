@@ -1696,10 +1696,10 @@ struct media_device_ops {
 		- 实现参考：
 			1. 完成 `b->type` 和 `b->memory` 验证
 			2. 调用并返回 `vb2_core_reqbufs` 完成后续语义
-	- `int (*vidioc_querybuf)(struct file *file, void *fh, struct v4l2_buffer b)` ：
+	- `int (*vidioc_querybuf)(struct file *file, void *fh, struct v4l2_buffer *b)` ：
 		- 功能含义：查询已分配缓冲区的信息，如物理地址、长度和偏移量
 		- 参考语义：
-			1. 验证 `b->type` 是否等于 ``
+			1. 验证 `b->type` 是否合法
 			2. 验证 `b->index` 是否在有效范围内
 			3. 根据内存类型填充相应字段：
 				- `MMAP` ：`b->m.offset` 、`b->length`
@@ -1708,7 +1708,8 @@ struct media_device_ops {
 			4. 填充其他字段：`b->flags` 、 `b->field` 、`b->timestamp` 等
 		- 返回值：成功时为 `0` ，无效索引返回 `-EINVAL` 
 		- 实现参考：
-			- 
+			1. 从 `file` 中找到 `video_device` ，并提取要查询的队列
+			2. 调用 `vb2_querybuf` 完成后续语义
 - 分辨率枚举：
 	- `int (*vidioc_enum_framesizes)(struct file *file, void *fh, struct v4l2_frmsizeenum *fsize)` ：
 		- 功能含义：用户态的分辨率枚举功能 `ioctl(VIDIOC_ENUM_FRAMESIZES)` 的回调
