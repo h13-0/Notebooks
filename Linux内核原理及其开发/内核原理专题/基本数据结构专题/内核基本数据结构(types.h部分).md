@@ -364,12 +364,78 @@ flowchart LR
 list_del(node1);
 ```
 
-### 5.1.8 替换节点
+### 5.1.8 替换节点(list_replace)
+
+```C
+/**
+ * list_replace - replace old entry by new one
+ * @old : the element to be replaced
+ * @new : the new element to insert
+ *
+ * If @old was empty, it will be overwritten.
+ */
+static inline void list_replace(struct list_head *old,
+				struct list_head *new)
+{
+	new->next = old->next;
+	new->next->prev = new;
+	new->prev = old->prev;
+	new->prev->next = new;
+}
+```
+
+如上述代码所示，该函数：
+- 会使用 `new` 节点替换<font color="#c00000">链表的</font> `old` 节点，<font color="#c00000">但是</font> `old` <font color="#c00000">节点本身的数据结构不会发生改变</font>，即：
+	- `old` 节点的前后指针不变(<font color="#c00000">即不可再访问</font> `old.prev` <font color="#c00000">等</font>)
+	- `old` 的资源不会被改变
+- 因此建议使用下方的 `list_replace_init` 函数
+
+### 5.1.9 替换并重置老节点(list_replace_init)
+
+```C
+/**
+ * list_replace_init - replace old entry by new one and initialize the old one
+ * @old : the element to be replaced
+ * @new : the new element to insert
+ *
+ * If @old was empty, it will be overwritten.
+ */
+static inline void list_replace_init(struct list_head *old,
+				     struct list_head *new)
+{
+	list_replace(old, new);
+	INIT_LIST_HEAD(old);
+}
+```
+
+该函数在 `list_replace` 的基础上<font color="#c00000">增加了重置老节点的功能</font>(将 `next` 和 `prev` 均指向自己)
+
+### 5.1.10 交换节点(list_swap)
+
+```C
+/**
+ * list_swap - replace entry1 with entry2 and re-add entry1 at entry2's position
+ * @entry1: the location to place entry2
+ * @entry2: the location to place entry1
+ */
+static inline void list_swap(struct list_head *entry1,
+			     struct list_head *entry2)
+{
+	struct list_head *pos = entry2->prev;
+
+	list_del(entry2);
+	list_replace(entry1, entry2);
+	if (pos == entry1)
+		pos = entry2;
+	list_add(entry1, pos);
+}
+```
 
 
 
 
-### 5.1.9 遍历节点(list_for_each)
+
+### 5.1.11 遍历节点(list_for_each)
 
 `list_for_each` 函数的定义如下：
 
