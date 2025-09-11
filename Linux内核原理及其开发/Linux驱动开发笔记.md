@@ -4321,8 +4321,8 @@ int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, co
 ## 14.2 基本数据结构
 
 基本索引：
-- [[内核基本数据结构(types.h部分)]]
-	- [[内核基本数据结构(types.h部分)#3 链表锚点 xl7wru|链表锚点]]
+- [[基本数据结构(types.h部分)]]
+	- [[链表(list.h)#^xl7wru|链表锚点]]
 
 ## 14.3 其他若干问题
 
@@ -4416,7 +4416,7 @@ struct cdev {
 ```
 
 通过"继承"该 `kobject` ，Linux内核可以完成统一的引用计数、sysfs表述、热拔插处理等特性。
-与[[内核基本数据结构(types.h部分)#3 链表锚点 xl7wru|链表锚点]]等数据结构相同的是，可以使用 `container_of` 宏查找 `kobject` 的host数据结构，详见下方子章节。
+与[[链表(list.h)#^xl7wru|链表锚点]]等数据结构相同的是，可以使用 `container_of` 宏查找 `kobject` 的host数据结构，详见下方子章节。
 
 ### 17.1.1 kobject相关API ^blb9e0
 
