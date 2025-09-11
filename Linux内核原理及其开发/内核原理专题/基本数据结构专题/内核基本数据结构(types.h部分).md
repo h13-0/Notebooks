@@ -358,11 +358,11 @@ flowchart LR
 	D --> A
 ```
 
-各宿主节点均遵从上方定义的[[内核基本数据结构(types.h部分)#^4l9s1l|统一的宿主数据结构]]，则删除node2节点的示例为：
+则删除其中节点时，传入对应的entry即可。
+需要注意：
+- 该函数仅从链表结构中删除了该节点，但是该
 
-```C
-list_del(node1);
-```
+
 
 ### 5.1.8 替换节点(list_replace)
 
@@ -431,9 +431,7 @@ static inline void list_swap(struct list_head *entry1,
 }
 ```
 
-
-
-
+该函数可以交换两个节点，即使这两个节点在不同的链表上(尽管不推荐这样做)
 
 ### 5.1.11 遍历节点(list_for_each)
 
