@@ -364,7 +364,12 @@ flowchart LR
 list_del(node1);
 ```
 
-### 5.1.8 遍历节点(list_for_each)
+### 5.1.8 替换节点
+
+
+
+
+### 5.1.9 遍历节点(list_for_each)
 
 `list_for_each` 函数的定义如下：
 
