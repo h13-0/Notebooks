@@ -360,9 +360,8 @@ flowchart LR
 
 则删除其中节点时，传入对应的entry即可。
 需要注意：
-- 该函数仅从链表结构中删除了该节点，但是该
-
-
+- 该函数<font color="#c00000">仅从链表结构中删除了该节点</font>，<font color="#c00000">但是该节点的</font> `prev` <font color="#c00000">等指针依旧指向原节点</font>。此时再访问前后指针是错误的危险行为。
+- 若需要删除该节点后重置该节点的双指针，请使用 `list_del_init`
 
 ### 5.1.8 替换节点(list_replace)
 
@@ -433,7 +432,23 @@ static inline void list_swap(struct list_head *entry1,
 
 该函数可以交换两个节点，即使这两个节点在不同的链表上(尽管不推荐这样做)
 
-### 5.1.11 遍历节点(list_for_each)
+### 5.1.11 删除并重置节点(list_del_init)
+
+```C
+/**
+ * list_del_init - deletes entry from list and reinitialize it.
+ * @entry: the element to delete from the list.
+ */
+static inline void list_del_init(struct list_head *entry)
+{
+	__list_del_entry(entry);
+	INIT_LIST_HEAD(entry);
+}
+```
+
+在 `list_del` 仅从链表中删除节点的基础上，重置了链表节点的前后指针(使其指向自身)。
+
+### 5.1.12 遍历节点(list_for_each)
 
 `list_for_each` 函数的定义如下：
 
