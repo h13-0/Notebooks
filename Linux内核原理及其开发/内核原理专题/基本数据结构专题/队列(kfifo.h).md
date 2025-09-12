@@ -121,7 +121,8 @@ unsigned int next_index = index + 1 < size ? 0 : index + 1;
 
 该宏函数：
 - 功能含义：
-
+- 注意：
+	- 该函数与 `DECLARE_KFIFO` 的区别仅在于 `DECLARE_KFIFO` <font color="#c00000">得到的队列缓冲区在结构体内部</font>，`DECLARE_KFIFO_PTR` <font color="#c00000">得到的队列不包含缓冲区</font>，<font color="#c00000">需要后续分配</font>。
 
 ## 3.3 定义fifi(DEFINE_KFIFO)
 
