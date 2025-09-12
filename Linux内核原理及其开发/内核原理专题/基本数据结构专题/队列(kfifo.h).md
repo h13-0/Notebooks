@@ -24,70 +24,35 @@ struct __kfifo {
 };
 ```
 
-随后对于内核开发者，使用 `DEFINE_KFIFO(fifo, type, size)` 即可完成队列定义：
-
-```C
-/**
- * DEFINE_KFIFO - macro to define and initialize a fifo
- * @fifo: name of the declared fifo datatype
- * @type: type of the fifo elements
- * @size: the number of elements in the fifo, this must be a power of 2
- *
- * Note: the macro can be used for global and local fifo data type variables.
- */
-#define DEFINE_KFIFO(fifo, type, size) \
-	DECLARE_KFIFO(fifo, type, size) = \
-	(typeof(fifo)) { \
-		{ \
-			{ \
-			.in	= 0, \
-			.out	= 0, \
-			.mask	= __is_kfifo_ptr(&(fifo)) ? \
-				  0 : \
-				  ARRAY_SIZE((fifo).buf) - 1, \
-			.esize	= sizeof(*(fifo).buf), \
-			.data	= __is_kfifo_ptr(&(fifo)) ? \
-				NULL : \
-				(fifo).buf, \
-			} \
-		} \
-	}
-```
-
-其中：
+随后对于内核开发者，使用 `DEFINE_KFIFO(fifo, type, size)` 即可完成队列定义，其中：
 - `fifo` 为队列名
 - `type` 为队列存储的元素类型
 - `size` 为队列大小
 随后该宏会生成如下的定义代码：
 
 ```C
-struct {
+struct {     						// 匿名结构体
 	union {
 		struct __kfifo	kfifo;
-		type		*type;
-		const type	*const_type;
-		char		(*rectype)[0];
-		type		*ptr;
-		type const	*ptr_const;
-	}
-} fifo = (typeof(fifo)) {
-{ 
-    {
-        .in    = 0, \  
-               .out   = 0, \  
-               .mask  = __is_kfifo_ptr(&(fifo)) ? \  
-                        0 : \  
-                        ARRAY_SIZE((fifo).buf) - 1, \  
-               .esize = sizeof(*(fifo).buf), \  
-               .data  = __is_kfifo_ptr(&(fifo)) ? \  
-                      NULL : \  
-                      (fifo).buf, \  
-               } \  
-        } \  
+		type		*type;  		// 运行时不会被使用，仅用于编译时静态类型检查
+		const type	*const_type;	// 运行时不会被使用
+		char		(*rectype)[0];	// 运行时不会被使用
+		type		*ptr;			// 运行时不会被使用
+		type const	*ptr_const;		// 运行时不会被使用
+	};
+	type buf[((size < 2) || (size & (size - 1))) ? -1 : size];
+} fifo = (typeof(fifo)) 
+{
+	{ 
+	    {
+	        .in    = 0,
+	        .out   = 0,
+	        .mask  = __is_kfifo_ptr(&(fifo)) ? 0 : ARRAY_SIZE((fifo).buf) - 1,  
+	        .esize = sizeof(*(fifo).buf),  
+	        .data  = __is_kfifo_ptr(&(fifo)) ? NULL : (fifo).buf, 
+	    }
+	}  
 }
-
-
-
 ```
 
 
