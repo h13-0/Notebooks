@@ -69,7 +69,23 @@ struct {     						// 匿名结构体
 
 ## 2.2 队列机制
 
-正如数据结构子章节中所述，队列的大小必须大于2，且为2的整数幂。而由于环形队列
+正如数据结构子章节中所述，队列的大小必须大于2，且为2的整数幂。而由于环形队列的引索到达末尾后需要回绕到前部，现在考虑如下几种实现方式：
+
+```C
+// 使用位掩码实现(当且仅当size为2的整数幂时可用)
+unsigned int index = current_index;
+unsigned int next_index = (index + 1) & mask; // 等价于 (index + 1) % size
+
+// 普通的取余
+unsigned int next_index = (index + 1) % size;
+
+// if判断法
+unsigned int next_index = index + 1 < size ? 0 : index + 1;
+```
+
+那么明显的位掩码的效率更高。
+
+# 3 相关API
 
 
 
