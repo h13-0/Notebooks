@@ -58,7 +58,37 @@ struct __kfifo {
 - `fifo` 为队列名
 - `type` 为队列存储的元素类型
 - `size` 为队列大小
-随后该宏会生成如下的
+随后该宏会生成如下的定义代码：
+
+```C
+struct {
+	union {
+		struct __kfifo	kfifo;
+		type		*type;
+		const type	*const_type;
+		char		(*rectype)[0];
+		type		*ptr;
+		type const	*ptr_const;
+	}
+} fifo = (typeof(fifo)) {
+{ 
+    {
+        .in    = 0, \  
+               .out   = 0, \  
+               .mask  = __is_kfifo_ptr(&(fifo)) ? \  
+                        0 : \  
+                        ARRAY_SIZE((fifo).buf) - 1, \  
+               .esize = sizeof(*(fifo).buf), \  
+               .data  = __is_kfifo_ptr(&(fifo)) ? \  
+                      NULL : \  
+                      (fifo).buf, \  
+               } \  
+        } \  
+}
+
+
+
+```
 
 
 
