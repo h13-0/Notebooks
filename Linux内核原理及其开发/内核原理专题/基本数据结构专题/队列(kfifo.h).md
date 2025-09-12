@@ -26,7 +26,7 @@ struct __kfifo {
 };
 ```
 
-随后对于内核开发者，使用 `DEFINE_KFIFO(fifo, type, size)` 即可完成队列定义，其中：
+随后对于内核开发者，使用 `DEFINE_KFIFO(fifo, type, size)` 即可完成队定义，其中：
 - `fifo` 为队列名
 - `type` 为队列存储的元素类型
 - `size` 为队列大小，<font color="#c00000">其值必须大于2</font>，<font color="#c00000">且为2的整数幂</font>
@@ -86,6 +86,61 @@ unsigned int next_index = index + 1 < size ? 0 : index + 1;
 那么明显的位掩码的效率更高。
 
 # 3 相关API
+
+## 3.1 声明fifo(DECLARE_KFIFO)
+
+```C
+/**
+ * DECLARE_KFIFO - macro to declare a fifo object
+ * @fifo: name of the declared fifo
+ * @type: type of the fifo elements
+ * @size: the number of elements in the fifo, this must be a power of 2
+ */
+#define DECLARE_KFIFO(fifo, type, size)	STRUCT_KFIFO(type, size) fifo
+```
+
+该宏函数：
+- 功能含义：声明一个内嵌数组的FIFO结构体变量
+- 参数：
+	- `fifo` 为队列名
+	- `type` 为队列存储的元素类型
+	- `size` 为队列大小，<font color="#c00000">其值必须大于2</font>，<font color="#c00000">且为2的整数幂</font>
+- 注意：
+	- 该宏只声明一个fifo对象，但并不初始化其成员值。
+
+## 3.2 声明fifo指针(DECLARE_KFIFO_PTR)
+
+```C
+/**
+ * DECLARE_KFIFO_PTR - macro to declare a fifo pointer object
+ * @fifo: name of the declared fifo
+ * @type: type of the fifo elements
+ */
+#define DECLARE_KFIFO_PTR(fifo, type)	STRUCT_KFIFO_PTR(type) fifo
+```
+
+该宏函数：
+- 功能含义：
+
+
+## 3.3 定义fifi(DEFINE_KFIFO)
+
+```C
+/**
+ * DEFINE_KFIFO - macro to define and initialize a fifo
+ * @fifo: name of the declared fifo datatype
+ * @type: type of the fifo elements
+ * @size: the number of elements in the fifo, this must be a power of 2
+ *
+ * Note: the macro can be used for global and local fifo data type variables.
+ */
+#define DEFINE_KFIFO(fifo, type, size)
+```
+
+
+
+
+
 
 
 
