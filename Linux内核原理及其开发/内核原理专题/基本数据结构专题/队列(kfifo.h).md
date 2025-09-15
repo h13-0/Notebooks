@@ -124,7 +124,7 @@ unsigned int next_index = index + 1 < size ? 0 : index + 1;
 - 注意：
 	- 该函数与 `DECLARE_KFIFO` 的区别仅在于 `DECLARE_KFIFO` <font color="#c00000">得到的队列缓冲区在结构体内部</font>，`DECLARE_KFIFO_PTR` <font color="#c00000">得到的队列不包含缓冲区</font>，<font color="#c00000">需要后续分配</font>。
 
-## 3.3 定义fifi(DEFINE_KFIFO)
+## 3.3 定义fifo(DEFINE_KFIFO)
 
 ```C
 /**
@@ -138,9 +138,22 @@ unsigned int next_index = index + 1 < size ? 0 : index + 1;
 #define DEFINE_KFIFO(fifo, type, size)
 ```
 
+该宏函数：
+- 功能含义：定义并初始化一个内嵌数组的FIFO
+	- 该宏一次性完成声明和初始化，是最常用的方式
 
+## 3.4 初始化fifo(INIT_KFIFO)
 
+```C
+/**
+ * INIT_KFIFO - Initialize a fifo declared by DECLARE_KFIFO
+ * @fifo: name of the declared fifo datatype
+ */
+#define INIT_KFIFO(fifo)
+```
 
+该宏函数：
+- 功能含义：
 
 
 
