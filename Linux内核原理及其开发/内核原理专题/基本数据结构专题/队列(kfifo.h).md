@@ -109,7 +109,7 @@ unsigned int next_index = index + 1 < size ? 0 : index + 1;
 	- 该宏只声明一个fifo对象，但并不初始化其成员值。
 	- 需要使用 `INIF_KFIFO` 初始化。
 	- <font color="#c00000">通常用于嵌入结构体中</font>。
-		- `DECLARE_KFIFO` <span style="background:#fff88f"><font color="#c00000">已经声明了缓冲区大小</font></span>，<font color="#c00000">在定义结构体时会在结构体内部直接占用对应大小的缓冲区</font>，不用担心缓冲区分配到某个函数栈上(这也是其和 `DECLARE_KFIFO_PTR` 的区别)。
+		- `DECLARE_KFIFO` <span style="background:#fff88f"><font color="#c00000">已经声明了缓冲区大小</font></span>，<font color="#c00000">在定义结构体时会在结构体内部直接占用对应大小的缓冲区</font>，随后使用 `INIF_KFIFO` 初始化即可，不用担心缓冲区分配到某个函数栈上(这也是其和 `DECLARE_KFIFO_PTR` 的区别)。
 	- 此时的kfifo的结构本身是静态定义的。
 
 ## 3.2 声明fifo指针(DECLARE_KFIFO_PTR)
@@ -160,6 +160,24 @@ unsigned int next_index = index + 1 < size ? 0 : index + 1;
 
 该宏函数：
 - 功能含义：<font color="#c00000">初始化一个</font><span style="background:#fff88f"><font color="#c00000">使用</font></span> `DECLARE_KFIFO` <span style="background:#fff88f"><font color="#c00000">声明的队列</font></span>
+- 注意：
+	- `DECLARE_KFIFO` <span style="background:#fff88f"><font color="#c00000">已经声明了缓冲区大小</font></span>，<font color="#c00000">也就是该函数实际上不会分配空间</font>，即不用担心如下的情况：
+```C
+struct my_device {
+    struct spinlock lock;
+    // ... 其他成员
+    DECLARE_KFIFO(fifo, u8, 256); // 直接内嵌定义并初始化
+};
+
+// 在此步就已经为缓冲区静态分配空间了
+static my_device dev;
+
+int my_func(){
+    INIT_KFIFO(dev.fifo); // 不用担心缓冲区在 `my_func` 的栈上。
+    ...
+}
+```
+
 
 ## 3.5 为fifo指针动态分配内存(kfifo_alloc)
 
