@@ -201,7 +201,7 @@ unsigned int next_index = index + 1 < size ? 0 : index + 1;
 - 注意：
 	- `size` 必须为2的整数幂
 
-## 3.7 释放fifo的缓冲区()
+## 3.7 释放fifo的缓冲区(kfifo_free)
 
 ```C
 /**
@@ -214,7 +214,7 @@ unsigned int next_index = index + 1 < size ? 0 : index + 1;
 该宏函数：
 - 功能含义：释放通过 `kfifo_alloc` 分配的缓冲区
 - 注意：
-	- 只释放fifo的缓冲区(`fifo->data`)，不释放fifo结构本身。
+	- 只释放fifo的缓冲区(`fifo->data`)，不释放fifo结构本身(fifo结构本身基本上都是静态分配的)。
 
 ## 3.8 检查fifo是否被初始化
 
@@ -317,5 +317,62 @@ unsigned int next_index = index + 1 < size ? 0 : index + 1;
 	- `val` ：<font color="#c00000">存放取出元素的地址</font>
 - 返回值：<font color="#c00000">成功时返回1</font>，失败时返回0(队空)
 
-## 3.16 查看fifo的下一个元素但不取出()
+## 3.16 查看fifo的下一个元素但不取出(kfifo_peek)
+
+
+## 3.17 向fifo中添加若干个元素(kfifo_in)
+
+```C
+/**
+ * kfifo_in - put data into the fifo
+ * @fifo: address of the fifo to be used
+ * @buf: the data to be added
+ * @n: number of elements to be added
+ *
+ * This macro copies the given buffer into the fifo and returns the
+ * number of copied elements.
+ *
+ * Note that with only one concurrent reader and one concurrent
+ * writer, you don't need extra locking to use these macro.
+ */
+#define	kfifo_in(fifo, buf, n)
+```
+
+该宏函数：
+- 功能含义：向fifo中添加若干个元素
+- 参数：
+	- `fifo` ：所使用的fifo<font color="#c00000">的地址</font>
+	- `buf` ：要添加的元素所在数组(连续内存)
+	- `n` ：要添加的元素个数
+- 返回值：<font color="#c00000">实际添加的元素个数</font>
+
+## 3.18 从fifo中取出若干个元素(kfifo_out)
+
+```C
+/**
+ * kfifo_out - get data from the fifo
+ * @fifo: address of the fifo to be used
+ * @buf: pointer to the storage buffer
+ * @n: max. number of elements to get
+ *
+ * This macro gets some data from the fifo and returns the numbers of elements
+ * copied.
+ *
+ * Note that with only one concurrent reader and one concurrent
+ * writer, you don't need extra locking to use these macro.
+ */
+#define	kfifo_out(fifo, buf, n)
+```
+
+该宏函数：
+- 功能含义：从fifo中取出若干个元素
+- 参数：
+	- `fifo` ：所使用的fifo<font color="#c00000">的地址</font>
+	- `buf` ：要取出元素寄存的地址
+	- `n` ：要取出的元素个数
+- 返回值：<font color="#c00000">实际取出的元素个数</font>
+
+## 3.19 查看队头若干个元素但不取出(kfifo_out_peek)
+
+
 
