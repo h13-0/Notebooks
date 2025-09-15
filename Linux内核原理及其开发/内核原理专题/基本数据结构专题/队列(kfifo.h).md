@@ -153,9 +153,27 @@ unsigned int next_index = index + 1 < size ? 0 : index + 1;
 ```
 
 该宏函数：
-- 功能含义：
+- 功能含义：<font color="#c00000">初始化一个</font><span style="background:#fff88f"><font color="#c00000">使用</font></span> `DECLARE_KFIFO` <span style="background:#fff88f"><font color="#c00000">声明的队列</font></span>
 
+## 3.5 为fifo指针动态分配内存(kfifo_alloc)
 
+```C
+/**
+ * kfifo_alloc - dynamically allocates a new fifo buffer
+ * @fifo: pointer to the fifo
+ * @size: the number of elements in the fifo, this must be a power of 2
+ * @gfp_mask: get_free_pages mask, passed to kmalloc()
+ *
+ * This macro dynamically allocates a new fifo buffer.
+ *
+ * The number of elements will be rounded-up to a power of 2.
+ * The fifo will be release with kfifo_free().
+ * Return 0 if no error, otherwise an error code.
+ */
+#define kfifo_alloc(fifo, size, gfp_mask)
+```
 
+该宏函数：
+- 
 
 
