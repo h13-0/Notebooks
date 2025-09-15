@@ -178,6 +178,72 @@ unsigned int next_index = index + 1 < size ? 0 : index + 1;
 	- 其中，`size` 可以不是2的整数幂，但是会被向上取到整数幂(所以没有实际意义)
 - 返回值：返回0表示成功
 
-## 3.6 (kfifo_init)
+## 3.6 使用预分配的缓存初始化fifo(kfifo_init)
 
+```C
+/**
+ * kfifo_init - initialize a fifo using a preallocated buffer
+ * @fifo: the fifo to assign the buffer
+ * @buffer: the preallocated buffer to be used
+ * @size: the size of the internal buffer, this have to be a power of 2
+ *
+ * This macro initializes a fifo using a preallocated buffer.
+ *
+ * The number of elements will be rounded-up to a power of 2.
+ * Return 0 if no error, otherwise an error code.
+ */
+#define kfifo_init(fifo, buffer, size)
+```
 
+该宏函数：
+- 功能含义：类似于 `kfifo_alloc` ，但使用用户提前分配好的 `buffer` ，而非重新分配
+- 返回值：返回0表示成功
+- 注意：
+	- `size` 必须为2的整数幂
+
+## 3.7 释放fifo的缓冲区()
+
+```C
+/**
+ * kfifo_free - frees the fifo
+ * @fifo: the fifo to be freed
+ */
+#define kfifo_free(fifo)
+```
+
+该宏函数：
+- 功能含义：释放通过 `kfifo_alloc` 分配的缓冲区
+- 注意：
+	- 只释放fifo的缓冲区(`fifo->data`)，不释放fifo结构本身。
+
+## 3.8 检查fifo是否被初始化
+
+```C
+/**
+ * kfifo_initialized - Check if the fifo is initialized
+ * @fifo: address of the fifo to check
+ *
+ * Return %true if fifo is initialized, otherwise %false.
+ * Assumes the fifo was 0 before.
+ */
+#define kfifo_initialized(fifo) ((fifo)->kfifo.mask)
+```
+
+该宏函数：
+- 功能含义：检查fifo是否被初始化
+- 返回值：已初始化返回 `true` ，否则返回 `false`
+
+## 3.9 获取fifo的容量(kfifo_size)
+
+```C
+/**
+ * kfifo_size - returns the size of the fifo in elements
+ * @fifo: address of the fifo to be used
+ */
+#define kfifo_size(fifo)	((fifo)->kfifo.mask + 1)
+```
+
+该宏函数：
+- 
+
+## 3.10 获取fifo中已入队元素个数(kfifo_len)
