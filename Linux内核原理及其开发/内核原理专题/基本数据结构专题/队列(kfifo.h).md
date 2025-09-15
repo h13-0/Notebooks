@@ -107,6 +107,9 @@ unsigned int next_index = index + 1 < size ? 0 : index + 1;
 	- `size` 为队列大小，<font color="#c00000">其值必须大于2</font>，<font color="#c00000">且为2的整数幂</font>
 - 注意：
 	- 该宏只声明一个fifo对象，但并不初始化其成员值。
+	- 需要使用 `INIF_KFIFO` 初始化。
+	- <font color="#c00000">通常用于嵌入结构体中</font>。
+	- 此时的kfifo
 
 ## 3.2 声明fifo指针(DECLARE_KFIFO_PTR)
 
@@ -123,6 +126,7 @@ unsigned int next_index = index + 1 < size ? 0 : index + 1;
 - 功能含义：
 - 注意：
 	- 该函数与 `DECLARE_KFIFO` 的区别仅在于 `DECLARE_KFIFO` <font color="#c00000">得到的队列缓冲区在结构体内部</font>，`DECLARE_KFIFO_PTR` <font color="#c00000">得到的队列不包含缓冲区</font>，<font color="#c00000">需要后续分配</font>。
+	- 需要使用 `kfifo_alloc` 初始化。
 
 ## 3.3 定义fifo(DEFINE_KFIFO)
 
