@@ -109,7 +109,8 @@ unsigned int next_index = index + 1 < size ? 0 : index + 1;
 	- 该宏只声明一个fifo对象，但并不初始化其成员值。
 	- 需要使用 `INIF_KFIFO` 初始化。
 	- <font color="#c00000">通常用于嵌入结构体中</font>。
-	- 此时的kfifo
+		- `DECLARE_KFIFO` <span style="background:#fff88f"><font color="#c00000">已经声明了缓冲区大小</font></span>，<font color="#c00000">在定义结构体时会在结构体内部直接占用对应大小的缓冲区</font>，不用担心缓冲区分配到某个函数栈上(这也是其和 `DECLARE_KFIFO_PTR` 的区别)。
+	- 此时的kfifo的结构本身是静态定义的。
 
 ## 3.2 声明fifo指针(DECLARE_KFIFO_PTR)
 
@@ -127,6 +128,7 @@ unsigned int next_index = index + 1 < size ? 0 : index + 1;
 - 注意：
 	- 该函数与 `DECLARE_KFIFO` 的区别仅在于 `DECLARE_KFIFO` <font color="#c00000">得到的队列缓冲区在结构体内部</font>，`DECLARE_KFIFO_PTR` <font color="#c00000">得到的队列不包含缓冲区</font>，<font color="#c00000">需要后续分配</font>。
 	- 需要使用 `kfifo_alloc` 初始化。
+	- 此时的kfifo的结构本身是静态定义的。
 
 ## 3.3 定义fifo(DEFINE_KFIFO)
 
