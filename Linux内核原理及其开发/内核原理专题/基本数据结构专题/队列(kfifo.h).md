@@ -244,6 +244,78 @@ unsigned int next_index = index + 1 < size ? 0 : index + 1;
 ```
 
 该宏函数：
-- 
+- 功能含义：获取fifo的容量
+- 返回值：容量
 
 ## 3.10 获取fifo中已入队元素个数(kfifo_len)
+
+```C
+/**
+ * kfifo_len - returns the number of used elements in the fifo
+ * @fifo: address of the fifo to be used
+ */
+#define kfifo_len(fifo)
+```
+
+该宏函数：
+- 功能含义：获取fifo中已入队元素个数
+- 返回值：已入队元素个数
+
+## 3.11 获取fifo的空闲容量(kfifo_avail)
+
+## 3.12 判断fifo是否为空(kfifo_is_empty)
+
+## 3.13 判断fifo是否为满(kfifo_is_full)
+
+## 3.14 向fifo中添加元素(kfifo_put)
+
+```C
+/**
+ * kfifo_put - put data into the fifo
+ * @fifo: address of the fifo to be used
+ * @val: the data to be added
+ *
+ * This macro copies the given value into the fifo.
+ * It returns 0 if the fifo was full. Otherwise it returns the number
+ * processed elements.
+ *
+ * Note that with only one concurrent reader and one concurrent
+ * writer, you don't need extra locking to use these macro.
+ */
+#define	kfifo_put(fifo, val)
+```
+
+该宏函数：
+- 功能含义：向fifo中添加元素(入队)
+- 参数：
+	- `fifo` ：所使用的fifo<font color="#c00000">的地址</font>
+	- `val` ：要放入的值
+- 返回值：<font color="#c00000">成功时返回1</font>，失败时返回0(队满)
+
+## 3.15 从fifo中取出元素(kfifo_get)
+
+```C
+/**
+ * kfifo_get - get data from the fifo
+ * @fifo: address of the fifo to be used
+ * @val: address where to store the data
+ *
+ * This macro reads the data from the fifo.
+ * It returns 0 if the fifo was empty. Otherwise it returns the number
+ * processed elements.
+ *
+ * Note that with only one concurrent reader and one concurrent
+ * writer, you don't need extra locking to use these macro.
+ */
+#define	kfifo_get(fifo, val)
+```
+
+该宏函数：
+- 功能含义：从fifo中取出单个元素
+- 参数：
+	- `fifo` ：所使用的fifo<font color="#c00000">的地址</font>
+	- `val` ：<font color="#c00000">存放取出元素的地址</font>
+- 返回值：<font color="#c00000">成功时返回1</font>，失败时返回0(队空)
+
+## 3.16 查看fifo的下一个元素但不取出()
+
