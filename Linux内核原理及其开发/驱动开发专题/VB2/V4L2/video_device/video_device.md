@@ -1683,8 +1683,12 @@ struct media_device_ops {
 注：
 - v4l2以及VB2提供了多种模型下的helper，例如：
 	- [[video_device#^1yz9a7|VB2 v4l2_ioctl_ops helper]]
-	- 
 	等。
+- 
+
+> [!attention]
+> - 本结构体中的所有回调均<font color="#c00000">已拥有了</font> `struct video_device.lock` ，<font color="#c00000">不需要再额外加锁!!!</font>
+> 
 
 ### 3.4.4 切片特性 ^3vrjl8
 

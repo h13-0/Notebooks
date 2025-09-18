@@ -847,6 +847,7 @@ void vb2_queue_release(struct vb2_queue *q);
 - 功能含义：<font color="#c00000">停止流传输并释放缓冲区</font>，<span style="background:#fff88f"><font color="#c00000">通常用于在用户态打开计数归0时停止流传输并释放缓冲区</font></span>
 - 注意：
 	- <span style="background:#fff88f"><font color="#c00000">该函数并不用于销毁</font></span> `vb2_queue_init` <span style="background:#fff88f"><font color="#c00000">的资源!!!</font></span> `vb2_queue_init` <font color="#c00000">并不会注册任何动态资源!!!</font>
+	- 因此，<font color="#c00000">被</font> `vb2_queue_release` <font color="#c00000">的队列不需要重新init即可重新使用!!!</font>
 
 ## 2.6 提供的机制
 
