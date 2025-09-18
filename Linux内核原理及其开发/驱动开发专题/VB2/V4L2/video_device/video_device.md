@@ -803,44 +803,7 @@ enum v4l2_buf_type {
 };
 ```
 
-### 3.1.2 队列初始化函数(vb2_queue_init)
-
-```C
-#include <media/videobuf2-v4l2.h>
-
-/**
- * vb2_queue_init() - initialize a videobuf2 queue
- * @q:		pointer to &struct vb2_queue with videobuf2 queue.
- *
- * The vb2_queue structure should be allocated by the driver. The driver is
- * responsible of clearing it's content and setting initial values for some
- * required entries before calling this function.
- * q->ops, q->mem_ops, q->type and q->io_modes are mandatory. Please refer
- * to the struct vb2_queue description in include/media/videobuf2-core.h
- * for more information.
- */
-int __must_check vb2_queue_init(struct vb2_queue *q);
-```
-
-该函数通常在 `probe` 或打开设备回调时被驱动调用。当函数执行成功时返回 `0` 。
-
-### 3.1.3 队列释放函数(vb2_queue_release)
-
-```C
-/**
- * vb2_queue_release() - stop streaming, release the queue and free memory
- * @q:		pointer to &struct vb2_queue with videobuf2 queue.
- *
- * This function stops streaming and performs necessary clean ups, including
- * freeing video buffer memory. The driver is responsible for freeing
- * the vb2_queue structure itself.
- */
-void vb2_queue_release(struct vb2_queue *q);
-```
-
-看注释即可。
-
-### 3.1.4 VB2 v4l2_ioctl_ops helper ^1yz9a7
+### 3.1.2 VB2 v4l2_ioctl_ops helper ^1yz9a7
 
 VB2框架为V4L2提供了如下的 `v4l2_ioctl_ops` 的预置实现：
 
@@ -873,9 +836,9 @@ int vb2_ioctl_remove_bufs(struct file *file, void *priv,
 注意：
 - <font color="#c00000">上述helpers需要设置</font> `video_device.queue` <font color="#c00000">后才可以使用</font>
 
-### 3.1.5 手动操作函数
+### 3.1.3 手动操作函数
 
-#### 3.1.5.1 申请缓冲区(vb2_reqbufs)
+#### 3.1.3.1 申请缓冲区(vb2_reqbufs)
 
 ```C
 /**
@@ -896,7 +859,7 @@ int vb2_reqbufs(struct vb2_queue *q, struct v4l2_requestbuffers *req);
 注：
 - 驱动可以不关心上述逻辑，只需要使用VB2提供的预置实现即可，后续同类型函数不再赘述。
 
-#### 3.1.5.2 查询缓冲区信息(vb2_querybuf)
+#### 3.1.3.2 查询缓冲区信息(vb2_querybuf)
 
 ```C
 /*
