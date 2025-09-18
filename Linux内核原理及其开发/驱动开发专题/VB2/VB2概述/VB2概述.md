@@ -788,9 +788,11 @@ struct vb2_mem_ops {
 
 ## 2.5 相关API
 
-### 2.5.1 初始化队列(vb2_queue_init)
+### 3.1.2 队列初始化函数(vb2_queue_init)
 
 ```C
+#include <media/videobuf2-v4l2.h>
+
 /**
  * vb2_queue_init() - initialize a videobuf2 queue
  * @q:		pointer to &struct vb2_queue with videobuf2 queue.
@@ -805,11 +807,10 @@ struct vb2_mem_ops {
 int __must_check vb2_queue_init(struct vb2_queue *q);
 ```
 
-该函数：
-- 功能含义：初始化一个 `vb2_queue` 
+该函数通常在 `probe` 或打开设备回调时被驱动调用。当函数执行成功时返回 `0` 。
 
 
-### 2.5.2 设置名称并初始化队列(vb2_queue_init_name)
+### 3.1.3 设置名称并初始化队列(vb2_queue_init_name)
 
 ```C
 /**
@@ -828,7 +829,21 @@ int __must_check vb2_queue_init_name(struct vb2_queue *q, const char *name);
 
 本方法会比上一子章节的初始化队列多一个设置名称的方法，对于多queue设备(如M2M)会有助于通过日志定位具体的队列实例。
 
-### 2.5.3 释放队列(vb2_queue_release)
+### 3.1.4 队列释放函数(vb2_queue_release)
+
+```C
+/**
+ * vb2_queue_release() - stop streaming, release the queue and free memory
+ * @q:		pointer to &struct vb2_queue with videobuf2 queue.
+ *
+ * This function stops streaming and performs necessary clean ups, including
+ * freeing video buffer memory. The driver is responsible for freeing
+ * the vb2_queue structure itself.
+ */
+void vb2_queue_release(struct vb2_queue *q);
+```
+
+看注释即可。
 
 
 ## 2.6 提供的机制
