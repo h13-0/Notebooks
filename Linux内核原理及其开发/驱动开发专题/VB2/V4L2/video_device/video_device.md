@@ -1600,6 +1600,10 @@ struct media_device_ops {
 
 #### 3.4.3.1 v4l2_ioctl_ops ^r8lfyg
 
+> [!attention]
+> - 本结构体中的所有回调均<font color="#c00000">已拥有了</font> `struct video_device.lock` ，<font color="#c00000">不需要再额外加锁!!!</font>
+> - 而[[VB2概述]]中讲的[[VB2概述#^tqizjf|struct vb2_ops]]中需要操作(不难理解，因为vb2框架并不管video设备)
+
 该结构体包含了众多ioctl回调接口(具体可见源码定义)，其主要包括：
 - 设备能力和基本信息查询：
 	- `int (*vidioc_querycap)(struct file *file, void *fh, struct v4l2_capability *cap)` ：
@@ -1684,11 +1688,6 @@ struct media_device_ops {
 - v4l2以及VB2提供了多种模型下的helper，例如：
 	- [[video_device#^1yz9a7|VB2 v4l2_ioctl_ops helper]]
 	等。
-- 
-
-> [!attention]
-> - 本结构体中的所有回调均<font color="#c00000">已拥有了</font> `struct video_device.lock` ，<font color="#c00000">不需要再额外加锁!!!</font>
-> 
 
 ### 3.4.4 切片特性 ^3vrjl8
 
