@@ -788,7 +788,7 @@ struct vb2_mem_ops {
 
 ## 2.5 相关API
 
-### 3.1.2 队列初始化函数(vb2_queue_init)
+### 2.5.1 队列初始化函数(vb2_queue_init)
 
 ```C
 #include <media/videobuf2-v4l2.h>
@@ -808,9 +808,10 @@ int __must_check vb2_queue_init(struct vb2_queue *q);
 ```
 
 该函数通常在 `probe` 或打开设备回调时被驱动调用。当函数执行成功时返回 `0` 。
+注意：
+- 该函数<span style="background:#fff88f"><font color="#c00000">仅初始化了静态结构</font></span>，也未向框架进行注册，<font color="#c00000">因此在probe等初始化过程中发生错误时</font><span style="background:#fff88f"><font color="#c00000">不需要调用</font></span> `vb2_queue_release` <span style="background:#fff88f"><font color="#c00000">回收队列!!!</font></span>(尽管回收了也不会怎么样)
 
-
-### 3.1.3 设置名称并初始化队列(vb2_queue_init_name)
+### 2.5.2 设置名称并初始化队列(vb2_queue_init_name)
 
 ```C
 /**
@@ -829,7 +830,7 @@ int __must_check vb2_queue_init_name(struct vb2_queue *q, const char *name);
 
 本方法会比上一子章节的初始化队列多一个设置名称的方法，对于多queue设备(如M2M)会有助于通过日志定位具体的队列实例。
 
-### 3.1.4 队列释放函数(vb2_queue_release)
+### 2.5.3 停止流传输并释放缓冲区(vb2_queue_release)
 
 ```C
 /**
@@ -843,8 +844,9 @@ int __must_check vb2_queue_init_name(struct vb2_queue *q, const char *name);
 void vb2_queue_release(struct vb2_queue *q);
 ```
 
-看注释即可。
-
+- 功能含义：<font color="#c00000">停止流传输并释放缓冲区</font>，<span style="background:#fff88f"><font color="#c00000">通常用于在用户态打开计数归0时停止流传输并释放缓冲区</font></span>
+- 注意：
+	- <span style="background:#fff88f"><font color="#c00000">该函数并不用于销毁</font></span> `vb2_queue_init` <span style="background:#fff88f"><font color="#c00000">的资源!!!</font></span> `vb2_queue_init` <font color="#c00000">并不会注册任何动态资源!!!</font>
 
 ## 2.6 提供的机制
 
