@@ -412,6 +412,12 @@ private成员(<font color="#c00000">驱动只读访问或禁止访问</font>)：
 
 ## 2.2 vb2相关回调函数(struct vb2_ops) ^tqizjf
 
+> [!attention]
+> - 本结构体中的所有回调均<font color="#c00000">均未拥有</font> `struct video_device.lock`
+ ，<font color="#c00000">因此需要按需加锁</font>(不难理解，因为vb2框架并不管video设备)
+> - 而[[video_device]]中的[[video_device#^r8lfyg|struct v4l2_ioctl_ops]]中所有回调已拥有该锁，不需要额外加锁
+
+
 视频缓冲区队列有如下的回调函数：
 
 ```C
