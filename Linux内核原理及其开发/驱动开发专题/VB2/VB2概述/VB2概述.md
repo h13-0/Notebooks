@@ -672,6 +672,7 @@ struct vb2_ops {
 	- 可选性：当需要支持请求API(request)时驱动需要实现
 
 ## 2.3 vb2内存操作函数(struct vb2_mem_ops) ^6l340x
+
 ```C
 /**
  * struct vb2_mem_ops - memory handling/memory allocator operations.
