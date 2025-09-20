@@ -12,6 +12,6 @@
   },
   "promptDelete": false,
   "readableLineLength": true,
-  "newLinkFormat": "shortest",
+  "newLinkFormat": "relative",
   "newFileLocation": "root"
 }
