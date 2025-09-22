@@ -1641,14 +1641,17 @@ struct media_device_ops {
 	- `int (*vidioc_enum_fmt_meta_out)(...)` ：
 		- 功能含义：元数据输出所支持的格式枚举回调
 - 获取/设置格式类回调( `vidioc_s_fmt_*` / `vidioc_g_fmt_*` )：
-	- `int (*vidioc_g_fmt_vid_cap)(...)`
-		- <span style="background:#fff88f"><font color="#c00000">注意</font></span>：
+	- 该类型的标准语义为：
+		- 功能含义：
 			1. 在<span style="background:#fff88f"><font color="#c00000">所有</font></span><font color="#c00000">获取/设置/尝试格式类</font>回调的标准行为定义中，<span style="background:#fff88f"><font color="#c00000">当且仅当</font></span> `v4l2_format.type` <font color="#c00000">非法时才可以返回错误值</font>，<font color="#c00000">其他情况下应当由驱动修改到可接受的格式类型</font><span style="background:#fff88f"><font color="#c00000">并返回成功</font></span>。
 				- 原文(`Documentation/userspace-api/media/v4l/vidioc-g-fmt.rst`)： `Drivers should not return an error code unless the type field is invalid`
 				- 尽管对用户层的请求已经做过一次路由转发，<font color="#c00000">但是驱动仍需要检查</font>
 			2. 获取/设置格式类回调文档可见 `Documentation/userspace-api/media/v4l/vidioc-g-fmt.rst`
-	- `int (*vidioc_g_fmt_vid_overlay)(...)`
-	- `int (*vidioc_g_fmt_vid_out)(...)`
+		- 注意：
+			- 所有<font color="#c00000">与应用程序交换数据的</font>V4L2设备<font color="#c00000">都需要实现对应的获取/设置格式类回调</font>
+	- `int (*vidioc_g_fmt_vid_cap)(...)` 
+	- `int (*vidioc_g_fmt_vid_overlay)(...)` 
+	- `int (*vidioc_g_fmt_vid_out)(...)` 
 	- 
 - 缓冲区管理(<font color="#c00000">这些回调通常不需要自行实现</font>，参考语义在使用helpers时仅供了解)：
 	- `int (*vidioc_reqbufs)(struct file *file, void *fh, struct v4l2_requestbuffers *b)` ：
@@ -1683,6 +1686,13 @@ struct media_device_ops {
 		- 注：
 			1. 分辨率枚举文档可见 `Documentation/userspace-api/media/v4l/vidioc-enum-framesizes.rst`
 - 帧率枚举：
+- 尝试格式类回调(`vidioc_try_fmt_*`)：
+	- 该类型的标准语义为：
+		- 功能含义：等价于对应的 `vidioc_s_fmt_*` ，除了：
+			- 
+		- 返回值：
+			- `0` ：表示尝试设置成功，且驱动已更新为目标格式
+			- `-EINVAL` ：表示驱动不支持该缓冲区
 
 注：
 - v4l2以及VB2提供了多种模型下的helper，例如：
