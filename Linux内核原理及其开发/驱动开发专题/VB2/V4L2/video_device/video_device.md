@@ -1688,8 +1688,11 @@ struct media_device_ops {
 - 帧率枚举：
 - 尝试格式类回调(`vidioc_try_fmt_*`)：
 	- 该类型的标准语义为：
-		- 功能含义：等价于对应的 `vidioc_s_fmt_*` ，除了：
-			- 
+		- 功能含义：
+			- 等价于对应的 `vidioc_s_fmt_*` ，除了：
+				- 不改变驱动程序状态(原文： `it does not change driver state.`)
+				- 在任何时刻都可以被调用，不会返回 `-EBUSY` 
+			- `VIDIOC_TRY_FMT` <font color="#c00000">返回的格式必须与</font> `VIDIOC_S_FMT` <font color="#c00000">为同一输入或输出返回的格式相同</font>
 		- 返回值：
 			- `0` ：表示尝试设置成功，且驱动已更新为目标格式
 			- `-EINVAL` ：表示驱动不支持该缓冲区
