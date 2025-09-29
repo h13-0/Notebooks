@@ -78,7 +78,7 @@ def plot_repo_stats(daily_line_count, daily_word_count, daily_commit_count,
                        set(daily_commit_count.keys()))
     
     start_date = min(all_dates)
-    end_date = max(all_dates)
+    end_date = date.today()
     date_range = [start_date + timedelta(days=i) 
                   for i in range((end_date - start_date).days + 1)]
     
