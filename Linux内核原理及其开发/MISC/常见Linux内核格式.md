@@ -10,7 +10,7 @@ number headings: auto, first-level 1, max 6, 1.1
 
 # 2 常见格式及区别
 
-常见linux内核的格式关系如下图所示：
+linux内核的常见格式关系如下图所示：
 
 ```mermaid
 flowchart TD
@@ -33,11 +33,10 @@ flowchart TD
 - vm是指虚拟内存(即用硬盘空间做内存)
 - 不可用作引导
 - 其包含全部符号与调试信息，可以使用 `readelf` 、 `nm` 、 `objdump` 等工具对其符号进行分析和调试
-- `System.map` 也是从此处提取。
+- `System.map` 也是从此处提取
 
-
-
-
+获取方式与位置：
+- 对内核源码进行编译后，通常会生成在源码的根目录
 
 ## 2.2 vmlinuz
 
@@ -49,7 +48,16 @@ flowchart TD
 
 ## 2.4 Image
 
-使用 `objcopy` 处理vmlinux后生成的<font color="#c00000">ARM/ARM64平台的</font>二进制内核镜像，未压缩，<font color="#c00000">可以用引导启动</font>。
+基本特性：
+- 使用 `objcopy` 处理vmlinux，并：
+	1. 删除 `.note` 段
+	2. 删除 `.note.gnu.build-id` 段
+	3. 删除 `.commit` 段
+	4. 删除(不复制)重定位信息和符号信息
+	后生成的<font color="#c00000">ARM/ARM64平台的</font>二进制内核镜像，未压缩，<font color="#c00000">可以用引导启动</font>
+
+获取方式与位置：
+- 其获取命令的示例为
 
 ## 2.5 Image.gz
 
