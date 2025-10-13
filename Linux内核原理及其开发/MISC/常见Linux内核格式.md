@@ -12,6 +12,8 @@ number headings: auto, first-level 1, max 6, 1.1
 
 ## 2.1 vmlinux
 
+vmlinux是内核源码编译出来的原始文件
+
 ## 2.2 Image
 
 
