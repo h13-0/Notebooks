@@ -56,16 +56,41 @@ flowchart TD
 	4. 删除(不复制)重定位信息和符号信息
 	后生成的<font color="#c00000">ARM/ARM64平台的</font>二进制内核镜像，未压缩，<font color="#c00000">可以用引导启动</font>
 
-获取方式与位置：
-- 其获取命令的示例为
+其获取命令的示例为：
+
+```Shell
+cmd_arch/arm64/boot/Image := aarch64-linux-gnu-objcopy -O binary -R .note -R .note.gnu.build-id -R .comment -S  vmlinux arch/arm64/boot/Image
+```
+
+其中：
+- `-R xx` 表示删除 `xx` 段
+
+其默认保存地址为 `arch/arm64/boot/Image` 
 
 ## 2.5 Image.gz
 
 是Image的压缩版本，可用于ARM64 u-boot和fastboot引导
 
+其获取命令的示例为：
+
+```Shell
+cmd_arch/arm64/boot/Image.gz := (cat arch/arm64/boot/Image | gzip -n -f -9 > arch/arm64/boot/Image.gz) || (rm -f arch/arm64/boot/Image.gz ; false)
+```
+
+其中：
+- `-n` 表示压缩文件时，不保存原来的文件名称及时间戳记
+- `-f` 表示强行压缩文件
+- `-g` 表示高压缩比
+
 ## 2.6 zImage
 
-使用gzip压缩Image后，添加了解压功能头的格式
+在Image.gz上添加了解压功能头的格式
+
+其获取命令的示例为：
+
+
+
+
 
 ## 2.7 uImage
 
