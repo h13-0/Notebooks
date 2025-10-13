@@ -15,7 +15,7 @@ SCCB全称为 `Serial Camera Control Bus` ，是豪威公司设计的一款<font
 ## 2.1 SCCB总线电气特性
 
 SCCB其具有如下的三根线路：
-	![[../../../Resources/chrome_XN4IR4xqvk.png]]
+	![[../../Resources/chrome_XN4IR4xqvk.png]]
 - 其各线路作用为：
 	- `SCCB_E` ：<span style="background:#fff88f"><font color="#c00000">线路的enable/disable引脚</font></span>，类似于I2C的Start/Stop时序，虽然规范中叫他片选引脚( `Serial Chip Select Output` )。<span style="background:#fff88f"><font color="#c00000">低电平有效</font></span>。
 		- <font color="#c00000">逻辑</font>高电平时表示总线空闲
@@ -29,12 +29,12 @@ SCCB其具有如下的三根线路：
 		- 在挂起模式时保持逻辑低电平
 		- `SIO_D` 只能在 `SIO_C` 为0时发生变化
 不过通常为了节省管脚(<font color="#7f7f7f">规避专利</font>)，其通常省略 `SCCB_E` ，此时电平始终为电气高电平(即逻辑低，表传输)，此时电气连接如下：
-	![[../../../Resources/chrome_q2Wp4PQNbf.png]]
+	![[../../Resources/chrome_q2Wp4PQNbf.png]]
 
 ## 2.2 SCCB电气时序
 
 SCCB的基本时序如下图所示：
-	![[../../../Resources/chrome_gUhCeX0ycJ.png]]
+	![[../../Resources/chrome_gUhCeX0ycJ.png]]
 其中需要注意：
 1. 在不考虑 `SCCB_E` 时，<font color="#c00000">其数据和时钟线在起始/终止传输信号的电平与I2C的数据和时钟线保持一致</font>；
 2. bit位传输<font color="#c00000">与I2C保持一致</font>，均为数据线先到达电平，随后时钟线在高电平时固定bit位；
@@ -47,7 +47,7 @@ SCCB主要有两段或三段传输结构，其功能和定义见各子章节。
 ### 2.3.1 三阶段SCCB
 
 三阶段SCCB，主要用于向某个寄存器写入1byte数据，其时序图如下图所示：
-	![[../../../Resources/chrome_Il0PkXU6mJ.png]]
+	![[../../Resources/chrome_Il0PkXU6mJ.png]]
 其各阶段含义为：
 1. 设备地址(通常也是7位地址+1位读写)
 2. 寄存器地址
@@ -56,7 +56,7 @@ SCCB主要有两段或三段传输结构，其功能和定义见各子章节。
 ### 2.3.2 两阶段写SCCB
 
 两阶段SCCB用于<font color="#c00000">为随后的两阶段读操作指定寄存器地址</font>，需要配合两阶段读操作(即先两阶段写，随后立即两阶段读)。其时序图如下图所示：
-	![[../../../Resources/chrome_9DTYSOe95k.png]]
+	![[../../Resources/chrome_9DTYSOe95k.png]]
 其各阶段含义为：
 1. 设备地址(读写位<font color="#c00000">表示写入</font>)
 2. 寄存器地址
