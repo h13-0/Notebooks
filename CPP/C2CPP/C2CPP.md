@@ -294,7 +294,9 @@ api::v2::foo();
 namespace fs = std::filesystem; // 简化长路径
 ```
 
-4. 命名空间导入：
+#### 3.3.1.2 命名空间的导入与全局命名空间
+
+命名空间的导入可直接参考如下方式：
 
 ```cpp
 // 导入整个命名空间
@@ -315,7 +317,20 @@ func2();             // 正确
 需要注意：
 1. <span style="background:#fff88f"><font color="#c00000">禁止在头文件中直接使用</font></span> `using namespace xxx;` <span style="background:#fff88f"><font color="#c00000">导入命名空间</font></span>，头文件在编译时会直接或间接的包含到众多的源文件中，从而污染命名空间。
 
-#### 3.3.1.2 匿名命名空间
+而对于没有添加命名空间的对象，<span style="background:#fff88f"><font color="#c00000">其默认位于全局命名空间中</font></span>。
+<font color="#c00000">当发生命名空间冲突时</font>(例如全局命名空间和 `std` 均有函数 `abs` )，<font color="#c00000">可使用</font> `::target` <font color="#c00000">来指定使用全局命名空间</font>
+
+```cpp
+void func()
+{
+	using namespace std;
+	
+	abs(-11);   // 直接使用 abs() 则默认调用 std::abs()
+	::abs(-11); // 指定使用全局命名空间的 abs()
+}
+```
+
+#### 3.3.1.3 匿名命名空间
 
 其主要用于替代C语言里面的 `static` 写法。
 当使用不包含名称的 `namespace` 时，该命名空间会被视作匿名命名空间，其作用是<span style="background:#fff88f"><font color="#c00000">当前作用域内可见</font></span>。
@@ -333,15 +348,15 @@ void func() { } // 则仅当前 curr.cpp可见，相当于直接定义 static vo
 ```cpp
 namespace api {
 namespace {
-	void helper() { } // 则整个namespace api中可见
+void helper() { } // 则整个namespace api中可见
 }
 }
 ```
 
 注意：
-1. <font color="#c00000">匿名命名空间不可放于头文件中</font>，上述操作仅适用于源文件中。
+1. <font color="#c00000">匿名命名空间不可放于头文件中</font>，<span style="background:#fff88f"><font color="#c00000">否则每个包含该头文件的源文件均会生成一份实体</font></span>。(类似于 `static` )。
 
-#### 3.3.1.3 内联命名空间
+#### 3.3.1.4 内联命名空间
 
 内联命名空间可将子命名空间自动提升为外层可见，方便用于版本管理和ABI过渡：
 
