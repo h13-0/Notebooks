@@ -294,20 +294,65 @@ int main()
 ### 3.3.2 constexpr 编译期求值
 
 `constexpr` 关键字用于指定<font color="#c00000">变量或函数</font>使其在<font color="#c00000">编译期完成求值</font>，其有如下特性：
-- `constexpr` 修饰变量，使变量在编译期完成求值
-- `constexpr` 修饰函数，使其在编译期执行
+- `constexpr` 修饰<font color="#c00000">常量</font>，使<font color="#c00000">常量</font>在编译期完成求值
+- `constexpr` 修饰函数，会<font color="#c00000">尝试</font>在编译期求值
 - `constexpr` 修饰构造函数，使对象在编译期构造
 
-#### 3.3.2.1 constexpr变量
+#### 3.3.2.1 constexpr 常量
 
-与 `const` 变量的区别：
+`constexpr` 会在编译期确定常量的值，其与 ` const ` 常量的区别：
 
 ```cpp
 const int runtime_const = get_value(); // 运行时求值的常量
 constexpr int compile_const = 42;      // 编译时求值的常量
 
 int array1[runtime_const];             // 错误，C++不支持VLA
+int array2[compile_const];             // 正确，编译期已经求值
 ```
+
+#### 3.3.2.2 constexpr 函数
+
+`constexpr` 修饰函数后，编译器会<font color="#c00000">尝试</font>对该函数在编译期求值：
+- 若输入的参数为常量，则编译期会完成求值
+- 若输入的参数是运行时变量，则求值会被推迟到运行时
+因此，`constexpr` 函数的返回值在
+
+
+不过其在C++11中，限制函数只能有一个 `return` 语句；而在C++14后放宽了该限制。
+
+```cpp
+// C++11 约束较多
+constexpr int factorial(int n) {
+    return n <= 1 ? 1 : n * factorial(n - 1);  // 只能有一条return语句
+}
+
+// C++14 放宽限制
+constexpr int fibonacci(int n) {
+    if (n <= 1) return n;
+    
+    int a = 0, b = 1;
+    for (int i = 2; i <= n; ++i) {
+        int next = a + b;
+        a = b;
+        b = next;
+    }
+    return b;
+}
+
+constexpr int fact_5 = factorial(5);  // 编译时计算：120
+constexpr int fib_10 = fibonacci(10); // 编译时计算：55
+
+int array[factorial(5)];              // 正确：编译时已知大小
+```
+
+
+## 3.4 C++不支持的C语言特性
+
+### 3.4.1 VLA可变长数组
+
+在C99之后，C语言就支持了可变长数组，但是无论哪个C++标准均不支持可变长数组。
+
+
 
 
 # 4 STL
