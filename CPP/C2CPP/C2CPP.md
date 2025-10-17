@@ -238,8 +238,15 @@ comp1.operator==(comp2);
 `namespace` 可以用于限定函数、类等特性，其基本使用方式为：
 
 ```cpp
+namespace mylib {
+void log(const char*);
+}
 
-
+int main(int argc, char **argv)
+{
+	mylib::log("hello, world");
+	return 0;
+}
 ```
 
 其有如下的拓展特性：
@@ -260,7 +267,19 @@ void process(Image&) { /* ... */ }
 
 2. 可嵌套特性：
 
-3. 
+```cpp
+namespace api {
+	namespace v2 {
+		void foo();
+	}
+
+	namespace v1 {
+		void foo();
+	}
+}
+```
+
+
 
 
 
@@ -273,6 +292,9 @@ void process(Image&) { /* ... */ }
 
 其主要用于替代C语言里面的 `static` 写法。
 当使用不包含名称的 `namespace` 时，该命名空间会被视作匿名命名空间
+
+
+#### 3.3.1.3 内联命名空间
 
 
 
