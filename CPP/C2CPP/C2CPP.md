@@ -231,9 +231,45 @@ comp1.operator==(comp2);
 
 ### 3.3.1 namespace
 
-如其字面意思， `namespace` 主要用于划定命名空间，给其限定的函数、类、变量
+如其字面意思， `namespace` 主要用于划定命名空间，给其限定的函数、类、变量、枚举、模板等提供作用域，从而<font color="#c00000">避免命名冲突</font>。
 
-#### 3.3.1.1 匿名命名空间
+#### 3.3.1.1 基本使用方式
+
+`namespace` 可以用于限定函数、类等特性，其基本使用方式为：
+
+```cpp
+
+
+```
+
+其有如下的拓展特性：
+1. 可合并特性：在多处使用同一个 `namespace` 划分的同名空间会被自动合并。
+
+```C
+// foo.h
+namespace proj {
+struct Image {};
+void process(Image&);
+}
+
+// foo.cpp
+namespace proj {
+void process(Image&) { /* ... */ }
+}
+```
+
+2. 可嵌套特性：
+
+3. 
+
+
+
+但是需要注意：
+1. <span style="background:#fff88f"><font color="#c00000">禁止在头文件中直接使用</font></span> `using namespace xxx;` <span style="background:#fff88f"><font color="#c00000">导入命名空间</font></span>，头文件在编译时会直接或间接的包含到众多的源文件中，从而污染命名空间。
+
+
+
+#### 3.3.1.2 匿名命名空间
 
 其主要用于替代C语言里面的 `static` 写法。
 当使用不包含名称的 `namespace` 时，该命名空间会被视作匿名命名空间
