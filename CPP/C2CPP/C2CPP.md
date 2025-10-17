@@ -301,18 +301,45 @@ namespace fs = std::filesystem; // 简化长路径
 using namespace std;
 
 // 导入部分命名空间
-using proj::process;
+// 当导入子命名空间时，后续调用仍然需要 sub_namespace::func1()
+using proj::sub_namespace;
+// 不可以省略子命名空间
+func1();             // 错误，仍然需要 sub_namespace::func1()
+
+// 当导入的是命名空间成员时，可以直接调用对应成员
+using proj::func2;
+// 可以直接调用func
+func2();             // 正确
 ```
 
-
-但是需要注意：
+需要注意：
 1. <span style="background:#fff88f"><font color="#c00000">禁止在头文件中直接使用</font></span> `using namespace xxx;` <span style="background:#fff88f"><font color="#c00000">导入命名空间</font></span>，头文件在编译时会直接或间接的包含到众多的源文件中，从而污染命名空间。
 
 #### 3.3.1.2 匿名命名空间
 
 其主要用于替代C语言里面的 `static` 写法。
-当使用不包含名称的 `namespace` 时，该命名空间会被视作匿名命名空间
+当使用不包含名称的 `namespace` 时，该命名空间会被视作匿名命名空间，其作用是<span style="background:#fff88f"><font color="#c00000">当前作用域内可见</font></span>。
 
+1. 若匿名命名空间直接位于 `curr.cpp` 文件中：
+
+```cpp
+namespace {
+void func() { } // 则仅当前 curr.cpp可见，相当于直接定义 static void func(){ }
+}
+```
+
+2. 若匿名命名空间位于父 `namespace` 中：
+
+```cpp
+namespace api {
+namespace {
+	void helper() { } // 则整个namespace api中可见
+}
+}
+```
+
+注意：
+1. <font color="#c00000">匿名命名空间不可放于头文件中</font>，上述操作仅适用于源文件中。
 
 #### 3.3.1.3 内联命名空间
 
@@ -321,17 +348,16 @@ using proj::process;
 ```cpp
 namespace api {
 inline namespace v2 {  // 外部可见为 api::*
-  void foo();          // 等价于 api::foo()
+void foo();          // 等价于 api::foo()
 }
+
 namespace v1 {
-  void foo();
+void foo();
 }
 }
 
 api::foo();            // 自动调用api::v2::foo();
 ```
-
-
 
 ### 3.3.2 explicit 强制显式转换 ^6nhi9i
 
