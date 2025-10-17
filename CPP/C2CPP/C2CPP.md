@@ -291,6 +291,15 @@ int main()
 }
 ```
 
+### 3.3.2 constexpr 编译期求值
+
+`constexpr` 关键字用于指定<font color="#c00000">变量或函数</font>使其在<font color="#c00000">编译期完成求值</font>，其有如下特性：
+- `constexpr` 修饰变量，使变量在编译期完成求值
+- `constexpr` 修饰函数，使其在编译期执行
+- `constexpr` 修饰构造函数，使对象在编译期构造
+
+
+
 # 4 STL
 
 STL全名为Standard Template Library，意为标准模板库或泛型库，是C++中的一个重要组件。其主要包含如下组件：
