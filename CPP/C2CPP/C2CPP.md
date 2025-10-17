@@ -294,9 +294,10 @@ int main()
 ### 3.3.2 constexpr 编译期求值
 
 `constexpr` 关键字用于指定<font color="#c00000">变量或函数</font>使其在<font color="#c00000">编译期完成求值</font>，其有如下特性：
-- `constexpr` 修饰<font color="#c00000">常量</font>，使<font color="#c00000">常量</font>在编译期完成求值
-- `constexpr` 修饰函数，会<font color="#c00000">尝试</font>在编译期求值
-- `constexpr` 修饰构造函数，使对象在编译期构造
+- `constexpr` 修饰<font color="#c00000">常量</font>，<font color="#c00000">常量</font>在编译期完成求值
+- `constexpr` 修饰函数，会<span style="background:#fff88f"><font color="#c00000">尝试</font></span>在编译期求值
+- `constexpr` 修饰构造函数，会在编译期构造<font color="#c00000">常量</font>对象
+需要注意的一点是 `constexpr` <span style="background:#fff88f"><font color="#c00000">仅</font></span><font color="#c00000">在修饰函数时</font>可能会延后到编译期求值，其他两种情况均<span style="background:#fff88f"><font color="#c00000">一定在编译期求值</font></span>。
 
 #### 3.3.2.1 constexpr 常量
 
@@ -312,13 +313,23 @@ int array2[compile_const];             // 正确，编译期已经求值
 
 #### 3.3.2.2 constexpr 函数
 
-`constexpr` 修饰函数后，编译器会<font color="#c00000">尝试</font>对该函数在编译期求值：
+`constexpr` 修饰函数后，编译器会<span style="background:#fff88f"><font color="#c00000">尝试</font></span>对该函数在编译期求值：
 - 若输入的参数为常量，则编译期会完成求值
 - 若输入的参数是运行时变量，则求值会被推迟到运行时
-因此，`constexpr` 函数的返回值在
+因此，`constexpr` 函数的返回值在编译期可求值时具有 `constexpr` 常量的特性，但当不可求值时，会回退到普通函数。
 
+```cpp
+constexpr int factorial(int n) {
+    return n <= 1 ? 1 : n * factorial(n - 1);
+}
 
-不过其在C++11中，限制函数只能有一个 `return` 语句；而在C++14后放宽了该限制。
+// 输出常量时
+int array[factorial(5)];              // 正确：编译时已知大小
+// 输入运行时变量时
+int array[factorial(var)];            // 错误：编译期无法完成求值
+```
+
+此外，在C++11中，限制函数只能有一个 `return` 语句；而在C++14后放宽了该限制。
 
 ```cpp
 // C++11 约束较多
@@ -341,9 +352,16 @@ constexpr int fibonacci(int n) {
 
 constexpr int fact_5 = factorial(5);  // 编译时计算：120
 constexpr int fib_10 = fibonacci(10); // 编译时计算：55
-
-int array[factorial(5)];              // 正确：编译时已知大小
 ```
+
+#### 3.3.2.3 constexpr 构造函数
+
+`constexpr` 构造函数可以在编译期构造<font color="#c00000">常量</font>对象
+
+
+### 3.3.3 consteval 
+
+
 
 
 ## 3.4 C++不支持的C语言特性
