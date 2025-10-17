@@ -298,6 +298,16 @@ int main()
 - `constexpr` 修饰函数，使其在编译期执行
 - `constexpr` 修饰构造函数，使对象在编译期构造
 
+#### 3.3.2.1 constexpr变量
+
+与 `const` 变量的区别：
+
+```cpp
+const int runtime_const = get_value(); // 运行时求值的常量
+constexpr int compile_const = 42;      // 编译时求值的常量
+
+int array1[runtime_const];             // 错误，C++不支持VLA
+```
 
 
 # 4 STL
