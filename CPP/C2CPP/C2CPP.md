@@ -268,25 +268,45 @@ void process(Image&) { /* ... */ }
 2. 可嵌套特性：
 
 ```cpp
+// 基础写法
 namespace api {
-	namespace v2 {
-		void foo();
-	}
-
-	namespace v1 {
-		void foo();
-	}
+namespace v2 {
+void foo();
 }
+
+namespace v1 {
+void foo();
+}
+}
+
+// C++17之后还可以简写为
+namespace api::v2 {
+void foo();
+}
+
+// 使用时逐级引用即可
+api::v2::foo();
 ```
 
+3. 命名空间别名：
 
+```cpp
+namespace fs = std::filesystem; // 简化长路径
+```
 
+4. 命名空间导入：
+
+```cpp
+// 导入整个命名空间
+using namespace std;
+
+// 导入部分命名空间
+using proj::process;
+```
 
 
 但是需要注意：
 1. <span style="background:#fff88f"><font color="#c00000">禁止在头文件中直接使用</font></span> `using namespace xxx;` <span style="background:#fff88f"><font color="#c00000">导入命名空间</font></span>，头文件在编译时会直接或间接的包含到众多的源文件中，从而污染命名空间。
-
-
 
 #### 3.3.1.2 匿名命名空间
 
@@ -296,7 +316,20 @@ namespace api {
 
 #### 3.3.1.3 内联命名空间
 
+内联命名空间可将子命名空间自动提升为外层可见，方便用于版本管理和ABI过渡：
 
+```cpp
+namespace api {
+inline namespace v2 {  // 外部可见为 api::*
+  void foo();          // 等价于 api::foo()
+}
+namespace v1 {
+  void foo();
+}
+}
+
+api::foo();            // 自动调用api::v2::foo();
+```
 
 
 
