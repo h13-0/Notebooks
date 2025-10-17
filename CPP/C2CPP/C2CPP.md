@@ -229,7 +229,20 @@ comp1.operator==(comp2);
 
 ## 3.3 新增关键字
 
-### 3.3.1 explicit 强制显式转换 ^6nhi9i
+### 3.3.1 namespace
+
+如其字面意思， `namespace` 主要用于划定命名空间，给其限定的函数、类、变量
+
+#### 3.3.1.1 匿名命名空间
+
+其主要用于替代C语言里面的 `static` 写法。
+当使用不包含名称的 `namespace` 时，该命名空间会被视作匿名命名空间
+
+
+
+
+
+### 3.3.2 explicit 强制显式转换 ^6nhi9i
 
 对于没有使用 `explicit` 修饰的类，若其存在<font color="#c00000">只有一个</font><span style="background:#fff88f"><font color="#c00000">非</font></span><font color="#c00000">默认参数</font>的构造函数时，那么该类就允许<font color="#c00000">由一个非默认参数的变量隐式转换为该类</font>。
 
@@ -291,7 +304,7 @@ int main()
 }
 ```
 
-### 3.3.2 constexpr 编译期求值
+### 3.3.3 constexpr 编译期求值
 
 `constexpr` 关键字用于指定<font color="#c00000">变量或函数</font>使其在<font color="#c00000">编译期完成求值</font>，其有如下特性：
 - `constexpr` 修饰<font color="#c00000">常量</font>，<font color="#c00000">常量</font>在编译期完成求值
@@ -299,7 +312,7 @@ int main()
 - `constexpr` 修饰构造函数，会在编译期构造<font color="#c00000">常量</font>对象
 需要注意的一点是 `constexpr` <span style="background:#fff88f"><font color="#c00000">仅</font></span><font color="#c00000">在修饰函数时</font>可能会延后到编译期求值，其他两种情况均<span style="background:#fff88f"><font color="#c00000">一定在编译期求值</font></span>。
 
-#### 3.3.2.1 constexpr 常量
+#### 3.3.3.1 constexpr 常量
 
 `constexpr` 会在编译期确定常量的值，其与 ` const ` 常量的区别：
 
@@ -311,7 +324,7 @@ int array1[runtime_const];             // 错误，C++不支持VLA
 int array2[compile_const];             // 正确，编译期已经求值
 ```
 
-#### 3.3.2.2 constexpr 函数
+#### 3.3.3.2 constexpr 函数
 
 `constexpr` 修饰函数后，编译器会<span style="background:#fff88f"><font color="#c00000">尝试</font></span>对该函数在编译期求值：
 - 若输入的参数为常量，则编译期会完成求值
@@ -354,12 +367,12 @@ constexpr int fact_5 = factorial(5);  // 编译时计算：120
 constexpr int fib_10 = fibonacci(10); // 编译时计算：55
 ```
 
-#### 3.3.2.3 constexpr 构造函数
+#### 3.3.3.3 constexpr 构造函数
 
 `constexpr` 构造函数可以在编译期构造<font color="#c00000">常量</font>对象
 
 
-### 3.3.3 consteval 
+### 3.3.4 consteval 
 
 
 
