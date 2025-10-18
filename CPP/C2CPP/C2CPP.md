@@ -50,8 +50,7 @@ ClassName obj{};
 
 ##### 3.1.1.3.1 指定使用默认的方法(=default)
 
-使用默认方法的作用是：
-1. 当
+使用默认方法 `=default` 可以用于指定部分函数按照其自动生成规则进行生成。具体如下。
 
 在C++11中可以指定使用默认的方法有：
 - 默认构造函数 `T()=default;`
@@ -64,8 +63,13 @@ ClassName obj{};
 - 比较运算函数 `bool operator==(const T&) const=default;`
 - 三路比较函数 `auto operator<=>(const T&) const=default;`
 其中：
-1. <font color="#c00000">若成员中含有不可拷贝类型</font>，则 `=default;` 会转化为 `=delete;` 。
-2. 当类
+1. <font color="#c00000">若指定的函数不满足生成条件</font>，<span style="background:#fff88f"><font color="#c00000">则</font></span> `=default;` <span style="background:#fff88f"><font color="#c00000">会转化为</font></span> `=delete;` ，例如：
+	- 若成员中包含不可拷贝类型，则<u>拷贝构造</u>、<u>拷贝赋值</u>会被转化为 `=delete;` 
+	- 若成员中包含 `const` 成员或引用成员，且没有自定义赋值语句，则<u>拷贝赋值函数</u>也会被删除
+	- 若成员或基类没有默认构造且未提供成员初始化器，则<u>默认构造函数</u>会被删除
+	- 若基类或成员不可移动，则<u>移动构造函数</u>、<u>移动赋值函数</u>会被删除
+	- 若基类或成员
+2. <font color="#c00000">当类声明了析构函数</font>(即使是 `~T()=default;` )，<font color="#c00000">则编译器不会再隐式生成移动构造或移动赋值函数</font>，除非再手动 `T(T&&)=default;` 等。
 3. 使用 `=default;` 生成默认方法和直接使用一个空实现(例如 `T(){};` )的区别是自定义的空函数可能会失去trivial特性，例如 `noexcept` 、 `constexpr` 等特性。
 4. 
 
