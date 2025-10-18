@@ -1290,6 +1290,11 @@ size_type count( const K& x ) const;
 
 `std::map` 内部通常基于红黑树实现，<font color="#c00000">元素始终按键的升序排序</font>。
 
+### 4.2.7 std::optional
+
+`std::optional` 主要用于解决可能返回失败的函数，例如要返回一个 `bool` 表示成功与否以及一个duix `T` 
+
+
 ## 4.3 算法
 
 ### 4.3.1 排序
