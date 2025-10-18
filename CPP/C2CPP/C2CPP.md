@@ -1292,7 +1292,10 @@ size_type count( const K& x ) const;
 
 ### 4.2.7 std::optional
 
-`std::optional` 主要用于解决可能返回失败的函数，例如要返回一个 `bool` 表示成功与否以及一个duix `T` 
+`std::optional` 主要用于解决可能返回失败的函数，例如要返回一个 `bool` 表示成功与否以及一个对象 `T` 来表示执行结果的函数。
+但是使用 `std::pair<T, bool>` 相对比较麻烦，可以直接使用 `std::optional<T>` 代替。
+
+
 
 
 ## 4.3 算法
