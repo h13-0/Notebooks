@@ -50,14 +50,27 @@ ClassName obj{};
 
 ##### 3.1.1.3.1 指定使用默认的方法(=default)
 
+使用默认方法的作用是：
+1. 当
+
 在C++11中可以指定使用默认的方法有：
-- 默认构造函数
-- 析构函数
-- 拷贝构造函数
-- 移动构造函数
-- 移动赋值函数
+- 默认构造函数 `T()=default;`
+- 析构函数 `~T()=default;`
+- 拷贝构造函数 `T(const T&)=default;`
+- 拷贝赋值函数 `T& operator=(const T&)=default;`
+- 移动构造函数 `T(T&&)=default;`
+- 移动赋值函数 `T& operator=(const T&&)=default;`
 而在C++20起，还额外支持了：
-- 
+- 比较运算函数 `bool operator==(const T&) const=default;`
+- 三路比较函数 `auto operator<=>(const T&) const=default;`
+其中：
+1. <font color="#c00000">若成员中含有不可拷贝类型</font>，则 `=default;` 会转化为 `=delete;` 。
+2. 当类
+3. 使用 `=default;` 生成默认方法和直接使用一个空实现(例如 `T(){};` )的区别是自定义的空函数可能会失去trivial特性，例如 `noexcept` 、 `constexpr` 等特性。
+4. 
+
+
+
 
 ##### 3.1.1.3.2 删除指定方法(=delete)
 
