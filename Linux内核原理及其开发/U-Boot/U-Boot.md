@@ -40,3 +40,5 @@ U-Boot全称为Universal Bootloader，<font color="#c00000">是一个裸机程�
 
 此外，U-Boot支持ARM、RISC-V、x86等架构，因此在工程上较为复杂。
 
+
+
