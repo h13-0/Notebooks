@@ -35,14 +35,17 @@ U-Boot全称为Universal Bootloader，<font color="#c00000">是一个裸机程�
 3. 启动内核
 
 此外，U-Boot还有如下的(可选)功能：
-1. 调试
-2. 从网络下载并启动内核
-3. 传递启动参数到内核
-4. 
+1. 网络下载功能(避免每次调试时都需要重新刷写分区)，例如：
+	1. 从网络下载并启动内核
+	2. 从网络下载并更新设备树
+2. 传递启动参数到内核
 
 ## 2.3 U-Boot与设备树
 
-在<font color="#c00000">上述硬件需求中</font>，例如CPU、时钟、内存等<font color="#c00000">需要设备树技术的介入</font>。而<font color="#c00000">设备树的介入也将</font>同一种芯片的不同电路设计、驱动选择所组成的<font color="#c00000">成千上万种的板级配置拆分到U-Boot和内核源代码之外</font>，<font color="#c00000">设备树也将被独立编译为一个单独的</font> `.dtb` <font color="#c00000">文件</font>，<font color="#c00000">以供U-Boot加载和读取</font>。
+在<font color="#c00000">上述硬件需求中</font>，例如CPU、时钟、内存<u>甚至网卡驱动</u>等<font color="#c00000">需要设备树技术的介入</font>。而<font color="#c00000">设备树的介入也将</font>同一种芯片的不同电路设计、驱动选择所组成的<font color="#c00000">成千上万种的板级配置拆分到U-Boot和内核源代码之外</font>，<font color="#c00000">设备树也将被独立编译为一个单独的</font> `.dtb` <font color="#c00000">文件</font>，<font color="#c00000">以供U-Boot加载和读取</font>。
+
+注：
+1. U-Boot使用的设备树与内核使用的设备树并非同一个二进制设备树文件。但是其通常由<font color="#c00000">同套</font>设备树源文件编译而成(可以通过include或者overlay等方式为U-Boot的设备树添加补丁)。
 
 # 3 U-Boot的加载流程 ^ro5d63
 
@@ -89,3 +92,10 @@ flowchart TD
     style I fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
 
 ```
+
+# 4 U-Boot的启动流程
+
+
+
+# 5 U-Boot的源码结构
+
