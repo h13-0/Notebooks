@@ -34,6 +34,12 @@ U-Boot全称为Universal Bootloader，<font color="#c00000">是一个裸机程�
 2. 将内核拷贝到内存中
 3. 启动内核
 
+此外，U-Boot还有如下的(可选)功能：
+1. 调试
+2. 从网络下载并启动内核
+3. 传递启动参数到内核
+4. 
+
 ## 2.3 U-Boot与设备树
 
 在<font color="#c00000">上述硬件需求中</font>，例如CPU、时钟、内存等<font color="#c00000">需要设备树技术的介入</font>。而<font color="#c00000">设备树的介入也将</font>同一种芯片的不同电路设计、驱动选择所组成的<font color="#c00000">成千上万种的板级配置拆分到U-Boot和内核源代码之外</font>，<font color="#c00000">设备树也将被独立编译为一个单独的</font> `.dtb` <font color="#c00000">文件</font>，<font color="#c00000">以供U-Boot加载和读取</font>。
@@ -53,4 +59,33 @@ U-Boot全称为Universal Bootloader，<font color="#c00000">是一个裸机程�
 	- 若SRAM无法存下U-Boot，其启动顺序为 `BootROM -> SPL -> U-Boot -> kernel -> FS`
 - 若Flash为XIP设备，直接加载U-Boot
 
+其流程图为：
+```mermaid
+flowchart TD
+    A[BootROM] --> B{Flash类型判断}
+    
+    B -->|非XIP设备<br>（大多数情况）| C{SRAM容量判断}
+    B -->|XIP设备| D[U-Boot<br>从Flash直接执行]
+    
+    C -->|SRAM足够<br>存储U-Boot| E[U-Boot<br>从SRAM执行]
+    C -->|SRAM不足<br>存储U-Boot| F[SPL<br>二级引导程序]
+    
+    F --> G[U-Boot<br>从DRAM执行]
+    G --> H[kernel<br>内核加载]
+    E --> H
+    D --> H
+    
+    H --> I[FileSystem<br>文件系统挂载]
+    
+    %% 样式美化
+    style A fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    style B fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style C fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style D fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style E fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style F fill:#ffecb3,stroke:#ff8f00,stroke-width:2px
+    style G fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style H fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style I fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
 
+```
