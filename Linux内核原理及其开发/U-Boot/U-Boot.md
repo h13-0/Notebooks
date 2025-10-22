@@ -12,13 +12,16 @@ number headings: auto, first-level 1, max 6, 1.1
 
 U-Boot全称为Universal Bootloader，<font color="#c00000">是一个裸机程序</font>。其目的是为了解决不同硬件上的内核启动需求。
 
-## 2.1 U-Boot基本需求
+## 2.1 U-Boot基本需求 ^cv97lr
 
 考虑如下几个要点：
 - 在单片机上，其RAM、Flash通常和CPU直接组合在一起，且其Flash通常也可以直接映射到内存空间从而实现程序的直接运行，这种设备也被称为<font color="#9bbb59">XIP设备</font>。
 	- <font color="#9bbb59">XIP</font>：Execute in place，原地执行。
 	- <font color="#9bbb59">XIP设备</font>：CPU可以直接在存储器中执行代码的设备。
-- 而在嵌入式Linux硬件上，其RAM、Flash通常都独立于CPU之外，且RAM和Flash的型号、容量、类型多种多样，其无法做到像单片机一样直接完全由CPU硬件完成系统的启动。因此其需要一个额外的Bootloader来实现内核的启动与更新等功能。
+- 而在嵌入式Linux硬件上，其：
+	- RAM、Flash通常都独立于CPU之外，SoC通常只有内存控制器和Flash控制器，这些都不具备<font color="#9bbb59">XIP</font>功能。
+	- RAM和Flash的型号、容量、类型多种多样，其无法做到像单片机一样直接完全由CPU硬件完成系统的启动。
+因此嵌入式Linux硬件需要一个额外的Bootloader来实现内核的启动与更新等功能。
 
 ## 2.2 U-Boot基本职责
 
