@@ -259,6 +259,7 @@ module_param(port, int, S_IRUGO);
 	- `S_IRUGO` ：所有用户具有可读权限
 	- `S_IWUGO` ：所有用户具有可写权限
 	- `S_IXUGO` ：所有用户具有可执行权限
+
 而在 `module_param` 函数中，通常使用如下的权限符：
 - `S_IRUGO` 表示任何人都可以读取该参数(<span style="background:#fff88f"><font color="#c00000">最常用</font></span>)
 - `S_IRUGO|S_IWUSR` 表示root用户可以修改该参数。<font color="#c00000">但是当参数发生修改时</font>，<font color="#c00000">内核不会通知内核模块参数被修改</font>，因此<font color="#c00000">通常</font>不使用。
