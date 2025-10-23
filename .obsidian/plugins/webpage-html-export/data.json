@@ -1,5 +1,5 @@
 {
-  "settingsVersion": "1.8.01",
+  "settingsVersion": "0.0.0",
   "exportOptions": {
     "createDocumentContainer": true,
     "keepModHeaderFooter": false,
@@ -11,9 +11,7 @@
     "displayProgress": true,
     "inlineHTML": false,
     "exportPath": "C:\\Users\\h13\\Documents\\GitHub\\Notebooks-html\\Notebooks",
-    "filesToExport": [
-      "all"
-    ],
+    "filesToExport": [],
     "useFallbackRenderer": false,
     "addBodyClasses": true,
     "addMathjaxStyles": true,
@@ -28,7 +26,7 @@
         "selector": ".footer",
         "type": "start"
       },
-      "displayTitle": "Backlinks"
+      "displayTitle": "反向链接"
     },
     "tagOptions": {
       "featureId": "tags",
@@ -41,14 +39,8 @@
         "type": "end"
       },
       "displayTitle": "",
-      "showInlineTags": {
-        "show": true,
-        "description": "Show tags that are inline in the document"
-      },
-      "showFrontmatterTags": {
-        "show": true,
-        "description": "Show tags that are in the frontmatter"
-      }
+      "showInlineTags": true,
+      "showFrontmatterTags": true
     },
     "aliasOptions": {
       "featureId": "aliases",
@@ -60,7 +52,7 @@
         "selector": ".header .data-bar",
         "type": "start"
       },
-      "displayTitle": ""
+      "displayTitle": "Aliases"
     },
     "propertiesOptions": {
       "featureId": "properties",
@@ -72,7 +64,7 @@
         "selector": ".header",
         "type": "start"
       },
-      "displayTitle": "Properties"
+      "displayTitle": "属性"
     },
     "fileNavigationOptions": {
       "featureId": "file-navigation",
@@ -103,7 +95,7 @@
         "selector": "#left-sidebar .topbar-content",
         "type": "start"
       },
-      "displayTitle": "Search..."
+      "displayTitle": "搜索..."
     },
     "outlineOptions": {
       "featureId": "outline",
@@ -115,7 +107,7 @@
         "selector": "#right-sidebar-content",
         "type": "end"
       },
-      "displayTitle": "Outline",
+      "displayTitle": "大纲",
       "startCollapsed": false,
       "minCollapseDepth": 0
     },
@@ -141,7 +133,7 @@
         "selector": "#right-sidebar-content",
         "type": "start"
       },
-      "displayTitle": "Graph View",
+      "displayTitle": "图形视图",
       "showOrphanNodes": true,
       "showAttachments": false,
       "allowGlobalGraph": true,
@@ -173,7 +165,7 @@
       "hideSettingsButton": false,
       "featurePlacement": {
         "selector": "head",
-        "type": "start"
+        "type": "end"
       },
       "sourcePath": "",
       "includePath": "site-lib/html/custom-head.html"
@@ -189,13 +181,13 @@
       "documentWidth": "40em"
     },
     "rssOptions": {
-      "featureId": "obsidian-document",
+      "featureId": "rss",
       "enabled": true,
       "unavailable": false,
       "alwaysEnabled": false,
       "hideSettingsButton": false,
-      "siteUrl": "notebooks.h13.tech",
-      "authorName": "h13"
+      "siteUrl": "",
+      "authorName": ""
     },
     "linkPreviewOptions": {
       "featureId": "link-preview",
@@ -227,7 +219,8 @@
       "code-styler"
     ],
     "includeStyleCssIds": [
-      "code-styler-styles"
+      "code-styler-styles",
+      "code-styler"
     ],
     "autoDisposeWebpages": true
   },
@@ -237,7 +230,7 @@
   "onlyExportModified": true,
   "deleteOldFiles": true,
   "exportPreset": "online",
-  "openAfterExport": false,
+  "openAfterExport": true,
   "filePickerBlacklist": [
     "(^|\\/)node_modules\\/",
     "(^|\\/)dist\\/",
