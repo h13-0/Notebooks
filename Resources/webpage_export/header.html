@@ -1,7 +1,7 @@
 <style>
   pre[class*="language-"].line-numbers {
     position: relative;
-    padding-left: 3.5em;              /* 预留行号栏 */
+    padding-left: 3.5em;
     counter-reset: linenumber;
   }
 
@@ -10,7 +10,7 @@
     display: block;
   }
 
-  pre[class*="language-"].line-numbers .line-numbers-rows {
+  pre[class*="language-"].line-numbers.line-numbers-rows {
     position: absolute;
     top: 0;
     left: 0;
@@ -23,11 +23,11 @@
     line-height: inherit;
   }
 
-  pre[class*="language-"].line-numbers .line-numbers-rows > span {
+  pre[class*="language-"].line-numbers.line-numbers-rows > span {
     display: block;
   }
 
-  pre[class*="language-"].line-numbers .line-numbers-rows > span::before {
+  pre[class*="language-"].line-numbers.line-numbers-rows > span::before {
     content: counter(linenumber);
     counter-increment: linenumber;
     color: var(--text-faint);
