@@ -99,7 +99,7 @@ flowchart TD
 1. 检查BootPin配置，从而选择启动设备，其策略通常有：
 	- 通过BootPin<font color="#c00000">选择启动设备</font>，例如
 	- 通过BootPin<font color="#c00000">选择启动顺序</font>，例如：
-		- 全志系列：选择是 `SD->NAND` 或者 `NAND->SD` 
+		- 全志、瑞芯微系列：选择是 `SD->NAND` 或者 `NAND->SD` 
 
 ## 3.2 SPL
 
