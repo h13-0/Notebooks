@@ -58,8 +58,16 @@ U-Boot全称为Universal Bootloader，<font color="#c00000">是一个裸机程�
 
 也就是说对于嵌入式Linux，其： ^c45lgx
 - 若Flash为非XIP设备(<font color="#c00000">大多数为此情况</font>)
-	- 若SRAM可以存下U-Boot，其启动顺序为 `BootROM -> U-Boot -> kernel -> FS` 
-	- 若SRAM无法存下U-Boot，其启动顺序为 `BootROM -> SPL -> U-Boot -> kernel -> FS`
+	- 若BootROM具有DDR初始化功能(<font color="#c00000">现代SoC较多使用</font>)：
+		1. 读取存储在U-Boot头部的DDR信息
+		2. 初始化DDR
+		3. 拷贝U-Boot到DDR
+	- 若BootROM不具有DDR初始化功能，则：
+		- 若SRAM可以存下U-Boot，其启动顺序为 `BootROM -> U-Boot -> kernel -> FS`
+		- 若SRAM无法存下U-Boot，其启动顺序为 `BootROM -> SPL -> U-Boot -> kernel -> FS` ，使用该方案的SoC有：
+        - S3C2440，BootROM会拷贝启动设备的头部4K代码到其4K的SRAM中并：
+            1. 初始化DDR
+            2. 拷贝包含头部4K SPL的U-Boot到DDR并执行
 - 若Flash为XIP设备，直接加载U-Boot
 
 其流程图为：
@@ -93,13 +101,22 @@ flowchart TD
 
 ```
 
+注：
+1. 部分SoC会将DDR参数存储于U-Boot头部，从而让BootROM读取DDR参数，初始化DDR，并直接将U-Boot加载到DDR，而非SRAM。使用此方法的SoC有：
+    - IMX6ULL
+
+
+
 ## 3.1 BootROM
 
 在BootROM阶段，SoC通常会执行如下操作：
 1. 检查BootPin配置，从而选择启动设备，其策略通常有：
-	- 通过BootPin<font color="#c00000">选择启动设备</font>，例如
+	- 通过BootPin<font color="#c00000">选择启动设备</font>，例如：
+        - NXP的IMX6ULL：选择是 `SD` 、 `EMMC` 或者是 `USB` 
 	- 通过BootPin<font color="#c00000">选择启动顺序</font>，例如：
 		- 全志、瑞芯微系列：选择是 `SD->NAND` 或者 `NAND->SD` 
+
+
 
 ## 3.2 SPL
 
