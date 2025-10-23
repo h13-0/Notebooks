@@ -99,12 +99,24 @@ flowchart TD
 
 # 5 U-Boot的源码结构
 
-```
+```shell
 u-boot:
 ├── api
-├── arch    # 各架构所属代码
+├── arch                    # 各架构所属代码
 │   ├── arc
 │   ├── arm
+│	│	├── cpu
+│	│	│	├── arm11
+│	│	│	├── arm1136
+│	│	│	├── ...
+│	│	│	└── armv8
+│	│	├── dts
+│	│	├── include
+│	│	├── lib
+│	│	├── mach-airoha      # 各CPU厂家的通用代码
+│	│	├── mach-apple       # 包括apple、sunxi、mediatek、rockchip等
+│	│	├── ...
+│	│	└── thumb1
 │   ├── ...
 │   └── xtensa
 ├── board
