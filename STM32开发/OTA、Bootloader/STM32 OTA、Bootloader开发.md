@@ -36,8 +36,8 @@ MEMORY
 }
 ```
 1. 实现Bootloader基础功能，主要包含：
-	1. [[STM32 OTA&Bootloader开发#^8pv5ar|Flash烧写功能]]
-	2. [[STM32 OTA&Bootloader开发#^fsnwb3|跳转功能]]，需要完成：
+	1. [[STM32 OTA、Bootloader开发#^8pv5ar|Flash烧写功能]]
+	2. [[STM32 OTA、Bootloader开发#^fsnwb3|跳转功能]]，需要完成：
 		1. 关闭并重置Bootloader程序所用到的所有外设。
 		2. 如果使用了RTOS，则还可能需要切换为特权模式。
 		3. 设置主堆栈指针MSP。
