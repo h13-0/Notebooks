@@ -93,7 +93,15 @@ flowchart TD
 
 ```
 
-## 3.1 SPL
+## 3.1 BootROM
+
+在BootROM阶段，SoC通常会执行如下操作：
+1. 检查BootPin配置，从而选择启动设备，其策略通常有：
+	- 通过BootPin<font color="#c00000">选择启动设备</font>，例如
+	- 通过BootPin<font color="#c00000">选择启动顺序</font>，例如：
+		- 全志系列：选择是 `SD->NAND` 或者 `NAND->SD` 
+
+## 3.2 SPL
 
 
 
