@@ -101,8 +101,8 @@ flowchart TD
 
 ```shell
 u-boot:
-├── api
-├── arch/                   	# 各架构所属代码
+├── api/
+├── arch/                   # 各架构所属代码
 │   ├── arc/
 │   ├── arm/              	# arm架构目录
 │	│	├── cpu/			# arm各版本架构目录
@@ -117,19 +117,22 @@ u-boot:
 │	│	│		├── *.S				# 该子架构通用CPU初始化代码
 │	│	│		├── *.c
 │	│	│		└── ...
-│	│	├── dts
-│	│	├── include
-│	│	├── lib          	# arm架构的通用例程(例如memcpy等，包含C和汇编)
-│	│	├── mach-airoha     # 各CPU厂家的通用代码
-│	│	├── mach-apple      # 包括apple、sunxi、mediatek、rockchip等
+│	│	├── dts/			# 该架构的SoC级和板级设备树
+│	│	├── include/
+│	│	│	├── asm/		# 架构相关头文件
+│	│	│	└── debug/
+│	│	├── lib/          	# arm架构的通用例程(例如memcpy等，包含C和汇编)
+│	│	├── mach-airoha/    # 各CPU厂家的通用代码
+│	│	├── mach-apple/     # 包括apple、sunxi、mediatek、rockchip等
 │	│	├── ...
-│	│	└── thumb1
+│	│	└── thumb1/
 │   ├── ...
 │   └── xtensa
 ├── board 					# 板级支持包
+
 ├── boot					# 镜像装载、解析等
 ├── cmd						# U-Boot shell命令的实现(如mmc、fat等)
-├── common
+├── common					# 启动
 ├── configs
 ├── disk
 ├── doc
