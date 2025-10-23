@@ -178,7 +178,11 @@ u-boot:
 │	├── eeprom/				# 
 │	├── init/				# 启动阶段调度、自举逻辑、autoboot、环境装载等
 │	└── spl/				# SPL框架，即裁剪后的早期引导，用于拉起完整的U-Boot
-├── configs/					
+├── configs/			    # 板级编辑配置文件，编译时引用
+│   ├── 10m50_defconfig         # 可使用 `make 10m50_defconfig` 指定该配置
+│   ├── 3c120_defconfig
+│   ├── ...
+│   └── zynq_cse_qspi_defconfig
 ├── disk/
 ├── doc/					# 开发、使用、架构对应文档
 │	├── android/
