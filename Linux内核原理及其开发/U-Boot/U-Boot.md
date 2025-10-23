@@ -102,9 +102,9 @@ flowchart TD
 ```shell
 u-boot:
 ├── api
-├── arch                    # 各架构所属代码
+├── arch                   	# 各架构所属代码
 │   ├── arc
-│   ├── arm
+│   ├── arm              	# arm架构目录
 │	│	├── cpu
 │	│	│	├── arm11
 │	│	│	├── arm1136
@@ -112,25 +112,25 @@ u-boot:
 │	│	│	└── armv8
 │	│	├── dts
 │	│	├── include
-│	│	├── lib
-│	│	├── mach-airoha      # 各CPU厂家的通用代码
-│	│	├── mach-apple       # 包括apple、sunxi、mediatek、rockchip等
+│	│	├── lib          	# arm架构的通用例程(例如memcpy等，包含C和汇编)
+│	│	├── mach-airoha     # 各CPU厂家的通用代码
+│	│	├── mach-apple      # 包括apple、sunxi、mediatek、rockchip等
 │	│	├── ...
 │	│	└── thumb1
 │   ├── ...
 │   └── xtensa
-├── board
-├── boot
-├── cmd
+├── board 					# 板级支持包
+├── boot					# 镜像装载、解析等
+├── cmd						# U-Boot shell命令的实现(如mmc、fat等)
 ├── common
 ├── configs
 ├── disk
 ├── doc
-├── drivers
+├── drivers					# 驱动树
 ├── dts
 ├── env
 ├── examples
-├── fs
+├── fs						# 文件系统实现
 ├── include
 ├── lib
 ├── Licenses
