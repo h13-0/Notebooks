@@ -93,6 +93,10 @@ flowchart TD
 
 ```
 
+## 3.1 SPL
+
+
+
 # 4 U-Boot的启动流程
 
 
@@ -128,25 +132,61 @@ u-boot:
 │	│	└── thumb1/
 │   ├── ...
 │   └── xtensa
-├── board 					# 板级支持包
-
-├── boot					# 镜像装载、解析等
-├── cmd						# U-Boot shell命令的实现(如mmc、fat等)
-├── common					# 启动
-├── configs
-├── disk
-├── doc
-├── drivers					# 驱动树
-├── dts
-├── env
-├── examples
-├── fs						# 文件系统实现
-├── include
-├── lib
-├── Licenses
-├── net
-├── post
-├── scripts
-├── test
-└── tools
+├── board/ 					# 板级支持包，包含SoC厂家和Board厂家
+│	├── abilis/
+│	├── acer/				# 宏碁
+│	├── ...
+│	├── firefly/			# firefly的板级支持包
+│	├── ...
+│	├── rockchip/   		# 瑞芯微，包含SoC及官方Board
+│	│	├── evb_px30/
+│	│	├── evb_px5/
+│	│	├── ...
+│	│	├── evb_rk3588/
+│	│	├── ...
+│	│	├── tinker_rk3288/
+│	│	└── toybrick_rk3588/
+│	├── ...
+│	└── zyxel/
+├── boot/					# 镜像装载、解析等
+├── cmd/						# U-Boot shell命令的实现(如mmc、fat等)
+├── common/					# 启动所需公共框架
+│	├── eeprom/				# 
+│	├── init/				# 启动阶段调度、自举逻辑、autoboot、环境装载等
+│	└── spl/				# SPL框架，即裁剪后的早期引导，用于拉起完整的U-Boot
+├── configs/					
+├── disk/
+├── doc/					# 开发、使用、架构对应文档
+│	├── android/
+│	├── ...
+│	├── arch/
+│	├── board/
+│	├── ...
+│	├── develop/
+│	├── device-tree-bindings/
+│	├── ...
+│	├── SPL/
+│	└── usage/
+├── drivers/				# 各种外设与硬件驱动
+│	├── adc/
+│	├── ...
+│	├── clk/
+│	├── core/
+│	├── cpu/
+│	├── crypto/
+│	├── ddr/
+│	├── ...
+│	└── xen/
+├── dts/
+├── env/
+├── examples/				# 示例
+├── fs/						# 文件系统实现
+├── include/
+├── lib/					# 通用库，包含压缩算法、加密算法、ACPI、EFI子系统等
+├── Licenses/				# 许可证
+├── net/					# 网络协议库，包含TCP/IP、UDP、lwip等
+├── post/
+├── scripts/				# 构建等相关脚本
+├── test/					# 测试库等
+└── tools/					# 
 ```
