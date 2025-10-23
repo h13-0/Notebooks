@@ -222,8 +222,13 @@
     "siteName": "Notebooks",
     "iconEmojiStyle": "Native",
     "exportRoot": "",
-    "includePluginCss": [],
-    "includeStyleCssIds": [],
+    "includePluginCss": [
+      "code-styler-styles",
+      "code-styler"
+    ],
+    "includeStyleCssIds": [
+      "code-styler-styles"
+    ],
     "autoDisposeWebpages": true
   },
   "logLevel": "warning",
