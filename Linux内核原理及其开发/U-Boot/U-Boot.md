@@ -42,7 +42,7 @@ U-Boot全称为Universal Bootloader，<font color="#c00000">是一个裸机程�
 
 ## 2.3 U-Boot与设备树
 
-在<font color="#c00000">上述硬件需求中</font>，例如CPU、时钟、内存<u>甚至网卡驱动</u>等<font color="#c00000">需要设备树技术的介入</font>。而<font color="#c00000">设备树的介入也将</font>同一种芯片的不同电路设计、驱动选择所组成的<font color="#c00000">成千上万种的板级配置拆分到U-Boot和内核源代码之外</font>，<font color="#c00000">设备树也将被独立编译为一个单独的</font> `.dtb` <font color="#c00000">文件</font>，<font color="#c00000">以供U-Boot加载和读取</font>。
+在<font color="#c00000">上述硬件需求中</font>，例如CPU、时钟、内存、屏幕<u>甚至网卡驱动</u>等<font color="#c00000">需要设备树技术的介入</font>。而<font color="#c00000">设备树的介入也将</font>同一种芯片的不同电路设计、驱动选择所组成的<font color="#c00000">成千上万种的板级配置拆分到U-Boot和内核源代码之外</font>，<font color="#c00000">设备树也将被独立编译为一个单独的</font> `.dtb` <font color="#c00000">文件</font>，<font color="#c00000">以供U-Boot加载和读取</font>。
 
 注：
 1. U-Boot使用的设备树与内核使用的设备树并非同一个二进制设备树文件。但是其通常由<font color="#c00000">同套</font>设备树源文件编译而成(可以通过include或者overlay等方式为U-Boot的设备树添加补丁)。
@@ -58,17 +58,22 @@ U-Boot全称为Universal Bootloader，<font color="#c00000">是一个裸机程�
 
 也就是说对于嵌入式Linux，其： ^c45lgx
 - 若Flash为非XIP设备(<font color="#c00000">大多数为此情况</font>)
-	- 若BootROM具有DDR初始化功能(<font color="#c00000">现代SoC较多使用</font>)：
+	- 若BootROM具有DDR初始化功能(<font color="#c00000">现代SoC较多使用</font>)，则：
 		1. 读取存储在U-Boot头部的DDR信息
 		2. 初始化DDR
-		3. 拷贝U-Boot到DDR
-	- 若BootROM不具有DDR初始化功能，则：
-		- 若SRAM可以存下U-Boot，其启动顺序为 `BootROM -> U-Boot -> kernel -> FS`
-		- 若SRAM无法存下U-Boot，其启动顺序为 `BootROM -> SPL -> U-Boot -> kernel -> FS` ，使用该方案的SoC有：
-        - S3C2440，BootROM会拷贝启动设备的头部4K代码到其4K的SRAM中并：
-            1. 初始化DDR
-            2. 拷贝包含头部4K SPL的U-Boot到DDR并执行
+		3. 拷贝U-Boot到DDR并执行
+	- 若BootROM不具有DDR初始化功能，则其启动顺序为：
+        1. `BootROM` 会拷贝指定启动设备的头部若干尺寸的代码到SRAM(通常是与SRAM一样大)，这部分代码即 `SPL`
+        2. `SPL` 会执行初始化DDR、拷贝包含 `SPL` 的完整U-Boot到DDR
+        3. 执行 `U-Boot` 
 - 若Flash为XIP设备，直接加载U-Boot
+
+注：
+1. 采用BootROM配置DDR的SoC有：
+    - IMX6ULL
+    - RK3399、RK3588等
+2. 采用SPL的SoC有：
+    - S3C2440
 
 其流程图为：
 ```mermaid
@@ -100,12 +105,6 @@ flowchart TD
     style I fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
 
 ```
-
-注：
-1. 部分SoC会将DDR参数存储于U-Boot头部，从而让BootROM读取DDR参数，初始化DDR，并直接将U-Boot加载到DDR，而非SRAM。使用此方法的SoC有：
-    - IMX6ULL
-
-
 
 ## 3.1 BootROM
 
