@@ -125,7 +125,9 @@ flowchart TD
 
 
 
-# 5 U-Boot的源码结构
+# 5 U-Boot源码结构及其编译
+
+## 5.1 U-Boot源码结构
 
 ```shell
 u-boot:
@@ -217,4 +219,20 @@ u-boot:
 ├── scripts/				# 构建等相关脚本
 ├── test/					# 测试库等
 └── tools/					# 编译时构建、打包工具，及python辅助库
+```
+
+## 5.2 U-Boot编译
+
+U-Boot编译时可使用如下命令：
+
+```Shell
+make ${config_name}
+```
+
+其中， `${config_name}` 为路径 `configs` 下的配置文件。
+
+使用：
+
+```shell
+make ${config_name} -p > 
 ```
