@@ -102,14 +102,21 @@ flowchart TD
 ```shell
 u-boot:
 ├── api
-├── arch                   	# 各架构所属代码
-│   ├── arc
-│   ├── arm              	# arm架构目录
-│	│	├── cpu
-│	│	│	├── arm11
-│	│	│	├── arm1136
+├── arch/                   	# 各架构所属代码
+│   ├── arc/
+│   ├── arm/              	# arm架构目录
+│	│	├── cpu/			# arm各版本架构目录
+│	│	│	├── arm11/
+│	│	│	├── arm1136/
 │	│	│	├── ...
-│	│	│	└── armv8
+│	│	│	└── armv8/			# armv8
+│	│	│		├── bcmns3/			# 各厂商的CPU侧极早期初始化代码
+│	│	│		├── fsl-layerscape/
+│	│	│		├── hisilicon/
+│	│	│		├── xen/
+│	│	│		├── *.S				# 该子架构通用CPU初始化代码
+│	│	│		├── *.c
+│	│	│		└── ...
 │	│	├── dts
 │	│	├── include
 │	│	├── lib          	# arm架构的通用例程(例如memcpy等，包含C和汇编)
