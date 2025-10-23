@@ -99,3 +99,32 @@ flowchart TD
 
 # 5 U-Boot的源码结构
 
+```
+u-boot:
+├── api
+├── arch    # 各架构所属代码
+│   ├── arc
+│   ├── arm
+│   ├── ...
+│   └── xtensa
+├── board
+├── boot
+├── cmd
+├── common
+├── configs
+├── disk
+├── doc
+├── drivers
+├── dts
+├── env
+├── examples
+├── fs
+├── include
+├── lib
+├── Licenses
+├── net
+├── post
+├── scripts
+├── test
+└── tools
+```
