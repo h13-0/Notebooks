@@ -177,7 +177,7 @@ u-boot:
 │	├── ddr/
 │	├── ...
 │	└── xen/
-├── dts/
+├── dts/					# 
 ├── env/
 ├── examples/				# 示例
 ├── fs/						# 文件系统实现
@@ -185,8 +185,8 @@ u-boot:
 ├── lib/					# 通用库，包含压缩算法、加密算法、ACPI、EFI子系统等
 ├── Licenses/				# 许可证
 ├── net/					# 网络协议库，包含TCP/IP、UDP、lwip等
-├── post/
+├── post/					# 上电自检框架(Power-On Self-Test)
 ├── scripts/				# 构建等相关脚本
 ├── test/					# 测试库等
-└── tools/					# 
+└── tools/					# 编译时构建、打包工具，及python辅助库
 ```
