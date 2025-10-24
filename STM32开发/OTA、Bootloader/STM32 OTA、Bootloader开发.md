@@ -1,30 +1,35 @@
 ---
-number headings: auto, first-level 2, max 6, 1.1
+number headings: auto, first-level 1, max 6, 1.1
 ---
 #STM32开发 
 
-## 1 目录
+# 1 目录
 
 ```toc
 ```
 
-## 2 前置基础
+# 2 前置基础
 
-### 2.1 STM32启动流程
+## 2.1 ARM Cortex-M CPU启动后流程
 
-[[STM32启动流程]]：![[STM32启动流程]]
+[[ARM内核/ARM Cortex-M/ARM Cortex-M硬件启动流程#^0fhhlg|ARM Cortex-M CPU启动后流程]]：![[ARM内核/ARM Cortex-M/ARM Cortex-M硬件启动流程#3 CPU启动后流程 0fhhlg]]
 
-### 2.2 固件布局(Sections)
+
+## 2.2 STM32 启动流程
+
+[[STM32开发/OTA、Bootloader/STM32启动流程]]：![[STM32开发/OTA、Bootloader/STM32启动流程]]
+
+## 2.3 固件布局(Sections)
 
 [[STM32启动流程#^ekk2l7|STM32固件结构]]：
 ![[STM32启动流程#3 2 STM32固件结构 ekk2l7]]
 
-## 3 实现
+# 3 实现
 
 基于上述STM32的启动过程，Bootloader可以按照如下的逻辑进行设计。
 需要说明的是，Bootloader和用户程序应当为两个独立的工程(或固件)。
 
-### 3.1 Bootloader实现
+## 3.1 Bootloader实现
 
 在Bootloader工程中进行如下修改：
 1. 修改 `*.ld` 文件的 `MEMORY` 定义的大小，<font color="#c00000">用于限制Bootloader固件的大小</font>：
@@ -45,13 +50,13 @@ MEMORY
 			- 详见：[[STM32启动流程#^yd4zac|Reset_handler注意点]]。
 2. 补全业务逻辑，略。
 
-#### 3.1.1 Flash烧写功能 ^8pv5ar
+## 3.2 Flash烧写功能 ^8pv5ar
 
 
 
 
 
-#### 3.1.2 跳转功能 ^fsnwb3
+## 3.3 跳转功能 ^fsnwb3
 
 ```C
 /**
@@ -102,7 +107,7 @@ void boot(uint32_t addr)
 注意：
 - `app` 指针<span style="background:#fff88f"><font color="#c00000">并非指向</font></span> `addr + 4` ，<span style="background:#fff88f"><font color="#c00000">而是指向</font></span> `addr + 4` <span style="background:#fff88f"><font color="#c00000">中存储的32位地址</font></span>。
 
-### 3.2 App程序实现
+## 3.4 App程序实现
 
 在APP中应当进行如下修改：
 1. 修改Flash的起始位置、Flash大小，<font color="#c00000">需要注意的是K为1024而非1000</font>：
