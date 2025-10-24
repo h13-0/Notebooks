@@ -63,7 +63,7 @@ U-Boot全称为Universal Bootloader，<font color="#c00000">是一个裸机程�
 		2. `SPL` 会执行初始化DDR、拷贝包含 `SPL` 的完整U-Boot到DDR
 		3. 执行 `U-Boot` 
 	- <font color="#c00000">SPL变体技术</font>(如RockChip)：
-		- 官方会提供一个DDR初始化固件(`ddrbin`)，以及一堆二级三级加载器，随后加载U-Boot
+		- 官方会提供一个DDR初始化固件(`ddrbin`)，以及[一堆二级三级加载器](https://opensource.rock-chips.com/wiki_Boot_option)，随后加载U-Boot
 		- 使用TPL等开源技术实现类似功能
 	- <font color="#c00000">BootROM阶段动态初始化DDR技术</font>(例如i.MX6UL系列)，其流程为：
 		1. 读取存储在U-Boot头部的DDR信息
