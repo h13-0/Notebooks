@@ -57,23 +57,19 @@ U-Boot全称为Universal Bootloader，<font color="#c00000">是一个裸机程�
 	- <font color="#9bbb59">SPL</font>：若SoC的SRAM容量不足以放下完整U-Boot时，BootROM会将精简版的U-Boot拷贝到SRAM，然后初始化DDR，从而继续拉起U-Boot。这个精简版的U-Boot就是SPL(Secondary Program Loader)。
 
 也就是说对于嵌入式Linux，其： ^c45lgx
-- 若Flash为非XIP设备(<font color="#c00000">大多数为此情况</font>)
-	- 若BootROM具有DDR初始化功能(<font color="#c00000">现代SoC较多使用</font>)，则：
+- 若Flash为非XIP设备，则其使用的技术多种多样。例如：
+	- <font color="#c00000">标准SPL技术</font>(例如S3C2440)：
+		1. `BootROM` 会拷贝指定启动设备的头部若干尺寸的代码到SRAM(通常是与SRAM一样大)，这部分代码即 `SPL`
+		2. `SPL` 会执行初始化DDR、拷贝包含 `SPL` 的完整U-Boot到DDR
+		3. 执行 `U-Boot` 
+	- <font color="#c00000">SPL变体技术</font>(如RockChip)：
+		- 官方会提供一个DDR初始化固件(`ddrbin`)，以及一堆二级三级加载器，随后加载U-Boot
+		- 使用TPL等开源技术实现类似功能
+	- <font color="#c00000">BootROM阶段动态初始化DDR技术</font>(例如i.MX6UL系列)，其流程为：
 		1. 读取存储在U-Boot头部的DDR信息
 		2. 初始化DDR
 		3. 拷贝U-Boot到DDR并执行
-	- 若BootROM不具有DDR初始化功能，则其启动顺序为：
-        1. `BootROM` 会拷贝指定启动设备的头部若干尺寸的代码到SRAM(通常是与SRAM一样大)，这部分代码即 `SPL`
-        2. `SPL` 会执行初始化DDR、拷贝包含 `SPL` 的完整U-Boot到DDR
-        3. 执行 `U-Boot` 
-- 若Flash为XIP设备(<font color="#c00000">例如Nor Flash</font>)，则直接加载U-Boot
-
-注：
-1. 采用BootROM配置DDR的SoC有：
-    - IMX6ULL
-    - RK3399、RK3588等
-2. 采用SPL的SoC有：
-    - S3C2440
+- 若Flash为XIP设备(<font color="#c00000">例如Nor Flash</font>)，则直接运行U-Boot
 
 其流程图为：
 
