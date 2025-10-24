@@ -67,9 +67,11 @@ STM32的启动模式主要有如下几种：
 从内置Flash启动的启动流程为：
 1. 芯片上电或触发复位。
 2. SYSCLK的第4个上升沿，BOOT引脚的值将被锁存，此时被配置为从内置Flash启动，`0x0000 0000` 的地址会被映射到 `0x0800 0000` ，并开始执行代码。
-3. 读取固件头的中断向量表(可详见[[STM32启动流程#^ekk2l7|STM32固件结构]])，并执行：
-	1. 将初始化栈顶指针读取到SP寄存器
-	2. 执行 `Reset_Handler` 函数，详见[[STM32启动流程#^1xjvks]]：![[STM32启动流程#5 1 Reset_Handler函数 ^1xjvks]]
+3. 随后CPU<span style="background:#fff88f"><font color="#c00000">自动执行</font></span>[[ARM内核/ARM Cortex-M/ARM Cortex-M硬件启动流程#3 CPU启动后流程 0fhhlg|启动后流程]]：![[ARM内核/ARM Cortex-M/ARM Cortex-M硬件启动流程#3 CPU启动后流程 0fhhlg]]
+	需要注意：
+	1. 向量表的第二个地址通常指向[[STM32启动流程#5 1 Reset_Handler函数 ^1xjvks|Reset_Handler]]函数，即加载MSP后自动执行该函数
+	2. 
+	3. 执行 `Reset_Handler` 函数，详见[[STM32启动流程#^1xjvks]]：!
 
 ### 5.1 Reset_Handler函数 ^1xjvks
 
