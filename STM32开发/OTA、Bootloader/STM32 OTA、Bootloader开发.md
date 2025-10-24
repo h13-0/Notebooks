@@ -12,14 +12,9 @@ number headings: auto, first-level 1, max 6, 1.1
 
 ## 2.1 ARM Cortex-M CPU启动后流程
 
-[[ARM内核/ARM Cortex-M/ARM Cortex-M硬件启动流程#^0fhhlg|ARM Cortex-M CPU启动后流程]]：![[ARM内核/ARM Cortex-M/ARM Cortex-M硬件启动流程#3 CPU启动后流程 0fhhlg]]
+CPU启动前流程属于硬件部分，对于OTA开发可直接参考[[ARM内核/ARM Cortex-M/ARM Cortex-M硬件启动流程#^0fhhlg|ARM Cortex-M CPU启动后流程]]：![[ARM内核/ARM Cortex-M/ARM Cortex-M硬件启动流程#3 CPU启动后流程 0fhhlg]]
 
-
-## 2.2 STM32 启动流程
-
-[[STM32开发/OTA、Bootloader/STM32启动流程]]：![[STM32开发/OTA、Bootloader/STM32启动流程]]
-
-## 2.3 固件布局(Sections)
+## 2.2 STM32固件布局(Sections)
 
 [[STM32启动流程#^ekk2l7|STM32固件结构]]：
 ![[STM32启动流程#3 2 STM32固件结构 ekk2l7]]
