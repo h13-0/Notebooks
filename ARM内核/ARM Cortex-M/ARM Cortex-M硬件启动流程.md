@@ -14,7 +14,7 @@ number headings: auto, first-level 1, max 6, 1.1
 
 在ARM Cortex-M的CPU开始运行之后，其<span style="background:#fff88f"><font color="#c00000">CPU会自动</font></span>：
 1. 从<font color="#9bbb59">向量表基地址</font><sup>注1</sup>装入<font color="#9bbb59">主堆栈指针MSP</font>
-2. 再将向量表基地址的下一条地址(`+0x04`)装入PC
+2. 再将向量表基地址的下一条地址(`+0x04`)<font color="#c00000">中的数据</font>(也就是其存储的地址)装入PC
 3. CPU自动从PC中的地址开始执行指令
 
 <font color="#c00000">再次强调</font>，<span style="background:#fff88f"><font color="#c00000">上述步骤由CPU硬件自动完成</font></span>。
