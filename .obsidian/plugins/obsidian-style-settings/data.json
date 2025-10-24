@@ -1,3 +1,8 @@
 {
-  "blue-topaz-theme@@color-scheme-options": "color-scheme-options-default"
+  "blue-topaz-theme@@color-scheme-options": "color-scheme-options-default",
+  "Blue-Topaz-Codebox-Highlight@@nowrap-edit-codebox": true,
+  "Blue-Topaz-Codebox-Highlight@@whole-code-wrap": true,
+  "Blue-Topaz-Codebox-Highlight@@code-box-style-option": "codebox-default-style",
+  "Blue-Topaz-Codebox-Highlight@@code-line-number": false,
+  "Blue-Topaz-Codebox-Highlight@@code-theme-selection": "code-theme-bt-default"
 }
