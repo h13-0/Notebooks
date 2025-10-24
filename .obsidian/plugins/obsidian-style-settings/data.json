@@ -4,5 +4,6 @@
   "Blue-Topaz-Codebox-Highlight@@whole-code-wrap": true,
   "Blue-Topaz-Codebox-Highlight@@code-box-style-option": "codebox-default-style",
   "Blue-Topaz-Codebox-Highlight@@code-line-number": false,
-  "Blue-Topaz-Codebox-Highlight@@code-theme-selection": "code-theme-bt-default"
+  "Blue-Topaz-Codebox-Highlight@@code-theme-selection": "code-theme-bt-default",
+  "minimal-style@@minimal-code-scroll": true
 }
