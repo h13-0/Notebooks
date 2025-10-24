@@ -45,7 +45,7 @@ U-Boot全称为Universal Bootloader，<font color="#c00000">是一个裸机程�
 在<font color="#c00000">上述硬件需求中</font>，例如CPU、时钟、内存、屏幕<u>甚至网卡驱动</u>等<font color="#c00000">需要设备树技术的介入</font>。而<font color="#c00000">设备树的介入也将</font>同一种芯片的不同电路设计、驱动选择所组成的<font color="#c00000">成千上万种的板级配置拆分到U-Boot和内核源代码之外</font>，<font color="#c00000">设备树也将被独立编译为一个单独的</font> `.dtb` <font color="#c00000">文件</font>，<font color="#c00000">以供U-Boot加载和读取</font>。
 
 注：
-1. U-Boot使用的设备树与内核使用的设备树并非同一个二进制设备树文件。但是其通常由<font color="#c00000">同套</font>设备树源文件编译而成(可以通过include或者overlay等方式为U-Boot的设备树添加补丁)。
+1. U-Boot使用的设备树与内核使用的设备树并非同一个二进制设备树文件。但是其通常由<font color="#c00000">同一套</font>设备树源文件编译而成(可以通过include或者overlay等方式为U-Boot的设备树添加补丁)。
 
 # 3 U-Boot的加载流程 ^ro5d63
 
@@ -75,25 +75,30 @@ U-Boot全称为Universal Bootloader，<font color="#c00000">是一个裸机程�
 
 ```mermaid
 flowchart TD
-    A[BootROM] --> B{Flash类型}
+    A[BootROM] --> B{XIP技术?}
     
-    B -->|非XIP设备<br>（大多数情况）| C{BootROM DDR<br>初始化功能判断}
-    B -->|XIP设备<br>（例如Nor Flash）| D[U-Boot<br>从Flash直接执行]
+    B -->|非XIP设备| C{非XIP启动技术选择}
+    B -->|XIP设备<br>如Nor Flash| D[直接执行<br>U-Boot]
     
-    C -->|具有DDR初始化功能<br>（现代SoC）| E[读取U-Boot头部<br>DDR信息]
-    E --> F[初始化DDR]
-    F --> G[拷贝U-Boot到DDR<br>并执行]
+    C -->|标准SPL技术<br>如S3C2440| E[拷贝SPL<br>到SRAM]
+    E --> F[SPL初始化DDR]
+    F --> G[SPL拷贝完整<br>U-Boot到DDR]
+    G --> H[执行U-Boot]
     
-    C -->|不具有DDR初始化功能| H[拷贝SPL到SRAM]
-    H --> I[SPL初始化DDR]
-    I --> J[SPL拷贝完整U-Boot<br>到DDR]
-    J --> K[执行U-Boot]
+    C -->|SPL变体技术<br>如RockChip| I[加载DDR<br>初始化固件]
+    I --> J[加载二级/<br>三级加载器]
+    J --> K[加载U-Boot]
+    K --> H
     
-    G --> L[kernel<br>内核加载]
-    D --> L
-    K --> L
+    C -->|BootROM动态初始化DDR<br>如i.MX6UL系列| L[读取U-Boot<br>头部DDR信息]
+    L --> M[BootROM<br>初始化DDR]
+    M --> N[拷贝U-Boot<br>到DDR并执行]
+    N --> H
     
-    L --> M[FS<br>文件系统挂载]
+    H --> O[kernel<br>内核加载]
+    D --> O
+    
+    O --> P[FS<br>文件系统挂载]
     
     %% 样式美化
     style A fill:#e1f5fe,stroke:#01579b,stroke-width:2px
@@ -102,13 +107,16 @@ flowchart TD
     style D fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
     style E fill:#ffecb3,stroke:#ff8f00,stroke-width:2px
     style F fill:#ffecb3,stroke:#ff8f00,stroke-width:2px
-    style G fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
-    style H fill:#ffcdd2,stroke:#c62828,stroke-width:2px
+    style G fill:#ffecb3,stroke:#ff8f00,stroke-width:2px
+    style H fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
     style I fill:#ffcdd2,stroke:#c62828,stroke-width:2px
     style J fill:#ffcdd2,stroke:#c62828,stroke-width:2px
-    style K fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
-    style L fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    style M fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    style K fill:#ffcdd2,stroke:#c62828,stroke-width:2px
+    style L fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px
+    style M fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px
+    style N fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px
+    style O fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style P fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
 
 ```
 
