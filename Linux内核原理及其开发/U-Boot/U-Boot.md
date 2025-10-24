@@ -76,33 +76,43 @@ U-Boot全称为Universal Bootloader，<font color="#c00000">是一个裸机程�
     - S3C2440
 
 其流程图为：
+
 ```mermaid
 flowchart TD
-    A[BootROM] --> B{Flash类型判断}
+    A[BootROM] --> B{Flash类型}
     
-    B -->|非XIP设备<br>（大多数情况）| C{SRAM容量判断}
+    B -->|非XIP设备<br>（大多数情况）| C{BootROM DDR<br>初始化功能判断}
     B -->|XIP设备| D[U-Boot<br>从Flash直接执行]
     
-    C -->|SRAM足够<br>存储U-Boot| E[U-Boot<br>从SRAM执行]
-    C -->|SRAM不足<br>存储U-Boot| F[SPL<br>二级引导程序]
+    C -->|具有DDR初始化功能<br>（现代SoC）| E[读取U-Boot头部<br>DDR信息]
+    E --> F[初始化DDR]
+    F --> G[拷贝U-Boot到DDR<br>并执行]
     
-    F --> G[U-Boot<br>从DRAM执行]
-    G --> H[kernel<br>内核加载]
-    E --> H
-    D --> H
+    C -->|不具有DDR初始化功能| H[拷贝SPL到SRAM]
+    H --> I[SPL初始化DDR]
+    I --> J[SPL拷贝完整U-Boot<br>到DDR]
+    J --> K[执行U-Boot]
     
-    H --> I[FileSystem<br>文件系统挂载]
+    G --> L[kernel<br>内核加载]
+    D --> L
+    K --> L
+    
+    L --> M[FS<br>文件系统挂载]
     
     %% 样式美化
     style A fill:#e1f5fe,stroke:#01579b,stroke-width:2px
     style B fill:#fff3e0,stroke:#e65100,stroke-width:2px
     style C fill:#fff3e0,stroke:#e65100,stroke-width:2px
     style D fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
-    style E fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style E fill:#ffecb3,stroke:#ff8f00,stroke-width:2px
     style F fill:#ffecb3,stroke:#ff8f00,stroke-width:2px
     style G fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
-    style H fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    style I fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    style H fill:#ffcdd2,stroke:#c62828,stroke-width:2px
+    style I fill:#ffcdd2,stroke:#c62828,stroke-width:2px
+    style J fill:#ffcdd2,stroke:#c62828,stroke-width:2px
+    style K fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style L fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style M fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
 
 ```
 
@@ -122,6 +132,9 @@ flowchart TD
 
 
 # 4 U-Boot的启动流程
+
+U-Boot的启动流程主要可以分为汇编部分和C语言部分。
+
 
 
 
