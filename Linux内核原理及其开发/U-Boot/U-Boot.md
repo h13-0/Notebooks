@@ -66,7 +66,7 @@ U-Boot全称为Universal Bootloader，<font color="#c00000">是一个裸机程�
         1. `BootROM` 会拷贝指定启动设备的头部若干尺寸的代码到SRAM(通常是与SRAM一样大)，这部分代码即 `SPL`
         2. `SPL` 会执行初始化DDR、拷贝包含 `SPL` 的完整U-Boot到DDR
         3. 执行 `U-Boot` 
-- 若Flash为XIP设备，直接加载U-Boot
+- 若Flash为XIP设备(<font color="#c00000">例如Nor Flash</font>)，则直接加载U-Boot
 
 注：
 1. 采用BootROM配置DDR的SoC有：
@@ -82,7 +82,7 @@ flowchart TD
     A[BootROM] --> B{Flash类型}
     
     B -->|非XIP设备<br>（大多数情况）| C{BootROM DDR<br>初始化功能判断}
-    B -->|XIP设备| D[U-Boot<br>从Flash直接执行]
+    B -->|XIP设备<br>（例如Nor Flash）| D[U-Boot<br>从Flash直接执行]
     
     C -->|具有DDR初始化功能<br>（现代SoC）| E[读取U-Boot头部<br>DDR信息]
     E --> F[初始化DDR]
