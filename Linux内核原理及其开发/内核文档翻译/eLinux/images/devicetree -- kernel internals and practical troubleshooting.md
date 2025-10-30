@@ -264,7 +264,7 @@ static const struct machine_desc __mach_desc_##_type    \
 	- 一个内核<font color="#c00000">可能有多个</font> `machine_desc`
 	- 一个内核<font color="#c00000">只能有一个</font>设备树实例
 
-### 4.2 简化的Linux内核启动过程
+### 4.2 简化的Linux内核启动过程 ^5v4j45
 
 简化的内核启动过程的伪代码如下：
 
@@ -293,7 +293,7 @@ start_kernel()
         
         ...
             arm_pm_restart = mdesc->restart
-        unflatten_device_tree()   <===============
+        unflatten_device_tree()      <===============
             if (mdesc->smp_init())
         ...
             handle_arch_irq = mdesc->handle_irq
@@ -308,12 +308,12 @@ start_kernel()
     rest_init()
         kernel_thread(kernel_init, ...)
             kernel_init()
-                        do_initcalls()
-                            customize_machine()
-                                machine_desc->init_machine()
-                        // device probing, driver binding
-                        init_machine_late()
-                                machine_desc->init_late()
+                do_initcalls()
+                    customize_machine()
+                        machine_desc->init_machine()
+                // device probing, driver binding
+                init_machine_late()
+                    machine_desc->init_late()
 ```
 
 在上述代码中：
@@ -391,14 +391,19 @@ TODO
 
 ### 5.1 创建设备
 
-对于
+#### 5.1.1 初始化调用
+
+回到章节[[Linux内核原理及其开发/内核文档翻译/eLinux/images/devicetree -- kernel internals and practical troubleshooting#^5v4j45|简化的Linux内核启动过程]]中的启动伪代码的 `do_initcalls()` 调用：![[Linux内核原理及其开发/内核文档翻译/eLinux/images/devicetree -- kernel internals and practical troubleshooting#4 2 简化的Linux内核启动过程 5v4j45]]
+其 `do_initcalls()` 
 
 
 
-#### 5.1.1 初始化回调
+#### 5.1.2 创建其他设备
 
-
-
+`of_platform_populate()` 函数只初始化部分平台设备，这些设备通常都是不可被主动发现(探测)的设备，例如：
+- i2c设备
+- SoC专用总线
+等
 
 ### 5.2 匹配设备和驱动程序
 
