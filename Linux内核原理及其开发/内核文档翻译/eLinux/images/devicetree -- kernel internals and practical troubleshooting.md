@@ -134,7 +134,7 @@ of_find_node_with_property (*from, ...)
 
 ## 4 章节2 - 根据启动选项匹配和调整设备树
 
-### 4.1 machine_desc结构体
+### 4.1 machine_desc结构体(arm64中已弃用)
 
 machine_desc结构体<font color="#c00000">用于为一个特定的设备树描述启动选项</font>，该结构体可以用于多个不同的设备树。
 
@@ -259,7 +259,7 @@ static const struct machine_desc __mach_desc_##_type    \
 
 注：
 - 在32位arm系统中，还存在 `machine_desc` 概念，但是在arm64系统中，<font color="#c00000">已经不再拥有该概念</font>。
-	- 在32位arm系统中，通常一家SoC一个 `machine_desc`
+	- 在32位arm系统中，通常一家SoC一个 `machine_desc` ，在编译时可以选择开启对应的 `machine_desc` 。
 - <span style="background:#fff88f"><font color="#c00000">注意区分</font></span>：
 	- 一个内核<font color="#c00000">可能有多个</font> `machine_desc`
 	- 一个内核<font color="#c00000">只能有一个</font>设备树实例
@@ -268,7 +268,7 @@ static const struct machine_desc __mach_desc_##_type    \
 
 简化的内核启动过程的伪代码如下：
 
-```
+```C
 start_kernel()
     pr_notice("%s", linux_banner)
     setup_arch()
@@ -382,6 +382,7 @@ TODO
 
 ### 4.5 总结与注意
 
+0. 如果做arm64开发，可以不看 `machine_desc` 相关内容。
 1. 内核会选择与设备树最匹配的 `machine_desc` 结构体。
 2. `machine_desc` 结构体中的值会改变启动过程。
 3. 尽可能不用machine_desc hooks。
@@ -389,6 +390,10 @@ TODO
 ## 5 章节3 - 更多的内核启动细节
 
 ### 5.1 创建设备
+
+对于
+
+
 
 #### 5.1.1 初始化回调
 
