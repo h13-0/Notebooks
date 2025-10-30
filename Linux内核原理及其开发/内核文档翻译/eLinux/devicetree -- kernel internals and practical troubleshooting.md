@@ -28,7 +28,8 @@ number headings: auto, first-level 2, max 6, 1.1
 ### 3.2 设备树生命周期及其概念
 
 设备树的生命周期如下图所示：
-    ![[Pasted image 20241102223502.png]] ^qfilmj
+	![[../../Resources/设备树生命周期.drawio.svg]]
+     ^qfilmj
 
 其生命周期为：
 1. dts源文件被dtc编译为dtb。
