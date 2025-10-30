@@ -71,7 +71,7 @@ static const struct of_device_id uart_driver_ids[] = {
 - 设备：`"manufactuerA,deviceA"` ，驱动：`"manufactuerA,deviceA"` -> 成功匹配
 - 设备：`"manufactuerA, deviceA"` ，驱动：`"manufactuerA,deviceA"` -> <span style="background:#fff88f"><font color="#c00000">无法匹配</font></span>
 
-而compatible属性的基本规定可见[[Device Tree Reference学习笔记#^740spc|compatible属性]]：![[Device Tree Reference学习笔记#2 2 2 compatible属性 740spc]]
+而compatible属性的基本规定可见[[../../内核文档翻译/eLinux/Development Portals/Device Tree/Device Tree Reference#^740spc|compatible属性]]：![[../../内核文档翻译/eLinux/Development Portals/Device Tree/Device Tree Reference#2 2 2 compatible属性 740spc]]
 #### 3.1.2.2 匹配的优先级原则
 
 

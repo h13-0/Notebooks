@@ -14,8 +14,9 @@ number headings: auto, first-level 2, max 6, 1.1
 
 # 学习笔记 
 
-> [!attention]
-> 学习本章节前，建议先学习[[../内核文档翻译/eLinux/devicetree -- kernel internals and practical troubleshooting|devicetree -- kernel internals and practical troubleshooting]]，该文章为Sony
+<span style="background:#fff88f"><font color="#c00000">注意</font></span>：
+- 学习本章节前，<span style="background:#fff88f"><font color="#c00000">强烈建议先学习</font></span>：[[../../devicetree -- kernel internals and practical troubleshooting|devicetree -- kernel internals and practical troubleshooting]]，该章节为Sony Mobile的设备树讲座，<font color="#c00000">其体裁类型比本笔记的文档类型更适合于入门学习</font>。
+
 ## 1 简介
 
 ### 1.1 什么是设备树
@@ -141,14 +142,14 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 
 ###### 2.1.3.4.1 compatible属性
 
-见[[Device Tree Reference学习笔记#2 2 2 compatible属性]]。
+见[[Device Tree Reference#2 2 2 compatible属性]]。
 
 ###### 2.1.3.4.2 reg属性及reg配置项属性
 
-具体原理在[[Device Tree Reference学习笔记#2 3 寻址的工作原理]]，同样建议跳过本子章节顺序学习到链接所述章节后再学习。
-![[Device Tree Reference学习笔记#^3gtf6k]]
-![[Device Tree Reference学习笔记#^a6lh1o]]
-![[Device Tree Reference学习笔记#^t6f0im]]
+具体原理在[[Device Tree Reference#2 3 寻址的工作原理]]，同样建议跳过本子章节顺序学习到链接所述章节后再学习。
+![[Device Tree Reference#^3gtf6k]]
+![[Device Tree Reference#^a6lh1o]]
+![[Device Tree Reference#^t6f0im]]
 
 ###### 2.1.3.4.3 model属性
 
@@ -192,11 +193,11 @@ status属性表示该属性所述的设备状态，其可选项有：
 
 ###### 2.1.3.4.6 自定义属性
 
-见[[Device Tree Reference学习笔记#2 5 添加平台特定数据]]章节。
+见[[Device Tree Reference#2 5 添加平台特定数据]]章节。
 
 ##### 2.1.3.5 特殊节点
 
-见[[Device Tree Reference学习笔记#2 6 特殊节点]]。
+见[[Device Tree Reference#2 6 特殊节点]]。
 
 ### 2.2 基本概念
 
@@ -243,7 +244,7 @@ status属性表示该属性所述的设备状态，其可选项有：
 };
 ```
 
-<span style="background:#fff88f"><font color="#c00000">该属性名务必正确填写</font></span>，<span style="background:#fff88f"><font color="#c00000">compatible属性将被用于匹配驱动</font></span>，具体可详见章节[[Device Tree Reference学习笔记#2 2 2 compatible属性|compatible属性]]。
+<span style="background:#fff88f"><font color="#c00000">该属性名务必正确填写</font></span>，<span style="background:#fff88f"><font color="#c00000">compatible属性将被用于匹配驱动</font></span>，具体可详见章节[[Device Tree Reference#2 2 2 compatible属性|compatible属性]]。
 
 ##### 2.2.1.3 CPUs
 
@@ -332,7 +333,7 @@ CPU的 `compatible` 填写格式也必须为 `<manufacturer>,<model>` ，该值�
 
 注：
 1. 此时该设备树依旧是无效的设备树，其还缺少一些设备之间的连接信息
-2. 每个节点都有 `compatible` 属性，具体可详见章节[[Device Tree Reference学习笔记#^740spc|compatible属性]]
+2. 每个节点都有 `compatible` 属性，具体可详见章节[[Device Tree Reference#^740spc|compatible属性]]
 3. flash节点中 `compatible` 属性有两个字符串
 4. 节点的名称应当反应设备的类型，而非具体的型号。ePAPR 2.2.2章节中已定义通用节点名称的列表。
 
@@ -415,7 +416,7 @@ compatible属性是<span style="background:#fff88f"><font color="#c00000">操作
 - `#address-cells = <1>`
 - `#size-cells = <1>`
 则根据基本假设：
-![[Device Tree Reference学习笔记#2 2 1 1 基本假设]]
+![[Device Tree Reference#2 2 1 1 基本假设]]
 可继续编写如下的设备树：
 
 ```dts
@@ -517,7 +518,7 @@ CPU需要连接的总线种类繁多，其驱动设计要求也有所不同，�
 - 不配置ranges属性(即不写该项)，则<font color="#c00000">该子节点上的所有设备不能由其父设备以外的任何设备直接访问</font>(例如I2C总线)。
 
 例如，按照假设设备的外部总线桥：
-![[Device Tree Reference学习笔记#^c5o9gk]]
+![[Device Tree Reference#^c5o9gk]]
 其从设备的地址可以设计为：
 - `<${片选ID} ${偏移量}>` 的两个32位字
 - 32位CPU中地址占用1个32位字
