@@ -3,9 +3,16 @@ number headings: auto, first-level 2, max 6, 1.1
 ---
 #嵌入式 #Linux驱动开发 #操作系统 
 
-# Note
+# Readme
 
-本笔记学习时的参考资料为[Device Tree Reference](https://elinux.org/Device_Tree_Reference?Overlay_Source_Format)，且笔记尽可能保持该资料原有的层次结构。
+原标题：`Device Tree Reference`
+原文档地址：[Device Tree Reference](https://elinux.org/Device_Tree_Reference) 
+原文档类型：文档
+
+本笔记在尽可能保持该资料原有的层次结构的基础上会添加一些补充内容。
+
+<span style="background:#fff88f"><font color="#c00000">注意</font></span>：
+- 学习本章节前，<span style="background:#fff88f"><font color="#c00000">强烈建议先学习</font></span>：[[../../devicetree -- kernel internals and practical troubleshooting|devicetree -- kernel internals and practical troubleshooting]]，该章节为Sony Mobile的设备树讲座，<font color="#c00000">其体裁类型比本笔记的文档类型更适合于入门学习</font>。
 
 # 目录
 
@@ -13,9 +20,6 @@ number headings: auto, first-level 2, max 6, 1.1
 ```
 
 # 学习笔记 
-
-<span style="background:#fff88f"><font color="#c00000">注意</font></span>：
-- 学习本章节前，<span style="background:#fff88f"><font color="#c00000">强烈建议先学习</font></span>：[[../../devicetree -- kernel internals and practical troubleshooting|devicetree -- kernel internals and practical troubleshooting]]，该章节为Sony Mobile的设备树讲座，<font color="#c00000">其体裁类型比本笔记的文档类型更适合于入门学习</font>。
 
 ## 1 简介
 
