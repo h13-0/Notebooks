@@ -26,6 +26,8 @@ number headings: auto, first-level 2, max 6, 1.1
 
 <span style="background:#fff88f"><font color="#c00000">设备树描述了无法通过探测定位的硬件</font></span>，<font color="#c00000">即描述了不可被主动发现的设备</font>。
 
+需要注意，<font color="#c00000">一个内核运行实例</font><span style="background:#fff88f"><font color="#c00000">最多只会使用一个</font></span><font color="#c00000">设备树</font>。
+
 ### 3.2 设备树生命周期及其概念
 
 设备树的生命周期如下图所示：
@@ -312,6 +314,8 @@ start_kernel()
 - 双缩进表示函数的内部调用
 
 ### 4.3 选择设备树最匹配的machine_desc
+
+注意
 
 匹配原则：
 - 匹配时设备树的和结构体中的compatible字符串必须完全相同
