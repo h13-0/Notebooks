@@ -136,7 +136,7 @@ of_find_node_with_property (*from, ...)
 
 ### 4.1 machine_desc结构体
 
-machine_desc结构体用于为一个特定的设备树描述启动选项，该结构体可以用于多个不同的设备树。
+machine_desc结构体<font color="#c00000">用于为一个特定的设备树描述启动选项</font>，该结构体可以用于多个不同的设备树。
 
 machine_desc结构体定义如下(Linux 6.10.0-rc)：
 
@@ -203,7 +203,7 @@ struct machine_desc {
 	- `l2c_write_sec`
 	- `restart`
 
-该结构体在代码中<font color="#c00000">使用静态创建</font>，<font color="#c00000">在支持多平台的Linux系统镜像上有多个该结构体</font>。
+该结构体在代码中<font color="#c00000">使用静态创建</font>，<font color="#c00000">在支持多平台的Linux系统镜像上有多个</font> `machine_desc` 。
 选择是否支持多平台会在编译Linux内核时交互时配置参数即可：
 1. 使用 `make ARCH=arm menuconfig` 进入Arm-Linux的menuconfig配置
 2. 随后弹出：
@@ -256,6 +256,13 @@ static const struct machine_desc __mach_desc_##_type    \
 1. 生成名为 `__mach_desc_${type}_type` 的结构体。
 2. 将 `machine_desc` 结构体存放到 `vmlinux.lds` 中的 `.arch.info.init` 段。
 3. 使用 `__used` 告诉编译器这段代码有用，组织对该变量的优化和警告。
+
+注：
+- 在32位arm系统中，还存在 `machine_desc` 概念，但是在arm64系统中，<font color="#c00000">已经不再拥有该概念</font>。
+	- 在32位arm系统中，通常一家SoC一个 `machine_desc`
+- <span style="background:#fff88f"><font color="#c00000">注意区分</font></span>：
+	- 一个内核<font color="#c00000">可能有多个</font> `machine_desc`
+	- 一个内核<font color="#c00000">只能有一个</font>设备树实例
 
 ### 4.2 简化的Linux内核启动过程
 
@@ -315,7 +322,9 @@ start_kernel()
 
 ### 4.3 选择设备树最匹配的machine_desc
 
-注意
+<font color="#c00000">注意解读标题</font>：
+- 是<span style="background:#fff88f"><font color="#c00000">为</font></span><font color="#c00000">内核唯一的设备树</font>实例<font color="#c00000">匹配machine_desc</font>
+- 而不是反过来，一个内核实例只有一个设备树，但是一个内核实例中可能有多个machine_desc
 
 匹配原则：
 - 匹配时设备树的和结构体中的compatible字符串必须完全相同
@@ -368,7 +377,6 @@ static const char *omap36xx_boards_compat[] __initconst = {
 
 其中， `l2c_aux_mask` 用于配置是否需要开启L2兼容性检查：
 - `(l2c_aux_mask || l2c_aux_val) != 0` 时，
-
 
 TODO
 
