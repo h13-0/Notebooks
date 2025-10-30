@@ -14,6 +14,8 @@ number headings: auto, first-level 2, max 6, 1.1
 
 # 学习笔记 
 
+> [!attention]
+> 学习本章节前，建议先学习[[../内核文档翻译/eLinux/devicetree -- kernel internals and practical troubleshooting|devicetree -- kernel internals and practical troubleshooting]]，该文章为Sony
 ## 1 简介
 
 ### 1.1 什么是设备树

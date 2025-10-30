@@ -5,6 +5,7 @@ number headings: auto, first-level 2, max 6, 1.1
 
 原标题：`devicetree: kernel internals and practical troubleshooting` 。
 原文档地址：[devicetree: Kernel Internals and Practical Troubleshooting](https://elinux.org/images/0/0c/Rowand--devicetree_kernel_internals.pdf)。
+原文档类型：PPT讲座，Sony Mobile Communications
 
 ## 1 目录
 
