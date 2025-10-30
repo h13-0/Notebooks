@@ -29,7 +29,7 @@ number headings: auto, first-level 2, max 6, 1.1
 ### 3.2 设备树生命周期及其概念
 
 设备树的生命周期如下图所示：
-	![[../../Resources/设备树生命周期.drawio.svg]]
+	![[../../../Resources/设备树生命周期.drawio.svg]]
      ^qfilmj
 
 其生命周期为：
@@ -65,12 +65,14 @@ dts，device tree source file，设备树源文件，具体可见[[Development P
 }
 ```
 
+原文推荐的dts入门介绍文档：[https://elinux.org/images/f/f9/Petazzoni-device-tree-dummies_0.pdf](https://elinux.org/images/f/f9/Petazzoni-device-tree-dummies_0.pdf)。
+
 #### 3.2.2 Binary Blob format(.dtb格式)
 
 Binary Blob format，二进制块格式，<span style="background:#fff88f"><font color="#c00000">即.dtb文件格式</font></span>。
 其是一个扁平结构，可以通过顺序扫描和偏移进行访问。其基本数据结构如下图所示：
 
-![[../../Resources/Binary_Blob_format.drawio.svg]]
+![[../../../Resources/Binary_Blob_format.drawio.svg]]
 
 #### 3.2.3 Flattened Device Tree(FDT)
 
@@ -78,9 +80,11 @@ FDT是平铺的结构，可以使用 `fdt_*` 族函数进行顺序扫描或偏�
 
 #### 3.2.4 Expanded DT
 
+Expanded DT是一种更利于计算机访问的数据格式。如果不打算维护设备树的内部实现的话，在这里只需要了解这个概念即可。
+
 Expanded DT有如下特性：
 - <u>是一个树状的数据结构</u>(其中包含 `parent` 、 `child` 、 `sibling` 、`next` 、 `allnext` 等节点)。具体如下：
-	- ![[chrome_8fAskRWQz2.png]]
+	- ![[../../../Resources/chrome_luIzgPOAfS.png]]
 	- 可以使用 `of_find_node_by_path()` 等方式进行树数据结构方式的访问。
 	- `allnext` 链表<span style="background:#fff88f"><font color="#c00000">在被修改过之前</font></span><font color="#c00000">使用深度优先顺序</font>，<font color="#c00000">但是修改后无法保证该特性</font>，因此在开发时应视为随机顺序。
 - 可以进行访问<span style="background:#fff88f"><font color="#c00000">和修改</font></span>(使用 `of_*` 族函数)。

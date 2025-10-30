@@ -12,7 +12,7 @@ number headings: auto, first-level 2, max 6, 1.1
 本笔记在尽可能保持该资料原有的层次结构的基础上会添加一些补充内容。
 
 <span style="background:#fff88f"><font color="#c00000">注意</font></span>：
-- 学习本章节前，<span style="background:#fff88f"><font color="#c00000">强烈建议先学习</font></span>：[[../../devicetree -- kernel internals and practical troubleshooting|devicetree -- kernel internals and practical troubleshooting]]，该章节为Sony Mobile的设备树讲座，<font color="#c00000">其体裁类型比本笔记的文档类型更适合于入门学习</font>。
+- 学习本章节前，<span style="background:#fff88f"><font color="#c00000">强烈建议先学习</font></span>：[[../../images/devicetree -- kernel internals and practical troubleshooting|devicetree -- kernel internals and practical troubleshooting]]，该章节为Sony Mobile的设备树讲座，<font color="#c00000">其体裁类型比本笔记的文档类型更适合于入门学习</font>。
 
 # 目录
 
@@ -794,7 +794,7 @@ dtc -I dtb -O dts -o xxx.dts xxx.dtb
 
 本章节的参考文档为[devicetree: Kernel Internals and Practical Troubleshooting](https://elinux.org/images/0/0c/Rowand--devicetree_kernel_internals.pdf)。
 
-学习笔记可见[[devicetree -- kernel internals and practical troubleshooting]]。
+学习笔记可见[[../../images/devicetree -- kernel internals and practical troubleshooting]]。
 
 ### 6.2 常见的Linux驱动程序错误
 
