@@ -42,7 +42,7 @@ number headings: auto, first-level 2, max 6, 1.1
 
 #### 3.2.1 dts - device tree source file
 
-dts，device tree source file，设备树源文件，具体可见[[Device Tree Reference学习笔记#2 设备树的使用]]，示例如下：
+dts，device tree source file，设备树源文件，具体可见[[Development Portals/Device Tree/Device Tree Reference#2 设备树的使用]]，示例如下：
 ```
 / {   /* incomplete .dts example */              // <--- root node
     model = "Qualcomm APQ8074 Dragonboard";      // <--- property
