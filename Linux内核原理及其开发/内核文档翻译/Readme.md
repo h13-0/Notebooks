@@ -1,11 +1,14 @@
+---
+number headings: auto, first-level 1, max 6, 1.1
+---
 #嵌入式 #Linux驱动开发 #操作系统
 
-## 目录
+# 目录
 
 ```toc
 ```
 
-## 说明
+# 说明
 
 本文件夹主要存放：
 - Linux内核源码文档
