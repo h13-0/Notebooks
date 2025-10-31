@@ -413,7 +413,14 @@ TODO
 
 在 `platform_driver_register` 的实现中(其被宏指向到 `__platform_device_register` )，其有如下的调用链：
 
-- `__platform_device_register(drv, owner)`
-	1. 设置 `drv->driver` 的 `owner` h
-	2. 调用 `driver_register`
+`__platform_device_register(drv, owner)` ：
+- 参数：
+	- 
+- 调用链：
+	1. 设置 `drv->driver` 的 `owner` 和总线类型
+	2. 调用 `driver_register` ：
+		1. 执行前检查，<font color="#7f7f7f">包含检查总线是否成功注册、参数检查等</font>
+		2. <font color="#c00000">调用</font> `bus_add_driver` <font color="#c00000">添加总线驱动</font>，其作用包含：
+			1. 在sysfs中注册节点
+			2. 将
 
