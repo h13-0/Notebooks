@@ -9,18 +9,22 @@
 
 版本：`6.10.0-rc1`
 原代码范围：`202-206`
-分析状态：⌛
+分析状态：✅
 
 函数签名： `int driver_add_groups(struct device_driver *drv, const struct attribute_group **groups)` 
 - 功能简述： ^rjmp0g
-	- 将一组 `sysfs` 属性组(`attribute_group`)批量挂载到给定驱动 `drv` 的 `kobject`（`drv->p->kobj`）下
-	- 在 `/sys/bus/<bus>/drivers/<driver>/`（或对应层级）创建相应目录/属性文件
-	- 成功返回 0，失败返回负的错误码(如 `-ENOMEM`、`-EEXIST` 等)。
+	- 将一组 `sysfs` 属性组(`attribute_group`)批量挂载到给定驱动 `drv` 的 `kobject` (`drv->p->kobj`)下，并创建对应目录/属性文件
+	- 成功返回 0，失败返回负的错误码(如 `-ENOMEM`、`-EEXIST` 等)
 - 参数：
-	- `struct device_driver *drv` ：
-	- `const struct attribute_group **groups` ：
+	- `struct device_driver *drv` ：目标设备驱动实例
+		- 要求其私有数据 `drv->p` 已初始化，且内部 `kobject` 已建立(通常在 `driver_register()/bus_add_driver()` 之后)
+	- `const struct attribute_group **groups` ：以 `NULL` 结尾的属性组指针数组
+		- 每个组可包含可选的目录名(`group->name`)与若干 `struct attribute*` (`group->attrs`)，用于在 sysfs 中生成目录与属性文件。
 - 调用栈分析：
-	1. 
+	1. 取得目标 `kobject`：`&drv->p->kobj`
+	2. 调用 `sysfs_create_groups(&drv->p->kobj, groups)`，其功能简述：![[Linux内核原理及其开发/内核源码探析/内核源码分析/fs/sysfs/group.c#^8dcmqy]]
+	3. 若任一组/属性创建失败，`sysfs_create_groups()` 返回负错并回滚已创建的组/文件，避免留下部分残留
+	4. 将底层返回值原样向上传递；上层(如 `driver_register()` 路径中)通常在失败时调用 `bus_remove_driver()` 等清理
 
 # driver_register ^fccqjf
 
@@ -39,5 +43,5 @@
 	3. 调用 `driver_add_groups` ，功能简述：![[Linux内核原理及其开发/内核源码探析/内核源码分析/drivers/base/driver.c#^rjmp0g]]
 	4. 调用 `kobject_uevent` 向用户空间发送热拔插事件
 	5. 调用 `deferred_probe_extend_timeout` 使用内核延迟探测机制，适当延长延迟探测的超时时间
-	6. 返回
+	6. 返回 `ret`
 
