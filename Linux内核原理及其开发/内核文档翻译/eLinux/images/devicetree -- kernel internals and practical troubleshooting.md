@@ -6,6 +6,10 @@ number headings: auto, first-level 2, max 6, 1.1
 原标题：`devicetree: kernel internals and practical troubleshooting` 。
 原文档地址：[devicetree: Kernel Internals and Practical Troubleshooting](https://elinux.org/images/0/0c/Rowand--devicetree_kernel_internals.pdf)。
 原文档类型：PPT讲座，Sony Mobile Communications
+翻译状态：
+- 未翻译完成的内容还有：
+	- [ ] 内核启动细节
+	- [ ] 
 
 ## 1 目录
 
@@ -416,3 +420,17 @@ TODO
 - 非平台设备：
 	- 当总线控制器驱动程序的探测函数在其总线上创建设备时，如果设备驱动程序已经注册，则设备创建将导致调用设备的探测函数。
 
+## 6 章节4-杂项
+
+### 6.1 多个驱动程序匹配一个设备时
+
+
+### 6.2 chosen节点
+
+#### 6.2.1 指定串口控制台
+
+可在节点 `/chosen/stdout-path` 指定串口控制台
+
+#### 6.2.2 \[补充\]指定内核启动参数(重要)
+
+可在节点 `/chosen/bootargs` 中指定启动参数，该参数可以决定根文件系统等的分区选取等。
