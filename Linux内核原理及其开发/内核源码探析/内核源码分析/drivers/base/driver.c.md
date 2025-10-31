@@ -5,9 +5,27 @@
 ```toc
 ```
 
+# driver_add_groups ^x7y7mj
+
+版本：`6.10.0-rc1`
+原代码范围：`202-206`
+分析状态：⌛
+
+函数签名： `int driver_add_groups(struct device_driver *drv, const struct attribute_group **groups)` 
+- 功能简述： ^rjmp0g
+	- 将一组 `sysfs` 属性组(`attribute_group`)批量挂载到给定驱动 `drv` 的 `kobject`（`drv->p->kobj`）下
+	- 在 `/sys/bus/<bus>/drivers/<driver>/`（或对应层级）创建相应目录/属性文件
+	- 成功返回 0，失败返回负的错误码(如 `-ENOMEM`、`-EEXIST` 等)。
+- 参数：
+	- `struct device_driver *drv` ：
+	- `const struct attribute_group **groups` ：
+- 调用栈分析：
+	1. 
+
 # driver_register ^fccqjf
 
 版本：`6.10.0-rc1`
+原代码范围：`214-258`
 分析状态：⌛
 
 函数签名：`int driver_register(struct device_driver *drv)` 
@@ -18,7 +36,8 @@
 - 调用栈分析：
 	1. 执行前检查，<font color="#7f7f7f">包含检查总线是否成功注册、参数检查等</font>
 	2. <font color="#c00000">调用</font> `bus_add_driver` <font color="#c00000">添加总线驱动</font>，功能简述：![[Linux内核原理及其开发/内核源码探析/内核源码分析/drivers/base/bus.c#^4owd6m]]
-	3. 调用 `driver_add_groups` ，功能简述：
+	3. 调用 `driver_add_groups` ，功能简述：![[Linux内核原理及其开发/内核源码探析/内核源码分析/drivers/base/driver.c#^rjmp0g]]
 	4. 调用 `kobject_uevent` 向用户空间发送热拔插事件
-	5. 告知内核
+	5. 调用 `deferred_probe_extend_timeout` 使用内核延迟探测机制，适当延长延迟探测的超时时间
+	6. 返回
 
