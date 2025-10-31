@@ -411,7 +411,9 @@ TODO
 
 #### 5.2.1 驱动绑定
 
+在 `platform_driver_register` 的实现中(其被宏指向到 `__platform_device_register` )，其有如下的调用链：
 
-
-
+- `__platform_device_register(drv, owner)`
+	1. 设置 `drv->driver` 的 `owner` h
+	2. 调用 `driver_register`
 
