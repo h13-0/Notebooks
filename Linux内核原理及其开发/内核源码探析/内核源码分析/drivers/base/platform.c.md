@@ -12,9 +12,11 @@
 分析状态：✅
 
 函数签名：`int __platform_driver_register(struct platform_driver *drv, struct module *owner)` 
+- 功能简述：
+	- 为平台设备注册驱动
 - 参数：
 	- `struct platform_driver *drv` ：要注册的平台驱动
-	- `struct module *owner` ：提供平台驱动的模块
+	- `struct module *owner` ：拥有该驱动的模块对象
 - 调用栈分析：
 	1. 设置 `drv->driver` 的 `owner` 和总线类型
 	2. <font color="#c00000">调用并返回</font>[[Linux内核原理及其开发/内核源码探析/内核源码分析/drivers/base/driver.c#^fccqjf|driver_register]]，功能简述：![[Linux内核原理及其开发/内核源码探析/内核源码分析/drivers/base/driver.c#^9535px]]
