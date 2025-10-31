@@ -411,12 +411,5 @@ TODO
 
 #### 5.2.1 驱动绑定
 
-在 `platform_driver_register` 的实现中(其被宏指向到 `__platform_device_register` )，其有如下的调用链：
-
-`__platform_device_register(drv, owner)` ：
-- 参数：
-	- 
-- 调用链：
-	1. 设置 `drv->driver` 的 `owner` 和总线类型
-	2. 调用 `driver_register` ：
+在 `platform_driver_register` 的实现中(其被宏指向到 `__platform_device_register` )，其调用链可见[[Linux内核原理及其开发/内核源码探析/内核源码分析/drivers/base/platform.c#^nahva9|__platform_device_register]]：![[Linux内核原理及其开发/内核源码探析/内核源码分析/drivers/base/platform.c#_ _platform_device_register nahva9]]
 
