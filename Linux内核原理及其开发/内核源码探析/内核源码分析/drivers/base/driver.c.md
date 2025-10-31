@@ -34,13 +34,15 @@
 
 函数签名：`int driver_register(struct device_driver *drv)` 
 - 功能简述 ^9535px
-	- 向总线注册驱动
+	- 将一个内核通用设备驱动注册到其所属总线，建立对应的sysfs节点并触发用户空间事件，同时尝试与现有设备进行自动匹配与绑定
+	- 失败时负责回滚已创建的内核对象与链表节点
 - 参数：
-	- `struct device_driver *drv` ：要注册的驱动
+	- `struct device_driver *drv` ：待注册的驱动描述结构
+		- 要求已填写 `name` 与 `bus` 等关键字段，常用成员包括 `owner`、`probe`、`remove`、`shutdown`、`of_match_table`、`acpi_match_table`、`groups` 等
 - 调用栈分析：
-	1. 执行前检查，<font color="#7f7f7f">包含检查总线是否成功注册、参数检查等</font>
-	2. <font color="#c00000">调用</font> `bus_add_driver` <font color="#c00000">添加总线驱动</font>，功能简述：![[Linux内核原理及其开发/内核源码探析/内核源码分析/drivers/base/bus.c#^4owd6m]]
-	3. 调用 `driver_add_groups` ，功能简述：![[Linux内核原理及其开发/内核源码探析/内核源码分析/drivers/base/driver.c#^rjmp0g]]
+	1. 基本合法性假设检查与内部私有数据准备，<font color="#7f7f7f">包含检查总线是否成功注册、参数检查等</font>
+	2. <font color="#c00000">调用</font>[[Linux内核原理及其开发/内核源码探析/内核源码分析/drivers/base/bus.c#^18vykf|bus_add_driver]]<font color="#c00000">添加总线驱动</font>，功能简述：![[Linux内核原理及其开发/内核源码探析/内核源码分析/drivers/base/bus.c#^4owd6m]]
+	3. 调用[[Linux内核原理及其开发/内核源码探析/内核源码分析/drivers/base/driver.c#driver_add_groups x7y7mj|driver_add_groups]]为驱动添加属性组，功能简述：![[Linux内核原理及其开发/内核源码探析/内核源码分析/drivers/base/driver.c#^rjmp0g]]
 	4. 调用 `kobject_uevent` 向用户空间发送热拔插事件
 	5. 调用 `deferred_probe_extend_timeout` 使用内核延迟探测机制，适当延长延迟探测的超时时间
 	6. 返回 `ret`
