@@ -8,6 +8,10 @@ from datetime import date, timedelta
 import git
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import numpy as np
+
+plt.rcParams['font.family'] = ['Source Han Mono']
+plt.rcParams['axes.unicode_minus'] = False
 
 
 # 配置日志将在main函数中根据命令行参数完成
@@ -45,16 +49,20 @@ class RepoStatistics:
         self.repo_path = repo_path
         self._doc_types = [".md"]
         self._doc_statistics = []
+        self._top_level_word_counts = defaultdict(int)
         self.update_statistics()
 
     def update_statistics(self):
         self._doc_statistics = []
+        self._top_level_word_counts = defaultdict(int)
         for root, _, files in os.walk(self.repo_path):
             for file in files:
                 if any(file.endswith(ext) for ext in self._doc_types):
                     file_path = os.path.join(root, file)
                     doc_statistics = DocStatistics(file_path)
                     self._doc_statistics.append(doc_statistics)
+                    top_level = self._get_top_level_folder(file_path)
+                    self._top_level_word_counts[top_level] += doc_statistics.char_count
 
     @property
     def word_count(self) -> int:
@@ -64,93 +72,226 @@ class RepoStatistics:
     def line_count(self) -> int:
         return sum(stat.line_count for stat in self._doc_statistics)
 
+    @property
+    def top_level_word_counts(self):
+        return dict(self._top_level_word_counts)
 
-def plot_repo_stats(daily_line_count, daily_word_count, daily_commit_count, 
-                    output_path, figsize=(15, 6), linewidth=2):
+    def _get_top_level_folder(self, file_path: str) -> str:
+        rel_path = os.path.relpath(file_path, self.repo_path)
+        if rel_path in (".", ""):
+            return "[root]"
+        parts = rel_path.split(os.sep)
+        top_level = parts[0] if parts else "[root]"
+        if top_level in ("", "."):
+            return "[root]"
+        return top_level
+
+
+def plot_repo_stats(daily_line_count, daily_word_count, daily_commit_count,
+                    top_level_word_count, output_path, figsize=(15, 10), linewidth=2,
+                    top_n_folders=8):
     """绘制代码库统计数据的曲线图"""
     if not daily_line_count:
         logger.warning("No data available for plotting")
         return
 
     # 准备日期范围
-    all_dates = sorted(set(daily_line_count.keys()) | 
-                       set(daily_word_count.keys()) | 
+    all_dates = sorted(set(daily_line_count.keys()) |
+                       set(daily_word_count.keys()) |
                        set(daily_commit_count.keys()))
-    
+
     start_date = min(all_dates)
     end_date = date.today()
-    date_range = [start_date + timedelta(days=i) 
+    date_range = [start_date + timedelta(days=i)
                   for i in range((end_date - start_date).days + 1)]
-    
+
     # 填充数据
     line_counts = []
     word_counts = []
     commit_counts = []
-    
+
     current_line = 0
     current_word = 0
-    
+
     for day in date_range:
         if day in daily_line_count:
             current_line = daily_line_count[day]
         line_counts.append(current_line)
-        
+
         if day in daily_word_count:
             current_word = daily_word_count[day]
         word_counts.append(current_word)
-        
+
         commit_counts.append(daily_commit_count.get(day, 0))
 
-    # 创建图表
-    fig, ax1 = plt.subplots(figsize=figsize)
-    
+    # 创建图表并共享输出画布
+    fig = plt.figure(figsize=figsize)
+    gs = fig.add_gridspec(2, 5, height_ratios=[2, 1])
+    ax1 = fig.add_subplot(gs[0, :])
+    ax_bar = fig.add_subplot(gs[1, :3])
+    ax_donut = fig.add_subplot(gs[1, 3])
+    ax_legend = fig.add_subplot(gs[1, 4])
+
     # 行数和字数曲线
     line1 = ax1.plot(date_range, line_counts, 'b-', label='lines', linewidth=linewidth)
     line2 = ax1.plot(date_range, word_counts, 'g-', label='words', linewidth=linewidth)
-    
+
     ax1.set_xlabel('Date')
     ax1.set_ylabel('Lines / Words', color='g')
     ax1.tick_params(axis='y', labelcolor='g')
     ax1.set_xlim(start_date, end_date + (end_date - start_date) * 0.05)
-    ax1.set_ylim(0, max(list(daily_word_count.values())) * 1.1)
-    
+    max_word = max(daily_word_count.values()) if daily_word_count else 0
+    if max_word > 0:
+        ax1.set_ylim(0, max_word * 1.1)
+
     # 提交次数曲线 - 改为填充区域
     ax2 = ax1.twinx()
     # 使用fill_between代替plot，创建与x轴之间的填充区域
     ax2.fill_between(date_range, commit_counts, 0, color='red', alpha=0.2, label='commits per day')
-    
+
     ax2.set_ylabel('Commits per Day', color='r')
     ax2.tick_params(axis='y', labelcolor='r')
     ax2.set_ylim(0, 100)
-    
+
     # 设置x轴格式
     total_months = (end_date.year - start_date.year) * 12 + (end_date.month - start_date.month) + 1
     interval = max(1, total_months // 16)
     ax1.xaxis.set_major_locator(mdates.MonthLocator(interval=interval))
     ax1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
-    plt.xticks(rotation=45)
-    
+    for label in ax1.get_xticklabels():
+        label.set_rotation(45)
+
     # 添加图例和网格
-    # 获取所有图例元素
-    lines = line1 + line2
-    labels = [l.get_label() for l in lines]
-    # 添加填充区域的图例（使用Patch）
     from matplotlib.patches import Patch
+    lines = line1 + line2
     patch = Patch(facecolor='red', alpha=0.4, label='commits per day')
     handles = lines + [patch]
-    labels.append('commits per day')
-    
+    labels = [l.get_label() for l in lines] + ['commits per day']
+
     ax1.legend(handles, labels, loc='upper left')
     ax1.grid(True, linestyle='--', alpha=0.5)
-    
-    plt.title('Repository Statistics Over Time')
-    plt.tight_layout()
-    
+
+    # 绘制一级目录字数统计
+    total_words = sum(top_level_word_count.values()) if top_level_word_count else 0
+    if total_words > 0:
+        sorted_folders = sorted(
+            top_level_word_count.items(), key=lambda item: item[1], reverse=True
+        )
+        top_folders = sorted_folders[:top_n_folders]
+        folder_labels = [name for name, _ in top_folders]
+        folder_counts = [count for _, count in top_folders]
+
+        colors = plt.cm.tab20(np.linspace(0, 1, len(top_folders)))
+        counts_k = [count / 1000 for count in folder_counts]
+        percentages = [round((count / total_words) * 100) for count in folder_counts]
+
+        indices = np.arange(len(folder_labels))
+        bars = ax_bar.bar(indices, counts_k, color=colors)
+        ax_bar.set_ylabel('Word Count (k)')
+        ax_bar.set_title(f'Top Notebooks by Word Count')
+        ax_bar.set_xticks(indices)
+
+        def wrap_label(label: str, max_width: float = 5.0) -> str:
+            lines = []
+            current = ''
+            width = 0.0
+            for ch in label:
+                if ch.isascii() and ch.strip():
+                    char_width = 2 / 3
+                elif ch.isascii():
+                    char_width = 2 / 3
+                else:
+                    char_width = 1.0
+                if current and width + char_width > max_width:
+                    lines.append(current)
+                    current = ch
+                    width = char_width
+                else:
+                    current += ch
+                    width += char_width
+            if current:
+                lines.append(current)
+            return '\n'.join(lines) if lines else label
+
+        formatted_labels = [wrap_label(label) for label in folder_labels]
+        ax_bar.set_xticklabels(formatted_labels, ha='center')
+        max_height = max(counts_k) if counts_k else 0
+        if max_height > 0:
+            ax_bar.set_ylim(0, max_height * 1.25)
+        y_offset = max_height * 0.02 if max_height else 0.1
+
+        for bar, count_k, pct in zip(bars, counts_k, percentages):
+            ax_bar.text(
+                bar.get_x() + bar.get_width() / 2,
+                bar.get_height() + y_offset,
+                f'{count_k:.1f}k\n{pct}%',
+                ha='center',
+                va='bottom',
+                fontsize=9
+            )
+
+        wedges, _ = ax_donut.pie(
+            folder_counts,
+            colors=colors,
+            startangle=90,
+            wedgeprops={'width': 0.4, 'edgecolor': 'white'}
+        )
+        for wedge, pct in zip(wedges, percentages):
+            if pct == 0:
+                continue
+            angle = np.deg2rad((wedge.theta2 + wedge.theta1) / 2)
+            radius = wedge.r + 0.15
+            ax_donut.text(
+                np.cos(angle) * radius,
+                np.sin(angle) * radius,
+                f'{pct}%',
+                ha='center',
+                va='center',
+                fontsize=9
+            )
+
+        ax_legend.axis('off')
+        ax_legend.legend(
+            wedges,
+            folder_labels,
+            loc='center',
+            frameon=False
+        )
+    else:
+        for ax in (ax_bar, ax_donut, ax_legend):
+            ax.text(
+                0.5,
+                0.5,
+                'No folder word count data available',
+                transform=ax.transAxes,
+                ha='center',
+                va='center'
+            )
+            ax.set_axis_off()
+
+    ax1.set_title('Notebooks Statistics Overview', pad=8)
+    fig.tight_layout(rect=[0, 0, 1, 0.96])
+    if total_words > 0:
+        donut_box = ax_donut.get_position(fig)
+        legend_box = ax_legend.get_position(fig)
+        center_x = (donut_box.x0 + legend_box.x1) / 2
+        top_y = max(donut_box.y1, legend_box.y1) + 0.02
+        fig.text(
+            center_x,
+            top_y,
+            'Word Share by Notebook',
+            ha='center',
+            va='bottom',
+            fontsize=12
+        )
+
     # 保存图表
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    plt.savefig(output_path)
+    output_dir = os.path.dirname(output_path)
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+    fig.savefig(output_path)
     logger.info(f"Statistics chart saved to {output_path}")
-    
+
     # 显示图表
     plt.show()
 
@@ -257,6 +398,8 @@ def main():
     
     # 恢复master分支
     repo.git.checkout("-f", "master")
+    repo_stats_current = RepoStatistics(repo_path)
+    top_level_word_count = repo_stats_current.top_level_word_counts
     
     if new_entries:
         logger.info(f"Added {new_entries} new commit statistics")
@@ -276,7 +419,13 @@ def main():
     
     # 生成图表
     if args.output:
-        plot_repo_stats(daily_line_count, daily_word_count, daily_commit_count, args.output)
+        plot_repo_stats(
+            daily_line_count,
+            daily_word_count,
+            daily_commit_count,
+            top_level_word_count,
+            args.output
+        )
     else:
         logger.warning("No output path specified, skipping chart generation")
 

@@ -11,7 +11,9 @@
 
 # 统计信息
 
-![统计信息图像](http://notebooks.h13.tech/resources/statistics.svg)
+<a href="http://notebooks.h13.tech/resources/statistics.svg">
+	<img src="http://notebooks.h13.tech/resources/statistics.svg" alt="统计信息图像">
+</a>
 
 # 笔记仓库
 

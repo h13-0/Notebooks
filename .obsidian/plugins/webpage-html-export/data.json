@@ -11,7 +11,9 @@
     "displayProgress": true,
     "inlineHTML": false,
     "exportPath": "C:\\Users\\h13\\Documents\\GitHub\\Notebooks-html\\Notebooks",
-    "filesToExport": [],
+    "filesToExport": [
+      "all"
+    ],
     "useFallbackRenderer": false,
     "addBodyClasses": true,
     "addMathjaxStyles": true,
