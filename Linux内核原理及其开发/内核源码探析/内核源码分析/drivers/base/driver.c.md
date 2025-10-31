@@ -8,13 +8,17 @@
 # driver_register ^fccqjf
 
 版本：`6.10.0-rc1`
+分析状态：⌛
 
-函数签名：`int driver_register(struct device_driver *drv)`
+函数签名：`int driver_register(struct device_driver *drv)` 
+- 功能简述 ^9535px
+	- 向总线注册驱动
 - 参数：
 	- `struct device_driver *drv` ：要注册的驱动
 - 调用栈分析：
 	1. 执行前检查，<font color="#7f7f7f">包含检查总线是否成功注册、参数检查等</font>
-	2. <font color="#c00000">调用</font> `bus_add_driver` <font color="#c00000">添加总线驱动</font>，其作用包含：
-		1. 在sysfs中注册节点
-		2. 将
+	2. <font color="#c00000">调用</font> `bus_add_driver` <font color="#c00000">添加总线驱动</font>，功能简述：![[Linux内核原理及其开发/内核源码探析/内核源码分析/drivers/base/bus.c#^4owd6m]]
+	3. 调用 `driver_add_groups` ，功能简述：
+	4. 调用 `kobject_uevent` 向用户空间发送热拔插事件
+	5. 告知内核
 
