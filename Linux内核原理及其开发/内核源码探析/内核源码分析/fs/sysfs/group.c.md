@@ -5,7 +5,7 @@
 ```toc
 ```
 
-# sysfs_create_groups
+# sysfs_create_groups ^c4obv4
 
 版本：`${linux内核版本号}` % 格式要求见注1
 原代码范围：`xxx-xxx`     % 方便章节排序

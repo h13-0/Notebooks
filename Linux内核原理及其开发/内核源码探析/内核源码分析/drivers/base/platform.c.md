@@ -8,7 +8,8 @@
 # \_\_platform_device_register ^nahva9
 
 版本：`6.10.0-rc1` 
-分析状态：⌛
+原代码范围：`856-868`
+分析状态：✅
 
 函数签名：`int __platform_driver_register(struct platform_driver *drv, struct module *owner)` 
 - 参数：
@@ -16,7 +17,7 @@
 	- `struct module *owner` ：提供平台驱动的模块
 - 调用栈分析：
 	1. 设置 `drv->driver` 的 `owner` 和总线类型
-	2. <font color="#c00000">调用并返回</font> [[Linux内核原理及其开发/内核源码探析/内核源码分析/drivers/base/driver.c#^fccqjf|driver_register]]，功能简述：![[Linux内核原理及其开发/内核源码探析/内核源码分析/drivers/base/driver.c#^9535px]]
+	2. <font color="#c00000">调用并返回</font>[[Linux内核原理及其开发/内核源码探析/内核源码分析/drivers/base/driver.c#^fccqjf|driver_register]]，功能简述：![[Linux内核原理及其开发/内核源码探析/内核源码分析/drivers/base/driver.c#^9535px]]
 
 
 
