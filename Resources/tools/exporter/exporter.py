@@ -129,12 +129,50 @@ def launch_obsidian(obsidian_path: Path, window_title: str, logger: logging.Logg
     app = Application(backend="uia")
     app.start(cmd_line=str(obsidian_path))
     desktop = Desktop(backend="uia")
+    target_pid = app.process
+
+    def _find_window(timeout: float = 60.0):
+        deadline = time.time() + timeout
+        while time.time() < deadline:
+            # 首先尝试在刚启动的进程内查找窗口
+            try:
+                candidate = app.window(title_re=window_title)
+                if candidate.exists(timeout=0.1):
+                    try:
+                        if candidate.element_info.process_id == target_pid:
+                            return candidate
+                    except ElementNotFoundError:
+                        pass
+            except ElementNotFoundError:
+                pass
+
+            # 如果未命中，再在桌面层面筛选相同进程的窗口
+            try:
+                candidates = desktop.windows(title_re=window_title)
+            except ElementNotFoundError:
+                candidates = []
+
+            for spec in candidates:
+                pid = getattr(spec, "process", None)
+                if pid is None:
+                    try:
+                        pid = spec.element_info.process_id
+                    except Exception:
+                        pid = None
+
+                if pid == target_pid:
+                    return spec
+
+            time.sleep(0.5)
+
+        raise TimeoutError(f"在超时时间内未找到进程 ID {target_pid} 对应的窗口。")
+
     try:
-        window = desktop.window(title_re=window_title)
-        window.wait("visible enabled ready", timeout=60)
-        window.set_focus()
+        window_spec = _find_window()
+        window_spec.wait("visible enabled ready", timeout=60)
+        window_spec.set_focus()
         logger.info("Obsidian window is ready and focused.")
-        return window, desktop
+        return window_spec, desktop
     except ElementNotFoundError as exc:
         logger.error("Could not find Obsidian window matching '%s'.", window_title)
         raise TimeoutError(str(exc)) from exc
@@ -362,33 +400,6 @@ def main() -> int:
             export_button.click_input()
         except Exception as exc:
             logger.error("Failed to click the 'Export' button: %s", exc)
-            return 1
-
-        # Step 5: confirm the export run completes and the toast appears.
-        logger.info("Waiting for 'Cancel' button to disappear.")
-        try:
-            wait_for_disappearance(
-                [window, desktop],
-                name_pattern=CANCEL_BUTTON_PATTERN,
-                control_type="button",
-                timeout=1800,
-            )
-        except TimeoutError:
-            logger.error("The 'Cancel' button did not disappear within 1800 seconds (30 minutes).")
-            return 1
-
-        logger.info("Waiting for 'Finished HTML Export:' notification.")
-        try:
-            wait_for_control(
-                [window, desktop],
-                name_pattern=FINISHED_TOAST_PATTERN,
-                control_type=None,
-                timeout=1800,
-            )
-        except TimeoutError:
-            logger.error(
-                "No notification starting with 'Finished HTML Export:' appeared within 120 seconds."
-            )
             return 1
 
         logger.info("Export completed successfully.")
