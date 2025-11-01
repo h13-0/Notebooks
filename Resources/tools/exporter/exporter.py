@@ -101,14 +101,15 @@ def clear_workspace(vault_dir: Path, logger: logging.Logger) -> None:
         if "children" in main_section and isinstance(main_section["children"], list):
             if main_section["children"]:
                 main_section["children"] = []
-                try:
-                    with workspace.open("w", encoding="utf-8") as fh:
-                        json.dump(data, fh, ensure_ascii=False, indent=2)
-                    logger.info("Cleared main.children entries in %s.", workspace)
-                except Exception as exc:
-                    logger.error("Failed to write workspace file %s: %s", workspace, exc)
-                return
-    logger.info("Workspace main.children already empty; no changes made.")
+    if data.get("lastOpenFiles"):
+        data["lastOpenFiles"] = []
+
+    try:
+        with workspace.open("w", encoding="utf-8") as fh:
+            json.dump(data, fh, ensure_ascii=False, indent=2)
+        logger.info("Reset workspace layout in %s.", workspace)
+    except Exception as exc:
+        logger.error("Failed to write workspace file %s: %s", workspace, exc)
 
 
 def update_export_settings(vault_dir: Path, export_path: Path, logger: logging.Logger) -> None:
