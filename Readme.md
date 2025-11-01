@@ -9,6 +9,8 @@
 	<img src="./Resources/chrome_dUPIIswVmr.png" alt="web预览图像">
 </a>
 
+[订阅RSS](http://notebooks.h13.tech/site-lib/rss.xml)： `http://notebooks.h13.tech/site-lib/rss.xml`
+
 # 统计信息
 
 <a href="http://notebooks.h13.tech/resources/statistics.svg">
