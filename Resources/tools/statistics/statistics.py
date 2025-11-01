@@ -3,8 +3,9 @@ import re
 import json
 import argparse
 import logging
+import shutil
 from collections import defaultdict, deque
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 import git
 from git.exc import GitCommandError
 import matplotlib.pyplot as plt
@@ -89,7 +90,7 @@ class RepoStatistics:
 
 
 def update_submodules(repo: git.Repo):
-    """强制更新子模块，确保对子模块指针与当前提交一致"""
+    """Force-update submodules to match the current commit."""
     args = ["update", "--init", "--recursive", "--force", "--checkout"]
     try:
         repo.git.submodule(*args)
@@ -105,9 +106,50 @@ def update_submodules(repo: git.Repo):
         raise
 
 
+def deinit_submodules(repo: git.Repo):
+    """Remove registered submodules to avoid stale directories."""
+    try:
+        repo.git.submodule("deinit", "--all", "--force")
+    except GitCommandError as exc:
+        logger.warning(f"Submodule deinit failed: {exc}")
+
+
+def clean_worktree(repo: git.Repo, logger: logging.Logger):
+    """Remove untracked files and directories to match the checked-out commit."""
+    try:
+        repo.git.clean("-xfd")
+    except GitCommandError as exc:
+        logger.warning(f"git clean failed: {exc}")
+
+
+def remove_orphan_submodule_dirs(repo_path: str, repo: git.Repo, logger: logging.Logger):
+    """Remove lingering submodule directories that are not tracked in the current commit."""
+    try:
+        tracked_paths = set(repo.git.ls_files().splitlines())
+    except GitCommandError as exc:
+        logger.warning(f"git ls-files failed: {exc}")
+        tracked_paths = set()
+
+    orphan_dirs = []
+    for root, dirs, files in os.walk(repo_path):
+        git_file = os.path.join(root, ".git")
+        if not os.path.isfile(git_file):
+            continue
+        rel_path = os.path.relpath(root, repo_path).replace("\\", "/")
+        if rel_path == ".":
+            continue
+        if rel_path not in tracked_paths:
+            orphan_dirs.append(root)
+
+    for path in orphan_dirs:
+        logger.info(f"Removing orphan submodule directory: {path}")
+        shutil.rmtree(path, ignore_errors=True)
+
+
 def plot_repo_stats(daily_line_count, daily_word_count, daily_commit_count,
                     top_level_word_count, output_path, figsize=(15, 10), linewidth=2,
-                    top_n_folders=8):
+                    top_n_folders=8, data_updated_text: str | None = None,
+                    note_updated_text: str | None = None):
     """绘制代码库统计数据的曲线图"""
     if not daily_line_count:
         logger.warning("No data available for plotting")
@@ -307,11 +349,26 @@ def plot_repo_stats(daily_line_count, daily_word_count, daily_commit_count,
     output_dir = os.path.dirname(output_path)
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
+    annotation_lines = []
+    if data_updated_text:
+        annotation_lines.append(data_updated_text)
+    if note_updated_text:
+        annotation_lines.append(note_updated_text)
+    if annotation_lines:
+        fig.text(
+            0.99,
+            0.02,
+            "\n".join(annotation_lines),
+            ha='right',
+            va='bottom',
+            fontsize=10,
+        )
+
     fig.savefig(output_path)
     logger.info(f"Statistics chart saved to {output_path}")
 
     # 显示图表
-    plt.show()
+    # plt.show()
 
 
 def load_statistics(cache_file):
@@ -382,6 +439,9 @@ def main():
     repo = git.Repo(repo_path)
     repo.git.checkout("-f", "master")
     repo.git.pull()
+    deinit_submodules(repo)
+    clean_worktree(repo, logger)
+    remove_orphan_submodule_dirs(repo_path, repo, logger)
     update_submodules(repo)
     
     # 加载历史统计
@@ -401,6 +461,9 @@ def main():
             
         try:
             repo.git.checkout("-f", hexsha)
+            deinit_submodules(repo)
+            clean_worktree(repo, logger)
+            remove_orphan_submodule_dirs(repo_path, repo, logger)
             update_submodules(repo)
             repo_stats = RepoStatistics(repo_path)
             statistics_cache[hexsha] = {
@@ -420,6 +483,9 @@ def main():
     
     # 恢复master分支
     repo.git.checkout("-f", "master")
+    deinit_submodules(repo)
+    clean_worktree(repo, logger)
+    remove_orphan_submodule_dirs(repo_path, repo, logger)
     update_submodules(repo)
     repo_stats_current = RepoStatistics(repo_path)
     top_level_word_count = repo_stats_current.top_level_word_counts
@@ -441,13 +507,24 @@ def main():
         daily_commit_count[commit_date] += 1
     
     # 生成图表
+    tz_utc8 = timezone(timedelta(hours=8))
+    now_local = datetime.now(tz_utc8)
+    latest_commit = repo.head.commit.committed_datetime
+    if latest_commit.tzinfo is None:
+        latest_commit = latest_commit.replace(tzinfo=timezone.utc)
+    latest_commit_local = latest_commit.astimezone(tz_utc8)
+    data_updated_text = f"数据更新日期：{now_local.strftime('%Y-%m-%d')}"
+    note_updated_text = f"笔记更新日期：{latest_commit_local.strftime('%Y-%m-%d')}"
+
     if args.output:
         plot_repo_stats(
             daily_line_count,
             daily_word_count,
             daily_commit_count,
             top_level_word_count,
-            args.output
+            args.output,
+            data_updated_text=data_updated_text,
+            note_updated_text=note_updated_text,
         )
     else:
         logger.warning("No output path specified, skipping chart generation")
