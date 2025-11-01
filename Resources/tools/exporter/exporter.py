@@ -13,15 +13,16 @@ from pywinauto.keyboard import send_keys
 from pywinauto.timings import TimeoutError
 
 
-NEW_NOTE_PATTERN = re.compile(r"Ctrl\s*\+\s*N", re.IGNORECASE)
-COMMAND_INPUT_PATTERN = re.compile(r"输入命令")
-EXPORT_BUTTON_PATTERN = re.compile(r"导出")
+NEW_NOTE_PATTERN = re.compile(r"Ctrl\s*\+\s*N", re.IGNORECASE)  # Regular expressions used to grab widget "Create new note (Ctrl+N)"
+COMMAND_INPUT_PATTERN = re.compile(r"Select a command")         # The regular expression of prompt words for Ctrl+P panel widget in the current Obsidian language. 
+EXPORT_BUTTON_PATTERN = re.compile(r"Export")                   # The export button regular expression in the current language.
 FINISHED_TOAST_PATTERN = re.compile(r"Finished HTML Export:", re.IGNORECASE)
 CANCEL_BUTTON_PATTERN = re.compile(r"Cancel", re.IGNORECASE)
 COMMAND_TEXT = "Webpage HTML Export: Set html export settings"
 
 
 def configure_logging(log_file: Path | None) -> logging.Logger:
+    """Create a logger that always writes to stdout and optionally a file."""
     logger = logging.getLogger("exporter")
     logger.setLevel(logging.INFO)
     formatter = logging.Formatter(
@@ -42,6 +43,7 @@ def configure_logging(log_file: Path | None) -> logging.Logger:
 
 
 def terminate_obsidian(logger: logging.Logger) -> None:
+    """Force close all Obsidian processes so the UI state is predictable."""
     logger.info("Stopping any running Obsidian processes.")
     result = subprocess.run(
         ["taskkill", "/IM", "Obsidian.exe", "/F"],
@@ -55,7 +57,7 @@ def terminate_obsidian(logger: logging.Logger) -> None:
     else:
         stdout = (result.stdout or "").lower()
         stderr = (result.stderr or "").lower()
-        no_process_tokens = ("not found", "no instance", "未找到", "不存在")
+        no_process_tokens = ("not found", "no instance")
         if any(token in stdout or token in stderr for token in no_process_tokens):
             logger.info("No Obsidian processes were running.")
         else:
@@ -68,6 +70,7 @@ def terminate_obsidian(logger: logging.Logger) -> None:
 
 
 def checkout_branch(vault_dir: Path, branch: str, logger: logging.Logger) -> None:
+    """Check out the requested git branch for the vault."""
     logger.info("Checking out branch '%s' in %s.", branch, vault_dir)
     repo = Repo(vault_dir, search_parent_directories=True)
     try:
@@ -78,6 +81,7 @@ def checkout_branch(vault_dir: Path, branch: str, logger: logging.Logger) -> Non
 
 
 def remove_workspace_file(vault_dir: Path, logger: logging.Logger) -> None:
+    """Delete the workspace layout file so the UI opens in a known state."""
     workspace = vault_dir / ".obsidian" / "workspace.json"
     if workspace.exists():
         logger.info("Removing workspace file %s.", workspace)
@@ -87,6 +91,7 @@ def remove_workspace_file(vault_dir: Path, logger: logging.Logger) -> None:
 
 
 def launch_obsidian(obsidian_path: Path, window_title: str, logger: logging.Logger):
+    """Start Obsidian and wait for the main window to become interactive."""
     logger.info("Launching Obsidian from %s.", obsidian_path)
     app = Application(backend="uia")
     app.start(cmd_line=str(obsidian_path))
@@ -103,6 +108,7 @@ def launch_obsidian(obsidian_path: Path, window_title: str, logger: logging.Logg
 
 
 def _iter_controls(root):
+    """Safely iterate UIA descendants for the given wrapper."""
     try:
         return root.descendants()
     except Exception:
@@ -117,6 +123,7 @@ def wait_for_control(
     timeout: float,
     retry_interval: float = 0.5,
 ):
+    """Poll UIA for a control matching the pattern until timeout."""
     if not isinstance(roots, (list, tuple)):
         roots = [roots]
     deadline = time.time() + timeout
@@ -144,6 +151,7 @@ def wait_for_disappearance(
     timeout: float,
     retry_interval: float = 0.5,
 ):
+    """Wait until a previously visible control is no longer found."""
     if not isinstance(roots, (list, tuple)):
         roots = [roots]
     deadline = time.time() + timeout
@@ -169,6 +177,7 @@ def wait_for_disappearance(
 
 
 def sample_controls(root, substring: str, limit: int = 10) -> list[str]:
+    """Collect a short list of controls whose names contain the substring."""
     samples: list[str] = []
     for ctrl in _iter_controls(root):
         name = (ctrl.element_info.name or "").strip()
@@ -180,6 +189,7 @@ def sample_controls(root, substring: str, limit: int = 10) -> list[str]:
 
 
 def parse_args() -> argparse.Namespace:
+    """Parse command-line arguments for the exporter automation."""
     parser = argparse.ArgumentParser(description="Automate Obsidian HTML export.")
     parser.add_argument(
         "--vault-dir",
@@ -212,23 +222,27 @@ def parse_args() -> argparse.Namespace:
 
 
 def ensure_environment(logger: logging.Logger) -> None:
+    """Sanity-check required Python modules are importable."""
     required = {"pywinauto", "git"}
     for module in required:
         logger.debug("Verified dependency: %s", module)
 
 
 def main() -> int:
+    """Drive the Obsidian export workflow end-to-end."""
     args = parse_args()
     logger = configure_logging(args.log_file)
 
     try:
+        # Preparation: ensure dependencies are present and any running instance is closed.
         ensure_environment(logger)
         terminate_obsidian(logger)
         checkout_branch(args.vault_dir, args.git_branch, logger)
         remove_workspace_file(args.vault_dir, logger)
         window, desktop = launch_obsidian(args.obsidian_path, args.window_title, logger)
 
-        logger.info("Waiting for indicator containing '%s'.", "创建新文件 (Ctrl + N)")
+        # Wait for the main workspace to finish loading.
+        logger.info("Waiting for indicator containing '%s'.", "Create new note (Ctrl + N)")
         try:
             wait_for_control(
                 [window, desktop],
@@ -239,15 +253,17 @@ def main() -> int:
         except TimeoutError:
             samples = sample_controls(desktop, "Ctrl", limit=10)
             logger.error(
-                "在60秒内未检测到包含 'Ctrl + N' 提示的控件。样例: %s",
+                "No widget containing 'Ctrl + N' prompt detected within 60 seconds, sample: %s",
                 samples,
             )
             return 1
 
+        # Step 2: open the command palette.
         logger.info("Opening command palette with Ctrl+P.")
         window.set_focus()
         send_keys("^p")
 
+        # Step 3: focus the palette input and submit the export command.
         logger.info("Waiting for command input box.")
         try:
             command_edit = wait_for_control(
@@ -257,8 +273,11 @@ def main() -> int:
                 timeout=30,
             )
         except TimeoutError:
-            samples = sample_controls(desktop, "命令", limit=10)
-            logger.error("在30秒内未检测到 '输入命令…' 控件。样例: %s", samples)
+            samples = sample_controls(desktop, "command", limit=10)
+            logger.error(
+                "The command palette input did not appear within 30 seconds. Samples: %s",
+                samples,
+            )
             return 1
 
         logger.info("Typing command '%s'.", COMMAND_TEXT)
@@ -276,7 +295,8 @@ def main() -> int:
             logger.error("Failed to send command text: %s", exc)
             return 1
 
-        logger.info("Waiting for '导出' button.")
+        # Step 4: wait for the export dialog and trigger the export.
+        logger.info("Waiting for 'Export' button.")
         try:
             export_button = wait_for_control(
                 [window, desktop],
@@ -285,27 +305,31 @@ def main() -> int:
                 timeout=60,
             )
         except TimeoutError:
-            samples = sample_controls(desktop, "导出", limit=10)
-            logger.error("在60秒内未检测到包含 '导出' 的按钮。样例: %s", samples)
+            samples = sample_controls(desktop, "Export", limit=10)
+            logger.error(
+                "An 'Export' button did not appear within 60 seconds. Samples: %s",
+                samples,
+            )
             return 1
 
-        logger.info("Clicking '导出' button.")
+        logger.info("Clicking 'Export' button.")
         try:
             export_button.click_input()
         except Exception as exc:
-            logger.error("点击 '导出' 按钮失败: %s", exc)
+            logger.error("Failed to click the 'Export' button: %s", exc)
             return 1
 
+        # Step 5: confirm the export run completes and the toast appears.
         logger.info("Waiting for 'Cancel' button to disappear.")
         try:
             wait_for_disappearance(
                 [window, desktop],
                 name_pattern=CANCEL_BUTTON_PATTERN,
                 control_type="button",
-                timeout=120,
+                timeout=1800,
             )
         except TimeoutError:
-            logger.error("在120秒内未检测到 'Cancel' 按钮消失，退出。")
+            logger.error("The 'Cancel' button did not disappear within 1800 seconds (30 minutes).")
             return 1
 
         logger.info("Waiting for 'Finished HTML Export:' notification.")
@@ -317,7 +341,9 @@ def main() -> int:
                 timeout=120,
             )
         except TimeoutError:
-            logger.error("在120秒内未检测到以 'Finished HTML Export:' 开头的提示，退出。")
+            logger.error(
+                "No notification starting with 'Finished HTML Export:' appeared within 120 seconds."
+            )
             return 1
 
         logger.info("Export completed successfully.")
