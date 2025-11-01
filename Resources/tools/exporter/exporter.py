@@ -126,6 +126,70 @@ def update_export_settings(vault_dir: Path, export_path: Path, logger: logging.L
         logger.error("Failed to write export configuration %s: %s", config_path, exc)
 
 
+def get_primary_tab_id(workspace_path: Path, logger: logging.Logger) -> str | None:
+    if not workspace_path.exists():
+        return None
+    try:
+        with workspace_path.open("r", encoding="utf-8") as fh:
+            data = json.load(fh)
+    except Exception:
+        return None
+
+    main_section = data.get("main")
+    if not isinstance(main_section, dict):
+        return None
+
+    children = main_section.get("children")
+    if not isinstance(children, list) or not children:
+        return None
+
+    first_child = children[0]
+    if not isinstance(first_child, dict):
+        return None
+
+    identifier = first_child.get("id")
+    if isinstance(identifier, str) and identifier:
+        return identifier
+    return None
+
+
+def wait_for_primary_tab_id(workspace_path: Path, timeout: float, logger: logging.Logger) -> str | None:
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        identifier = get_primary_tab_id(workspace_path, logger)
+        if identifier:
+            return identifier
+        time.sleep(0.5)
+    return get_primary_tab_id(workspace_path, logger)
+
+
+def wait_for_workspace_change(
+    workspace_path: Path,
+    previous_id: str | None,
+    timeout: float,
+    poll_interval: float,
+    logger: logging.Logger,
+) -> bool:
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        current_id = get_primary_tab_id(workspace_path, logger)
+        if current_id is None and previous_id is None:
+            time.sleep(poll_interval)
+            continue
+
+        if current_id != previous_id:
+            logger.info(
+                "Workspace primary tab id changed from %s to %s.",
+                previous_id or "<none>",
+                current_id or "<none>",
+            )
+            return True
+
+        time.sleep(poll_interval)
+
+    return False
+
+
 def launch_obsidian(obsidian_path: Path, window_title: str, logger: logging.Logger):
     """Start Obsidian and wait for the main window to become interactive."""
     logger.info("Launching Obsidian from %s.", obsidian_path)
@@ -326,6 +390,7 @@ def main() -> int:
         update_export_settings(args.vault_dir, export_path, logger)
         remove_workspace_file(args.vault_dir, logger)
         window, desktop = launch_obsidian(args.obsidian_path, args.window_title, logger)
+        workspace_path = args.vault_dir / ".obsidian" / "workspace.json"
 
         # Wait for the main workspace to finish loading.
         logger.info("Waiting for indicator containing '%s'.", "Create new note (Ctrl + N)")
@@ -383,6 +448,12 @@ def main() -> int:
 
         # Step 4: wait for the export dialog and trigger the export.
         logger.info("Waiting for 'Export' button.")
+        initial_tab_id = wait_for_primary_tab_id(workspace_path, timeout=60, logger=logger)
+        if initial_tab_id:
+            logger.info("Captured workspace tab id before export: %s.", initial_tab_id)
+        else:
+            logger.info("Workspace tab id unavailable before export; will monitor for future changes.")
+
         try:
             export_button = wait_for_control(
                 [window, desktop],
@@ -405,17 +476,16 @@ def main() -> int:
             logger.error("Failed to click the 'Export' button: %s", exc)
             return 1
 
-        logger.info("Waiting for 'Finished HTML Export:' notification.")
-        try:
-            wait_for_control(
-                [window, desktop],
-                name_pattern=FINISHED_TOAST_PATTERN,
-                control_type=None,
-                timeout=1800,
-            )
-        except TimeoutError:
+        logger.info("Waiting for workspace state to update after export.")
+        if not wait_for_workspace_change(
+            workspace_path,
+            initial_tab_id,
+            timeout=1800,
+            poll_interval=2.0,
+            logger=logger,
+        ):
             logger.error(
-                "No notification starting with 'Finished HTML Export:' appeared within 120 seconds."
+                "Workspace primary tab id did not change within 1800 seconds; export may have stalled."
             )
             return 1
 
