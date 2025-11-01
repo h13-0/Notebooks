@@ -402,6 +402,20 @@ def main() -> int:
             logger.error("Failed to click the 'Export' button: %s", exc)
             return 1
 
+        logger.info("Waiting for 'Finished HTML Export:' notification.")
+        try:
+            wait_for_control(
+                [window, desktop],
+                name_pattern=FINISHED_TOAST_PATTERN,
+                control_type=None,
+                timeout=1800,
+            )
+        except TimeoutError:
+            logger.error(
+                "No notification starting with 'Finished HTML Export:' appeared within 120 seconds."
+            )
+            return 1
+
         logger.info("Export completed successfully.")
         return 0
     except (TimeoutError, ElementNotFoundError, GitCommandError) as exc:
