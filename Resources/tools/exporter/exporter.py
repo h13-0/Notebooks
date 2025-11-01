@@ -84,17 +84,31 @@ def checkout_branch(vault_dir: Path, branch: str, logger: logging.Logger) -> Non
         raise
 
 
-def remove_workspace_file(vault_dir: Path, logger: logging.Logger) -> None:
-    """Delete the workspace layout file so the UI opens in a known state."""
+def clear_workspace(vault_dir: Path, logger: logging.Logger) -> None:
+    """Reset the workspace layout so the main split has no children."""
     workspace = vault_dir / ".obsidian" / "workspace.json"
-    if workspace.exists():
-        logger.info("Removing workspace file %s.", workspace)
-        try:
-            workspace.unlink()
-        except Exception as exc:
-            logger.error("Failed to remove workspace file %s: %s", workspace, exc)
-    else:
-        logger.info("Workspace file %s does not exist; skipping removal.", workspace)
+    if not workspace.exists():
+        logger.info("Workspace file %s does not exist; skipping modification.", workspace)
+        return
+    try:
+        with workspace.open("r", encoding="utf-8") as fh:
+            data = json.load(fh)
+    except Exception as exc:
+        logger.error("Failed to read workspace file %s: %s", workspace, exc)
+        return
+    main_section = data.get("main")
+    if isinstance(main_section, dict):
+        if "children" in main_section and isinstance(main_section["children"], list):
+            if main_section["children"]:
+                main_section["children"] = []
+                try:
+                    with workspace.open("w", encoding="utf-8") as fh:
+                        json.dump(data, fh, ensure_ascii=False, indent=2)
+                    logger.info("Cleared main.children entries in %s.", workspace)
+                except Exception as exc:
+                    logger.error("Failed to write workspace file %s: %s", workspace, exc)
+                return
+    logger.info("Workspace main.children already empty; no changes made.")
 
 
 def update_export_settings(vault_dir: Path, export_path: Path, logger: logging.Logger) -> None:
@@ -388,7 +402,7 @@ def main() -> int:
         except TypeError:
             export_path = export_path.resolve()
         update_export_settings(args.vault_dir, export_path, logger)
-        remove_workspace_file(args.vault_dir, logger)
+        clear_workspace(args.vault_dir, logger)
         window, desktop = launch_obsidian(args.obsidian_path, args.window_title, logger)
         workspace_path = args.vault_dir / ".obsidian" / "workspace.json"
 
