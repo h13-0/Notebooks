@@ -1,0 +1,42 @@
+# YAML 配置示例，请根据实际环境调整路径与参数。
+
+variables:
+  vault_dir: D:/Obsidian/Notebooks
+  export_path: D:/Obsidian/export
+  obsidian_path: C:/Users/Username/AppData/Local/Programs/Obsidian/Obsidian.exe
+  repo_branch: master
+  obsidian_process_name: Obsidian.exe
+
+scripts:
+  exporter:
+    path: exporter/exporter.py
+    args:
+      - --vault-dir
+      - "{vault_dir}"
+      - --export-path
+      - "{export_path}"
+      - --obsidian-path
+      - "{obsidian_path}"
+      - --git-branch
+      - "{repo_branch}"
+      - --window-title
+      - ".*Obsidian.*"
+    terminate_process: "{obsidian_process_name}"
+  statistics:
+    path: statistics/statistics.py
+    args:
+      - --repo-path
+      - "{vault_dir}"
+      - --cache
+      - statistics/statistics.json
+      - --output
+      - statistics/statistics.png
+
+package:
+  source: "{vault_dir}"
+  archive: D:/Obsidian/webpage_exported.zip
+
+remote:
+  zip_path: /tmp/exported-data.zip
+  deploy_path: /var/www/Notebooks
+  port: 22

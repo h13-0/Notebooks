@@ -6,6 +6,7 @@ import logging
 from collections import defaultdict, deque
 from datetime import date, timedelta
 import git
+from git.exc import GitCommandError
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import numpy as np
@@ -85,6 +86,23 @@ class RepoStatistics:
         if top_level in ("", "."):
             return "[root]"
         return top_level
+
+
+def update_submodules(repo: git.Repo):
+    """强制更新子模块，确保对子模块指针与当前提交一致"""
+    args = ["update", "--init", "--recursive", "--force", "--checkout"]
+    try:
+        repo.git.submodule(*args)
+    except GitCommandError as exc:
+        # 有些 Git 版本会把信息写在 stdout
+        output = ""
+        if getattr(exc, "stderr", None):
+            output += exc.stderr
+        if getattr(exc, "stdout", None):
+            output += exc.stdout
+        if output:
+            logger.error(f"Submodule update failed: {output.strip()}")
+        raise
 
 
 def plot_repo_stats(daily_line_count, daily_word_count, daily_commit_count,
@@ -324,6 +342,8 @@ def main():
                         help='Path to save the statistics chart')
     parser.add_argument('--cache', type=str, default='./statistics.json',
                         help='Path to statistics cache file')
+    parser.add_argument('--repo-path', type=str, default='./Notebooks',
+                        help='Path to the target repository for statistics')
     # 添加日志路径参数
     parser.add_argument('--log', type=str, default=None,
                         help='Path to log file (appended mode)')
@@ -357,10 +377,12 @@ def main():
     logger.info(f"Command line arguments: {args}")
 
     # 初始化仓库
-    repo_path = "./Notebooks"
+    repo_path = os.path.abspath(args.repo_path)
+    logger.info(f"Using repository path: {repo_path}")
     repo = git.Repo(repo_path)
     repo.git.checkout("-f", "master")
     repo.git.pull()
+    update_submodules(repo)
     
     # 加载历史统计
     cache_file = args.cache
@@ -379,7 +401,7 @@ def main():
             
         try:
             repo.git.checkout("-f", hexsha)
-            repo.submodule_update()
+            update_submodules(repo)
             repo_stats = RepoStatistics(repo_path)
             statistics_cache[hexsha] = {
                 'date': commit.committed_datetime.isoformat(),
@@ -398,6 +420,7 @@ def main():
     
     # 恢复master分支
     repo.git.checkout("-f", "master")
+    update_submodules(repo)
     repo_stats_current = RepoStatistics(repo_path)
     top_level_word_count = repo_stats_current.top_level_word_counts
     
