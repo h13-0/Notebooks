@@ -1,4 +1,5 @@
 import argparse
+import json
 import logging
 import re
 import subprocess
@@ -85,9 +86,41 @@ def remove_workspace_file(vault_dir: Path, logger: logging.Logger) -> None:
     workspace = vault_dir / ".obsidian" / "workspace.json"
     if workspace.exists():
         logger.info("Removing workspace file %s.", workspace)
-        workspace.unlink()
+        try:
+            workspace.unlink()
+        except Exception as exc:
+            logger.error("Failed to remove workspace file %s: %s", workspace, exc)
     else:
         logger.info("Workspace file %s does not exist; skipping removal.", workspace)
+
+
+def update_export_settings(vault_dir: Path, export_path: Path, logger: logging.Logger) -> None:
+    """Update the webpage-html-export plugin configuration with the desired export path."""
+    config_path = vault_dir / ".obsidian" / "plugins" / "webpage-html-export" / "data.json"
+    if not config_path.exists():
+        logger.warning("Export plugin configuration %s does not exist; skipping update.", config_path)
+        return
+
+    try:
+        with config_path.open("r", encoding="utf-8") as fh:
+            config = json.load(fh)
+    except Exception as exc:
+        logger.error("Failed to read export configuration %s: %s", config_path, exc)
+        return
+
+    export_options = config.setdefault("exportOptions", {})
+    desired_path = str(export_path)
+    if export_options.get("exportPath") == desired_path:
+        logger.info("Export path already set to %s; no update necessary.", desired_path)
+        return
+
+    export_options["exportPath"] = desired_path
+    try:
+        with config_path.open("w", encoding="utf-8") as fh:
+            json.dump(config, fh, ensure_ascii=False, indent=2)
+        logger.info("Updated exportPath to %s in %s.", desired_path, config_path)
+    except Exception as exc:
+        logger.error("Failed to write export configuration %s: %s", config_path, exc)
 
 
 def launch_obsidian(obsidian_path: Path, window_title: str, logger: logging.Logger):
@@ -198,6 +231,12 @@ def parse_args() -> argparse.Namespace:
         help="Path to the Obsidian vault directory (git repository).",
     )
     parser.add_argument(
+        "--export-path",
+        required=True,
+        type=Path,
+        help="Target directory for the Webpage HTML Export plugin output.",
+    )
+    parser.add_argument(
         "--obsidian-path",
         required=True,
         type=Path,
@@ -238,6 +277,12 @@ def main() -> int:
         ensure_environment(logger)
         terminate_obsidian(logger)
         checkout_branch(args.vault_dir, args.git_branch, logger)
+        export_path = args.export_path.expanduser()
+        try:
+            export_path = export_path.resolve(strict=False)
+        except TypeError:
+            export_path = export_path.resolve()
+        update_export_settings(args.vault_dir, export_path, logger)
         remove_workspace_file(args.vault_dir, logger)
         window, desktop = launch_obsidian(args.obsidian_path, args.window_title, logger)
 
@@ -338,7 +383,7 @@ def main() -> int:
                 [window, desktop],
                 name_pattern=FINISHED_TOAST_PATTERN,
                 control_type=None,
-                timeout=120,
+                timeout=1800,
             )
         except TimeoutError:
             logger.error(
