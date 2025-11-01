@@ -75,10 +75,16 @@ def checkout_branch(vault_dir: Path, branch: str, logger: logging.Logger) -> Non
     logger.info("Checking out branch '%s' in %s.", branch, vault_dir)
     repo = Repo(vault_dir, search_parent_directories=True)
     try:
-        logger.info("Pulling latest changes from remote for %s.", branch)
+        logger.info("Fetching latest changes for %s.", branch)
         repo.git.fetch("--all")
-        repo.git.pull()
+        logger.info("Checking out branch '%s' with --force.", branch)
         repo.git.checkout("-f", branch)
+        logger.info("Pulling latest changes for '%s'.", branch)
+        try:
+            repo.git.pull("--ff-only")
+        except GitCommandError:
+            logger.warning("Fast-forward pull failed, attempting regular pull.")
+            repo.git.pull()
     except GitCommandError as exc:
         logger.error("Failed to checkout branch '%s': %s", branch, exc)
         raise
@@ -502,6 +508,18 @@ def main() -> int:
             logger.error(
                 "Workspace primary tab id did not change within 1800 seconds; export may have stalled."
             )
+            return 1
+
+        logger.info("Waiting for 'Cancel' button to disappear.")
+        try:
+            wait_for_disappearance(
+                [window, desktop],
+                name_pattern=CANCEL_BUTTON_PATTERN,
+                control_type="button",
+                timeout=1800,
+            )
+        except TimeoutError:
+            logger.error("The 'Cancel' button did not disappear within 1800 seconds.")
             return 1
 
         logger.info("Export completed successfully.")
