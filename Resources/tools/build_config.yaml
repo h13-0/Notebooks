@@ -1,11 +1,16 @@
 # YAML 配置示例，请根据实际环境调整路径与参数。
-
 variables:
   vault_dir: D:/Obsidian/Notebooks
   export_path: D:/Obsidian/export
   obsidian_path: C:/Users/Username/AppData/Local/Programs/Obsidian/Obsidian.exe
   repo_branch: master
   obsidian_process_name: Obsidian.exe
+  remote_sync_path: /tmp/notebooks-sync
+  deploy_path: /opt/my-app
+  statistics_image: statistics/output.png
+  post_deploy_commands:
+    - find /opt/my-app -type d -exec chmod 0755 {} \;
+    - find /opt/my-app -type f -exec chmod 0644 {} \;
 
 scripts:
   exporter:
@@ -30,13 +35,24 @@ scripts:
       - --cache
       - statistics/statistics.json
       - --output
-      - statistics/statistics.png
-
-package:
-  source: "{vault_dir}"
-  archive: D:/Obsidian/webpage_exported.zip
+      - "{statistics_image}"
 
 remote:
-  zip_path: /tmp/exported-data.zip
-  deploy_path: /var/www/Notebooks
   port: 22
+
+sync:
+  source: "{export_path}"
+  remote_path: "{remote_sync_path}"
+  options:
+    - -az
+    - --delete
+    - --compress
+  ssh_options: []
+  retries: 3
+
+deploy:
+  source: "{remote_sync_path}"
+  deploy_path: "{deploy_path}"
+  options:
+    - -a
+    - --delete

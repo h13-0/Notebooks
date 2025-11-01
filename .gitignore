@@ -9,3 +9,4 @@ github_token.txt
 *.svg.bkp
 *.svg.dtmp
 /Resources/Statistics/Notebooks
+*.pyc
