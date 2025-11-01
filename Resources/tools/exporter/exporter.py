@@ -75,7 +75,10 @@ def checkout_branch(vault_dir: Path, branch: str, logger: logging.Logger) -> Non
     logger.info("Checking out branch '%s' in %s.", branch, vault_dir)
     repo = Repo(vault_dir, search_parent_directories=True)
     try:
-        repo.git.checkout(branch)
+        logger.info("Pulling latest changes from remote for %s.", branch)
+        repo.git.fetch("--all")
+        repo.git.pull()
+        repo.git.checkout("-f", branch)
     except GitCommandError as exc:
         logger.error("Failed to checkout branch '%s': %s", branch, exc)
         raise
