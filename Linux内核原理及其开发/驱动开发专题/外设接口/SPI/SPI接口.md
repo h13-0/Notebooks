@@ -45,7 +45,7 @@ number headings: auto, first-level 1, max 6, 1.1
 ```
 
 而<font color="#c00000">SPI从设备必须作为SPI控制器节点的子节点存在</font>，其节点结构中：
-- `node-name` ：设备的通用名，，<font color="#c00000">不参与驱动匹配</font>
+- `node-name` ：设备的通用名，用于形成设备树路径，<font color="#c00000">不参与驱动匹配</font>
 - `unit-address` ：片选号(`CS index`)，与控制器的CS数组的index一致
 	- <font color="#c00000">其为书写形式要求</font>，<font color="#c00000">不决定节点属性</font>，但是必须与 `reg` 属性保持一致
 - `label` ：别名，略
