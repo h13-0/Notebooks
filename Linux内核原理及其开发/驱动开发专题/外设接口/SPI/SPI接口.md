@@ -15,7 +15,7 @@ number headings: auto, first-level 1, max 6, 1.1
 
 # 3 设备树配置
 
-## 3.1 主机设备树配置
+## 3.1 控制器设备树配置
 
 ## 3.2 从设备设备树配置
 
@@ -29,15 +29,21 @@ number headings: auto, first-level 1, max 6, 1.1
 
 &spix {
 	status = "okay";
-	
-	// 子设备节点
-	spi_device: 
+	// 从设备节点
+	spi_device@xx {
+	}
 }
-
-
 ```
 
+而<font color="#c00000">SPI从设备必须作为SPI控制器节点的子节点存在</font>，其必选属性有：
+- 
 
+其可选属性有：
+- `spi-cpol`
+- `spi-cpha`
+- `spi-cs-high`
+- `spi-3wire`
+- 
 
 
 
