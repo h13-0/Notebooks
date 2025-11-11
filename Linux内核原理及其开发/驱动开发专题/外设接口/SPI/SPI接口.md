@@ -36,15 +36,18 @@ number headings: auto, first-level 1, max 6, 1.1
 
 &spix {
 	status = "okay";
+	
 	// 从设备节点
-	spi_device@xx {
+	spi_device@${unit-address} {
+		// 从设备属性
 	}
 }
 ```
 
 而<font color="#c00000">SPI从设备必须作为SPI控制器节点的子节点存在</font>，其必选属性有：
 - `compatible` ：描述
-- `reg` ：片选号，与控制器的
+- `unit-address` ：片选号(`CS index`)，与控制器的CS数组的index一致
+- `reg` ：，与 `unit-address` 必须匹配，不匹配则dtc警告
 
 其可选属性有：
 - `spi-cpol` ：SPI的反向时钟特性(CPOL)
