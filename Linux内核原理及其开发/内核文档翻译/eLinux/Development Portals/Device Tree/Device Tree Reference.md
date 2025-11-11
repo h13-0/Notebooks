@@ -107,7 +107,7 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 
 ##### 2.1.3.3 子节点
 
-子节点的格式为：
+子节点的基本格式为：
 
 ```dts
 [${label}: ]node-name[@${unit-address}] {
@@ -116,10 +116,15 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 };
 ```
 
-注：
-- 方括号内可省略。
-	- 上述的 `${label}` 即别名，方便被引用。当包含设备地址时，其节点被引用时也需要带地址引用。但是使用 `${label}` 后则引用 `${label}` 即可。
-- 上述<span style="background:#fff88f"><font color="#c00000">名称区域的</font></span><font color="#c00000">设备地址</font> `[${@unit-address}]` <font color="#c00000">没有实际的语法意义</font>，只是为了方便阅读，方便命名和避免重名。具体地址定义应当在 `[${properties}]` 区域。<font color="#c00000">不过当节点中含有reg属性后，地址区域也应当加上地址后缀，否则会有警告</font>。
+上述格式中方括号内可省略，其中：
+- `label` ：别名，方便被引用。
+	- 当包含设备地址时，其节点被引用时也需要带地址引用。但是若使用 `label` 则引用 `label` 即可。
+- `node-name` ：节点名，
+	- 其应当由1–31个字符组成，字符集受限且必须以字母开头
+- `unit-address` ：设备地址，<span style="background:#fff88f"><font color="#c00000">但是没有实际的语法意义</font></span>，且有：
+	- 其只是为了方便阅读，方便命名和避免重名。
+	- 具体的设备地址定义应当在 `[${properties}]` 区域。
+	- <font color="#c00000">当节点中含有reg属性后，地址区域也应当加上地址后缀并保持一致，否则会有警告</font>。
 - <font color="#c00000">节点的名称应当反应设备的类型，而非具体的型号</font>。<font color="#c00000">节点名称尽可能使用标准名</font>，ePAPR 2.2.2章节中已定义通用节点名称的列表。
 - <font color="#c00000">同级节点下</font><span style="background:#fff88f"><font color="#c00000">包含地址的</font></span><font color="#c00000">节点名不能相同</font>，不同级节点的节点名可以相同，如下为一个合法示例：
 ```dts
