@@ -65,7 +65,9 @@ number headings: auto, first-level 1, max 6, 1.1
 	- 数据类型： `flag`
 - `spi-cpha` ：
 	- 功能含义：SPI的移相时钟特性([[嵌入式基础/接口技术/SPI/SPI总线标准#^341ed0|CPHA]])
-	- 数据类型： `flag`
+		- 设置该flag时 `CPHA=2Edge`
+		- 不设置时 `CPHA=1Edge` 
+	- 数据类型： `flag` 
 - `spi-cs-high` ：
 	- 功能含义：片选为高电平
 	- 数据类型： `flag`
@@ -88,6 +90,5 @@ number headings: auto, first-level 1, max 6, 1.1
 - `spi-rx-bus-width` 、`spi-tx-bus-width` ：
 	- 功能含义：数据线宽属性，可选1/2/4/8，用于 dual/quad/octal 等[[嵌入式基础/接口技术/SPI/SPI总线标准#^b6tpvl|变种SPI]]
 	- 数据类型： `uint32_t`
-
 
 # 5 软件接口
