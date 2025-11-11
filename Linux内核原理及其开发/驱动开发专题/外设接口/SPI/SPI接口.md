@@ -43,15 +43,16 @@ number headings: auto, first-level 1, max 6, 1.1
 ```
 
 而<font color="#c00000">SPI从设备必须作为SPI控制器节点的子节点存在</font>，其必选属性有：
-- 
+- `compatible` ：描述
+- `reg` ：片选号，与控制器的
 
 其可选属性有：
-- `spi-cpol`
-- `spi-cpha`
-- `spi-cs-high`
-- `spi-3wire`
-- `spi-lsb-first`
-- `spi-max-frequency`
+- `spi-cpol` ：SPI的反向时钟特性(CPOL)
+- `spi-cpha` ：SPI的移相时钟特性(CPHA)
+- `spi-cs-high` ：片选为高电平
+- `spi-3wire` ：3线SPI模式(半双工)
+- `spi-lsb-first` ：SPI的地位优先特性(LSB)
+- `spi-max-frequency` ：该外设可接受的最大SPI时钟
 
 [[Linux内核原理及其开发/内核源码探析/内核源码分析/include/spi/spi.h#^j2uocs|spi_device]]
 
