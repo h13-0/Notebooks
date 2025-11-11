@@ -123,8 +123,9 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 	1. 节点名应当反应设备的类型，而非具体的型号
 	2. 节点名称尽可能使用标准名，ePAPR 2.2.2章节中已定义通用节点名称的列表
 	3. 其应当由1–31个字符组成，字符集受限且必须以字母开头
-	4. 同级节点下包含地址的节点名不能相同，不同级节点的节点名可以相同，可见本子章节demo1
-- `unit-address` ：设备地址，<span style="background:#fff88f"><font color="#c00000">但是没有实际的语法意义</font></span>，且有：
+	4. 同级节点下<font color="#c00000">包含地址的节点名</font>(即 `node-name[@${unit-address}]`)不能相同，不同级节点的节点名可以相同，可见本子章节demo1
+	5. 包含地址的节点名会被用于构建系统中 `/proc/device-tree` 路径
+- `unit-address` ：设备地址，<span style="background:#fff88f"><font color="#c00000">但是没有实际的语法与参数传递意义</font></span>，且有：
 	- 其只是为了方便阅读，方便命名和避免重名。
 	- 具体的设备地址定义应当在 `[${properties}]` 区域。
 	- <font color="#c00000">当节点中含有reg属性后，地址区域也应当加上地址后缀并保持一致，否则会有警告</font>。
