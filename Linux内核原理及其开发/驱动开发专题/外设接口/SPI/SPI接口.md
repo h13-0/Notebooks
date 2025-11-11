@@ -55,28 +55,39 @@ number headings: auto, first-level 1, max 6, 1.1
 其必选属性有：
 - `compatible` ：
 	- 功能含义：描述兼容性属性，用于驱动匹配
+	- 数据类型： `string-list`
 - `reg` ：
 	- 功能含义：片选号(`CS index`)，与 `unit-address` 必须匹配，不匹配则dtc警告
+	- 数据类型： `uint32_t`，值域 $[0, 256]$
 其可选属性有：
 - `spi-cpol` ：
 	- 功能含义：SPI的反向时钟特性([[嵌入式基础/接口技术/SPI/SPI总线标准#^341ed0|CPOL]])
+	- 数据类型： `flag`
 - `spi-cpha` ：
 	- 功能含义：SPI的移相时钟特性([[嵌入式基础/接口技术/SPI/SPI总线标准#^341ed0|CPHA]])
+	- 数据类型： `flag`
 - `spi-cs-high` ：
 	- 功能含义：片选为高电平
+	- 数据类型： `flag`
 - `spi-3wire` ：
 	- 功能含义：3线SPI模式(半双工)
+	- 数据类型： `flag`
 - `spi-lsb-first` ：
 	- 功能含义：SPI的地位优先特性(LSB)
+	- 数据类型： `flag`
 - `spi-max-frequency` ：
 	- 功能含义：该外设可接受的最大SPI时钟
+	- 数据类型： `uint32_t`
 更精细的片选和传输属性：
 - `spi-cs-setup-delay-ns` 、`spi-cs-hold-delay-ns` 、`spi-cs-inactive-delay-ns` ：
 	- 功能含义：CS时序与空闲要求
+	- 数据类型： `uint32_t`
 - `spi-rx-delay-us` 、`spi-tx-delay-us` 、`rx-sample-delay-ns` ：
 	- 功能含义：收发的采样偏移
+	- 数据类型： `uint32_t`
 - `spi-rx-bus-width` 、`spi-tx-bus-width` ：
 	- 功能含义：数据线宽属性，可选1/2/4/8，用于 dual/quad/octal 等[[嵌入式基础/接口技术/SPI/SPI总线标准#^b6tpvl|变种SPI]]
+	- 数据类型： `uint32_t`
 
 
 # 5 软件接口
