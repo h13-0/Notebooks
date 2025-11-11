@@ -38,16 +38,20 @@ number headings: auto, first-level 1, max 6, 1.1
 	status = "okay";
 	
 	// 从设备节点
-	spi_device@${unit-address} {
+	[${label}: ]node-name[@${unit-address}] {
 		// 从设备属性
 	}
 }
 ```
 
-而<font color="#c00000">SPI从设备必须作为SPI控制器节点的子节点存在</font>，其必选属性有：
-- `compatible` ：描述
+而<font color="#c00000">SPI从设备必须作为SPI控制器节点的子节点存在</font>，其节点结构中：
+- `node-name` ：
 - `unit-address` ：片选号(`CS index`)，与控制器的CS数组的index一致
-- `reg` ：，与 `unit-address` 必须匹配，不匹配则dtc警告
+	- <font color="#c00000">其为书写形式要求</font>，<font color="#c00000">不决定节点属性</font>，但是必须与 `reg` 属性保持一致
+- `label` ：别名，略
+其必选属性有：
+- `compatible` ：描述
+- `reg` ：片选号(`CS index`)，与 `unit-address` 必须匹配，不匹配则dtc警告
 
 其可选属性有：
 - `spi-cpol` ：SPI的反向时钟特性(CPOL)

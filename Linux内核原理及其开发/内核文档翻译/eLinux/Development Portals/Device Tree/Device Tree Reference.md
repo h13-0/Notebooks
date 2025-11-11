@@ -110,7 +110,7 @@ Linux中设备树的主要目的是<font color="#c00000">提供一种描述不�
 子节点的格式为：
 
 ```dts
-[${label}: ]node-name[${@unit-address}] {
+[${label}: ]node-name[@${unit-address}] {
 	[${properties}]
 	[${child nodes}]
 };
