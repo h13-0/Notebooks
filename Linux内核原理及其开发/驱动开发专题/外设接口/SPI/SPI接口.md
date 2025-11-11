@@ -59,9 +59,9 @@ number headings: auto, first-level 1, max 6, 1.1
 	- 功能含义：片选号(`CS index`)，与 `unit-address` 必须匹配，不匹配则dtc警告
 其可选属性有：
 - `spi-cpol` ：
-	- 功能含义：SPI的反向时钟特性(CPOL)
+	- 功能含义：SPI的反向时钟特性([[嵌入式基础/接口技术/SPI/SPI总线标准#^341ed0|CPOL]])
 - `spi-cpha` ：
-	- 功能含义：SPI的移相时钟特性(CPHA)
+	- 功能含义：SPI的移相时钟特性([[嵌入式基础/接口技术/SPI/SPI总线标准#^341ed0|CPHA]])
 - `spi-cs-high` ：
 	- 功能含义：片选为高电平
 - `spi-3wire` ：
@@ -76,9 +76,7 @@ number headings: auto, first-level 1, max 6, 1.1
 - `spi-rx-delay-us` 、`spi-tx-delay-us` 、`rx-sample-delay-ns` ：
 	- 功能含义：收发的采样偏移
 - `spi-rx-bus-width` 、`spi-tx-bus-width` ：
-	- 功能含义：数据线宽属性，可选1/2/4/8，用于dual/quad/octal 等变种SPI
+	- 功能含义：数据线宽属性，可选1/2/4/8，用于 dual/quad/octal 等[[嵌入式基础/接口技术/SPI/SPI总线标准#^b6tpvl|变种SPI]]
 
-
-[[Linux内核原理及其开发/内核源码探析/内核源码分析/include/spi/spi.h#^j2uocs|spi_device]]
 
 # 5 软件接口
