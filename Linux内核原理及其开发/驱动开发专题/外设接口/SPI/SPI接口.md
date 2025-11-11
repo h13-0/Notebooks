@@ -13,11 +13,18 @@ number headings: auto, first-level 1, max 6, 1.1
 ```toc
 ```
 
-# 3 设备树配置
+# 3 内核设备模型及数据结构
 
-## 3.1 控制器设备树配置
 
-## 3.2 从设备设备树配置
+
+## 3.1 
+
+
+# 4 设备树配置
+
+## 4.1 控制器设备树配置
+
+## 4.2 从设备设备树配置
 
 在上一章节中已经完成了主机spi设备树节点的配置，其基本结构为
 
@@ -43,9 +50,10 @@ number headings: auto, first-level 1, max 6, 1.1
 - `spi-cpha`
 - `spi-cs-high`
 - `spi-3wire`
-- 
+- `spi-lsb-first`
+- `spi-max-frequency`
 
 
 
 
-# 4 软件接口
+# 5 软件接口
