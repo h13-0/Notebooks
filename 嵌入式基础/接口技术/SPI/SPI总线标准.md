@@ -28,7 +28,7 @@ SPI，即Serial Peripheral interface，即串行外围设备接口。其最早�
 
 ### 3.1 传输的若干基本环节及其时序
 
-#### 3.1.1 SCK的时钟相位(CPHA)与时钟极性(CPOL)
+#### 3.1.1 SCK的时钟相位(CPHA)与时钟极性(CPOL) ^341ed0
 
 时钟相位(CPHA)：在时钟脉冲(SCK)的第一个还是第二个边缘触发采样。
 - `CHPA=0` ：在SCK脉冲的第一个边缘触发采样
@@ -69,7 +69,7 @@ SPI，即Serial Peripheral interface，即串行外围设备接口。其最早�
 3. 读取指定长度
 4. 失能CS引脚，并按照手册等待指定时长
 
-### 3.2 SPI拓展与变种
+### 3.2 SPI拓展与变种 ^b6tpvl
 
 #### 3.2.1 缺线SPI
 
