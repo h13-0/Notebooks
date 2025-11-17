@@ -1,7 +1,6 @@
 [
   "obsidian-dynamic-toc",
   "obsidian-copy-block-link",
-  "obsidian-jupyter",
   "obsidian-git",
   "obsidian42-brat",
   "multi-column-markdown",
@@ -15,6 +14,5 @@
   "easy-typing-obsidian",
   "smart-composer",
   "drawio-obsidian",
-  "obsidian-style-settings",
-  "templater-obsidian"
+  "obsidian-style-settings"
 ]
