@@ -9,7 +9,7 @@
 
 版本：`6.10.0-rc1` 
 原代码范围：`374-395` 
-分析状态：✅/⌛ 
+分析状态：✅
 
 函数签名： `static int spi_match_device(struct device *dev, struct device_driver *drv)`
 - 功能简述： ^4jla92
@@ -29,7 +29,7 @@
 	3. 尝试比较设备树的OF匹配
 	4. 尝试ACPI匹配
 	5. 尝试驱动id表匹配
-	6. 进行名称匹配
+	6. 进行名称匹配。其 `spi->modalias` 可以由板级信息、设备树、ACPI等提供，作为兜底选项。
 
 ```C
 static int spi_match_device(struct device *dev, struct device_driver *drv)
