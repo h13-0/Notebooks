@@ -228,6 +228,20 @@ struct spi_board_info {
 		- 传统的传递给驱动的私有数据方法(`spi_device.dev.platform_data`)，在DT/ACPI场景下通常使用设备属性而非本节点
 - `const struct software_node *swnode` ：
 	- 功能含义
-- 
+- `void *controller_data`
+- `int irq` :
+	- 功能含义：从设备的中断号，取决于设备连接
+	- 维护方：在DT/ACPI下由固件解析得到
+- `u32 max_speed_hz` ：
+	- 功能含义：设备允许的最高SCLK频率
+	- 维护方：在DT/ACPI下由固件解析得到
+- `u16 bus_num` ：
+	- 功能含义：设备对应的 `spi_controller` 总线号
+- `u16 chip_select` ：
+	- 功能含义：设备对应的CS引脚号
+	- 维护方：在DT/ACPI下由固件解析得到
+- `u32 mode` :
+	- 功能含义：设备的SPI配置掩码，通常包含 `SPI_CPHA` 、 `SPI_CPOL` 等标志位
+	- 维护方：在DT/ACPI下由固件解析得到
 
 
