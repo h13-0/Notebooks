@@ -132,13 +132,13 @@ struct spi_device {
 ```
 
 
-# spi_board_info
+# spi_board_info ^877sjn
 
 版本：`6.10.0-rc1` 
 原代码范围：`1563-1636` 
 分析状态：⌛
 
-数据结构：
+数据结构定义：
 
 ```C
 /**
@@ -225,7 +225,8 @@ struct spi_board_info {
 		- 在DT/ACPI模式下由固件节点派生，不需要手动配置
 - `const void *platform_data` ：
 	- 功能含义：
-		- 传统的传递给驱动的私有数据方法(`spi_device.dev.platform_data`)，在DT/ACPI场景下通常使用设备属性而非本节点
+		- 传统的传递给驱动的私有数据方法(`spi_device.dev.platform_data`)
+	- 维护方：在DT/ACPI场景下通常使用设备属性而非本节点
 - `const struct software_node *swnode` ：
 	- 功能含义
 - `void *controller_data`
@@ -240,7 +241,7 @@ struct spi_board_info {
 - `u16 chip_select` ：
 	- 功能含义：设备对应的CS引脚号
 	- 维护方：在DT/ACPI下由固件解析得到
-- `u32 mode` :
+- `u32 mode` ： ^znds47
 	- 功能含义：设备的SPI配置掩码，通常包含 `SPI_CPHA` 、 `SPI_CPOL` 等标志位
 	- 维护方：在DT/ACPI下由固件解析得到
 

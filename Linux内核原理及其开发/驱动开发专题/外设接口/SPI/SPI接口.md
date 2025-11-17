@@ -77,7 +77,7 @@ EXPORT_SYMBOL_GPL(spi_bus_type);
 - `reg` ：
 	- 功能含义：片选号(`CS index`)，与 `unit-address` 必须匹配，不匹配则dtc警告
 	- 数据类型： `uint32_t`，值域 $[0, 256]$
-其可选属性有：
+其可选属性有(<font color="#c00000">会配置到</font>[[Linux内核原理及其开发/内核源码探析/内核源码分析/include/spi/spi.h#^877sjn|spi_board_info]]的[[Linux内核原理及其开发/内核源码探析/内核源码分析/include/spi/spi.h#^znds47|mode成员]]中)：
 - `spi-cpol` ：
 	- 功能含义：SPI的反向时钟特性([[嵌入式基础/接口技术/SPI/SPI总线标准#^341ed0|CPOL]])
 	- 数据类型： `flag`
