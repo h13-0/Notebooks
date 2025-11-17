@@ -5631,26 +5631,24 @@ probe函数表示对指定设备进行探测，其返回值定义如下：
 	- `-EBUSY` ：请求的资源已被占用
 	- `-EPROBE_DEFER` ：<font color="#c00000">表示请求延迟探测</font>
 
-#### 17.5.3.2 设备模型层级与回调规定
+#### 17.5.3.2 设备模型层级与回调规定 ^4gz3xk
 
 明显地，上述 `device_driver` 对象通常需要嵌入到更高级的对象当中去，例如 `platform_driver` 、 `spi_driver` 等。
 
-而在Linux中一个常见的设计现象就是更高级设备模型通常会覆盖低级设备模型中的部分方法或属性，例如：
-
-`platform_device` 中有如下同名属性：
+而在Linux中一个常见的设计现象就是更高级设备模型通常会覆盖低级设备模型中的部分方法或属性，例如 `spi_driver` 的完整定义如下：
 
 ```C
-struct platform_driver {
-	int (*probe)(struct platform_device *);
-
-	/* ... */
-	int (*remove)(struct platform_device *);
-	...
-	void (*shutdown)(struct platform_device *);  
-	int (*suspend)(struct platform_device *, pm_message_t state);
+struct spi_driver {
+	const struct spi_device_id *id_table;
+	int			(*probe)(struct spi_device *spi);
+	void			(*remove)(struct spi_device *spi);
+	void			(*shutdown)(struct spi_device *spi);
+	struct device_driver	driver;
+};
 ```
 
-上述同名属性、函数的处理方式通常为<font color="#c00000">优先使用更高级的同名方法</font>：
+明显的，<font color="#c00000">其提供了部分基础驱动模型同名的方法</font>，<font color="#c00000">但又缺失了部分基础驱动模型的方法</font>(例如 `resume` 或 `pm.resume` )，那么针对这两个问题有如下的处理规则：
+1. 对于同名方法，其规则为<span style="background:#fff88f"><font color="#c00000">优先使用更高级的同名方法</font></span>，其在内核中的处理路径基本如下：
 
 ```C
 if (dev->bus && dev->bus->probe)
@@ -5659,8 +5657,7 @@ else if (drv->probe)
     return drv->probe(dev);
 ```
 
-也就是
-
+2. 对于缺失的方法，则默认使用基础模型中提供的方法。
 
 ### 17.5.4 类
 
