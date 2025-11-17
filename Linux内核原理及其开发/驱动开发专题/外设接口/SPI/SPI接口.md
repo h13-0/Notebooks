@@ -15,9 +15,28 @@ number headings: auto, first-level 1, max 6, 1.1
 
 # 3 内核设备模型及数据结构
 
+## 3.1 SPI设备模型
+
+在内核中，SPI总线被定义如下：
+
+```C
+const struct bus_type spi_bus_type = {
+	.name		= "spi",
+	.dev_groups	= spi_dev_groups,
+	.match		= spi_match_device,
+	.uevent		= spi_uevent,
+	.probe		= spi_probe,
+	.remove		= spi_remove,
+	.shutdown	= spi_shutdown,
+};
+EXPORT_SYMBOL_GPL(spi_bus_type);
+```
+
+### 3.1.1 设备匹配(match)
 
 
-## 3.1 
+
+
 
 
 # 4 设备树配置
