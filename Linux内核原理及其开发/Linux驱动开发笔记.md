@@ -5633,8 +5633,33 @@ probe函数表示对指定设备进行探测，其返回值定义如下：
 
 #### 17.5.3.2 设备模型层级与回调规定
 
-明显地，上述 `device_driver` 对象通常需要嵌入到更高级的对象当中去，例如 `platform` 、 `spi_driver` 等
+明显地，上述 `device_driver` 对象通常需要嵌入到更高级的对象当中去，例如 `platform_driver` 、 `spi_driver` 等。
 
+而在Linux中一个常见的设计现象就是更高级设备模型通常会覆盖低级设备模型中的部分方法或属性，例如：
+
+`platform_device` 中有如下同名属性：
+
+```C
+struct platform_driver {
+	int (*probe)(struct platform_device *);
+
+	/* ... */
+	int (*remove)(struct platform_device *);
+	...
+	void (*shutdown)(struct platform_device *);  
+	int (*suspend)(struct platform_device *, pm_message_t state);
+```
+
+上述同名属性、函数的处理方式通常为<font color="#c00000">优先使用更高级的同名方法</font>：
+
+```C
+if (dev->bus && dev->bus->probe)
+    return dev->bus->probe(dev);
+else if (drv->probe)
+    return drv->probe(dev);
+```
+
+也就是
 
 
 ### 17.5.4 类
