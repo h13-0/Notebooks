@@ -181,9 +181,14 @@ struct spi_driver {
 
 其成员：
 - `const struct spi_device_id *id_table` ：
-	- 功能含义：该驱动支持的设备名列表
-
-
+	- 功能含义：该驱动支持的设备名列表，成员定义可见[[Linux内核原理及其开发/内核源码探析/内核源码分析/include/mod_devicetable.h#^886i4y|spi_device_id]]。
+- `int (*probe)(struct spi_device *spi)` ：
+	- 功能含义：驱动 `probe` 回调
+- `void (*remove)(struct spi_device *spi)` ：
+	- 功能含义：驱动解绑回调，<font color="#c00000">需要对称注销</font> `probe` <font color="#c00000">中的资源</font>
+- `void (*shutdown)(struct spi_device *spi)` ：
+	- 功能含义：关机阶段回调，用于
+- 
 
 # spi_board_info ^877sjn
 
