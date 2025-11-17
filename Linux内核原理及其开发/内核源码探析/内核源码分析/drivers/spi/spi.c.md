@@ -5,19 +5,23 @@
 ```toc
 ```
 
+# spi_match_device
 
+版本：`6.10.0-rc1` 
+原代码范围：`374-395` 
+分析状态：✅/⌛ 
 
-版本：`${linux内核版本号}` % 格式要求见注1
-原代码范围：`xxx-xxx`    % 方便章节排序
-分析状态：✅/⌛ % ✅表示已处理完毕、⌛表示未处理完毕
-
-函数签名： `${函数完整签名}`
-- 功能简述： ^${anchor}
-	- 
+函数签名： `static int spi_match_device(struct device *dev, struct device_driver *drv)`
+- 功能简述： ^6sulsd 
+	- 判定一个SPI设备与SPI驱动是否匹配，按优先级依次考虑：
+		1. 用户覆盖
+		2. 设备树OF匹配
+		3. ACPI匹配
+		4. 驱动id_table表匹配
+		5. 名称匹配
 - 参数：
-	- `${参数1签名}` ：${功能含义}
-	- `${参数2签名}` ：${功能含义}
-	- ...
+	- `struct device *dev` ：${功能含义}
+	- `struct device_driver *drv` ：${功能含义}
 - 调用栈分析：
 	1. ${函数内部步骤1}
 	2. ${函数内部步骤2}
