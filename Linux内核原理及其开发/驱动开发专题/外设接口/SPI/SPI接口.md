@@ -34,9 +34,8 @@ EXPORT_SYMBOL_GPL(spi_bus_type);
 
 ### 3.1.1 设备匹配(match)
 
-
-
-
+[[Linux内核原理及其开发/内核源码探析/内核源码分析/drivers/spi/spi.c#spi_match_device 6sulsd|设备匹配函数]]功能简述如下：
+![[Linux内核原理及其开发/内核源码探析/内核源码分析/drivers/spi/spi.c#^4jla92]]
 
 
 # 4 设备树配置
