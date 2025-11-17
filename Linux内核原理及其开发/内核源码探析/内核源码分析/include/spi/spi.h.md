@@ -136,7 +136,7 @@ struct spi_device {
 
 版本：`6.10.0-rc1` 
 原代码范围：`1563-1636` 
-分析状态：✅/⌛ % ✅表示已处理完毕、⌛表示未处理完毕
+分析状态：⌛
 
 数据结构：
 
@@ -218,4 +218,16 @@ struct spi_board_info {
 ```
 
 其成员：
+- `char modalias[SPI_NAME_SIZE]` ：
+	- 功能含义：
+		- 设备的匹配名，用于驱动匹配或模块的自动加载
+		- 应与驱动的 `drv->name` 一致
+		- 在DT/ACPI模式下由固件节点派生，不需要手动配置
+- `const void *platform_data` ：
+	- 功能含义：
+		- 传统的传递给驱动的私有数据方法(`spi_device.dev.platform_data`)，在DT/ACPI场景下通常使用设备属性而非本节点
+- `const struct software_node *swnode` ：
+	- 功能含义
 - 
+
+
