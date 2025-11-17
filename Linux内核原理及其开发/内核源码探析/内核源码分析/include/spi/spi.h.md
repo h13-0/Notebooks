@@ -132,6 +132,56 @@ struct spi_device {
 ```
 
 
+
+# spi_driver
+
+版本：`6.10.0-rc1` <!--格式要求见注1-->
+原代码范围：`321-532`    <!--方便章节排序-->
+分析状态：⌛ <!--✅表示已处理完毕、⌛表示未处理完毕-->
+
+数据结构定义：
+
+```C
+/**
+ * struct spi_driver - Host side "protocol" driver
+ * @id_table: List of SPI devices supported by this driver
+ * @probe: Binds this driver to the SPI device.  Drivers can verify
+ *	that the device is actually present, and may need to configure
+ *	characteristics (such as bits_per_word) which weren't needed for
+ *	the initial configuration done during system setup.
+ * @remove: Unbinds this driver from the SPI device
+ * @shutdown: Standard shutdown callback used during system state
+ *	transitions such as powerdown/halt and kexec
+ * @driver: SPI device drivers should initialize the name and owner
+ *	field of this structure.
+ *
+ * This represents the kind of device driver that uses SPI messages to
+ * interact with the hardware at the other end of a SPI link.  It's called
+ * a "protocol" driver because it works through messages rather than talking
+ * directly to SPI hardware (which is what the underlying SPI controller
+ * driver does to pass those messages).  These protocols are defined in the
+ * specification for the device(s) supported by the driver.
+ *
+ * As a rule, those device protocols represent the lowest level interface
+ * supported by a driver, and it will support upper level interfaces too.
+ * Examples of such upper levels include frameworks like MTD, networking,
+ * MMC, RTC, filesystem character device nodes, and hardware monitoring.
+ */
+struct spi_driver {
+	const struct spi_device_id *id_table;
+	int			(*probe)(struct spi_device *spi);
+	void			(*remove)(struct spi_device *spi);
+	void			(*shutdown)(struct spi_device *spi);
+	struct device_driver	driver;
+};
+```
+
+其成员：
+- `${成员签名}` ：
+	- 功能含义：
+
+
+
 # spi_board_info ^877sjn
 
 版本：`6.10.0-rc1` 
