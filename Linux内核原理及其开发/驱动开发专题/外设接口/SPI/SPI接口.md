@@ -95,3 +95,7 @@ number headings: auto, first-level 1, max 6, 1.1
 - 进入 `/proc/device-tree/spi@${address}` ，检查从设备是否出现。
 
 # 5 软件接口
+
+
+
+
