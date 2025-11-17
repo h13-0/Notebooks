@@ -139,7 +139,7 @@ struct spi_device {
 # spi_driver
 
 版本：`6.10.0-rc1` <!--格式要求见注1-->
-原代码范围：`321-532`    <!--方便章节排序-->
+原代码范围：`321-532` <!--方便章节排序-->
 分析状态：⌛ <!--✅表示已处理完毕、⌛表示未处理完毕-->
 
 数据结构定义：
@@ -187,8 +187,10 @@ struct spi_driver {
 - `void (*remove)(struct spi_device *spi)` ：
 	- 功能含义：驱动解绑回调，<font color="#c00000">需要对称注销</font> `probe` <font color="#c00000">中的资源</font>
 - `void (*shutdown)(struct spi_device *spi)` ：
-	- 功能含义：关机阶段回调，用于
-- 
+	- 功能含义：关机阶段回调
+		- 用于系统关机、重启等场景<font color="#c00000">下让器件回到安全状态</font>，<font color="#c00000">而不是资源回收</font>
+- `struct device_driver driver` ：
+	- 功能含义：通用驱动程序对象
 
 # spi_board_info ^877sjn
 
