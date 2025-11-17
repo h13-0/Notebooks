@@ -91,4 +91,8 @@ number headings: auto, first-level 1, max 6, 1.1
 	- 功能含义：数据线宽属性，可选1/2/4/8，用于 dual/quad/octal 等[[嵌入式基础/接口技术/SPI/SPI总线标准#^b6tpvl|变种SPI]]
 	- 数据类型： `uint32_t`
 
+当修改完成后，即可使用如下方法检测从设备是否生效：
+- 进入 `/proc/device-tree/spi@${address}` ，检查从设备是否出现。
+
+
 # 5 软件接口
