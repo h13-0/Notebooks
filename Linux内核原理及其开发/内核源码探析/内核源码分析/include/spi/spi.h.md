@@ -131,7 +131,10 @@ struct spi_device {
 };
 ```
 
-
+其成员：
+- 
+- `char modalias[SPI_NAME_SIZE]` ： ^ga6pq3
+	- 
 
 # spi_driver
 
@@ -177,8 +180,8 @@ struct spi_driver {
 ```
 
 其成员：
-- `${成员签名}` ：
-	- 功能含义：
+- `const struct spi_device_id *id_table` ：
+	- 功能含义：该驱动支持的设备名列表
 
 
 
