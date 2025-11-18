@@ -366,6 +366,7 @@ compatible属性是<span style="background:#fff88f"><font color="#c00000">操作
 		- <span style="background:#fff88f"><font color="#c00000">请勿使用通配兼容型号来实现设备树</font></span>，例如 `"fsl,mpc8349-uart"` 不可写为 `"fsl,mpc83xx-uart"` 。因为：
 			1. 即使现在mpc83xx的所有型号都互相兼容，<font color="#c00000">但是不能保证该制造商<u>未来的</u>所有mpc83xx型号依旧会兼容该驱动程序</font>(通常来说，编写设备树的不一定是设备制造商自己。甚至设备制造商自己也无法做到向前兼容，例如如果遇到重大设计问题导致不得不改版等)。
 			2. `compatible` 的匹配规则是字符串完全一致，而非模糊匹配。
+5. <span style="background:#fff88f"><font color="#c00000">列表中最后一个元素必须以空节点结尾</font></span>，即 `{ }` 。
 
 <font color="#c00000">在compatible匹配通过后，会执行驱动的probe函数</font>。
 
