@@ -65,7 +65,7 @@ uart0: serial@10000000 {
 static const struct of_device_id uart_driver_ids[] = {
     { .compatible = "vendor,uart-2000" },  // 高优先级匹配
     { .compatible = "generic-uart" },      // 低优先级匹配
-    { /* Sentinel */ }
+    { /* Sentinel */ }                     // 必须以空节点结尾
 };
 ```
 
