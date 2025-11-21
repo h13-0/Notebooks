@@ -1,35 +1,57 @@
-<style>
-  pre[class*="language-"].line-numbers {
-    position: relative;
-    padding-left: 3.5em;
-    counter-reset: linenumber;
-  }
+<script>
+  (function () {
+    function mountGiscus() {
+      // 1. 找到正文容器
+      var container = document.querySelector(
+        ".markdown-preview-sizer.markdown-preview-section"
+      );
 
-  pre[class*="language-"].line-numbers > code {
-    position: relative;
-    display: block;
-  }
+      if (!container) {
+        console.warn("Giscus: 未找到正文容器 .markdown-preview-sizer.markdown-preview-section");
+        return;
+      }
 
-  pre[class*="language-"].line-numbers.line-numbers-rows {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 3em;
-    border-right: 1px solid var(--background-modifier-border);
-    pointer-events: none;
-    user-select: none;
-    text-align: right;
-    padding-right: 0.75em;
-    line-height: inherit;
-  }
+      // 避免重复挂载
+      if (document.querySelector(".giscus-container")) {
+        return;
+      }
 
-  pre[class*="language-"].line-numbers.line-numbers-rows > span {
-    display: block;
-  }
+      // 2. 创建一个包裹 Giscus 的 section
+      var wrapper = document.createElement("section");
+      wrapper.className = "giscus-container";
+      // 你可以自己加标题或分割线
+      // wrapper.innerHTML = "<hr/><h2>评论</h2>";
+      container.appendChild(wrapper);
 
-  pre[class*="language-"].line-numbers.line-numbers-rows > span::before {
-    content: counter(linenumber);
-    counter-increment: linenumber;
-    color: var(--text-faint);
-  }
-</style>
+      // 3. 创建 Giscus 的 script 标签
+      var s = document.createElement("script");
+      s.src = "https://giscus.app/client.js";
+      s.setAttribute("data-repo", "h13-0/NotebooksGiscus");
+      s.setAttribute("data-repo-id", "R_kgDOQaHX3A");
+      s.setAttribute("data-category", "Announcements");
+      s.setAttribute("data-category-id", "DIC_kwDOQaHX3M4CyCR8");
+      s.setAttribute("data-mapping", "pathname");
+      s.setAttribute("data-strict", "0");
+      s.setAttribute("data-reactions-enabled", "1");
+      s.setAttribute("data-emit-metadata", "0");
+      s.setAttribute("data-input-position", "bottom");
+      s.setAttribute("data-theme", "preferred_color_scheme");
+      s.setAttribute("data-lang", "zh-CN");
+      s.setAttribute("data-loading", "lazy");
+      s.setAttribute("crossorigin", "anonymous");
+      s.async = true;
+
+      // 让 Giscus 以 wrapper 作为父元素（iframe 会插在这里）
+      wrapper.appendChild(s);
+    }
+
+    // 关键点：这里不要只监听 DOMContentLoaded
+    //   - 如果 DOM 还在加载，就挂个监听
+    //   - 如果 DOM 已经是 complete/interactive，就直接跑
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", mountGiscus);
+    } else {
+      mountGiscus();
+    }
+  })();
+</script>
