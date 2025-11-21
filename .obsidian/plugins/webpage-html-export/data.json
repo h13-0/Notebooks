@@ -169,7 +169,7 @@
         "selector": "head",
         "type": "end"
       },
-      "sourcePath": "",
+      "sourcePath": "Resources\\webpage_export\\header.html",
       "includePath": "site-lib/html/custom-head.html"
     },
     "documentOptions": {
