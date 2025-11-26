@@ -250,6 +250,16 @@ struct spi_driver {
 - 注意事项：
 	- <span style="background:#fff88f"><font color="#c00000">该函数可能会休眠</font></span>，因此中断上下文中禁用
 
+# spi_w8r8
+
+
+
+# spi_w8r16
+
+
+
+
+
 
 
 # spi_board_info ^877sjn
