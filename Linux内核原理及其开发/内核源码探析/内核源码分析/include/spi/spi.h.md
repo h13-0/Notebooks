@@ -11,7 +11,10 @@
 原代码范围：`130-244` 
 分析状态：⌛
 
-数据结构：
+对象功能含义：
+- 该对象是SPI从设备在内核中的对象实例，用于操作对象和通信
+
+数据结构定义：
 
 ```C
 /**
@@ -132,9 +135,15 @@ struct spi_device {
 ```
 
 其成员：
-- 
-- `char modalias[SPI_NAME_SIZE]` ： ^ga6pq3
+- `struct device dev` ：
+	- 功能含义：标准设备模型成员
+- `struct spi_controller *controller` ：
+	- 功能含义：指向设备所属的SPI控制器
+- `u8 chip_select[SPI_CS_CNT_MAX]` ：
+	- 功能含义：
 	- 
+- `char modalias[SPI_NAME_SIZE]` ： ^ga6pq3
+	- 功能含义：
 
 # spi_driver
 
@@ -198,8 +207,8 @@ struct spi_driver {
 原代码范围：`1422-443` <!--方便章节排序-->
 分析状态：⌛ <!--✅表示已处理完毕、⌛表示未处理完毕-->
 
-函数签名： `${函数完整签名}`
-- 功能简述： ^${anchor}
+函数签名： `int spi_write(struct spi_device *spi, const void *buf, size_t len)`
+- 功能简述： ^43qc8t
 	- 
 - 参数：
 	- `${参数1签名}` ：${功能含义}
