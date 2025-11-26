@@ -212,26 +212,24 @@ struct spi_driver {
 - `struct device_driver driver` ：
 	- 功能含义：通用驱动程序对象
 
-# spi_write
+# spi_write ^mrzeek
 
 版本：`6.10.0-rc1` <!--格式要求见注1-->
 原代码范围：`1422-443` <!--方便章节排序-->
-分析状态：⌛ <!--✅表示已处理完毕、⌛表示未处理完毕-->
+分析状态：✅ <!--✅表示已处理完毕、⌛表示未处理完毕-->
 
 函数签名： `int spi_write(struct spi_device *spi, const void *buf, size_t len)`
 - 功能简述： ^43qc8t
-	- 
+	- 向spi设备中写入指定长度的数据
 - 参数：
-	- `${参数1签名}` ：${功能含义}
-	- `${参数2签名}` ：${功能含义}
-	- ...
+	- `struct spi_device *spi` ：目标SPI从设备指针
+	- `const void *buf` ：数据所在缓冲区
+	- `size_t len` ：要写入的<font color="#c00000">字节数</font>(而非word数)
 - 调用栈分析：
-	1. ${函数内部步骤1}
-	2. ${函数内部步骤2}
-	3. ...
-	4. 调用\${其他linux内核函数}，功能简述：\${引用对应函数调用的obsidian_anchor}
-	5. ...
-
+	1. 实例化要传输的数据对象(`struct spi_transfer`)
+	2. 调用并返回 `spi_sync_transfer`
+- 注意事项：
+	- <span style="background:#fff88f"><font color="#c00000">该函数可能会休眠</font></span>，因此中断上下文中禁用
 
 # spi_board_info ^877sjn
 
