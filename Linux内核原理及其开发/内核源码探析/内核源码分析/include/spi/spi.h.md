@@ -231,6 +231,27 @@ struct spi_driver {
 - 注意事项：
 	- <span style="background:#fff88f"><font color="#c00000">该函数可能会休眠</font></span>，因此中断上下文中禁用
 
+# spi_read ^4zl7vy
+
+版本：`6.10.0-rc1` <!--格式要求见注1-->
+原代码范围：`1445-1466` <!--方便章节排序-->
+分析状态：✅ <!--✅表示已处理完毕、⌛表示未处理完毕-->
+
+函数签名： `int spi_read(struct spi_device *spi, void *buf, size_t len)`
+- 功能简述： ^${anchor}
+	- 
+- 参数：
+	- `struct spi_device *spi` ：目标SPI从设备指针
+	- `void *buf` ：数据所在缓冲区
+	- `size_t len` ：要读取的<font color="#c00000">字节数</font>(而非word数)
+- 调用栈分析：
+	1. 实例化要传输的数据对象(`struct spi_transfer`)
+	2. 调用并返回 `spi_sync_transfer`
+- 注意事项：
+	- <span style="background:#fff88f"><font color="#c00000">该函数可能会休眠</font></span>，因此中断上下文中禁用
+
+
+
 # spi_board_info ^877sjn
 
 版本：`6.10.0-rc1` 
