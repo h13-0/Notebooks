@@ -19,9 +19,7 @@ number headings: auto, first-level 1, max 6, 1.1
 内核模型、设备树配置等内容可见笔记[[../../Linux设备模型/SPI总线/SPI总线模型|SPI总线模型]]。
 # 4 软件接口
 
-
-
-[[Linux内核原理及其开发/内核源码探析/内核源码分析/include/spi/spi.h#^j2uocs|spi设备对象]]
+本章节软件接口均是基于[[Linux内核原理及其开发/内核源码探析/内核源码分析/include/spi/spi.h#^j2uocs|spi设备对象]]进行操作。
 
 
 
