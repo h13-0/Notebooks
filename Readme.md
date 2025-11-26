@@ -33,5 +33,7 @@
 
 # 声明
 
-自用笔记，如有错误请提issue。  
+自用笔记，错误反馈渠道：
+- [Github issue](https://github.com/h13-0/Notebooks/issues)
+- [Web端](http://notebooks.h13.tech/)对应页面评论区
 <!--<font color="#ffffff">菜鸡的一个小笔记</font>-->
