@@ -140,10 +140,21 @@ struct spi_device {
 - `struct spi_controller *controller` ：
 	- 功能含义：指向设备所属的SPI控制器
 - `u8 chip_select[SPI_CS_CNT_MAX]` ：
+	- 功能含义：配合 `cs_index_mask` 成员实现多CS片选机制
+	- 版本演化历史：
+		- 在老内核中只有单个片选号，而新内核中的设计支持了多片选号/并联Flash的支持
+- `u8 bits_per_word` ：
+	- 功能含义：一个 `word` 有多少位
+		- 其常见值有：
+			- `0` ：默认8位
+			- `8、16、32` ：对应位数
+- `bool rt` ：
 	- 功能含义：
-	- 
 - `char modalias[SPI_NAME_SIZE]` ： ^ga6pq3
 	- 功能含义：
+- 
+- `u32 cs_index_mask : SPI_CS_CNT_MAX;`
+
 
 # spi_driver
 
