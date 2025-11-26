@@ -28,3 +28,4 @@ number headings: auto, first-level 1, max 6, 1.1
 
 ## 4.2 读取若干字节(spi_read)
 
+[[Linux内核原理及其开发/内核源码探析/内核源码分析/include/spi/spi.h#^4zl7vy]]
