@@ -238,7 +238,7 @@ struct spi_driver {
 分析状态：✅ <!--✅表示已处理完毕、⌛表示未处理完毕-->
 
 函数签名： `int spi_read(struct spi_device *spi, void *buf, size_t len)`
-- 功能简述： ^${anchor}
+- 功能简述： ^468aai
 	- 从spi设备中读取指定长度的数据
 - 参数：
 	- `struct spi_device *spi` ：目标SPI从设备指针
@@ -250,27 +250,26 @@ struct spi_driver {
 - 注意事项：
 	- <span style="background:#fff88f"><font color="#c00000">该函数可能会休眠</font></span>，因此中断上下文中禁用
 
-# spi_w8r8
+# spi_w8r8 ^yvj6l7
 
 版本：`6.10.0-rc1` <!--格式要求见注1-->
 原代码范围：`1473-1493` <!--方便章节排序-->
-分析状态：⌛ <!--✅表示已处理完毕、⌛表示未处理完毕-->
+分析状态：✅ <!--✅表示已处理完毕、⌛表示未处理完毕-->
 
 函数签名： `ssize_t spi_w8r8(struct spi_device *spi, u8 cmd)`
-- 功能简述： ^${anchor}
-	- 
+- 功能简述： ^dml6vi
+	- 向指定设备写8字节，随后读8字节，并通过返回值返回(通常用于寄存器读取)
 - 参数：
-	- `${参数1签名}` ：${功能含义}
-	- `${参数2签名}` ：${功能含义}
-	- ...
+	- `struct spi_device *spi` ：目标SPI从设备指针
+	- `u8 cmd` ：要写入的8bit cmd数据
+- 返回值：
+	- 当<font color="#c00000">返回值小于0时</font>，<font color="#c00000">操作失败</font>
+	- 返回值大于0时，<font color="#c00000">返回值即为读取到的数据值</font>
 - 调用栈分析：
-	1. ${函数内部步骤1}
-	2. ${函数内部步骤2}
-	3. ...
-	4. 调用\${其他linux内核函数}，功能简述：\${引用对应函数调用的obsidian_anchor}
-	5. ...
-
-
+	1. 实例化要传输的数据对象(`struct spi_transfer`)
+	2. 调用并返回 `spi_sync_transfer`
+- 注意事项：
+	- <span style="background:#fff88f"><font color="#c00000">该函数可能会休眠</font></span>，因此中断上下文中禁用
 
 # spi_w8r16
 
