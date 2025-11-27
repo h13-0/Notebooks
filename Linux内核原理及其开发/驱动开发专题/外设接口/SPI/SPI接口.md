@@ -38,7 +38,10 @@ number headings: auto, first-level 1, max 6, 1.1
 可见章节[[Linux内核原理及其开发/内核源码探析/内核源码分析/include/spi/spi.h#^yvj6l7|spi_w8r8]]：
 ![[Linux内核原理及其开发/内核源码探析/内核源码分析/include/spi/spi.h#spi_w8r8 yvj6l7]]
 
+## 4.4 写入8字节随后读取16字节(spi_w8r16)
+
+该方法通常用于寄存器读取。
+可见章节[[Linux内核原理及其开发/内核源码探析/内核源码分析/include/spi/spi.h#^975e58|spi_w8r16]]：
+![[Linux内核原理及其开发/内核源码探析/内核源码分析/include/spi/spi.h#spi_w8r16 975e58]]
 
 
-
-[[Linux内核原理及其开发/内核源码探析/内核源码分析/include/spi/spi.h#^975e58]]
