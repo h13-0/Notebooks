@@ -15,15 +15,10 @@
 函数签名： `void usleep_range(unsigned long min, unsigned long max)`
 - 功能简述： ^rbwl1s
 	- 休眠一段时间，时长为指定范围，<font color="#c00000">单位微秒</font>
-	- 具体休眠时长取决于diao du q
+	- 具体休眠时长取决于调度器与系统负载，无严格数学分布
 - 参数：
 	- `unsigned long min` ：最短休眠时长
 	- `unsigned long max` ：期望最大休眠时长(不严格保证)
-	- ...
 - 调用栈分析：
-	1. ${函数内部步骤1}
-	2. ${函数内部步骤2}
-	3. ...
-	4. 调用\${其他linux内核函数}，功能简述：\${引用对应函数调用的obsidian_anchor}
-	5. ...
+	1. 调用 `usleep_range_state`
 

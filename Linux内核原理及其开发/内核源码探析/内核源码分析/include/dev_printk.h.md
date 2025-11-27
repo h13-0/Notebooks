@@ -21,3 +21,5 @@
 	- `...` ：可变参数列表
 - 调用栈分析：
 	1. 宏调用 `dev_printk_index_wrap`
+- 版本演化历史：
+	- 该函数曾定义于 `linux/device.h`
