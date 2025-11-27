@@ -5,6 +5,27 @@
 ```toc
 ```
 
+# mdelay
+
+版本：`6.10.0-rc1` <!--格式要求见注1-->
+原代码范围：`44-46` <!--方便章节排序-->
+分析状态：⌛ <!--✅表示已处理完毕、⌛表示未处理完毕-->
+
+函数签名： `#define mdelay(n)`
+- 功能简述： ^he4myr
+	- <font color="#c00000">忙等</font>指定毫秒数。<span style="background:#fff88f"><font color="#c00000">需要注意</font></span>，在Linux中：
+		- `delay` 系函数为<font color="#c00000">忙等</font>，不会休眠，不会让出CPU。可在
+		- `sleep` 系函数为<font color="#c00000">休眠</font>，
+- 参数：
+	- `n` ：要等待的整数毫秒数
+- 调用栈分析：
+	1. ${函数内部步骤1}
+	2. ${函数内部步骤2}
+	3. ...
+	4. 调用\${其他linux内核函数}，功能简述：\${引用对应函数调用的obsidian_anchor}
+	5. ...
+- 版本演化历史：
+
 
 # usleep_range
 
