@@ -13,18 +13,15 @@
 
 函数签名： `#define mdelay(n)`
 - 功能简述： ^he4myr
-	- <font color="#c00000">忙等</font>指定毫秒数。<span style="background:#fff88f"><font color="#c00000">需要注意</font></span>，在Linux中：
-		- `delay` 系函数为<font color="#c00000">忙等</font>，不会休眠，不会让出CPU。可在
-		- `sleep` 系函数为<font color="#c00000">休眠</font>，
+	- <span style="background:#fff88f"><font color="#c00000">忙等</font></span>指定毫秒数。<span style="background:#fff88f"><font color="#c00000">需要注意</font></span>，在Linux中：
+		- `delay` 系函数为<font color="#c00000">忙等</font>，不会休眠，不会让出CPU。<span style="background:#fff88f"><font color="#c00000">可在</font></span>[[Linux驱动开发笔记#^fw453g|中断上下文]]<span style="background:#fff88f"><font color="#c00000">中使用</font></span>
+		- `sleep` 系函数为<font color="#c00000">休眠</font>，不可在原子或中断上下文中使用。
 - 参数：
-	- `n` ：要等待的整数毫秒数
+	- `n` ：要等待的整数毫秒数，实际等待时间可能略多<font color="#c00000">而不会略少</font>
 - 调用栈分析：
-	1. ${函数内部步骤1}
-	2. ${函数内部步骤2}
-	3. ...
-	4. 调用\${其他linux内核函数}，功能简述：\${引用对应函数调用的obsidian_anchor}
-	5. ...
-- 版本演化历史：
+	1. 三元运算符判断+执行 `udelay` 
+
+
 
 
 # usleep_range
