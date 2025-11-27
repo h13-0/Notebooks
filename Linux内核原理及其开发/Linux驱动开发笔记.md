@@ -3114,7 +3114,7 @@ void ssleep(unsigned int seconds);
 1. 对于没有提供外部中断功能的硬件设备，可以使用内核定时器定时轮询。
 2. 在完成 `fops->close` 等操作时，使用内核定时器异步完成。
 
-<span style="background:#fff88f"><font color="#c00000">内核定时器是一种软件中断</font></span>，<font color="#c00000">这些代码位于中断上下文中而非进程上下文</font>，此时的注意事项可见[[Linux驱动开发笔记#^fw453g]]：
+<span style="background:#fff88f"><font color="#c00000">内核定时器是一种软件中断</font></span>，<font color="#c00000">这些代码位于中断上下文中而非进程上下文</font>，此时的注意事项可见[[Linux驱动开发笔记#^fw453g|中断上下文的注意事项]]：
 ![[Linux驱动开发笔记#13 1 2 中断上下文中的注意事项 fw453g]]
 
 此外内核还提供了一些API可以用于查询当前上下文的状态，API及不同上下文的注意事项可见[[Linux驱动开发笔记#^h05ata|当前上下文状态与注意事项]]。
@@ -4064,6 +4064,7 @@ in_interrupt();
 1. <span style="background:#fff88f"><font color="#c00000">不允许访问用户空间</font></span>，因为不在进程上下文中。
 2. 用于指向当前进程的 `current` 指针也无效。
 3. 不能执行休眠或调度，不可调用 `schedule` 或 `wait_event` 等。也不能调用可能引起休眠的函数或信号量，例如 `kmalloc(..., GFP_KERNEL)` 。
+4. 但是可以使用忙等。
 
 ### 13.1.3 查询当前是否在原子上下文中
 
