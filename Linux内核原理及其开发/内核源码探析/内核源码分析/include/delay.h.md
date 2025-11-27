@@ -21,7 +21,26 @@
 - 调用栈分析：
 	1. 三元运算符判断+执行 `udelay` 
 
+# ndelay
 
+版本：`6.10.0-rc1` <!--格式要求见注1-->
+原代码范围：`50-54` <!--方便章节排序-->
+分析状态：⌛ <!--✅表示已处理完毕、⌛表示未处理完毕-->
+
+函数签名： `void ndelay(unsigned long x)`
+- 功能简述： ^a2f3jf
+	- <font color="#c00000">忙等</font>指定纳秒。<span style="background:#fff88f"><font color="#c00000">需要注意</font></span>，在Linux中：
+		- `delay` 系函数为<font color="#c00000">忙等</font>，不会休眠，不会让出CPU。<span style="background:#fff88f"><font color="#c00000">可在</font></span>[[Linux驱动开发笔记#^fw453g|中断上下文]]<span style="background:#fff88f"><font color="#c00000">中使用</font></span>
+		- `sleep` 系函数为<font color="#c00000">休眠</font>，不可在原子或中断上下文中使用。
+- 参数：
+	- `unsigned long x` ：要等待的纳秒数，实际等待时间可能略多<font color="#c00000">而不会略少</font>
+- 调用栈分析：
+	1. 向上取整 $x/1000$ 
+	2. 调用 `udelay` 等待对应微秒数
+
+# msleep
+
+该函数定义详见 ${定义处} 。
 
 
 # usleep_range
