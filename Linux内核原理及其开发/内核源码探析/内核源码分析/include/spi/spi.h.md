@@ -159,23 +159,30 @@ struct spi_device {
 
 版本：`6.10.0-rc1` <!--格式要求见注1-->
 原代码范围：`280-283` <!--方便章节排序-->
-分析状态：⌛ <!--✅表示已处理完毕、⌛表示未处理完毕-->
+分析状态：✅ <!--✅表示已处理完毕、⌛表示未处理完毕-->
 
 函数签名： `void spi_set_drvdata(struct spi_device *spi, void *data)`
 - 功能简述： ^zppwba
-	- 
+	- 将私有数据指针寄存到 `spi->dev` 标准设备的 `driver_data` 成员中
 - 参数：
-	- `${参数1签名}` ：${功能含义}
-	- `${参数2签名}` ：${功能含义}
-	- ...
+	- `struct spi_device *spi` ：SPI设备指针
+	- `void *data` ：要绑定的驱动私有数据
 - 调用栈分析：
-	1. ${函数内部步骤1}
-	2. ${函数内部步骤2}
-	3. ...
-	4. 调用\${其他linux内核函数}，功能简述：\${引用对应函数调用的obsidian_anchor}
-	5. ...
-- 版本演化历史：
+	1. 直接调用 `dev_set_drvdata(&spi->dev, data)` ，将数据寄存到 `spi->dev->driver_data`
 
+# spi_get_drvdata
+
+版本：`6.10.0-rc1` <!--格式要求见注1-->
+原代码范围：`280-283` <!--方便章节排序-->
+分析状态：⌛ <!--✅表示已处理完毕、⌛表示未处理完毕-->
+
+函数签名： `void *spi_get_drvdata(const struct spi_device *spi)`
+- 功能简述： ^h36ubr
+	- 从SPI设备指针中提取驱动私有数据(即 `spi->dev->driver_data`)
+- 参数：
+	- `const struct spi_device *spi` ：SPI设备指针
+- 调用栈分析：
+	1. 调用并返回 `dev_get_drvdata`
 
 
 # spi_driver
