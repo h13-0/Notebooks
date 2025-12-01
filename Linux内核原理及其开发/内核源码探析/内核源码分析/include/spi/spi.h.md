@@ -174,7 +174,7 @@ struct spi_device {
 
 版本：`6.10.0-rc1` <!--格式要求见注1-->
 原代码范围：`280-283` <!--方便章节排序-->
-分析状态：⌛ <!--✅表示已处理完毕、⌛表示未处理完毕-->
+分析状态：✅ <!--✅表示已处理完毕、⌛表示未处理完毕-->
 
 函数签名： `void *spi_get_drvdata(const struct spi_device *spi)`
 - 功能简述： ^h36ubr
@@ -182,8 +182,7 @@ struct spi_device {
 - 参数：
 	- `const struct spi_device *spi` ：SPI设备指针
 - 调用栈分析：
-	1. 调用并返回 `dev_get_drvdata`
-
+	1. 调用并返回 `dev_get_drvdata` ，从而读取 `spi->dev->driver_data`
 
 # spi_driver
 
