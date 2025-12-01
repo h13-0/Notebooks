@@ -155,6 +155,28 @@ struct spi_device {
 - 
 - `u32 cs_index_mask : SPI_CS_CNT_MAX;`
 
+# spi_set_drvdata
+
+版本：`6.10.0-rc1` <!--格式要求见注1-->
+原代码范围：`280-283` <!--方便章节排序-->
+分析状态：⌛ <!--✅表示已处理完毕、⌛表示未处理完毕-->
+
+函数签名： `void spi_set_drvdata(struct spi_device *spi, void *data)`
+- 功能简述： ^zppwba
+	- 
+- 参数：
+	- `${参数1签名}` ：${功能含义}
+	- `${参数2签名}` ：${功能含义}
+	- ...
+- 调用栈分析：
+	1. ${函数内部步骤1}
+	2. ${函数内部步骤2}
+	3. ...
+	4. 调用\${其他linux内核函数}，功能简述：\${引用对应函数调用的obsidian_anchor}
+	5. ...
+- 版本演化历史：
+
+
 
 # spi_driver
 
