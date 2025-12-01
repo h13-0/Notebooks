@@ -13,15 +13,12 @@
 
 函数签名： `void *devm_kzalloc(struct device *dev, size_t size, gfp_t gfp)`
 - 功能简述： ^vkk5ej
-	- 为设备对象分配零内存
+	- 为设备对象分配零内存，<font color="#c00000">并将设备挂载到链表中</font>，<span style="background:#fff88f"><font color="#c00000">当设备释放或驱动解绑时自动释放内存</font></span>
+		- 若使用 `kzalloc` ，<font color="#c00000">则需要在上述时机手动</font> `kfree` 。此外无区别
+	- 其可以为私有设备类型分配内存，只需要将 `struct device *dev` 成员放到首个位置即可
 - 参数：
-	- `${参数1签名}` ：${功能含义}
-	- `${参数2签名}` ：${功能含义}
-	- ...
+	- `struct device *dev` ：${功能含义}
+	- `size_t size` ：${功能含义}
+	- `gfp_t gfp`
 - 调用栈分析：
-	1. ${函数内部步骤1}
-	2. ${函数内部步骤2}
-	3. ...
-	4. 调用\${其他linux内核函数}，功能简述：\${引用对应函数调用的obsidian_anchor}
-	5. ...
-- 版本演化历史：
+	1. 调用并返回 `devm_kmalloc` ，并额外附加至零标记
