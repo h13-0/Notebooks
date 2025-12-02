@@ -27,7 +27,7 @@ enum v4l2_frmsizetypes {
 
 其成员：
 - `V4L2_FRMSIZE_TYPE_DISCRETE` ：
-	- 功能含义：离散分辨率枚举，用于指示当前枚举类型
+	- 功能含义：离散分辨率枚举，用于指示当前枚举类型为离散值
 - `V4L2_FRMSIZE_TYPE_CONTINUOUS` ：
 	- 功能含义：连续分辨率枚举
 - `V4L2_FRMSIZE_TYPE_STEPWISE` ：
