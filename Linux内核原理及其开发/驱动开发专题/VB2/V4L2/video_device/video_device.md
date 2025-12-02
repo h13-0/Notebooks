@@ -935,39 +935,8 @@ enum vfl_devnode_type {
 
 ### 3.3.1 数据结构
 
-其数据结构定义如下：
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+其数据结构定义见章节[[Linux内核原理及其开发/内核源码探析/内核源码分析/include/v4l2-dev.h#^bd1jcw|video_device]]：
+![[Linux内核原理及其开发/内核源码探析/内核源码分析/include/v4l2-dev.h#video_device bd1jcw]]
 
 ### 3.3.2 相关API
 
