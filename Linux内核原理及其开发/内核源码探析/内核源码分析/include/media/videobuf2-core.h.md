@@ -402,4 +402,7 @@ private成员(<font color="#c00000">驱动只读访问或禁止访问</font>)：
 	- 驱动访问：可直接读取，或通过 `vb2_queue_init_name()` 间接设置
 
 版本演化历史：
-- 在   之前，
+- 在 `4.8-rc1` 之前，`struct vb2_queue` 中并没有 `struct device *dev` 成员。此时可依赖成员 `void *drv_priv` 。
+
+
+
