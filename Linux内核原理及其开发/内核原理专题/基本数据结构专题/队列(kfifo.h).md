@@ -85,6 +85,8 @@ unsigned int next_index = index + 1 < size ? 0 : index + 1;
 
 那么明显的位掩码的效率更高。
 
+<font color="#c00000">需要注意</font>：`kfifo` <span style="background:#fff88f"><font color="#c00000">并非线程安全</font></span>
+
 # 3 相关API
 
 ## 3.1 声明fifo(DECLARE_KFIFO)
