@@ -25,3 +25,6 @@
 	- `gfp_t gfp` ：内存约束标志位
 - 调用栈分析：
 	1. 调用并返回 `devm_kmalloc` ，并在 `gfp` 中额外附加至零标记
+
+注：
+- <font color="#c00000">多次</font> `devm_kzalloc` <font color="#c00000">可以指向同一个</font> `dev` 
