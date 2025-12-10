@@ -22,3 +22,12 @@ MPEG是指动态图像专家组，即Moving Picture Experts Group，其隶属于
 3. MPEG-4(ISO/IEC 14496)：
 	- 
 	- 知名协议有：H.264(AVC)
+4. MPEG-7(ISO/IEC 15938)：
+	- 
+5. MPEG-21(ISO/IEC 21000)：
+6. MPEG-H
+	- 知名协议有：H.265
+7. MPEG-D
+8. MPEG-I
+9. MPEG-G
+10. MPEG-5
