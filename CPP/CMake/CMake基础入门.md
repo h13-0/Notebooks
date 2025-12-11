@@ -43,12 +43,17 @@ number headings: auto, first-level 1, max 6, 1.1
 
 ```CMake
 set(CACHE{<variable>} [TYPE <type>] [HELP <helpstring>...] [FORCE] VALUE [<value>...])
+
+list(FILTER <list> {INCLUDE | EXCLUDE} REGEX <regex>)
 ```
 
-其约定为：
+其文档约定为：
 - 尖括号占位符为必填参数
 - 省略号 `...` 表示前面的参数可以重复多个
 - 方括号占位符为可选参数
+- 花括号 `{ }` 则有如下的用法：
+	- `{INCLUDE | EXCLUDE}` 表示<font color="#c00000">必须且单选</font>(互斥)
+	- `{A B}` 表示顺序序列，
 
 # 3 变量及基本操作
 
@@ -224,9 +229,10 @@ Ordering
 set(MY_LIST a;b;c)
 list(JOIN MY_LIST " -> " RESULT) # 则 RESULT = "a -> b -> c"
 ```
-- `list(SUBLIST)` 为切片操作
-- `list(FIND)` 为寻找操作，当没有找到时会返回 `-1`
-
+- `list(SUBLIST)` 为<font color="#c00000">切片操作</font>
+- `list(FIND)` 为<font color="#c00000">查找操作</font>，当没有找到时会返回 `-1`
+- `list(FILTER)` 为<font color="#c00000">正则筛选功能</font>，选择 `INCLUDE` 或 `EXCLUDE` 进行筛选
+- `list(TRANSFORM)` 
 
 
 ## 3.3 数学运算()
