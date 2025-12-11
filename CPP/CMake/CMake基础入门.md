@@ -8,7 +8,33 @@ number headings: auto, first-level 1, max 6, 1.1
 ```toc
 ```
 
-# 2 变量
+# 2 基本规则
+
+## 2.1 大小写规则
+
+在CMake中，<font color="#c00000">不区分大小写</font>的有：
+- 函数/命令
+而<span style="background:#fff88f"><font color="#c00000">应当</font></span><font color="#c00000">区分大小写</font>的有：
+- 变量名(严格区分)
+- 关键字(大部分不区分)
+
+注：
+1. CMake的大多数关键字都大小写不敏感，但是/虽然：
+	- 部分例如 `STATUS` 的关键字依旧敏感
+	- 新版本的CMake放宽了部分关键字的大小写限制
+	<font color="#c00000">因此为了安全性和可读性</font>，<span style="background:#fff88f"><font color="#c00000">需要始终保持大写</font></span>。
+
+## 2.2 变量名规则
+
+在CMake中，变量名
+
+
+
+注：
+1. 变量名可以包含空格，只不过后续使用该变量名时必须加双引号 `""` 或者加转义符 `\ `
+
+
+# 3 变量
 
 CMake按变量的作用域可以分为：
 - 普通变量：
@@ -56,31 +82,34 @@ CMake按变量的作用域可以分为：
 		- 定义时<font color="#c00000">必须携带</font> `CACHE` <font color="#c00000">关键字</font>
 - 数字类型：<font color="#c00000">看起来像数字的字符串</font>，可以通过 `math(EXPR ...)` 命令进行计算
 
-### 2.1.1 变量定义(set&unset)
+## 3.1 变量定义(set&unset)
+
+在CMake中，变量定义主要通过 `set` 函数定义，其形式为：
+
+```CMake
+set(<variable> <value>... [PARENT_SCOPE])
+```
 
 
 
-### 2.1.2 列表操作
-
-
-
-
-### 2.1.3 数学运算()
-
-
-
-
-
+## 3.2 列表操作
 
 
 
 
+## 3.3 数学运算()
 
-# 3 关键字
 
-需要注意，CMake的大多数关键字都大小写不敏感，但是/虽然：
-- 部分例如 `STATUS` 的关键字依旧敏感
-- 新版本的CMake放宽了部分关键字的大小写限制
-<font color="#c00000">因此为了安全性和可读性</font>，<span style="background:#fff88f"><font color="#c00000">需要始终保持大写</font></span>。
+
+
+
+
+
+
+
+
+# 4 关键字
+
+
 
 
