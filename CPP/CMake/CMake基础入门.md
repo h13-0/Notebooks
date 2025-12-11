@@ -55,7 +55,7 @@ list(FILTER <list> {INCLUDE | EXCLUDE} REGEX <regex>)
 	- `{INCLUDE | EXCLUDE}` 表示<font color="#c00000">必须且单选</font>(互斥)
 	- `{A B}` 表示<font color="#c00000">顺序序列</font>，必须先写 `A` 再写 `B`
 
-# 3 变量及基本操作
+# 3 变量、宏
 
 CMake按变量的作用域可以分为：
 - 普通变量：
@@ -108,18 +108,18 @@ CMake按变量的作用域可以分为：
 
 CMake中有如下前两种变量作用域：
 - 目录作用域： ^2d7hmf
-	- 每使用 `add_subdirectory` 添加一个目录时，都会创建一个新的目录作用域
+	- 每使用 `add_subdirectory` 添加一个目录时，都会创建一个新的目录作用域：
+		- 由于 `add_subdirectory` 时，目标目录必须包含 `CMakeLists.txt` ，因此直接定义在 `CMakeLists.txt` 中的变量即为目录作用域变量
 	- 目录继承特性：
 		- 所有父目录的普通变量均会被复制一份到子目录(即<font color="#c00000">副本</font>)
-		- 而<font color="#c00000">子目录对副本的修改不会影响到父目录中</font>
+		- 而<font color="#c00000">子目录对副本的修改不会影响到父目录中</font>，除非使用 `PARENT_SCOPE` 关键字
 - 函数作用域： ^i116pd
 	- 每次定义并调用一个函数时，会产生函数作用域，类似于局部变量。
 	- 特性：
-		- 
+		- 函数内部可以读取调用者拥有的变量，<font color="#c00000">访问的也是副本</font>
+		- 当需要修改外部变量时，也必须显式使用 `PARENT_SCOPE` 关键字
 
 不过需要注意的是，宏(`macro`)无作用域，其本质与C语言中的宏一致，为文本替换。
-
-
 
 ## 3.2 变量定义(set&unset)
 
@@ -261,6 +261,20 @@ list(JOIN MY_LIST " -> " RESULT) # 则 RESULT = "a -> b -> c"
 ## 3.4 数学运算()
 
 
+## 3.5 宏(macro)
+
+在CMake中，宏(`macro`)的基本性质与C语言中的宏类似，为文本替换。
+
+
+其使用方法如下：
+
+```CMake
+macro(<name> [<arg1> ...])
+  <commands>
+endmacro()
+```
+
+不过通常来说要避免使用宏，因此会读即可。
 
 # 4 流程控制
 
@@ -312,6 +326,10 @@ if(${var2}) # 即 if(var1)，也为FALSE
 3. 二元测试符
 4. 一元逻辑运算符 `NOT`
 5. 二元逻辑运算符 `AND` 和 `OR` ，从左到右，无短路
+
+
+
+
 
 # 5 关键字
 
