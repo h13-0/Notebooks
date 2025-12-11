@@ -64,8 +64,8 @@ CMake按变量的作用域可以分为：
 	- 访问方式：通过 `${变量名}` 访问
 	- 生命周期：仅在当前CMake处理过程中存在，CMake结束后消失
 	- 作用域：总体类似于C语言函数：
-		- 目录作用域：在当前目录及子目录存在
-		- 函数作用域：仅可在函数中访问<font color="#d8d8d8">(除非使用 <code>PARENT_SCOPE</code> 关键字)</font>
+		- [[CPP/CMake/CMake基础入门#^2d7hmf|目录作用域]]：在当前目录及子目录存在
+		- [[CPP/CMake/CMake基础入门#^i116pd|函数作用域]]：仅可在函数中访问<font color="#d8d8d8">(除非使用 <code>PARENT_SCOPE</code> 关键字)</font>
 - 缓存变量：
 	- 存储位置：构建目录下 `CMakeCache.txt` 文件中，在多次CMake之间是持久化的
 	- 定义方式：
@@ -104,7 +104,24 @@ CMake按变量的作用域可以分为：
 		- 定义时<font color="#c00000">必须携带</font> `CACHE` <font color="#c00000">关键字</font>
 - 数字类型：<font color="#c00000">看起来像数字的字符串</font>，可以通过 `math(EXPR ...)` 命令进行计算
 
-## 3.1 变量定义(set&unset)
+## 3.1 变量作用域
+
+CMake中有如下前两种变量作用域：
+- 目录作用域： ^2d7hmf
+	- 每使用 `add_subdirectory` 添加一个目录时，都会创建一个新的目录作用域
+	- 目录继承特性：
+		- 所有父目录的普通变量均会被复制一份到子目录(即<font color="#c00000">副本</font>)
+		- 而<font color="#c00000">子目录对副本的修改不会影响到父目录中</font>
+- 函数作用域： ^i116pd
+	- 每次定义并调用一个函数时，会产生函数作用域，类似于局部变量。
+	- 特性：
+		- 
+
+不过需要注意的是，宏(`macro`)无作用域，其本质与C语言中的宏一致，为文本替换。
+
+
+
+## 3.2 变量定义(set&unset)
 
 在CMake中，变量定义主要通过 `set` 函数定义，其形式为：
 
@@ -133,7 +150,7 @@ unset(CACHE{<variable>}) # CMake 4.2+
 unset(ENV{<variable>})
 ```
 
-### 3.1.1 设置普通变量
+### 3.2.1 设置普通变量
 
 在CMake中，普通环境变量的设置与取消对应如下的方法：
 
@@ -145,7 +162,7 @@ set(<variable> <value>... [PARENT_SCOPE])
 unset(ENV{<variable>})
 ```
 
-#### 3.1.1.1 定义列表
+#### 3.2.1.1 定义列表
 
 当 `set` 定义列表时，可以使用如下的方式：
 
@@ -154,7 +171,7 @@ set(LISTVALUE value1;value2)
 set(LISTVALUE value1 value2) # 此时LISTVALUE为"value1;value2"
 ```
 
-### 3.1.2 定义缓存条目
+### 3.2.2 定义缓存条目
 
 在CMake中，缓存条目的设置与取消对应如下的方法：
 
@@ -167,7 +184,7 @@ unset(<variable> CACHE)
 unset(CACHE{<variable>}) # CMake 4.2+
 ```
 
-### 3.1.3 定义环境变量
+### 3.2.3 定义环境变量
 
 在CMake中，环境变量的设置与取消对应如下的方法：
 
@@ -187,7 +204,7 @@ unset(ENV{CXX})
 ```
 
 
-## 3.2 列表操作(list)
+## 3.3 列表操作(list)
 
 CMake提供了如下的列表操作：
 
@@ -241,7 +258,7 @@ list(JOIN MY_LIST " -> " RESULT) # 则 RESULT = "a -> b -> c"
 	- `COMPARE:NATURAL` ：自然排序，可以识别版本号，例如 `v2 < v10`
 	- `CASE:INSENSITIVE` ：忽略大小写
 
-## 3.3 数学运算()
+## 3.4 数学运算()
 
 
 
