@@ -94,7 +94,7 @@ CMake按变量的作用域可以分为：
 set(<variable> <value>... [PARENT_SCOPE])
 ```
 
-在CMake中，可以使用 `set` 重复定义一个变量。
+在CMake中，可以使用 `set` 重复定义一个变量，也可以使用 `unset` 取消设置一个变量
 
 ### 3.1.1 set定义列表
 
@@ -107,12 +107,17 @@ set(LISTVALUE value1 value2) # 此时LISTVALUE为"value1;value2"
 
 ### 3.1.2 set定义环境变量
 
-正如上述章节所述，CMake可通过u：
+正如上述章节所述，CMake可通过如下的方式定义环境变量：
 
 ```CMake
-
+set(ENV{VAR_NAME} value)
 ```
 
+例如：
+
+```CMake
+set(ENV{CXX} g++)
+```
 
 
 ## 3.2 列表操作
