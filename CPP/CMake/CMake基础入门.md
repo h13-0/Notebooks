@@ -252,31 +252,47 @@ CMake中有如下的流程控制
 	- `if(<condition>)` 、 `endif()`
 	- `else()`
 	- `elseif(<condition>)`
+	由于在 `if` 出现的早期的CMake中，`${}` 是作为求值指令的，因此在 `if` 语句中不需要tian jia
 其中：
 - `<condition>` 为[[CPP/CMake/CMake基础入门#^9wij0or|条件语句]]
 
 ## 4.1 条件语句 ^9wij0or
 
 在CMake中，条件语句不仅可以配合：
-- `NOT` 、 `OR` 、 `AND` 等[[CPP/CMake/CMake基础入门#^url4xi|逻辑类关键字]]
-- `LESS` 、`GREATER` 等[[CPP/CMake/CMake基础入门#^omnc8n|比较类关键字]]
+- `NOT` 、 `OR` 、 `AND` 等[[CPP/CMake/CMake基础入门#^url4xi|逻辑类测试符]]
+- `LESS` 、`GREATER` 等[[CPP/CMake/CMake基础入门#^omnc8n|比较类测试符]]
 等关键字进行使用，还可以配合如下的函数类关键字使用：
-- [[CPP/CMake/CMake基础入门#^r5u82d|文件操作类关键字]]：
-	- 
+- [[CPP/CMake/CMake基础入门#^r5u82d|文件操作类测试符]]：`EXISTS` 、`IS_READABLE`、`IS_EXECUTABLE` 等
+- [[CPP/CMake/CMake基础入门#^7q3egc|版本比较类测试符]]：`VERSION_LESS` 、`VERSION_GREATER` 等
+- [[CPP/CMake/CMake基础入门#^di61xr|路径比较类测试符]]：`PATH_EQUAL`
 
+此外，<font color="#c00000">条件语句的评估顺序为</font>：
+1. 括号
+2. 一元测试符
+3. 二元测试符
+4. 一元逻辑运算符 `NOT`
+5. 二元逻辑运算符 `AND` 和 `OR` ，从左到右，无短路
 
 
 
 # 5 关键字
 
-## 5.1 逻辑类关键字 ^url4xi
+## 5.1 测试符
+
+### 5.1.1 逻辑类测试符 ^url4xi
 
 
 
-## 5.2 比较类关键字 ^omnc8n
+### 5.1.2 比较类测试符 ^omnc8n
 
 
-## 5.3 文件操作类关键字 ^r5u82d
+### 5.1.3 文件操作类测试符 ^r5u82d
+
+### 5.1.4 版本比较类测试符 ^7q3egc
+
+### 5.1.5 路径比较类测试符 ^di61xr
+
+
 
 
 # 6 函数
