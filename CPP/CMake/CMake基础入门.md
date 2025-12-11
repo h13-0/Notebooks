@@ -280,10 +280,16 @@ endmacro()
 其Demo如下：
 
 ```CMake
-macro(max var1 var2)
-	
+macro(clear list)
+	set(${list} "")      # 清空数组
 endmacro()
-set()
+
+set(var "a;b;c")      # 定义数组
+message("var=${var}") # var="a;b;c"
+
+clear(var)
+message("var=${var}") # var=""
+
 ```
 
 
