@@ -213,10 +213,19 @@ Ordering
   list(SORT <list> [...])
 ```
 
-其中需要说明的有：
-- 读取类操作：
-	- 
+其参数：
+- `<out-var>` 是输出变量的占位符
+- `<index>` <font color="#c00000">可以是负数</font>，例如 `-1` 表示倒数第一个元素
 
+其中：
+- `list(GET)` 中， `<element index> [<index> ...]` 代表需要读取的一个或多个索引
+- `list(JOIN)` 可以将列表中各个元素按照 `<glue>` 的值拼接为一个字符串，例如：
+```CMake
+set(MY_LIST a;b;c)
+list(JOIN MY_LIST " -> " RESULT) # 则 RESULT = "a -> b -> c"
+```
+- `list(SUBLIST)` 为切片操作
+- `list(FIND)` 为寻找操作，当没有找到时会返回 `-1`
 
 
 
