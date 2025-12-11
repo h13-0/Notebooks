@@ -29,9 +29,15 @@ number headings: auto, first-level 1, max 6, 1.1
 
 ## 2.2 变量名规则
 
-在CMake中，变量名
-
-
+在CMake中，变量名有如下规则
+1. 允许如下字符：
+	- 字母(`a-z`、`A-Z`)
+	- 数字
+	- 下划线
+	- 连字符
+	- 小数点(`.`)
+	- 加号(`+`)
+2. <font color="#c00000">变量名区分大小写</font>
 
 注：
 1. 变量名可以包含空格，只不过后续使用该变量名时必须加双引号 `""` 或者加转义符 `\ ` ，例如：
@@ -262,6 +268,7 @@ list(JOIN MY_LIST " -> " RESULT) # 则 RESULT = "a -> b -> c"
 
 ## 3.4 数学运算()
 
+#TODO 
 
 ## 3.5 宏(macro)
 
@@ -274,28 +281,38 @@ endmacro()
 ```
 
 其中：
-- `<arg1>` 为变量占位符，替换时CMake会自动传入对应的变量
+- `<arg1>` 为变量占位符，<font color="#c00000">替换时CMake会自动传入对应的</font><span style="background:#fff88f"><font color="#c00000">变量名</font></span>(因此需要 `${}` 解引用)
 - `<commands>` 为替换出来的命令，<font color="#c00000">即任何可以被CMake所识别的语句</font>。
 
 其Demo如下：
 
 ```CMake
 macro(clear list)
-	set(${list} "")      # 清空数组
+    set(${list} "")   # 清空数组
 endmacro()
 
 set(var "a;b;c")      # 定义数组
-message("var=${var}") # var="a;b;c"
+message("var=${var}") # 输出：var=a;b;c
 
 clear(var)
-message("var=${var}") # var=""
-
+message("var=${var}") # 输出：var=
 ```
 
+其本质上是被替换成了：
+
+```CMake
+set(var "a;b;c")
+message("var=${var}")
+
+# clear(var)
+set(var "")            # 替换处
+message("var=${var}")
+```
 
 需要注意：
-1. 尽管宏不区分大小写，但是还是尽量使用全小写名称。
-2. 通常来说要避免使用宏，因此会读即可。
+1. <font color="#c00000">宏传入的是变量名</font>，<span style="background:#fff88f"><font color="#c00000">需要解引用</font></span>
+2. 尽管宏不区分大小写，但是还是尽量使用全小写名称。
+3. 通常来说要避免使用宏，因此会读即可。
 
 # 4 流程控制
 
@@ -355,14 +372,17 @@ if(${var2}) # 即 if(var1)，也为FALSE
 
 
 
+
+
+
+
+
 因此 `*.cmake` 文件中通常存放宏和函数定义
 
 
 
 
-# 6 关键字
-
-anchor ^g41y0l
+# 6 关键字 ^g41y0l
 
 ## 6.1 测试符
 
