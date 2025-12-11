@@ -265,16 +265,27 @@ list(JOIN MY_LIST " -> " RESULT) # 则 RESULT = "a -> b -> c"
 
 ## 3.5 宏(macro)
 
-在CMake中，宏(`macro`)的基本性质与C语言中的宏类似，为文本替换。不过
-
-
-其使用方法如下：
+在CMake中，宏(`macro`)的基本性质与C语言中的宏类似，为文本替换，其使用方法如下：
 
 ```CMake
 macro(<name> [<arg1> ...])
   <commands>
 endmacro()
 ```
+
+其中：
+- `<arg1>` 为变量占位符，替换时CMake会自动传入对应的变量
+- `<commands>` 为替换出来的命令，<font color="#c00000">即任何可以被CMake所识别的语句</font>。
+
+其Demo如下：
+
+```CMake
+macro(max var1 var2)
+	
+endmacro()
+set()
+```
+
 
 需要注意：
 1. 尽管宏不区分大小写，但是还是尽量使用全小写名称。
