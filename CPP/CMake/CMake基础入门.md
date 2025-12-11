@@ -57,8 +57,9 @@ CMake按变量的作用域可以分为：
 	- 作用域：整个项目中可见
 - 环境变量：
 	- 存储位置：操作系统环境
-	- 读取方式：通过 `$ENV{var_name}` 进行访问
-	- 写入方式：`set(ENV{VAR_NAME} value)` ，<font color="#c00000">修改仅会影响当前CMake进程</font>
+	- 访问方式：
+		- 读取方式：通过 `$ENV{var_name}` 进行访问
+		- 写入方式：`set(ENV{VAR_NAME} value)` ，<font color="#c00000">修改仅会影响当前CMake进程</font>，<font color="#c00000">且不会影响到Shell</font>
 	- 作用域：整个项目中可见
 - 系统变量：
 	- 存储位置：内存
@@ -93,6 +94,8 @@ CMake按变量的作用域可以分为：
 set(<variable> <value>... [PARENT_SCOPE])
 ```
 
+在CMake中，可以使用 `set` 重复定义一个变量。
+
 ### 3.1.1 set定义列表
 
 当 `set` 定义列表时，可以使用如下的方式：
@@ -100,6 +103,14 @@ set(<variable> <value>... [PARENT_SCOPE])
 ```CMake
 set(LISTVALUE value1;value2)
 set(LISTVALUE value1 value2) # 此时LISTVALUE为"value1;value2"
+```
+
+### 3.1.2 set定义环境变量
+
+正如上述章节所述，CMake可通过u：
+
+```CMake
+
 ```
 
 
@@ -121,6 +132,13 @@ set(LISTVALUE value1 value2) # 此时LISTVALUE为"value1;value2"
 
 
 # 4 关键字
+
+
+# 5 函数
+
+## 5.1 message
+
+
 
 
 
