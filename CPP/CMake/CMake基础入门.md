@@ -31,7 +31,10 @@ number headings: auto, first-level 1, max 6, 1.1
 
 
 注：
-1. 变量名可以包含空格，只不过后续使用该变量名时必须加双引号 `""` 或者加转义符 `\ `
+1. 变量名可以包含空格，只不过后续使用该变量名时必须加双引号 `""` 或者加转义符 `\ ` ，例如：
+	- `set("my var" xxx)` 或 `set([[my var]] xxx)` 
+	- `${"my var"}` 或 `${my\ var}`
+
 
 
 # 3 变量
@@ -88,6 +91,15 @@ CMake按变量的作用域可以分为：
 
 ```CMake
 set(<variable> <value>... [PARENT_SCOPE])
+```
+
+### 3.1.1 set定义列表
+
+当 `set` 定义列表时，可以使用如下的方式：
+
+```CMake
+set(LISTVALUE value1;value2)
+set(LISTVALUE value1 value2) # 此时LISTVALUE为"value1;value2"
 ```
 
 
