@@ -50,7 +50,7 @@ set(CACHE{<variable>} [TYPE <type>] [HELP <helpstring>...] [FORCE] VALUE 
 - 省略号 `...` 表示前面的参数可以重复多个
 - 方括号占位符为可选参数
 
-# 3 变量
+# 3 变量及基本操作
 
 CMake按变量的作用域可以分为：
 - 普通变量：
@@ -117,11 +117,29 @@ set(ENV{<variable>} [<value>])
 在CMake中，可以使用 `set` 重复定义一个变量，也可以使用 `unset` 取消设置一个变量，其形式为：
 
 ```CMake
+# 取消普通变量
+unset(<variable> [PARENT_SCOPE])
 
+# 取消缓存条目
+unset(<variable> CACHE)
+unset(CACHE{<variable>}) # CMake 4.2+
+
+# 取消环境变量
+unset(ENV{<variable>})
 ```
 
-
 ### 3.1.1 设置普通变量
+
+在CMake中，普通环境变量的设置与取消对应如下的方法：
+
+```CMake
+# 设置普通变量
+set(<variable> <value>... [PARENT_SCOPE])
+
+# 取消环境变量
+unset(ENV{<variable>})
+```
+
 #### 3.1.1.1 定义列表
 
 当 `set` 定义列表时，可以使用如下的方式：
@@ -133,24 +151,42 @@ set(LISTVALUE value1 value2) # 此时LISTVALUE为"value1;value2"
 
 ### 3.1.2 定义缓存条目
 
+在CMake中，缓存条目的设置与取消对应如下的方法：
 
+```CMake
+# 设置缓存条目
+set(CACHE{<variable>} [TYPE <type>] [HELP <helpstring>...] [FORCE] VALUE [<value>...])
+
+# 取消缓存条目
+unset(<variable> CACHE)
+unset(CACHE{<variable>}) # CMake 4.2+
+```
 
 ### 3.1.3 定义环境变量
 
-正如上述章节所述，CMake可通过如下的方式定义环境变量：
+在CMake中，环境变量的设置与取消对应如下的方法：
 
 ```CMake
+# 设置环境变量
 set(ENV{<variable>} [<value>])
+
+# 取消环境变量
+unset(ENV{<variable>})
 ```
 
 例如：
 
 ```CMake
 set(ENV{CXX} g++)
+unset(ENV{CXX})
 ```
 
 
-## 3.2 列表操作
+## 3.2 列表操作(list)
+
+
+
+
 
 
 
