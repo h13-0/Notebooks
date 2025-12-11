@@ -10,13 +10,24 @@ number headings: auto, first-level 1, max 6, 1.1
 
 # 2 变量
 
-CMake按变量的提供者可以分为：
+CMake按变量的作用域可以分为：
+- 普通变量：
+	- 定义方式：通过不含 `CACHE` 关键字的 `set` 命令进行定义
+	- 生命周期：
+	- 作用域
+- 缓存变量：
+	- 存储于构建目录下 `CMakeCache.txt` 文件中的变量，在多次CMake之间是持久化的
+	- 定义方式：用户通过 `cmake` 或 `cmake-gui` 进行配置
+	- 生命周期
+	- 作用域：整个项目中可见
+- 环境变量：
+	- 读取方式：通过 `$ENV{var_name}` 进行访问
+	- 写入方式：`set(ENV{VAR_NAME} value)` ，仅会修改当前
+
+
+
 1. CMake中预先提供的变量
 2. 通过 `set` 等方式用户自行定义的变量
-按变量存储类型可以分为：
-
-
-
 
 而在CMake中，<span style="background:#fff88f"><font color="#c00000">其底层有且仅有一种类型</font></span>，<font color="#c00000">那就是字符串</font>。而在字符串之上，其通过如下的方式实现了不同的类型用途：
 - 字符串类型：直接实现
@@ -32,12 +43,8 @@ CMake按变量的提供者可以分为：
 		- `""` 空字符串
 	需要再次强调，<font color="#c00000">其对大小写不敏感</font>
 - 路径类型：
-- 数字类型：
+- 数字类型：<font color="#c00000">看起来像数字的字符串</font>，可以通过 `math(EXPR ...)` 命令进行计算
 
 CMake中的变量区分大小写，其使用方式为 `${变量名}` 
 
-### 2.1.1 set&unset
-
-
-
-
+### 2.1.1 set&unse
