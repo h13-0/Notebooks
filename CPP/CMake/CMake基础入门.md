@@ -248,14 +248,35 @@ list(JOIN MY_LIST " -> " RESULT) # 则 RESULT = "a -> b -> c"
 # 4 流程控制
 
 CMake中有如下的流程控制
-- 
+- if系列：
+	- `if(<condition>)` 、 `endif()`
+	- `else()`
+	- `elseif(<condition>)`
+其中：
+- `<condition>` 为[[CPP/CMake/CMake基础入门#^9wij0or|条件语句]]
 
+## 4.1 条件语句 ^9wij0or
 
+在CMake中，条件语句不仅可以配合：
+- `NOT` 、 `OR` 、 `AND` 等[[CPP/CMake/CMake基础入门#^url4xi|逻辑类关键字]]
+- `LESS` 、`GREATER` 等[[CPP/CMake/CMake基础入门#^omnc8n|比较类关键字]]
+等关键字进行使用，还可以配合如下的函数类关键字使用：
+- [[CPP/CMake/CMake基础入门#^r5u82d|文件操作类关键字]]：
+	- 
 
 
 
 
 # 5 关键字
+
+## 5.1 逻辑类关键字 ^url4xi
+
+
+
+## 5.2 比较类关键字 ^omnc8n
+
+
+## 5.3 文件操作类关键字 ^r5u82d
 
 
 # 6 函数
