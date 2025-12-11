@@ -184,9 +184,38 @@ unset(ENV{CXX})
 
 ## 3.2 列表操作(list)
 
+CMake提供了如下的列表操作：
 
+```CMake
+Reading
+  list(LENGTH <list> <out-var>)
+  list(GET <list> <element index> [<index> ...] <out-var>)
+  list(JOIN <list> <glue> <out-var>)
+  list(SUBLIST <list> <begin> <length> <out-var>)
 
+Search
+  list(FIND <list> <value> <out-var>)
 
+Modification
+  list(APPEND <list> [<element>...])
+  list(FILTER <list> {INCLUDE | EXCLUDE} REGEX <regex>)
+  list(INSERT <list> <index> [<element>...])
+  list(POP_BACK <list> [<out-var>...])
+  list(POP_FRONT <list> [<out-var>...])
+  list(PREPEND <list> [<element>...])
+  list(REMOVE_ITEM <list> <value>...)
+  list(REMOVE_AT <list> <index>...)
+  list(REMOVE_DUPLICATES <list>)
+  list(TRANSFORM <list> <ACTION> [...])
+
+Ordering
+  list(REVERSE <list>)
+  list(SORT <list> [...])
+```
+
+其中需要说明的有：
+- 读取类操作：
+	- 
 
 
 
