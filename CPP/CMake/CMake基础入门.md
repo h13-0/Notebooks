@@ -48,12 +48,12 @@ list(FILTER <list> {INCLUDE | EXCLUDE} REGEX <regex>)
 ```
 
 其文档约定为：
-- 尖括号占位符为必填参数
+- 尖括号 `< >` 占位符为必填参数
 - 省略号 `...` 表示前面的参数可以重复多个
-- 方括号占位符为可选参数
+- 方括号 `[ ]` 占位符为可选参数
 - 花括号 `{ }` 则有如下的用法：
 	- `{INCLUDE | EXCLUDE}` 表示<font color="#c00000">必须且单选</font>(互斥)
-	- `{A B}` 表示顺序序列，
+	- `{A B}` 表示<font color="#c00000">顺序序列</font>，必须先写 `A` 再写 `B`
 
 # 3 变量及基本操作
 
@@ -232,8 +232,14 @@ list(JOIN MY_LIST " -> " RESULT) # 则 RESULT = "a -> b -> c"
 - `list(SUBLIST)` 为<font color="#c00000">切片操作</font>
 - `list(FIND)` 为<font color="#c00000">查找操作</font>，当没有找到时会返回 `-1`
 - `list(FILTER)` 为<font color="#c00000">正则筛选功能</font>，选择 `INCLUDE` 或 `EXCLUDE` 进行筛选
-- `list(TRANSFORM)` 
-
+- `list(TRANSFORM)` 为<font color="#c00000">对列表中每个元素执行操作</font>，例如：
+	- `TOUPPER` ：转大写
+	- `PREPEND` ：加前缀
+- `list(REVERSE)` ：<font color="#c00000">让列表元素顺序翻转</font>(注意与下方的 `SORT` 进行区分)
+- `list(SORT)` ：<font color="#c00000">让列表元素排序</font>，其有如下的常用选项：
+	- 缺省：<font color="#c00000">默认为按ASCII表排序</font>
+	- `COMPARE:NATURAL` ：自然排序，可以识别版本号，例如 `v2 < v10`
+	- `CASE:INSENSITIVE` ：忽略大小写
 
 ## 3.3 数学运算()
 
