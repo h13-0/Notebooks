@@ -82,7 +82,11 @@ class demo {
 而在C++20起，还额外支持了：
 - 比较运算函数 `bool operator==(const T&) const=default;`
 - 三路比较函数 `auto operator<=>(const T&) const=default;`
-其中：
+<span style="background:#fff88f"><font color="#c00000">明显地，上述构造函数中</font></span>：
+- <font color="#c00000">拷贝构造函数的参数均为</font> `const T&`
+- <font color="#c00000">移动构造函数的参数均为</font> `T&&`
+- <font color="#c00000">复制函数均为运算符重载</font> `operator=`
+此外：
 1. <font color="#c00000">若指定的函数不满足生成条件</font>，<span style="background:#fff88f"><font color="#c00000">则</font></span> `=default;` <span style="background:#fff88f"><font color="#c00000">会转化为</font></span> `=delete;` ，例如：
 	- 若成员中包含不可拷贝类型，则<font color="#c00000"><u>拷贝构造函数</u></font>、<font color="#c00000"><u>拷贝赋值函数</u></font>会被转化为 `=delete;` 
 	- 若成员中包含 `const` 成员或引用成员，且没有自定义赋值语句，则<font color="#c00000"><u>拷贝赋值函数</u></font>也会被删除
