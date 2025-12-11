@@ -3,6 +3,8 @@ number headings: auto, first-level 1, max 6, 1.1
 ---
 #CMake 
 
+本笔记仅为入门用途，更多详细用法需对接CMake官方文档
+
 # 1 目录
 
 ```toc
@@ -35,7 +37,18 @@ number headings: auto, first-level 1, max 6, 1.1
 	- `set("my var" xxx)` 或 `set([[my var]] xxx)` 
 	- `${"my var"}` 或 `${my\ var}`
 
+## 2.3 函数声明规则
 
+在CMake的官方文档中，通常会有类似于如下的函数声明：
+
+```CMake
+set(CACHE{<variable>} [TYPE <type>] [HELP <helpstring>...] [FORCE] VALUE [<value>...])
+```
+
+其约定为：
+- 尖括号占位符为必填参数
+- 省略号 `...` 表示前面的参数可以重复多个
+- 方括号占位符为可选参数
 
 # 3 变量
 
@@ -91,12 +104,25 @@ CMake按变量的作用域可以分为：
 在CMake中，变量定义主要通过 `set` 函数定义，其形式为：
 
 ```CMake
+# 设置普通变量
 set(<variable> <value>... [PARENT_SCOPE])
+
+# 设置缓存条目
+set(CACHE{<variable>} [TYPE <type>] [HELP <helpstring>...] [FORCE] VALUE [<value>...])
+
+# 设置环境变量
+set(ENV{<variable>} [<value>])
 ```
 
-在CMake中，可以使用 `set` 重复定义一个变量，也可以使用 `unset` 取消设置一个变量
+在CMake中，可以使用 `set` 重复定义一个变量，也可以使用 `unset` 取消设置一个变量，其形式为：
 
-### 3.1.1 set定义列表
+```CMake
+
+```
+
+
+### 3.1.1 设置普通变量
+#### 3.1.1.1 定义列表
 
 当 `set` 定义列表时，可以使用如下的方式：
 
@@ -105,12 +131,16 @@ set(LISTVALUE value1;value2)
 set(LISTVALUE value1 value2) # 此时LISTVALUE为"value1;value2"
 ```
 
-### 3.1.2 set定义环境变量
+### 3.1.2 定义缓存条目
+
+
+
+### 3.1.3 定义环境变量
 
 正如上述章节所述，CMake可通过如下的方式定义环境变量：
 
 ```CMake
-set(ENV{VAR_NAME} value)
+set(ENV{<variable>} [<value>])
 ```
 
 例如：
