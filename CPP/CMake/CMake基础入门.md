@@ -30,13 +30,9 @@ number headings: auto, first-level 1, max 6, 1.1
 ## 2.2 变量名规则
 
 在CMake中，变量名有如下规则
-1. 允许如下字符：
-	- 字母(`a-z`、`A-Z`)
-	- 数字
-	- 下划线
-	- 连字符
-	- 小数点(`.`)
-	- 加号(`+`)
+1. 变量名<span style="background:#fff88f"><font color="#c00000">允许使用任何字符串，甚至emoji</font></span>：
+	- 一般情况下不需要带字符串
+	- 花里胡哨时只需要使用字符串包裹即可
 2. <font color="#c00000">变量名区分大小写</font>
 
 注：
