@@ -252,12 +252,24 @@ CMake中有如下的流程控制
 	- `if(<condition>)` 、 `endif()`
 	- `else()`
 	- `elseif(<condition>)`
+	其中：
+	- `<condition>` 为[[CPP/CMake/CMake基础入门#^9wij0or|条件语句]]，<font color="#c00000">特性及注意事项需阅读对应章节</font>
 - while系列：
 	- `while(<condition>)` 、`endwhile()`
-	- 
+- for系列：
+	- `foreach` 可接受参数类型有：
+		- `foreach(<loop_var> <items>)`
+		- `foreach(<loop_var> RANGE <stop>)`
+		- `foreach(<loop_var> RANGE <start> <stop> [<step>])` 
+		- `foreach(<loop_var> IN [LISTS [<lists>]] [ITEMS [<items>]])` 
+		其中：
+		- `<loop_var>` <font color="#c00000">为循环变量</font>，类似于 `for(int i=0; i<100; i++)` 中的 `i` 
+	- `endforeach()` 
+- `continue`
+- `break`
 
-<font color="#c00000">需要注意</font>：
-- 由于在 `if` 出现的早期的CMake中，`${}` 是作为求值指令的，因此在 `if` 语句中会自动添加求值符 `${}` ，且需要注意：
+<span style="background:#fff88f"><font color="#c00000">需要注意</font></span>：
+- 由于在早期的CMake中，`${}` 是作为求值指令的，因此在 `if` 、 `while` 等语句中会自动添加求值符 `${}` ，即：
 	- `if(VAR1)` 表示对 `VAR1` 的值进行判断
 	- `if(${VAR2})` 表示对 `VAR2` <font color="#c00000">字符串对应的变量值进行判断</font>，例如
 ```CMake
@@ -266,11 +278,6 @@ set(var2 "var1")
 if(var1)    # 即 if(OFF) ，为FALSE
 if(${var2}) # 即 if(var1)，也为FALSE
 ```
-
-注：
-- `<condition>` 为[[CPP/CMake/CMake基础入门#^9wij0or|条件语句]]
-- `if(${VAR2})` 的示例：
-
 
 ## 4.1 条件语句 ^9wij0or
 
@@ -288,8 +295,6 @@ if(${var2}) # 即 if(var1)，也为FALSE
 3. 二元测试符
 4. 一元逻辑运算符 `NOT`
 5. 二元逻辑运算符 `AND` 和 `OR` ，从左到右，无短路
-
-
 
 # 5 关键字
 
