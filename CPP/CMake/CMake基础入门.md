@@ -365,15 +365,23 @@ if(${var2}) # 即 if(var1)，也为FALSE
 
 ## 5.1 .cmake文件与Include
 
+`*.cmake` 类似于C语言中的头文件，与C语言的 `*.h` 文件和 `#include` 指令一致的是，<font color="#c00000">其设计目的是为了将</font> `*.cmake` <font color="#c00000">文件复制到</font> `Include` <font color="#c00000">命令所在的位置</font>
 
 
 
-
-
-
+为了让其他脚本通过 `Include` 命令直接
 
 
 因此 `*.cmake` 文件中通常存放宏和函数定义
+
+
+## 5.2 CMakeLists.txt与add_subdirectory
+
+
+
+
+
+
 
 
 
