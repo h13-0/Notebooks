@@ -123,7 +123,7 @@ CMake中有如下前两种变量作用域：
 		- 当需要修改外部变量时，也必须显式使用 `PARENT_SCOPE` 关键字
 明显地， `PARENT_SCOPE` 关键字只能向上传递一级，若需要连续传递则需要连续使用。
 
-不过需要注意的是，宏(`macro`)无作用域，其本质与C语言中的宏一致，为文本替换。
+不过需要注意的是，宏(`macro`)和 ` Include ` 等无作用域，其本质与C语言中的一致，为文本替换。
 
 ## 3.2 变量定义(set&unset)
 
@@ -368,7 +368,9 @@ if(${var2}) # 即 if(var1)，也为FALSE
 `*.cmake` 类似于C语言中的头文件，与C语言的 `*.h` 文件和 `#include` 指令一致的是，其：
 - <font color="#c00000">规则是</font> `*.cmake` <font color="#c00000">文件复制到</font> `Include` <font color="#c00000">命令所在的位置</font>
 - 通常用于导入脚本或导入库
-因此 `*.cmake` 文件中通常存放宏、函数定义和导入预置包
+因此 `*.cmake` 文件中通常存放宏、函数定义和导入预置包等。
+
+
 
 
 ## 5.2 CMakeLists.txt与add_subdirectory
