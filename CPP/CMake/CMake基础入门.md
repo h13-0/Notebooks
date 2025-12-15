@@ -384,11 +384,65 @@ if(${var2}) # 即 if(var1)，也为FALSE
 在实际工程中，项目通常都为树形组织结构，父级目录需要包含子级目录提供的头文件声明与二进制定义等。
 
 针对上述问题，CMake给出的解决方案为：
-1. 每个包含了若干头文件声明与实现的子文件夹在CMake中被定义为目标(`Target`)
-2. 每个 `target` 下都包含一个 `CMakeLists.txt` ，并由父级通过 `add_subdirctory` 包含
-3. 每个 `target` 通过如下的命令暴露头文件等：
+1. <font color="#c00000">每个包含了若干头文件声明与实现的子文件夹在CMake中被定义为</font><font color="#9bbb59">目标</font>(`Target`)
+2. <font color="#c00000">每个</font> `target` <font color="#c00000">下都包含一个</font> `CMakeLists.txt` ，<font color="#c00000">并由父级通过</font> `add_subdirctory` <font color="#c00000">包含</font>
+3. 每个 `target` <font color="#c00000">通过如下的命令暴露库信息</font>(例如头文件路径等)：
 	- `target_include_directories` ：暴露头文件路径
+	- `target_link_libraries` ：暴露依赖库
+	- `target_compile_definitions` ：暴露预处理器宏定义
+	- `target_compile_options` ：暴露编译选项
+	- `target_compile_features` ：暴露编译特性
+当父级通过 `add_subdirctory` 包含后，子目标即可正常工作。实例如下：
 
+文件结构：
+
+```
+Project/
+├── CMakeLists.txt      (父级/主程序)
+├── main.cpp
+└── my_lib/             (全是库文件的文件夹)
+    ├── CMakeLists.txt  (子目标的CMakeLists)
+    ├── math_utils.cpp
+    ├── math_utils.h
+    └── string_utils.cpp
+```
+
+子目标 `CMakeLists.txt` 负责组织自身工程及暴露库信息：
+
+```CMake
+# 1. 定义这个库目标 (Target)
+# 把文件夹下的源码打包成一个叫 "MyLib" 的库
+add_library(MyLib 
+    math_utils.cpp 
+    string_utils.cpp
+)
+
+# 2. 定义头文件查找路径 (关键步骤！)
+# PUBLIC 的含义暂时可以忽略
+target_include_directories(MyLib PUBLIC 
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+```
+
+随后父级 `CMakeLists.txt` 直接引用即可：
+
+```CMake
+cmake_minimum_required(VERSION 3.10)
+project(MainApp)
+
+# 1. 添加子目录
+# 这会执行 my_lib/CMakeLists.txt，此时 "MyLib" 这个目标就在内存里产生了
+add_subdirectory(my_lib)
+
+# 2. 定义主程序
+add_executable(App main.cpp)
+
+# 3. 链接库 (关键步骤！)
+# 只要这一行，发生了两件事：
+#   (1) 链接器会把 libMyLib.a 链接进 App。
+#   (2) App 会自动获得 my_lib 目录作为头文件搜索路径 (因为刚才设了 PUBLIC)。
+target_link_libraries(App PRIVATE MyLib)
+```
 
 
 ## 5.3 项目组织常用命令
