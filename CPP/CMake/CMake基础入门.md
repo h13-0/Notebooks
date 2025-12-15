@@ -310,6 +310,13 @@ message("var=${var}")
 2. 尽管宏不区分大小写，但是还是尽量使用全小写名称。
 3. 通常来说要避免使用宏，因此会读即可。
 
+## 3.6 内置变量
+
+https://cmake.org/cmake/help/latest/manual/cmake-env-variables.7.html#id1
+
+
+
+
 # 4 流程控制
 
 CMake中有如下的流程控制
@@ -445,10 +452,7 @@ target_link_libraries(App PRIVATE MyLib)
 
 ### 5.2.1 传播控制及其关键字
 
-
-
-
-[[CPP/CMake/CMake基础入门#^7ylkgd]]
+本章节内容位于章节[[CPP/CMake/CMake基础入门#^7ylkgd|传播控制关键字]]中：![[CPP/CMake/CMake基础入门#6 2 传播控制关键字 7ylkgd]]
 
 ## 5.3 项目组织常用命令
 
@@ -487,7 +491,7 @@ target_link_libraries(App PRIVATE MyLib)
 
 
 
-# 7 函数
+# 7 函数、命令
 
 ## 7.1 message
 
@@ -495,4 +499,21 @@ target_link_libraries(App PRIVATE MyLib)
 
 
 
+## 7.2 target_include_directories
 
+为目标添加包含目录
+
+```CMake
+target_include_directories(<target> [SYSTEM] [AFTER|BEFORE]
+  <INTERFACE|PUBLIC|PRIVATE> [items1...]
+  [<INTERFACE|PUBLIC|PRIVATE> [items2...] ...])
+```
+
+## 7.3 target_link_libraries
+
+
+## 7.4 target_compile_definitions
+
+## 7.5 target_compile_options
+
+## 7.6 target_compile_features
