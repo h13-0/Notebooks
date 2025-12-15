@@ -585,6 +585,8 @@ using xxCallback = std::function<void(const xx&)>;
 
 #### 3.3.5.3 类继承中的成员引入
 
+当父类中某一个函数有多个重载，且子类只重写了其中的某一个时，可以使用 `using` 把其他qian mi
+
 
 #### 3.3.5.4 使用枚举(C++20)
 
