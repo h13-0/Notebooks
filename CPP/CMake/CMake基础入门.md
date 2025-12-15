@@ -423,7 +423,7 @@ add_library(MyLib
 )
 
 # 2. 为目标 `MyLib` 添加查找路径
-#    PUBLIC、INTERFACE、PRIVATE等为导入规则，后续章节会讲解，暂时不用了解
+#    PUBLIC、INTERFACE、PRIVATE等为导入规则，传播控制关键字章节会讲解，暂时不用了解
 target_include_directories(MyLib PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
@@ -443,10 +443,12 @@ add_executable(App main.cpp)
 target_link_libraries(App PRIVATE MyLib)
 ```
 
-### 5.2.1 
+### 5.2.1 传播控制及其关键字
 
 
 
+
+[[CPP/CMake/CMake基础入门#^7ylkgd]]
 
 ## 5.3 项目组织常用命令
 
@@ -476,6 +478,12 @@ target_link_libraries(App PRIVATE MyLib)
 
 ### 6.1.5 路径比较类测试符 ^di61xr
 
+## 6.2 传播控制关键字 ^7ylkgd
+
+传播控制关键字主要有 `INTERFACE` 、 `PUBLIC` 、 `PRIVATE` 这三种，其区别如下：
+- 
+- 
+- `PRIVATE` ：独享关键字
 
 
 
