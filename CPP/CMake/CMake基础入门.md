@@ -381,7 +381,7 @@ if(${var2}) # 即 if(var1)，也为FALSE
 
 ## 5.2 CMakeLists.txt与add_subdirectory
 
-
+在实际工程中，项目通常都为树形组织结构，父级目录需要包含子级目录提供的头文件声明与二进制定义等。
 
 
 
