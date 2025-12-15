@@ -376,8 +376,8 @@ if(${var2}) # 即 if(var1)，也为FALSE
 	1. 用户指定的 `CMAKE_MODULE_PATH` 变量中查找：
 		- 该变量是一个列表变量
 		- 默认为空，需要在 `CMakeLists.txt` 等中手动配置
-	2. 
-
+	2. 从CMake内置的 `${CMAKE_ROOT}/Modules` 中寻找模块。具体路径可在脚本中打印
+	注意，<font color="#c00000">CMake不会从系统的</font> `PATH` <font color="#c00000">路径中寻找模块</font>
 
 ## 5.2 CMakeLists.txt与add_subdirectory
 
@@ -386,7 +386,14 @@ if(${var2}) # 即 if(var1)，也为FALSE
 
 
 
+## 5.3 项目组织常用命令
 
+### 5.3.1 添加头文件路径
+
+
+
+
+### 5.3.2 
 
 
 
