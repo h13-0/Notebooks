@@ -456,7 +456,12 @@ target_link_libraries(App PRIVATE MyLib)
 	2. 从CMake内置的 `${CMAKE_ROOT}/Modules` 中寻找模块。具体路径可在脚本中打印
 	注意，<font color="#c00000">CMake不会从系统的</font> `PATH` <font color="#c00000">路径中寻找模块</font>
 
-## 5.3 项目组织常用命令
+## 5.3 CMake工程的基本要求
+
+
+
+
+## 5.4 项目组织常用命令
 
 项目组织常用命令有：
 - [[CPP/CMake/CMake基础入门#^ym2lpn|add_executable]]：创建可执行文件目标
@@ -521,7 +526,9 @@ add_library(<name> [<type>] [EXCLUDE_FROM_ALL] <sources>...)
 - `[<type>]` 可以选择指定为如下三种类型：
 	- `STATIC` ：静态链接库
 	- `SHARED` ：动态链接库，构建时链接。若不链接程序可能无法启动
-	- `MODULE` ：模块库，
+		- 允许(或期望)父级通过 `target_link_libraries` 链接
+	- `MODULE` ：动态链接库(模块)，运行时加载。在程序运行时由代码加载
+		- <font color="#c00000">禁止父级通过</font> `target_link_libraries` <font color="#c00000">链接</font>
 	其默认为 `STATIC` 或 `SHARED` ，具体取决于 `BUILD_SHARED_LIBS` 变量的值。
 
 ## 7.4 target_include_directories ^43amk6
