@@ -372,7 +372,11 @@ if(${var2}) # 即 if(var1)，也为FALSE
 
 与C语言中的 `Include` <span style="background:#fff88f"><font color="#c00000">相似但不同的是</font></span>，`include` 支持两种导入文件的方式：
 1. 当 `include` 的<font color="#c00000">参数中包含路径分隔符</font>(`/`)<font color="#c00000">或文件名后缀</font>(`.cmake `)时，CMake<font color="#c00000">会按照绝对路径或相对路径对参数进行解析</font>，从而导入文件
-2. 
+2. 当 `include` 的<font color="#c00000">参数为单纯的一个模块名时</font>，其会<font color="#c00000">按照下方的优先级</font>查找模块对应的 `.cmake` 文件从而进行导入：
+	1. 用户指定的 `CMAKE_MODULE_PATH` 变量中查找：
+		- 该变量是一个列表变量
+		- 默认为空，需要在 `CMakeLists.txt` 等中手动配置
+	2. 
 
 
 ## 5.2 CMakeLists.txt与add_subdirectory
