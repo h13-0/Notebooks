@@ -384,18 +384,20 @@ if(${var2}) # 即 if(var1)，也为FALSE
 在实际工程中，项目通常都为树形组织结构，父级目录需要包含子级目录提供的头文件声明与二进制定义等。
 
 针对上述问题，CMake给出的解决方案为：
-1. <font color="#c00000">每个包含了若干头文件声明与实现的子文件夹在CMake中被定义为</font><font color="#9bbb59">目标</font>(`Target`)
-2. <font color="#c00000">每个</font> `target` <font color="#c00000">下都包含一个</font> `CMakeLists.txt` ，<font color="#c00000">并由父级通过</font> `add_subdirctory` <font color="#c00000">包含</font>
-3. 每个 `target` <font color="#c00000">通过如下的命令暴露库信息</font>(例如头文件路径等)：
+1. 允许 `CMakeLists.txt` 定义零个或多个<font color="#9bbb59">目标</font>(`target`)，<font color="#c00000">每个目标即为逻辑上的一个库</font>
+2. 允许在 `CMakeLists.txt` 中为每个目标<font color="#c00000">通过如下的命令暴露库信息</font>(例如头文件路径等)：
 	- `target_include_directories` ：暴露头文件路径
 	- `target_link_libraries` ：暴露依赖库
 	- `target_compile_definitions` ：暴露预处理器宏定义
 	- `target_compile_options` ：暴露编译选项
 	- `target_compile_features` ：暴露编译特性
-当父级通过 `add_subdirctory` 包含后，子目标即可正常工作。实例如下：
+3. 随后<font color="#c00000">父级使用</font> `add_subdirctory` 将子文件夹中包含 ``
+4. 
+5. 
+6. <span style="background:#fff88f"><font color="#c00000">即可自动将子目标暴露的信息导入到父级中</font></span>
 
-文件结构：
-
+说明用实例如下：
+- 工程结构假设如下：
 ```
 Project/
 ├── CMakeLists.txt      (父级/主程序)
@@ -406,43 +408,39 @@ Project/
     ├── math_utils.h
     └── string_utils.cpp
 ```
-
-子目标 `CMakeLists.txt` 负责组织自身工程及暴露库信息：
-
+- 子目标 `CMakeLists.txt` 负责组织自身工程及暴露库信息：
 ```CMake
 # 1. 定义这个库目标 (Target)
-# 把文件夹下的源码打包成一个叫 "MyLib" 的库
+# 把文件夹下的源码打包成一个叫 "MyLib" 的库，方便导入源文件
 add_library(MyLib 
     math_utils.cpp 
     string_utils.cpp
 )
 
-# 2. 定义头文件查找路径 (关键步骤！)
-# PUBLIC 的含义暂时可以忽略
+# 2. 为目标添加查找路径
+# PUBLIC、INTERFACE、PRIVATE等为导入规则，后续章节会讲解，暂时不用了解
 target_include_directories(MyLib PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 ```
-
-随后父级 `CMakeLists.txt` 直接引用即可：
-
+- 随后父级 `CMakeLists.txt` 直接使用 `add_subdirectory` 即可导入：
 ```CMake
 cmake_minimum_required(VERSION 3.10)
 project(MainApp)
 
-# 1. 添加子目录
-# 这会执行 my_lib/CMakeLists.txt，此时 "MyLib" 这个目标就在内存里产生了
+# 1. 添加子目录，此时子目录暴露的 `MyLib` 、以及头文件路径等均已自动导入
 add_subdirectory(my_lib)
 
 # 2. 定义主程序
 add_executable(App main.cpp)
 
-# 3. 链接库 (关键步骤！)
-# 只要这一行，发生了两件事：
-#   (1) 链接器会把 libMyLib.a 链接进 App。
-#   (2) App 会自动获得 my_lib 目录作为头文件搜索路径 (因为刚才设了 PUBLIC)。
+# 3. 将子目标提供的 `MyLib` 参与链接
 target_link_libraries(App PRIVATE MyLib)
 ```
+
+### 5.2.1 
+
+
 
 
 ## 5.3 项目组织常用命令
