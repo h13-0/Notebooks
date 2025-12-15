@@ -102,6 +102,29 @@ class demo {
 
 删除指定方法 `=delete` 可以用于删除不可支持或暂不支持的方法，例如当类中成员包含不可复制对象时(例如套接字等)可以显示禁用类的拷贝方法。
 
+##### 3.1.1.3.4 修改属性权限
+
+在C++的语法上，允许子类通过重新定义<font color="#c00000">某个方法</font>来修改其权限，例如：
+
+```CPP
+class Base {
+public:
+    void func() { /* ... */ } // 父类是 public
+};
+
+class Derived : public Base {
+private:
+    // 将父类的 func 在子类中强制降级为 private
+    using Base::func; 
+};
+```
+
+当然，从语法上也允许子类将 `private` 的方法升级为 `public` 
+
+注意：
+1. 
+
+
 ### 3.1.2 重载运算符
 
 #### 3.1.2.1 基本定义
@@ -585,12 +608,49 @@ using xxCallback = std::function<void(const xx&)>;
 
 #### 3.3.5.3 类继承中的成员引入
 
-当父类中某一个函数有多个重载，且子类只重写了其中的某一个时，可以使用 `using` 把其他qian mi
+当父类中某一个函数有多个重载，且子类<font color="#c00000">只</font><span style="background:#fff88f"><font color="#c00000">重新定义</font></span><font color="#c00000">了某一个时</font>，可以使用 `using` 把其他签名的函数引入到子类中，例如：
+
+```CPP
+class Base {
+public:
+    void func(int i) { ... }
+    void func(double d) { ... }
+};
+
+class Derived : public Base {
+public:
+    // 子类定义了一个 func，这会导致 Base::func(int) 和 Base::func(double) 被隐藏
+    void func(std::string s) { ... }
+    
+    // 补救：使用 using 把父类的 func 全家桶都拉进可见范围
+    using Base::func; 
+};
+
+Derived d;
+d.func(10); // 如果没有 using，这行会报错
+```
 
 
-#### 3.3.5.4 使用枚举(C++20)
 
 
+
+
+#### 3.3.5.4 简化枚举类(C++20)
+
+在C++20之前，当使用枚举类时(`enum class`)，必须为预定义的枚举添加类名：
+
+```CPP
+enum class Color { Red, Green, Blue };
+
+void paint() {
+    // 在C++20之前，必须为预定义的枚举 `Red` 前添加类名 `Color`
+    Color c = Color::Red;
+    
+    // C++20之后，可以使用using enum来简化枚举类的使用
+    using enum Color;
+    Color c = Red; // 可以直接写 Red
+}
+```
 
 ## 3.4 C++不支持的C语言特性
 
