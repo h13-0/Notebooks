@@ -480,10 +480,10 @@ target_link_libraries(App PRIVATE MyLib)
 
 ## 6.2 传播控制关键字 ^7ylkgd
 
-传播控制关键字主要有 `INTERFACE` 、 `PUBLIC` 、 `PRIVATE` 这三种，其区别如下：
-- 
-- 
-- `PRIVATE` ：独享关键字
+传播控制关键字主要有 `PUBLIC` 、`INTERFACE` 、`PRIVATE` 这三种，其区别如下：
+- `PUBLIC` ：共享关键字，<font color="#c00000">当前目标及使用了该目标的范围内可用</font>
+- `INTERFACE` ：转发/接口关键字，<font color="#c00000">仅传递给依赖该目标的父级</font>
+- `PRIVATE` ：独享关键字，<font color="#c00000">仅目标自身范围内可用</font>
 
 
 
