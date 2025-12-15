@@ -102,11 +102,38 @@ class demo {
 
 删除指定方法 `=delete` 可以用于删除不可支持或暂不支持的方法，例如当类中成员包含不可复制对象时(例如套接字等)可以显示禁用类的拷贝方法。
 
-##### 3.1.1.3.4 成员引入
+##### 3.1.1.3.4 成员引入(using) ^464qd9
 
-anchor ^464qd9
+当父类中某一个函数有多个重载，且子类<font color="#c00000">只</font><span style="background:#fff88f"><font color="#c00000">重新定义</font></span><font color="#c00000">了某一个时</font>，可以使用 `using` 把其他签名的函数引入到子类中，例如：
 
-##### 3.1.1.3.5 修改成员属性权限(using) ^cvt59v
+```CPP
+class Base {
+public:
+    void func(int i) { ... }
+    void func(double d) { ... }
+};
+
+class Derived : public Base {
+public:
+    // 子类定义了一个 func，这会导致 Base::func(int) 和 Base::func(double) 被隐藏
+    void func(std::string s) { ... }
+    
+    // 补救：使用 using 把父类的 func 全家桶都拉进可见范围
+    using Base::func; 
+};
+
+Derived d;
+d.func(10); // 如果没有 using，这行会报错
+```
+
+注意：
+1. <font color="#c00000">使用</font> `using` <font color="#c00000">引入基类成员</font>和<font color="#c00000">重新定义基类成员</font>是<span style="background:#fff88f"><font color="#c00000">两个<u>不同的</u>特性</font></span>：
+	- 使用 `using` 则会<font color="#c00000">重新引入对应的成员</font>，<font color="#c00000">不会创建新的副本</font>
+	- 重新定义基类成员会重新分配一个成员，并按变量遮蔽规则进行使用，即：
+		- 父类中<font color="#c00000">只能使用</font>父类定义的成员
+		- 子类中<font color="#c00000">优先使用</font>子类定义的成员
+
+##### 3.1.1.3.5 成员权限修改(using) ^cvt59v
 
 在C++的语法上，允许子类通过<font color="#c00000">使用</font> `using` <font color="#c00000">的方式来修改某个属性和方法的权限</font>，例如：
 
@@ -129,7 +156,7 @@ public:
 
 注意：
 1. 只能通过 `using` 的方式实现上述操作
-2. <font color="#c00000">若使用重新定义的方式</font>，<span style="background:#fff88f"><font color="#c00000">则会触发命名遮蔽特性</font></span>。<font color="#c00000">此时会创建两个副本</font>，<font color="#c00000">父类中只能看到父类的副本</font>，<font color="#c00000">子类则优先看到子类的副本</font>。
+2. <font color="#c00000">若使用重新定义的方式</font>，<span style="background:#fff88f"><font color="#c00000">则会触发命名遮蔽特性</font></span>。<font color="#c00000">此时会创建两个副本</font>，<font color="#c00000">父类中只能看到父类的副本</font>，<font color="#c00000">子类则优先看到子类的副本</font>(与上一章节相同)。
 
 ### 3.1.2 重载运算符
 
@@ -614,32 +641,9 @@ using xxCallback = std::function<void(const xx&)>;
 
 #### 3.3.5.3 类继承中的成员引入
 
-当父类中某一个函数有多个重载，且子类<font color="#c00000">只</font><span style="background:#fff88f"><font color="#c00000">重新定义</font></span><font color="#c00000">了某一个时</font>，可以使用 `using` 把其他签名的函数引入到子类中，例如：
-
-```CPP
-class Base {
-public:
-    void func(int i) { ... }
-    void func(double d) { ... }
-};
-
-class Derived : public Base {
-public:
-    // 子类定义了一个 func，这会导致 Base::func(int) 和 Base::func(double) 被隐藏
-    void func(std::string s) { ... }
-    
-    // 补救：使用 using 把父类的 func 全家桶都拉进可见范围
-    using Base::func; 
-};
-
-Derived d;
-d.func(10); // 如果没有 using，这行会报错
-```
-
-其具体特性及要求可见章节：[[CPP/C2CPP/C2CPP#^cvt59v|成员引入与权限修改]]。
-
-
-
+类继承中的成员引入可以用于重写部分成员和修改成员权限，具体可见章节[[CPP/C2CPP/C2CPP#^464qd9|成员引入]]与[[CPP/C2CPP/C2CPP#^cvt59v|成员权限修改]]：
+![[CPP/C2CPP/C2CPP#3 1 1 3 4 成员引入 using 464qd9]]
+![[CPP/C2CPP/C2CPP#3 1 1 3 5 成员权限修改 using cvt59v]]
 
 #### 3.3.5.4 简化枚举类(C++20)
 
