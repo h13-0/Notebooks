@@ -363,14 +363,16 @@ if(${var2}) # 即 if(var1)，也为FALSE
 
 # 5 CMake项目组织
 
-## 5.1 .cmake文件与Include
+## 5.1 .cmake文件与include
 
 `*.cmake` 类似于C语言中的头文件，与C语言的 `*.h` 文件和 `#include` 指令一致的是，其：
-- <font color="#c00000">规则是</font> `*.cmake` <font color="#c00000">文件复制到</font> `Include` <font color="#c00000">命令所在的位置</font>
+- <font color="#c00000">规则是</font> `*.cmake` <font color="#c00000">文件复制到</font> `include` <font color="#c00000">命令所在的位置</font>
 - 通常用于导入脚本或导入库
 因此 `*.cmake` 文件中通常存放宏、函数定义和导入预置包等。
 
-
+与C语言中的 `Include` <span style="background:#fff88f"><font color="#c00000">相似但不同的是</font></span>，`include` 支持两种导入文件的方式：
+1. 当 `include` 的<font color="#c00000">参数中包含路径分隔符</font>(`/`)<font color="#c00000">或文件名后缀</font>(`.cmake `)时，CMake<font color="#c00000">会按照绝对路径或相对路径对参数进行解析</font>，从而导入文件
+2. 
 
 
 ## 5.2 CMakeLists.txt与add_subdirectory
