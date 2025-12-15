@@ -463,8 +463,11 @@ target_link_libraries(App PRIVATE MyLib)
 - [[CPP/CMake/CMake基础入门#^hx86e8|add_library]]：创建静态链接/动态链接库目标
 - [[CPP/CMake/CMake基础入门#^43amk6|target_include_directories]]：为目标添加头文件路径
 
-
----
+<div style="display:flex;align-items:center;gap:12px;margin:12px 0;">
+  <span style="flex:1;height:2px;background:#ccc;"></span>
+  <span style="color:#666;font-size:14px;white-space:nowrap;">后续章节为查阅性章节</span>
+  <span style="flex:1;height:2px;background:#ccc;"></span>
+</div>
 
 # 6 关键字 ^g41y0l
 
@@ -500,7 +503,18 @@ target_link_libraries(App PRIVATE MyLib)
 
 ## 7.2 add_executable ^ym2lpn
 
+创建一个可执行文件目标
 
+```CMake
+add_executable(<name> <options>... <sources>...)
+```
+
+其参数：
+- `<options>` ：选项，包括：
+	- `WIN32`
+	- `MACOSX_BUNDLE`
+	- `EXCLUDE_FROM_ALL`
+- 
 
 ## 7.3 add_library ^hx86e8
 
