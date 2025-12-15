@@ -506,18 +506,23 @@ target_link_libraries(App PRIVATE MyLib)
 创建一个可执行文件目标
 
 ```CMake
-add_executable(<name> <options>... <sources>...)
+add_executable(<name> [options]... [sources]...)
 ```
-
-其参数：
-- `<options>` ：选项，包括：
-	- `WIN32`
-	- `MACOSX_BUNDLE`
-	- `EXCLUDE_FROM_ALL`
-- 
 
 ## 7.3 add_library ^hx86e8
 
+创建一个链接库目标
+
+```CMake
+add_library(<name> [<type>] [EXCLUDE_FROM_ALL] <sources>...)
+```
+
+其中：
+- `[<type>]` 可以选择指定为如下三种类型：
+	- `STATIC` ：静态链接库
+	- `SHARED` ：动态链接库，构建时链接。若不链接程序可能无法启动
+	- `MODULE` ：模块库，
+	其默认为 `STATIC` 或 `SHARED` ，具体取决于 `BUILD_SHARED_LIBS` 变量的值。
 
 ## 7.4 target_include_directories ^43amk6
 
