@@ -370,34 +370,18 @@ if(${var2}) # 即 if(var1)，也为FALSE
 
 # 5 CMake项目组织
 
-## 5.1 .cmake文件与include
-
-`*.cmake` 类似于C语言中的头文件，与C语言的 `*.h` 文件和 `#include` 指令一致的是，其：
-- <font color="#c00000">规则是</font> `*.cmake` <font color="#c00000">文件复制到</font> `include` <font color="#c00000">命令所在的位置</font>
-- 通常用于导入脚本或导入库
-因此 `*.cmake` 文件中通常存放宏、函数定义和导入预置包等。
-
-与C语言中的 `Include` <span style="background:#fff88f"><font color="#c00000">相似但不同的是</font></span>，`include` 支持两种导入文件的方式：
-1. 当 `include` 的<font color="#c00000">参数中包含路径分隔符</font>(`/`)<font color="#c00000">或文件名后缀</font>(`.cmake `)时，CMake<font color="#c00000">会按照绝对路径或相对路径对参数进行解析</font>，从而导入文件
-2. 当 `include` 的<font color="#c00000">参数为单纯的一个模块名时</font>，其会<font color="#c00000">按照下方的优先级</font>查找模块对应的 `.cmake` 文件从而进行导入：
-	1. 用户指定的 `CMAKE_MODULE_PATH` 变量中查找：
-		- 该变量是一个列表变量
-		- 默认为空，需要在 `CMakeLists.txt` 等中手动配置
-	2. 从CMake内置的 `${CMAKE_ROOT}/Modules` 中寻找模块。具体路径可在脚本中打印
-	注意，<font color="#c00000">CMake不会从系统的</font> `PATH` <font color="#c00000">路径中寻找模块</font>
-
-## 5.2 CMakeLists.txt与add_subdirectory
-
 在实际工程中，项目通常都为树形组织结构，父级目录需要包含子级目录提供的头文件声明与二进制定义等。
 
 针对上述问题，CMake定义了如下概念：
-- <font color="#9bbb59">目标</font>：即 `target` ，是<span style="background:#fff88f"><font color="#c00000">逻辑上的</font></span><font color="#c00000">一个库</font>，<font color="#c00000">通过</font> `add_library` <font color="#c00000">定义</font>
+- <font color="#9bbb59">目标</font>：即 `target` ，是<span style="background:#fff88f"><font color="#c00000">逻辑上的</font></span><font color="#c00000">一个库</font>，<font color="#c00000">通过</font> `add_library` 或 `add_executable` <font color="#c00000">定义</font>
 	- 其允许包含头文件从而<font color="#c00000">提供静态/动态链接库</font>，<font color="#c00000">也允许是纯头文件库</font>
 - <font color="#9bbb59">子文件夹</font>：头文件、源文件等的<font color="#c00000">文件系统容器</font>，其包含 `CMakeLists.txt` 
 需要注意：
 - <font color="#9bbb59">目标</font>和<font color="#9bbb59">子文件夹</font><font color="#c00000">是两个不同的概念</font>，一个子文件夹的 `CMakeLists.txt` <font color="#c00000">中可以定义零个或多个目标</font>
 
-随后有如下的使用流程：
+## 5.1 CMakeLists.txt与add_subdirectory
+
+`CMakeLists.txt` 与 `add_subdirectory` 即为CMake的基础项目组织方式，其有如下的使用流程：
 1. 在子文件的 `CMakeLists.txt` 中定义零个或多个<font color="#9bbb59">目标</font>(`target`)
 2. 在子文件的 `CMakeLists.txt` 中<span style="background:#fff88f"><font color="#c00000">为每个目标</font></span><span style="background:#fff88f"><b><font color="#c00000">分别</font></b></span><font color="#c00000">通过如下的命令暴露库信息</font>(例如头文件路径等)：
 	- `target_include_directories` ：暴露头文件路径
@@ -450,20 +434,37 @@ add_executable(App main.cpp)
 target_link_libraries(App PRIVATE MyLib)
 ```
 
-### 5.2.1 传播控制及其关键字
+### 5.1.1 传播控制及其关键字
 
 本章节内容位于章节[[CPP/CMake/CMake基础入门#^7ylkgd|传播控制关键字]]中：![[CPP/CMake/CMake基础入门#6 2 传播控制关键字 7ylkgd]]
 
+## 5.2 .cmake文件与include
+
+`*.cmake` 类似于C语言中的头文件，与C语言的 `*.h` 文件和 `#include` 指令一致的是，其：
+- <font color="#c00000">规则是</font> `*.cmake` <font color="#c00000">文件复制到</font> `include` <font color="#c00000">命令所在的位置</font>
+- 通常用于导入脚本或导入库
+`*.cmake` 文件中通常存放宏、函数定义和导入预置包等。
+
+尽管通过 `include` 的展开机制配合项目组织命令也可以完成工程编译，<font color="#c00000">但其在工程组织上无法实现树形组织结构</font>，因此通常不用该方式组织工程。
+
+与C语言中的 `Include` <span style="background:#fff88f"><font color="#c00000">相似但不同的是</font></span>，`include` 支持两种导入文件的方式：
+1. 当 `include` 的<font color="#c00000">参数中包含路径分隔符</font>(`/`)<font color="#c00000">或文件名后缀</font>(`.cmake `)时，CMake<font color="#c00000">会按照绝对路径或相对路径对参数进行解析</font>，从而导入文件
+2. 当 `include` 的<font color="#c00000">参数为单纯的一个模块名时</font>，其会<font color="#c00000">按照下方的优先级</font>查找模块对应的 `.cmake` 文件从而进行导入：
+	1. 用户指定的 `CMAKE_MODULE_PATH` 变量中查找：
+		- 该变量是一个列表变量
+		- 默认为空，需要在 `CMakeLists.txt` 等中手动配置
+	2. 从CMake内置的 `${CMAKE_ROOT}/Modules` 中寻找模块。具体路径可在脚本中打印
+	注意，<font color="#c00000">CMake不会从系统的</font> `PATH` <font color="#c00000">路径中寻找模块</font>
+
 ## 5.3 项目组织常用命令
 
-### 5.3.1 添加头文件路径
+项目组织常用命令有：
+- [[CPP/CMake/CMake基础入门#^ym2lpn|add_executable]]：创建可执行文件目标
+- [[CPP/CMake/CMake基础入门#^hx86e8|add_library]]：创建静态链接/动态链接库目标
+- [[CPP/CMake/CMake基础入门#^43amk6|target_include_directories]]：为目标添加头文件路径
 
 
-
-
-### 5.3.2 
-
-
+---
 
 # 6 关键字 ^g41y0l
 
@@ -497,9 +498,14 @@ target_link_libraries(App PRIVATE MyLib)
 
 
 
+## 7.2 add_executable ^ym2lpn
 
 
-## 7.2 target_include_directories
+
+## 7.3 add_library ^hx86e8
+
+
+## 7.4 target_include_directories ^43amk6
 
 为目标添加包含目录
 
@@ -509,11 +515,11 @@ target_include_directories(<target> [SYSTEM] [AFTER|BEFORE]
   [<INTERFACE|PUBLIC|PRIVATE> [items2...] ...])
 ```
 
-## 7.3 target_link_libraries
+## 7.5 target_link_libraries
 
 
-## 7.4 target_compile_definitions
+## 7.6 target_compile_definitions
 
-## 7.5 target_compile_options
+## 7.7 target_compile_options
 
-## 7.6 target_compile_features
+## 7.8 target_compile_features
