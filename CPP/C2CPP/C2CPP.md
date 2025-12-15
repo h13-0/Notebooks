@@ -102,28 +102,34 @@ class demo {
 
 删除指定方法 `=delete` 可以用于删除不可支持或暂不支持的方法，例如当类中成员包含不可复制对象时(例如套接字等)可以显示禁用类的拷贝方法。
 
-##### 3.1.1.3.4 修改属性权限
+##### 3.1.1.3.4 成员引入
 
-在C++的语法上，允许子类通过重新定义<font color="#c00000">某个方法</font>来修改其权限，例如：
+anchor ^464qd9
+
+##### 3.1.1.3.5 修改成员属性权限(using) ^cvt59v
+
+在C++的语法上，允许子类通过<font color="#c00000">使用</font> `using` <font color="#c00000">的方式来修改某个属性和方法的权限</font>，例如：
 
 ```CPP
 class Base {
-public:
+protected:
     void func() { /* ... */ } // 父类是 public
 };
 
 class Derived : public Base {
-private:
+public:
     // 将父类的 func 在子类中强制降级为 private
-    using Base::func; 
+    using Base::func;
 };
 ```
 
-当然，从语法上也允许子类将 `private` 的方法升级为 `public` 
+当然，从语法上也允许子类将 `public` 的方法降级为 `private` ，不过其依旧可以通过多态将子类降级为父类从而实现访问。因此：
+- 将成员<font color="#c00000">提权</font>是<span style="background:#fff88f"><font color="#c00000">可行且常用的</font></span>
+- 将成员<font color="#c00000">降级</font>是可行但<font color="#c00000">有漏洞的</font>(没必要)
 
 注意：
-1. 
-
+1. 只能通过 `using` 的方式实现上述操作
+2. <font color="#c00000">若使用重新定义的方式</font>，<span style="background:#fff88f"><font color="#c00000">则会触发命名遮蔽特性</font></span>。<font color="#c00000">此时会创建两个副本</font>，<font color="#c00000">父类中只能看到父类的副本</font>，<font color="#c00000">子类则优先看到子类的副本</font>。
 
 ### 3.1.2 重载运算符
 
@@ -630,7 +636,7 @@ Derived d;
 d.func(10); // 如果没有 using，这行会报错
 ```
 
-
+其具体特性及要求可见章节：[[CPP/C2CPP/C2CPP#^cvt59v|成员引入与权限修改]]。
 
 
 
