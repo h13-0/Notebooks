@@ -458,8 +458,11 @@ target_link_libraries(App PRIVATE MyLib)
 
 ## 5.3 CMake工程的基本要求
 
+`CMakeLists.txt` <font color="#c00000">必须满足如下要求</font>：
+1. <font color="#c00000">必须包含</font> `cmake_minimum_required(VERSION x.xx)` <font color="#c00000">且必须放置到第一行</font>
+2. <font color="#c00000">必须包含</font> `project(<Name> ...)` 且跟随在 `cmake_minimum_required` 之后
 
-
+而 `*.cmake` 文件没有基本要求(反正只是被复制过来原地展开)。
 
 ## 5.4 项目组织常用命令
 
