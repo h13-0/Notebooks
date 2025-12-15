@@ -383,20 +383,25 @@ if(${var2}) # 即 if(var1)，也为FALSE
 
 在实际工程中，项目通常都为树形组织结构，父级目录需要包含子级目录提供的头文件声明与二进制定义等。
 
-针对上述问题，CMake给出的解决方案为：
-1. 允许 `CMakeLists.txt` 定义零个或多个<font color="#9bbb59">目标</font>(`target`)，<font color="#c00000">每个目标即为逻辑上的一个库</font>
-2. 允许在 `CMakeLists.txt` 中为每个目标<font color="#c00000">通过如下的命令暴露库信息</font>(例如头文件路径等)：
+针对上述问题，CMake定义了如下概念：
+- <font color="#9bbb59">目标</font>：即 `target` ，是<span style="background:#fff88f"><font color="#c00000">逻辑上的</font></span><font color="#c00000">一个库</font>，<font color="#c00000">通过</font> `add_library` <font color="#c00000">定义</font>
+	- 其允许包含头文件从而<font color="#c00000">提供静态/动态链接库</font>，<font color="#c00000">也允许是纯头文件库</font>
+- <font color="#9bbb59">子文件夹</font>：头文件、源文件等的<font color="#c00000">文件系统容器</font>，其包含 `CMakeLists.txt` 
+需要注意：
+- <font color="#9bbb59">目标</font>和<font color="#9bbb59">子文件夹</font><font color="#c00000">是两个不同的概念</font>，一个子文件夹的 `CMakeLists.txt` <font color="#c00000">中可以定义零个或多个目标</font>
+
+随后有如下的使用流程：
+1. 在子文件的 `CMakeLists.txt` 中定义零个或多个<font color="#9bbb59">目标</font>(`target`)
+2. 在子文件的 `CMakeLists.txt` 中<span style="background:#fff88f"><font color="#c00000">为每个目标</font></span><span style="background:#fff88f"><b><font color="#c00000">分别</font></b></span><font color="#c00000">通过如下的命令暴露库信息</font>(例如头文件路径等)：
 	- `target_include_directories` ：暴露头文件路径
 	- `target_link_libraries` ：暴露依赖库
 	- `target_compile_definitions` ：暴露预处理器宏定义
 	- `target_compile_options` ：暴露编译选项
 	- `target_compile_features` ：暴露编译特性
-3. 随后<font color="#c00000">父级使用</font> `add_subdirctory` 将子文件夹中包含 ``
-4. 
-5. 
-6. <span style="background:#fff88f"><font color="#c00000">即可自动将子目标暴露的信息导入到父级中</font></span>
+3. 随后<font color="#c00000">父级使用</font> `add_subdirctory` <font color="#c00000">包含</font> `CMakeLists.txt` <font color="#c00000">的子文件夹</font>
+4. 随后子文件夹 `CMakeLists.txt` 中<span style="background:#fff88f"><font color="#c00000">所有目标</font></span><font color="#c00000">暴露的库信息均会自动导入到父级中</font>
 
-说明用实例如下：
+说明demo如下：
 - 工程结构假设如下：
 ```
 Project/
@@ -410,15 +415,15 @@ Project/
 ```
 - 子目标 `CMakeLists.txt` 负责组织自身工程及暴露库信息：
 ```CMake
-# 1. 定义这个库目标 (Target)
-# 把文件夹下的源码打包成一个叫 "MyLib" 的库，方便导入源文件
+# 1. 定义一个库目标 `MyLib`，并为库目标导入源文件 (允许纯头文件库，即不添加源文件参数)
+#    允许通过多次调用 `add_library` 定义多个不同的目标
 add_library(MyLib 
     math_utils.cpp 
     string_utils.cpp
 )
 
-# 2. 为目标添加查找路径
-# PUBLIC、INTERFACE、PRIVATE等为导入规则，后续章节会讲解，暂时不用了解
+# 2. 为目标 `MyLib` 添加查找路径
+#    PUBLIC、INTERFACE、PRIVATE等为导入规则，后续章节会讲解，暂时不用了解
 target_include_directories(MyLib PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
