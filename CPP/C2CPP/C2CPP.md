@@ -562,6 +562,31 @@ constexpr int fib_10 = fibonacci(10); // 编译时计算：55
 
 ### 3.3.4 consteval 
 
+### 3.3.5 using
+
+在C++中，`using` 主要有如下的用法：
+1. 命名空间引入
+2. 提供类别别名(现代版的 `typedef` )
+3. 类继承中的成员引入
+4. 使用枚举
+
+#### 3.3.5.1 命名空间引入
+
+using引入命名空间时，有如下两种的引入方式：
+1. 引入整个命名空间(即 `using namespace std;` )
+2. 引入特定成员，例如 `using namespace std::string` ，随后即可使用 `string`
+通常来说
+
+#### 3.3.5.2 提供类别别名
+
+```CPP
+using xxCallback = std::function<void(const xx&)>;
+```
+
+#### 3.3.5.3 类继承中的成员引入
+
+
+#### 3.3.5.4 使用枚举(C++20)
 
 
 
