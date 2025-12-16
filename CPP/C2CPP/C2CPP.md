@@ -392,7 +392,13 @@ comp1.operator==(comp2);
 #### 3.4.2.1 发送者构造方法
 
 对于错误发送者，其基本用法为：
-1. 使用构造函数构造，其中：
+1. 使用构造函数构造，但其要求<font color="#c00000">已拥有</font>或<font color="#c00000">已完成</font>：
+	1. 错误类别(域信息)的构造
+	2. 错误枚举及错误信息的构造
+2. 直接抛出预置的IO错误(`std::io_errc`)
+
+
+3. 使用构造函数构造，其中：
 ```CPP
 error_code() noexcept;
 error_code(int ec, const error_category& ecat) noexcept;
@@ -405,7 +411,11 @@ error_code(error_code&& other) = default;
 std::error_code make_error_code(std::io_errc e) noexcept;
 ```
 其中：
-- `error_category` 为错误
+- `error_category` 为错误类别对象，其要继承自 `std::error_category`
+- `ErrorCodeEnum`
+
+
+
 
 #### 3.4.2.2 接收者使用方法
 
