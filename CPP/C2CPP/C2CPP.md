@@ -1453,7 +1453,25 @@ size_type count( const K& x ) const;
 
 `std::map` 内部通常基于红黑树实现，<font color="#c00000">元素始终按键的升序排序</font>。
 
-### 4.2.7 std::optional
+### 4.2.7 std::optional(C++17)
+
+`std::optional` 表示是<span style="background:#fff88f"><font color="#c00000">一个可能存在，也可能不存在的值</font></span>。其可以用于如下用途：
+1. 函数返回值：表示可能无法返回有效结果的返回值
+```CPP
+// 当不使用 `std::optional` 时，必须同时从参数和返回值ji
+bool find_item(const Container &c, Item &i) {
+	
+}
+```
+1. struct成员：表示struct的可选字段
+2. 延迟初始化：例如有些对象的构造代价可能很大，因此可以先使用 `std::optional` 进行占位
+
+
+
+
+
+
+
 
 `std::optional` 主要用于解决可能返回失败的函数，例如要返回一个 `bool` 表示成功与否以及一个对象 `T` 来表示执行结果的函数。
 但是使用 `std::pair<T, bool>` 相对比较麻烦，可以直接使用 `std::optional<T>` 代替。
