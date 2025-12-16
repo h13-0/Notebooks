@@ -505,11 +505,14 @@ target_link_libraries(App PRIVATE MyLib)
 
 # 7 函数、命令
 
-## 7.1 message
+## 7.1 输出消息(message)
 
+`message` 命令主要有如下三种使用方式：
+1. 输出一个通用消息 `message([<mode>] "message text" ...)` ，其中参数 `[<mode>]` 为可省略的消息类型
+2. 输出检查状态 `message(<checkState> "message text" ...)` 
+3. 输出配置日志 `message(CONFIGURE_LOG <text>...)` 
 
-
-## 7.2 add_executable ^ym2lpn
+## 7.2 创建一个可执行文件目标(add_executable) ^ym2lpn
 
 创建一个可执行文件目标
 
