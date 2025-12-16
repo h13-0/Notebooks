@@ -458,11 +458,11 @@ target_link_libraries(App PRIVATE MyLib)
 
 ## 5.3 CMake工程的基本要求
 
-`CMakeLists.txt` <font color="#c00000">必须满足如下要求</font>：
+<span style="background:#fff88f"><font color="#c00000">根项目</font></span>的 `CMakeLists.txt` <font color="#c00000">必须满足如下要求</font>：
 1. <font color="#c00000">必须包含</font> `cmake_minimum_required(VERSION x.xx)` <font color="#c00000">且必须放置到第一行</font>
 2. <font color="#c00000">必须包含</font> `project(<Name> ...)` 且跟随在 `cmake_minimum_required` 之后
 
-而 `*.cmake` 文件没有基本要求(反正只是被复制过来原地展开)。
+而<font color="#c00000">子项目的</font> `CMakeLists.txt` 和所有 `*.cmake` 文件<font color="#c00000">没有基本要求</font>。
 
 ## 5.4 项目组织常用命令
 
