@@ -1455,27 +1455,51 @@ size_type count( const K& x ) const;
 
 ### 4.2.7 std::optional(C++17)
 
+#### 4.2.7.1 基本使用
+
 `std::optional` 表示是<span style="background:#fff88f"><font color="#c00000">一个可能存在，也可能不存在的值</font></span>。其可以用于如下用途：
 1. 函数返回值：表示可能无法返回有效结果的返回值
 ```CPP
-// 当不使用 `std::optional` 时，必须同时从参数和返回值ji
-bool find_item(const Container &c, Item &i) {
-	
+// 当不使用 `std::optional` 时，必须同时从参数和返回值接收查询结果
+bool find_item(const Container &c, Item &i) { ... }
+
+// 而使用 `std::optional` 后，可以不再从参数接收结果
+std::optional<Item> find_item(const Container &c) { 
+	if(success)
+		return Item();
+	else
+		return std::nullopt;
 }
 ```
-1. struct成员：表示struct的可选字段
-2. 延迟初始化：例如有些对象的构造代价可能很大，因此可以先使用 `std::optional` 进行占位
+2. struct成员：表示struct的可选字段
+```CPP
+struct UserInfo {
+    std::string name;           // 必填
+    int age;                    // 必填
+    std::optional<std::string> nickname; // 选填：用户可能没有昵称
+    std::optional<std::string> phone;    // 选填：用户可能没填电话
+};
+```
+3. 延迟初始化：例如有些对象的构造代价可能很大，因此可以先使用 `std::optional` 进行占位
 
+而在使用时，可以使用如下的方法校验其是否包含值：
 
+```CPP
+// 使用 `has_value` 方法
+if(opt.has_value()) { ... }
 
+// 使用重载的 bool 转换
+if(opt) { ... }
+```
 
+获取值也有如下的几种方法：
+1. (<font color="#c00000">推荐</font>)使用 `opt.value_or(default_val)` ，当没有值时会使用默认值
+2. 使用 `opt.value()` ，<font color="#c00000">当没有值时会抛出异常</font>
+3. 直接解引用 `value = *opt` ，<font color="#c00000">没有值时行为未定义</font>，但是速度最快
 
+#### 4.2.7.2 内存分配
 
-
-
-`std::optional` 主要用于解决可能返回失败的函数，例如要返回一个 `bool` 表示成功与否以及一个对象 `T` 来表示执行结果的函数。
-但是使用 `std::pair<T, bool>` 相对比较麻烦，可以直接使用 `std::optional<T>` 代替。
-
+`std::optional` 是静态分配的内存，位于栈上
 
 
 
