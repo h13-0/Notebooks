@@ -365,33 +365,71 @@ comp1.operator==(comp2);
 ## 3.2 引用
 
 
-## 3.3 智能指针
+## 3.3 新增基本类型(不含STL)
+
+### 3.3.1 智能指针
 
 智能指针是C++中一类指针的统称，其包含：
 - `std::unique_ptr` 独占指针
 - `std::shared_ptr` 共享指针
 - `std::weak_ptr` 弱引用指针
 
-### 3.3.1 独占指针(unique_ptr)
+#### 3.3.1.1 独占指针(unique_ptr)
 
-独占指针是现在C++中最常用、最推荐的智能指针，其特性如下：
+独占指针是现在C++中<font color="#c00000">最常用</font>、<font color="#c00000">最推荐</font>的智能指针，其特性如下：
 1. 独占特性：
-	1. 同一时刻只能有一个 `unique_ptr` 指向该对象
-	2. 禁止拷贝：赋值会出错
+	1. 同一时刻<font color="#c00000">有且只能有一个</font> `unique_ptr` 指向该对象
+	2. 禁止拷贝：赋值会报错
 	3. 允许移动：把所有权通过 `std::move` 转让给别人
 2. 零开销特性：其大小和普通指针一样大，运行时也几乎没有额外开销
+3. 自动内存管理：指针声明周期结束时会自动释放对应内存
+
+其特性与demo为：
+
+```CPP
+void test_unique() {
+    // 通过 `std::make_unique` 创建
+    std::unique_ptr<int> ptr1 = std::make_unique<int>(10);
+    
+    // std::unique_ptr<int> ptr2 = ptr1; // 编译报错！禁止拷贝
+    
+    // 移动 (所有权转移)
+    std::unique_ptr<int> ptr2 = std::move(ptr1); 
+    // 此时 ptr1 变为空 (nullptr)，ptr2 拥有那个 int
+} // 函数结束，ptr2 析构，自动 delete 内存
+```
+
+#### 3.3.1.2 共享指针(shared_ptr)
+
+共享指针用于多个指针指向同一个对象的情况，其特性如下：
+1. <font color="#c00000">引用计数特性</font>：
+	- 每多一个指针则引用计数器 `+1` ，每少一个指针则计数器 `-1` 
+	- 计数器归零时自动释放内存
+2. 有性能开销：
+	1. <font color="#c00000">其大小是普通指针的二倍</font>(一个指向对象，一个指向计数器)
+	2. 计数器的加减涉及原子操作，新增/释放指针时比普通指针慢
+3. 允许拷贝
+
+其特性与demo为：
+
+```CPP
+void test_shared() {
+	// 通过 `std::make_shared` 创建，此时计数器为1
+    std::shared_ptr<int> sp1 = std::make_shared<int>(100);
+    
+    {
+        std::shared_ptr<int> sp2 = sp1; // 允许拷贝，计数 = 2
+        // 两人共用一个 int
+    } // sp2 析构，计数 = 1，内存未释放
+    
+} // sp1 析构，计数 = 0 -> 释放内存
+```
 
 
+#### 3.3.1.3 强类型枚举(enum class)
 
 
-
-
-## 3.4 新增基本类型(不含STL)
-
-### 3.4.1 强类型枚举(enum class)
-
-
-### 3.4.2 错误码(std::error_code)(C++11)
+### 3.3.2 错误码(std::error_code)(C++11)
 
 在C++11之前，标准提供的错误机制主要有如下两种：
 1. 全局的 `errno` ，是全局变量，线程不安全
@@ -402,7 +440,7 @@ comp1.operator==(comp2);
 2. `std::error_code` 可以携带错误信息字符串
 3. `std::error_code` 可以携带域信息，标明错误是源自操作系统、HTTP库或者其他的库
 
-#### 3.4.2.1 发送者构造方法
+#### 3.3.2.1 发送者构造方法
 
 对于错误发送者，可直接使用构造函数构造并返回，但其要求<font color="#c00000">已拥有</font>或<font color="#c00000">已完成</font>：
 1. 错误类别(域信息)的构造
@@ -479,7 +517,7 @@ inline std::error_code make_error_code(CaptureError e) {
 }
 ```
 
-#### 3.4.2.2 接收者使用方法
+#### 3.3.2.2 接收者使用方法
 
 对于错误接收者，其基本用法有：
 1. 判断是否有错：
@@ -501,13 +539,13 @@ if(ec == std::errc::invalid_argument) ...
 cout << "Value: " << ec.value() << ", Category: " << ec.category().name()
 ```
 
-## 3.5 新增关键字
+## 3.4 新增关键字
 
-### 3.5.1 namespace
+### 3.4.1 namespace
 
 如其字面意思， `namespace` 主要用于划定命名空间，给其限定的函数、类、变量、枚举、模板等提供作用域，从而<font color="#c00000">避免命名冲突</font>。
 
-#### 3.5.1.1 基本使用方式
+#### 3.4.1.1 基本使用方式
 
 `namespace` 可以用于限定函数、类等特性，其基本使用方式为：
 
@@ -568,7 +606,7 @@ api::v2::foo();
 namespace fs = std::filesystem; // 简化长路径
 ```
 
-#### 3.5.1.2 命名空间的导入与全局命名空间
+#### 3.4.1.2 命名空间的导入与全局命名空间
 
 命名空间的导入可直接参考如下方式：
 
@@ -604,7 +642,7 @@ void func()
 }
 ```
 
-#### 3.5.1.3 匿名命名空间
+#### 3.4.1.3 匿名命名空间
 
 其主要用于替代C语言里面的 `static` 写法。
 当使用不包含名称的 `namespace` 时，该命名空间会被视作匿名命名空间，其作用是<span style="background:#fff88f"><font color="#c00000">当前作用域内可见</font></span>。
@@ -630,7 +668,7 @@ void helper() { } // 则整个namespace api中可见
 注意：
 1. <font color="#c00000">匿名命名空间不可放于头文件中</font>，<span style="background:#fff88f"><font color="#c00000">否则每个包含该头文件的源文件均会生成一份实体</font></span>。(类似于 `static` )。
 
-#### 3.5.1.4 内联命名空间
+#### 3.4.1.4 内联命名空间
 
 内联命名空间可将子命名空间自动提升为外层可见，方便用于版本管理和ABI过渡：
 
@@ -648,7 +686,7 @@ void foo();
 api::foo();            // 自动调用api::v2::foo();
 ```
 
-### 3.5.2 explicit 强制显式转换 ^6nhi9i
+### 3.4.2 explicit 强制显式转换 ^6nhi9i
 
 对于没有使用 `explicit` 修饰的类，若其存在<font color="#c00000">只有一个</font><span style="background:#fff88f"><font color="#c00000">非</font></span><font color="#c00000">默认参数</font>的构造函数时，那么该类就允许<font color="#c00000">由一个非默认参数的变量隐式转换为该类</font>。
 
@@ -710,7 +748,7 @@ int main()
 }
 ```
 
-### 3.5.3 constexpr 编译期求值
+### 3.4.3 constexpr 编译期求值
 
 `constexpr` 关键字用于指定<font color="#c00000">变量或函数</font>使其在<font color="#c00000">编译期完成求值</font>，其有如下特性：
 - `constexpr` 修饰<font color="#c00000">常量</font>，<font color="#c00000">常量</font>在编译期完成求值
@@ -718,7 +756,7 @@ int main()
 - `constexpr` 修饰构造函数，会在编译期构造<font color="#c00000">常量</font>对象
 需要注意的一点是 `constexpr` <span style="background:#fff88f"><font color="#c00000">仅</font></span><font color="#c00000">在修饰函数时</font>可能会延后到编译期求值，其他两种情况均<span style="background:#fff88f"><font color="#c00000">一定在编译期求值</font></span>。
 
-#### 3.5.3.1 constexpr 常量
+#### 3.4.3.1 constexpr 常量
 
 `constexpr` 会在编译期确定常量的值，其与 ` const ` 常量的区别：
 
@@ -730,7 +768,7 @@ int array1[runtime_const];             // 错误，C++不支持VLA
 int array2[compile_const];             // 正确，编译期已经求值
 ```
 
-#### 3.5.3.2 constexpr 函数
+#### 3.4.3.2 constexpr 函数
 
 `constexpr` 修饰函数后，编译器会<span style="background:#fff88f"><font color="#c00000">尝试</font></span>对该函数在编译期求值：
 - 若输入的参数为常量，则编译期会完成求值
@@ -773,14 +811,14 @@ constexpr int fact_5 = factorial(5);  // 编译时计算：120
 constexpr int fib_10 = fibonacci(10); // 编译时计算：55
 ```
 
-#### 3.5.3.3 constexpr 构造函数
+#### 3.4.3.3 constexpr 构造函数
 
 `constexpr` 构造函数可以在编译期构造<font color="#c00000">常量</font>对象
 
 
-### 3.5.4 consteval 
+### 3.4.4 consteval 
 
-### 3.5.5 using
+### 3.4.5 using
 
 在C++中，`using` 主要有如下的用法：
 1. 命名空间引入
@@ -788,26 +826,26 @@ constexpr int fib_10 = fibonacci(10); // 编译时计算：55
 3. 类继承中的成员引入
 4. 使用枚举
 
-#### 3.5.5.1 命名空间引入
+#### 3.4.5.1 命名空间引入
 
 using引入命名空间时，有如下两种的引入方式：
 1. 引入整个命名空间(即 `using namespace std;` )
 2. 引入特定成员，例如 `using namespace std::string` ，随后即可使用 `string`
 通常来说更推荐第二种引入方式
 
-#### 3.5.5.2 提供类别别名
+#### 3.4.5.2 提供类别别名
 
 ```CPP
 using xxCallback = std::function<void(const xx&)>;
 ```
 
-#### 3.5.5.3 类继承中的成员引入
+#### 3.4.5.3 类继承中的成员引入
 
 类继承中的成员引入可以用于<font color="#c00000">重写部分成员</font>和<font color="#c00000">修改成员权限</font>，具体可见章节[[CPP/C2CPP/C2CPP#^464qd9|成员引入]]与[[CPP/C2CPP/C2CPP#^cvt59v|成员权限修改]]：
 ![[CPP/C2CPP/C2CPP#3 1  3 4 成员引入 using 464qd9]]
 ![[CPP/C2CPP/C2CPP#3 1 3 5 成员权限修改 using cvt59v]]
 
-#### 3.5.5.4 简化枚举类(C++20)
+#### 3.4.5.4 简化枚举类(C++20)
 
 在C++20之前，当使用枚举类时(`enum class`)，必须为预定义的枚举添加类名：
 
@@ -824,9 +862,9 @@ void paint() {
 }
 ```
 
-## 3.6 C++不支持的C语言特性
+## 3.5 C++不支持的C语言特性
 
-### 3.6.1 VLA可变长数组
+### 3.5.1 VLA可变长数组
 
 在C99之后，C语言就支持了可变长数组，但是无论哪个C++标准均不支持可变长数组。
 
