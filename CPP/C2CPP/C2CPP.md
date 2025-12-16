@@ -371,6 +371,13 @@ comp1.operator==(comp2);
 
 ## 3.3 智能指针
 
+智能指针是C++中一类指针的统称，其包含：
+- `std::unique_ptr` 独占指针
+- `std::shared_ptr` 共享指针
+- `std::weak_ptr` 弱引用指针
+
+### 3.3.1 
+
 
 
 ## 3.4 新增基本类型(不含STL)
@@ -460,11 +467,11 @@ const std::error_category& capture_category() {
 ```
 5. (可选)重载 `make_error_code` 方便使用
 ```CPP
-std::error_code make_error_code(CaptureError e) {
+// capture_errors.hpp
+inline std::error_code make_error_code(CaptureError e) {
     return std::error_code(static_cast<int>(e), capture_category());
 }
 ```
-
 
 #### 3.4.2.2 接收者使用方法
 
