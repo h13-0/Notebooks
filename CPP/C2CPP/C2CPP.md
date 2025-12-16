@@ -419,8 +419,8 @@ void test_shared() {
     std::shared_ptr<int> sp1 = std::make_shared<int>(100);
     
     {
+    	// 两指针共用一个 int
         std::shared_ptr<int> sp2 = sp1; // 允许拷贝，计数 = 2
-        // 两人共用一个 int
     } // sp2 析构，计数 = 1，内存未释放
     
 } // sp1 析构，计数 = 0 -> 释放内存
@@ -449,11 +449,34 @@ void test_cycle() {
 } // a, b均减一，但不为0，内存泄露
 ```
 
-那么此时则需要
+那么此时则需要为其中一个结构体设计一个不增加引用计数器的指针，即 `weak_ptr` ，其特性如下：
+1. <font color="#c00000">不增加共享指针的引用计数</font>
+2. 其没有解引用操作符(`*` 、 `->`)，需要调用 `.lock()` 升级为 `std::shared_ptr` 后才可以使用
+其改进demo如下：
 
+```CPP
+struct B;
+struct A {
+    std::shared_ptr<B> b_ptr;
+};
+struct B {
+    // 如果这里是 shared_ptr<A>，就会循环引用，内存永远泄露
+    std::weak_ptr<A> a_ptr; 
+};
 
-
-
+void test_cycle() {
+    auto a = std::make_shared<A>();
+    auto b = std::make_shared<B>();
+    a->b_ptr = b;
+    b->a_ptr = a; // weak_ptr 不增加计数
+    
+    // 解引用需要升级为 shared_ptr
+    auto shared = b->a_ptr.lock();
+    if(shared)
+    	do_sth(*shared);
+    
+} // 正常释放
+```
 
 ### 3.3.2 强类型枚举(enum class)
 
