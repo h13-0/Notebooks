@@ -807,9 +807,11 @@ int main()
 
 `constexpr` 关键字用于指定<font color="#c00000">变量或函数</font>使其在<font color="#c00000">编译期完成求值</font>，其有如下特性：
 - `constexpr` 修饰<font color="#c00000">常量</font>，<font color="#c00000">常量</font>在编译期完成求值
-- `constexpr` 修饰函数，会<span style="background:#fff88f"><font color="#c00000">尝试</font></span>在编译期求值
+- `constexpr` 修饰函数，会<span style="background:#fff88f"><font color="#c00000">尝试</font></span>在编译期求值(也可能推迟到运行时)
 - `constexpr` 修饰构造函数，会在编译期构造<font color="#c00000">常量</font>对象
-需要注意的一点是 `constexpr` <span style="background:#fff88f"><font color="#c00000">仅</font></span><font color="#c00000">在修饰函数时</font>可能会延后到编译期求值，其他两种情况均<span style="background:#fff88f"><font color="#c00000">一定在编译期求值</font></span>。
+需要注意：
+- `constexpr` <span style="background:#fff88f"><font color="#c00000">仅</font></span><font color="#c00000">在修饰函数时</font>可能会延后到运行时求值，其他两种情况均<span style="background:#fff88f"><font color="#c00000">一定在编译期求值</font></span>。
+- `constexpr` 修饰函数时，<span style="background:#fff88f"><font color="#c00000">必须在声明处使用</font></span>，不过通常推荐声明和定义写在一起。
 
 #### 3.4.3.1 constexpr 常量
 
@@ -916,6 +918,11 @@ void paint() {
     Color c = Red; // 可以直接写 Red
 }
 ```
+
+### 3.4.6 函数关键字汇总及要求
+
+在C++中
+
 
 ## 3.5 C++不支持的C语言特性
 
