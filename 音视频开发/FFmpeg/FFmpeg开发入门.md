@@ -8,7 +8,9 @@ number headings: auto, first-level 1, max 6, 1.1
 ```toc
 ```
 
+# 2 概述
 
+## 2.1 FFmpeg模块结构
 
 FFmpeg主要有如下几个子模块：
 - `libavcodec` ：提供了一系列编码器的实现
@@ -18,6 +20,26 @@ FFmpeg主要有如下几个子模块：
 - `libavdevice` ：提供了访问捕获设备和回放设备的接口
 - `libswresample` ：提供了混音和重采样
 - `libswscale` ：提供了色彩转换和缩放功能
+
+
+
+# 3 libavutil模块
+
+## 3.1 FFmpeg日志系统的使用
+
+FFmpeg日志系统的声明位于头文件 `libavutil/log.h` 其简易使用流程为：
+1. [[音视频开发/FFmpeg/FFmpeg开发入门#^oxdoti|设置日志等级]]
+
+### 3.1.1 常用API
+
+#### 3.1.1.1 设置日志等级 ^oxdoti
+
+```C
+av_log_set_level()
+```
+
+
+
 
 
 
