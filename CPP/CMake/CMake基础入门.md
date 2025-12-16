@@ -58,6 +58,20 @@ list(FILTER <list> {INCLUDE | EXCLUDE} REGEX <regex>)
 	- `{INCLUDE | EXCLUDE}` 表示<font color="#c00000">必须且单选</font>(互斥)
 	- `{A B}` 表示<font color="#c00000">顺序序列</font>，必须先写 `A` 再写 `B`
 
+## 2.4 函数参数规则
+
+在CMake中，调用函数或命令时，分号 `;` 的作用与空格移植，用于分割参数，例如：
+
+```CMake
+set(SRC_FILES a.cpp;b.cpp;c.cpp)
+
+# 错误用法：
+# message(${SRC_FILES}) # 等价于 message(a.cpp b.cpp c.cpp)，不符合参数规定，报错
+
+# 正确用法：使用双引号包裹变量
+message("${SRC_FILES}")
+```
+
 # 3 变量、宏
 
 CMake按变量的作用域可以分为：
