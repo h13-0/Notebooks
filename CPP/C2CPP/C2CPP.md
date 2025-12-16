@@ -391,14 +391,11 @@ comp1.operator==(comp2);
 
 #### 3.4.2.1 发送者构造方法
 
-对于错误发送者，其基本用法为：
-1. 使用构造函数构造，但其要求<font color="#c00000">已拥有</font>或<font color="#c00000">已完成</font>：
-	1. 错误类别(域信息)的构造
-	2. 错误枚举及错误信息的构造
-2. 直接抛出预置的IO错误(`std::io_errc`)
+对于错误发送者，可直接使用构造函数构造并返回，但其要求<font color="#c00000">已拥有</font>或<font color="#c00000">已完成</font>：
+1. 错误类别(域信息)的构造
+2. 错误枚举及错误信息的构造
+随后即可使用构造函数进行构造：
 
-
-3. 使用构造函数构造，其中：
 ```CPP
 error_code() noexcept;
 error_code(int ec, const error_category& ecat) noexcept;
@@ -406,15 +403,67 @@ template<class ErrorCodeEnum> error_code(ErrorCodeEnum e) noexcept;
 error_code(const error_code& other) = default;
 error_code(error_code&& other) = default;
 ```
-2. 直接抛出预置的IO错误(`std::io_errc`)：
-```CPP
-std::error_code make_error_code(std::io_errc e) noexcept;
-```
+
 其中：
 - `error_category` 为错误类别对象，其要继承自 `std::error_category`
-- `ErrorCodeEnum`
+- `ErrorCodeEnum` 为可转换为 `std::error_code` 的错误码
+
+而错误类别、错误枚举及错误信息的构造步骤为：
+1. 定义错误枚举：
+```CPP
+// capture_errors.hpp
+enum class CaptureError {
+    Success = 0,
+    DeviceBusy,
+    CameraDisconnected,
+    DecodeFailed
+};
+```
+2. 向STL告知 `CaptureError` 可以转换为 `std::error_code`
+```CPP
+// capture_errors.hpp
+namespace std {
+    template <>
+    struct is_error_code_enum<CaptureError> : true_type {};
+}
+```
+3. 定义错误类别，继承自 `std::error_category` ，并设置错误信息
+```CPP
+// capture_errors.hpp
+class CaptureCategory : public std::error_category {
+public:
+    const char* name() const noexcept override {
+        return "MasqueCapture"; // 错误类别的名字
+    }
+
+    std::string message(int ev) const override {
+        switch (static_cast<CaptureError>(ev)) {
+            case CaptureError::Success: return "Success";
+            case CaptureError::DeviceBusy: return "Device is busy";
+            case CaptureError::CameraDisconnected: return "Camera disconnected";
+            case CaptureError::DecodeFailed: return "Frame decode failed";
+            default: return "Unknown capture error";
+        }
+    }
+};
 
 
+```
+4. 为错误类别构造全局单例
+```CPP
+// capture_errors.hpp
+// 全局单例，保证 Category 地址唯一
+const std::error_category& capture_category() {
+    static CaptureCategory instance;
+    return instance;
+}
+```
+5. (可选)重载 `make_error_code` 方便使用
+```CPP
+std::error_code make_error_code(CaptureError e) {
+    return std::error_code(static_cast<int>(e), capture_category());
+}
+```
 
 
 #### 3.4.2.2 接收者使用方法
