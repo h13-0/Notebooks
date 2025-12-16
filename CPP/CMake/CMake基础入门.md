@@ -552,3 +552,12 @@ target_include_directories(<target> [SYSTEM] [AFTER|BEFORE]
 ## 7.7 target_compile_options
 
 ## 7.8 target_compile_features
+
+## 7.9 遍历文件夹下源文件(aux_source_directory)
+
+该命令会遍历指定文件夹下所有源文件，并<font color="#c00000">追加</font>到指定变量中
+
+```CMake
+aux_source_directory(<dir> <variable>)
+```
+
