@@ -389,17 +389,32 @@ comp1.operator==(comp2);
 2. `std::error_code` 可以携带错误信息字符串
 3. `std::error_code` 可以携带域信息，标明错误是源自操作系统、HTTP库或者其他的库
 
+#### 3.4.2.1 发送者构造方法
+
 对于错误发送者，其基本用法为：
-
+1. 使用构造函数构造，其中：
 ```CPP
-
-
-
-
+error_code() noexcept;
+error_code(int ec, const error_category& ecat) noexcept;
+template<class ErrorCodeEnum> error_code(ErrorCodeEnum e) noexcept;
+error_code(const error_code& other) = default;
+error_code(error_code&& other) = default;
 ```
+2. 直接抛出预置的IO错误(`std::io_errc`)：
+```CPP
+std::error_code make_error_code(std::io_errc e) noexcept;
+```
+其中：
+- `error_category` 为错误
+
+#### 3.4.2.2 接收者使用方法
 
 对于错误接收者，其基本用法有：
-1. 
+1. 判断是否有错：
+```CPP
+// 直接使用重载的 bool 转换
+if (ec) { ... }
+```
 2. 直接获取错误信息：
 ```CPP
 cout << ec.message()
@@ -407,11 +422,12 @@ cout << ec.message()
 3. 比较是不是特定错误：
 ```CPP
 // 判断是不是标准错误码中的参数错误
-ifec == std::errc::invalid_argument
+if(ec == std::errc::invalid_argument) ...
 ```
-
-
-
+4. 获取错误码值和其所属类别：
+```CPP
+cout << "Value: " << ec.value() << ", Category: " << ec.category().name()
+```
 
 ## 3.5 新增关键字
 
