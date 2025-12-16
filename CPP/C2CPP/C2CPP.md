@@ -374,6 +374,7 @@ comp1.operator==(comp2);
 - `std::shared_ptr` 共享指针
 - `std::weak_ptr` 弱引用指针
 智能指针严格来说不属于STL。
+智能指针使用头文件 `<memory>` 。
 
 #### 3.3.1.1 独占指针(unique_ptr)
 
@@ -1664,6 +1665,8 @@ size_type count( const K& x ) const;
 `std::map` 内部通常基于红黑树实现，<font color="#c00000">元素始终按键的升序排序</font>。
 
 ### 4.2.7 std::optional(C++17)
+
+`std::optional` 使用头文件 `<optional>`
 
 #### 4.2.7.1 基本使用
 
