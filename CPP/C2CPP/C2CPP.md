@@ -49,7 +49,7 @@ ClassName obj{};
 - class中默认成员访问权限和继承权限为 `private` ，struct中默认成员访问权限和继承权限为 `public` 
 而使用 `struct` 可以很方便的实现[[../../面向对象的程序设计/面向对象的程序设计#^vuawz5|聚合初始化]]功能，而该功能又可以让struct像C语言中的struct一样被简单定义。
 
-### 3.1.3 面向对象的额外特性
+### 3.1.3 面向对象的其他基础特性
 
 #### 3.1.3.1 this指针
 
@@ -673,8 +673,8 @@ using xxCallback = std::function<void(const xx&)>;
 #### 3.5.5.3 类继承中的成员引入
 
 类继承中的成员引入可以用于<font color="#c00000">重写部分成员</font>和<font color="#c00000">修改成员权限</font>，具体可见章节[[CPP/C2CPP/C2CPP#^464qd9|成员引入]]与[[CPP/C2CPP/C2CPP#^cvt59v|成员权限修改]]：
-![[CPP/C2CPP/C2CPP#3 1 1 3 4 成员引入 using 464qd9]]
-![[CPP/C2CPP/C2CPP#3 1 1 3 5 成员权限修改 using cvt59v]]
+![[CPP/C2CPP/C2CPP#3 1  3 4 成员引入 using 464qd9]]
+![[CPP/C2CPP/C2CPP#3 1 3 5 成员权限修改 using cvt59v]]
 
 #### 3.5.5.4 简化枚举类(C++20)
 
