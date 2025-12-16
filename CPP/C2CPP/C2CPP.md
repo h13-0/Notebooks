@@ -743,6 +743,8 @@ api::foo();            // 自动调用api::v2::foo();
 
 对于没有使用 `explicit` 修饰的类，若其存在<font color="#c00000">只有一个</font><span style="background:#fff88f"><font color="#c00000">非</font></span><font color="#c00000">默认参数</font>的构造函数时，那么该类就允许<font color="#c00000">由一个非默认参数的变量隐式转换为该类</font>。
 
+<font color="#c00000">该关键字只在声明处使用</font>。
+
 例如：
 
 ```CPP
