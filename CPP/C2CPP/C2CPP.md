@@ -373,6 +373,7 @@ comp1.operator==(comp2);
 - `std::unique_ptr` 独占指针
 - `std::shared_ptr` 共享指针
 - `std::weak_ptr` 弱引用指针
+智能指针严格来说不属于STL。
 
 #### 3.3.1.1 独占指针(unique_ptr)
 
@@ -425,11 +426,39 @@ void test_shared() {
 } // sp1 析构，计数 = 0 -> 释放内存
 ```
 
+#### 3.3.1.3 弱引用指针(weak_ptr)
 
-#### 3.3.1.3 强类型枚举(enum class)
+弱引用指针是为解决共享指针循环引用问题而设计的工具，<font color="#c00000">需要配合共享指针使用</font>。
+
+考虑如下的循环引用场景：
+
+```CPP
+struct B;
+struct A {
+    std::shared_ptr<B> b_ptr;
+};
+struct B {
+    std::shared_ptr<A> a_ptr; 
+};
+
+void test_cycle() {
+    auto a = std::make_shared<A>();
+    auto b = std::make_shared<B>();
+    a->b_ptr = b;  // b的引用计数 -> 2
+    b->a_ptr = a;  // a的引用计数 -> 2
+} // a, b均减一，但不为0，内存泄露
+```
+
+那么此时则需要
 
 
-### 3.3.2 错误码(std::error_code)(C++11)
+
+
+
+### 3.3.2 强类型枚举(enum class)
+
+
+### 3.3.3 错误码(std::error_code)(C++11)
 
 在C++11之前，标准提供的错误机制主要有如下两种：
 1. 全局的 `errno` ，是全局变量，线程不安全
@@ -440,7 +469,7 @@ void test_shared() {
 2. `std::error_code` 可以携带错误信息字符串
 3. `std::error_code` 可以携带域信息，标明错误是源自操作系统、HTTP库或者其他的库
 
-#### 3.3.2.1 发送者构造方法
+#### 3.3.3.1 发送者构造方法
 
 对于错误发送者，可直接使用构造函数构造并返回，但其要求<font color="#c00000">已拥有</font>或<font color="#c00000">已完成</font>：
 1. 错误类别(域信息)的构造
@@ -517,7 +546,7 @@ inline std::error_code make_error_code(CaptureError e) {
 }
 ```
 
-#### 3.3.2.2 接收者使用方法
+#### 3.3.3.2 接收者使用方法
 
 对于错误接收者，其基本用法有：
 1. 判断是否有错：
