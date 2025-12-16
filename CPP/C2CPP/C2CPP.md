@@ -923,6 +923,28 @@ void paint() {
 
 在C++中，函数关键字主要可以分为前置关键字和后置关键字。
 
+$$
+\underbrace{\text{template <...>}}_{\text{声明定义皆有}} 
+\quad
+\underbrace{\text{static/virtual/explicit}}_{\text{仅声明}} 
+\quad
+\text{ReturnType} 
+\quad
+\text{FuncName}(\text{Params}) 
+\quad
+\underbrace{\text{const}}_{\text{声明定义皆有}} 
+\quad
+\underbrace{\text{volatile}}_{\text{声明定义皆有}} 
+\quad
+\underbrace{\&/\&\&}_{\text{声明定义皆有}} 
+\quad
+\underbrace{\text{noexcept}}_{\text{声明定义皆有}} 
+\quad
+\underbrace{\text{override/final}}_{\text{仅声明}} 
+\quad
+\underbrace{=0}_{\text{仅声明}}
+$$
+
 #### 3.4.6.1 前置关键字
 
 前置关键字需要放到函数的返回值类型之前，<font color="#c00000">用于修饰函数本身的性质</font>(储存方式、链接属性、构造规则等)
