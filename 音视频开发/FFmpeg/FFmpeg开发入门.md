@@ -64,14 +64,29 @@ void av_log(void *avcl, int level, const char *fmt,...)
 
 # 4 libavformat模块
 
-## 4.1 文件操作
+## 4.1 IO操作
 
 
-### 4.1.1 
+### 4.1.1 打开目录(URL)
 
+```C
+int avio_open_dir(AVIODirContext **s, const char *url, AVDictionary **options)	
+```
 
+其参数：
+- `AVIODirContext **s` ：目录上下文
+- `const char *url` ：目录的URL
+- `AVDictionary **options` ：包含协议私密配置的词典，返回时该参数将被销毁，并替换为包含缺失选项的词典，可能为 `NULL` 
 
+### 4.1.2 读取目录条目
 
-### 4.1.2 删除文件
+```C
+int avio_read_dir(AVIODirContext *s, AVIODirEntry **next)	
+```
 
+### 4.1.3 关闭目录
+
+```C
+int avio_close_dir(AVIODirContext **s)	
+```
 
