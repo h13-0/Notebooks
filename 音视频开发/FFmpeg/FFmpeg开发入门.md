@@ -91,10 +91,7 @@ FFmpeg的IO操作主要分为 `avio_*` 和 `ffurl_*` 这两个系列，其具体
 #### 4.1.1.1 打开文件
 
 ```C
-int avio_open(AVIOContext **s,
-const char * 	url,
-int 	flags 
-)	
+int avio_open(AVIOContext **s, const char *url, int flags)	
 ```
 
 
