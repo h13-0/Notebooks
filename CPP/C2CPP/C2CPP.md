@@ -500,14 +500,33 @@ void test_cycle() {
 
 #### 3.3.3.1 成员函数
 
-C++的原子变量支持如下的成员函数
+C++的原子变量支持如子章节所示的成员函数。
 
-##### 3.3.3.1.1 
+##### 3.3.3.1.1 检查对象是否无锁
 
-##### 3.3.3.1.2 
+```CPP
+bool is_lock_free() const noexcept;
+```
+
+其返回值为是否有锁。
+
+##### 3.3.3.1.2 赋值运算符(operator=)
+
+其：
+- 功能含义
+等价于调用 `store` 函数
 
 
-##### 3.3.3.1.3 
+##### 3.3.3.1.3 原子地存值(store)
+
+```CPP
+T load(std::memory_order order = std::memory_order_seq_cst) const noexcept;
+```
+
+
+
+
+##### 3.3.3.1.4 原子地取值(load)
 
 
 
