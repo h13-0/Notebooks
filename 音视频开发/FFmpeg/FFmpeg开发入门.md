@@ -66,8 +66,22 @@ void av_log(void *avcl, int level, const char *fmt,...)
 
 ## 4.1 IO操作
 
+FFmpeg的IO操作主要分为 `ffurl_*` 和 `avio_*` 这两个系列，其具体区别为：
+- `ffurl_*` 系列函数
+- `avio_*` 系列函数
+需要注意上述系列函数均<span style="background:#fff88f"><font color="#c00000">同时兼容URL和普通文件系统</font></span>。
 
-### 4.1.1 打开目录
+### 4.1.1 ffurl系列函数
+
+#### 4.1.1.1 打开文件
+
+```C
+
+```
+
+
+
+#### 4.1.1.2 打开目录
 
 ```C
 int avio_open_dir(AVIODirContext **s, const char *url, AVDictionary **options)	
@@ -78,13 +92,15 @@ int avio_open_dir(AVIODirContext **s, const char *url, AVDictionary **options)
 - `const char *url` ：目录的URL
 - `AVDictionary **options` ：包含协议私密配置的词典，返回时该参数将被销毁，并替换为包含缺失选项的词典，可能为 `NULL` 
 
-### 4.1.2 读取目录条目
+### 4.1.2 avio系列函数
+
+#### 4.1.2.1 读取目录条目
 
 ```C
 int avio_read_dir(AVIODirContext *s, AVIODirEntry **next)	
 ```
 
-### 4.1.3 关闭目录
+#### 4.1.2.2 关闭目录
 
 ```C
 int avio_close_dir(AVIODirContext **s)	
