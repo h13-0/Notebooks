@@ -607,9 +607,9 @@ C++中提供了两种线程对象：
 
 与其他语言/框架一致的是，其有如下的基本特性：
 - 创建线程后会立即执行
-- 若线程对象被析构时，线程仍在运行，则会触发异常。对应的
-	- 调用 `join` 可以等待子线程退出
-	- 调用 `detach` 可以分离其与父线程之间的关联
+- 若线程句柄被析构时，线程仍在运行且句柄未分离(即 `joinable` 为 `true` )，则会触发异常。对应的处理方式为：
+	- 调用 `join` 可以等待子线程退出，退出后可析构线程句柄
+	- 调用 `detach` 可以分离其与父线程之间的关联，此时析构线程句柄是安全的
 
 ##### 3.3.4.1.1 构造函数
 
@@ -638,12 +638,24 @@ explicit thread( F&& f, Args&&... args );
 void join();
 ```
 
+调用前需要确保该线程可被 `join`，否则会抛出异常。
+`join` 后其 `joinable` 为 `false` (即只能被 `join` 一次)。
 
+##### 3.3.4.1.3 分离指定线程(detach)
 
+```CPP
+void detach();
+```
+
+分离指定线程，分离后其 `joinable` 为 `false` 。
 
 #### 3.3.4.2 std::jthread(C++20)
 
-
+`std::jthread` 比 `std::thread` 多了如下特性：
+- `std::jthread` 提供了停止机制，可通过其提供的 `std::stop_token` 检测是否
+- 在线程句柄被析构时，线程仍在运行且句柄未分离(即 `joinable` 为 `true` )，则：
+	- `std::thread` 会直接 `std::terminate()` 并触发异常
+	- `std::jthread` 会先 `request_stop()` ，随后自动 `join()`
 
 
 
