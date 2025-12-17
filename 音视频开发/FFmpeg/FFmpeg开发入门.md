@@ -84,7 +84,7 @@ FFmpeg的IO操作主要分为 `avio_*` 和 `ffurl_*` 这两个系列，其具体
 
 ### 4.1.1 avio系列函数
 
-avio系列han sh
+`avio_*` 系列的IO操作函数均需要维护一个 `AVIODirContext` 上下文，
 
 
 #### 4.1.1.1 读取目录条目
