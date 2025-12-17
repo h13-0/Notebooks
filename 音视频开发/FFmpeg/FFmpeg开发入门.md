@@ -29,6 +29,18 @@ FFmpeg主要有如下几个子模块：
 
 FFmpeg日志系统的声明位于头文件 `libavutil/log.h` 其简易使用流程为：
 1. [[音视频开发/FFmpeg/FFmpeg开发入门#^oxdoti|设置日志等级]]
+2. [[音视频开发/FFmpeg/FFmpeg开发入门#^gsjiaj|输出日志]]
+
+在FFmpeg中，日志等级有如下几种：
+- `AV_LOG_QUIET` ：
+- `AV_LOG_PANIC` ：
+- `AV_LOG_FATAL` ：
+- `AV_LOG_ERROR` ：
+- `AV_LOG_WARNING` ：
+- `AV_LOG_INFO` ：
+- `AV_LOG_VERBOSE` ：
+- `AV_LOG_DEBUG` ：
+- `AV_LOG_TRACE` ：
 
 ### 3.1.1 常用API
 
@@ -38,20 +50,16 @@ FFmpeg日志系统的声明位于头文件 `libavutil/log.h` 其简易使用流�
 void av_log_set_level(int level)
 ```
 
-其可选日志等级有：
-- `AV_LOG_QUIET` ：
-- `AV_LOG_PANIC` ：
-- `AV_LOG_FATAL` ：
-- `AV_LOG_ERROR`
-- `AV_LOG_WARNING`
-- `AV_LOG_INFO`
-- `AV_LOG_VERBOSE`
-- `AV_LOG_DEBUG`
-- `AV_LOG_TRACE`
-
-#### 3.1.1.2 输出日志
+#### 3.1.1.2 输出日志 ^gsjiaj
 
 ```C
 void av_log(void *avcl, int level, const char *fmt,...)
 ```
+
+其参数：
+- `void *avcl` ：指向第一个字段为 `AVClass` 的结构体的指针，若为<font color="#c00000">常规日志则为</font> `NULL`
+- `int level` ：日志等级
+- `const char *fmt` ：格式化字符串
+- `...` ：可变参数
+
 
