@@ -602,6 +602,7 @@ void wait(T old,
 C++中提供了两种线程对象：
 - `std::thread` ：普通线程
 - `std::jthread` ：自带收尾机制、在某些情况下可以被取消/停止的线程
+上述两种对象均使用头文件 `<thread>`
 
 #### 3.3.4.1 std::thread(C++11)
 
@@ -663,14 +664,36 @@ void detach();
 	- `std::thread` 会直接 `std::terminate()` 并触发异常
 	- `std::jthread` 会先 `request_stop()` ，随后自动 `join()`
 
+应当注意：
+1. <font color="#c00000">线程函数</font><span style="background:#fff88f"><font color="#c00000">应当</font></span><font color="#c00000">检测</font> `std::stop_token` ，<font color="#c00000">否则在</font> `jthread` <font color="#c00000">析构时可能死锁</font>
+
 其相较于 `std::thread` 多出的特性如子章节所示。
 
 ##### 3.3.4.2.1 构造函数
 
+`std::jthread` 的构造函数定义与 `std::thread` 定义一致，但是<font color="#c00000">只要当线程函数的第一个参数为</font> `std::stop_token` ， `std::jthread` <font color="#c00000">就会自动把内部的</font> `token` <font color="#c00000">注入进去</font>。
 
-
-
-
+demo：
+1. 如果第一个参数为 `std::stop_token` 就会自动注入：
+```CPP
+void func(std::stop_token st, int x);
+jthread t(func, 10);                  // 自动注入token
+```
+2. 不为 `std::stop_token` 时也正常传参即可：
+```CPP
+void func(int x);
+jthread t(func, 10);                  // 不会注入token
+```
+3. 线程函数中可直接判断 `std::stop_token` 并退出：
+```CPP
+void func(std::stop_token stoken, int id) 
+{ 
+	while (!stoken.stop_requested())
+	{
+		// do sth.
+	}
+}
+```
 
 ### 3.3.5 错误码(std::error_code)(C++11)
 
