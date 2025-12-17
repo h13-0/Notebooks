@@ -94,6 +94,14 @@ FFmpeg的IO操作主要分为 `avio_*` 和 `ffurl_*` 这两个系列，其具体
 int avio_open(AVIOContext **s, const char *url, int flags)	
 ```
 
+该函数会创建并初始化一个 `AVIOContext` ，用于访问 `url` 指示的资源。
+其参数：
+- `AVIOContext **s` ：指向 `AVIOContext *` 的指针，用于将 `AVIOContext *` 返回给调用者
+- `const char *url` ：文件的url路径
+- `int flags`
+其返回值：
+- 大于等于0时表示成功
+- 负值表示 `AVERROR` 值
 
 #### 4.1.1.2 读取目录条目
 
@@ -127,4 +135,8 @@ int avio_open_dir(AVIODirContext **s, const char *url, AVDictionary **options)
 - `AVIODirContext **s` ：目录上下文
 - `const char *url` ：目录的URL
 - `AVDictionary **options` ：包含协议私密配置的词典，返回时该参数将被销毁，并替换为包含缺失选项的词典，可能为 `NULL` 
+
+## 4.2 多媒体流操作
+
+在[[../音视频开发入门|音视频开发入门]]中就已经讲到，音视频文件或流中均包含一个或多个音频流或视频流，这些流中又包含音视频shu ju
 
