@@ -84,16 +84,27 @@ FFmpeg的IO操作主要分为 `avio_*` 和 `ffurl_*` 这两个系列，其具体
 
 ### 4.1.1 avio系列函数
 
-`avio_*` 系列的IO操作函数均需要维护一个 `AVIODirContext` 上下文，
+`avio_*` 系列的IO操作函数均需要维护对应的上下文：
+- 文件操作需要 `AVIOContext` 上下文
+- 目录操作需要 `AVIODirContext` 上下文
+
+#### 4.1.1.1 打开文件
+
+```C
+int avio_open(AVIOContext **s,
+const char * 	url,
+int 	flags 
+)	
+```
 
 
-#### 4.1.1.1 读取目录条目
+#### 4.1.1.2 读取目录条目
 
 ```C
 int avio_read_dir(AVIODirContext *s, AVIODirEntry **next)	
 ```
 
-#### 4.1.1.2 关闭目录
+#### 4.1.1.3 关闭目录
 
 ```C
 int avio_close_dir(AVIODirContext **s)	
