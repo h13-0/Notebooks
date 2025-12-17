@@ -62,4 +62,16 @@ void av_log(void *avcl, int level, const char *fmt,...)
 - `const char *fmt` ：格式化字符串
 - `...` ：可变参数
 
+# 4 libavformat模块
+
+## 4.1 文件操作
+
+
+### 4.1.1 
+
+
+
+
+### 4.1.2 删除文件
+
 
