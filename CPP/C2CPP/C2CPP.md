@@ -498,11 +498,16 @@ void test_cycle() {
 	- 通常来说，界限为8字节或16字节
 	- <font color="#c00000">可以使用</font> `obj.is_lock_free()` <font color="#c00000">来检测当前类型是否无锁</font>
 
-#### 3.3.3.1 成员函数
+#### 3.3.3.1 构造函数
+
+
+
+
+#### 3.3.3.2 成员函数
 
 C++的原子变量支持如子章节所示的成员函数。
 
-##### 3.3.3.1.1 检查对象是否无锁
+##### 3.3.3.2.1 检查对象是否无锁
 
 ```CPP
 bool is_lock_free() const noexcept;
@@ -510,7 +515,7 @@ bool is_lock_free() const noexcept;
 
 其返回值为是否有锁。
 
-##### 3.3.3.1.2 赋值运算符(operator=)
+##### 3.3.3.2.2 赋值运算符(operator=)
 
 ```CPP
 T operator=(T desired) noexcept;
@@ -522,7 +527,7 @@ T operator=(T desired) noexcept;
 返回值：
 - 等于 `desired`
 
-##### 3.3.3.1.3 原子地存值(store)
+##### 3.3.3.2.3 原子地存值(store)
 
 ```CPP
 void store(T desired, std::memory_order order =
@@ -534,7 +539,7 @@ void store(T desired, std::memory_order order =
 - `T desired` ：要存入的非原子变量类型的值
 - `std::memory_order order` ：要强制执行的内存顺序约束
 
-##### 3.3.3.1.4 取值运算符(operator T)
+##### 3.3.3.2.4 取值运算符(operator T)
 
 ```CPP
 operator T() const noexcept;
@@ -542,14 +547,14 @@ operator T() const noexcept;
 
 其功能为原子地加载并返回原子变量的当前值，等价于调用 `load` 函数。
 
-##### 3.3.3.1.5 原子地取值(load)
+##### 3.3.3.2.5 原子地取值(load)
 
 ```CPP
 T load(std::memory_order order = std::memory_order_seq_cst) const noexcept;
 ```
 
 
-##### 3.3.3.1.6 赋予新值并取出旧值(exchange)
+##### 3.3.3.2.6 赋予新值并取出旧值(exchange)
 
 ```CPP
 T exchange(T desired, std::memory_order order =
@@ -565,7 +570,7 @@ T exchange(T desired, std::memory_order order =
 返回值：
 - 调用前原子变量的值
 
-##### 3.3.3.1.7 条件睡眠(wait)(C++20)
+##### 3.3.3.2.7 条件睡眠(wait)(C++20)
 
 ```CPP
 void wait(T old, std::memory_order order =
@@ -582,12 +587,12 @@ void wait(T old,
 	- <font color="#c00000">其比较是按位进行的</font>，类似于 `memcmp` 
 - `std::memory_order order` ：要强制执行的内存顺序约束
 
-##### 3.3.3.1.8 唤醒一个睡眠线程(notify_one)(C++20)
+##### 3.3.3.2.8 唤醒一个睡眠线程(notify_one)(C++20)
 
 
 
 
-##### 3.3.3.1.9 唤醒所有睡眠线程(notify_all)(C++20)
+##### 3.3.3.2.9 唤醒所有睡眠线程(notify_all)(C++20)
 
 
 
@@ -602,7 +607,38 @@ C++中提供了两种线程对象：
 
 与其他语言/框架一致的是，其有如下的基本特性：
 - 创建线程后会立即执行
-- 
+- 若线程对象被析构时，线程仍在运行，则会触发异常。对应的
+	- 调用 `join` 可以等待子线程退出
+	- 调用 `detach` 可以分离其与父线程之间的关联
+
+##### 3.3.4.1.1 构造函数
+
+###### 3.3.4.1.1.1 创建一个不表示任何线程的thread对象
+
+```CPP
+thread() noexcept;
+```
+
+###### 3.3.4.1.1.2 移动构造函数
+
+```CPP
+thread( thread&& other ) noexcept;
+```
+
+###### 3.3.4.1.1.3 创建线程并传递参数
+
+```CPP
+template< class F, class... Args >
+explicit thread( F&& f, Args&&... args );
+```
+
+##### 3.3.4.1.2 阻塞等待指定线程执行完毕(join)
+
+```CPP
+void join();
+```
+
+
 
 
 #### 3.3.4.2 std::jthread(C++20)
