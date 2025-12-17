@@ -574,9 +574,9 @@ T exchange(T desired, std::memory_order order =
 
 ```CPP
 void wait(T old, std::memory_order order =
-                      std::memory_order_seq_cst) const noexcept;
+        	std::memory_order_seq_cst) const noexcept;
 void wait(T old,
-           std::memory_order order =
+        	std::memory_order order =
                std::memory_order_seq_cst) const volatile noexcept;
 ```
 

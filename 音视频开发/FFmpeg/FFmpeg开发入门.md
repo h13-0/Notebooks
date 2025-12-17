@@ -62,9 +62,9 @@ void av_log(void *avcl, int level, const char *fmt,...)
 
 # 4 libavformat模块
 
-## 4.1 IO操作
+## 4.1 基础IO操作
 
-FFmpeg的IO操作主要分为 `avio_*` 和 `ffurl_*` 这两个系列，其具体区别为：
+FFmpeg的基础IO操作主要分为 `avio_*` 和 `ffurl_*` 这两个系列，其具体区别为：
 
 |  特性  | <center>`avio_*`</center>                                               | <center>`ffurl_*`</center>              |
 | :--: | ----------------------------------------------------------------------- | --------------------------------------- |
@@ -134,7 +134,10 @@ int avio_open_dir(AVIODirContext **s, const char *url, AVDictionary **options)
 - `const char *url` ：目录的URL
 - `AVDictionary **options` ：包含协议私密配置的词典，返回时该参数将被销毁，并替换为包含缺失选项的词典，可能为 `NULL` 
 
-## 4.2 多媒体流操作
+## 4.2 解复用
+
+
+
 
 在[[../音视频开发入门|音视频开发入门]]中就已经讲到，音视频文件或流中均包含一个或多个音频流或视频流，这些流中又包含音视频数据包。
 
@@ -148,4 +151,12 @@ int avio_open_dir(AVIODirContext **s, const char *url, AVDictionary **options)
 - `AVStream` ：音视频流结构体
 - `AVPacket` ：音频数据包
 - 
+
+
+
+
+
+
+
+### 
 
