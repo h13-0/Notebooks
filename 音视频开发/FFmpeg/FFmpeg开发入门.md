@@ -51,4 +51,7 @@ void av_log_set_level(int level)
 
 #### 3.1.1.2 输出日志
 
+```C
+void av_log(void *avcl, int level, const char *fmt,...)
+```
 
