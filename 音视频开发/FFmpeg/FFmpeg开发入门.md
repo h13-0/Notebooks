@@ -67,7 +67,7 @@ void av_log(void *avcl, int level, const char *fmt,...)
 ## 4.1 IO操作
 
 
-### 4.1.1 打开目录(URL)
+### 4.1.1 打开目录
 
 ```C
 int avio_open_dir(AVIODirContext **s, const char *url, AVDictionary **options)	
