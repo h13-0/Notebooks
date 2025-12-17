@@ -76,12 +76,15 @@ FFmpeg的IO操作主要分为 `avio_*` 和 `ffurl_*` 这两个系列，其具体
 | 数据感知 | <font color="#c00000">支持高级数据类型读写</font><br>(`int`、`string` 、` line ` 等) | <font color="#c00000">只支持处理原生字节流</font> |
 | 底层依赖 | 依赖 `ffurl` 或用户回调                                                        | 依赖系统API                                 |
 
-因此对于应用开发者而言，<font color="#c00000">通常只需要使用</font> `avio_*` <font color="#c00000">系列接口</font>或更高级的 `avformat_*` 系列接口。
+因此对于应用开发者而言，<font color="#c00000">通常只需要使用</font> `avio_*` <font color="#c00000">系列接口</font>或更高级的：
+- `avformat_*` ：高级封装格式层IO
+- `av_file_*` ：内存映射IO
+系列接口。
 需要注意上述系列函数均<span style="background:#fff88f"><font color="#c00000">同时兼容URL和普通文件系统</font></span>。
 
 ### 4.1.1 avio系列函数
 
-
+avio系列han sh
 
 
 #### 4.1.1.1 读取目录条目
