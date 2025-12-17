@@ -36,7 +36,6 @@ FFmpeg主要有如下几个子模块：
 	- 对应FFmpeg结构体： `AVPacket`
 	- 对应FFmpeg动作：`Render/Filter` 渲染/滤镜
 
-
 # 3 libavutil模块
 
 ## 3.1 FFmpeg日志系统的使用
