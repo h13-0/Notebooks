@@ -169,12 +169,17 @@ int avformat_open_input(AVFormatContext **ps, const char *url,
 其参数：
 - `AVFormatContext **ps` ：格式化IO上下文的二级指针。当打开失败时其会返回 `NULL` 
 - `const char *url` ：媒体文件的URL
-- `const AVInputFormat *fmt` ：
-- `AVDictionary **options` ：
+- `const AVInputFormat *fmt` ：指定解析时使用的封装格式(`MP4`、`FLV` 等)，需要注意：
+	- 传入 `NULL` 时自动检测封装格式
+	- 传入非 `NULL` 时则会按照指定的格式进行解析(即使和实际格式不匹配)
+- `AVDictionary **options` ：由key和value组成的选项字典
 
-### 4.2.2 关闭媒体文件
+### 4.2.2 关闭媒体文件(avformat_close_input)
+
+```C
 
 
+```
 
 
 
