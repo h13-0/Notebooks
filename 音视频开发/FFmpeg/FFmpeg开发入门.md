@@ -35,11 +35,20 @@ FFmpeg日志系统的声明位于头文件 `libavutil/log.h` 其简易使用流�
 #### 3.1.1.1 设置日志等级 ^oxdoti
 
 ```C
-av_log_set_level()
+void av_log_set_level(int level)
 ```
 
+其可选日志等级有：
+- `AV_LOG_QUIET` ：
+- `AV_LOG_PANIC` ：
+- `AV_LOG_FATAL` ：
+- `AV_LOG_ERROR`
+- `AV_LOG_WARNING`
+- `AV_LOG_INFO`
+- `AV_LOG_VERBOSE`
+- `AV_LOG_DEBUG`
+- `AV_LOG_TRACE`
 
-
-
+#### 3.1.1.2 输出日志
 
 
