@@ -481,7 +481,7 @@ void test_cycle() {
 
 ### 3.3.2 强类型枚举(enum class)
 
-### 3.3.3 原子变量(atomic)(C++11)
+### 3.3.3 原子变量(std::atomic)(C++11)
 
 正如其名，对原子类型的操作是原子的，即在多线程环境下任何对原子变量的访问都是完整的。因此使用原子变量可以有效避免数据竞争。
 
@@ -551,10 +551,20 @@ T load(std::memory_order order = std::memory_order_seq_cst) const noexcept;
 
 
 
-### 标准xian c
+### 3.3.4 标准线程(std::thread、std::jthread)
+
+C++中提供了两种线程对象：
+- `std::thread` ：普通线程
+- `std::jthread` ：自带收尾机制、在某些情况下可以被取消/停止的线程
+
+#### 3.3.4.1 std::thread
+
+与其他语言/框架一致的是，其有如下的基本特性：
+- 
 
 
-### 3.3.4 错误码(std::error_code)(C++11)
+
+### 3.3.5 错误码(std::error_code)(C++11)
 
 在C++11之前，标准提供的错误机制主要有如下两种：
 1. 全局的 `errno` ，是全局变量，线程不安全
@@ -565,7 +575,7 @@ T load(std::memory_order order = std::memory_order_seq_cst) const noexcept;
 2. `std::error_code` 可以携带错误信息字符串
 3. `std::error_code` 可以携带域信息，标明错误是源自操作系统、HTTP库或者其他的库
 
-#### 3.3.4.1 发送者构造方法
+#### 3.3.5.1 发送者构造方法
 
 对于错误发送者，可直接使用构造函数构造并返回，但其要求<font color="#c00000">已拥有</font>或<font color="#c00000">已完成</font>：
 1. 错误类别(域信息)的构造
@@ -642,7 +652,7 @@ inline std::error_code make_error_code(CaptureError e) {
 }
 ```
 
-#### 3.3.4.2 接收者使用方法
+#### 3.3.5.2 接收者使用方法
 
 对于错误接收者，其基本用法有：
 1. 判断是否有错：
