@@ -512,12 +512,37 @@ bool is_lock_free() const noexcept;
 
 ##### 3.3.3.1.2 赋值运算符(operator=)
 
-其：
-- 功能含义
-等价于调用 `store` 函数
+```CPP
+T operator=(T desired) noexcept;
+```
 
+其功能为将非原子变量的值存入原子变量，等价于调用 `store` 函数。
+参数：
+- `T desired` ：要存入的非原子变量类型的值
+返回值：
+- 等于 `desired`
 
 ##### 3.3.3.1.3 原子地存值(store)
+
+```CPP
+void store(T desired, std::memory_order order =
+            std::memory_order_seq_cst ) noexcept;
+```
+
+其功能为将非原子变量的值存入原子变量。
+参数：
+- `T desired` ：要存入的非原子变量类型的值
+- `std::memory_order order` ：
+
+##### 3.3.3.1.4 取值运算符(operator T)
+
+```CPP
+operator T() const noexcept;
+```
+
+其功能为原子地加载并返回原子变量的当前值，等价于调用 `load` 函数。
+
+##### 3.3.3.1.5 原子地取值(load)
 
 ```CPP
 T load(std::memory_order order = std::memory_order_seq_cst) const noexcept;
@@ -526,7 +551,6 @@ T load(std::memory_order order = std::memory_order_seq_cst) const noexcept;
 
 
 
-##### 3.3.3.1.4 原子地取值(load)
 
 
 
