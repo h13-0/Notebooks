@@ -532,7 +532,7 @@ void store(T desired, std::memory_order order =
 其功能为将非原子变量的值存入原子变量。
 参数：
 - `T desired` ：要存入的非原子变量类型的值
-- `std::memory_order order` ：
+- `std::memory_order order` ：要强制执行的内存顺序约束
 
 ##### 3.3.3.1.4 取值运算符(operator T)
 
@@ -549,6 +549,23 @@ T load(std::memory_order order = std::memory_order_seq_cst) const noexcept;
 ```
 
 
+##### 3.3.3.1.6 赋予新值并取出旧值(exchange)
+
+```CPP
+T exchange(T desired, std::memory_order order =
+                           std::memory_order_seq_cst) noexcept;
+T exchange(T desired, std::memory_order order =
+                           std::memory_order_seq_cst) volatile noexcept;
+```
+
+其参数：
+- `T desired` ：要存入的非原子变量类型的值
+- `std::memory_order order` ：要强制执行的内存顺序约束
+返回值：
+- 调用前原子变量的值
+
+##### 3.3.3.1.7 
+
 
 
 ### 3.3.4 标准线程(std::thread、std::jthread)
@@ -557,10 +574,16 @@ C++中提供了两种线程对象：
 - `std::thread` ：普通线程
 - `std::jthread` ：自带收尾机制、在某些情况下可以被取消/停止的线程
 
-#### 3.3.4.1 std::thread
+#### 3.3.4.1 std::thread(C++11)
 
 与其他语言/框架一致的是，其有如下的基本特性：
+- 创建线程后会立即执行
 - 
+
+
+#### 3.3.4.2 std::jthread(C++20)
+
+
 
 
 
