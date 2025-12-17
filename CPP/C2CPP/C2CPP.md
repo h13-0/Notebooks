@@ -558,13 +558,37 @@ T exchange(T desired, std::memory_order order =
                            std::memory_order_seq_cst) volatile noexcept;
 ```
 
+该函数会给原子变量赋予新值并取出旧值
 其参数：
 - `T desired` ：要存入的非原子变量类型的值
 - `std::memory_order order` ：要强制执行的内存顺序约束
 返回值：
 - 调用前原子变量的值
 
-##### 3.3.3.1.7 
+##### 3.3.3.1.7 条件睡眠(wait)(C++20)
+
+```CPP
+void wait(T old, std::memory_order order =
+                      std::memory_order_seq_cst) const noexcept;
+void wait(T old,
+           std::memory_order order =
+               std::memory_order_seq_cst) const volatile noexcept;
+```
+
+该函数会阻塞，并当满足条件或被唤醒时解除睡眠
+其参数：
+- `T old` ：要比较的参数。
+	- 当条件变量当前值与 `old` <font color="#c00000">相等时则睡眠</font>，<font color="#c00000">否则</font><span style="background:#fff88f"><font color="#c00000">直接结束</font></span>
+	- <font color="#c00000">其比较是按位进行的</font>，类似于 `memcmp` 
+- `std::memory_order order` ：要强制执行的内存顺序约束
+
+##### 3.3.3.1.8 唤醒一个睡眠线程(notify_one)(C++20)
+
+
+
+
+##### 3.3.3.1.9 唤醒所有睡眠线程(notify_all)(C++20)
+
 
 
 
