@@ -158,5 +158,25 @@ int avio_open_dir(AVIODirContext **s, const char *url, AVDictionary **options)
 
 
 
-### 
+### 4.2.1 打开媒体文件(avformat_open_input)
+
+```C
+int avformat_open_input(AVFormatContext **ps, const char *url,
+	const AVInputFormat *fmt, AVDictionary **options)	
+```
+
+该函数会打开一个输入流并读取头部。在此步骤中编解码器并没有被打开
+其参数：
+- `AVFormatContext **ps` ：格式化IO上下文的二级指针。当打开失败时其会返回 `NULL` 
+- `const char *url` ：媒体文件的URL
+- `const AVInputFormat *fmt` ：
+- `AVDictionary **options` ：
+
+### 4.2.2 关闭媒体文件
+
+
+
+
+
+
 
