@@ -66,14 +66,39 @@ void av_log(void *avcl, int level, const char *fmt,...)
 
 ## 4.1 IO操作
 
-FFmpeg的IO操作主要分为 `ffurl_*` 和 `avio_*` 这两个系列，其具体区别为：
-- `ffurl_*` 系列函数
-- `avio_*` 系列函数
+FFmpeg的IO操作主要分为 `avio_*` 和 `ffurl_*` 这两个系列，其具体区别为：
+
+|  特性  | <center>`avio_*`</center>                                               | <center>`ffurl_*`</center>              |
+| :--: | ----------------------------------------------------------------------- | --------------------------------------- |
+| 设计目的 | FFmpeg<font color="#c00000">为应用开发者提供的接口</font>                          | FFmpeg内部使用的接口                           |
+| 缓冲区  | <font color="#c00000">默认带缓冲区</font>                                     | 不带缓冲区，直接操作IO                            |
+|  性能  | <font color="#c00000">极快</font>，同时适合频繁小操作                               | 频繁小操作时速度慢                               |
+| 数据感知 | <font color="#c00000">支持高级数据类型读写</font><br>(`int`、`string` 、` line ` 等) | <font color="#c00000">只支持处理原生字节流</font> |
+| 底层依赖 | 依赖 `ffurl` 或用户回调                                                        | 依赖系统API                                 |
+
+因此对于应用开发者而言，<font color="#c00000">通常只需要使用</font> `avio_*` <font color="#c00000">系列接口</font>或更高级的 `avformat_*` 系列接口。
 需要注意上述系列函数均<span style="background:#fff88f"><font color="#c00000">同时兼容URL和普通文件系统</font></span>。
 
-### 4.1.1 ffurl系列函数
+### 4.1.1 avio系列函数
 
-#### 4.1.1.1 打开文件
+
+
+
+#### 4.1.1.1 读取目录条目
+
+```C
+int avio_read_dir(AVIODirContext *s, AVIODirEntry **next)	
+```
+
+#### 4.1.1.2 关闭目录
+
+```C
+int avio_close_dir(AVIODirContext **s)	
+```
+
+### 4.1.2 ffurl系列函数
+
+#### 4.1.2.1 打开文件
 
 ```C
 
@@ -81,7 +106,7 @@ FFmpeg的IO操作主要分为 `ffurl_*` 和 `avio_*` 这两个系列，其具体
 
 
 
-#### 4.1.1.2 打开目录
+#### 4.1.2.2 打开目录
 
 ```C
 int avio_open_dir(AVIODirContext **s, const char *url, AVDictionary **options)	
@@ -91,18 +116,4 @@ int avio_open_dir(AVIODirContext **s, const char *url, AVDictionary **options)
 - `AVIODirContext **s` ：目录上下文
 - `const char *url` ：目录的URL
 - `AVDictionary **options` ：包含协议私密配置的词典，返回时该参数将被销毁，并替换为包含缺失选项的词典，可能为 `NULL` 
-
-### 4.1.2 avio系列函数
-
-#### 4.1.2.1 读取目录条目
-
-```C
-int avio_read_dir(AVIODirContext *s, AVIODirEntry **next)	
-```
-
-#### 4.1.2.2 关闭目录
-
-```C
-int avio_close_dir(AVIODirContext **s)	
-```
 
