@@ -21,8 +21,6 @@ FFmpeg主要有如下几个子模块：
 - `libswresample` ：提供了混音和重采样
 - `libswscale` ：提供了色彩转换和缩放功能
 
-
-
 # 3 libavutil模块
 
 ## 3.1 FFmpeg日志系统的使用
