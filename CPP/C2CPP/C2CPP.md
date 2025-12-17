@@ -651,11 +651,24 @@ void detach();
 
 #### 3.3.4.2 std::jthread(C++20)
 
-`std::jthread` 比 `std::thread` 多了如下特性：
-- `std::jthread` 提供了停止机制，可通过其提供的 `std::stop_token` 检测是否
+考虑如下的场景：
+- 主线程中实现UI交互，并创建若干子线程执行子任务
+- 主线程会响应来自UI的退出程序命令，主线程需要：
+	1. 通过条件变量或原子变量通知子任务结束
+	2. 等待所有子任务结束后才能安全退出程序
+
+因此 `std::jthread` 就提供了如下的停止机制：
+- `std::jthread` <font color="#c00000">可通过其提供的</font> `std::stop_token` <font color="#c00000">检测是否请求退出</font>
 - 在线程句柄被析构时，线程仍在运行且句柄未分离(即 `joinable` 为 `true` )，则：
 	- `std::thread` 会直接 `std::terminate()` 并触发异常
 	- `std::jthread` 会先 `request_stop()` ，随后自动 `join()`
+
+其相较于 `std::thread` 多出的特性如子章节所示。
+
+##### 3.3.4.2.1 构造函数
+
+
+
 
 
 
