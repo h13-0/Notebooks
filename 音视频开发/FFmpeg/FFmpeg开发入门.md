@@ -27,11 +27,16 @@ FFmpeg主要有如下几个子模块：
 	![[../Resources/FFmpeg解码工作流.drawio.svg]]
 针对上述流程，有如下补充：
 - FFmpeg解码流程实际上主要就分为如下几步：
-	1. 从URL
+	1. 从网络流或文件系统中抓取封装文件
+	2. 从封装文件中获取流信息
+	3. 从流信息中构造解码器
+	4. 循环从封装文件中提取编码后的数据包给解码器
+	5. 循环从解码器中获取解码后的原始音视频数据
 - 数据结构部分：
+	- `AVFormatContext` ：封装文件上下文
+	- `AVStream` ：<font color="#c00000">流信息</font>，<span style="background:#fff88f"><font color="#c00000">而非流数据</font></span>
+	- `AVCodecParameters` ：编码数据流的属性
 	- 
-
-
 
 
 
