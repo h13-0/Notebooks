@@ -492,13 +492,13 @@ int init()
 	int ret = 0;
 	
 	// 初始化资源a
-	Resource a = {};
+	ResourceA a = {};
 	ret = init_a(&a);
 	if(ret)
 		return ret;
 	
 	// 初始化资源b
-	Resource b = {};
+	ResourceB b = {};
 	ret = init_b(&b);
 	if(ret) {
 		free_a(&a);
@@ -506,13 +506,14 @@ int init()
 	}
 	
 	// 初始化资源c
-	Resource c = {};
+	ResourceC c = {};
 	if(ret) {
 		free_b(&b);
 		free_a(&a);
 		return ret;
 	}
 	
+	// 越来越长...
 	...
 }
 ```
@@ -525,19 +526,19 @@ int init()
 	int ret = 0;
 	
 	// 初始化资源a
-	Resource *a = NULL;
+	ResourceA *a = NULL;
 	ret = init_a(&a);
 	if(ret)
 		goto cleanup;
 	
 	// 初始化资源b
-	Resource b = {};
+	ResourceB b = {};
 	ret = init_b(&b);
 	if(ret)
 		goto cleanup;
 	
 	// 初始化资源c
-	Resource c = {};
+	ResourceC c = {};
 	if(ret)
 		goto cleanup;
 	
@@ -553,11 +554,54 @@ cleanup:
 }
 ```
 
-而使用智能指针可以解决这个问题，只需要为每个
+而使用智能指针可以解决这个问题，只需要为每个对象都：
+1. 实现一个 `Deleter`
+2. 使用绑定了 `Deleter` 的智能指针(通常是别名用法)
+即可，并且智能指针可以使用 `.get()` 方法，从而兼容C语言调用，例如：
+
+```CPP
+// ResourcePtr.hpp
+// 构造Deleter
+Struct ResourceADeleter {
+	void operator()(ResourceA* a) const {
+		if(a) free_a(a);
+	}
+}
+
+Struct ResourceBDeleter {
+	void operator()(ResourceB* b) const {
+		if(b) free_b(b);
+	}
+}
+
+Struct ResourceBDeleter {
+	void operator()(ResourceC* c) const {
+		if(c) free_c(c);
+	}
+}
+
+// 使用别名
+Using ResourceAPtr = std::unique_ptr<ResourceA, ResourceADeleter>;
+Using ResourceBPtr = std::unique_ptr<ResourceB, ResourceBDeleter>;
+Using ResourceCPtr = std::unique_ptr<ResourceC, ResourceCDeleter>;
+```
+
+随后调用时可以：
+
+```CPP
+// 调用时可以：
+int init() 
+{
+	int ret = 0;
+	
+	// 初始化资源a
+
+}
 
 
+```
 
-
+#TODO
 
 ### 3.3.2 强类型枚举(enum class)
 
