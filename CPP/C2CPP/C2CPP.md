@@ -2007,8 +2007,14 @@ struct UserInfo {
 };
 ```
 3. 延迟初始化：例如有些对象的构造代价可能很大，因此可以先使用 `std::optional` 进行占位
+需要注意：
+- `std::optional<T>` <font color="#c00000">默认只是一个空容器</font>，<span style="background:#fff88f"><font color="#c00000"><u>需要先创建该对象</u></font></span>，<font color="#c00000">随后才能进行赋值和操作</font>。
+	- 构造时可以：
+		- 使用[[CPP/C2CPP/C2CPP#^r5zfr4|emplace]]原地构造
+		- 也可以使用赋值操作
+	- 作为struct成员时更应注意
 
-而在使用时，可以使用如下的方法校验其是否包含值：
+在使用时，可以使用如下的方法校验其是否包含值：
 
 ```CPP
 // 使用 `has_value` 方法
@@ -2026,6 +2032,18 @@ if(opt) { ... }
 #### 4.2.7.2 内存分配
 
 `std::optional` 是静态分配的内存，位于栈上。
+
+#### 4.2.7.3 常用成员函数
+
+##### 4.2.7.3.1 原地构造(emplace) ^r5zfr4
+
+`emplace` 函数会就地构造该值，如果调用时已包含该值，则会先销毁原值再构造新值。
+
+```CPP
+template< class... Args >
+T& emplace( Args&&... args );
+```
+
 
 ## 4.3 算法
 
