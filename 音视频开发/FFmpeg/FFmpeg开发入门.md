@@ -24,27 +24,41 @@ FFmpeg主要有如下几个子模块：
 其中，[[音视频开发/音视频开发入门#^rk4p2m|流媒体结构]]与FFmpeg之间的关联如下：
 	![[Resources/音视频流四层结构.drawio.svg]]
 - 传输层：
-	- 对应FFmpeg结构体： `AVIOContext`
-	- 对应FFmpeg动作：`Read/Write` IO读写
+	- 相关FFmpeg结构体：
+		- `AVIOContext` ：<font color="#c00000">含有缓冲区的IO上下文</font>
+	- 相关FFmpeg动作：`Read/Write` IO读写
 - 封装层：
 	- 相关FFmpeg结构体：
-		- `AVFormatContext`
+		- `AVFormatContext` ：<font color="#c00000">封装文件上下文</font>
 		- `AVStream` ：代表一条数据流(轨道)，例如音频流、视频流、字幕流
-	- 对应FFmpeg动作：`Demux/Mux` <font color="#c00000">解/复用</font>
+	- 相关FFmpeg动作：`Demux/Mux` <font color="#c00000">解/复用</font>
 - 编码层：
 	- 相关FFmpeg结构体： 
-		- `AVPacket`
+		- `AVPacket` ：<font color="#c00000">压缩数据包</font>
 		- `AVCodecContext` ：编解码器上下文
 		- `AVCodecParameters` ：编解码器参数
-	- 对应FFmpeg动作：`Decode/Encode` <font color="#c00000">编/解码</font>
+	- 相关FFmpeg动作：`Decode/Encode` <font color="#c00000">编/解码</font>
 - 原始数据层：
 	- 相关FFmpeg结构体：
-		- `AVFrame` ：原始数据
-		- `SwsContext` ：图像转换上下文
-		- 
-	- 对应FFmpeg动作：`Render/Filter` 渲染/滤镜
+		- `AVFrame` ：<font color="#c00000">原始数据</font>
+	- 相关FFmpeg动作：`Render/Filter` 渲染/滤镜
 
-此外，
+
+
+
+
+
+
+此外，FFmpeg还有如下类别的结构体：
+- 工具类：
+	- `AVDictionary` ：用于传递 `key` 和 `value` 的字典
+	- `AVRational` ：分数(数学上的)，避免浮点数误差
+- 设备类别：
+	- `AVDeviceInfoList` ：设备信息列表
+	- `AVDeviceInfo` ：设备信息
+- 滤镜与转换：
+	- `SwsContext` ：图像转换上下文
+	- `SwrContext` ：音频重采样上下文
 
 
 # 3 libavutil模块
