@@ -813,22 +813,36 @@ cout << "Value: " << ec.value() << ", Category: " << ec.category().name()
 - 除 `{` 和 `}` 的字符串会被原样复制输出
 - `{{` 和 `}}` 被用作转义序列，表达 `{` 和 `}` 
 - 形如下方的替换字段被用作格式化参数：
-	- `{}`
-	- `{arg-id}`
-	- `{arg-id: format-spec}`
-	其中：
-	- `{}` 
-	- `arg-id` 为
-	
+	- `{}` ：参数占位符
+	- `{arg-id}` ：指定 `args` 中用于格式化的参数的索引，如果省略，则按顺序使用参数。
+	- `{arg-id: format-spec}` ：<font color="#c00000">指定格式化规范</font>，并指定索引。
+`std::format` 使用头文件 `<format>`
 
-
+`std::format` 主要分为如下几类：
+1. 使用标准格式方法格式化普通字符串和宽字符串：
 ```CPP
+// 格式化普通字符串
 template< class... Args >
 std::string format( std::format_string<Args...> fmt, Args&&... args );
+// 格式化宽字符串
+template< class... Args >
+std::wstring format( std::wformat_string<Args...> fmt, Args&&... args );
+```
+2. 使用与地区习惯相符的方式(尤其指日期、小数等)格式化普通字符串和宽字符串：
+```CPP
+template< class... Args >
+std::string format( const std::locale& loc,
+                    std::format_string<Args...> fmt, Args&&... args );
+template< class... Args >
+std::wstring format( const std::locale& loc,
+                     std::wformat_string<Args...> fmt, Args&&... args );
 ```
 
+demo如下：
+```CPP
 
 
+```
 
 
 ## 3.5 新增关键字
