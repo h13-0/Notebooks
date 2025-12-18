@@ -2039,11 +2039,23 @@ if(opt) { ... }
 
 `emplace` 函数会就地构造该值，如果调用时已包含该值，则会先销毁原值再构造新值。
 
+其有如下两个重载：
+1. 通过直接初始化构造包含值，相当于执行了 `T(args)` ：
 ```CPP
 template< class... Args >
 T& emplace( Args&&... args );
 ```
+- 其中：
+	- `args` 为传递给构造函数的参数
 
+2. 通过调用聚合初始化方法构造，相当于执行了 `T({u1, u2, ...}, args...)`：
+```CPP
+template< class U, class... Args >
+T& emplace( std::initializer_list<U> ilist, Args&&... args );
+```
+- 其中：
+	- `ilist` 为要传递给构造函数的初始化列表
+	- `args` 为传递给构造函数的参数
 
 ## 4.3 算法
 
