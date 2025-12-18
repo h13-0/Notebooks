@@ -482,7 +482,7 @@ void test_cycle() {
 
 #### 3.3.1.4 拓展用法
 
-##### 3.3.1.4.1 #####
+##### 3.3.1.4.1 资源自动释放
 
 在C语言中，资源的申请均需要申请者手动进行释放，没有C++中的析构函数的自动释放方式。这样一旦遇到复杂的错误路径处理就很麻烦，例如：
 
@@ -492,15 +492,69 @@ int init()
 	int ret = 0;
 	
 	// 初始化资源a
-	Resource *a = NULL;
-	ret = init_a(a);
+	Resource a = {};
+	ret = init_a(&a);
 	if(ret)
 		return ret;
 	
 	// 初始化资源b
-	Resource *b =*
+	Resource b = {};
+	ret = init_b(&b);
+	if(ret) {
+		free_a(&a);
+		return ret;
+	}
+	
+	// 初始化资源c
+	Resource c = {};
+	if(ret) {
+		free_b(&b);
+		free_a(&a);
+		return ret;
+	}
+	
+	...
 }
 ```
+
+即使上述资源可以像指针一样简单判断是否需要释放，或者有一个鲁棒的释放函数，然后再配合 `goto` ，其错误处理依旧是十分复杂繁琐的：
+
+```C
+int init() 
+{
+	int ret = 0;
+	
+	// 初始化资源a
+	Resource *a = NULL;
+	ret = init_a(&a);
+	if(ret)
+		goto cleanup;
+	
+	// 初始化资源b
+	Resource b = {};
+	ret = init_b(&b);
+	if(ret)
+		goto cleanup;
+	
+	// 初始化资源c
+	Resource c = {};
+	if(ret)
+		goto cleanup;
+	
+	...
+cleanup:
+	// 如果是指针类型，或者可以判断是否需要free
+	if(a) free_a(a);
+	if(is_inited(&b)) free_b(&b);
+	// 或者说可以释放函数设计的很鲁棒，可以随意调用
+	free(&c);
+	
+	return ret;
+}
+```
+
+而使用智能指针可以解决这个问题，只需要为每个
+
 
 
 
