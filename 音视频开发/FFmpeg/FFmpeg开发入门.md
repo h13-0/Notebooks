@@ -27,14 +27,25 @@ FFmpeg主要有如下几个子模块：
 	- 对应FFmpeg结构体： `AVIOContext`
 	- 对应FFmpeg动作：`Read/Write` IO读写
 - 封装层：
-	- 对应FFmpeg结构体： `AVFormatContext`
+	- 相关FFmpeg结构体：
+		- `AVFormatContext`
+		- `AVStream` ：代表一条数据流(轨道)，例如音频流、视频流、字幕流
 	- 对应FFmpeg动作：`Demux/Mux` <font color="#c00000">解/复用</font>
 - 编码层：
-	- 对应FFmpeg结构体： `AVPacket`
+	- 相关FFmpeg结构体： 
+		- `AVPacket`
+		- `AVCodecContext` ：编解码器上下文
+		- `AVCodecParameters` ：编解码器参数
 	- 对应FFmpeg动作：`Decode/Encode` <font color="#c00000">编/解码</font>
 - 原始数据层：
-	- 对应FFmpeg结构体： `AVPacket`
+	- 相关FFmpeg结构体：
+		- `AVFrame` ：原始数据
+		- `SwsContext` ：图像转换上下文
+		- 
 	- 对应FFmpeg动作：`Render/Filter` 渲染/滤镜
+
+此外，
+
 
 # 3 libavutil模块
 
