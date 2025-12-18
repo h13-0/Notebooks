@@ -30,7 +30,7 @@ FFmpeg主要有如下几个子模块：
 针对上述流程，有如下补充：
 - FFmpeg解码流程实际上主要就分为如下几步：
 	1. 从网络流或文件系统中抓取封装文件
-	2. 从封装文件中获取流信息
+	2. 从封装文件中获取<font color="#c00000">流</font><span style="background:#fff88f"><font color="#c00000"><u><b>信息</b></u></font></span>
 	3. 从流信息中构造解码器
 	4. 循环从封装文件中提取编码后的数据包给解码器
 	5. 循环从解码器中获取解码后的原始音视频数据
@@ -41,8 +41,10 @@ FFmpeg主要有如下几个子模块：
 	- `AVCodecID` ：编码类型枚举
 	- `AVCodec` ：编解码器的单例预定义(指明每个编解码器的回调函数等)
 	- `AVCodecContext` ：编解码器上下文
-	- `AVPacket` ：压缩
+	- `AVPacket` ：编码后的数据片段
 	- `AVFrame` ：基础数据帧
+		- 对于视频是单帧原始数据
+		- 对于音频是一段采样点构成的数组，即一段PCM数据
 
 # 3 libavformat模块
 
@@ -119,28 +121,6 @@ int avio_open_dir(AVIODirContext **s, const char *url, AVDictionary **options)
 - `AVDictionary **options` ：包含协议私密配置的词典，返回时该参数将被销毁，并替换为包含缺失选项的词典，可能为 `NULL` 
 
 ## 3.2 解复用
-
-
-
-
-在[[../音视频开发入门|音视频开发入门]]中就已经讲到，音视频文件或流中均包含一个或多个音频流或视频流，这些流中又包含音视频数据包。
-
-
-
-
-
-
-因此有如下若干重要结构体：
-- `AVFormatContext` ：格式化IO上下文
-- `AVStream` ：音视频流结构体
-- `AVPacket` ：音频数据包
-- 
-
-
-
-
-
-
 
 ### 3.2.1 打开媒体文件(avformat_open_input)
 
