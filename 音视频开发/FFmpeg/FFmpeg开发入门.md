@@ -21,8 +21,17 @@ FFmpeg主要有如下几个子模块：
 - `libswresample` ：提供了混音和重采样
 - `libswscale` ：提供了色彩转换和缩放功能
 
-其中，[[音视频开发/音视频开发入门#^rk4p2m|流媒体结构]]与FFmpeg之间的关联如下：
+在[[音视频开发/音视频开发入门#^rk4p2m|流媒体结构]]我们已经了解了如下的音视频流四层结构：
 	![[Resources/音视频流四层结构.drawio.svg]]
+而在FFmpeg进行解码和播放时，则会分别对应如下的工作流程：
+
+
+
+
+
+
+
+
 - 传输层：
 	- 相关FFmpeg结构体：
 		- `AVIOContext` ：<font color="#c00000">含有缓冲区的IO上下文</font>
