@@ -804,6 +804,86 @@ if(ec == std::errc::invalid_argument) ...
 cout << "Value: " << ec.value() << ", Category: " << ec.category().name()
 ```
 
+### 3.3.6 std::optional(C++17)
+
+`std::optional` 使用头文件 `<optional>`
+
+#### 3.3.6.1 基本使用
+
+`std::optional` 表示是<span style="background:#fff88f"><font color="#c00000">一个可能存在，也可能不存在的值</font></span>。其可以用于如下用途：
+1. 函数返回值：表示可能无法返回有效结果的返回值
+```CPP
+// 当不使用 `std::optional` 时，必须同时从参数和返回值接收查询结果
+bool find_item(const Container &c, Item &i) { ... }
+
+// 而使用 `std::optional` 后，可以不再从参数接收结果
+std::optional<Item> find_item(const Container &c) { 
+	if(success)
+		return Item();
+	else
+		return std::nullopt;
+}
+```
+2. struct成员：表示struct的可选字段
+```CPP
+struct UserInfo {
+    std::string name;           // 必填
+    int age;                    // 必填
+    std::optional<std::string> nickname; // 选填：用户可能没有昵称
+    std::optional<std::string> phone;    // 选填：用户可能没填电话
+};
+```
+3. 延迟初始化：例如有些对象的构造代价可能很大，因此可以先使用 `std::optional` 进行占位
+需要注意：
+- `std::optional<T>` <font color="#c00000">默认只是一个空容器</font>，<span style="background:#fff88f"><font color="#c00000"><u>需要先创建该对象</u></font></span>，<font color="#c00000">随后才能进行赋值和操作</font>。
+	- 构造时可以：
+		- 使用[[CPP/C2CPP/C2CPP#^r5zfr4|emplace]]原地构造
+		- 也可以使用赋值操作
+	- 作为struct成员时更应注意
+
+在使用时，可以使用如下的方法校验其是否包含值：
+
+```CPP
+// 使用 `has_value` 方法
+if(opt.has_value()) { ... }
+
+// 使用重载的 bool 转换
+if(opt) { ... }
+```
+
+获取值也有如下的几种方法：
+1. (<font color="#c00000">推荐</font>)使用 `opt.value_or(default_val)` ，当没有值时会使用默认值
+2. 使用 `opt.value()` ，<font color="#c00000">当没有值时会抛出异常</font>
+3. 直接解引用 `value = *opt` ，<font color="#c00000">没有值时行为未定义</font>，但是速度最快
+
+#### 3.3.6.2 内存分配
+
+`std::optional` 是静态分配的内存，位于栈上。
+
+#### 3.3.6.3 常用成员函数
+
+##### 3.3.6.3.1 原地构造(emplace) ^r5zfr4
+
+`emplace` 函数会就地构造该值，如果调用时已包含该值，则会先销毁原值再构造新值。
+
+其有如下两个重载：
+1. 通过直接初始化构造包含值，相当于执行了 `T(args)` ：
+```CPP
+template< class... Args >
+T& emplace( Args&&... args );
+```
+- 其中：
+	- `args` 为传递给构造函数的参数
+
+2. 通过调用聚合初始化方法构造，相当于执行了 `T({u1, u2, ...}, args...)`：
+```CPP
+template< class U, class... Args >
+T& emplace( std::initializer_list<U> ilist, Args&&... args );
+```
+- 其中：
+	- `ilist` 为要传递给构造函数的初始化列表
+	- `args` 为传递给构造函数的参数
+
 ## 3.4 新增函数
 
 ### 3.4.1 字符串格式化函数(std::format)(C++20)
@@ -1977,86 +2057,6 @@ size_type count( const K& x ) const;
 ### 4.2.6 std::map
 
 `std::map` 内部通常基于红黑树实现，<font color="#c00000">元素始终按键的升序排序</font>。
-
-### 4.2.7 std::optional(C++17)
-
-`std::optional` 使用头文件 `<optional>`
-
-#### 4.2.7.1 基本使用
-
-`std::optional` 表示是<span style="background:#fff88f"><font color="#c00000">一个可能存在，也可能不存在的值</font></span>。其可以用于如下用途：
-1. 函数返回值：表示可能无法返回有效结果的返回值
-```CPP
-// 当不使用 `std::optional` 时，必须同时从参数和返回值接收查询结果
-bool find_item(const Container &c, Item &i) { ... }
-
-// 而使用 `std::optional` 后，可以不再从参数接收结果
-std::optional<Item> find_item(const Container &c) { 
-	if(success)
-		return Item();
-	else
-		return std::nullopt;
-}
-```
-2. struct成员：表示struct的可选字段
-```CPP
-struct UserInfo {
-    std::string name;           // 必填
-    int age;                    // 必填
-    std::optional<std::string> nickname; // 选填：用户可能没有昵称
-    std::optional<std::string> phone;    // 选填：用户可能没填电话
-};
-```
-3. 延迟初始化：例如有些对象的构造代价可能很大，因此可以先使用 `std::optional` 进行占位
-需要注意：
-- `std::optional<T>` <font color="#c00000">默认只是一个空容器</font>，<span style="background:#fff88f"><font color="#c00000"><u>需要先创建该对象</u></font></span>，<font color="#c00000">随后才能进行赋值和操作</font>。
-	- 构造时可以：
-		- 使用[[CPP/C2CPP/C2CPP#^r5zfr4|emplace]]原地构造
-		- 也可以使用赋值操作
-	- 作为struct成员时更应注意
-
-在使用时，可以使用如下的方法校验其是否包含值：
-
-```CPP
-// 使用 `has_value` 方法
-if(opt.has_value()) { ... }
-
-// 使用重载的 bool 转换
-if(opt) { ... }
-```
-
-获取值也有如下的几种方法：
-1. (<font color="#c00000">推荐</font>)使用 `opt.value_or(default_val)` ，当没有值时会使用默认值
-2. 使用 `opt.value()` ，<font color="#c00000">当没有值时会抛出异常</font>
-3. 直接解引用 `value = *opt` ，<font color="#c00000">没有值时行为未定义</font>，但是速度最快
-
-#### 4.2.7.2 内存分配
-
-`std::optional` 是静态分配的内存，位于栈上。
-
-#### 4.2.7.3 常用成员函数
-
-##### 4.2.7.3.1 原地构造(emplace) ^r5zfr4
-
-`emplace` 函数会就地构造该值，如果调用时已包含该值，则会先销毁原值再构造新值。
-
-其有如下两个重载：
-1. 通过直接初始化构造包含值，相当于执行了 `T(args)` ：
-```CPP
-template< class... Args >
-T& emplace( Args&&... args );
-```
-- 其中：
-	- `args` 为传递给构造函数的参数
-
-2. 通过调用聚合初始化方法构造，相当于执行了 `T({u1, u2, ...}, args...)`：
-```CPP
-template< class U, class... Args >
-T& emplace( std::initializer_list<U> ilist, Args&&... args );
-```
-- 其中：
-	- `ilist` 为要传递给构造函数的初始化列表
-	- `args` 为传递给构造函数的参数
 
 ## 4.3 算法
 
