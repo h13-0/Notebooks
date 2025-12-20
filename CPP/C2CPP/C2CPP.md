@@ -434,7 +434,7 @@ void test_shared() {
 
 #### 3.3.1.3 独占、共享指针的通用API ^sh4a28
 
-##### 3.3.1.3.1 构造方法
+##### 3.3.1.3.1 构造方法(std::make_unique、std::make_shared)
 
 
 
