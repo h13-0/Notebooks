@@ -480,9 +480,28 @@ void test_cycle() {
 } // 正常释放
 ```
 
-#### 3.3.1.4 拓展用法
+#### 3.3.1.4 通用API
 
-##### 3.3.1.4.1 资源自动释放(RAII)
+##### 3.3.1.4.1 解引用(operator->、operator*)
+
+```CPP
+typename std::add_lvalue_reference<T>::type operator*() const
+    noexcept(noexcept(*std::declval<pointer>()));
+```
+
+```CPP
+pointer operator->() const noexcept;
+```
+
+##### 3.3.1.4.2 获取原始裸指针(get)
+
+
+
+
+
+#### 3.3.1.5 拓展用法
+
+##### 3.3.1.5.1 资源自动释放(RAII)
 
 在C语言中，资源的申请均需要申请者手动进行释放，没有C++中的析构函数的自动释放方式。这样一旦遇到复杂的错误路径处理就很麻烦，例如：
 
