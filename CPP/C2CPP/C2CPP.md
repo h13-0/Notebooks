@@ -402,6 +402,8 @@ void test_unique() {
 } // 函数结束，ptr2 析构，自动 delete 内存
 ```
 
+其通用API可见章节[[CPP/C2CPP/C2CPP#^sh4a28|独占、共享指针的通用API]]。
+
 #### 3.3.1.2 共享指针(shared_ptr)
 
 共享指针用于多个指针指向同一个对象的情况，其特性如下：
@@ -428,7 +430,42 @@ void test_shared() {
 } // sp1 析构，计数 = 0 -> 释放内存
 ```
 
-#### 3.3.1.3 弱引用指针(weak_ptr)
+其通用API可见章节[[CPP/C2CPP/C2CPP#^sh4a28|独占、共享指针的通用API]]。
+
+#### 3.3.1.3 独占、共享指针的通用API ^sh4a28
+
+##### 3.3.1.3.1 构造方法
+
+
+
+
+##### 3.3.1.3.2 解引用(operator->、operator*)
+
+```CPP
+typename std::add_lvalue_reference<T>::type operator*() const
+    noexcept(noexcept(*std::declval<pointer>()));
+```
+
+```CPP
+pointer operator->() const noexcept;
+```
+
+##### 3.3.1.3.3 访问数组元素(operator\[\])
+
+
+
+
+##### 3.3.1.3.4 获取原始裸指针(get)
+
+当调用普通C语言API，或者调用未使用智能指针的API时，则可以使用 `get` 方法获取其持有的裸指针。
+
+```CPP
+pointer get() const noexcept;
+```
+
+
+
+#### 3.3.1.4 弱引用指针(weak_ptr)
 
 弱引用指针是为解决共享指针循环引用问题而设计的工具，<font color="#c00000">需要配合共享指针使用</font>。
 
@@ -480,22 +517,14 @@ void test_cycle() {
 } // 正常释放
 ```
 
-#### 3.3.1.4 通用API
+弱引用指针无法使用解引用
 
-##### 3.3.1.4.1 解引用(operator->、operator*)
 
-```CPP
-typename std::add_lvalue_reference<T>::type operator*() const
-    noexcept(noexcept(*std::declval<pointer>()));
-```
+##### 3.3.1.4.1 获取访问权并升格为共享指针(lock)
 
 ```CPP
-pointer operator->() const noexcept;
+
 ```
-
-##### 3.3.1.4.2 获取原始裸指针(get)
-
-
 
 
 
