@@ -434,12 +434,35 @@ void test_shared() {
 
 #### 3.3.1.3 独占、共享指针的通用API ^sh4a28
 
-##### 3.3.1.3.1 构造方法(std::make_unique、std::make_shared)
+##### 3.3.1.3.1 构造函数与Deleter
+
+对于 `unique_ptr` 和 `shared_ptr` 这两个智能指针，都可以为其指定析构器 `Deleter` ，从而实现自定义释放资源的方法。
+
+```CPP
+template<
+    class T,
+    class Deleter = std::default_delete<T>
+> class unique_ptr;
+
+template <
+    class T,
+    class Deleter
+> class unique_ptr<T[], Deleter>;
+```
+
+```CPP
+
+```
 
 
 
 
-##### 3.3.1.3.2 解引用(operator->、operator*)
+##### 3.3.1.3.2 构造方法(std::make_unique、std::make_shared)
+
+当设置了Deleter之后无法使用该方法
+
+
+##### 3.3.1.3.3 解引用(operator->、operator*)
 
 ```CPP
 typename std::add_lvalue_reference<T>::type operator*() const
@@ -450,12 +473,12 @@ typename std::add_lvalue_reference<T>::type operator*() const
 pointer operator->() const noexcept;
 ```
 
-##### 3.3.1.3.3 访问数组元素(operator\[\])
+##### 3.3.1.3.4 访问数组元素(operator\[\])
 
 
 
 
-##### 3.3.1.3.4 获取原始裸指针(get)
+##### 3.3.1.3.5 获取原始裸指针(get)
 
 当调用普通C语言API，或者调用未使用智能指针的API时，则可以使用 `get` 方法获取其持有的裸指针。
 
