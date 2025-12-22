@@ -434,16 +434,20 @@ void test_shared() {
 
 #### 3.3.1.3 独占、共享指针的通用API ^sh4a28
 
-##### 3.3.1.3.1 构造函数与Deleter
+##### 3.3.1.3.1 构造与Deleter
 
-对于 `unique_ptr` 和 `shared_ptr` 这两个智能指针，都可以为其指定析构器 `Deleter` ，从而实现自定义释放资源的方法。
+对于 `unique_ptr` 和 `shared_ptr` 这两个智能指针，都可以为其指定析构器 `Deleter` ，从而实现自定义释放资源的方法。不过：
+- `unique_ptr` 是在<font color="#c00000">类型模板中传递</font>，<font color="#c00000">会改变其类型定义</font>，会在编译期完成指定
+- `shared_ptr` 是在构造函数中传递，<font color="#c00000">不会改变类型定义</font>，会在运行时完成指定
 
 ```CPP
+// 使用默认Deleter
 template<
     class T,
     class Deleter = std::default_delete<T>
 > class unique_ptr;
 
+// 指定自定义Deleter
 template <
     class T,
     class Deleter
@@ -451,7 +455,8 @@ template <
 ```
 
 ```CPP
-
+template< class Y, class Deleter >
+shared_ptr( Y* ptr, Deleter d );
 ```
 
 
@@ -459,7 +464,12 @@ template <
 
 ##### 3.3.1.3.2 构造方法(std::make_unique、std::make_shared)
 
+`make_unique` 和 `make_shared` 均为
+
 当设置了Deleter之后无法使用该方法
+
+
+
 
 
 ##### 3.3.1.3.3 解引用(operator->、operator*)
