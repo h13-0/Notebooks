@@ -2364,8 +2364,29 @@ size_type count( const K& x ) const;
 
 ### 5.1.1 PImpl模式
 
-在C++中，由于<font color="#c00000">不支持将一个对象或结构体分多个地方多次定义</font>，ka
+在C++中，由于<font color="#c00000">不支持将一个对象或结构体分多个地方多次定义</font>，因此考虑如下的设计场景：
+- 现在需要基于几个内部库实现一个对象，并且<font color="#c00000">不希望这个对象的调用者关心内部库的数据结构</font>以及这个对象的内部实现
+- 但是这个对象中不可避免的需要几个由内部库定义的私有成员变量
+例如：
 
+```CPP
+// FfmpegCapture.hpp
+class FfmpegCapture : public ICapture {
+public:
+    // ... 接口 ...
+private:
+    // 若干FFmpeg定义的成员变量
+    AVFormatContext* fmtctx;
+    AVCodeID         codeid;
+    AVCodecContext*  codecctx;
+    ...
+    
+    // 若干内部实现
+    std::vector<StreamInfo> probe_streams(AVFormatContext* fmtctx);
+    ...
+};
+```
 
+上述实现方式除了会被动暴露对象的私有成员变量、内部方法等实现细节，还会被动引入大量内部依赖库的头文件及数据结构定义、编译选项等。尽管还可以ton
 
 
