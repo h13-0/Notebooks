@@ -489,6 +489,7 @@ process(std::make_unique<MyClass>(), getPriority());
 ```
 
 不过需要注意，<span style="background:#fff88f"><font color="#c00000">当设置了Deleter之后</font></span><font color="#c00000">两种指针均无法使用此方法构造</font>。
+子章节中列出了常用的构造方法，更多构造方法自行参考cppreference。
 
 ###### 3.3.1.3.2.1 构造独占指针并传递参数
 
@@ -507,6 +508,9 @@ template< class T >
 constexpr unique_ptr<T> make_unique( std::size_t size );
 ```
 
+其中：
+- 模板 `T` <span style="background:#fff88f"><font color="#c00000">为目标类型的数组类型</font></span>
+
 ###### 3.3.1.3.2.3 构造共享指针并传递参数
 
 ```CPP
@@ -524,10 +528,12 @@ template< class T >
 shared_ptr<T> make_shared( std::size_t N );
 ```
 
-
-
+其中：
+- 模板 `T` <span style="background:#fff88f"><font color="#c00000">为目标类型的数组类型</font></span>
 
 ##### 3.3.1.3.3 解引用(operator->、operator*)
+
+和普通裸指针一样使用即可。
 
 ```CPP
 typename std::add_lvalue_reference<T>::type operator*() const
@@ -550,7 +556,6 @@ pointer operator->() const noexcept;
 ```CPP
 pointer get() const noexcept;
 ```
-
 
 
 #### 3.3.1.4 弱引用指针(weak_ptr)
