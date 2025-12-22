@@ -464,20 +464,24 @@ shared_ptr( Y* ptr, Deleter d );
 
 ##### 3.3.1.3.2 构造方法(std::make_unique、std::make_shared)(C++14)
 
-`make_unique` 和 `make_shared` 是专门用于构造对应的两种指针的构造方法。除了提供了一些性能优化和简化写法以外，其主要可以在如下情况提供更安全的内存保护，具体如下：
-1. 在C++17之前，<font color="#c00000">函数参数的求值顺序是不确定的</font>(<font color="#c00000">甚至函数参数的参数求值顺序也不固定</font>)，例如：
+`make_unique` 和 `make_shared` 是专门用于构造对应的两种指针的构造方法。除了：
+1. 提供了一些性能优化
+2. 简化写法
+以外，其最核心的优势：
+- 可以在如下情况提供更安全的内存保护，具体如下：
+	1. 在C++17之前，<font color="#c00000">函数参数的求值顺序是不确定的</font>(<font color="#c00000">甚至函数参数的参数求值顺序也不固定</font>)，例如：
 ```CPP
 void process(std::unique_ptr<MyClass> ptr, int priority);
 int getPriority(); // 这个函数可能会抛出异常
-	
-// 调用代码：
-process(std::unique_ptr<MyClass>(new MyClass()), getPriority());
-```
-2. 则上述调用必须执行如下三件事，<font color="#c00000">但是其顺序不固定</font>：
-	1. 执行 `new MyClass()` 
-	2. 执行 `std::unique_ptr` 的构造函数
-	3. 调用 `getPriority()`
-3. 那么如果先执行了 `new MyClass()` ，随后在 `getPriority()` 时触发异常，则会导致 `new` 出来的内存没人去释放，从而导致内存泄露。
+		
+	// 调用代码：
+	process(std::unique_ptr<MyClass>(new MyClass()), getPriority());
+	```
+	2. 则上述调用必须执行如下三件事，<font color="#c00000">但是其顺序不固定</font>：
+		1. 执行 `new MyClass()` 
+		2. 执行 `std::unique_ptr` 的构造函数
+		3. 调用 `getPriority()`
+	3. 那么如果先执行了 `new MyClass()` ，随后在 `getPriority()` 时触发异常，则会导致 `new` 出来的内存没人去释放，从而导致内存泄露。
 因此，上述代码可以改用 `make_unique` 进行实现：
 
 ```CPP
@@ -488,7 +492,10 @@ int getPriority(); // 这个函数可能会抛出异常
 process(std::make_unique<MyClass>(), getPriority());
 ```
 
-不过需要注意，<span style="background:#fff88f"><font color="#c00000">当设置了Deleter之后</font></span><font color="#c00000">两种指针均无法使用此方法构造</font>。
+其解决的根本原理是<span style="background:#fff88f"><font color="#c00000">把资源申请的步骤放到了工厂函数中!!!</font></span>
+
+不过需要注意：
+1. <span style="background:#fff88f"><font color="#c00000">当设置了Deleter之后</font></span><font color="#c00000">两种指针均无法使用此方法构造</font>。
 子章节中列出了常用的构造方法，更多构造方法自行参考cppreference。
 
 ###### 3.3.1.3.2.1 构造独占指针并传递参数
@@ -531,7 +538,16 @@ shared_ptr<T> make_shared( std::size_t N );
 其中：
 - 模板 `T` <span style="background:#fff88f"><font color="#c00000">为目标类型的数组类型</font></span>
 
-##### 3.3.1.3.3 解引用(operator->、operator*)
+##### 3.3.1.3.3 自定义工厂函数的方法 ^oji6gb
+
+在上述章节中提到了一种由于C++20之前，参数求值顺序不确定导致的内存泄露风险，在一般情况下我们可以通过使用工厂函数 `std::make_unique` 和 `std::make_shared` 进行规避。
+
+
+
+
+
+
+##### 3.3.1.3.4 解引用(operator->、operator*)
 
 和普通裸指针一样使用即可。
 
@@ -544,12 +560,12 @@ typename std::add_lvalue_reference<T>::type operator*() const
 pointer operator->() const noexcept;
 ```
 
-##### 3.3.1.3.4 访问数组元素(operator\[\])
+##### 3.3.1.3.5 访问数组元素(operator\[\])
 
 
 
 
-##### 3.3.1.3.5 获取原始裸指针(get)
+##### 3.3.1.3.6 获取原始裸指针(get)
 
 当调用普通C语言API，或者调用未使用智能指针的API时，则可以使用 `get` 方法获取其持有的裸指针。
 
