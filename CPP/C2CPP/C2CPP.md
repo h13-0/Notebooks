@@ -377,7 +377,7 @@ comp1.operator==(comp2);
 智能指针严格来说不属于STL。
 智能指针使用头文件 `<memory>` 。
 
-#### 3.3.1.1 独占指针(unique_ptr)
+#### 3.3.1.1 独占指针(unique_ptr) ^t86e16
 
 独占指针是现在C++中<font color="#c00000">最常用</font>、<font color="#c00000">最推荐</font>的智能指针，其特性如下：
 1. 独占特性：
@@ -2387,6 +2387,37 @@ private:
 };
 ```
 
-上述实现方式除了会被动暴露对象的私有成员变量、内部方法等实现细节，还会被动引入大量内部依赖库的头文件及数据结构定义、编译选项等。尽管还可以ton
+上述实现方式除了会被动暴露对象的私有成员变量、内部方法等实现细节，还会被动引入大量内部依赖库的头文件及数据结构定义、编译选项等。
 
+解决此问题可以使用PImpl模式进行设计，其具体步骤为：
+1. 在结构体的 `private` 中<span style="background:#fff88f"><font color="#c00000"><b><u>声明</u></b></font></span>一个 `struct Impl;` (<font color="#c00000">注意并非定义</font>)
+2. 内部私有成员定义一个[[CPP/C2CPP/C2CPP#^t86e16|独占指针]]指向该结构体成员(`std::unique_ptr<Impl> _impl;`)
+3. <span style="background:#fff88f"><font color="#c00000">在源文件中定义该结构体</font></span>
+4. 在构造函数中实例化该结构体成员
+5. <span style="background:#fff88f"><font color="#c00000">在源文件中定义析构函数</font></span>(不可在头文件中定义)
+随后内部调用的时候使用 `_impl` 调用内部成员和方法即可。
+
+Demo如下：
+
+```CPP
+// FfmpegCapture.hpp
+class FfmpegCapture {
+public:
+	FfmpegCapture();
+	// 在头文件只声明，不实现茜igu
+    ~FfmpegCapture(); 
+    
+    // 后续若干接口
+private:
+    // 1. 声明 Impl 结构体
+    struct Impl;
+    // 2. 定义独占指针
+    std::unique_ptr<Impl> _impl;
+};
+```
+
+```CPP
+
+
+```
 
