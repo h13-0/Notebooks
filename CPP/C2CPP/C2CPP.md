@@ -490,9 +490,7 @@ process(std::make_unique<MyClass>(), getPriority());
 
 不过需要注意，<span style="background:#fff88f"><font color="#c00000">当设置了Deleter之后</font></span><font color="#c00000">两种指针均无法使用此方法构造</font>。
 
-###### 3.3.1.3.2.1 构造du zh
-
-###### 3.3.1.3.2.2 构造独占指针并传递参数
+###### 3.3.1.3.2.1 构造独占指针并传递参数
 
 ```CPP
 template< class T, class... Args >
@@ -502,7 +500,29 @@ constexpr unique_ptr<T> make_unique( Args&&... args );
 其中：
 - 参数 `args` 被传递给 `T` 的构造函数
 
-###### 3.3.1.3.2.3 
+###### 3.3.1.3.2.2 为独占指针构造指定大小的数组
+
+```CPP
+template< class T >
+constexpr unique_ptr<T> make_unique( std::size_t size );
+```
+
+###### 3.3.1.3.2.3 构造共享指针并传递参数
+
+```CPP
+template< class T, class... Args >
+shared_ptr<T> make_shared( Args&&... args );
+```
+
+其中：
+- 参数 `args` 被传递给 `T` 的构造函数
+
+###### 3.3.1.3.2.4 为共享指针构造指定大小的数组
+
+```CPP
+template< class T >
+shared_ptr<T> make_shared( std::size_t N );
+```
 
 
 
