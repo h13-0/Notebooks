@@ -2371,6 +2371,13 @@ size_type count( const K& x ) const;
 
 ```CPP
 // FfmpegCapture.hpp
+
+extern "C" {
+	#include "libavutil/avutil.h"
+	#include "libavformat/avformat.h"
+	...
+}
+
 class FfmpegCapture : public ICapture {
 public:
     // ... 接口 ...
@@ -2393,8 +2400,8 @@ private:
 1. 在结构体的 `private` 中<span style="background:#fff88f"><font color="#c00000"><b><u>声明</u></b></font></span>一个 `struct Impl;` (<font color="#c00000">注意并非定义</font>)
 2. 内部私有成员定义一个[[CPP/C2CPP/C2CPP#^t86e16|独占指针]]指向该结构体成员(`std::unique_ptr<Impl> _impl;`)
 3. <span style="background:#fff88f"><font color="#c00000">在源文件中定义该结构体</font></span>
-4. 在构造函数中实例化该结构体成员
-5. <span style="background:#fff88f"><font color="#c00000">在源文件中定义析构函数</font></span>(不可在头文件中定义)
+4. <span style="background:#fff88f"><font color="#c00000">在<u>头文件中声明</u>、<u>源文件中定义</u>构造函数、析构函数</font></span>(注意在哪声明、在哪定义)
+5. 在上述构造函数中实例化该独占指针(通常是在初始化列表中实例化)
 随后内部调用的时候使用 `_impl` 调用内部成员和方法即可。
 
 Demo如下：
@@ -2403,11 +2410,12 @@ Demo如下：
 // FfmpegCapture.hpp
 class FfmpegCapture {
 public:
+	// 在头文件只声明，不实现构造和析构函数!!!
+	// 因为此时还没有 Impl 的定义
 	FfmpegCapture();
-	// 在头文件只声明，不实现茜igu
     ~FfmpegCapture(); 
     
-    // 后续若干接口
+    // ... 接口 ...
 private:
     // 1. 声明 Impl 结构体
     struct Impl;
@@ -2417,7 +2425,33 @@ private:
 ```
 
 ```CPP
+// FfmpegCapture.cpp
 
+#include "FfmpegCapture.hpp"
+extern "C" {
+	#include "libavutil/avutil.h"
+	#include "libavformat/avformat.h"
+	...
+}
 
+// 3. 在源文件定义内部成员和实现
+struct FfmpegCapture::Impl {
+	// 若干FFmpeg定义的成员变量
+	AVFormatContext* fmtctx;
+	AVCodeID         codeid;
+	AVCodecContext*  codecctx;
+	...
+	
+	// 若干内部实现
+	std::vector<StreamInfo> probe_streams(AVFormatContext* fmtctx);
+	...
+};
+
+// 4. [关键] 构造函数在 cpp 中实现
+FfmpegCapture::FfmpegCapture() : _impl(std::make_unique<Impl>()) {}
+
+// 4. [关键] 析构函数在 cpp 中实现
+// 此时 Impl 已经是"完整类型"了，unique_ptr 知道怎么 delete 它了
+FfmpegCapture::~FfmpegCapture() = default;
 ```
 
