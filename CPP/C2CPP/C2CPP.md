@@ -402,7 +402,7 @@ void test_unique() {
 } // 函数结束，ptr2 析构，自动 delete 内存
 ```
 
-其通用API可见章节[[CPP/C2CPP/C2CPP#^sh4a28|独占、共享指针的通用API]]。
+其通用API可见章节[[CPP/C2CPP/C2CPP#^sh4a28|独占、共享指针的通用方法]]。
 
 #### 3.3.1.2 共享指针(shared_ptr)
 
@@ -430,9 +430,9 @@ void test_shared() {
 } // sp1 析构，计数 = 0 -> 释放内存
 ```
 
-其通用API可见章节[[CPP/C2CPP/C2CPP#^sh4a28|独占、共享指针的通用API]]。
+其通用API可见章节[[CPP/C2CPP/C2CPP#^sh4a28|独占、共享指针的通用方法]]。
 
-#### 3.3.1.3 独占、共享指针的通用API ^sh4a28
+#### 3.3.1.3 独占、共享指针的通用方法 ^sh4a28
 
 ##### 3.3.1.3.1 构造与Deleter
 
@@ -459,8 +459,8 @@ template< class Y, class Deleter >
 shared_ptr( Y* ptr, Deleter d );
 ```
 
-
-
+需要注意：
+1. 当需要构造<font color="#c00000">指向类型</font> `A` <font color="#c00000">的智能指针时</font>，则上述<font color="#c00000">模板参数</font> `T` <font color="#c00000">和</font> `Y` <font color="#c00000">应当为类型</font> `A` <span style="background:#fff88f"><font color="#c00000">本身而非</font></span> `A*`
 
 ##### 3.3.1.3.2 构造方法(std::make_unique、std::make_shared)(C++14)
 
