@@ -462,26 +462,22 @@ shared_ptr( Y* ptr, Deleter d );
 需要注意：
 1. 当需要构造<font color="#c00000">指向类型</font> `A` <font color="#c00000">的智能指针时</font>，则上述<font color="#c00000">模板参数</font> `T` <font color="#c00000">和</font> `Y` <font color="#c00000">应当为类型</font> `A` <span style="background:#fff88f"><font color="#c00000">本身而非</font></span> `A*`
 
-##### 3.3.1.3.2 构造方法(std::make_unique、std::make_shared)(C++14)
+##### 3.3.1.3.2 构造方法(std::make_unique、std::make_shared)(C++14) ^fb89wj
 
-`make_unique` 和 `make_shared` 是专门用于构造对应的两种指针的构造方法。除了：
-1. 提供了一些性能优化
-2. 简化写法
-以外，其最核心的优势：
-- 可以在如下情况提供更安全的内存保护，具体如下：
-	1. 在C++17之前，<font color="#c00000">函数参数的求值顺序是不确定的</font>(<font color="#c00000">甚至函数参数的参数求值顺序也不固定</font>)，例如：
+`make_unique` 和 `make_shared` 是专门用于构造对应的两种指针的构造方法。除了提供了一些性能优化和简化写法以外，其主要可以<font color="#c00000">在如下情况提供更安全的内存保护</font>，具体如下：
+1. 在C++17之前，<font color="#c00000">函数参数的求值顺序是不确定的</font>(<font color="#c00000">甚至函数参数的参数求值顺序也不固定</font>)，例如：
 ```CPP
 void process(std::unique_ptr<MyClass> ptr, int priority);
 int getPriority(); // 这个函数可能会抛出异常
-		
-	// 调用代码：
-	process(std::unique_ptr<MyClass>(new MyClass()), getPriority());
-	```
-	2. 则上述调用必须执行如下三件事，<font color="#c00000">但是其顺序不固定</font>：
-		1. 执行 `new MyClass()` 
-		2. 执行 `std::unique_ptr` 的构造函数
-		3. 调用 `getPriority()`
-	3. 那么如果先执行了 `new MyClass()` ，随后在 `getPriority()` 时触发异常，则会导致 `new` 出来的内存没人去释放，从而导致内存泄露。
+	
+// 调用代码：
+process(std::unique_ptr<MyClass>(new MyClass()), getPriority());
+```
+2. 则上述调用必须执行如下三件事，<font color="#c00000">但是其顺序不固定</font>：
+	1. 执行 `new MyClass()` 
+	2. 执行 `std::unique_ptr` 的构造函数
+	3. 调用 `getPriority()`
+3. 那么如果先执行了 `new MyClass()` ，随后在 `getPriority()` 时触发异常，则会导致 `new` 出来的内存没人去释放，从而导致内存泄露。
 因此，上述代码可以改用 `make_unique` 进行实现：
 
 ```CPP
@@ -540,7 +536,15 @@ shared_ptr<T> make_shared( std::size_t N );
 
 ##### 3.3.1.3.3 自定义工厂函数的方法 ^oji6gb
 
-在上述章节中提到了一种由于C++20之前，参数求值顺序不确定导致的内存泄露风险，在一般情况下我们可以通过使用工厂函数 `std::make_unique` 和 `std::make_shared` 进行规避。
+在[[CPP/C2CPP/C2CPP#^fb89wj|上述章节]]中提到了一种由于C++20之前，参数求值顺序不确定导致的内存泄露风险，在一般情况下我们可以通过使用工厂函数 `std::make_unique` 和 `std::make_shared` 进行规避。但是其问题是当我们自定义 `Deleter` 时，就无法使用上述两个函数。
+
+此时的解决方案是定义自己的工厂函数
+
+
+
+
+
+
 
 
 
