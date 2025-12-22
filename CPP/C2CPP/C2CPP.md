@@ -462,11 +462,25 @@ shared_ptr( Y* ptr, Deleter d );
 
 
 
-##### 3.3.1.3.2 构造方法(std::make_unique、std::make_shared)
+##### 3.3.1.3.2 构造方法(std::make_unique、std::make_shared)(C++14)
 
-`make_unique` 和 `make_shared` 均为
+`make_unique` 和 `make_shared` 是专门用于构造对应的两种指针的构造方法。除了提供了一些性能优化和简化写法以外，其主要可以在如下情况提供更安全的内存保护，具体如下：
+1. 在C++17之前，<font color="#c00000">函数参数的求值顺序是不确定的</font>(<font color="#c00000">甚至函数参数的参数求值顺序也不固定</font>)，例如：
+```CPP
+void process(std::unique_ptr<MyClass> ptr, int priority);
+int getPriority(); // 这个函数可能会抛出异常
+	
+// 调用代码：
+process(std::unique_ptr<MyClass>(new MyClass()), getPriority());
+```
+2. 则上述调用必须执行如下三件事，<font color="#c00000">但是其顺序不固定</font>：
+	1. 执行 `new MyClass()` 
+	2. 执行 `std::unique_ptr` 的构造函数
+	3. 调用 `getPriority()`
 
-当设置了Deleter之后无法使用该方法
+
+
+不过需要注意，<span style="background:#fff88f"><font color="#c00000">当设置了Deleter之后</font></span><font color="#c00000">两种指针均无法使用此方法构造</font>。
 
 
 
