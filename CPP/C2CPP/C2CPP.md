@@ -477,11 +477,32 @@ process(std::unique_ptr<MyClass>(new MyClass()), getPriority());
 	1. 执行 `new MyClass()` 
 	2. 执行 `std::unique_ptr` 的构造函数
 	3. 调用 `getPriority()`
+3. 那么如果先执行了 `new MyClass()` ，随后在 `getPriority()` 时触发异常，则会导致 `new` 出来的内存没人去释放，从而导致内存泄露。
+因此，上述代码可以改用 `make_unique` 进行实现：
 
+```CPP
+void process(std::unique_ptr<MyClass> ptr, int priority);
+int getPriority(); // 这个函数可能会抛出异常
 
+// 调用代码：
+process(std::make_unique<MyClass>(), getPriority());
+```
 
 不过需要注意，<span style="background:#fff88f"><font color="#c00000">当设置了Deleter之后</font></span><font color="#c00000">两种指针均无法使用此方法构造</font>。
 
+###### 3.3.1.3.2.1 构造du zh
+
+###### 3.3.1.3.2.2 构造独占指针并传递参数
+
+```CPP
+template< class T, class... Args >
+constexpr unique_ptr<T> make_unique( Args&&... args );
+```
+
+其中：
+- 参数 `args` 被传递给 `T` 的构造函数
+
+###### 3.3.1.3.2.3 
 
 
 
