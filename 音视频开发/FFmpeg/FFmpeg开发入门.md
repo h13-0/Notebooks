@@ -145,6 +145,14 @@ int avformat_open_input(AVFormatContext **ps, const char *url,
 
 ```
 
+### 3.2.3 从封装中读取数据包(av_read_frame)
+
+```C
+int av_read_frame(AVFormatContext *s, AVPacket *pkt);
+```
+
+功能含义：
+- 
 
 
 
