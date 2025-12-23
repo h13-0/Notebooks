@@ -78,8 +78,7 @@ int avcodec_send_packet(AVCodecContext *avctx, const AVPacket *avpkt);
 - 将数据包传递给解码器，并等待解码
 注意：
 - 当 `AVPacket *avpkt` 传递给解码器后，其引用计数器会 `+1`
-- 直到[[音视频开发/FFmpeg/FFmpeg开发入门#^bgy9em|在解码器中处理完毕并]]后 
-
+- 直到在解码器中处理完毕[[音视频开发/FFmpeg/FFmpeg开发入门#^bgy9em|并读取]]后其引用计数器才会自动 `-1`
 
 ## 4.3 从解码器中读取解码后的帧(avcodec_receive_frame) ^bgy9em
 
