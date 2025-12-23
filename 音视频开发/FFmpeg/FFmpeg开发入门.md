@@ -48,14 +48,50 @@ FFmpeg主要有如下几个子模块：
 
 # 3 基础数据结构
 
-## 3.1 封装数据包对象(AVPacket)
+## 3.1 封装文件上下文对象(AVFormatContext)
+
+
+其常用API有：
+- [[音视频开发/FFmpeg/FFmpeg开发入门#^cuxcfg|打开媒体源]]
+- [[音视频开发/FFmpeg/FFmpeg开发入门#^f0yo06|关闭媒体源]]
+
+## 3.2 音视频流信息对象(AVStream)
+
+
+## 3.3 编码数据流属性对象(AVCodecParameters)
+
+
+## 3.4 封装数据包对象(AVPacket)
 
 
 
 
 # 4 常用API
 
-## 4.1 从封装中读取数据包(av_read_frame)
+## 4.1 打开媒体源(avformat_open_input) ^cuxcfg
+
+```C
+int avformat_open_input(AVFormatContext **ps, const char *url,
+	const AVInputFormat *fmt, AVDictionary **options)	
+```
+
+该函数会打开一个输入流并读取头部。在此步骤中编解码器并没有被打开
+其参数：
+- `AVFormatContext **ps` ：格式化IO上下文的二级指针。当打开失败时其会返回 `NULL` 
+- `const char *url` ：媒体文件的URL
+- `const AVInputFormat *fmt` ：指定解析时使用的封装格式(`MP4`、`FLV` 等)，需要注意：
+	- 传入 `NULL` 时自动检测封装格式
+	- 传入非 `NULL` 时则会按照指定的格式进行解析(即使和实际格式不匹配)
+- `AVDictionary **options` ：由key和value组成的选项字典
+
+## 4.2 关闭媒体源(avformat_close_input) ^f0yo06
+
+```C
+
+
+```
+
+## 4.3 从封装中读取数据包(av_read_frame)
 
 ```C
 int av_read_frame(AVFormatContext *s, AVPacket *pkt);
@@ -68,7 +104,7 @@ int av_read_frame(AVFormatContext *s, AVPacket *pkt);
 - 当调用者不再需要其中的数据时，需要手动调用 `av_packet_unref` 解除对其的引用
 
 
-## 4.2 将数据包传递给解码器(avcodec_send_packet)
+## 4.4 将数据包传递给解码器(avcodec_send_packet)
 
 ```C
 int avcodec_send_packet(AVCodecContext *avctx, const AVPacket *avpkt);
@@ -80,12 +116,12 @@ int avcodec_send_packet(AVCodecContext *avctx, const AVPacket *avpkt);
 - 当 `AVPacket *avpkt` 传递给解码器后，其引用计数器会 `+1`
 - 直到在解码器中处理完毕[[音视频开发/FFmpeg/FFmpeg开发入门#^bgy9em|并读取]]后其引用计数器才会自动 `-1`
 
-## 4.3 从解码器中读取解码后的帧(avcodec_receive_frame) ^bgy9em
+## 4.5 从解码器中读取解码后的帧(avcodec_receive_frame) ^bgy9em
 
 
 
 
-## 4.4 
+## 4.6 
 
 
 
@@ -165,29 +201,6 @@ int avio_open_dir(AVIODirContext **s, const char *url, AVDictionary **options)
 - `AVDictionary **options` ：包含协议私密配置的词典，返回时该参数将被销毁，并替换为包含缺失选项的词典，可能为 `NULL` 
 
 ## 5.2 解复用
-
-### 5.2.1 打开媒体文件(avformat_open_input)
-
-```C
-int avformat_open_input(AVFormatContext **ps, const char *url,
-	const AVInputFormat *fmt, AVDictionary **options)	
-```
-
-该函数会打开一个输入流并读取头部。在此步骤中编解码器并没有被打开
-其参数：
-- `AVFormatContext **ps` ：格式化IO上下文的二级指针。当打开失败时其会返回 `NULL` 
-- `const char *url` ：媒体文件的URL
-- `const AVInputFormat *fmt` ：指定解析时使用的封装格式(`MP4`、`FLV` 等)，需要注意：
-	- 传入 `NULL` 时自动检测封装格式
-	- 传入非 `NULL` 时则会按照指定的格式进行解析(即使和实际格式不匹配)
-- `AVDictionary **options` ：由key和value组成的选项字典
-
-### 5.2.2 关闭媒体文件(avformat_close_input)
-
-```C
-
-
-```
 
 # 6 libavutil模块
 
