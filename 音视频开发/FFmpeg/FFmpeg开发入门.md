@@ -46,9 +46,32 @@ FFmpeg主要有如下几个子模块：
 		- 对于视频是单帧原始数据
 		- 对于音频是一段采样点构成的数组，即一段PCM数据
 
-# 3 libavformat模块
+# 3 基础数据结构
 
-## 3.1 基础IO操作
+## 3.1 封装数据包对象(AVPacket)
+
+
+
+
+# 4 常用API
+
+## 4.1 从封装中读取数据包(av_read_frame)
+
+```C
+int av_read_frame(AVFormatContext *s, AVPacket *pkt);
+```
+
+功能含义：
+- 从封装上下文中读取数据包
+注意：
+- 其在成功调用后，`AVPacket *pkt` 中的引用计数器会 `+1` ，
+- 当
+
+
+
+# 5 libavformat模块
+
+## 5.1 基础IO操作
 
 FFmpeg的基础IO操作主要分为 `avio_*` 和 `ffurl_*` 这两个系列，其具体区别为：
 
@@ -66,13 +89,13 @@ FFmpeg的基础IO操作主要分为 `avio_*` 和 `ffurl_*` 这两个系列，其
 系列接口。
 需要注意上述系列函数均<span style="background:#fff88f"><font color="#c00000">同时兼容URL和普通文件系统</font></span>。
 
-### 3.1.1 avio系列函数
+### 5.1.1 avio系列函数
 
 `avio_*` 系列的IO操作函数均需要维护对应的上下文：
 - 文件操作需要 `AVIOContext` 上下文
 - 目录操作需要 `AVIODirContext` 上下文
 
-#### 3.1.1.1 打开文件
+#### 5.1.1.1 打开文件
 
 ```C
 int avio_open(AVIOContext **s, const char *url, int flags)	
@@ -87,21 +110,21 @@ int avio_open(AVIOContext **s, const char *url, int flags)
 - 大于等于0时表示成功
 - 负值表示 `AVERROR` 值
 
-#### 3.1.1.2 读取目录条目
+#### 5.1.1.2 读取目录条目
 
 ```C
 int avio_read_dir(AVIODirContext *s, AVIODirEntry **next)	
 ```
 
-#### 3.1.1.3 关闭目录
+#### 5.1.1.3 关闭目录
 
 ```C
 int avio_close_dir(AVIODirContext **s)	
 ```
 
-### 3.1.2 ffurl系列函数
+### 5.1.2 ffurl系列函数
 
-#### 3.1.2.1 打开文件
+#### 5.1.2.1 打开文件
 
 ```C
 
@@ -109,7 +132,7 @@ int avio_close_dir(AVIODirContext **s)
 
 
 
-#### 3.1.2.2 打开目录
+#### 5.1.2.2 打开目录
 
 ```C
 int avio_open_dir(AVIODirContext **s, const char *url, AVDictionary **options)	
@@ -120,9 +143,9 @@ int avio_open_dir(AVIODirContext **s, const char *url, AVDictionary **options)
 - `const char *url` ：目录的URL
 - `AVDictionary **options` ：包含协议私密配置的词典，返回时该参数将被销毁，并替换为包含缺失选项的词典，可能为 `NULL` 
 
-## 3.2 解复用
+## 5.2 解复用
 
-### 3.2.1 打开媒体文件(avformat_open_input)
+### 5.2.1 打开媒体文件(avformat_open_input)
 
 ```C
 int avformat_open_input(AVFormatContext **ps, const char *url,
@@ -138,29 +161,16 @@ int avformat_open_input(AVFormatContext **ps, const char *url,
 	- 传入非 `NULL` 时则会按照指定的格式进行解析(即使和实际格式不匹配)
 - `AVDictionary **options` ：由key和value组成的选项字典
 
-### 3.2.2 关闭媒体文件(avformat_close_input)
+### 5.2.2 关闭媒体文件(avformat_close_input)
 
 ```C
 
 
 ```
 
-### 3.2.3 从封装中读取数据包(av_read_frame)
+# 6 libavutil模块
 
-```C
-int av_read_frame(AVFormatContext *s, AVPacket *pkt);
-```
-
-功能含义：
-- 从封装上下文中
-注意：
-- 其在成功调用后，`AVPacket *pkt` 中的引用计数器会 `+1` ，
-
-
-
-# 4 libavutil模块
-
-## 4.1 FFmpeg日志系统的使用
+## 6.1 FFmpeg日志系统的使用
 
 FFmpeg日志系统的声明位于头文件 `libavutil/log.h` 其简易使用流程为：
 1. [[音视频开发/FFmpeg/FFmpeg开发入门#^oxdoti|设置日志等级]]
@@ -177,15 +187,15 @@ FFmpeg日志系统的声明位于头文件 `libavutil/log.h` 其简易使用流�
 - `AV_LOG_DEBUG` ：
 - `AV_LOG_TRACE` ：
 
-### 4.1.1 常用API
+### 6.1.1 常用API
 
-#### 4.1.1.1 设置日志等级 ^oxdoti
+#### 6.1.1.1 设置日志等级 ^oxdoti
 
 ```C
 void av_log_set_level(int level)
 ```
 
-#### 4.1.1.2 输出日志 ^gsjiaj
+#### 6.1.1.2 输出日志 ^gsjiaj
 
 ```C
 void av_log(void *avcl, int level, const char *fmt,...)
