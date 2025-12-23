@@ -64,8 +64,30 @@ int av_read_frame(AVFormatContext *s, AVPacket *pkt);
 功能含义：
 - 从封装上下文中读取数据包
 注意：
-- 其在成功调用后，`AVPacket *pkt` 中的引用计数器会 `+1` ，
-- 当
+- 其在成功调用后，`AVPacket *pkt` 中的引用计数器会 `+1` 
+- 当调用者不再需要其中的数据时，需要手动调用 `av_packet_unref` 解除对其的引用
+
+
+## 4.2 将数据包传递给解码器(avcodec_send_packet)
+
+```C
+int avcodec_send_packet(AVCodecContext *avctx, const AVPacket *avpkt);
+```
+
+功能含义：
+- 将数据包传递给解码器，并等待解码
+注意：
+- 当 `AVPacket *avpkt` 传递给解码器后，其引用计数器会 `+1`
+- 直到[[音视频开发/FFmpeg/FFmpeg开发入门#^bgy9em|在解码器中处理完毕并]]后 
+
+
+## 4.3 从解码器中读取解码后的帧(avcodec_receive_frame) ^bgy9em
+
+
+
+
+## 4.4 
+
 
 
 
