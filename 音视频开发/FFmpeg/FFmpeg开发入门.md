@@ -152,8 +152,9 @@ int av_read_frame(AVFormatContext *s, AVPacket *pkt);
 ```
 
 功能含义：
-- 
-
+- 从封装上下文中
+注意：
+- 其在成功调用后，`AVPacket *pkt` 中的引用计数器会 `+1` ，
 
 
 
