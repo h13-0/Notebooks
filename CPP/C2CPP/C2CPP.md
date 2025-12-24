@@ -2475,4 +2475,35 @@ FfmpegCapture::~FfmpegCapture() = default;
 
 那么此时则应当：
 1. <font color="#c00000">只在基类中声明</font> `Struct Impl;` <font color="#c00000">和</font> `std::unique_ptr<Impl> _impl;` 
-2. 基类在定义 `Dervide::Impl` 时继承自 `Base::Impl`
+2. 基类在定义 `Dervide::Impl` 时继承自 `Base::Impl` 
+3. 派生类访问 `_impl` 指针时，<font color="#c00000">需要将该指针向下转型为</font> `Dervide::Impl`
+
+```CPP
+// xx.hpp
+class Base {
+public:
+	Base();
+	virtual ~Base() = default;
+protected:
+	Struct Impl;
+	std::unique_ptr<Impl> _impl;
+}
+
+class Dervide {
+public:
+	Dervide();
+}
+```
+
+```CPP
+// xx.cpp
+Base::Impl {
+	int base_prop;
+}
+
+Base::Base() : _impl(std::make_unique<Impl>()) { }
+
+Dervide::Impl 
+
+
+```
