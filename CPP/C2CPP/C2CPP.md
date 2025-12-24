@@ -2367,6 +2367,8 @@ size_type count( const K& x ) const;
 
 ### 5.1.1 PImpl模式
 
+#### 5.1.1.1 PImpl的基础用法
+
 在C++中，由于<font color="#c00000">不支持将一个对象或结构体分多个地方多次定义</font>，因此考虑如下的设计场景：
 - 现在需要基于几个内部库实现一个对象，并且<font color="#c00000">不希望这个对象的调用者关心内部库的数据结构</font>以及这个对象的内部实现
 - 但是这个对象中不可避免的需要几个由内部库定义的私有成员变量
@@ -2458,3 +2460,7 @@ FfmpegCapture::FfmpegCapture() : _impl(std::make_unique<Impl>()) {}
 FfmpegCapture::~FfmpegCapture() = default;
 ```
 
+#### 5.1.1.2 PImpl在多态中的用法
+
+在上述情况下很好的解决了普通类的细节隐藏需求。但是考虑如下的场景：
+- 基类 `Base` 需要shi y
