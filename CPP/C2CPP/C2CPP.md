@@ -2463,4 +2463,16 @@ FfmpegCapture::~FfmpegCapture() = default;
 #### 5.1.1.2 PImpl在多态中的用法
 
 在上述情况下很好的解决了普通类的细节隐藏需求。但是考虑如下的场景：
-- 基类 `Base` 需要shi y
+- 基类 `Base` 需要使用PImpl隐藏内部细节
+- 派生类 `Dervide` 也需要使用PImpl隐藏内部细节
+并且在绝大多数场景下，派生类也需要使用基类中的 `_impl` 字段，那么则会面临如下的问题：
+1. 如果派生类和基类的 `_impl` 使用不同的名称，则会：
+	1. 带来极大的代码污染
+	2. 构造派生类时，<font color="#c00000">会多次触发内存分配</font>(先构造基类的 `_impl` 随后构造派生类的)
+2. 如果派生类和基类均使用 `_impl` ，则会：
+	1. 引入命名遮蔽问题，派生类访问基类的 `_impl` 时需要使用 `Base::_impl`
+	2. 构造派生类时，<font color="#c00000">会多次触发内存分配</font>(先构造基类的 `_impl` 随后构造派生类的)
+
+那么此时则应当：
+1. <font color="#c00000">只在基类中声明</font> `Struct Impl;` <font color="#c00000">和</font> `std::unique_ptr<Impl> _impl;` 
+2. 基类在定义 `Dervide::Impl` 时继承自 `Base::Impl`
