@@ -1340,15 +1340,35 @@ dynamic_cast<目标类型>(表达式)
 主要用途：
 - 兼容旧的C语言库：
 	- 若能确保C语言库中没有实际修改变量，则一定是安全的
-	- 若C语言库中修改了变量，<font color="#c00000">则要确保转换前的指针实际指向的是可修改的内存区域</font>
+	- 若C语言库中修改了变量，<font color="#c00000">则要确保转换前的指针实际指向的是可修改的内存区域</font>(否则UB)
+
+Demo1：
 
 ```CPP
-void legacyFunc(int* p) { /* ... */ } // 旧接口，没写 const
+// 旧接口，实际没有修改变量，但没写 const
+void legacyFunc(int* p) { /* ... */ }
 
 void wrapper(const int* p) {
-    // legacyFunc(p); // 编译错误
-    legacyFunc(const_cast<int*>(p)); // ✅去掉 const 才能传进去
+    // legacyFunc(p);                // 编译错误
+    legacyFunc(const_cast<int*>(p)); // 去掉 const 才能传进去
 }
+```
+
+Demo2：
+
+```CPP
+const int constant = 10;
+int* p = const_cast<int*>(&constant);
+*p = 20; // 错误!!! UB!!!
+```
+
+合法Demo：
+
+```CPP
+int var = 10;
+int const *const_p = &var;
+int* p = const_cast<int*>(const_p);
+*p = 20;  // 合法
 ```
 
 #### 3.4.2.4 重新解释转换(reinterpret_cast)
