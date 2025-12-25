@@ -2459,7 +2459,6 @@ FfmpegCapture::~FfmpegCapture() = default;
 ```
 
 在上述情况下很好的解决了普通类的细节隐藏需求。
-
 <font color="#c00000">但是需要注意</font>，<font color="#c00000">PImpl模式并不能很好的做到如下的场景</font>：
 - 基类 `Base` 需要使用PImpl隐藏内部细节
 - 派生类 `Dervide` 也需要使用PImpl隐藏内部细节
