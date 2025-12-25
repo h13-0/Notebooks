@@ -1405,15 +1405,13 @@ void wrapper(const int* p) {
     legacyFunc(const_cast<int*>(p)); // 去掉 const 才能传进去
 }
 ```
-2. 若发生变量修改，且原内存区域不允许修改，则UB：^tsx4l0
+2. 若发生变量修改，且原内存区域<font color="#c00000">不允许</font>修改，则UB：^tsx4l0
 ```CPP
 const int constant = 10;
 int* p = const_cast<int*>(&constant);
 *p = 20; // 错误!!! UB!!!
 ```
-
-Demo3(合法)： ^ytqx0t
-3. 若
+3. 若发生变量修改，且原内存区域<font color="#c00000">允许</font>修改，则合法：^ytqx0t
 ```CPP
 int var = 10;
 int const *const_p = &var;
