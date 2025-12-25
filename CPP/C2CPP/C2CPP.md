@@ -484,28 +484,30 @@ shared_ptr( Y* ptr, Deleter d );
 ```C
 std::shared_ptr<Base> p(new Derived());
 ```
-2. 支持别名构造：
+2. 支持别名构造(Aliasing Constructor)： ^2eap77
 ```CPP
+struct Car {
+    Engine engine;
+};
 
+// 创建变量 `std::shared_ptr<Car> car` ，此时计数器为 1
+std::shared_ptr<Car> car = std::make_shared<Car>();
+
+// 创建一个指向 Engine 的 shared_ptr
+// 但它实际上共享的是整个 Car 的引用计数(Car 不死，Engine 就不死)
+// T = Engine, Y = Car
+std::shared_ptr<Engine> engine(car, &car->engine);
 ```
-3. 使用 `void` 指针持有任何对象(资源保活)：
+3. 使用 `void` 指针持有任何对象(类型擦除、资源保活)：
 ```CPP
 class DataTypeA {
 public:
-	uint8_t *data;
-	DataTypeA() {
-		data = malloc(1024);
-	}
-	
-	~DataTypeA() {
-		free(data);
-	}
+	uint8_t data[1024] = { 0 };
 }
 
 class DataTypeB {
 public:
-	uint8_t *data;
-	...
+	uint8_t *data[2048] = { 0 };
 }
 
 // DataContainer 用于统一存储 DataTypeA 和 DataTypeB
@@ -528,7 +530,7 @@ DataContainer func() {
 	DataTypeA *data_a = new DataTypeA;
 	
 	// 此时DataContainer引用了data_a
-	return DataContainer(data_a.data, std::shared_ptr<DataTypeA>(data_a));
+	return DataContainer(data_a->data, std::shared_ptr<DataTypeA>(data_a));
 }
 
 int main()
@@ -541,10 +543,10 @@ int main()
 
 <font color="#c00000">需要注意</font>：
 - `Y*` <span style="background:#fff88f"><font color="#c00000">必须可以隐式转换为</font></span> `T*`
-- 类型：
-	- `T` 决定了 `shared_ptr.get()` 获取到的指针的类型
-	- `Y` 决定了 `shared_ptr` 析构时的Deleter
-
+- `T` & `Y` (可见设计目的2：[[CPP/C2CPP/C2CPP#^2eap77|别名构造]])：
+	- 类型 `T` 决定了 `shared_ptr.get()` 获取到的指针的类型
+	- 类型 `Y` 决定了 `shared_ptr` 析构时的Deleter
+	- <font color="#c00000">参数</font> `Y* ptr` <font color="#c00000">决定了用哪个引用计数器</font>
 
 #### 3.3.1.3 独占、共享指针的通用方法 ^sh4a28
 
