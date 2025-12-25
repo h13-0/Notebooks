@@ -470,6 +470,10 @@ template< class T > class shared_ptr;
 其常用<span style="background:#fff88f"><font color="#c00000"><u>构造函数</u></font></span><font color="#c00000">定义如下</font>：
 
 ```CPP
+template< class Y >  
+explicit shared_ptr( Y* ptr );
+
+// 使用自定义Deleter
 template< class Y, class Deleter >
 shared_ptr( Y* ptr, Deleter d );
 ```
@@ -480,32 +484,54 @@ shared_ptr( Y* ptr, Deleter d );
 ```CPP
 
 ```
-3. 使用 `void` 指针持有任何对象：
+3. 使用 `void` 指针持有任何对象(资源保活)：
 ```CPP
 class DataTypeA {
 public:
 	uint8_t *data;
+	DataTypeA() {  }
+	
+	~DataTypeA() {
+		free(data);
+	}
 }
 
 class DataTypeB {
 public:
 	uint8_t *data;
+	~DataTypeB() {
+		free(data);
+	}
 }
 
+// DataContainer 用于统一存储 DataTypeA 和 DataTypeB
 class DataContainer {
-	DataContainer(uint8_t *data, std::shared_ptr<void> owner);
-	uint8_t *get_data();
+	// 构造函数负责寄存
+	DataContainer(uint8_t *data, std::shared_ptr<void> owner)
+		: data(data), owner(owner) { }
+	
+	uint8_t *get_data() { return data; }
 private:
+	uint8_t *data;
 	// 用于持有对真实数据持有者的引用计数
 	std::shared_ptr<void> owner;
 }
 
-void main() {
-
-	r
+DataContainer func() {
+	// 获取要寄存的数据
+	DataTypeA *data_a = alloc_data_a();
+	
+	// 此时DataContainer引用了data_a
+	// 如果不引用，则 func 函数一结束，data_a的资源就不再有效
+	return DataContainer(data_a.data, std::shared_ptr<DataTypeA>(data_a));
 }
 
-
+int main()
+{
+	DataContainer container = func();
+	uint8_t *data = container.get_data();
+	return 0;
+}
 ```
 
 <font color="#c00000">其限制为</font>：
