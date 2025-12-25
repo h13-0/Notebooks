@@ -493,9 +493,8 @@ struct Car {
 // 创建变量 `std::shared_ptr<Car> car` ，此时计数器为 1
 std::shared_ptr<Car> car = std::make_shared<Car>();
 
-// 创建一个指向 Engine 的 shared_ptr
-// 但它实际上共享的是整个 Car 的引用计数(Car 不死，Engine 就不死)
-// T = Engine, Y = Car
+// 使用别名构造方法创建变量 `std::shared_ptr<Engine> engine`
+// 但是其计数器用的是变量 `car` 的计数器，此时计数器为 2
 std::shared_ptr<Engine> engine(car, &car->engine);
 ```
 3. 使用 `void` 指针持有任何对象(类型擦除、资源保活)：
@@ -543,10 +542,9 @@ int main()
 
 <font color="#c00000">需要注意</font>：
 - `Y*` <span style="background:#fff88f"><font color="#c00000">必须可以隐式转换为</font></span> `T*`
-- `T` & `Y` (可见设计目的2：[[CPP/C2CPP/C2CPP#^2eap77|别名构造]])：
+- `T` & `Y` ：
 	- 类型 `T` 决定了 `shared_ptr.get()` 获取到的指针的类型
 	- 类型 `Y` 决定了 `shared_ptr` 析构时的Deleter
-	- <font color="#c00000">参数</font> `Y* ptr` <font color="#c00000">决定了用哪个引用计数器</font>
 
 #### 3.3.1.3 独占、共享指针的通用方法 ^sh4a28
 
