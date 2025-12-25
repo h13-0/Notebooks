@@ -461,16 +461,32 @@ void test_shared()
 - `unique_ptr` 是在<font color="#c00000">类型模板中传递</font>，<font color="#c00000">会改变其类型定义</font>，会在编译期完成指定
 - `shared_ptr` 是在构造函数中传递，<font color="#c00000">不会改变类型定义</font>，会在运行时完成指定
 
-`std::shared_ptr` 的常用<span style="background:#fff88f"><font color="#c00000"><u>构造函数</u></font></span><font color="#c00000">定义如下</font>：
+`std::shared_ptr` 的<span style="background:#fff88f"><font color="#c00000"><u>类型定义</u></font></span><font color="#c00000">如下</font>：
+
+```CPP
+template< class T > class shared_ptr;
+```
+
+其常用<span style="background:#fff88f"><font color="#c00000"><u>构造函数</u></font></span><font color="#c00000">定义如下</font>：
 
 ```CPP
 template< class Y, class Deleter >
 shared_ptr( Y* ptr, Deleter d );
 ```
 
-需要注意：
-1. 当需要构造<font color="#c00000">指向类型</font> `A` <font color="#c00000">的智能指针时</font>，则上述<font color="#c00000">模板参数</font> `T` <font color="#c00000">和</font> `Y` <font color="#c00000">应当为类型</font> `A` <span style="background:#fff88f"><font color="#c00000">本身而非</font></span> `A*`
+明显地，<font color="#c00000">其类型定义中使用的是类型</font> `T` ，<font color="#c00000">而构造函数中统一使用类型</font> `A` ，<span style="background:#fff88f"><font color="#c00000">这是两个不同的类</font></span>。其这样设计的目的有：
 
+
+
+其限制为：
+- 
+
+
+
+需要注意：
+- 其类型定义中使用的是类型 `T` ，而构造函数中统一使用类型 `A` ，这是两个不同的类，
+- 当需要构造<font color="#c00000">指向类型</font> `A` <font color="#c00000">的智能指针时</font>，则上述<font color="#c00000">模板参数</font> `Y` <font color="#c00000">应当为类型</font> `A` <span style="background:#fff88f"><font color="#c00000">本身而非</font></span> `A*`
+- 
 
 
 
