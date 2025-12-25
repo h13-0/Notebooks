@@ -470,6 +470,7 @@ template< class T > class shared_ptr;
 其常用<span style="background:#fff88f"><font color="#c00000"><u>构造函数</u></font></span><font color="#c00000">定义如下</font>：
 
 ```CPP
+// 使用类的默认删除器 std::default_delete<Y>
 template< class Y >  
 explicit shared_ptr( Y* ptr );
 
@@ -480,6 +481,9 @@ shared_ptr( Y* ptr, Deleter d );
 
 明显地，<font color="#c00000">其类型定义中使用的是类型</font> `T` ，<font color="#c00000">而构造函数中统一使用类型</font> `A` ，<span style="background:#fff88f"><font color="#c00000">这是两个不同的类</font></span>。其这样设计的目的有：
 1. 允许使用基类指针指向派生类对象(多态)：
+```C
+std::shared_ptr<Base> p(new Derived());
+```
 2. 支持别名构造：
 ```CPP
 
@@ -489,7 +493,9 @@ shared_ptr( Y* ptr, Deleter d );
 class DataTypeA {
 public:
 	uint8_t *data;
-	DataTypeA() {  }
+	DataTypeA() {
+		data = malloc(1024);
+	}
 	
 	~DataTypeA() {
 		free(data);
@@ -499,9 +505,7 @@ public:
 class DataTypeB {
 public:
 	uint8_t *data;
-	~DataTypeB() {
-		free(data);
-	}
+	...
 }
 
 // DataContainer 用于统一存储 DataTypeA 和 DataTypeB
@@ -519,10 +523,11 @@ private:
 
 DataContainer func() {
 	// 获取要寄存的数据
-	DataTypeA *data_a = alloc_data_a();
+	// 需要注意，必须是动态分配在堆内存的对象才可以交给 shared_ptr 
+	// 不然可能会导致双重释放
+	DataTypeA *data_a = new DataTypeA;
 	
 	// 此时DataContainer引用了data_a
-	// 如果不引用，则 func 函数一结束，data_a的资源就不再有效
 	return DataContainer(data_a.data, std::shared_ptr<DataTypeA>(data_a));
 }
 
@@ -534,16 +539,11 @@ int main()
 }
 ```
 
-<font color="#c00000">其限制为</font>：
+<font color="#c00000">需要注意</font>：
 - `Y*` <span style="background:#fff88f"><font color="#c00000">必须可以隐式转换为</font></span> `T*`
-
-
-
-需要注意：
-- 其类型定义中使用的是类型 `T` ，而构造函数中统一使用类型 `A` ，这是两个不同的类，
-- 当需要构造<font color="#c00000">指向类型</font> `A` <font color="#c00000">的智能指针时</font>，则上述<font color="#c00000">模板参数</font> `Y` <font color="#c00000">应当为类型</font> `A` <span style="background:#fff88f"><font color="#c00000">本身而非</font></span> `A*`
-- 
-
+- 类型：
+	- `T` 决定了 `shared_ptr.get()` 获取到的指针的类型
+	- `Y` 决定了 `shared_ptr` 析构时的Deleter
 
 
 #### 3.3.1.3 独占、共享指针的通用方法 ^sh4a28
