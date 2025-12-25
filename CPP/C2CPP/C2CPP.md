@@ -2473,4 +2473,6 @@ FfmpegCapture::~FfmpegCapture() = default;
 	1. 引入命名遮蔽问题，派生类访问基类的 `_impl` 时需要使用 `Base::_impl`
 	2. 构造派生类时，<font color="#c00000">会多次触发内存分配</font>(先构造基类的 `_impl` 随后构造派生类的)
 
-那么此时则应当：
+那么此时的方法有：
+1. 放弃对基类使用 `PImpl` ，将基类与派生类共用的成员塞入 `private` ，具体略
+2. 
