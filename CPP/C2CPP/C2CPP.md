@@ -1329,17 +1329,20 @@ dynamic_cast<目标类型>(表达式)
 	- 指针返回 `nullptr` 
 	- 引用抛出异常(`std::bad_cast`)
 
-<font color="#c00000">其目标类型必须为如下的一种</font>：
-- 指针类型
-- 引用类型
-- `void*`
-因此其不存在直接创造对象的方法。
+其使用要求如下：
+1. <font color="#c00000">其目标类型必须为如下的一种</font>：
+	- 指针类型
+	- 引用类型
+	- `void*`
+	<font color="#c00000">因此其不存在直接创造对象的方法</font>，即使是 `Base b = dynamic_cast<Base>(d);` 
+	(<font color="#c00000">然而静态转换可以</font> `Base b = static_cast<Base>(d);` ) 
+2. 操作的类型必须是多态的(含有RTTI表，<font color="#c00000">即基类必须有虚函数</font>)
 
 其常用方法为：
 - 下行转换：父类指针转子类指针，含有运行时检查，更为安全
 - 侧向转换：在多重继承中，在兄弟类之间跳转
 
-其需要注意：
+Demo及注意事项如下：
 1. 正常使用方式如下：
 ```CPP
 class Base {
@@ -1358,17 +1361,29 @@ void func() {
 	Derived *pd = dynamic_cast<Derived *>(pb);
 	// 2. 引用转换
 	Derived &rd = dynamic_cast<Derived &>(rb);
-	// 错误：指针和引用不可混合使用
-	// Derived *rd = dynamic_cast<Derived &>(rb);
 }
 ```
 2. 不可混合使用指针和引用：
 ```CPP
 // 错误：指针和引用不可混合使用
-Derived *rd = dynamic_cast<Derived &>(rb);  // bian y
+Derived *rd = dynamic_cast<Derived &>(rb);  // 编译错误
 ```
-
-
+3. 空指针/抛异常Demo如下：
+```CPP
+void func() {
+	Base b;
+	
+	// 空指针，返回nullptr
+	Derived *pd = dynamic_cast<Derived *>(&b);
+	// 抛异常
+	Derived &rd = dynamic_cast<Derived &>(b); // std::bad_cast
+}
+```
+4. 其基类必须有虚函数：
+```CPP
+class Base {}                     // 无法使用，Base必须包含虚函数
+class Derived : public Base {}
+```
 
 #### 3.4.2.3 去常转换(const_cast)
 
@@ -1379,8 +1394,8 @@ Derived *rd = dynamic_cast<Derived &>(rb);  // bian y
 	- 若能确保C语言库中没有实际修改变量，则一定是安全的，可见[[CPP/C2CPP/C2CPP#^fxahzf|Demo1]]。
 	- 若C语言库中修改了变量，<font color="#c00000">则要确保转换前的指针实际指向的是可修改的内存区域</font>(否则UB)，可见[[CPP/C2CPP/C2CPP#^tsx4l0|Demo2]]、[[CPP/C2CPP/C2CPP#^ytqx0t|Demo3]]。
 
-Demo1： ^fxahzf
-
+其Demo如下：
+1. 若实际上没有发生变量修改，则一定安全：^fxahzf
 ```CPP
 // 旧接口，实际没有修改变量，但没写 const
 void legacyFunc(int* p) { /* ... */ }
@@ -1390,9 +1405,7 @@ void wrapper(const int* p) {
     legacyFunc(const_cast<int*>(p)); // 去掉 const 才能传进去
 }
 ```
-
-Demo2(非法)： ^tsx4l0
-
+2. 若发生变量修改，且原内存区域不允许修改，则UB：^tsx4l0
 ```CPP
 const int constant = 10;
 int* p = const_cast<int*>(&constant);
@@ -1400,7 +1413,7 @@ int* p = const_cast<int*>(&constant);
 ```
 
 Demo3(合法)： ^ytqx0t
-
+3. 若
 ```CPP
 int var = 10;
 int const *const_p = &var;
