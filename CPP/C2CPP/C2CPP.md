@@ -1300,6 +1300,19 @@ demo如下：
 
 ### 3.4.2 强制类型转换
 
+注意：
+- 下方四个子章节仅涉及普通<font color="#c00000"><u>裸指针</u></font>的类型转换，智能指针的对应版本为： ^4pmbef
+	- `std::shared_ptr` 对应关系：
+		- 静态转换：`std::static_pointer_cast`
+		- 动态转换：`std::dynamic_pointer_cast`
+		- 去常转换：`std::const_pointer_cast`
+		- 重新解释转换：`std::reinterpret_pointer_cast`
+	- `std::unique_ptr` 对应关系：
+		- 静态转换：
+			- 子转父：自动
+			- 父转子：不支持
+		- 剩余其他三种也均不支持
+
 #### 3.4.2.1 静态转换(static_cast)
 
 ```CPP
@@ -1311,11 +1324,14 @@ static_cast<目标类型 ﻿>(表达式 ﻿)
 其常用方法为：
 1. 数据类型转换：`int` 和 `double` 互转等
 2. 父子类型转换：
-	1. 上行转换：子类指针转父类指针，安全
-	2. 下行转换：父类指针转子类指针，<font color="#c00000">不安全</font>：
+	1. 上行转换：子类<font color="#c00000"><u>裸指针</u></font>转父类<font color="#c00000"><u>裸指针</u></font>，安全
+	2. 下行转换：父类<font color="#c00000"><u>裸指针</u></font>转子类<font color="#c00000"><u>裸指针</u></font>，<font color="#c00000">不安全</font>：
 		- 其只在编译时检查继承关系、计算指针偏移量
 		- 没有运行时检查(dynamic_cast为该需求的安全版本)
 3. `void*` 与其他指针的互转。
+
+注意：
+- 上述指针均为<font color="#c00000"><u>裸指针</u></font>类型，智能指针版本详见父章节开头[[CPP/C2CPP/C2CPP#^4pmbef|对应关系]]，后续子章节同。
 
 #### 3.4.2.2 动态转换(dynamic_cast)
 
@@ -1331,7 +1347,7 @@ dynamic_cast<目标类型>(表达式)
 
 其使用要求如下：
 1. <font color="#c00000">其目标类型必须为如下的一种</font>：
-	- 指针类型
+	- <u>裸指针</u>类型
 	- 引用类型
 	- `void*`
 	<font color="#c00000">因此其不存在直接创造对象的方法</font>，即使是 `Base b = dynamic_cast<Base>(d);` 
