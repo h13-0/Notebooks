@@ -1329,9 +1329,46 @@ dynamic_cast<目标类型>(表达式)
 	- 指针返回 `nullptr` 
 	- 引用抛出异常(`std::bad_cast`)
 
+<font color="#c00000">其目标类型必须为如下的一种</font>：
+- 指针类型
+- 引用类型
+- `void*`
+因此其不存在直接创造对象的方法。
+
 其常用方法为：
 - 下行转换：父类指针转子类指针，含有运行时检查，更为安全
 - 侧向转换：在多重继承中，在兄弟类之间跳转
+
+其需要注意：
+1. 正常使用方式如下：
+```CPP
+class Base {
+	virtual ~Base() { };
+}
+class Derived : public Base {}
+
+void func() {
+	Derived d;
+	
+	// 这里静态动态均可
+	Base *pb = dynamic_cast<Base *>(&d);
+	Base &rb = static_cast<Base &>(d);
+	
+	// 1. 指针转换
+	Derived *pd = dynamic_cast<Derived *>(pb);
+	// 2. 引用转换
+	Derived &rd = dynamic_cast<Derived &>(rb);
+	// 错误：指针和引用不可混合使用
+	// Derived *rd = dynamic_cast<Derived &>(rb);
+}
+```
+2. 不可混合使用指针和引用：
+```CPP
+// 错误：指针和引用不可混合使用
+Derived *rd = dynamic_cast<Derived &>(rb);  // bian y
+```
+
+
 
 #### 3.4.2.3 去常转换(const_cast)
 
@@ -1339,10 +1376,10 @@ dynamic_cast<目标类型>(表达式)
 
 主要用途：
 - 兼容旧的C语言库：
-	- 若能确保C语言库中没有实际修改变量，则一定是安全的
-	- 若C语言库中修改了变量，<font color="#c00000">则要确保转换前的指针实际指向的是可修改的内存区域</font>(否则UB)
+	- 若能确保C语言库中没有实际修改变量，则一定是安全的，可见[[CPP/C2CPP/C2CPP#^fxahzf|Demo1]]。
+	- 若C语言库中修改了变量，<font color="#c00000">则要确保转换前的指针实际指向的是可修改的内存区域</font>(否则UB)，可见[[CPP/C2CPP/C2CPP#^tsx4l0|Demo2]]、[[CPP/C2CPP/C2CPP#^ytqx0t|Demo3]]。
 
-Demo1：
+Demo1： ^fxahzf
 
 ```CPP
 // 旧接口，实际没有修改变量，但没写 const
@@ -1354,7 +1391,7 @@ void wrapper(const int* p) {
 }
 ```
 
-Demo2：
+Demo2(非法)： ^tsx4l0
 
 ```CPP
 const int constant = 10;
@@ -1362,7 +1399,7 @@ int* p = const_cast<int*>(&constant);
 *p = 20; // 错误!!! UB!!!
 ```
 
-合法Demo：
+Demo3(合法)： ^ytqx0t
 
 ```CPP
 int var = 10;
