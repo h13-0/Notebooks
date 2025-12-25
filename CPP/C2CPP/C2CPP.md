@@ -402,43 +402,11 @@ void test_unique() {
 } // 函数结束，ptr2 析构，自动 delete 内存
 ```
 
-其通用API可见章节[[CPP/C2CPP/C2CPP#^sh4a28|独占、共享指针的通用方法]]。
+其通用API可见章节[[CPP/C2CPP/C2CPP#^sh4a28|独占、共享指针的通用方法]]，专用API见子章节。
 
-#### 3.3.1.2 共享指针(shared_ptr)
+##### 3.3.1.1.1 类型定义与指定Deleter
 
-共享指针用于多个指针指向同一个对象的情况，其特性如下：
-1. <font color="#c00000">引用计数特性</font>：
-	- 每多一个指针则引用计数器 `+1` ，每少一个指针则计数器 `-1` 
-	- 计数器归零时自动释放内存
-2. 有性能开销：
-	1. <font color="#c00000">其大小是普通指针的二倍</font>(一个指向对象，一个指向计数器)
-	2. 计数器的加减涉及原子操作，新增/释放指针时比普通指针慢
-3. 允许拷贝
-
-其特性与demo为：
-
-```CPP
-void test_shared() {
-	// 通过 `std::make_shared` 创建，此时计数器为1
-    std::shared_ptr<int> sp1 = std::make_shared<int>(100);
-    
-    {
-    	// 两指针共用一个 int
-        std::shared_ptr<int> sp2 = sp1; // 允许拷贝，计数 = 2
-    } // sp2 析构，计数 = 1，内存未释放
-    
-} // sp1 析构，计数 = 0 -> 释放内存
-```
-
-其通用API可见章节[[CPP/C2CPP/C2CPP#^sh4a28|独占、共享指针的通用方法]]。
-
-#### 3.3.1.3 独占、共享指针的通用方法 ^sh4a28
-
-##### 3.3.1.3.1 构造与Deleter
-
-对于 `unique_ptr` 和 `shared_ptr` 这两个智能指针，都可以为其指定析构器 `Deleter` ，从而实现自定义释放资源的方法。不过：
-- `unique_ptr` 是在<font color="#c00000">类型模板中传递</font>，<font color="#c00000">会改变其类型定义</font>，会在编译期完成指定
-- `shared_ptr` 是在构造函数中传递，<font color="#c00000">不会改变类型定义</font>，会在运行时完成指定
+`std::unique_ptr` 在构造时可在模板中传递Deleter，从而在指针生命周期结束时自动释放资源。<font color="#c00000">其</font><span style="background:#fff88f"><font color="#c00000"><u>类型定义</u></font></span><font color="#c00000">如下</font>：
 
 ```CPP
 // 使用默认Deleter
@@ -454,6 +422,47 @@ template <
 > class unique_ptr<T[], Deleter>;
 ```
 
+需要注意：
+- <font color="#c00000">Deleter不同</font>，<font color="#c00000">则对应的</font> `std::unique_ptr` <font color="#c00000">类型不同</font>。
+- 当需要构造<font color="#c00000">指向类型</font> `A` <font color="#c00000">的智能指针时</font>，则上述<font color="#c00000">模板参数</font> `T` <font color="#c00000">应当为类型</font> `A` <span style="background:#fff88f"><font color="#c00000">本身而非</font></span> `A*`
+
+#### 3.3.1.2 共享指针(shared_ptr)
+
+共享指针用于多个指针指向同一个对象的情况，其特性如下：
+1. <font color="#c00000">引用计数特性</font>：
+	- 每多一个指针则引用计数器 `+1` ，每少一个指针则计数器 `-1` 
+	- 计数器归零时自动释放内存
+2. 有性能开销：
+	1. <font color="#c00000">其大小是普通指针的二倍</font>(一个指向对象，一个指向计数器)
+	2. 计数器的加减涉及原子操作，新增/释放指针时比普通指针慢
+3. 允许拷贝
+
+其特性与demo为：
+
+```CPP
+void test_shared()
+{
+	// 通过 `std::make_shared` 创建，此时计数器为1
+    std::shared_ptr<int> sp1 = std::make_shared<int>(100);
+    
+    {
+    	// 两指针共用一个 int
+        std::shared_ptr<int> sp2 = sp1; // 允许拷贝，计数 = 2
+    } // sp2 析构，计数 = 1，内存未释放
+    
+} // sp1 析构，计数 = 0 -> 释放内存
+```
+
+其通用API可见章节[[CPP/C2CPP/C2CPP#^sh4a28|独占、共享指针的通用方法]]，专用API见子章节。
+
+##### 3.3.1.2.1 构造函数构造与指定Deleter
+
+对于 `unique_ptr` 和 `shared_ptr` 这两个智能指针，都可以为其指定析构器 `Deleter` ，从而实现自定义释放资源的方法。不过：
+- `unique_ptr` 是在<font color="#c00000">类型模板中传递</font>，<font color="#c00000">会改变其类型定义</font>，会在编译期完成指定
+- `shared_ptr` 是在构造函数中传递，<font color="#c00000">不会改变类型定义</font>，会在运行时完成指定
+
+`std::shared_ptr` 的常用<span style="background:#fff88f"><font color="#c00000"><u>构造函数</u></font></span><font color="#c00000">定义如下</font>：
+
 ```CPP
 template< class Y, class Deleter >
 shared_ptr( Y* ptr, Deleter d );
@@ -462,7 +471,12 @@ shared_ptr( Y* ptr, Deleter d );
 需要注意：
 1. 当需要构造<font color="#c00000">指向类型</font> `A` <font color="#c00000">的智能指针时</font>，则上述<font color="#c00000">模板参数</font> `T` <font color="#c00000">和</font> `Y` <font color="#c00000">应当为类型</font> `A` <span style="background:#fff88f"><font color="#c00000">本身而非</font></span> `A*`
 
-##### 3.3.1.3.2 构造方法(std::make_unique、std::make_shared)(C++14) ^fb89wj
+
+
+
+#### 3.3.1.3 独占、共享指针的通用方法 ^sh4a28
+
+##### 3.3.1.3.1 构造方法(std::make_unique、std::make_shared)(C++14) ^fb89wj
 
 `make_unique` 和 `make_shared` 是专门用于构造对应的两种指针的构造方法。除了提供了一些性能优化和简化写法以外，其主要可以<font color="#c00000">在如下情况提供更安全的内存保护</font>，具体如下：
 1. 在C++17之前，<font color="#c00000">函数参数的求值顺序是不确定的</font>(<font color="#c00000">甚至函数参数的参数求值顺序也不固定</font>)，例如：
@@ -494,7 +508,7 @@ process(std::make_unique<MyClass>(), getPriority());
 1. <span style="background:#fff88f"><font color="#c00000">当设置了Deleter之后</font></span><font color="#c00000">两种指针均无法使用此方法构造</font>。
 子章节中列出了常用的构造方法，更多构造方法自行参考cppreference。
 
-###### 3.3.1.3.2.1 构造独占指针并传递参数
+###### 3.3.1.3.1.1 构造独占指针并传递参数
 
 ```CPP
 template< class T, class... Args >
@@ -504,7 +518,7 @@ constexpr unique_ptr<T> make_unique( Args&&... args );
 其中：
 - 参数 `args` 被传递给 `T` 的构造函数
 
-###### 3.3.1.3.2.2 为独占指针构造指定大小的数组
+###### 3.3.1.3.1.2 为独占指针构造指定大小的数组
 
 ```CPP
 template< class T >
@@ -514,7 +528,7 @@ constexpr unique_ptr<T> make_unique( std::size_t size );
 其中：
 - 模板 `T` <span style="background:#fff88f"><font color="#c00000">为目标类型的数组类型</font></span>
 
-###### 3.3.1.3.2.3 构造共享指针并传递参数
+###### 3.3.1.3.1.3 构造共享指针并传递参数
 
 ```CPP
 template< class T, class... Args >
@@ -524,7 +538,7 @@ shared_ptr<T> make_shared( Args&&... args );
 其中：
 - 参数 `args` 被传递给 `T` 的构造函数
 
-###### 3.3.1.3.2.4 为共享指针构造指定大小的数组
+###### 3.3.1.3.1.4 为共享指针构造指定大小的数组
 
 ```CPP
 template< class T >
@@ -534,7 +548,7 @@ shared_ptr<T> make_shared( std::size_t N );
 其中：
 - 模板 `T` <span style="background:#fff88f"><font color="#c00000">为目标类型的数组类型</font></span>
 
-##### 3.3.1.3.3 自定义工厂函数的方法 ^oji6gb
+##### 3.3.1.3.2 自定义工厂函数的方法 ^oji6gb
 
 在[[CPP/C2CPP/C2CPP#^fb89wj|上述章节]]中提到了一种由于C++20之前，参数求值顺序不确定导致的内存泄露风险，在一般情况下我们可以通过使用工厂函数 `std::make_unique` 和 `std::make_shared` 进行规避。但是其问题是当我们自定义 `Deleter` 时，就无法使用上述两个函数。
 
@@ -551,7 +565,7 @@ shared_ptr<T> make_shared( std::size_t N );
 
 
 
-##### 3.3.1.3.4 解引用(operator->、operator*)
+##### 3.3.1.3.3 解引用(operator->、operator*)
 
 和普通裸指针一样使用即可。
 
@@ -564,12 +578,12 @@ typename std::add_lvalue_reference<T>::type operator*() const
 pointer operator->() const noexcept;
 ```
 
-##### 3.3.1.3.5 访问数组元素(operator\[\])
+##### 3.3.1.3.4 访问数组元素(operator\[\])
 
 
 
 
-##### 3.3.1.3.6 获取原始裸指针(get)
+##### 3.3.1.3.5 获取原始裸指针(get)
 
 当调用普通C语言API，或者调用未使用智能指针的API时，则可以使用 `get` 方法获取其持有的裸指针。
 
@@ -577,7 +591,7 @@ pointer operator->() const noexcept;
 pointer get() const noexcept;
 ```
 
-##### 3.3.1.3.7 交换(swap)
+##### 3.3.1.3.6 交换(swap)
 
 
 
