@@ -475,11 +475,41 @@ shared_ptr( Y* ptr, Deleter d );
 ```
 
 明显地，<font color="#c00000">其类型定义中使用的是类型</font> `T` ，<font color="#c00000">而构造函数中统一使用类型</font> `A` ，<span style="background:#fff88f"><font color="#c00000">这是两个不同的类</font></span>。其这样设计的目的有：
+1. 允许使用基类指针指向派生类对象(多态)：
+2. 支持别名构造：
+```CPP
+
+```
+3. 使用 `void` 指针持有任何对象：
+```CPP
+class DataTypeA {
+public:
+	uint8_t *data;
+}
+
+class DataTypeB {
+public:
+	uint8_t *data;
+}
+
+class DataContainer {
+	DataContainer(uint8_t *data, std::shared_ptr<void> owner);
+	uint8_t *get_data();
+private:
+	// 用于持有对真实数据持有者的引用计数
+	std::shared_ptr<void> owner;
+}
+
+void main() {
+
+	r
+}
 
 
+```
 
-其限制为：
-- 
+<font color="#c00000">其限制为</font>：
+- `Y*` <span style="background:#fff88f"><font color="#c00000">必须可以隐式转换为</font></span> `T*`
 
 
 
