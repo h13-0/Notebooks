@@ -60,6 +60,11 @@ FFmpeg主要有如下几个子模块：
 
 ## 3.3 编码数据流属性对象(AVCodecParameters)
 
+```C
+
+```
+
+
 
 ## 3.4 封装数据包对象(AVPacket)
 
