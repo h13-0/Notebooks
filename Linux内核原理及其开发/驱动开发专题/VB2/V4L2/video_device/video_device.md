@@ -20,7 +20,7 @@ number headings: auto, first-level 1, max 6, 1.1
 ![[音视频开发/音视频开发入门#2 2 原始视频格式 w9205z]]
 
 其中，需要额外补充的是：
-- 在Linux中，默认最大平面数为8( `VIDEO_MAX_PLANES` )。
+- 在Linux中，默认最大平面数为8( `VIDEO_MAX_PLANES` )，而通常对于视频数据来说，其平面数通常不会多于4(FFmpeg中也是固定为4)。
 
 ## 2.2 视频设备用户态开发(/dev/video*)
 
