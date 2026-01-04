@@ -24,8 +24,9 @@ number headings: auto, first-level 1, max 6, 1.1
 
 在[[../../面向对象的程序设计/面向对象的程序设计|面向对象的程序设计]]中已经给出了C++对象的若干构造方法。
 
-此外，需要额外说明的是在C++中规定：<span style="background:#fff88f"><font color="#c00000">任何可以被解析为函数声明的代码都会被解析为函数声明</font></span>。因此在类的定义中，有如下注意事项：
-
+此外，需要额外说明的有：
+1. 当对象在构造过程中，<font color="#c00000">由于异常等构造失败时</font>，<span style="background:#fff88f"><font color="#c00000">析构函数不会被调用</font></span>，先前已经动态申请的对象也不会被释放(需要考虑RAII范式)
+2. 在C++中规定：<span style="background:#fff88f"><font color="#c00000">任何可以被解析为函数声明的代码都会被解析为函数声明</font></span>。因此在类的定义中，有如下注意事项：
 ```CPP
 // 正确：调用默认构造函数
 ClassName obj;
