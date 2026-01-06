@@ -1287,6 +1287,20 @@ T& emplace( std::initializer_list<U> ilist, Args&&... args );
 	- `ilist` 为要传递给构造函数的初始化列表
 	- `args` 为传递给构造函数的参数
 
+### 3.3.7 std::basic_string_view(C++17)
+
+本章节应当在学习完章节[[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]后学习。
+其与 `std::basic_string` 的区别如下：
+
+
+
+
+#### 3.3.7.1 
+
+
+
+
+
 ## 3.4 新增函数
 
 ### 3.4.1 字符串格式化函数(std::format)(C++20)
@@ -2084,7 +2098,7 @@ const T* begin() const noexcept;
 const T* end() const noexcept;
 ```
 
-### 4.2.2 std::basic_string
+### 4.2.2 std::basic_string ^33a2f1
 
 `std::basic_string` 为C++为若干种字符串类型(`char` 、 `wchar_t` 、`char32_t` 等)提供的统一容器，用于适配不同的字符串及编码类型。
 
