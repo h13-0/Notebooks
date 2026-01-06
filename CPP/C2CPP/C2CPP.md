@@ -1347,7 +1347,7 @@ const char* c_str = "Hello World";
 // 调用构造函数
 std::string_view sv(c_str);
 
-// 或者直接
+// 或者使用赋值形式(但是触发的是构造函数，而非类型转换运算符)
 std::string_view sv = c_str;
 ```
 
@@ -1366,6 +1366,16 @@ constexpr basic_string_view ( const CharT * s, size_type count ) ;
 - 时间复杂度：$O(1)$
 
 ##### 3.3.7.1.5 字面量+sv后缀构造
+
+```CPP
+using namespace std::literals; // 必须引入命名空间
+auto sv = "Hello World"sv;     // 类型直接推导为 std::string_view
+```
+
+复杂度：
+- 时间复杂度：$O(0)$ (编译期求值)
+
+##### 3.3.7.1.6 迭代器构造
 
 
 
