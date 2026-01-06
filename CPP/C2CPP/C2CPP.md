@@ -1363,7 +1363,12 @@ constexpr basic_string_view ( const CharT * s, size_type count ) ;
 ```
 
 复杂度：
-- 时间复杂度
+- 时间复杂度：$O(1)$
+
+##### 3.3.7.1.5 字面量+sv后缀构造
+
+
+
 
 
 
