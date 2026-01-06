@@ -1303,9 +1303,67 @@ T& emplace( std::initializer_list<U> ilist, Args&&... args );
 | 空结尾                 | 保证以 `\0` 结尾                                | 不保证以 `\0` 结尾                         |
 | 主要用途                | 存储数据，作为返回值，需要修改字符串                         | 函数参数，解析字符串，切片等                       |
 
-#### 3.3.7.1 基本使用
+#### 3.3.7.1 常用构造方式
 
+##### 3.3.7.1.1 默认构造(空视图)
 
+```CPP
+constexpr basic_string_view ( ) noexcept;
+```
+
+使用时直接构造即可，<font color="#c00000">构造后</font>`sv.data` <font color="#c00000">指向</font> `nullptr`
+
+```CPP
+std::string_view sv; 
+// sv.data() == nullptr
+// sv.size() == 0
+```
+
+##### 3.3.7.1.2 从basic_string隐式转换
+
+需要注意，本方法并非使用构造函数，而是使用转换运算符 `operator string_view()` 
+
+```CPP
+std::string s = "Hello world!";
+std::string_view sv = s; // 自动调用 s.operator string_view()
+```
+
+复杂度：
+- 时间复杂度：$O(1)$
+
+##### 3.3.7.1.3 从C风格字符串构造
+
+构造函数定义：
+
+```CPP
+constexpr basic_string_view ( const CharT * s ) ;
+```
+
+其使用时可以：
+
+```CPP
+const char* c_str = "Hello World";
+
+// 调用构造函数
+std::string_view sv(c_str);
+
+// 或者直接
+std::string_view sv = c_str;
+```
+
+复杂度：
+- 时间复杂度：$O(n)$ ，其会遍历数组直到找到 `\0`
+
+##### 3.3.7.1.4 由C风格字符串+长度构造
+
+构造函数定义：
+
+```CPP
+constexpr basic_string_view ( const CharT * s, size_type count ) ;
+```
+
+复杂度：
+- 时间复杂度
 
 
 
