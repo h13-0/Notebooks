@@ -1287,15 +1287,23 @@ T& emplace( std::initializer_list<U> ilist, Args&&... args );
 	- `ilist` 为要传递给构造函数的初始化列表
 	- `args` 为传递给构造函数的参数
 
-### 3.3.7 std::basic_string_view(C++17)
+### 3.3.7 std::basic_string_view(C++17) ^2d6kyg
 
 本章节应当在学习完章节[[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]后学习。
-其与 `std::basic_string` 的区别如下：
+其与 `std::basic_string` 的区别如下表所示：
 
+| <center>特性</center> | <center>std::string</center>               | <center>std::string_view</center>    |
+| ------------------- | ------------------------------------------ | ------------------------------------ |
+| 本质                  | <font color="#c00000">字符串的拥有者</font>(RAII) | <font color="#c00000">字符串的观察者</font> |
+| 内存所有权               | 拥有内存(Owner)                                | 不拥有(Non-owning)                      |
+| 引入版本                | C++98                                      | C++17                                |
+| 拷贝代价                | 高(深拷贝，可能涉及 `new`/`malloc`)                 | 极低(仅拷贝指针+长度)                         |
+| 数据位置                | 通常在堆上，短字符串优化(SSO)除外                        | 指向任意位置(栈、堆、静态区)                      |
+| 可变性                 | 可修改                                        | <font color="#c00000">只读</font>      |
+| 空结尾                 | 保证以 `\0` 结尾                                | 不保证以 `\0` 结尾                         |
+| 主要用途                | 存储数据，作为返回值，需要修改字符串                         | 函数参数，解析字符串，切片等                       |
 
-
-
-#### 3.3.7.1 
+#### 3.3.7.1 基本使用
 
 
 
@@ -2098,7 +2106,7 @@ const T* begin() const noexcept;
 const T* end() const noexcept;
 ```
 
-### 4.2.2 std::basic_string ^33a2f1
+### 4.2.2 std::basic_string(C++98) ^33a2f1
 
 `std::basic_string` 为C++为若干种字符串类型(`char` 、 `wchar_t` 、`char32_t` 等)提供的统一容器，用于适配不同的字符串及编码类型。
 
@@ -2341,6 +2349,10 @@ basic_string& replace( size_type pos, size_type count,
 
 string可以作为struct的成员，其size计算符合内存对齐等要求。
 
+#### 4.2.2.4 basic_string_view
+
+`std::basic_string_view` 是零拷贝观察字符串数据的一种方式，具体可见章节：
+- [[CPP/C2CPP/C2CPP#^2d6kyg|std::basic_string_view]]
 
 ### 4.2.3 array
 
