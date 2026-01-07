@@ -2040,13 +2040,57 @@ $$
 
 ### 3.6.3 异常嵌套(C++11) ^81jlmr
 
-在C++中异常嵌套通常用于上文中所述的二次封装。而<span style="background:#fff88f"><font color="#c00000">异常嵌套可以理解为"洋葱"</font></span>，外层套着内层：
-- 
-
+在C++中异常嵌套通常用于上文中所述的二次封装。而<span style="background:#fff88f"><font color="#c00000">异常嵌套可以理解为"洋葱"</font></span>，<span style="background:#fff88f"><font color="#c00000">外层套着内层</font></span>：
+- 在封装时调用 `std::throw_with_nested(e)` ，将现在上下文中正在处理的异常包装到新的异常 `e` 当中
+- 在解封装时调用 `std::rethrow_if_nested(e)` ，<font color="#c00000">剥去最外一层异常</font>(从外到内剥)，<font color="#c00000">将内层重新抛出</font>(如果有)
+具体用法如下：
+1. 在 `catch` 块中使用 `std::throw_with_nested` <span style="background:#fff88f"><font color="#c00000">封装新的异常并抛出</font></span>：
 ```CPP
+// 抛出原始异常 (最里层的娃娃)
+void open_file() {
+    throw std::runtime_error("File 'config.ini' not found");
+}
 
+void init() {
+	try {
+        openFile();
+    } catch (...) {
+        // 具体动作：
+        // 1. catch块中捕获了 "File not found"
+        // 2. 创建一个 "Init Failed" 异常
+        // 3. 自动把 1 塞进 2 里面，然后抛出
+        std::throw_with_nested(std::logic_error("Init Failed"));
+    }
+}
+```
+2. 当处理异常时，使用 `try` 配合 `std::rethrow_if_nested` 将里面的异常重新抛出并捕获：
+```CPP
+// 递归打印异常链的辅助函数
+void printExceptionStack(const std::exception& e, int level = 0) {
+    // 1. 打印当前这一层的错误信息
+    // std::string(level * 2, ' ') 是为了缩进，好看
+    std::cerr << std::string(level * 2, ' ') << "Error: " << e.what() << std::endl;
+	
+    try {
+        // 2. 【关键动作】尝试重新抛出“肚子里”的异常
+        // 如果 e 里面没有嵌套异常，这句啥也不做
+        // 如果 e 里面有，它就会把里面的异常 throw 出来
+        std::rethrow_if_nested(e);
+    } 
+    catch (const std::exception& nested) {
+        // 3. 捕获到了里面的异常，递归调用自己
+        printExceptionStack(nested, level + 1);
+    } 
+    catch (...) {
+        // 处理非 std::exception 类型的古怪异常
+        std::cerr << "Unknown non-standard exception nested." << std::endl;
+    }
+}
 ```
 
+应当说明的是：
+1. 如果在 `catch` 块之外调用 `std::throw_with_nested` ，<font color="#c00000">则其中包裹的异常为</font> `nullptr`，<font color="#c00000">是一个无用且危险的行为</font>(当调用 `std::rethrow_if_nested` ，拆到 `nullptr` 时会直接触发 `std::terminate()` )
+2. 
 
 ## 3.7 C++不支持的C语言特性
 
