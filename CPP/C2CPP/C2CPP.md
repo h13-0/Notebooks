@@ -1289,10 +1289,7 @@ T& emplace( std::initializer_list<U> ilist, Args&&... args );
 
 ### 3.3.7 文件系统(std::filesystem)
 
-
-
-
-
+C++的文件系统中提供了大量的新类型与新机制，具体统一见章节[[CPP/C2CPP/C2CPP#^alqala|文件系统]]。
 
 ### 3.3.8 std::basic_string_view(C++17) ^2d6kyg
 
@@ -2741,14 +2738,22 @@ size_type count( const K& x ) const;
 
 #### 4.3.2.1 std::replace
 
+# 5 新增标准库
 
-# 5 现代C++
+## 5.1 文件系统(std::filesystem) ^alqala
 
-## 5.1 面向对象的高级特性
 
-### 5.1.1 子类父类
 
-#### 5.1.1.1 子类与父类之间的创建与转换
+
+
+
+# 6 现代C++
+
+## 6.1 面向对象的高级特性
+
+### 6.1.1 子类父类
+
+#### 6.1.1.1 子类与父类之间的创建与转换
 
 
 
@@ -2757,12 +2762,12 @@ size_type count( const K& x ) const;
 - 当使用 `Base &b = d;` 时，
 - 当使用 `Base *b = &d;` 时，
 
-#### 5.1.1.2 运行时类型信息(RTTI)
+#### 6.1.1.2 运行时类型信息(RTTI)
 
 
 
 
-### 5.1.2 PImpl模式
+### 6.1.2 PImpl模式
 
 在C++中，由于<font color="#c00000">不支持将一个对象或结构体分多个地方多次定义</font>，因此考虑如下的设计场景：
 - 现在需要基于几个内部库实现一个对象，并且<font color="#c00000">不希望这个对象的调用者关心内部库的数据结构</font>以及这个对象的内部实现
