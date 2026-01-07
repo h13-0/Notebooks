@@ -2009,8 +2009,15 @@ $$
 在为一个项目设计异常时，应当：
 1. 定义一个项目专属的异常基类，并继承自 `std::runtime_error` 或 `std::exception`
 2. 每一个子模块派生自己的异常类
-3. `try...catch` 防火墙应当只假设在di ceng chu fa di
-
+3. `try...catch` 防火墙应当只假设在<span style="background:#fff88f"><u>底层触发点</u></span>和<span style="background:#fff88f"><u>顶层触发点</u></span>：
+	- 底层触发点：当项目调用其他库代码，接收到错误或异常时。
+	- <font color="#c00000">顶层触发点</font>：当代码需要<font color="#c00000">被其他语言调用</font>、<font color="#c00000">或回调函数调用时</font>，<span style="background:#fff88f"><font color="#c00000">一定要捕获所有异常</font></span>
+4. <span style="background:#fff88f"><font color="#c00000">每个线程的入口函数(Entry)必须包裹</font></span> `try...catch` ，否则当异常抛出时，<font color="#c00000">整个进程都会被终止</font>。
+5. 一个优秀的异常对象应当包含：
+	1. What：发生了什么错误
+	2. Where：发生错误的文件名、函数名、行号
+	3. Context：关键变量的值
+	4. Cause：原始错误码
 
 使用异常时需注意：
 1. <font color="#c00000">绝对不要在析构函数中抛出异常</font>，原因：
