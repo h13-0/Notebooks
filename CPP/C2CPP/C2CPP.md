@@ -1345,7 +1345,14 @@ T& emplace( std::initializer_list<U> ilist, Args&&... args );
 
 C++的文件系统中提供了大量的新类型与新机制，具体统一见章节[[CPP/C2CPP/C2CPP#^alqala|文件系统]]。
 
-### 3.3.9 std::basic_string_view(C++17) ^2d6kyg
+### 3.3.9 RAII的互斥体封装器(std::lock_guard)(C++11)
+
+明显地，在进行互斥量开发时
+
+
+
+
+### 3.3.10 std::basic_string_view(C++17) ^2d6kyg
 
 本章节应当在学习完章节[[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]后学习。
 其与 `std::basic_string` 的区别如下表所示：
@@ -1361,9 +1368,9 @@ C++的文件系统中提供了大量的新类型与新机制，具体统一见�
 | 空结尾                 | 保证以 `\0` 结尾                                | 不保证以 `\0` 结尾                         |
 | 主要用途                | 存储数据，作为返回值，需要修改字符串                         | 函数参数，解析字符串，切片等                       |
 
-#### 3.3.9.1 常用构造方式
+#### 3.3.10.1 常用构造方式
 
-##### 3.3.9.1.1 默认构造(空视图)
+##### 3.3.10.1.1 默认构造(空视图)
 
 ```CPP
 constexpr basic_string_view ( ) noexcept;
@@ -1377,7 +1384,7 @@ std::string_view sv;
 // sv.size() == 0
 ```
 
-##### 3.3.9.1.2 从basic_string隐式转换
+##### 3.3.10.1.2 从basic_string隐式转换
 
 需要注意，本方法并非使用构造函数，而是使用转换运算符 `operator string_view()` 
 
@@ -1389,7 +1396,7 @@ std::string_view sv = s; // 自动调用 s.operator string_view()
 复杂度：
 - 时间复杂度：$O(1)$
 
-##### 3.3.9.1.3 从C风格字符串构造
+##### 3.3.10.1.3 从C风格字符串构造
 
 构造函数定义：
 
@@ -1412,7 +1419,7 @@ std::string_view sv = c_str;
 复杂度：
 - 时间复杂度：$O(n)$ ，其会遍历数组直到找到 `\0`
 
-##### 3.3.9.1.4 由C风格字符串+长度构造
+##### 3.3.10.1.4 由C风格字符串+长度构造
 
 构造函数定义：
 
@@ -1423,7 +1430,7 @@ constexpr basic_string_view ( const CharT * s, size_type count ) ;
 复杂度：
 - 时间复杂度：$O(1)$
 
-##### 3.3.9.1.5 字面量+sv后缀构造
+##### 3.3.10.1.5 字面量+sv后缀构造
 
 ```CPP
 using namespace std::literals; // 必须引入命名空间
@@ -1433,7 +1440,7 @@ auto sv = "Hello World"sv;     // 类型直接推导为 std::string_view
 复杂度：
 - 时间复杂度：$O(0)$ (编译期求值)
 
-##### 3.3.9.1.6 迭代器构造
+##### 3.3.10.1.6 迭代器构造
 
 
 
