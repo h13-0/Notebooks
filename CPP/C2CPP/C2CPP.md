@@ -395,21 +395,24 @@ comp1.operator==(comp2);
 
 ### 3.2.2 引用的特殊特性
 
-除了上述的基本特性以外，引用还有如下的特殊特性：
+除了上述的基本特性以外，引用还有如下复合直觉的特性：
+1. 使用类型判定时，引用和原始类型不是同一个类型：
+	- `std::is_same<int, int&>` -> `false`
+2. 可以使用 `using` 、`typedef` 为引用设置类别别名
+
+<font color="#c00000">但是引用还有如下的反直觉特性</font>：
 - 穿透性：
 	- 引用在表达式中会"隐身"：
 		- 即使是在 `sizeof(Type&)` 时，<font color="#c00000">其获取到的是</font> `Type` <font color="#c00000">的大小</font>，<font color="#c00000">而非指针的大小</font>
 	- 获取 `typeid` 时也会"隐身"：
 		- `typeid(ref).name()` 时，获取到的是原始类型的名称
-- 类型判定的非穿透性：
-	- 使用类型判定时，引用和原始类型不是同一个类型
 - <span style="background:#fff88f"><font color="#c00000">C++中没有二级引用!!!</font></span> 
 	- `Type&` 是左值引用
-	- `Type&&` <span style="background:#fff88f"><font color="#c00000">是右值引用!!!</font></span>
+	- `Type&&` <span style="background:#fff88f"><font color="#c00000">是右值引用!!!</font></span> ^ymcr6z
 - <font color="#c00000">引用折叠特性</font>：
 	- <font color="#c00000">无论间接地套了多少次引用(即引用的引用)</font>，<span style="background:#fff88f"><font color="#c00000">其最终都会折叠为单级引用</font></span>：
 		- 即使在类型判定(`std::is_same`)中也是如此
-
+		- 间接引用主要依靠 `typedef` 、`using` 等类型别名的方式间接堆叠
 
 ### 3.2.3 引用的链式调用特性 ^8eltqy
 
