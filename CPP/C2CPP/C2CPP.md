@@ -1287,11 +1287,15 @@ T& emplace( std::initializer_list<U> ilist, Args&&... args );
 	- `ilist` 为要传递给构造函数的初始化列表
 	- `args` 为传递给构造函数的参数
 
-### 3.3.7 文件系统(std::filesystem)
+### 3.3.7 预期对象(std::expected) ^qh6jjo
+
+[[CPP/C2CPP/C2CPP#^qh6jjo|预期di]]
+
+### 3.3.8 文件系统(std::filesystem)
 
 C++的文件系统中提供了大量的新类型与新机制，具体统一见章节[[CPP/C2CPP/C2CPP#^alqala|文件系统]]。
 
-### 3.3.8 std::basic_string_view(C++17) ^2d6kyg
+### 3.3.9 std::basic_string_view(C++17) ^2d6kyg
 
 本章节应当在学习完章节[[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]后学习。
 其与 `std::basic_string` 的区别如下表所示：
@@ -1307,9 +1311,9 @@ C++的文件系统中提供了大量的新类型与新机制，具体统一见�
 | 空结尾                 | 保证以 `\0` 结尾                                | 不保证以 `\0` 结尾                         |
 | 主要用途                | 存储数据，作为返回值，需要修改字符串                         | 函数参数，解析字符串，切片等                       |
 
-#### 3.3.8.1 常用构造方式
+#### 3.3.9.1 常用构造方式
 
-##### 3.3.8.1.1 默认构造(空视图)
+##### 3.3.9.1.1 默认构造(空视图)
 
 ```CPP
 constexpr basic_string_view ( ) noexcept;
@@ -1323,7 +1327,7 @@ std::string_view sv;
 // sv.size() == 0
 ```
 
-##### 3.3.8.1.2 从basic_string隐式转换
+##### 3.3.9.1.2 从basic_string隐式转换
 
 需要注意，本方法并非使用构造函数，而是使用转换运算符 `operator string_view()` 
 
@@ -1335,7 +1339,7 @@ std::string_view sv = s; // 自动调用 s.operator string_view()
 复杂度：
 - 时间复杂度：$O(1)$
 
-##### 3.3.8.1.3 从C风格字符串构造
+##### 3.3.9.1.3 从C风格字符串构造
 
 构造函数定义：
 
@@ -1358,7 +1362,7 @@ std::string_view sv = c_str;
 复杂度：
 - 时间复杂度：$O(n)$ ，其会遍历数组直到找到 `\0`
 
-##### 3.3.8.1.4 由C风格字符串+长度构造
+##### 3.3.9.1.4 由C风格字符串+长度构造
 
 构造函数定义：
 
@@ -1369,7 +1373,7 @@ constexpr basic_string_view ( const CharT * s, size_type count ) ;
 复杂度：
 - 时间复杂度：$O(1)$
 
-##### 3.3.8.1.5 字面量+sv后缀构造
+##### 3.3.9.1.5 字面量+sv后缀构造
 
 ```CPP
 using namespace std::literals; // 必须引入命名空间
@@ -1379,7 +1383,7 @@ auto sv = "Hello World"sv;     // 类型直接推导为 std::string_view
 复杂度：
 - 时间复杂度：$O(0)$ (编译期求值)
 
-##### 3.3.8.1.6 迭代器构造
+##### 3.3.9.1.6 迭代器构造
 
 
 
@@ -2089,14 +2093,21 @@ void print_exception_stack(const std::exception& e, int level = 0) {
 
 应当说明的是：
 1. 如果在 `catch` 块之外调用 `std::throw_with_nested` ，<font color="#c00000">则其中包裹的异常为</font> `nullptr`，<font color="#c00000">是一个无用且危险的行为</font>(当调用 `std::rethrow_if_nested` ，拆到 `nullptr` 时会直接触发 `std::terminate()` )
-2. 调用 `std::rethrow_if_nested` 会从外到内的拆洋葱，如果当前异常还内嵌的有其他yi c
+2. 调用 `std::rethrow_if_nested` 会从外到内的"拆洋葱"，如果当前异常还内嵌的有其他异常则会抛出，如果没有内嵌则不抛异常。
 3. 对于普通业务场景，通常不需要"拆洋葱"，甚至不需要捕获异常
 4. 对于日志等需求，<font color="#c00000">则应当</font><span style="background:#fff88f"><font color="#c00000">递归地</font></span><font color="#c00000">"拆洋葱"</font>，直到拆到没有新的异常(具体可见上方示例)
-
 
 ## 3.7 错误处理机制汇总
 
 
+至此，我们已经学习了C++中如下的几种错误处理机制：
+- C风格返回值：
+	- 依赖机制：
+		- `int` 或 `enun` 类型
+		- `std::error_code` 类型
+- 异常 `std::exception` ：
+	- 依赖机制：`try...catch` 
+- 
 
 
 
