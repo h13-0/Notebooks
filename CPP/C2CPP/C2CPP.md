@@ -1207,7 +1207,7 @@ if(ec == std::errc::invalid_argument) ...
 cout << "Value: " << ec.value() << ", Category: " << ec.category().name()
 ```
 
-### 3.3.6 std::optional(C++17)
+### 3.3.6 std::optional(C++17) ^fatdl4
 
 `std::optional` 使用头文件 `<optional>`
 
@@ -1289,7 +1289,6 @@ T& emplace( std::initializer_list<U> ilist, Args&&... args );
 
 ### 3.3.7 预期对象(std::expected) ^qh6jjo
 
-[[CPP/C2CPP/C2CPP#^qh6jjo|预期di]]
 
 ### 3.3.8 文件系统(std::filesystem)
 
@@ -2105,12 +2104,27 @@ void print_exception_stack(const std::exception& e, int level = 0) {
 	- 依赖机制：
 		- `int` 或 `enun` 类型
 		- `std::error_code` 类型
+	- 优缺点：
+		- 优点：
+		- 缺点：
+			- 无法在返回值中同时接收结果和(大多数情况下)
 - 异常 `std::exception` ：
 	- 依赖机制：`try...catch` 
-- 
-
-
-
+	- 优缺点：
+		- 优点：
+		- 缺点：
+			- 性能开销大
+			- 部分开发环境中被禁用(嵌入式、游戏开发)
+- 可选值：
+	- 依赖机制：[[CPP/C2CPP/C2CPP#^fatdl4|std::optional]]
+	- 优缺点：
+		- 优点：
+		- 缺点：
+			- 
+- 预期对象
+	- 依赖机制：[[CPP/C2CPP/C2CPP#^qh6jjo|std::excepted]]
+	- 
+为规范性起见
 
 ## 3.8 C++不支持的C语言特性
 
