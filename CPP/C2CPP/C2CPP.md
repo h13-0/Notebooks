@@ -2009,7 +2009,7 @@ $$
 - 嵌入式和性能受限场景应当考虑使用错误码或 `std::expected` 。
 - 对于现代应用开发，可以考虑使用异常系统。
 
-在为一个项目设计异常时，应当：
+在为一个项目设计异常时，应当： ^ut2ewj
 1. 定义一个项目专属的异常基类，并继承自 `std::runtime_error` 或 `std::exception`
 2. 每一个子模块派生自己的异常类
 3. `try...catch` 防火墙应当只假设在<span style="background:#fff88f"><u>底层触发点</u></span>和<span style="background:#fff88f"><u>顶层触发点</u></span>：
@@ -2124,9 +2124,11 @@ void print_exception_stack(const std::exception& e, int level = 0) {
 	- 优缺点：
 		- 优点：
 			- 可以一次性包裹一大块代码，<font color="#c00000">不用单独判定每个可能失败的操作</font>
+			- <font color="#c00000">错误分支处理与错误传递极其方便</font>
+			- 可以配合RAII减轻资源回收复杂度
 			- 不占用返回值
 		- 缺点：
-			- 性能开销大
+			- <font color="#c00000">性能开销大</font>
 			- 部分开发环境中被禁用(嵌入式、游戏开发)
 - 可选值：
 	- 依赖机制：[[CPP/C2CPP/C2CPP#^fatdl4|std::optional]]
@@ -2134,11 +2136,24 @@ void print_exception_stack(const std::exception& e, int level = 0) {
 		- 优点：
 			- 不占用返回值
 		- 缺点：
-			- 
-- 预期对象
+			- <font color="#c00000">无法传递任何错误信息</font>
+- 预期对象：
 	- 依赖机制：[[CPP/C2CPP/C2CPP#^qh6jjo|std::excepted]]
-	- 
-为规范性起见
+	- 优缺点：
+		- 优点：
+		- 缺点：
+			- 错误分支处理复杂、需要判定每个可能失败的操作
+为规范性起见，<span style="background:#fff88f"><font color="#c00000">在单一函数中一定不可混用上述错误机制</font></span>：
+- 使用了异常的不要使用其他错误机制
+- 使用了其他错误机制的一定要用 `noexcept` 修饰该函数，其不止是为了编译器性能优化，<span style="background:#fff88f"><font color="#c00000">更是省去调用者对抛出异常导致其业务错误的担心</font></span>
+在框架及系统设计中，推荐使用如下设计原则：
+- 业务受限环境下不可使用异常
+- 允许使用异常时：
+	- 按照项目层级分：
+		- 底层算法应当使用 `std::excepted` 或其简易实现
+		- 业务逻辑应当使用 `std::exception` 机制，其原则可见[[CPP/C2CPP/C2CPP#^ut2ewj|异常设计原则]]
+	- 按照
+
 
 ## 3.8 C++不支持的C语言特性
 
