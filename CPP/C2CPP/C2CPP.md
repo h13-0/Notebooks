@@ -396,8 +396,19 @@ comp1.operator==(comp2);
 ### 3.2.2 引用的特殊特性
 
 除了上述的基本特性以外，引用还有如下的特殊特性：
-- 穿透性：引用在表达式中会"yin shen" `sizeof(Type&)` 
-
+- 穿透性：
+	- 引用在表达式中会"隐身"：
+		- 即使是在 `sizeof(Type&)` 时，<font color="#c00000">其获取到的是</font> `Type` <font color="#c00000">的大小</font>，<font color="#c00000">而非指针的大小</font>
+	- 获取 `typeid` 时也会"隐身"：
+		- `typeid(ref).name()` 时，获取到的是原始类型的名称
+- 类型判定的非穿透性：
+	- 使用类型判定时，引用和原始类型不是同一个类型
+- <span style="background:#fff88f"><font color="#c00000">C++中没有二级引用!!!</font></span> 
+	- `Type&` 是左值引用
+	- `Type&&` <span style="background:#fff88f"><font color="#c00000">是右值引用!!!</font></span>
+- <font color="#c00000">引用折叠特性</font>：
+	- <font color="#c00000">无论间接地套了多少次引用(即引用的引用)</font>，<span style="background:#fff88f"><font color="#c00000">其最终都会折叠为单级引用</font></span>：
+		- 即使在类型判定(`std::is_same`)中也是如此
 
 
 ### 3.2.3 引用的链式调用特性 ^8eltqy
@@ -450,13 +461,17 @@ void func() {
 
 
 
-### 3.2.5 左值引用与右值引用(C++11)
+## 3.3 左值与右值
 
 
 
-## 3.3 新增基本类型(不含STL)
 
-### 3.3.1 智能指针
+
+
+
+## 3.4 新增基本类型(不含STL)
+
+### 3.4.1 智能指针
 
 智能指针是C++中一类指针的统称，其包含：
 - `std::unique_ptr` 独占指针
@@ -465,7 +480,7 @@ void func() {
 智能指针严格来说不属于STL。
 智能指针使用头文件 `<memory>` 。
 
-#### 3.3.1.1 独占指针(unique_ptr) ^t86e16
+#### 3.4.1.1 独占指针(unique_ptr) ^t86e16
 
 独占指针是现在C++中<font color="#c00000">最常用</font>、<font color="#c00000">最推荐</font>的智能指针，其特性如下：
 1. 独占特性：
@@ -492,7 +507,7 @@ void test_unique() {
 
 其通用API可见章节[[CPP/C2CPP/C2CPP#^sh4a28|独占、共享指针的通用方法]]，专用API见子章节。
 
-##### 3.3.1.1.1 类型定义与指定Deleter
+##### 3.4.1.1.1 类型定义与指定Deleter
 
 `std::unique_ptr` 在构造时可在模板中传递Deleter，从而在指针生命周期结束时自动释放资源。<font color="#c00000">其</font><span style="background:#fff88f"><font color="#c00000"><u>类型定义</u></font></span><font color="#c00000">如下</font>：
 
@@ -514,7 +529,7 @@ template <
 - <font color="#c00000">Deleter不同</font>，<font color="#c00000">则对应的</font> `std::unique_ptr` <font color="#c00000">类型不同</font>。
 - 当需要构造<font color="#c00000">指向类型</font> `A` <font color="#c00000">的智能指针时</font>，则上述<font color="#c00000">模板参数</font> `T` <font color="#c00000">应当为类型</font> `A` <span style="background:#fff88f"><font color="#c00000">本身而非</font></span> `A*`
 
-#### 3.3.1.2 共享指针(shared_ptr)
+#### 3.4.1.2 共享指针(shared_ptr)
 
 共享指针用于多个指针指向同一个对象的情况，其特性如下：
 1. <font color="#c00000">引用计数特性</font>：
@@ -543,7 +558,7 @@ void test_shared()
 
 其通用API可见章节[[CPP/C2CPP/C2CPP#^sh4a28|独占、共享指针的通用方法]]，专用API见子章节。
 
-##### 3.3.1.2.1 构造函数构造与指定Deleter
+##### 3.4.1.2.1 构造函数构造与指定Deleter
 
 对于 `unique_ptr` 和 `shared_ptr` 这两个智能指针，都可以为其指定析构器 `Deleter` ，从而实现自定义释放资源的方法。不过：
 - `unique_ptr` 是在<font color="#c00000">类型模板中传递</font>，<font color="#c00000">会改变其类型定义</font>，会在编译期完成指定
@@ -634,9 +649,9 @@ int main()
 	- 类型 `T` 决定了 `shared_ptr.get()` 获取到的指针的类型
 	- 类型 `Y` 决定了 `shared_ptr` 析构时的Deleter
 
-#### 3.3.1.3 独占、共享指针的通用方法 ^sh4a28
+#### 3.4.1.3 独占、共享指针的通用方法 ^sh4a28
 
-##### 3.3.1.3.1 构造方法(std::make_unique、std::make_shared)(C++14) ^fb89wj
+##### 3.4.1.3.1 构造方法(std::make_unique、std::make_shared)(C++14) ^fb89wj
 
 `make_unique` 和 `make_shared` 是专门用于构造对应的两种指针的构造方法。除了提供了一些性能优化和简化写法以外，其主要可以<font color="#c00000">在如下情况提供更安全的内存保护</font>，具体如下：
 1. 在C++17之前，<font color="#c00000">函数参数的求值顺序是不确定的</font>(<font color="#c00000">甚至函数参数的参数求值顺序也不固定</font>)，例如：
@@ -668,7 +683,7 @@ process(std::make_unique<MyClass>(), getPriority());
 1. <span style="background:#fff88f"><font color="#c00000">当设置了Deleter之后</font></span><font color="#c00000">两种指针均无法使用此方法构造</font>。
 子章节中列出了常用的构造方法，更多构造方法自行参考cppreference。
 
-###### 3.3.1.3.1.1 构造独占指针并传递参数
+###### 3.4.1.3.1.1 构造独占指针并传递参数
 
 ```CPP
 template< class T, class... Args >
@@ -678,7 +693,7 @@ constexpr unique_ptr<T> make_unique( Args&&... args );
 其中：
 - 参数 `args` 被传递给 `T` 的构造函数
 
-###### 3.3.1.3.1.2 为独占指针构造指定大小的数组
+###### 3.4.1.3.1.2 为独占指针构造指定大小的数组
 
 ```CPP
 template< class T >
@@ -688,7 +703,7 @@ constexpr unique_ptr<T> make_unique( std::size_t size );
 其中：
 - 模板 `T` <span style="background:#fff88f"><font color="#c00000">为目标类型的数组类型</font></span>
 
-###### 3.3.1.3.1.3 构造共享指针并传递参数
+###### 3.4.1.3.1.3 构造共享指针并传递参数
 
 ```CPP
 template< class T, class... Args >
@@ -698,7 +713,7 @@ shared_ptr<T> make_shared( Args&&... args );
 其中：
 - 参数 `args` 被传递给 `T` 的构造函数
 
-###### 3.3.1.3.1.4 为共享指针构造指定大小的数组
+###### 3.4.1.3.1.4 为共享指针构造指定大小的数组
 
 ```CPP
 template< class T >
@@ -708,7 +723,7 @@ shared_ptr<T> make_shared( std::size_t N );
 其中：
 - 模板 `T` <span style="background:#fff88f"><font color="#c00000">为目标类型的数组类型</font></span>
 
-##### 3.3.1.3.2 自定义工厂函数的方法 ^oji6gb
+##### 3.4.1.3.2 自定义工厂函数的方法 ^oji6gb
 
 在[[CPP/C2CPP/C2CPP#^fb89wj|上述章节]]中提到了一种由于C++20之前，参数求值顺序不确定导致的内存泄露风险，在一般情况下我们可以通过使用工厂函数 `std::make_unique` 和 `std::make_shared` 进行规避。但是其问题是当我们自定义 `Deleter` 时，就无法使用上述两个函数。
 
@@ -725,7 +740,7 @@ shared_ptr<T> make_shared( std::size_t N );
 
 
 
-##### 3.3.1.3.3 解引用(operator->、operator*)
+##### 3.4.1.3.3 解引用(operator->、operator*)
 
 和普通裸指针一样使用即可。
 
@@ -738,12 +753,12 @@ typename std::add_lvalue_reference<T>::type operator*() const
 pointer operator->() const noexcept;
 ```
 
-##### 3.3.1.3.4 访问数组元素(operator\[\])
+##### 3.4.1.3.4 访问数组元素(operator\[\])
 
 
 
 
-##### 3.3.1.3.5 获取原始裸指针(get)
+##### 3.4.1.3.5 获取原始裸指针(get)
 
 当调用普通C语言API，或者调用未使用智能指针的API时，则可以使用 `get` 方法获取其持有的裸指针。
 
@@ -751,11 +766,11 @@ pointer operator->() const noexcept;
 pointer get() const noexcept;
 ```
 
-##### 3.3.1.3.6 交换(swap)
+##### 3.4.1.3.6 交换(swap)
 
 
 
-#### 3.3.1.4 弱引用指针(weak_ptr)
+#### 3.4.1.4 弱引用指针(weak_ptr)
 
 弱引用指针是为解决共享指针循环引用问题而设计的工具，<font color="#c00000">需要配合共享指针使用</font>。
 
@@ -810,7 +825,7 @@ void test_cycle() {
 弱引用指针无法使用解引用
 
 
-##### 3.3.1.4.1 获取访问权并升格为共享指针(lock)
+##### 3.4.1.4.1 获取访问权并升格为共享指针(lock)
 
 ```CPP
 
@@ -818,9 +833,9 @@ void test_cycle() {
 
 
 
-#### 3.3.1.5 拓展用法
+#### 3.4.1.5 拓展用法
 
-##### 3.3.1.5.1 资源自动释放(RAII) ^9cldls
+##### 3.4.1.5.1 资源自动释放(RAII) ^9cldls
 
 在C语言中，资源的申请均需要申请者手动进行释放，没有C++中的析构函数的自动释放方式。这样一旦遇到复杂的错误路径处理就很麻烦，例如：
 
@@ -943,9 +958,9 @@ int init()
 
 上述设计方法或思想即为RAII(资源获取即初始化)，简单理解即<span style="background:#fff88f"><font color="#c00000">把资源的声明周期绑定到对象的生命周期上</font></span>。
 
-### 3.3.2 强类型枚举(enum class)
+### 3.4.2 强类型枚举(enum class)
 
-### 3.3.3 原子变量(std::atomic)(C++11)
+### 3.4.3 原子变量(std::atomic)(C++11)
 
 正如其名，对原子类型的操作是原子的，即在多线程环境下任何对原子变量的访问都是完整的。因此使用原子变量可以有效避免数据竞争。
 
@@ -962,16 +977,16 @@ int init()
 	- 通常来说，界限为8字节或16字节
 	- <font color="#c00000">可以使用</font> `obj.is_lock_free()` <font color="#c00000">来检测当前类型是否无锁</font>
 
-#### 3.3.3.1 构造函数
+#### 3.4.3.1 构造函数
 
 
 
 
-#### 3.3.3.2 成员函数
+#### 3.4.3.2 成员函数
 
 C++的原子变量支持如子章节所示的成员函数。
 
-##### 3.3.3.2.1 检查对象是否无锁
+##### 3.4.3.2.1 检查对象是否无锁
 
 ```CPP
 bool is_lock_free() const noexcept;
@@ -979,7 +994,7 @@ bool is_lock_free() const noexcept;
 
 其返回值为是否有锁。
 
-##### 3.3.3.2.2 赋值运算符(operator=)
+##### 3.4.3.2.2 赋值运算符(operator=)
 
 ```CPP
 T operator=(T desired) noexcept;
@@ -991,7 +1006,7 @@ T operator=(T desired) noexcept;
 返回值：
 - 等于 `desired`
 
-##### 3.3.3.2.3 原子地存值(store)
+##### 3.4.3.2.3 原子地存值(store)
 
 ```CPP
 void store(T desired, std::memory_order order =
@@ -1003,7 +1018,7 @@ void store(T desired, std::memory_order order =
 - `T desired` ：要存入的非原子变量类型的值
 - `std::memory_order order` ：要强制执行的内存顺序约束
 
-##### 3.3.3.2.4 取值运算符(operator T)
+##### 3.4.3.2.4 取值运算符(operator T)
 
 ```CPP
 operator T() const noexcept;
@@ -1011,14 +1026,14 @@ operator T() const noexcept;
 
 其功能为原子地加载并返回原子变量的当前值，等价于调用 `load` 函数。
 
-##### 3.3.3.2.5 原子地取值(load)
+##### 3.4.3.2.5 原子地取值(load)
 
 ```CPP
 T load(std::memory_order order = std::memory_order_seq_cst) const noexcept;
 ```
 
 
-##### 3.3.3.2.6 赋予新值并取出旧值(exchange)
+##### 3.4.3.2.6 赋予新值并取出旧值(exchange)
 
 ```CPP
 T exchange(T desired, std::memory_order order =
@@ -1034,7 +1049,7 @@ T exchange(T desired, std::memory_order order =
 返回值：
 - 调用前原子变量的值
 
-##### 3.3.3.2.7 条件睡眠(wait)(C++20)
+##### 3.4.3.2.7 条件睡眠(wait)(C++20)
 
 ```CPP
 void wait(T old, std::memory_order order =
@@ -1051,24 +1066,24 @@ void wait(T old,
 	- <font color="#c00000">其比较是按位进行的</font>，类似于 `memcmp` 
 - `std::memory_order order` ：要强制执行的内存顺序约束
 
-##### 3.3.3.2.8 唤醒一个睡眠线程(notify_one)(C++20)
+##### 3.4.3.2.8 唤醒一个睡眠线程(notify_one)(C++20)
 
 
 
 
-##### 3.3.3.2.9 唤醒所有睡眠线程(notify_all)(C++20)
+##### 3.4.3.2.9 唤醒所有睡眠线程(notify_all)(C++20)
 
 
 
 
-### 3.3.4 标准线程(std::thread、std::jthread)
+### 3.4.4 标准线程(std::thread、std::jthread)
 
 C++中提供了两种线程对象：
 - `std::thread` ：普通线程
 - `std::jthread` ：自带收尾机制、在某些情况下可以被取消/停止的线程
 上述两种对象均使用头文件 `<thread>`
 
-#### 3.3.4.1 std::thread(C++11)
+#### 3.4.4.1 std::thread(C++11)
 
 与其他语言/框架一致的是，其有如下的基本特性：
 - 创建线程后会立即执行
@@ -1076,28 +1091,28 @@ C++中提供了两种线程对象：
 	- 调用 `join` 可以等待子线程退出，退出后可析构线程句柄
 	- 调用 `detach` 可以分离其与父线程之间的关联，此时析构线程句柄是安全的
 
-##### 3.3.4.1.1 构造函数
+##### 3.4.4.1.1 构造函数
 
-###### 3.3.4.1.1.1 创建一个不表示任何线程的thread对象
+###### 3.4.4.1.1.1 创建一个不表示任何线程的thread对象
 
 ```CPP
 thread() noexcept;
 ```
 
-###### 3.3.4.1.1.2 移动构造函数
+###### 3.4.4.1.1.2 移动构造函数
 
 ```CPP
 thread( thread&& other ) noexcept;
 ```
 
-###### 3.3.4.1.1.3 创建线程并传递参数
+###### 3.4.4.1.1.3 创建线程并传递参数
 
 ```CPP
 template< class F, class... Args >
 explicit thread( F&& f, Args&&... args );
 ```
 
-##### 3.3.4.1.2 阻塞等待指定线程执行完毕(join)
+##### 3.4.4.1.2 阻塞等待指定线程执行完毕(join)
 
 ```CPP
 void join();
@@ -1106,7 +1121,7 @@ void join();
 调用前需要确保该线程可被 `join`，否则会抛出异常。
 `join` 后其 `joinable` 为 `false` (即只能被 `join` 一次)。
 
-##### 3.3.4.1.3 分离指定线程(detach)
+##### 3.4.4.1.3 分离指定线程(detach)
 
 ```CPP
 void detach();
@@ -1114,7 +1129,7 @@ void detach();
 
 分离指定线程，分离后其 `joinable` 为 `false` 。
 
-#### 3.3.4.2 std::jthread(C++20)
+#### 3.4.4.2 std::jthread(C++20)
 
 考虑如下的场景：
 - 主线程中实现UI交互，并创建若干子线程执行子任务
@@ -1133,7 +1148,7 @@ void detach();
 
 其相较于 `std::thread` 多出的特性如子章节所示。
 
-##### 3.3.4.2.1 构造函数
+##### 3.4.4.2.1 构造函数
 
 `std::jthread` 的构造函数定义与 `std::thread` 定义一致，但是<font color="#c00000">只要当线程函数的第一个参数为</font> `std::stop_token` ， `std::jthread` <font color="#c00000">就会自动把内部的</font> `token` <font color="#c00000">注入进去</font>。
 
@@ -1159,7 +1174,7 @@ void func(std::stop_token stoken, int id)
 }
 ```
 
-### 3.3.5 错误码(std::error_code)(C++11) ^i8qvar
+### 3.4.5 错误码(std::error_code)(C++11) ^i8qvar
 
 在C++11之前，标准提供的错误机制主要有如下两种：
 1. 全局的 `errno` ，是全局变量，线程不安全
@@ -1170,7 +1185,7 @@ void func(std::stop_token stoken, int id)
 2. `std::error_code` 可以携带错误信息字符串
 3. `std::error_code` 可以携带域信息，标明错误是源自操作系统、HTTP库或者其他的库
 
-#### 3.3.5.1 发送者构造方法
+#### 3.4.5.1 发送者构造方法
 
 对于错误发送者，可直接使用构造函数构造并返回，但其要求<font color="#c00000">已拥有</font>或<font color="#c00000">已完成</font>：
 1. 错误类别(域信息)的构造
@@ -1245,7 +1260,7 @@ inline std::error_code make_error_code(CaptureError e) {
 }
 ```
 
-#### 3.3.5.2 接收者使用方法
+#### 3.4.5.2 接收者使用方法
 
 对于错误接收者，其基本用法有：
 1. 判断是否有错：
@@ -1267,11 +1282,11 @@ if(ec == std::errc::invalid_argument) ...
 cout << "Value: " << ec.value() << ", Category: " << ec.category().name()
 ```
 
-### 3.3.6 std::optional(C++17) ^fatdl4
+### 3.4.6 std::optional(C++17) ^fatdl4
 
 `std::optional` 使用头文件 `<optional>`
 
-#### 3.3.6.1 基本使用
+#### 3.4.6.1 基本使用
 
 `std::optional` 表示是<span style="background:#fff88f"><font color="#c00000">一个可能存在，也可能不存在的值</font></span>。其可以用于如下用途：
 1. 函数返回值：表示可能无法返回有效结果的返回值
@@ -1319,13 +1334,13 @@ if(opt) { ... }
 2. 使用 `opt.value()` ，<font color="#c00000">当没有值时会抛出异常</font>
 3. 直接解引用 `value = *opt` ，<font color="#c00000">没有值时行为未定义</font>，但是速度最快
 
-#### 3.3.6.2 内存分配
+#### 3.4.6.2 内存分配
 
 `std::optional` 是静态分配的内存，位于栈上。
 
-#### 3.3.6.3 常用成员函数
+#### 3.4.6.3 常用成员函数
 
-##### 3.3.6.3.1 原地构造(emplace) ^r5zfr4
+##### 3.4.6.3.1 原地构造(emplace) ^r5zfr4
 
 `emplace` 函数会就地构造该值，如果调用时已包含该值，则会先销毁原值再构造新值。
 
@@ -1347,14 +1362,14 @@ T& emplace( std::initializer_list<U> ilist, Args&&... args );
 	- `ilist` 为要传递给构造函数的初始化列表
 	- `args` 为传递给构造函数的参数
 
-### 3.3.7 预期对象(std::expected) ^qh6jjo
+### 3.4.7 预期对象(std::expected) ^qh6jjo
 
 
-### 3.3.8 文件系统(std::filesystem)
+### 3.4.8 文件系统(std::filesystem)
 
 C++的文件系统中提供了大量的新类型与新机制，具体统一见章节[[CPP/C2CPP/C2CPP#^alqala|文件系统]]。
 
-### 3.3.9 RAII的互斥体封装器(std::lock_guard)(C++11)
+### 3.4.9 RAII的互斥体封装器(std::lock_guard)(C++11)
 
 明显地，在进行互斥量开发时，需要针对函数的异常与错误分支进行解锁：
 - 在C语言中，其依赖复杂的错误处理逻辑进行解锁
@@ -1387,7 +1402,7 @@ void func() {
 
 
 
-### 3.3.10 std::basic_string_view(C++17) ^2d6kyg
+### 3.4.10 std::basic_string_view(C++17) ^2d6kyg
 
 本章节应当在学习完章节[[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]后学习。
 其与 `std::basic_string` 的区别如下表所示：
@@ -1403,9 +1418,9 @@ void func() {
 | 空结尾                 | 保证以 `\0` 结尾                                | 不保证以 `\0` 结尾                         |
 | 主要用途                | 存储数据，作为返回值，需要修改字符串                         | 函数参数，解析字符串，切片等                       |
 
-#### 3.3.10.1 常用构造方式
+#### 3.4.10.1 常用构造方式
 
-##### 3.3.10.1.1 默认构造(空视图)
+##### 3.4.10.1.1 默认构造(空视图)
 
 ```CPP
 constexpr basic_string_view ( ) noexcept;
@@ -1419,7 +1434,7 @@ std::string_view sv;
 // sv.size() == 0
 ```
 
-##### 3.3.10.1.2 从basic_string隐式转换
+##### 3.4.10.1.2 从basic_string隐式转换
 
 需要注意，本方法并非使用构造函数，而是使用转换运算符 `operator string_view()` 
 
@@ -1431,7 +1446,7 @@ std::string_view sv = s; // 自动调用 s.operator string_view()
 复杂度：
 - 时间复杂度：$O(1)$
 
-##### 3.3.10.1.3 从C风格字符串构造
+##### 3.4.10.1.3 从C风格字符串构造
 
 构造函数定义：
 
@@ -1454,7 +1469,7 @@ std::string_view sv = c_str;
 复杂度：
 - 时间复杂度：$O(n)$ ，其会遍历数组直到找到 `\0`
 
-##### 3.3.10.1.4 由C风格字符串+长度构造
+##### 3.4.10.1.4 由C风格字符串+长度构造
 
 构造函数定义：
 
@@ -1465,7 +1480,7 @@ constexpr basic_string_view ( const CharT * s, size_type count ) ;
 复杂度：
 - 时间复杂度：$O(1)$
 
-##### 3.3.10.1.5 字面量+sv后缀构造
+##### 3.4.10.1.5 字面量+sv后缀构造
 
 ```CPP
 using namespace std::literals; // 必须引入命名空间
@@ -1475,16 +1490,16 @@ auto sv = "Hello World"sv;     // 类型直接推导为 std::string_view
 复杂度：
 - 时间复杂度：$O(0)$ (编译期求值)
 
-##### 3.3.10.1.6 迭代器构造
+##### 3.4.10.1.6 迭代器构造
 
 
 
 
 
 
-## 3.4 新增函数
+## 3.5 新增函数
 
-### 3.4.1 字符串格式化函数(std::format)(C++20)
+### 3.5.1 字符串格式化函数(std::format)(C++20)
 
 `std::format` 是类似于 `printf` 的字符串格式化函数，其格式字符串 `fmt` 有如下的替换规则：
 - 除 `{` 和 `}` 的字符串会被原样复制输出
@@ -1521,7 +1536,7 @@ demo如下：
 
 ```
 
-### 3.4.2 强制类型转换
+### 3.5.2 强制类型转换
 
 注意：
 - 下方四个子章节仅涉及普通<font color="#c00000"><u>裸指针</u></font>的类型转换，智能指针的对应版本为： ^4pmbef
@@ -1536,7 +1551,7 @@ demo如下：
 			- 父转子：不支持
 		- 剩余其他三种也均不支持
 
-#### 3.4.2.1 静态转换(static_cast)
+#### 3.5.2.1 静态转换(static_cast)
 
 ```CPP
 static_cast<目标类型 ﻿>(表达式 ﻿)
@@ -1556,7 +1571,7 @@ static_cast<目标类型 ﻿>(表达式 ﻿)
 注意：
 - 上述指针均为<font color="#c00000"><u>裸指针</u></font>类型，智能指针版本详见父章节开头[[CPP/C2CPP/C2CPP#^4pmbef|对应关系]]，后续子章节同。
 
-#### 3.4.2.2 动态转换(dynamic_cast)
+#### 3.5.2.2 动态转换(dynamic_cast)
 
 ```CPP
 dynamic_cast<目标类型>(表达式)
@@ -1624,7 +1639,7 @@ class Base {}                     // 无法使用，Base必须包含虚函数
 class Derived : public Base {}
 ```
 
-#### 3.4.2.3 去常转换(const_cast)
+#### 3.5.2.3 去常转换(const_cast)
 
 去常转换主要用于去除变量的 `const` 修饰。
 
@@ -1658,7 +1673,7 @@ int* p = const_cast<int*>(const_p);
 *p = 20;  // 合法
 ```
 
-#### 3.4.2.4 重新解释转换(reinterpret_cast)
+#### 3.5.2.4 重新解释转换(reinterpret_cast)
 
 ```CPP
 reinterpret_cast<目标类型>(表达式)
@@ -1670,7 +1685,7 @@ reinterpret_cast<目标类型>(表达式)
 1. 指针强转(即使毫不相干)：`int*` 转 `std::vector*` 等
 2. 类型强转：`long` 转 `struct xx` 等
 
-#### 3.4.2.5 强制类型转换汇总与C语言风格转换
+#### 3.5.2.5 强制类型转换汇总与C语言风格转换
 
 上述四种转换的汇总对比如下：
 
@@ -1688,13 +1703,13 @@ reinterpret_cast<目标类型>(表达式)
 4. `dynamic_cast`
 因此不建议在C++中使用C语言风格的转换。
 
-## 3.5 新增关键字
+## 3.6 新增关键字
 
-### 3.5.1 namespace
+### 3.6.1 namespace
 
 如其字面意思， `namespace` 主要用于划定命名空间，给其限定的函数、类、变量、枚举、模板等提供作用域，从而<font color="#c00000">避免命名冲突</font>。
 
-#### 3.5.1.1 基本使用方式
+#### 3.6.1.1 基本使用方式
 
 `namespace` 可以用于限定函数、类等特性，其基本使用方式为：
 
@@ -1750,7 +1765,7 @@ api::v2::foo();
 namespace fs = std::filesystem; // 简化长路径
 ```
 
-#### 3.5.1.2 命名空间的导入与全局命名空间
+#### 3.6.1.2 命名空间的导入与全局命名空间
 
 命名空间的导入可直接参考如下方式：
 
@@ -1786,7 +1801,7 @@ void func()
 }
 ```
 
-#### 3.5.1.3 匿名命名空间
+#### 3.6.1.3 匿名命名空间
 
 其主要用于替代C语言里面的 `static` 写法。
 当使用不包含名称的 `namespace` 时，该命名空间会被视作匿名命名空间，其作用是<span style="background:#fff88f"><font color="#c00000">当前作用域内可见</font></span>。
@@ -1812,7 +1827,7 @@ void helper() { } // 则整个namespace api中可见
 注意：
 1. <font color="#c00000">匿名命名空间不可放于头文件中</font>，<span style="background:#fff88f"><font color="#c00000">否则每个包含该头文件的源文件均会生成一份实体</font></span>。(类似于 `static` )。
 
-#### 3.5.1.4 内联命名空间
+#### 3.6.1.4 内联命名空间
 
 内联命名空间可将子命名空间自动提升为外层可见，方便用于版本管理和ABI过渡：
 
@@ -1830,7 +1845,7 @@ void foo();
 api::foo();            // 自动调用api::v2::foo();
 ```
 
-### 3.5.2 explicit 强制显式转换 ^6nhi9i
+### 3.6.2 explicit 强制显式转换 ^6nhi9i
 
 对于没有使用 `explicit` 修饰的类，若其存在<font color="#c00000">只有一个</font><span style="background:#fff88f"><font color="#c00000">非</font></span><font color="#c00000">默认参数</font>的构造函数时，那么该类就允许<font color="#c00000">由一个非默认参数的变量隐式转换为该类</font>。
 
@@ -1894,7 +1909,7 @@ int main()
 }
 ```
 
-### 3.5.3 constexpr 编译期求值
+### 3.6.3 constexpr 编译期求值
 
 `constexpr` 关键字用于指定<font color="#c00000">变量或函数</font>使其在<font color="#c00000">编译期完成求值</font>，其有如下特性：
 - `constexpr` 修饰<font color="#c00000">常量</font>，<font color="#c00000">常量</font>在编译期完成求值
@@ -1904,7 +1919,7 @@ int main()
 - `constexpr` <span style="background:#fff88f"><font color="#c00000">仅</font></span><font color="#c00000">在修饰函数时</font>可能会延后到运行时求值，其他两种情况均<span style="background:#fff88f"><font color="#c00000">一定在编译期求值</font></span>。
 - `constexpr` 修饰函数时，<span style="background:#fff88f"><font color="#c00000">必须在声明处使用</font></span>，不过通常推荐声明和定义写在一起。
 
-#### 3.5.3.1 constexpr 常量
+#### 3.6.3.1 constexpr 常量
 
 `constexpr` 会在编译期确定常量的值，其与 ` const ` 常量的区别：
 
@@ -1916,7 +1931,7 @@ int array1[runtime_const];             // 错误，C++不支持VLA
 int array2[compile_const];             // 正确，编译期已经求值
 ```
 
-#### 3.5.3.2 constexpr 函数
+#### 3.6.3.2 constexpr 函数
 
 `constexpr` 修饰函数后，编译器会<span style="background:#fff88f"><font color="#c00000">尝试</font></span>对该函数在编译期求值：
 - 若输入的参数为常量，则编译期会完成求值
@@ -1959,14 +1974,14 @@ constexpr int fact_5 = factorial(5);  // 编译时计算：120
 constexpr int fib_10 = fibonacci(10); // 编译时计算：55
 ```
 
-#### 3.5.3.3 constexpr 构造函数
+#### 3.6.3.3 constexpr 构造函数
 
 `constexpr` 构造函数可以在编译期构造<font color="#c00000">常量</font>对象
 
 
-### 3.5.4 consteval 
+### 3.6.4 consteval 
 
-### 3.5.5 using
+### 3.6.5 using
 
 在C++中，`using` 主要有如下的用法：
 1. 命名空间引入
@@ -1974,26 +1989,26 @@ constexpr int fib_10 = fibonacci(10); // 编译时计算：55
 3. 类继承中的成员引入
 4. 使用枚举
 
-#### 3.5.5.1 命名空间引入
+#### 3.6.5.1 命名空间引入
 
 using引入命名空间时，有如下两种的引入方式：
 1. 引入整个命名空间(即 `using namespace std;` )
 2. 引入特定成员，例如 `using namespace std::string` ，随后即可使用 `string`
 通常来说更推荐第二种引入方式
 
-#### 3.5.5.2 提供类别别名
+#### 3.6.5.2 提供类别别名
 
 ```CPP
 using xxCallback = std::function<void(const xx&)>;
 ```
 
-#### 3.5.5.3 类继承中的成员引入
+#### 3.6.5.3 类继承中的成员引入
 
 类继承中的成员引入可以用于<font color="#c00000">重写部分成员</font>和<font color="#c00000">修改成员权限</font>，具体可见章节[[CPP/C2CPP/C2CPP#^464qd9|成员引入]]与[[CPP/C2CPP/C2CPP#^cvt59v|成员权限修改]]：
 ![[CPP/C2CPP/C2CPP#3 1  3 4 成员引入 using 464qd9]]
 ![[CPP/C2CPP/C2CPP#3 1 3 5 成员权限修改 using cvt59v]]
 
-#### 3.5.5.4 简化枚举类(C++20)
+#### 3.6.5.4 简化枚举类(C++20)
 
 在C++20之前，当使用枚举类时(`enum class`)，必须为预定义的枚举添加类名：
 
@@ -2010,7 +2025,7 @@ void paint() {
 }
 ```
 
-### 3.5.6 函数关键字汇总及要求
+### 3.6.6 函数关键字汇总及要求
 
 在C++中，函数关键字主要可以分为前置关键字和后置关键字。
 
@@ -2036,7 +2051,7 @@ $$
 \underbrace{=0}_{\text{仅声明}}
 $$
 
-#### 3.5.6.1 前置关键字
+#### 3.6.6.1 前置关键字
 
 前置关键字需要放到函数的返回值类型之前，<font color="#c00000">用于修饰函数本身的性质</font>(储存方式、链接属性、构造规则等)
 
@@ -2051,7 +2066,7 @@ $$
 | `consteval` | 编译期计算  | 声明+定义(头文件) | **强制编译期**：C++20引入，函数**必须**在编译期执行。  |
 | `template`  | 泛型     | 声明+定义(头文件) | **模板**：定义泛型函数。                     |
 
-#### 3.5.6.2 后置关键字
+#### 3.6.6.2 后置关键字
 
 后置关键字放置于函数的参数列表 `(...)` 之后，通常用于：
 - 修饰隐含的 `this` 指针
@@ -2068,9 +2083,9 @@ $$
 | `&` / `&&` | 引用限定符     | <font color="#c00000">声明+定义</font> | **C++11新特性**：限制函数只能被左值对象(`&`)或右值对象(`&&`)调用。 |
 | `= 0`      | 纯虚函数      |                只在声明                | **纯虚**：没有实现，类变为抽象类。                         |
 
-## 3.6 异常系统及设计(std::exception)
+## 3.7 异常系统及设计(std::exception)
 
-### 3.6.1 异常的基本原理
+### 3.7.1 异常的基本原理
 
 和其他语言一样，C++中的异常主要也分为尝试、抛出、捕获三部分：
 - 尝试(`try`)：尝试可能抛出异常的代码块
@@ -2093,7 +2108,7 @@ $$
 3. 常用的异常类别有：
 	1. `std::runtime_error` ：运行时错误
 
-### 3.6.2 异常系统的设计
+### 3.7.2 异常系统的设计
 
 在使用异常系统之前，首先：
 - <font color="#c00000">要考虑清楚到底用不用异常</font>，<font color="#c00000">对于整个项目而言风格要统一</font>。
@@ -2134,7 +2149,7 @@ $$
 3. 由于抛出异常时会立即退出当前作用栈，会导致栈中 `new` 的对象难以 `delete` ，因此使用异常时应当配合[[CPP/C2CPP/C2CPP#^9cldls|RAII范式]]。
 4. 对派生类的拦截应当在基类前
 
-### 3.6.3 异常嵌套(C++11) ^81jlmr
+### 3.7.3 异常嵌套(C++11) ^81jlmr
 
 在C++中异常嵌套通常用于上文所述的二次封装。而<span style="background:#fff88f"><font color="#c00000">异常嵌套可以理解为"洋葱"</font></span>，<span style="background:#fff88f"><font color="#c00000">外层套着内层</font></span>：
 - 在封装时调用 `std::throw_with_nested(e)` ，将现在上下文中正在处理的异常包装到新的异常 `e` 当中
@@ -2189,7 +2204,7 @@ void print_exception_stack(const std::exception& e, int level = 0) {
 3. 对于普通业务场景，通常不需要"拆洋葱"，甚至不需要捕获异常
 4. 对于日志等需求，<font color="#c00000">则应当</font><span style="background:#fff88f"><font color="#c00000">递归地</font></span><font color="#c00000">"拆洋葱"</font>，直到拆到没有新的异常(具体可见上方示例)
 
-## 3.7 错误处理机制汇总
+## 3.8 错误处理机制汇总
 
 
 至此，我们已经学习了C++中如下的几种错误处理机制：
@@ -2254,9 +2269,9 @@ void print_exception_stack(const std::exception& e, int level = 0) {
 		- <font color="#c00000">对外边界不应当</font>使用 `throw` 抛出异常：
 			- 对外边界：公有API、线程入口、IPC句柄、插件回调等
 
-## 3.8 C++不支持的C语言特性
+## 3.9 C++不支持的C语言特性
 
-### 3.8.1 VLA可变长数组
+### 3.9.1 VLA可变长数组
 
 在C99之后，C语言就支持了可变长数组，但是无论哪个C++标准均不支持可变长数组。
 
