@@ -389,16 +389,47 @@ comp1.operator==(comp2);
 引用与非引用实体之间的赋值：
 - 将实体赋值给引用，<font color="#c00000">则引用会指向该实体</font>
 - 将引用赋值给实体，<font color="#c00000">则引用的值会</font><span style="background:#fff88f"><font color="#c00000">拷贝</font></span><font color="#c00000">到该实体</font>，常见场景：
-	- 返回值类型为引用的函数，赋值给了实体
+	- 返回值类型为引用的函数，赋值给了实体([[CPP/C2CPP/C2CPP#^8eltqy|引用的链式调用]]中，返回值需要规定为引用)
 
-### 3.2.2 const与引用
+### 3.2.2 引用的链式调用特性 ^8eltqy
+
+在其他语言中通常有链式调用特性，例如：
+
+```Python
+result = (
+	Query(users)
+	.where(lambda u: u.city == "Shanghai")
+	.where(lambda u: u.age >= 26)
+	.order_by(lambda u: u.age, reverse=True)
+	.take(2)
+	.to_list()
+)
+```
+
+而在C++中，可以通过将返回值改为该类别的引用形式实现链式调用：
+
+```CPP
+class Person {
+public:
+	Person& name(std::string name) { m_name = std::move(name); };
+	Person& age(int age) { m_age = age; };
+	Person& gender(Gender g) { m_gender = g; };
+}
+
+// 调用：
+void func() {
+	auto person = Person().name("张三").age(35).gender(Gender::Male);
+}
+```
+
+### 3.2.3 const与引用
 
 
 
 
 
 
-### 3.2.3 左值引用与右值引用(C++11)
+### 3.2.4 左值引用与右值引用(C++11)
 
 
 
