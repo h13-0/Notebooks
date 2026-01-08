@@ -1972,7 +1972,7 @@ $$
 | `&` / `&&` | 引用限定符     | <font color="#c00000">声明+定义</font> | **C++11新特性**：限制函数只能被左值对象(`&`)或右值对象(`&&`)调用。 |
 | `= 0`      | 纯虚函数      |                只在声明                | **纯虚**：没有实现，类变为抽象类。                         |
 
-## 3.6 异常系统及设计
+## 3.6 异常系统及设计(std::exception)
 
 ### 3.6.1 异常的基本原理
 
@@ -2089,13 +2089,21 @@ void print_exception_stack(const std::exception& e, int level = 0) {
 
 应当说明的是：
 1. 如果在 `catch` 块之外调用 `std::throw_with_nested` ，<font color="#c00000">则其中包裹的异常为</font> `nullptr`，<font color="#c00000">是一个无用且危险的行为</font>(当调用 `std::rethrow_if_nested` ，拆到 `nullptr` 时会直接触发 `std::terminate()` )
-2. 如果
+2. 调用 `std::rethrow_if_nested` 会从外到内的拆洋葱，如果当前异常还内嵌的有其他yi c
 3. 对于普通业务场景，通常不需要"拆洋葱"，甚至不需要捕获异常
 4. 对于日志等需求，<font color="#c00000">则应当</font><span style="background:#fff88f"><font color="#c00000">递归地</font></span><font color="#c00000">"拆洋葱"</font>，直到拆到没有新的异常(具体可见上方示例)
 
-## 3.7 C++不支持的C语言特性
 
-### 3.7.1 VLA可变长数组
+## 3.7 错误处理机制汇总
+
+
+
+
+
+
+## 3.8 C++不支持的C语言特性
+
+### 3.8.1 VLA可变长数组
 
 在C99之后，C语言就支持了可变长数组，但是无论哪个C++标准均不支持可变长数组。
 
