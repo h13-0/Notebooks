@@ -1099,7 +1099,7 @@ void func(std::stop_token stoken, int id)
 }
 ```
 
-### 3.3.5 错误码(std::error_code)(C++11)
+### 3.3.5 错误码(std::error_code)(C++11) ^i8qvar
 
 在C++11之前，标准提供的错误机制主要有如下两种：
 1. 全局的 `errno` ，是全局变量，线程不安全
@@ -2101,17 +2101,30 @@ void print_exception_stack(const std::exception& e, int level = 0) {
 
 至此，我们已经学习了C++中如下的几种错误处理机制：
 - C风格返回值：
-	- 依赖机制：
-		- `int` 或 `enun` 类型
-		- `std::error_code` 类型
+	- 依赖机制：`int` 或 `enun` 等类型
 	- 优缺点：
 		- 优点：
+			- 运行效率高、语言标准版本要求低
+			- 可以传递预定义的错误原因
 		- 缺点：
-			- 无法在返回值中同时接收结果和(大多数情况下)
+			- <font color="#c00000">占用返回值</font>，真正的运行结果需要通过引用方式传出(大多数情况下)
+			- <font color="#c00000">无法获取字符串风格的错误原因</font>
+			- 错误分支处理复杂、需要判定每个可能失败的操作
+- 错误码：
+	- 依赖机制：[[CPP/C2CPP/C2CPP#^i8qvar|std::error_code]]
+	- 优缺点：
+		- 优点：
+			- 运行效率高
+			- 可以传递字符串风格的错误原因
+		- 缺点：
+			- <font color="#c00000">占用返回值</font>，真正的运行结果需要通过引用方式传出
+			- 错误分支处理复杂、需要判定每个可能失败的操作
 - 异常 `std::exception` ：
 	- 依赖机制：`try...catch` 
 	- 优缺点：
 		- 优点：
+			- 可以一次性包裹一大块代码，<font color="#c00000">不用单独判定每个可能失败的操作</font>
+			- 不占用返回值
 		- 缺点：
 			- 性能开销大
 			- 部分开发环境中被禁用(嵌入式、游戏开发)
@@ -2119,6 +2132,7 @@ void print_exception_stack(const std::exception& e, int level = 0) {
 	- 依赖机制：[[CPP/C2CPP/C2CPP#^fatdl4|std::optional]]
 	- 优缺点：
 		- 优点：
+			- 不占用返回值
 		- 缺点：
 			- 
 - 预期对象
