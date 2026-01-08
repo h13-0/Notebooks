@@ -411,9 +411,18 @@ result = (
 ```CPP
 class Person {
 public:
-	Person& name(std::string name) { m_name = std::move(name); };
-	Person& age(int age) { m_age = age; };
-	Person& gender(Gender g) { m_gender = g; };
+	Person& name(std::string name) { 
+		m_name = std::move(name);
+		return *this;
+	};
+	Person& age(int age) { 
+		m_age = age;	
+		return *this;
+	};
+	Person& gender(Gender g) {
+		m_gender = g;
+		return *this;
+	};
 }
 
 // 调用：
