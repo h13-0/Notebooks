@@ -385,11 +385,16 @@ comp1.operator==(comp2);
 引用相较于指针：
 - 引用更加安全：不存在NULL，也不会有野指针
 - 引用更加方便：不需要引用和解引用(`&`、`*`、` -> `)
+
+引用与非引用实体之间的赋值：
+- 将实体赋值给引用，<font color="#c00000">则引用会指向该实体</font>
+- 将引用赋值给实体，<font color="#c00000">则引用的值会</font><span style="background:#fff88f"><font color="#c00000">拷贝</font></span><font color="#c00000">到该实体</font>，常见场景：
+	- 返回值类型为引用的函数，赋值给了实体
+
 ### 3.2.2 const与引用
 
 
 
-### 引用与fa hui z
 
 
 
