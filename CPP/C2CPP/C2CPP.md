@@ -3029,7 +3029,22 @@ size_type count( const K& x ) const;
 
 ### 4.3.1 排序
 
-#### 4.3.1.1 
+#### 4.3.1.1 通用基础内容
+
+##### 4.3.1.1.1 Compare要求
+
+Compare要求建立如下的严格弱序关系：
+- <span style="background:#fff88f"><font color="#c00000">相等时返回</font></span> `false`： `compare(a, a) == false`
+- 不可反转： `compare(a, b) == true` 则 `compare(b, a) == false`
+- 可传递性：
+	- 如果 `compare(a, b) == true` 且 `compare(b, c) == true` 
+	- 则 `compare(a, c) == true` 
+且其返回值要有如下特性：
+- `BooleanTestable` (C++20前) 或 `boolean-testable` (C++20其)
+
+
+
+
 
 #### 4.3.1.2 std::sort(混合排序)
 
