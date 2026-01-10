@@ -3029,10 +3029,45 @@ size_type count( const K& x ) const;
 
 ### 4.3.1 排序
 
-#### 4.3.1.1 std::sort(混合排序)
+#### 4.3.1.1 
+
+#### 4.3.1.2 std::sort(混合排序)
 
 `std::sort` 使用的排序方法会根据需要排序的元素数量动态切换排序方式，是<span style="background:#fff88f"><font color="#c00000">不稳定</font></span><font color="#c00000">排序</font>。其先使用快速排序对数据进行分段，
 - 
+
+##### 4.3.1.2.1 普通升序排序(串行)
+
+```CPP
+template< class RandomIt >
+void sort( RandomIt first, RandomIt last );
+```
+
+##### 4.3.1.2.2 按指定策略升序排序
+
+```CPP
+template< class ExecutionPolicy, class RandomIt >
+void sort( ExecutionPolicy&& policy,
+           RandomIt first, RandomIt last );
+```
+
+
+
+##### 4.3.1.2.3 按自定义逻辑执行排序(串行)
+
+```CPP
+template< class RandomIt, class Compare >
+void sort( RandomIt first, RandomIt last, Compare comp );
+```
+
+##### 4.3.1.2.4 按自定义逻辑和指定策略执行排序
+
+```CPP
+template< class ExecutionPolicy, class RandomIt, class Compare >
+void sort( ExecutionPolicy&& policy,
+           RandomIt first, RandomIt last, Compare comp );
+```
+
 
 ### 4.3.2 替换
 
