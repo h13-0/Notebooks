@@ -3031,7 +3031,7 @@ size_type count( const K& x ) const;
 
 #### 4.3.1.1 通用基础内容
 
-##### 4.3.1.1.1 Compare要求
+##### 4.3.1.1.1 Compare要求 ^t2nyfa
 
 Compare要求建立如下的严格弱序关系：
 - <span style="background:#fff88f"><font color="#c00000">相等时返回</font></span> `false`： `compare(a, a) == false`
@@ -3074,6 +3074,9 @@ void sort( ExecutionPolicy&& policy,
 template< class RandomIt, class Compare >
 void sort( RandomIt first, RandomIt last, Compare comp );
 ```
+
+其中：
+- `Compare comp` 应当满足[[CPP/C2CPP/C2CPP#^t2nyfa|Compare要求]]
 
 ##### 4.3.1.2.4 按自定义逻辑和指定策略执行排序
 
