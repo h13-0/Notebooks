@@ -3021,6 +3021,24 @@ size_type count( const K& x ) const;
 
 `unordered_map` 提供了 `.begin()` 和 `.end()` 两个获取迭代器的方法，返回的类型为前向迭代器。
 
+##### 4.2.5.2.11 k, v遍历
+
+```CPP
+std::unordered_map<std::string, int> scores = {
+    {"Alice", 90},
+    {"Bob", 85},
+    {"Charlie", 95}
+};
+
+// [key, val] 直接对应键和值
+// 使用 const auto& 避免拷贝，提高效率
+for (const auto& [name, score] : scores) {
+    std::cout << "Key: " << name << ", Value: " << score << "\n";
+}
+```
+
+
+
 ### 4.2.6 std::map
 
 `std::map` 内部通常基于红黑树实现，<font color="#c00000">元素始终按键的升序排序</font>。
