@@ -2383,6 +2383,8 @@ STL容器主要有如下三类：
 	3. `std::unordered_map`
 	4. `std::unordered_multimap`
 
+### 4.2.1 容器的常用成员函数及补充说明
+
 <span style="background:#fff88f"><font color="#c00000">其常用成员函数有</font></span>：
 - 元素增加：
 	- `insert()` ：插入元素
@@ -2394,6 +2396,7 @@ STL容器主要有如下三类：
 	- 
 - 元素删除：
 	- `erase()` ：删除元素
+		- 补充说明：[[CPP/C2CPP/C2CPP#^8t8324|遍历时安全删除元素]]
 	- `pop_back()` ：删除末尾元素
 - 元素修改：
 	- `operator[]` ：访问指定元素
@@ -2431,20 +2434,41 @@ STL容器主要有如下三类：
 	- `end()` ：获取指向末尾的下一个元素的迭代器
 - 
 
+#### 4.2.1.1 遍历时安全删除元素 ^8t8324
 
-### 4.2.1 std::initializer_list
+为避免遍历时删除中可能遇到的：
+- 迭代器失效：通过 `erase(it)` 删除迭代器指向的元素后，迭代器 `it` 会失效，无法再 `it++` 等操作
+- 逻辑错误：错误跳过某些元素
+等问题，建议使用以下范式：
+
+```CPP
+for(auto it = container; it < container.end(); ) { // 注意这里不要使用 `it++`
+	if(condition(it)) {
+		it = erase(it);
+	} else {
+	
+	}
+}
+
+
+```
+
+
+
+
+### 4.2.2 std::initializer_list
 
 <font color="#9bbb59">初始化列表</font>( `initializer_list` )是一个轻量化的<span style="background:#fff88f"><font color="#c00000">只读容器</font></span>，<font color="#c00000">通常其只能通过特殊的构造函数构造</font>。
 需注意的是，<font color="#9bbb59">初始化列表</font>和构造函数的<font color="#9bbb59">成员初始化列表</font>是不同的概念。
 
-#### 4.2.1.1 模板定义
+#### 4.2.2.1 模板定义
 
 ```CPP
 template< class T >
 class initializer_list;
 ```
 
-#### 4.2.1.2 常用构造函数
+#### 4.2.2.2 常用构造函数
 
 ```CPP
 initializer_list() noexcept;
@@ -2466,9 +2490,9 @@ private:
 		: begin_(first), size_(count) {}
 ```
 
-#### 4.2.1.3 常用方法
+#### 4.2.2.3 常用方法
 
-##### 4.2.1.3.1 查询元素数量(size)
+##### 4.2.2.3.1 查询元素数量(size)
 
 ```CPP
 size_type size() const noexcept;
@@ -2476,18 +2500,18 @@ size_type size() const noexcept;
 
 其实际上返回的是表达式 `std::distance(begin(), end())` 的值，类型为 `std::size_t` 。
 
-##### 4.2.1.3.2 迭代器(begin、end)
+##### 4.2.2.3.2 迭代器(begin、end)
 
 ```CPP
 const T* begin() const noexcept;
 const T* end() const noexcept;
 ```
 
-### 4.2.2 std::basic_string(C++98) ^33a2f1
+### 4.2.3 std::basic_string(C++98) ^33a2f1
 
 `std::basic_string` 为C++为若干种字符串类型(`char` 、 `wchar_t` 、`char32_t` 等)提供的统一容器，用于适配不同的字符串及编码类型。
 
-#### 4.2.2.1 模板定义
+#### 4.2.3.1 模板定义
 
 ```CPP
 template<
@@ -2507,9 +2531,9 @@ template<
 | `std::u32string` | `std::basic_string<char32_t>` |
 | `std::wstring`   | `std::basic_string<wchar_t>`  |
 
-#### 4.2.2.2 常用方法
+#### 4.2.3.2 常用方法
 
-##### 4.2.2.2.1 插入字符(insert)
+##### 4.2.3.2.1 插入字符(insert)
 
 插入多个指定字符：
 
@@ -2570,7 +2594,7 @@ basic_string& insert( size_type index, const StringViewLike& t,
                       size_type t_index, size_type count = npos );
 ```
 
-##### 4.2.2.2.2 删除字符(erase)
+##### 4.2.3.2.2 删除字符(erase)
 
 从指定引索开始删除至多指定数量的字符：
 
@@ -2592,7 +2616,7 @@ iterator erase( const_iterator position );
 iterator erase( const_iterator first, const_iterator last );
 ```
 
-##### 4.2.2.2.3 查询/修改元素(operator\[\])
+##### 4.2.3.2.3 查询/修改元素(operator\[\])
 
 通过index获取字符：
 
@@ -2601,9 +2625,9 @@ CharT& operator[]( size_type pos );
 const CharT& operator[]( size_type pos ) const;
 ```
 
-##### 4.2.2.2.4 访问指定位置的字符(at)
+##### 4.2.3.2.4 访问指定位置的字符(at)
 
-##### 4.2.2.2.5 查找字符串或字符(find)
+##### 4.2.3.2.5 查找字符串或字符(find)
 
 从指定位置开始查找子字符串：
 
@@ -2630,7 +2654,7 @@ size_type find( const StringViewLike& t,
                 size_type pos = 0 ) const noexcept(/* see below */);
 ```
 
-##### 4.2.2.2.6 获取c语言字符串版本指针(c_str)
+##### 4.2.3.2.6 获取c语言字符串版本指针(c_str)
 
 ```CPP
 const CharT* c_str() const;
@@ -2641,11 +2665,11 @@ const CharT* c_str() const;
 2. 在原字符串容量被修改前有效
 3. <font color="#c00000">不可通过该指针写入数据</font>(UB)
 
-##### 4.2.2.2.7 清空字符串(clear)
+##### 4.2.3.2.7 清空字符串(clear)
 
 
 
-##### 4.2.2.2.8 替换子字符串(replace)
+##### 4.2.3.2.8 替换子字符串(replace)
 
 需要注意，`replace` 是用于将字符串的指定区间替换为另一个字符串，而非字符或子字符串的匹配替换(该方法为 `std::replace` )。
 
@@ -2715,29 +2739,29 @@ basic_string& replace( size_type pos, size_type count,
 
 
 
-#### 4.2.2.3 基本特性
+#### 4.2.3.3 基本特性
 
-##### 4.2.2.3.1 sizeof(string)
+##### 4.2.3.3.1 sizeof(string)
 
 在x86架构下，`sizeof(std::string) = 28`；
 在x86_64架构下，`sizeof(std::string) = 40`；
 而 `sizeof(std::string)` 的值<u><font color="#c00000">不随字符串内容发生改变</font></u>。
-##### 4.2.2.3.2 string作为struct的成员时
+##### 4.2.3.3.2 string作为struct的成员时
 
 string可以作为struct的成员，其size计算符合内存对齐等要求。
 
-#### 4.2.2.4 basic_string_view
+#### 4.2.3.4 basic_string_view
 
 `std::basic_string_view` 是零拷贝观察字符串数据的一种方式，具体可见章节：
 - [[CPP/C2CPP/C2CPP#^2d6kyg|std::basic_string_view]]
 
-### 4.2.3 array
+### 4.2.4 array
 
-### 4.2.4 vector
+### 4.2.5 vector
 
 `std::vector` 是C++的动态大小的数组实现，其元素被顺序存储，因此其可以被迭代器和引索顺序访问。其会自动扩展其所需要的内存空间，并且通常其所占用的内存比同大小的静态数组要多。其空间的动态分配仅会发生在其所保留的额外空间耗尽时触发。
 
-#### 4.2.4.1 模板定义
+#### 4.2.5.1 模板定义
 
 ```CPP
 template<
@@ -2753,26 +2777,26 @@ template<
 
 但是需要注意<span style="background:#fff88f"><font color="#c00000">慎用bool类型作为vector的元素</font></span>，除非明确地要使用 `vector<bool>` 的特性。
 
-#### 4.2.4.2 常用方法
+#### 4.2.5.2 常用方法
 
 
-##### 4.2.4.2.1 构造函数
+##### 4.2.5.2.1 构造函数
 
-###### 4.2.4.2.1.1 创建包含n个指定默认元素的vector
+###### 4.2.5.2.1.1 创建包含n个指定默认元素的vector
 
 ```CPP
 explicit vector( size_type count,
                  const Allocator& alloc = Allocator() );
 ```
 
-###### 4.2.4.2.1.2 创建包含n个指定值的vector
+###### 4.2.5.2.1.2 创建包含n个指定值的vector
 
 ```CPP
 vector( size_type count, const T& value,
         const Allocator& alloc = Allocator() );
 ```
 
-###### 4.2.4.2.1.3 由输入迭代器构造vector
+###### 4.2.5.2.1.3 由输入迭代器构造vector
 
 ```C
 template< class InputIt >
@@ -2783,15 +2807,15 @@ vector( InputIt first, InputIt last,
 
 
 
-##### 4.2.4.2.2 迭代器
+##### 4.2.5.2.2 迭代器
 
 `vector` 返回的迭代器为随机访问迭代器，可通过 `.begin()` 、 `.end()` 获取。
 
-### 4.2.5 std::unordered_map
+### 4.2.6 std::unordered_map
 
 `std::unordered_map` <font color="#c00000">基于哈希表实现</font>，内部元素无序存储。
 
-#### 4.2.5.1 模板定义
+#### 4.2.6.1 模板定义
 
 ```CPP
 template<
@@ -2810,9 +2834,9 @@ template<
 - `class KeyEqual` 为键值比较函数对象类型
 - `class Allocator` 为内存分配器类型
 
-#### 4.2.5.2 常用方法
+#### 4.2.6.2 常用方法
 
-##### 4.2.5.2.1 构造函数
+##### 4.2.6.2.1 构造函数
 
 ```CPP
 unordered_map();
@@ -2823,15 +2847,15 @@ unordered_map();
 - `mapped_type` ：即 `class T` ，值类型
 - `value_type` ：`std::pair<const Key, T>` ^o36e6j 
 
-##### 4.2.5.2.2 清空容器(clear)
+##### 4.2.6.2.2 清空容器(clear)
 
 ```CPP
 void clear() noexcept;
 ```
 
-##### 4.2.5.2.3 插入元素(insert)
+##### 4.2.6.2.3 插入元素(insert)
 
-###### 4.2.5.2.3.1 插入单个元素
+###### 4.2.6.2.3.1 插入单个元素
 
 ```CPP
 std::pair<iterator, bool> insert( const value_type& value ); 
@@ -2854,7 +2878,7 @@ auto ret1 = map.insert({1, "one"});               // ret1.second == true
 auto ret2 = map.insert(std::make_pair(1, "one")); // 此时ret2.second为false
 ```
 
-###### 4.2.5.2.3.2 批量插入(通过初始化列表)
+###### 4.2.6.2.3.2 批量插入(通过初始化列表)
 
 ```CPP
 void insert( std::initializer_list<value_type> ilist );
@@ -2867,7 +2891,7 @@ void insert( std::initializer_list<value_type> ilist );
 	- 若参数中有重复键，则只插入第一个
 	- 不会修改已有键值
 
-###### 4.2.5.2.3.3 批量插入(通过迭代器)
+###### 4.2.6.2.3.3 批量插入(通过迭代器)
 
 ```C
 template< class InputIt >
@@ -2876,11 +2900,11 @@ void insert( InputIt first, InputIt last );
 
 
 
-###### 4.2.5.2.3.4 带位置提示的插入
+###### 4.2.6.2.3.4 带位置提示的插入
 
-##### 4.2.5.2.4 删除元素(erase)
+##### 4.2.6.2.4 删除元素(erase)
 
-###### 4.2.5.2.4.1 通过key值删除
+###### 4.2.6.2.4.1 通过key值删除
 
 ```CPP
 size_type erase( const Key& key );
@@ -2894,7 +2918,7 @@ size_type erase( const Key& key );
 - 平均 $O(1)$
 - 最坏 $O(size)$
 
-###### 4.2.5.2.4.2 通过迭代器删除单个元素
+###### 4.2.6.2.4.2 通过迭代器删除单个元素
 
 ```CPP
 iterator erase( iterator pos );
@@ -2906,7 +2930,7 @@ iterator erase( iterator pos );
 		- 因为<font color="#c00000">只要map不为空</font>，<font color="#c00000">其最后一个元素就不是</font> `end()` ，所以<font color="#c00000">非空时</font>删除最后一个元素应当使用 `map.erase(std::prev(map.end()))`
 - 返回值为被删除元素之后元素的迭代器。如果删除的是最后一个元素，则返回 `end()` 。
 
-###### 4.2.5.2.4.3 通过迭代器范围删除元素
+###### 4.2.6.2.4.3 通过迭代器范围删除元素
 
 ```CPP
 iterator erase( const_iterator first, const_iterator last );
@@ -2925,9 +2949,9 @@ iterator erase( const_iterator first, const_iterator last );
 - 平均 $O(n)$
 - 最坏 $O(n\times size)$
 
-##### 4.2.5.2.5 查询(at)
+##### 4.2.6.2.5 查询(at)
 
-###### 4.2.5.2.5.1 普通查找
+###### 4.2.6.2.5.1 普通查找
 
 普通查找有如下两个不同的成员函数：
 
@@ -2949,7 +2973,7 @@ std::string& ref = map.at(1);
 const std::string& cref = const_map.at(1);
 ```
 
-###### 4.2.5.2.5.2 异构查找(C++26)
+###### 4.2.6.2.5.2 异构查找(C++26)
 
 在普通查找时，其参数只能为Key的类型，而不能是可以和Key透明比较的类型。例如：
 
@@ -2963,7 +2987,7 @@ int value1 = traditional_map.at("view");
 int value2 = transparent_map.at(std::string_view("view"));
 ```
 
-##### 4.2.5.2.6 查询/新增(operator\[\])
+##### 4.2.6.2.6 查询/新增(operator\[\])
 
 其对应的运算符重载函数签名为：
 
@@ -2979,7 +3003,7 @@ T& operator[]( Key&& key );
 | 键值不存在时 | 抛出异常   | 插入新元素        |
 | 只读访问   | 可用     | 不可，会插入新元素    |
 
-##### 4.2.5.2.7 查找(find)
+##### 4.2.6.2.7 查找(find)
 
 `find` 用于查找是否包含对应的键值：
 
@@ -2999,7 +3023,7 @@ const_iterator find( const K& x ) const;
 
 该函数的返回值为指向键值对应的元素的迭代器，若没有该元素则返回 `end()` 迭代器
 
-##### 4.2.5.2.8 查找(count)
+##### 4.2.6.2.8 查找(count)
 
 `count` 也可用于查找是否存在对应的元素，由于hash表特性，其值只能为0或1。
 
@@ -3014,14 +3038,14 @@ template< class K >
 size_type count( const K& x ) const;
 ```
 
-##### 4.2.5.2.9 原地插入(emplace)
+##### 4.2.6.2.9 原地插入(emplace)
 
 
-##### 4.2.5.2.10 迭代器
+##### 4.2.6.2.10 迭代器
 
 `unordered_map` 提供了 `.begin()` 和 `.end()` 两个获取迭代器的方法，返回的类型为前向迭代器。
 
-##### 4.2.5.2.11 k, v遍历
+##### 4.2.6.2.11 k, v遍历
 
 ```CPP
 std::unordered_map<std::string, int> scores = {
@@ -3039,7 +3063,7 @@ for (const auto& [name, score] : scores) {
 
 
 
-### 4.2.6 std::map
+### 4.2.7 std::map
 
 `std::map` 内部通常基于红黑树实现，<font color="#c00000">元素始终按键的升序排序</font>。
 
