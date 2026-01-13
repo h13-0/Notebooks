@@ -2444,17 +2444,18 @@ STL容器主要有如下三类：
 ```CPP
 for(auto it = container; it < container.end(); ) { // 注意这里不要使用 `it++`
 	if(condition(it)) {
-		it = erase(it);
+		it = container.erase(it);
 	} else {
-	
+		it ++;
 	}
 }
-
-
 ```
 
-
-
+注意：
+1. <font color="#c00000">循环中并不是每次都执行</font> `it++` ，因此：
+	1. 循环中不要每次执行 `it++`
+	2. 未删除元素时别忘了 `it++`
+2. 使用 `it = erase(it)` 在删除元素时更新迭代器
 
 ### 4.2.2 std::initializer_list
 
