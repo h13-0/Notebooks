@@ -3052,7 +3052,8 @@ for (const auto& [name, score] : scores) {
 ##### 4.3.1.1.1 Compare要求 ^t2nyfa
 
 Compare要求建立如下的严格弱序关系：
-- <span style="background:#fff88f"><font color="#c00000">相等时返回</font></span> `false`： `compare(a, a) == false`
+- <font color="#c00000">弱序时返回</font> `true` ：`compare(0, 1) == true`
+- <span style="background:#fff88f"><font color="#c00000">相等时返回</font></span> `false` ： `compare(a, a) == false`
 - 不可反转： `compare(a, b) == true` 则 `compare(b, a) == false`
 - 可传递性：
 	- 如果 `compare(a, b) == true` 且 `compare(b, c) == true` 
