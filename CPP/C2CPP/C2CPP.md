@@ -2414,7 +2414,7 @@ STL容器主要有如下三类：
 		- 若元素数量小于目标容器大小，则填充默认值或指定值
 	- `swap()` 
 	- `operator=` ：容器赋值
-	- `assign()` ：为容器批量赋值
+	- `assign()` ：为容器批量<font color="#c00000">赋值</font>(注意不是分配空间)
 	- `assign_range()` 
 	- 
 - 容器容量：
@@ -2756,11 +2756,19 @@ string可以作为struct的成员，其size计算符合内存对齐等要求。
 `std::basic_string_view` 是零拷贝观察字符串数据的一种方式，具体可见章节：
 - [[CPP/C2CPP/C2CPP#^2d6kyg|std::basic_string_view]]
 
-### 4.2.4 array
+### 4.2.4 array(C++11)
 
+#### 4.2.4.1 模板定义
 
+```CPP
+template<
+    class T,
+    std::size_t N
+> struct array;
+```
 
-
+注意：
+- `std::size_t N` <span style="background:#fff88f"><font color="#c00000">必须在编译器即可确定</font></span>，<font color="#c00000">即也不支持动态数组大小</font>
 
 ### 4.2.5 vector
 
