@@ -2414,14 +2414,13 @@ STL容器主要有如下三类：
 		- 若元素数量小于目标容器大小，则填充默认值或指定值
 	- `swap()` 
 	- `operator=` ：容器赋值
-	- `assign()` ：为容器批量<font color="#c00000">赋值</font>(注意不是分配空间)
+	- `assign()` ：为容器批量<font color="#c00000">赋值</font>(注意不是分配空间，区分于 `reserve` )
 	- `assign_range()` 
-	- 
 - 容器容量：
 	- `empty()` ：判断是否为空
 	- `size()` ：返回元素成员数量
 	- `max_size()` ：返回最大的可能成员数量
-	- `reserve()` ：预留存储空间
+	- `reserve()` ：<font color="#c00000">预留存储空间</font>
 	- `capacity()` ：返回当前已分配空间中可以容纳的元素数量
 	- `shrink_to_fit()` ：通过释放未使用的内存来减少内存占用
 - 容器访问：
