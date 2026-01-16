@@ -108,6 +108,49 @@ def run_python_script(script_path: Path, arguments: List[str], logger: logging.L
         raise RuntimeError(f"脚本执行失败，退出码 {completed.returncode}: {script_path}")
 
 
+def run_docker_export(
+    docker_cfg: Dict[str, Any],
+    *,
+    base_dir: Path,
+    context: Dict[str, Any],
+    logger: logging.Logger,
+) -> None:
+    docker_path = find_executable(["docker"])
+    image = format_string(docker_cfg["image"], context)
+    vault_dir = resolve_to_path(docker_cfg["vault_dir"], base_dir=base_dir, context=context)
+    output_dir = resolve_to_path(docker_cfg["output_dir"], base_dir=base_dir, context=context)
+
+    env_cfg = docker_cfg.get("env", {})
+    env_args: List[str] = []
+    for key, value in env_cfg.items():
+        env_args.extend(["-e", f"{key}={format_string(str(value), context)}"])
+
+    vault_mount = f"{vault_dir.as_posix()}:/vault"
+    output_mount = f"{output_dir.as_posix()}:/output"
+
+    logger.info("强制拉取 Docker 镜像 %s", image)
+    pull_cmd = [docker_path, "pull", image]
+    completed = subprocess.run(pull_cmd, check=False)
+    if completed.returncode != 0:
+        raise RuntimeError(f"Docker 拉取镜像失败，退出码 {completed.returncode}: {image}")
+
+    run_cmd = [
+        docker_path,
+        "run",
+        "--rm",
+        *env_args,
+        "-v",
+        vault_mount,
+        "-v",
+        output_mount,
+        image,
+    ]
+    logger.info("运行 Docker 导出: %s", " ".join(run_cmd))
+    completed = subprocess.run(run_cmd, check=False)
+    if completed.returncode != 0:
+        raise RuntimeError(f"Docker 导出失败，退出码 {completed.returncode}: {image}")
+
+
 def terminate_process(process_name: str, logger: logging.Logger) -> None:
     """Attempt to terminate a process; ignore if it is not running."""
     if not process_name:
@@ -362,12 +405,9 @@ def main() -> int:
 
     exporter_cfg = scripts_cfg.get("exporter")
     if exporter_cfg:
-        exporter_path = resolve_to_path(exporter_cfg["path"], base_dir=config_dir, context=context)
-        exporter_args = resolve_arguments(exporter_cfg.get("args", []), context=context)
-        run_python_script(exporter_path, exporter_args, logger)
-        process_to_terminate = exporter_cfg.get("terminate_process")
-        if process_to_terminate:
-            terminate_process(format_string(process_to_terminate, context), logger)
+        docker_cfg = exporter_cfg.get("docker")
+        if docker_cfg:
+            run_docker_export(docker_cfg, base_dir=config_dir, context=context, logger=logger)
 
     statistics_cfg = scripts_cfg.get("statistics")
     if statistics_cfg:
