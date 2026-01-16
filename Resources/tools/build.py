@@ -119,6 +119,7 @@ def run_docker_export(
     image = format_string(docker_cfg["image"], context)
     vault_dir = resolve_to_path(docker_cfg["vault_dir"], base_dir=base_dir, context=context)
     output_dir = resolve_to_path(docker_cfg["output_dir"], base_dir=base_dir, context=context)
+    git_branch = format_string(docker_cfg.get("git_branch", ""), context).strip()
 
     env_cfg = docker_cfg.get("env", {})
     env_args: List[str] = []
@@ -128,11 +129,21 @@ def run_docker_export(
     vault_mount = f"{vault_dir.as_posix()}:/vault"
     output_mount = f"{output_dir.as_posix()}:/output"
 
-    logger.info("强制拉取 Docker 镜像 %s", image)
-    pull_cmd = [docker_path, "pull", image]
+    git_path = find_executable(["git"])
+    pull_cmd = [git_path, "-C", str(vault_dir), "pull", "--recurse-submodules"]
+    if git_branch:
+        pull_cmd.extend(["origin", git_branch])
+
+    logger.info("拉取 vault_dir 最新版本: %s", " ".join(pull_cmd))
     completed = subprocess.run(pull_cmd, check=False)
     if completed.returncode != 0:
-        raise RuntimeError(f"Docker 拉取镜像失败，退出码 {completed.returncode}: {image}")
+        raise RuntimeError(f"拉取 vault_dir 失败，退出码 {completed.returncode}: {vault_dir}")
+
+    submodule_cmd = [git_path, "-C", str(vault_dir), "submodule", "update", "--init", "--recursive"]
+    logger.info("更新 vault_dir 子模块: %s", " ".join(submodule_cmd))
+    completed = subprocess.run(submodule_cmd, check=False)
+    if completed.returncode != 0:
+        raise RuntimeError(f"更新 vault_dir 子模块失败，退出码 {completed.returncode}: {vault_dir}")
 
     run_cmd = [
         docker_path,
