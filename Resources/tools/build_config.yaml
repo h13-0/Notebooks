@@ -3,6 +3,7 @@ variables:
   vault_dir: D:/Obsidian/Notebooks
   export_path: D:/Obsidian/export
   docker_image: obsidian-webpage-export:latest
+  vault_git_branch: master
   remote_sync_path: /tmp/notebooks-sync
   deploy_path: /opt/my-app
   statistics_image: statistics/output.png
@@ -16,6 +17,7 @@ scripts:
       image: "{docker_image}"
       vault_dir: "{vault_dir}"
       output_dir: "{export_path}"
+      git_branch: "{vault_git_branch}"
       env:
         EXPORT_ENTIRE_VAULT: "1"
   statistics:
