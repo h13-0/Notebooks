@@ -2,9 +2,7 @@
 variables:
   vault_dir: D:/Obsidian/Notebooks
   export_path: D:/Obsidian/export
-  obsidian_path: C:/Users/Username/AppData/Local/Programs/Obsidian/Obsidian.exe
-  repo_branch: master
-  obsidian_process_name: Obsidian.exe
+  docker_image: obsidian-webpage-export:latest
   remote_sync_path: /tmp/notebooks-sync
   deploy_path: /opt/my-app
   statistics_image: statistics/output.png
@@ -14,19 +12,12 @@ variables:
 
 scripts:
   exporter:
-    path: exporter/exporter.py
-    args:
-      - --vault-dir
-      - "{vault_dir}"
-      - --export-path
-      - "{export_path}"
-      - --obsidian-path
-      - "{obsidian_path}"
-      - --git-branch
-      - "{repo_branch}"
-      - --window-title
-      - ".*Obsidian.*"
-    terminate_process: "{obsidian_process_name}"
+    docker:
+      image: "{docker_image}"
+      vault_dir: "{vault_dir}"
+      output_dir: "{export_path}"
+      env:
+        EXPORT_ENTIRE_VAULT: "1"
   statistics:
     path: statistics/statistics.py
     args:
