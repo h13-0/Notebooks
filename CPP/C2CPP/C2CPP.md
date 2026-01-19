@@ -3146,7 +3146,7 @@ void sort( ExecutionPolicy&& policy,
 ##### 4.3.1.3.1 搜索是否存在目标值(binary_search)
 
 `std::binary_search` ：
-- 
+- 头文件：`<algorithm>` 
 - 函数功能：搜索 `[first, last)` 区间内是否存在目标值 `value` 
 - 函数参数：
 	- 使用默认 `Compare` 并搜索：`std::binary_search(first, last, value)`
@@ -3163,7 +3163,6 @@ constexpr bool binary_search( ForwardIt first, ForwardIt last,
                               const T& value );
 ```
 - 使用自定义[[CPP/C2CPP/C2CPP#^t2nyfa|Compare]]并搜索：
-
 ```CPP
 template< class ForwardIt, class T = typename std::iterator_traits
                                          <ForwardIt>::value_type,
@@ -3175,9 +3174,23 @@ constexpr bool binary_search( ForwardIt first, ForwardIt last,
 ##### 4.3.1.3.2 搜索第一个大于等于目标值的位置(lower_bound)
 
 `std::lower_bound` ：
-- 函数功能
+- 头文件：`<algorithm>` 
+- 函数功能：搜索 `[first, last)` 区间内的第一个<span style="background:#fff88f"><font color="#c00000">大于等于</font></span> `value` 的元素位置
+- 函数参数：
+	- 使用默认 `Compare` 并搜索：`std::lower_bound(first, last, value)`
+	- 使用自定义[[CPP/C2CPP/C2CPP#^t2nyfa|Compare]]并搜索：`std::lower_bound(first, last, value, comp)`
+- 返回值：
+	- `iterator` ：
+		- 当所有元素都比 `value` 大时，返回值等价 `.begin()`
+		- 当所有元素都比 `value` 小时，返回值等价 `.end()`
+- 注：
+	- 当<font color="#c00000">使用默认</font> `Compare` <font color="#c00000">时</font>，传入容器<span style="background:#fff88f"><font color="#c00000"><u>必须为升序容器</u></font></span>
+	- 当传入降序容器时，必须指定自定义[[CPP/C2CPP/C2CPP#^t2nyfa|Compare]]
 
+具体签名：
+```CPP
 
+```
 
 
 ##### 4.3.1.3.3 搜索第一个大于目标值的位置(upper_bound)
