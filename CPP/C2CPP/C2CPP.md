@@ -3145,18 +3145,38 @@ void sort( ExecutionPolicy&& policy,
 
 ##### 4.3.1.3.1 搜索是否存在目标值(binary_search)
 
+`std::binary_search` ：
+- 
+- 函数功能：搜索 `[first, last)` 区间内是否存在目标值 `value` 
+- 函数参数：
+	- 使用默认 `Compare` 并搜索：`std::binary_search(first, last, value)`
+	- 使用自定义[[CPP/C2CPP/C2CPP#^t2nyfa|Compare]]并搜索：`std::binary_search(first, last, value, comp)`
+- 返回值：
+	- `bool` ，表示范围内是否存在 `value`
+
+具体签名：
+- 使用默认 `Compare` 并搜索：
 ```CPP
 template< class ForwardIt, class T = typename std::iterator_traits
                                          <ForwardIt>::value_type >
 constexpr bool binary_search( ForwardIt first, ForwardIt last,
                               const T& value );
 ```
+- 使用自定义[[CPP/C2CPP/C2CPP#^t2nyfa|Compare]]并搜索：
 
-
-
-
+```CPP
+template< class ForwardIt, class T = typename std::iterator_traits
+                                         <ForwardIt>::value_type,
+          class Compare >
+constexpr bool binary_search( ForwardIt first, ForwardIt last,
+                              const T& value, Compare comp );
+```
 
 ##### 4.3.1.3.2 搜索第一个大于等于目标值的位置(lower_bound)
+
+`std::lower_bound` ：
+- 函数功能
+
 
 
 
