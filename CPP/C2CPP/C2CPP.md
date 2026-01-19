@@ -3141,6 +3141,32 @@ void sort( ExecutionPolicy&& policy,
            RandomIt first, RandomIt last, Compare comp );
 ```
 
+#### 4.3.1.3 二分搜索
+
+##### 4.3.1.3.1 搜索是否存在目标值(binary_search)
+
+```CPP
+template< class ForwardIt, class T = typename std::iterator_traits
+                                         <ForwardIt>::value_type >
+constexpr bool binary_search( ForwardIt first, ForwardIt last,
+                              const T& value );
+```
+
+
+
+
+
+##### 4.3.1.3.2 搜索第一个大于等于目标值的位置(lower_bound)
+
+
+
+##### 4.3.1.3.3 搜索第一个大于目标值的位置(upper_bound)
+
+
+##### 4.3.1.3.4 搜索等于目标值的区间范围(equal_range)
+
+
+
 
 ### 4.3.2 替换
 
