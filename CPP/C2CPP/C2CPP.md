@@ -3141,7 +3141,7 @@ void sort( ExecutionPolicy&& policy,
            RandomIt first, RandomIt last, Compare comp );
 ```
 
-#### 4.3.1.3 二分搜索
+#### 4.3.1.3 二分搜索(C++20) ^1gb857
 
 ##### 4.3.1.3.1 搜索是否存在目标值(binary_search)
 
@@ -3153,6 +3153,10 @@ void sort( ExecutionPolicy&& policy,
 	- 使用自定义[[CPP/C2CPP/C2CPP#^t2nyfa|Compare]]并搜索：`std::binary_search(first, last, value, comp)`
 - 返回值：
 	- `bool` ，表示范围内是否存在 `value`
+- 注：
+	- <font color="#c00000">容器中元素必须按</font> `Compare` <font color="#c00000">排序</font>，即：
+		- 当<font color="#c00000">使用默认</font> `Compare` <font color="#c00000">时</font>，传入容器<span style="background:#fff88f"><font color="#c00000"><u>必须为升序容器</u></font></span>
+		- 当传入降序容器时，必须指定自定义[[CPP/C2CPP/C2CPP#^t2nyfa|Compare]]
 
 具体签名：
 - 使用默认 `Compare` 并搜索：
@@ -3184,17 +3188,59 @@ constexpr bool binary_search( ForwardIt first, ForwardIt last,
 		- 当所有元素都比 `value` 大时，返回值等价 `.begin()`
 		- 当所有元素都比 `value` 小时，返回值等价 `.end()`
 - 注：
-	- 当<font color="#c00000">使用默认</font> `Compare` <font color="#c00000">时</font>，传入容器<span style="background:#fff88f"><font color="#c00000"><u>必须为升序容器</u></font></span>
-	- 当传入降序容器时，必须指定自定义[[CPP/C2CPP/C2CPP#^t2nyfa|Compare]]
+	- <font color="#c00000">容器中元素必须按</font> `Compare` <font color="#c00000">排序</font>，即：
+		- 当<font color="#c00000">使用默认</font> `Compare` <font color="#c00000">时</font>，传入容器<span style="background:#fff88f"><font color="#c00000"><u>必须为升序容器</u></font></span>
+		- 当传入降序容器时，必须指定自定义[[CPP/C2CPP/C2CPP#^t2nyfa|Compare]]
 
 具体签名：
+- 使用默认 `Compare` 并搜索：
 ```CPP
-
+template< class ForwardIt, class T = typename std::iterator_traits
+                                         <ForwardIt>::value_type >
+constexpr ForwardIt lower_bound( ForwardIt first, ForwardIt last,
+                                 const T& value );
 ```
-
+- 使用自定义[[CPP/C2CPP/C2CPP#^t2nyfa|Compare]]并搜索：
+```CPP
+template< class ForwardIt, class T = typename std::iterator_traits
+                                         <ForwardIt>::value_type,
+          class Compare >
+constexpr ForwardIt lower_bound( ForwardIt first, ForwardIt last,
+                                 const T& value, Compare comp );
+```
 
 ##### 4.3.1.3.3 搜索第一个大于目标值的位置(upper_bound)
 
+`std::upper_bound` ：
+- 函数功能：搜索 `[first, last)` 区间内的第一个<span style="background:#fff88f"><font color="#c00000">大于</font></span> `value` 的元素位置
+- 函数参数：
+	- 使用默认 `Compare` 并搜索：`std::upper_bound(first, last, value)`
+	- 使用自定义[[CPP/C2CPP/C2CPP#^t2nyfa|Compare]]并搜索：`std::upper_bound(first, last, value, comp)`
+- 返回值：
+	- `iterator` ：
+		- 当所有元素都比 `value` 大时，返回值等价 `.begin()`
+		- 当所有元素都小于等于 `value` 时，返回值等价 `.end()`
+- 注：
+	- <font color="#c00000">容器中元素必须按</font> `Compare` <font color="#c00000">排序</font>，即：
+		- 当<font color="#c00000">使用默认</font> `Compare` <font color="#c00000">时</font>，传入容器<span style="background:#fff88f"><font color="#c00000"><u>必须为升序容器</u></font></span>
+		- 当传入降序容器时，必须指定自定义[[CPP/C2CPP/C2CPP#^t2nyfa|Compare]]
+
+具体签名：
+- 使用默认 `Compare` 并搜索：
+```CPP
+template< class ForwardIt, class T = typename std::iterator_traits
+                                         <ForwardIt>::value_type >
+constexpr ForwardIt upper_bound( ForwardIt first, ForwardIt last,
+                                 const T& value );
+```
+- 使用自定义[[CPP/C2CPP/C2CPP#^t2nyfa|Compare]]并搜索：
+```CPP
+template< class ForwardIt, class T = typename std::iterator_traits
+                                         <ForwardIt>::value_type,
+          class Compare >
+constexpr ForwardIt upper_bound( ForwardIt first, ForwardIt last,
+                                 const T& value, Compare comp );
+```
 
 ##### 4.3.1.3.4 搜索等于目标值的区间范围(equal_range)
 
