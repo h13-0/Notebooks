@@ -2393,11 +2393,13 @@ STL容器主要有如下三类：
 	- `push_back()` ：在末尾添加
 	- `emplace_back()` ：在末尾构造并插入
 	- `append_range()` 
-	- 
+	- `push()` ：在顶部插入元素
+	- `push_range()` ：在顶部插入一个元素范围
 - 元素删除：
 	- `erase()` ：删除元素
 		- 补充说明：[[CPP/C2CPP/C2CPP#^8t8324|遍历时安全删除元素]]
 	- `pop_back()` ：删除末尾元素
+	- `pop()` ：移除顶部元素
 - 元素修改：
 	- `operator[]` ：访问指定元素
 - 元素访问：
@@ -2823,11 +2825,36 @@ vector( InputIt first, InputIt last,
 
 `vector` 返回的迭代器为随机访问迭代器，可通过 `.begin()` 、 `.end()` 获取。
 
-### 4.2.6 std::unordered_map
+### 4.2.6 stack
+
+`std::stack` 是STL提供的栈容器，数据结构特性略。
+
+#### 4.2.6.1 模板定义
+
+```CPP
+template<
+    class T,
+    class Container = std::deque<T>
+> class stack;
+```
+
+#### 4.2.6.2 常用方法
+
+
+
+
+
+
+
+
+
+
+
+### 4.2.7 std::unordered_map
 
 `std::unordered_map` <font color="#c00000">基于哈希表实现</font>，内部元素无序存储。
 
-#### 4.2.6.1 模板定义
+#### 4.2.7.1 模板定义
 
 ```CPP
 template<
@@ -2846,9 +2873,9 @@ template<
 - `class KeyEqual` 为键值比较函数对象类型
 - `class Allocator` 为内存分配器类型
 
-#### 4.2.6.2 常用方法
+#### 4.2.7.2 常用方法
 
-##### 4.2.6.2.1 构造函数
+##### 4.2.7.2.1 构造函数
 
 ```CPP
 unordered_map();
@@ -2859,15 +2886,15 @@ unordered_map();
 - `mapped_type` ：即 `class T` ，值类型
 - `value_type` ：`std::pair<const Key, T>` ^o36e6j 
 
-##### 4.2.6.2.2 清空容器(clear)
+##### 4.2.7.2.2 清空容器(clear)
 
 ```CPP
 void clear() noexcept;
 ```
 
-##### 4.2.6.2.3 插入元素(insert)
+##### 4.2.7.2.3 插入元素(insert)
 
-###### 4.2.6.2.3.1 插入单个元素
+###### 4.2.7.2.3.1 插入单个元素
 
 ```CPP
 std::pair<iterator, bool> insert( const value_type& value ); 
@@ -2890,7 +2917,7 @@ auto ret1 = map.insert({1, "one"});               // ret1.second == true
 auto ret2 = map.insert(std::make_pair(1, "one")); // 此时ret2.second为false
 ```
 
-###### 4.2.6.2.3.2 批量插入(通过初始化列表)
+###### 4.2.7.2.3.2 批量插入(通过初始化列表)
 
 ```CPP
 void insert( std::initializer_list<value_type> ilist );
@@ -2903,7 +2930,7 @@ void insert( std::initializer_list<value_type> ilist );
 	- 若参数中有重复键，则只插入第一个
 	- 不会修改已有键值
 
-###### 4.2.6.2.3.3 批量插入(通过迭代器)
+###### 4.2.7.2.3.3 批量插入(通过迭代器)
 
 ```C
 template< class InputIt >
@@ -2912,11 +2939,11 @@ void insert( InputIt first, InputIt last );
 
 
 
-###### 4.2.6.2.3.4 带位置提示的插入
+###### 4.2.7.2.3.4 带位置提示的插入
 
-##### 4.2.6.2.4 删除元素(erase)
+##### 4.2.7.2.4 删除元素(erase)
 
-###### 4.2.6.2.4.1 通过key值删除
+###### 4.2.7.2.4.1 通过key值删除
 
 ```CPP
 size_type erase( const Key& key );
@@ -2930,7 +2957,7 @@ size_type erase( const Key& key );
 - 平均 $O(1)$
 - 最坏 $O(size)$
 
-###### 4.2.6.2.4.2 通过迭代器删除单个元素
+###### 4.2.7.2.4.2 通过迭代器删除单个元素
 
 ```CPP
 iterator erase( iterator pos );
@@ -2942,7 +2969,7 @@ iterator erase( iterator pos );
 		- 因为<font color="#c00000">只要map不为空</font>，<font color="#c00000">其最后一个元素就不是</font> `end()` ，所以<font color="#c00000">非空时</font>删除最后一个元素应当使用 `map.erase(std::prev(map.end()))`
 - 返回值为被删除元素之后元素的迭代器。如果删除的是最后一个元素，则返回 `end()` 。
 
-###### 4.2.6.2.4.3 通过迭代器范围删除元素
+###### 4.2.7.2.4.3 通过迭代器范围删除元素
 
 ```CPP
 iterator erase( const_iterator first, const_iterator last );
@@ -2961,9 +2988,9 @@ iterator erase( const_iterator first, const_iterator last );
 - 平均 $O(n)$
 - 最坏 $O(n\times size)$
 
-##### 4.2.6.2.5 查询(at)
+##### 4.2.7.2.5 查询(at)
 
-###### 4.2.6.2.5.1 普通查找
+###### 4.2.7.2.5.1 普通查找
 
 普通查找有如下两个不同的成员函数：
 
@@ -2985,7 +3012,7 @@ std::string& ref = map.at(1);
 const std::string& cref = const_map.at(1);
 ```
 
-###### 4.2.6.2.5.2 异构查找(C++26)
+###### 4.2.7.2.5.2 异构查找(C++26)
 
 在普通查找时，其参数只能为Key的类型，而不能是可以和Key透明比较的类型。例如：
 
@@ -2999,7 +3026,7 @@ int value1 = traditional_map.at("view");
 int value2 = transparent_map.at(std::string_view("view"));
 ```
 
-##### 4.2.6.2.6 查询/新增(operator\[\])
+##### 4.2.7.2.6 查询/新增(operator\[\])
 
 其对应的运算符重载函数签名为：
 
@@ -3015,7 +3042,7 @@ T& operator[]( Key&& key );
 | 键值不存在时 | 抛出异常   | 插入新元素        |
 | 只读访问   | 可用     | 不可，会插入新元素    |
 
-##### 4.2.6.2.7 查找(find)
+##### 4.2.7.2.7 查找(find)
 
 `find` 用于查找是否包含对应的键值：
 
@@ -3035,7 +3062,7 @@ const_iterator find( const K& x ) const;
 
 该函数的返回值为指向键值对应的元素的迭代器，若没有该元素则返回 `end()` 迭代器
 
-##### 4.2.6.2.8 查找(count)
+##### 4.2.7.2.8 查找(count)
 
 `count` 也可用于查找是否存在对应的元素，由于hash表特性，其值只能为0或1。
 
@@ -3050,14 +3077,14 @@ template< class K >
 size_type count( const K& x ) const;
 ```
 
-##### 4.2.6.2.9 原地插入(emplace)
+##### 4.2.7.2.9 原地插入(emplace)
 
 
-##### 4.2.6.2.10 迭代器
+##### 4.2.7.2.10 迭代器
 
 `unordered_map` 提供了 `.begin()` 和 `.end()` 两个获取迭代器的方法，返回的类型为前向迭代器。
 
-##### 4.2.6.2.11 k, v遍历
+##### 4.2.7.2.11 k, v遍历
 
 ```CPP
 std::unordered_map<std::string, int> scores = {
@@ -3075,7 +3102,7 @@ for (const auto& [name, score] : scores) {
 
 
 
-### 4.2.7 std::map
+### 4.2.8 std::map
 
 `std::map` 内部通常基于红黑树实现，<font color="#c00000">元素始终按键的升序排序</font>。
 
