@@ -3244,7 +3244,8 @@ constexpr ForwardIt upper_bound( ForwardIt first, ForwardIt last,
 
 ##### 4.3.1.3.4 搜索等于目标值的区间范围(equal_range)
 
-
+`std::equal_range` ：
+- 函数功能：找到
 
 
 ### 4.3.2 替换
