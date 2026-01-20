@@ -3251,13 +3251,12 @@ constexpr ForwardIt upper_bound( ForwardIt first, ForwardIt last,
 	- 使用自定义[[CPP/C2CPP/C2CPP#^t2nyfa|Compare]]并搜索：`std::equal_range(first, last, value, comp);`
 - 返回值：
 	- `std::pair<ForwardIt, ForwardIt>` ：
-		- `pair[0]` 指向 `[first, last)` 中第一个不小于 value 的元素的迭代器
-		- `pair[1]` 指向 `[first, last)` 中第一个大于 value 的元素的迭代器
+		- `pair.first` 指向 `[first, last)` 中第一个不小于 value 的元素的迭代器
+		- `pair.second` 指向 `[first, last)` 中第一个大于 value 的元素的迭代器
 	- 则有：
-		1. 如果序列中所有元素大于 `value` ，则 `pair[0]`、`pair[1]`  指向 `.begin() `
-		2. 如果序列中所有元素小于 `value` ，则 `pair[0]`、`pair[1]`  指向 `.end() `
-		- 目标值序列的长度为 
-		- 
+		1. 如果序列中所有元素大于 `value` ，则 `pair.first`、`pair.second`  指向 `.begin() `
+		2. 如果序列中所有元素小于 `value` ，则 `pair.first`、`pair.second`  指向 `.end() `
+		3. 如果序列中所有元素不等于 `value` ，则 `pair.second - pair.first = 0`
 - 注：
 	- <font color="#c00000">容器中元素必须按</font> `Compare` <font color="#c00000">排序</font>，即：
 		- 当<font color="#c00000">使用默认</font> `Compare` <font color="#c00000">时</font>，传入容器<span style="background:#fff88f"><font color="#c00000"><u>必须为升序容器</u></font></span>
