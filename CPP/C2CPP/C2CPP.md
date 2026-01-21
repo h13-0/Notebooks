@@ -1372,10 +1372,23 @@ T& emplace( std::initializer_list<U> ilist, Args&&... args );
 2. 操作失败时返回错误码(泛型、可以是枚举、`std::error_code`、或者 `std::string` 等)
 
 其模板定义为 `std::expected<T, E>` ：
+- `T` ：操作成功时返回的数据类型
+- `E` ：操作失败时返回的错误类型
+即 `std::expected` 要么包含着数据类型 `T` ，要么包含数据类型 `E` 。
 
+生产者使用方法：
+1. 定义函数返回值类型 `std::expected<T, E>`
+2. 当操作成功时返回 `T{}`
+3. 当操作失败时返回 `std::unexpected(E{})`
 
+消费者使用方法：
+1. 接收返回值 `auto result = func();`
+2. 使用 `if(result)` 判断操作是否成功：
+	1. 成功时使用 `*` 解引用来提取数据：`T res = *result;`
+	2. 失败时使用成员函数 `.error()` 来提取错误码
 
-
+拓展：
+1. 在实际项目中，ton
 
 ### 3.4.8 文件系统(std::filesystem)
 
