@@ -2390,17 +2390,21 @@ STL容器主要有如下三类：
 	- `insert()` ：插入元素
 	- `insert_range()` 
 	- `emplace()` ：就地构造并插入
+		- [[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `emplace_back()` ：在末尾构造并插入
 	- `append_range()` 
-	- `push()` ：在顶部插入元素
+	- `push()` ：在顶部/末尾插入元素
+		- [[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `push_back()` ：在末尾添加
 	- `push_front()` ：在前端添加
 	- `push_range()` ：在顶部插入一个元素范围
+		- [[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 - 元素删除：
 	- `erase()` ：删除元素
 		- 补充说明：[[CPP/C2CPP/C2CPP#^8t8324|遍历时安全删除元素]]
 	- `pop_back()` ：删除末尾元素
 	- `pop()` ：移除顶部元素
+		- [[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 - 元素修改：
 	- `operator[]` ：访问指定元素
 - 元素访问：
@@ -2408,20 +2412,25 @@ STL容器主要有如下三类：
 	- `operator[]` ：访问指定元素
 	- `find()` ：查找指定元素(通常返回元素的迭代器)
 	- `front()` ：访问第一个元素
+		- [[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `back()` ：访问最后一个元素
+		- [[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `count()` ：统计指定元素数量
 - 容器修改：
 	- `clear()` ：清空容器
 	- `resize()` ：修改容器大小
 		- 若元素数量大于目标容器大小，则删除后续元素并缩小
 		- 若元素数量小于目标容器大小，则填充默认值或指定值
-	- `swap()` 
+	- `swap()` ：与其他容器交换内容
+		- [[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `operator=` ：容器赋值
 	- `assign()` ：为容器批量<font color="#c00000">赋值</font>(注意不是分配空间，区分于 `reserve` )
 	- `assign_range()` 
 - 容器容量：
 	- `empty()` ：判断是否为空
+		- [[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `size()` ：返回元素成员数量
+		- [[CPP/C2CPP/C2CPP#^vsyig3|queue]]
 	- `max_size()` ：返回最大的可能成员数量
 	- `reserve()` ：<font color="#c00000">预留存储空间</font>
 	- `capacity()` ：返回当前已分配空间中可以容纳的元素数量
@@ -2829,12 +2838,12 @@ vector( InputIt first, InputIt last,
 
 ### 4.2.6 queue ^vsyig3
 
-[[CPP/C2CPP/C2CPP#^vsyig3|queue]]
+
 
 ### 4.2.7 deque ^xkoeis
 
 
-[[CPP/C2CPP/C2CPP#^xkoeis]]
+
 
 
 
