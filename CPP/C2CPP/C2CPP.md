@@ -2468,6 +2468,19 @@ for(auto it = container; it < container.end(); ) { // 注意这里不要使用 `
 	2. 未删除元素时别忘了 `it++`
 2. 使用 `it = erase(it)` 在删除元素时更新迭代器
 
+#### 4.2.1.2 移动构造与被移动
+
+当STL容器被移动构造到其他对象后，STL容器会处于"<span style="background:#fff88f"><font color="#c00000">有效但未指定(Valid but Unspecified)</font></span>"的状态，此时：
+- <font color="#c00000">不能假设其中还有什么数据</font>
+- <font color="#c00000">但是可以重置或清空它</font>，<font color="#c00000">随后重新使用</font>
+
+概念"<font color="#9bbb59">有效但未指定</font>"：
+- <font color="#9bbb59">有效(Valid)</font>：它的内部结构没有损坏(指针、大小等变量符合内部逻辑)。你可以安全地析构它，或者调用不依赖具体值的成员函数。
+- <font color="#9bbb59">未指定(Unspecified)</font>：
+	- 不可假设其 `size()=0` 
+	- 不可假设 `capacity()` 的具体值
+	- 不可编写依赖于其为空或非空的代码(可以先检测，但是通常重置后再使用)
+
 ### 4.2.2 std::initializer_list
 
 <font color="#9bbb59">初始化列表</font>( `initializer_list` )是一个轻量化的<span style="background:#fff88f"><font color="#c00000">只读容器</font></span>，<font color="#c00000">通常其只能通过特殊的构造函数构造</font>。
@@ -2836,14 +2849,16 @@ vector( InputIt first, InputIt last,
 `vector` 返回的迭代器为随机访问迭代器，可通过 `.begin()` 、 `.end()` 获取。
 
 
-### 4.2.6 queue ^vsyig3
+### 4.2.6 deque ^xkoeis
 
 
 
-### 4.2.7 deque ^xkoeis
 
 
 
+### 4.2.7 queue ^vsyig3
+
+从数据结构上来讲，`queue` 是 `deque` 的基础(或特性上是其子集)。在C++的具体实现中，`queue` 并非独立的STL容器，而是套着 `deque`
 
 
 
