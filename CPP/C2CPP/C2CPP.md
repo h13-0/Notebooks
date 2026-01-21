@@ -1367,6 +1367,12 @@ T& emplace( std::initializer_list<U> ilist, Args&&... args );
 
 ### 3.4.7 预期对象(std::expected) ^qh6jjo
 
+作为C++中的一种错误处理机制， `std::expected` 需要分别完成如下两个需求：
+1. 操作成功时返回返回值
+2. 操作失败时返回错误码(泛型、可以是枚举、`std::error_code`、或者 `std::string` 等)
+
+其模板定义为 `std::expected<T, E>` ：
+
 
 
 
