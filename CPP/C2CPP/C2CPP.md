@@ -1388,7 +1388,11 @@ T& emplace( std::initializer_list<U> ilist, Args&&... args );
 	2. 失败时使用成员函数 `.error()` 来提取错误码
 
 拓展：
-1. 在实际项目中，ton
+1. 在实际项目中，通常会定义自定义模板类 `Result` 和预定义的错误码 `Error` 来统一返回值：
+```CPP
+template<class T>
+using Result = std::expected<T, Error>;
+```
 
 ### 3.4.8 文件系统(std::filesystem)
 
