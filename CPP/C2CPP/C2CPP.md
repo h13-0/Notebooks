@@ -2409,12 +2409,14 @@ STL容器主要有如下三类：
 	- `operator[]` ：访问指定元素
 - 元素访问：
 	- `at()` ：访问指定元素，带边界检查
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `operator[]` ：访问指定元素
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `find()` ：查找指定元素(通常返回元素的迭代器)
 	- `front()` ：访问第一个元素
-		- [[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `back()` ：访问最后一个元素
-		- [[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `count()` ：统计指定元素数量
 - 容器修改：
 	- `clear()` ：清空容器
@@ -2425,12 +2427,14 @@ STL容器主要有如下三类：
 		- [[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `operator=` ：容器赋值
 	- `assign()` ：为容器批量<font color="#c00000">赋值</font>(注意不是分配空间，区分于 `reserve` )
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `assign_range()` 
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 - 容器容量：
 	- `empty()` ：判断是否为空
-		- [[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `size()` ：返回元素成员数量
-		- [[CPP/C2CPP/C2CPP#^vsyig3|queue]]
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]
 	- `max_size()` ：返回最大的可能成员数量
 	- `reserve()` ：<font color="#c00000">预留存储空间</font>
 	- `capacity()` ：返回当前已分配空间中可以容纳的元素数量
@@ -2442,8 +2446,13 @@ STL容器主要有如下三类：
 	- 
 - 迭代器：
 	- `begin()` ：获取指向开始的迭代器
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `end()` ：获取指向末尾的下一个元素的迭代器
-- 
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+	- `rbegin()` ：获取逆向迭代器，第一个元素为正向的最后一个
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+	- `rend()` ：
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 
 #### 4.2.1.1 遍历时安全删除元素 ^8t8324
 
@@ -2858,7 +2867,9 @@ vector( InputIt first, InputIt last,
 
 ### 4.2.7 queue ^vsyig3
 
-从数据结构上来讲，`queue` 是 `deque` 的基础(或特性上是其子集)。在C++的具体实现中，`queue` 并非独立的STL容器，而是套着 `deque`
+从数据结构上来讲，`queue` 是 `deque` 的基础(或特性上是其子集)。在C++的具体实现中，`queue` <font color="#c00000">并非独立的STL容器</font>，<font color="#c00000">而是套着限制性外壳</font>(即<font color="#9bbb59">适配器</font>)<font color="#c00000">的</font> `deque` 。
+
+该适配器屏蔽了 `deque` 的大部分功能，从而严格约束 `queue` 的FIFO特性。
 
 
 
