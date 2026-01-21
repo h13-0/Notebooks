@@ -2388,21 +2388,35 @@ STL容器主要有如下三类：
 <span style="background:#fff88f"><font color="#c00000">其常用成员函数有</font></span>：
 - 元素增加：
 	- `insert()` ：插入元素
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `insert_range()` 
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `emplace()` ：就地构造并插入
-		- [[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `emplace_back()` ：在末尾构造并插入
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+	- `emplace_front()` ：在起始构造并插入
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `append_range()` 
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `push()` ：在顶部/末尾插入元素
 		- [[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `push_back()` ：在末尾添加
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `push_front()` ：在前端添加
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `push_range()` ：在顶部插入一个元素范围
 		- [[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
+	- `prepend_range` ：添加一个元素范围到起始
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 - 元素删除：
 	- `erase()` ：删除元素
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 		- 补充说明：[[CPP/C2CPP/C2CPP#^8t8324|遍历时安全删除元素]]
-	- `pop_back()` ：删除末尾元素
+	- `pop_back()` ：移除末尾元素
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+	- `pop_front()` ：移除首个元素
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `pop()` ：移除顶部元素
 		- [[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 - 元素修改：
@@ -2420,11 +2434,13 @@ STL容器主要有如下三类：
 	- `count()` ：统计指定元素数量
 - 容器修改：
 	- `clear()` ：清空容器
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `resize()` ：修改容器大小
 		- 若元素数量大于目标容器大小，则删除后续元素并缩小
 		- 若元素数量小于目标容器大小，则填充默认值或指定值
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `swap()` ：与其他容器交换内容
-		- [[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `operator=` ：容器赋值
 	- `assign()` ：为容器批量<font color="#c00000">赋值</font>(注意不是分配空间，区分于 `reserve` )
 		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
@@ -2436,9 +2452,11 @@ STL容器主要有如下三类：
 	- `size()` ：返回元素成员数量
 		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]
 	- `max_size()` ：返回最大的可能成员数量
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `reserve()` ：<font color="#c00000">预留存储空间</font>
 	- `capacity()` ：返回当前已分配空间中可以容纳的元素数量
 	- `shrink_to_fit()` ：通过释放未使用的内存来减少内存占用
+		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 - 容器访问：
 	- `data()` ：直接访问底层的数据存储的连续区域
 - operators：
