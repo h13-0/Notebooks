@@ -70,7 +70,7 @@ number headings: auto, first-level 2, max 6, 1.1
 
 本IO模型不常用。
 
-### 3.3 IO多路复用(IO Multiplexing)
+### 3.3 IO多路复用(IO Multiplexing) ^zlajg5
 
 对上一章节末尾的场景进行分析，其效率问题主要集中在了：
 - 线程利用率低，一个线程只能负责一个阻塞业务
