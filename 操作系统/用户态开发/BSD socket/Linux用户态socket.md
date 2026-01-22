@@ -15,7 +15,7 @@ number headings: auto, first-level 2, max 6, 1.1
 
 ### 3.1 Server端Demo
 
-单线程的server段的主要逻辑如下：
+单线程的server端的主要逻辑如下：
 
 ```mermaid
 flowchart TB
