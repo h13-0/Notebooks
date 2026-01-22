@@ -103,7 +103,7 @@ int select(int nfds, fd_set *readfds,
             struct timeval *timeout);
 ```
 - 其参数：
-	- `int  nfds` ：需要使用 `select` 委托内核查询的三个集合中的<font color="#c00000">最大fd号</font><span style="background:#fff88f"><font color="#c00000">+1</font></span>。
+	- `int nfds` ：需要使用 `select` 委托内核查询的三个集合中的<font color="#c00000">最大fd号</font><span style="background:#fff88f"><font color="#c00000">+1</font></span>。
 	- `fd_set	*readfds` ：
 		- 传入时：为委托内核需要<font color="#c00000">检测读缓冲区</font>的文件描述符的集合
 		- 传出时：读缓冲区<font color="#c00000">可读</font>的文件描述符集合
