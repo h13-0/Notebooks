@@ -2409,12 +2409,12 @@ STL容器主要有如下三类：
 	3. `std::unordered_map`
 	4. `std::unordered_multimap`
 
-### 4.2.1 容器的常用成员函数及补充说明
+### 4.2.1 容器的常用成员函数及补充说明 ^vtihaw
 
 <span style="background:#fff88f"><font color="#c00000">其常用成员函数有</font></span>：
 - 元素增加：
 	- `insert()` ：插入元素
-		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `insert_range()` 
 		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `emplace()` ：就地构造并插入
@@ -2449,12 +2449,12 @@ STL容器主要有如下三类：
 	- `operator[]` ：访问指定元素
 - 元素访问：
 	- `at()` ：访问指定元素，带边界检查
-		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `operator[]` ：访问指定元素
-		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `find()` ：查找指定元素(通常返回元素的迭代器)
 	- `front()` ：访问第一个元素
-		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
+		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `back()` ：访问最后一个元素
 		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `count()` ：统计指定元素数量
@@ -2847,7 +2847,7 @@ template<
 注意：
 - `std::size_t N` <span style="background:#fff88f"><font color="#c00000">必须在编译器即可确定</font></span>，<font color="#c00000">即也不支持动态数组大小</font>
 
-### 4.2.5 vector
+### 4.2.5 vector ^xlcxlf
 
 `std::vector` 是C++的动态大小的数组实现，其元素被顺序存储，因此其可以被迭代器和引索顺序访问。其会自动扩展其所需要的内存空间，并且通常其所占用的内存比同大小的静态数组要多。其空间的动态分配仅会发生在其所保留的额外空间耗尽时触发。
 
