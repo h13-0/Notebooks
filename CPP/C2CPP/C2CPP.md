@@ -3239,9 +3239,9 @@ Compare要求建立如下的严格弱序关系：
 且其返回值要有如下特性：
 - `BooleanTestable` (C++20前) 或 `boolean-testable` (C++20前)
 
-标准Compare有： ^rlmwhl
-- `std::less<T>` ：要求实现 x > y 的函数对象，推导参数和返回类型
-- `std::greater<T>` ：要求实现 x > y 的函数对象，推导参数和返回类型
+内置Compare有：
+- `std::less<T>` ：要求实现 `x > y` 的函数对象，推导参数和返回类型
+- `std::greater<T>` ：要求实现 `x > y` 的函数对象，推导参数和返回类型
 
 #### 4.3.1.2 std::sort(混合排序)
 
