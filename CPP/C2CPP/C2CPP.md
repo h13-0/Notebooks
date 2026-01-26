@@ -3196,7 +3196,7 @@ size_type count( const K& x ) const;
 
 `unordered_map` 提供了 `.begin()` 和 `.end()` 两个获取迭代器的方法，返回的类型为前向迭代器。
 
-##### 4.2.9.2.11 k, v遍历
+##### 4.2.9.2.11 k, v遍历 ^vx7gf9
 
 ```CPP
 std::unordered_map<std::string, int> scores = {
@@ -3210,9 +3210,12 @@ std::unordered_map<std::string, int> scores = {
 for (const auto& [name, score] : scores) {
     std::cout << "Key: " << name << ", Value: " << score << "\n";
 }
+
+// 使用pair进行遍历
+for (const auto& t : scores) {
+    std::cout << "Key: " << t.first << ", Value: " << t.second << "\n";
+}
 ```
-
-
 
 ### 4.2.10 std::map
 
