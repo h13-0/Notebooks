@@ -2417,12 +2417,18 @@ STL容器主要有如下三类：
 		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `insert_range()` 
 		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+	- `insert_or_assign()` ：插入元素或如果键已存在则赋值给当前元素
+		- [[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]
 	- `emplace()` ：就地构造并插入
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
+		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
+	- `emplace_hint()` ：使用提示就地构造元素
+		- [[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]
 	- `emplace_back()` ：在末尾构造并插入
 		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `emplace_front()` ：在起始构造并插入
 		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+	- `try_emplace()` ：如果键不存在则原地插入，如果键存在则不执行任何操作
+		- [[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]
 	- `append_range()` 
 		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `push()` ：在顶部/末尾插入元素
@@ -2437,7 +2443,7 @@ STL容器主要有如下三类：
 		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 - 元素删除：
 	- `erase()` ：删除元素
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 		- 补充说明：[[CPP/C2CPP/C2CPP#^8t8324|遍历时安全删除元素]]
 	- `pop_back()` ：移除末尾元素
 		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
@@ -2449,15 +2455,21 @@ STL容器主要有如下三类：
 	- `operator[]` ：访问指定元素
 - 元素访问：
 	- `at()` ：访问指定元素，带边界检查
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `operator[]` ：访问指定元素
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `find()` ：查找指定元素(通常返回元素的迭代器)
+		- [[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]
+	- `contains` ：检查容器是否包含具有特定键的元素
+		- [[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]
 	- `front()` ：访问第一个元素
 		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `back()` ：访问最后一个元素
 		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
-	- `count()` ：统计指定元素数量
+	- `count()` ：返回匹配特定键的元素数量
+		- [[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]
+	- `equal_range()` ：返回与特定键匹配的元素范围
+		- [[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]
 - 容器修改：
 	- `clear()` ：清空容器
 		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
@@ -2466,7 +2478,7 @@ STL容器主要有如下三类：
 		- 若元素数量小于目标容器大小，则填充默认值或指定值
 		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `swap()` ：与其他容器交换内容
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
+		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `operator=` ：容器赋值
 	- `assign()` ：为容器批量<font color="#c00000">赋值</font>(注意不是分配空间，区分于 `reserve` )
 		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
@@ -2500,6 +2512,11 @@ STL容器主要有如下三类：
 		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `rend()` ：
 		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+- 
+	- extract
+		- [[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]
+	- merge
+		- [[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]
 
 #### 4.2.1.1 遍历时安全删除元素 ^8t8324
 
