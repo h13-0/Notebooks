@@ -2429,12 +2429,14 @@ STL容器主要有如下三类：
 		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `try_emplace()` ：如果键不存在则原地插入，如果键存在则不执行任何操作
 		- [[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]
+	- `append()` ：
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]
 	- `append_range()` 
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `push()` ：在顶部/末尾插入元素
 		- [[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `push_back()` ：在末尾添加
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `push_front()` ：在前端添加
 		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `push_range()` ：在顶部插入一个元素范围
@@ -2446,7 +2448,7 @@ STL容器主要有如下三类：
 		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 		- 补充说明：[[CPP/C2CPP/C2CPP#^8t8324|遍历时安全删除元素]]
 	- `pop_back()` ：移除末尾元素
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `pop_front()` ：移除首个元素
 		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `pop()` ：移除顶部元素
@@ -2503,7 +2505,8 @@ STL容器主要有如下三类：
 		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、
 - operators：
 	- `operator[]` ：访问指定元素
-	- 
+	- `operator+=` ：
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]
 - 迭代器：
 	- `begin()` ：获取指向开始的迭代器
 		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
@@ -2514,9 +2517,9 @@ STL容器主要有如下三类：
 	- `rend()` ：
 		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 - MISC
-	- extract
+	- `extract`
 		- [[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]
-	- merge
+	- `merge`
 		- [[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]
 	- `get_allocator`
 		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]
@@ -2524,7 +2527,8 @@ STL容器主要有如下三类：
 		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]
 	- `operator basic_string_view
 	  - [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]
-`
+	- `replace` ：
+	- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]
 
 
 #### 4.2.1.1 遍历时安全删除元素 ^8t8324
