@@ -3271,11 +3271,9 @@ int timer_pending(const struct timer_list * timer);
 
 tasklet机制即小任务机制，其特性有：
 1. <font color="#c00000">本质上基于软中断实现</font>，<span style="background:#fff88f"><font color="#c00000">始终在中断期间运行</font></span>，具体注意事项应见[[Linux驱动开发笔记#12 1 2 中断上下文中的注意事项 fw453g|中断上下文中的注意事项]]
-2. <font color="#c00000">其通常在中断中被创建</font>，<span style="background:#fff88f"><font color="#c00000">用于处理中断下半部</font></span>(但是在普通内核线程中也可以创建)：
-	1. 使用 `tasklet` <font color="#c00000">主要是为了快速让出硬中断</font>，<span style="background:#fff88f"><font color="#c00000">使硬件中断可以快速的接收下一个信号</font></span>
-	2. `tasklet` 是为了解决如下：
-		1. 要求任务有极高的响应速度(因此不能用工作队列)
-		2. 要求
+2. <font color="#c00000">其通常在中断中被创建</font>，<span style="background:#fff88f"><font color="#c00000">用于处理中断下半部</font></span>，主要是为了：
+	1. <font color="#c00000">快速让出硬中断</font>，<span style="background:#fff88f"><font color="#c00000">使硬件中断可以快速的接收下一个信号</font></span>
+	2. <font color="#c00000">要求任务有极高的响应速度</font>(因此不能用工作队列)
 3. 相较于定时器，开发者不能要求tasklet在给定的时间运行。
 4. tasklet可以注册自己本身。
 5. tasklet有高低优先级特性，高优先级的tasklet会被先执行。
@@ -3287,6 +3285,10 @@ tasklet其<font color="#c00000">最根本的功能是可以将部分或后续操
 1. 定义 `tasklet_struct` 的变量。
 2. 初始化tasklet，并填入回调函数，参数等。
 3. 使用 `tasklet_schedule` 将回调函数中的操作放入异步处理。
+
+因此 `tasklet` 要求开发者：
+1. 遵守中断上下文中的注意事项
+2. 快速执行、快速结束
 
 经典例子：
 
