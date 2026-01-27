@@ -3270,13 +3270,18 @@ int timer_pending(const struct timer_list * timer);
 ## 10.5 tasklet(即将被移除) ^meiuw1
 
 tasklet机制即小任务机制，其特性有：
-1. <span style="background:#fff88f"><font color="#c00000">始终在中断期间运行</font></span>，具体注意事项应见[[Linux驱动开发笔记#12 1 2 中断上下文中的注意事项 fw453g|中断上下文中的注意事项]]。
-2. 相较于定时器，开发者不能要求tasklet在给定的时间运行。
-3. tasklet可以注册自己本身。
-4. tasklet有高低优先级特性，高优先级的tasklet会被先执行。
-5. <font color="#c00000">tasklet在系统负载不重时立刻执行，且始终不会晚于下一个定时器滴答</font>。
-6. tasklet可以和别的tasklet并发执行，但<span style="background:#fff88f"><font color="#c00000">同一个tasklet自身</font></span><font color="#c00000">只能串行执行</font>(指的是自己注册自己的运行情况)，即同一个tasklet不会在多个处理器上同时运行。
-7. tasklet<font color="#c00000">内部有一个禁用-启用次数计数器</font>，当且仅当计数器为0时会被调度。
+1. <font color="#c00000">本质上基于软中断实现</font>，<span style="background:#fff88f"><font color="#c00000">始终在中断期间运行</font></span>，具体注意事项应见[[Linux驱动开发笔记#12 1 2 中断上下文中的注意事项 fw453g|中断上下文中的注意事项]]
+2. <font color="#c00000">其通常在中断中被创建</font>，<span style="background:#fff88f"><font color="#c00000">用于处理中断下半部</font></span>(但是在普通内核线程中也可以创建)：
+	1. 使用 `tasklet` <font color="#c00000">主要是为了快速让出硬中断</font>，<span style="background:#fff88f"><font color="#c00000">使硬件中断可以快速的接收下一个信号</font></span>
+	2. `tasklet` 是为了解决如下：
+		1. 要求任务有极高的响应速度(因此不能用工作队列)
+		2. 要求
+3. 相较于定时器，开发者不能要求tasklet在给定的时间运行。
+4. tasklet可以注册自己本身。
+5. tasklet有高低优先级特性，高优先级的tasklet会被先执行。
+6. <font color="#c00000">tasklet在系统负载不重时立刻执行，且始终不会晚于下一个定时器滴答</font>。
+7. tasklet可以和别的tasklet并发执行，但<span style="background:#fff88f"><font color="#c00000">同一个tasklet自身</font></span><font color="#c00000">只能串行执行</font>(指的是自己注册自己的运行情况)，即同一个tasklet不会在多个处理器上同时运行。
+8. tasklet<font color="#c00000">内部有一个禁用-启用次数计数器</font>，当且仅当计数器为0时会被调度。
 
 tasklet其<font color="#c00000">最根本的功能是可以将部分或后续操作异步的进行处理</font>，其常用使用流程：
 1. 定义 `tasklet_struct` 的变量。
