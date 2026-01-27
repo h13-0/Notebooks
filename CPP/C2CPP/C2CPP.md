@@ -2414,9 +2414,9 @@ STL容器主要有如下三类：
 <span style="background:#fff88f"><font color="#c00000">其常用成员函数有</font></span>：
 - 元素增加：
 	- `insert()` ：插入元素
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `insert_range()` 
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `insert_or_assign()` ：插入元素或如果键已存在则赋值给当前元素
 		- [[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]
 	- `emplace()` ：就地构造并插入
@@ -2443,7 +2443,7 @@ STL容器主要有如下三类：
 		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 - 元素删除：
 	- `erase()` ：删除元素
-		- [[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 		- 补充说明：[[CPP/C2CPP/C2CPP#^8t8324|遍历时安全删除元素]]
 	- `pop_back()` ：移除末尾元素
 		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
@@ -2453,9 +2453,10 @@ STL容器主要有如下三类：
 		- [[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 - 元素修改：
 	- `operator[]` ：访问指定元素
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]
 - 元素访问：
 	- `at()` ：访问指定元素，带边界检查
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `operator[]` ：访问指定元素
 		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `find()` ：查找指定元素(通常返回元素的迭代器)
@@ -2463,16 +2464,16 @@ STL容器主要有如下三类：
 	- `contains` ：检查容器是否包含具有特定键的元素
 		- [[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]
 	- `front()` ：访问第一个元素
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `back()` ：访问最后一个元素
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `count()` ：返回匹配特定键的元素数量
 		- [[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]
 	- `equal_range()` ：返回与特定键匹配的元素范围
 		- [[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]
 - 容器修改：
 	- `clear()` ：清空容器
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `resize()` ：修改容器大小
 		- 若元素数量大于目标容器大小，则删除后续元素并缩小
 		- 若元素数量小于目标容器大小，则填充默认值或指定值
@@ -2481,42 +2482,50 @@ STL容器主要有如下三类：
 		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `operator=` ：容器赋值
 	- `assign()` ：为容器批量<font color="#c00000">赋值</font>(注意不是分配空间，区分于 `reserve` )
-		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `assign_range()` 
-		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 - 容器容量：
 	- `empty()` ：判断是否为空
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `size()` ：返回元素成员数量
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]
 	- `max_size()` ：返回容器能够容纳的最大元素数量，取决于系统或库实现
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `reserve()` ：<font color="#c00000">预留存储空间</font>
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、
 	- `capacity()` ：返回当前已分配空间中可以容纳的元素数量
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、
 	- `shrink_to_fit()` ：通过释放未使用的内存来减少内存占用
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 - 容器访问：
 	- `data()` ：直接访问底层的数据存储的连续区域
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、
 - operators：
 	- `operator[]` ：访问指定元素
 	- 
 - 迭代器：
 	- `begin()` ：获取指向开始的迭代器
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `end()` ：获取指向末尾的下一个元素的迭代器
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `rbegin()` ：获取逆向迭代器，第一个元素为正向的最后一个
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `rend()` ：
-		- [[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
-- 
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+- MISC
 	- extract
 		- [[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]
 	- merge
 		- [[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]
+	- `get_allocator`
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]
+	- `c_str`
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]
+	- `operator basic_string_view
+	  - [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]
+`
+
 
 #### 4.2.1.1 遍历时安全删除元素 ^8t8324
 
