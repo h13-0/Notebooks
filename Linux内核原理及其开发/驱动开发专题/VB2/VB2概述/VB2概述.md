@@ -481,7 +481,7 @@ void vb2_queue_release(struct vb2_queue *q);
 # 3 缓冲区(vb2_buffer)
 
 ## 3.1 缓冲区状态与生命周期 ^nijdvg
-
+	
 对于VB2缓冲区对象，无论其为输入设备还是输出设备，其均有如下的状态转换图：
 ```mermaid
 stateDiagram-v2
