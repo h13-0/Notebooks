@@ -210,12 +210,12 @@ nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0 。
 给你一个二叉树的根节点 `root` ， 检查它是否轴对称。
 
 **示例 1：**
-	![[../Resources/Pasted image 20260120153254.png]]
+	![[../../Resources/Pasted image 20260120153254.png]]
 - **输入：** `root = [1,2,2,3,4,4,3]`
 - **输出：** `true`
 
 **示例 2：**
-	![[../Resources/Pasted image 20260120153338.png]]
+	![[../../Resources/Pasted image 20260120153338.png]]
 - **输入：** `root = [1,2,2,null,3,null,3]`
 - **输出：** `false`
 
@@ -230,7 +230,7 @@ nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0 。
 给你二叉树的根节点 `root` ，返回其节点值的**层序遍历**。(即逐层地，从左到右访问所有节点)。
 
 **示例 1：**
-	![[../Resources/Pasted image 20260121142050.png]]
+	![[../../Resources/Pasted image 20260121142050.png]]
 - **输入：** `root = [3,9,20,null,null,15,7]`
 - **输出：** `[[3],[9,20],[15,7]]`
 
