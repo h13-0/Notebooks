@@ -3406,6 +3406,7 @@ constexpr ForwardIt upper_bound( ForwardIt first, ForwardIt last,
 	- 使用自定义[[CPP/C2CPP/C2CPP#^t2nyfa|Compare]]并搜索：`std::equal_range(first, last, value, comp);`
 - 返回值：
 	- `std::pair<ForwardIt, ForwardIt>` ：
+		- `<pair.first, pair.second>` <span style="background:#fff88f"><font color="#c00000">等价于</font></span> `<lower_bound, upper_bound>`
 		- `pair.first` 指向 `[first, last)` 中第一个不小于 value 的元素的迭代器
 		- `pair.second` 指向 `[first, last)` 中第一个大于 value 的元素的迭代器
 	- 则有：
