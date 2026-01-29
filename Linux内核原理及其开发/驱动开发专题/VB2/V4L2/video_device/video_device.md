@@ -283,10 +283,12 @@ printf("get pix.pixelformat=%c.%c.%c.%c\r\n",
 #### 2.2.7.1 V4L2缓冲区类型 ^ekflbd
 
 V4L2框架一共提供了如下三种缓冲区：
-- `V4L2_MEMORY_MMAP` ：使用 `mmap` 将内核分配的DMA缓冲区映射到用户空间
+- `V4L2_MEMORY_MMAP` ：使用 `mmap` 将内核分配的缓冲区映射到用户空间
 	- 数据流动：`硬件 -(DMA)-> DMA缓冲区 <-(内存映射)->用户空间`
 	- 在用户态编程时，[[mmap#^go6lxw|mmap]]<font color="#c00000">的操作对象是将一个fd的offset处映射到指定内存区域</font>，因此在使用mmap方式操作缓冲区时也是<font color="#c00000">获取到缓冲区</font><span style="background:#fff88f"><font color="#c00000">相对于fd的offset</font></span>后进行操作。
 	- 无需拷贝，性能较好。
+	- 注意：
+		- 具体分配什么类型的内存取决于驱动的后端实现，<font color="#c00000">大多数情况下是DMA缓冲区</font>，<font color="#c00000">但也不绝对</font>
 - `V4L2_MEMORY_USERPTR` ：用户提供缓冲区，驱动直接通过DMA将数据写入这些缓冲区，而无需CPU介入。
 	- 标准语义的数据流动：`硬件 -(DMA)-> 离散的用户空间`
 	- 部分CPU可能不支持直接DMA到可能离散的用户内存空间。
