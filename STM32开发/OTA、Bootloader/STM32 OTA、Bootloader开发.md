@@ -35,7 +35,7 @@ MEMORY
   FLASH    (rx)    : ORIGIN = 0x8000000,   LENGTH = 20K  /* 64K */
 }
 ```
-1. 实现Bootloader基础功能，主要包含：
+1. 实现Bootloader基础功能，主要包含： ^l8gh6b
 	1. [[STM32 OTA、Bootloader开发#^8pv5ar|Flash烧写功能]]
 	2. [[STM32 OTA、Bootloader开发#^fsnwb3|跳转功能]]，需要完成：
 		1. 关闭并重置Bootloader程序所用到的所有外设。
