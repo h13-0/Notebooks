@@ -96,16 +96,21 @@ Reset_Handler:
   b LoopCopyDataInit
 ```
 
-其主要流程为：
-1. 调用 `SystemInit` 函数，主要初始化系统时钟源、PLL锁等。
-2. 初始化 `.data` 段。
-3. 跳转 `LoopCopyDataInit` 函数：
-   1. 清零 `.bss` 段。
-   2. 调用 `__libc_init_array` 函数初始化C库。
-   3. 调用 `main` 函数。
+- 其主要流程为： ^gb5pov
+	1. 调用 `SystemInit` 函数，主要初始化系统时钟源、PLL锁等。
+	2. 初始化(拷贝) `.data` 段。
+	3. 跳转 `LoopCopyDataInit` 函数：
+	   4. 清零 `.bss` 段。
+	   5. 调用 `__libc_init_array` 函数初始化C库。
+	   6. 调用 `main` 函数。
 
 ### 5.2 SystemInit函数
 
+`SystemInit` 函数主要负责：<font color="#c00000">将MCU从硬件复位的"混沌状态"，恢复到一个"已知的、安全的、默认的"运行状态</font>。
 
-
+- 其主要流程为： ^3hxcfi
+	1. 开启FPU(如果有)
+	2. <font color="#c00000">复位RCC时钟配置</font>
+	3. <font color="#c00000">配置VTOR偏移</font>
+	4. 配置外部存储器FSMC/FMC(如果有)
 
