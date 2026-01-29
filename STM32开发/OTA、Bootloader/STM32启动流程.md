@@ -103,3 +103,9 @@ Reset_Handler:
    1. 清零 `.bss` 段。
    2. 调用 `__libc_init_array` 函数初始化C库。
    3. 调用 `main` 函数。
+
+### 5.2 SystemInit函数
+
+
+
+
