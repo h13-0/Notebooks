@@ -513,7 +513,7 @@ stateDiagram-v2
 	2. 缓冲区状态为 `DONE` 的也有一个队列，用于等待用户态申请出队。
 2. 用户态可访问的缓冲区有且仅有 `DEQUEUED` 状态
 3. <span style="background:#fff88f"><font color="#c00000">只有状态为</font></span> `ACTIVE` <span style="background:#fff88f"><font color="#c00000">的缓冲区才可以转变为</font></span> `DONE` 
-4. 在用户态开启流传输前，<font color="#c00000">首次初始化缓冲区并入队时</font>，<span style="background:#fff88f"><font color="#c00000">并不会触发入队回调</font></span>。当用户开启流传输时，<font color="#c00000">流传输开启回调中会告诉驱动当前队列中缓冲区数量</font>，驱动需要从中
+4. 在用户态开启流传输前，<font color="#c00000">首次初始化缓冲区并入队时</font>，<span style="background:#fff88f"><font color="#c00000">并不会触发入队回调</font></span>。当用户开启流传输时，<font color="#c00000">流传输开启回调中会告诉驱动当前队列中缓冲区数量</font>，<font color="#c00000">驱动需要将已入队的缓冲区提交给硬件进行处理</font>
 
 对应的枚举为：
 
