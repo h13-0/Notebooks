@@ -1386,6 +1386,37 @@ ssize_t (*writev) (struct file *, const struct iovec *, unsigned long, loff_t *)
 
 <font color="#c00000">上述支持在Linux 2.6.19中已经删除</font>。
 
+## 6.12 最简字符设备实例 ^od3z64
+
+```C
+// 1. 定义 fops 
+static struct file_operations my_fops = {
+    .owner = THIS_MODULE,
+    .open = my_open,
+    .read = my_read,
+};
+
+static int __init my_init(void)
+{
+    dev_t dev_id;
+    
+    // 2. 申请设备号
+    // 动态分配：cat /proc/devices 查看
+    alloc_chrdev_region(&dev_id, 0, 1, "my_simplest_dev");
+    
+    // 3. 初始化 cdev
+    cdev_init(&my_cdev, &my_fops);
+    my_cdev.owner = THIS_MODULE;
+    
+    // 4. 注册到内核 (上线)
+    // 此时内核建立了 dev_t -> cdev 的映射
+    cdev_add(&my_cdev, dev_id, 1);
+    
+    return 0;
+}
+```
+
+
 # 7 内核调试技术
 
 ## 7.1 内核的调试技术支持
