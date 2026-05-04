@@ -12,7 +12,12 @@ alwaysApply: false
 3. 主模型默认有投票权限，参与加权评分。
 4. 先读取 `AI-Review/` 下的设计文档。
 5. 通过 CLI 执行权威流程，不要手工随意改文件。
-6. 默认先执行 dry-run：`ai-review review --changed --dry-run`。
-7. 只有用户明确要求写入时，才执行 apply。
-8. 不得直接修改用户原始正文。
-9. 原文反向折叠块不显示 topic。
+6. 默认先执行 dry-run 桥接流程：
+   - `.\ai-review.cmd prepare-host --changed --dry-run`
+   - 读取 `AI-Review/.state/host-current-prepare.json`
+   - 当前 Cursor Agent 模型逐个生成符合 `AI-Review/MODEL_PROTOCOL.md` 的投票，写入 `AI-Review/.state/host-current-votes.json`
+   - `.\ai-review.cmd merge-host --prepare-file AI-Review/.state/host-current-prepare.json --host-current-vote-file AI-Review/.state/host-current-votes.json --dry-run`
+7. 只有用户明确要求写入时，才把 prepare/merge 的 `--dry-run` 换成 `--apply`。
+8. host-current 投票中 `model_id` 必须是 `host-current`，`model_role` 必须是 `main`。
+9. 不得直接修改用户原始正文。
+10. 原文反向折叠块不显示 topic。

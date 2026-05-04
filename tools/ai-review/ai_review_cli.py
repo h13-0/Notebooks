@@ -1123,6 +1123,134 @@ def save_run_state(review_dir: Path, state: dict[str, Any]) -> None:
     write_json_atomic(review_dir / ".state" / "run-state.json", state)
 
 
+def discover_units_for_args(
+    root: Path,
+    config: dict[str, Any],
+    review_dir: Path,
+    args: argparse.Namespace,
+    unit_ledger: dict[str, Any],
+) -> tuple[list[Path], list[ReviewUnit]]:
+    scope = "all" if getattr(args, "all", False) else "changed"
+    files = list_markdown_files(root, review_dir, scope, getattr(args, "paths", []))
+    all_units: list[ReviewUnit] = []
+    for path in files:
+        all_units.extend(split_units(path, root, unit_ledger))
+    issue_id = getattr(args, "issue", None)
+    if issue_id:
+        issue = next((x for x in collect_issues(review_dir) if x["id"] == issue_id), None)
+        if not issue:
+            raise AiReviewError(f"未找到 issue：{issue_id}")
+        all_units = [
+            u for u in all_units
+            if u.unit_id == issue["source_unit_id"] or u.rel_path.strip('"') == issue["source_file"].strip('"')
+        ]
+    limit = getattr(args, "limit", None)
+    if limit:
+        all_units = all_units[: int(limit)]
+    return files, all_units
+
+
+def serialize_unit_for_host(root: Path, unit: ReviewUnit, config: dict[str, Any], warning_keys: set[str]) -> dict[str, Any]:
+    context_notes = extract_attachment_context(root, unit, config, warning_keys)
+    return {
+        "unit_id": unit.unit_id,
+        "source_file": unit.rel_path,
+        "source_block_ref": source_block_ref(unit),
+        "heading_path": unit.heading_path,
+        "heading": unit.heading,
+        "level": unit.level,
+        "start_line": unit.start_line,
+        "end_line": unit.end_line,
+        "content_hash": unit.content_hash,
+        "requires_multimodal": unit.requires_multimodal,
+        "attachments": unit.attachments,
+        "outlinks": unit.outlinks,
+        "tags": unit.tags,
+        "context_notes": context_notes,
+        "content": unit.content,
+        "prompt": build_prompt(unit, context_notes),
+    }
+
+
+def host_prepare_payload(args: argparse.Namespace) -> tuple[Path, dict[str, Any]]:
+    root = Path.cwd().resolve()
+    config = load_yaml(root / ".ai-review.yaml")
+    review_dir = root / str(config.get("review_dir", "AI-Review"))
+    ensure_review_dirs(root, review_dir)
+    warning_keys: set[str] = set()
+    warnings = git_preflight(root, config, False)
+    for warning in warnings:
+        print_warning(warning)
+    validate_issue_notes(review_dir)
+    unit_ledger = load_json(review_dir / ".state" / "review-unit-ledger.json", {"version": 1, "next_unit_id": 1, "units": {}})
+    files, units = discover_units_for_args(root, config, review_dir, args, unit_ledger)
+    payload = {
+        "version": 1,
+        "kind": "ai-review-host-current-prepare",
+        "created_at": _dt.datetime.now().isoformat(),
+        "repo_root": str(root),
+        "review_dir": str(review_dir.relative_to(root).as_posix()),
+        "mode": {
+            "scope": "all" if getattr(args, "all", False) else "changed",
+            "dry_run": bool(getattr(args, "dry_run", False) or not getattr(args, "apply", False)),
+            "apply": bool(getattr(args, "apply", False)),
+            "limit": getattr(args, "limit", None),
+            "issue": getattr(args, "issue", None),
+            "paths": getattr(args, "paths", []),
+        },
+        "model_protocol": "AI-Review/MODEL_PROTOCOL.md",
+        "output_contract": {
+            "format": "JSON object or array",
+            "accepted_shapes": [
+                "数组：每项是一个单模型投票对象",
+                "对象：{unit_id: vote_object}",
+                "单对象：包含 unit_id 的 vote_object",
+            ],
+            "required_model_id": "host-current",
+            "required_model_role": "main",
+        },
+        "files": [p.relative_to(root).as_posix() for p in files],
+        "units": [serialize_unit_for_host(root, unit, config, warning_keys) for unit in units],
+        "warnings": sorted(warning_keys),
+    }
+    return review_dir, payload
+
+
+def command_prepare_host(args: argparse.Namespace) -> int:
+    review_dir, payload = host_prepare_payload(args)
+    output = Path(args.output) if args.output else review_dir / ".state" / "host-current-prepare.json"
+    write_json_atomic(output, payload)
+    print_info(f"host-current prepare 已生成：{output}")
+    print_info(f"待当前会话模型审查 ReviewUnit：{len(payload['units'])}")
+    if args.print_json:
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+    return 0
+
+
+def command_merge_host(args: argparse.Namespace) -> int:
+    if not args.host_current_vote_file:
+        raise AiReviewError("merge-host 需要 --host-current-vote-file。")
+    prepare_payload: dict[str, Any] = {}
+    if args.prepare_file:
+        prepare_payload = load_json(Path(args.prepare_file), {})
+    mode_data = prepare_payload.get("mode", {}) if isinstance(prepare_payload, dict) else {}
+    ns = argparse.Namespace(
+        command="review",
+        changed=not bool(args.all or mode_data.get("scope") == "all"),
+        all=bool(args.all or mode_data.get("scope") == "all"),
+        paths=args.paths or mode_data.get("paths", []),
+        issue=args.issue or mode_data.get("issue"),
+        resume=False,
+        dry_run=bool(args.dry_run or (not args.apply and mode_data.get("dry_run", True))),
+        apply=bool(args.apply or mode_data.get("apply", False)),
+        limit=args.limit if args.limit is not None else mode_data.get("limit"),
+        main="host-current",
+        host_current_vote_file=args.host_current_vote_file,
+        no_external=bool(args.no_external),
+    )
+    return command_review(ns)
+
+
 def command_review(args: argparse.Namespace) -> int:
     root = Path.cwd().resolve()
     config = load_yaml(root / ".ai-review.yaml")
@@ -1140,28 +1268,18 @@ def command_review(args: argparse.Namespace) -> int:
     unit_ledger = load_json(unit_ledger_path, {"version": 1, "next_unit_id": 1, "units": {}})
     issue_ledger = load_json(issue_ledger_path, {"version": 1, "next_issue_id_hex": "0001", "issues": {}})
 
-    scope = "all" if args.all else "changed"
-    files = list_markdown_files(root, review_dir, scope, args.paths)
-    all_units: list[ReviewUnit] = []
-    for path in files:
-        all_units.extend(split_units(path, root, unit_ledger))
-    if args.issue:
-        wanted = args.issue
-        issue = next((x for x in collect_issues(review_dir) if x["id"] == wanted), None)
-        if not issue:
-            raise AiReviewError(f"未找到 issue：{wanted}")
-        all_units = [u for u in all_units if u.unit_id == issue["source_unit_id"] or u.rel_path.strip('"') == issue["source_file"].strip('"')]
-    if args.limit:
-        all_units = all_units[: int(args.limit)]
+    files, all_units = discover_units_for_args(root, config, review_dir, args, unit_ledger)
     if args.apply:
         save_run_state(review_dir, {"version": 1, "active_run": {"stage": "SCANNING", "started_at": _dt.datetime.now().isoformat(), "units": len(all_units)}, "last_runs": []})
     print_info(f"扫描到 {len(files)} 个 Markdown 文件，待审查 ReviewUnit：{len(all_units)}")
 
     link_index = build_link_index(all_units)
     host_votes = load_host_votes(args.host_current_vote_file)
+    existing_issues = collect_issues(review_dir)
     aggregates: dict[str, AggregateResult] = {}
     issue_links: dict[str, list[tuple[str, Path]]] = {}
     planned_issue_text: dict[Path, str] = {}
+    planned_moves: list[tuple[Path, Path, str, str]] = []
     if args.apply:
         save_run_state(review_dir, {"version": 1, "active_run": {"stage": "VOTING", "units": len(all_units)}, "last_runs": []})
 
@@ -1176,7 +1294,22 @@ def command_review(args: argparse.Namespace) -> int:
             votes = [fallback_unknown_vote(unit, "没有可用模型完成审查。")]
         aggregate = aggregate_votes(votes, config)
         aggregates[unit.unit_id] = aggregate
+        open_existing = [
+            item for item in existing_issues
+            if item.get("source_unit_id") == unit.unit_id and item.get("status") in {"Open", "Unknown"}
+        ]
+        if aggregate.severity == "Correct":
+            for item in open_existing:
+                src = item["path"]
+                dst = issue_move_target(review_dir, src, "Closed")
+                planned_moves.append((src, dst, "Closed", item["id"]))
+            print_info(f"{idx}/{len(all_units)} {unit.unit_id} {unit.rel_path}:{unit.start_line} -> {aggregate.severity}")
+            continue
         if aggregate.severity in ISSUE_SEVERITIES:
+            for item in open_existing:
+                src = item["path"]
+                dst = issue_move_target(review_dir, src, "Superseded")
+                planned_moves.append((src, dst, "Superseded", item["id"]))
             issue_id = next_issue_id(issue_ledger)
             path = issue_path(review_dir, issue_id, aggregate.severity, aggregate.title)
             issue_links.setdefault(unit.unit_id, []).append((issue_id, path.relative_to(root)))
@@ -1196,9 +1329,20 @@ def command_review(args: argparse.Namespace) -> int:
         print_info("dry-run 结果：")
         for unit_id, aggregate in aggregates.items():
             print(f"- {unit_id}: {aggregate.severity} · {aggregate.title} · votes={len(aggregate.votes)}")
+        for src, dst, status, issue_id in planned_moves:
+            print(f"- move {issue_id}: {src.relative_to(root).as_posix()} -> {dst.relative_to(root).as_posix()} ({status})")
         return 0
 
     save_run_state(review_dir, {"version": 1, "active_run": {"stage": "WRITING", "units": len(aggregates)}, "last_runs": []})
+    for src, dst, status, issue_id in planned_moves:
+        text = update_issue_status_text(load_text(src), status)
+        write_text_atomic(dst, text)
+        if src != dst and src.exists():
+            src.unlink()
+        if issue_id in issue_ledger.get("issues", {}):
+            issue_ledger["issues"][issue_id]["status"] = status.lower()
+            issue_ledger["issues"][issue_id]["path"] = dst.relative_to(root).as_posix()
+            issue_ledger["issues"][issue_id]["updated_at"] = now_date()
     for path, text in planned_issue_text.items():
         validate_frontmatter_text(text)
         write_text_atomic(path, text)
@@ -1303,6 +1447,33 @@ def build_parser() -> argparse.ArgumentParser:
     review.add_argument("--host-current-vote-file", help="注入 host-current 主模型投票 JSON")
     review.add_argument("--no-external", action="store_true", help="不调用外部 voter API，仅验证扫描、聚合和渲染路径")
 
+    prepare = sub.add_parser("prepare-host", help="为 Codex/Cursor 当前会话模型准备 host-current 审查输入")
+    prepare_scope = prepare.add_mutually_exclusive_group()
+    prepare_scope.add_argument("--changed", action="store_true", help="只准备 Git 变更文件")
+    prepare_scope.add_argument("--all", action="store_true", help="准备全仓库")
+    prepare.add_argument("paths", nargs="*", help="指定文件或目录")
+    prepare.add_argument("--issue", help="准备复查指定 issue")
+    prepare.add_argument("--limit", type=int, help="最多准备 N 个 ReviewUnit")
+    prepare_mode = prepare.add_mutually_exclusive_group()
+    prepare_mode.add_argument("--dry-run", action="store_true", help="准备 dry-run 审查")
+    prepare_mode.add_argument("--apply", action="store_true", help="准备 apply 审查")
+    prepare.add_argument("--output", help="prepare JSON 输出路径，默认 AI-Review/.state/host-current-prepare.json")
+    prepare.add_argument("--print-json", action="store_true", help="同时向 stdout 打印完整 JSON")
+
+    merge = sub.add_parser("merge-host", help="合并 Codex/Cursor 当前会话模型投票并继续 CLI 流程")
+    merge_scope = merge.add_mutually_exclusive_group()
+    merge_scope.add_argument("--changed", action="store_true", help="只审查 Git 变更文件")
+    merge_scope.add_argument("--all", action="store_true", help="审查全仓库")
+    merge.add_argument("paths", nargs="*", help="指定文件或目录")
+    merge.add_argument("--issue", help="复查指定 issue")
+    merge_mode = merge.add_mutually_exclusive_group()
+    merge_mode.add_argument("--dry-run", action="store_true", help="只预览，不写入")
+    merge_mode.add_argument("--apply", action="store_true", help="事务化写入")
+    merge.add_argument("--limit", type=int, help="最多审查 N 个 ReviewUnit")
+    merge.add_argument("--prepare-file", default="AI-Review/.state/host-current-prepare.json", help="prepare-host 生成的 JSON")
+    merge.add_argument("--host-current-vote-file", required=True, help="当前会话模型生成的投票 JSON")
+    merge.add_argument("--no-external", action="store_true", help="不调用外部 voter API，仅使用 host-current 投票")
+
     dashboard = sub.add_parser("dashboard", help="更新 Dashboard")
     dashboard.add_argument("--dry-run", action="store_true")
     sub.add_parser("check", help="检查配置、状态和链接")
@@ -1324,6 +1495,15 @@ def main(argv: list[str] | None = None) -> int:
                 if not args.changed and not args.all and not args.paths:
                     args.changed = str(default.get("scope", "changed")) == "changed"
             return command_review(args)
+        if args.command == "prepare-host":
+            if not args.dry_run and not args.apply:
+                default = load_yaml(Path.cwd() / ".ai-review.yaml").get("default_mode", {})
+                args.dry_run = bool(default.get("dry_run", True))
+                if not args.changed and not args.all and not args.paths:
+                    args.changed = str(default.get("scope", "changed")) == "changed"
+            return command_prepare_host(args)
+        if args.command == "merge-host":
+            return command_merge_host(args)
         if args.command == "dashboard":
             return command_dashboard(args)
         if args.command == "check":
