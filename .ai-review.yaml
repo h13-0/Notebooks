@@ -59,17 +59,17 @@ voting:
   main_model_uses_same_scoring: true
   severity_thresholds:
     Correct:
-      min_normalized_score: 0.50
+      min_normalized_score: 0.80
     Enhance:
-      min_normalized_score: 0.35
+      min_normalized_score: 0.70
     Minor:
-      min_normalized_score: 0.45
+      min_normalized_score: 0.70
     Major:
-      min_normalized_score: 0.40
+      min_normalized_score: 0.70
     Critical:
-      min_normalized_score: 0.35
+      min_normalized_score: 0.70
     Unknown:
-      min_normalized_score: 0.30
+      min_normalized_score: 0.60
 
 models:
   main: "gpt-main"

@@ -10,3 +10,4 @@ github_token.txt
 *.svg.dtmp
 /Resources/Statistics/Notebooks
 *.pyc
+.ai-review-secrets.yaml
