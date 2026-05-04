@@ -84,12 +84,55 @@ models:
       generation:
         max_tokens: 8192
         temperature: 0.1
+    - id: "qwen3.6-max-preview"
+      display_name: "Qwen3.6-Max-Preview"
+      provider: "aliyun"
+      model: "qwen3.6-max-preview"
+      multimodal: false
+      weight: 2
+      role: "voter"
+      vote_enabled: true
+      thinking:
+        enabled: true
+        effort: "high"
+      generation:
+        max_tokens: 8192
+        temperature: 0.1
+    - id: "qwen3.6-plus"
+      display_name: "Qwen3.6-Plus"
+      provider: "aliyun"
+      model: "qwen3.6-plus"
+      multimodal: true
+      weight: 2
+      role: "voter"
+      vote_enabled: true
+      thinking:
+        enabled: true
+        effort: "high"
+      generation:
+        max_tokens: 8192
+        temperature: 0.1
+    - id: "kimi-k2.6"
+      display_name: "Kimi-K2.6"
+      provider: "moonlight"
+      model: "kimi-k2.6"
+      multimodal: true
+      weight: 2
+      role: "voter"
+      vote_enabled: true
+      thinking:
+        enabled: true
+        effort: "high"
+      generation:
+        max_tokens: 8192
+        temperature: 0.1
+
 
 context:
   include_outlinks: true
   include_backlinks: true
   max_backlinks: 5
-  max_context_tokens: 6000
+  max_context_tokens: 8192
 
 attachments:
   svg:
