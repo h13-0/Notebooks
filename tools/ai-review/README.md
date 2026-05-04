@@ -44,6 +44,34 @@ $env:AI_REVIEW_HOST_CURRENT_VOTES_JSON = Get-Content -Raw host-votes.json
 
 如果未注入 `host-current` 投票，CLI 会继续调用配置的 voter 模型；如果没有任何可用模型，则按配置降级为 `Unknown`。
 
+## Codex/Cursor 桥接流程
+
+Codex/Cursor 的 `/ai-review` 应使用两段式桥接：
+
+```powershell
+.\ai-review.cmd prepare-host --changed --dry-run
+```
+
+该命令生成：
+
+```text
+AI-Review/.state/host-current-prepare.json
+```
+
+宿主模型读取其中 `units`，逐个生成符合 `AI-Review/MODEL_PROTOCOL.md` 的投票，并写入：
+
+```text
+AI-Review/.state/host-current-votes.json
+```
+
+随后合并：
+
+```powershell
+.\ai-review.cmd merge-host --prepare-file AI-Review/.state/host-current-prepare.json --host-current-vote-file AI-Review/.state/host-current-votes.json --dry-run
+```
+
+写入模式把 `prepare-host` 和 `merge-host` 的 `--dry-run` 都替换为 `--apply`。
+
 ## 外部 voter
 
 外部模型从 `.ai-review.yaml` 读取模型列表，从 `.ai-review-secrets.yaml` 读取 provider 的 `base_url` 和 `api_key`。请求使用 OpenAI-compatible `/chat/completions` 形态，模型必须返回协议 JSON。
