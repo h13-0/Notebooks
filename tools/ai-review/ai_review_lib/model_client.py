@@ -22,7 +22,38 @@ def endpoint_for_provider(provider: str, secrets: dict[str, Any]) -> tuple[str, 
     return base_url, api_key
 
 
-def call_model(model: dict[str, Any], secrets: dict[str, Any], prompt: str, timeout: int) -> dict[str, Any]:
+def _parse_non_stream_response(data: dict[str, Any]) -> str:
+    return data.get("choices", [{}])[0].get("message", {}).get("content", "")
+
+
+def _parse_stream_response(resp: Any) -> str:
+    """Parse OpenAI-compatible SSE chunks.
+
+    中文说明：开启 stream 后，timeout 变成 socket 空闲超时。只要服务端持续
+    输出 chunk，`readline()` 就会持续返回，不会因为总生成时间长而被误判为无响应。
+    """
+    pieces: list[str] = []
+    for raw_line in resp:
+        line = raw_line.decode("utf-8", errors="replace").strip()
+        if not line or not line.startswith("data:"):
+            continue
+        payload = line[5:].strip()
+        if payload == "[DONE]":
+            break
+        try:
+            data = json.loads(payload)
+        except json.JSONDecodeError:
+            continue
+        choice = (data.get("choices") or [{}])[0]
+        delta = choice.get("delta") or {}
+        message = choice.get("message") or {}
+        content = delta.get("content") or message.get("content") or ""
+        if content:
+            pieces.append(content)
+    return "".join(pieces)
+
+
+def call_model(model: dict[str, Any], secrets: dict[str, Any], prompt: str, timeout: int, stream: bool = False) -> dict[str, Any]:
     """Call one OpenAI-compatible chat completion endpoint.
 
     中文说明：外部 voter 统一走 OpenAI-compatible chat/completions。
@@ -41,6 +72,8 @@ def call_model(model: dict[str, Any], secrets: dict[str, Any], prompt: str, time
         "max_tokens": generation.get("max_tokens", 4096),
         "response_format": {"type": "json_object"},
     }
+    if stream:
+        payload["stream"] = True
     body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
     req = urllib.request.Request(
         url,
@@ -50,11 +83,15 @@ def call_model(model: dict[str, Any], secrets: dict[str, Any], prompt: str, time
     )
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
+            if stream:
+                content = _parse_stream_response(resp)
+                data = None
+            else:
+                data = json.loads(resp.read().decode("utf-8"))
+                content = _parse_non_stream_response(data)
     except urllib.error.HTTPError as exc:
         body = exc.read().decode("utf-8", errors="replace")[:1000]
         raise ModelClientError(f"HTTP {exc.code}: {body}") from exc
-    content = data.get("choices", [{}])[0].get("message", {}).get("content", "")
     if not content:
         raise ModelClientError("模型返回为空")
     content = content.strip()
@@ -66,11 +103,11 @@ def call_model(model: dict[str, Any], secrets: dict[str, Any], prompt: str, time
     return json.loads(content)
 
 
-def call_model_with_retry(model: dict[str, Any], secrets: dict[str, Any], prompt: str, timeout: int, retry: int) -> dict[str, Any]:
+def call_model_with_retry(model: dict[str, Any], secrets: dict[str, Any], prompt: str, timeout: int, retry: int, stream: bool = False) -> dict[str, Any]:
     last_exc: Exception | None = None
     for attempt in range(retry + 1):
         try:
-            return call_model(model, secrets, prompt, timeout)
+            return call_model(model, secrets, prompt, timeout, stream=stream)
         except Exception as exc:
             last_exc = exc
             if attempt < retry:

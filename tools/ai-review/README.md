@@ -96,6 +96,21 @@ scan:
 
 黑名单支持目录名和仓库相对路径 glob。命中后不会生成 ReviewUnit，但不影响 CLI 维护 `AI-Review/` 下的 issue、Dashboard 和 state 文件。
 
+## Obsidian 引用上下文
+
+当 `.ai-review.yaml` 中启用：
+
+```yaml
+context:
+  include_outlink_blocks: true
+```
+
+CLI 会解析当前 ReviewUnit 中的 `[[note#Heading]]` 和 `[[note#^blockid]]`，把目标标题段落或块 ID 所在段落拼接进模型上下文。
+
+## 流式外部 voter
+
+`runtime.stream: true` 时，外部 voter 使用 OpenAI-compatible SSE stream。此时 `request_timeout_sec` 是 socket 空闲超时：只要模型持续输出 chunk，就不会因为总输出时间较长而被误判为无响应。
+
 ## 结构化本地验证
 
 如只想验证扫描、ReviewUnit 切分、聚合和渲染链路，不调用外部模型：
