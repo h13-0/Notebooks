@@ -10,70 +10,27 @@ ReviewUnit 是 AI Review 的最小审查单位。
 
 1. 按 Markdown 1-6 级标题划分；
 2. 一个标题及其下方正文，直到下一个任意级别标题之前，构成一个 ReviewUnit；
-3. 如果两个标题之间没有正文内容，则跳过；
+3. 如果两个标题之间没有正文内容，则跳过，不插入反向折叠块；
 4. 文件开头在第一个标题前的正文可作为 `_preamble` ReviewUnit；
 5. ReviewUnit ID 使用 `ru000001` 形式递增；
-6. ReviewUnit ID 写入原文 AI-Review 折叠块，并作为 Obsidian 块 ID 使用；
+6. ReviewUnit ID 写入原文 AI-Review 折叠块，并追加为 Obsidian 块 ID，例如 `^ru000001`；
 7. 文件路径、标题路径只作为 locator，不作为稳定 ID；
 8. 段落内容 hash 用于判断是否需要复查。
 
-## 2. 原文 AI-Review 折叠块
-
-每个被审查的非空 ReviewUnit 后必须插入一个 AI-Review 折叠块。
-
-有问题示例：
-
-```markdown
-<!-- ai-review:start unit=ru000001 -->
-> [!bug]- AI Review `ru000001`
-> - [ ] [[AI-Review/Open/ar0001-Major-Loader与MaskROM概念混用|ar0001]]
-> `2026-05-04` · GPT-5.5/DeepSeek
-<!-- ai-review:end -->
-^ru000001
-```
-
-正确示例：
-
-```markdown
-<!-- ai-review:start unit=ru000002 -->
-> [!success]- AI Review `ru000002`
-> - [[AI-Review/Dashboard|Dashboard]]
-> `2026-05-04` · GPT-5.5/DeepSeek
-<!-- ai-review:end -->
-^ru000002
-```
-
-规则：
-
-1. 折叠块不显示 topic；
-2. 折叠块必须显示当前 ReviewUnit ID；
-3. issue 文件通过 `[[source.md#^ru000001]]` 引用原文块；
-4. 折叠块是机器管理区域，除 checkbox 外不建议人工修改；
-5. hash 计算时必须忽略整个 AI-Review 折叠块和尾随块 ID。
-
-## 3. 语言规则
-
-1. 所有面向用户的输出主语言必须是简体中文；
-2. 所有写入 Markdown 的 issue、Dashboard、状态说明、warning 和运行日志主语言必须是简体中文；
-3. 必要的专业外文单词、命令、路径、模型名、配置字段、API 字段和代码可以保留英文；
-4. 模型投票 JSON 的字段名保持英文，字段值中的自然语言内容应使用简体中文。
-
-## 4. Hash 规则
+## 2. Hash 规则
 
 计算 ReviewUnit hash 时，应进行归一化：
 
 1. 忽略 AI-Review 自动插入块；
-2. 统一换行符为 `
-`；
+2. 统一换行符为 `\n`；
 3. 删除段前段后空行；
 4. 连续多个空行压缩；
 5. 删除行尾空格；
 6. 保留代码块内容，不做语义格式化；
-7. 表格不自动重排；
-8. 附件按原始 bytes 计算 hash；
-9. SVG 转 PNG 仅用于多模态审查，不写入笔记仓库。
+7. 附件按原始 bytes 计算 hash；
+8. SVG 转 PNG 仅用于多模态审查，不写入笔记仓库。
 
-## 5. Issue 生命周期
+## 3. Issue 生命周期
 
 Issue 状态包括：
 
@@ -95,7 +52,7 @@ Issue 状态包括：
 9. 旧问题被新问题替代时移动到 `Superseded/`；
 10. 无法判断的问题进入 `Unknown/`。
 
-## 6. 严重等级
+## 4. 严重等级
 
 固定等级：
 
@@ -108,7 +65,7 @@ Issue 状态包括：
 | Critical | 严重错误，核心结论错误 | `[!danger]` |
 | Unknown | 无法判断，需要人工确认 | `[!question]` |
 
-## 7. 多模型投票规则
+## 5. 多模型投票规则
 
 每个模型输出：
 
@@ -120,7 +77,7 @@ Issue 状态包括：
 6. 是否需要多模态；
 7. 是否使用了上下文。
 
-当前主模型默认开放投票权限。主模型投票结果必须像其他投票模型一样进入统一加权评分，并在 issue 的模型投票表中显式记录。
+当前主模型默认有投票权限。主模型投票必须和其他模型一样进入统一加权评分，不得在聚合阶段隐式覆盖其他模型。
 
 最终等级按加权得分决定：
 
@@ -128,11 +85,9 @@ Issue 状态包括：
 score(severity) = Σ(model_weight × model_confidence)
 ```
 
-最终等级为得分最高且达到该等级阈值的 severity。
+最终等级为得分最高且达到该等级阈值的 severity。每个 severity 都可以单独设置阈值。
 
-每个 severity 都可以单独设置阈值。
-
-## 8. Topic 规则
+## 6. Topic 规则
 
 Issue 文件中必须包含 topic。
 
@@ -145,14 +100,26 @@ topic:
   - 分区备份
 ```
 
-规则：
+原文反向折叠块中不得显示 topic。Dashboard 可以按 topic 聚合问题。
 
-1. topic 不在原文反向折叠块中显示；
-2. topic 用于 Dashboard 聚合和筛选；
-3. topic 应尽量短，优先使用技术关键词、概念名、命令名、模块名；
-4. 一个 issue 推荐 1-5 个 topic。
+## 7. 原文回链规则
 
-## 9. 人工备注区
+Issue 文件必须引用原文 ReviewUnit 块 ID，例如：
+
+```markdown
+- [[Linux/rkdeveloptool.md#^ru000001]]
+```
+
+原文折叠块中只显示：
+
+1. 当前 ReviewUnit ID；
+2. issue 链接，或 Correct 状态下的 Dashboard 链接；
+3. 检查日期；
+4. 投票模型列表。
+
+不得在原文折叠块中显示 topic。
+
+## 8. 人工备注区
 
 Issue 文件必须包含人工备注区：
 
@@ -171,7 +138,7 @@ Issue 文件必须包含人工备注区：
 3. AI 不得覆盖、删除、改写人工备注；
 4. 如果人工备注边界损坏，应停止更新该 issue 并 warning。
 
-## 10. 不允许直接修改正文
+## 9. 不允许直接修改正文
 
 AI Review 不得直接修改：
 

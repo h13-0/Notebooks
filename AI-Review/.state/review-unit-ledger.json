@@ -1,6 +1,6 @@
 {
-  "schema_version": 1,
+  "version": 1,
   "next_unit_id": "ru000001",
   "units": {},
-  "note": "机器管理文件，不建议人工编辑。"
+  "note": "机器状态文件。请勿人工编辑。"
 }

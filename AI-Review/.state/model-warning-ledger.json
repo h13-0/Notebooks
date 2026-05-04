@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "version": 1,
   "warnings": {},
-  "note": "机器管理文件，不建议人工编辑。"
+  "note": "同一模型同类 warning 只提示一次。"
 }

@@ -1,35 +1,38 @@
 ---
-description: AI Review workflow for Obsidian Markdown notes
+description: AI Review 工作流规则
+globs:
+  - "**/*.md"
+  - ".ai-review.yaml"
+  - "AI-Review/**"
 alwaysApply: false
 ---
 
-# AI Review Rule
+# AI Review Cursor Rule
 
-当用户要求运行、设计、更新或检查 AI Review 时：
+所有自然语言输出必须以简体中文为主。必要的命令、路径、配置键名、模型名、API 字段和专业英文术语可以保留英文。
 
-1. 先阅读 `AI-Review/README.md`、`AI-Review/DESIGN.md`、`AI-Review/IMPLEMENTATION.md`、`AI-Review/MODEL_PROTOCOL.md`、`AI-Review/CONFIG_REFERENCE.md` 和 `.ai-review.yaml`；
-2. 所有自然语言回复、issue 文件、Dashboard、warning 和日志主语言必须使用简体中文；
-3. 必要的专业外文单词、命令、路径、代码、模型名、API 字段和配置键名可以保留英文；
-4. 优先使用 `ai-review` CLI；
-5. 不得直接修改原始笔记正文；
-6. 只允许修改 AI-Review 管理的折叠块、issue 文件、Dashboard 和状态文件；
-7. 原文折叠块中不得显示 topic；
-8. topic 只允许写入 issue frontmatter/body 和 Dashboard；
-9. issue 文件必须引用原文 ReviewUnit 块 ID，例如 `[[note.md#^ru000001]]`；
-10. issue ID 永不复用、永不合并、永不跨 ReviewUnit 共享；
-11. Correct ReviewUnit 不生成 issue 文件；
-12. 空标题段跳过；
-13. 当前主模型默认参与投票；
-14. 主模型投票必须和其他模型一样进入加权评分，并显式写入模型投票表；
-15. 敏感 API 配置只能放在 `.ai-review-secrets.yaml`，不得进入已跟踪文件。
+在处理 AI Review 前，必须阅读：
 
-管理块格式：
+- `AI-Review/README.md`
+- `AI-Review/DESIGN.md`
+- `AI-Review/IMPLEMENTATION.md`
+- `AI-Review/MODEL_PROTOCOL.md`
+- `AI-Review/CONFIG_REFERENCE.md`
+- `AI-Review/SLASH_COMMANDS.md`
+- `.ai-review.yaml`
 
-```markdown
-<!-- ai-review:start unit=ru000001 -->
-> [!bug]- AI Review `ru000001`
-> - [ ] [[AI-Review/Open/ar0001-Major-问题标题|ar0001]]
-> `2026-05-04` · GPT-5.5/DeepSeek
-<!-- ai-review:end -->
-^ru000001
+CLI 是唯一权威执行路径。Cursor agent 不得绕过 CLI 手动批量修改笔记正文、issue、Dashboard 或 `.state`。
+
+优先执行：
+
+```bash
+ai-review review --changed --dry-run
 ```
+
+用户明确要求写入时执行：
+
+```bash
+ai-review review --changed --apply
+```
+
+如果 `ai-review` CLI 不存在或不可用，不得写入仓库，只能说明缺失项和建议的下一步。
