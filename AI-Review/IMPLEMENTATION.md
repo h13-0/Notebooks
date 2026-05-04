@@ -7,11 +7,12 @@
 AI Review skill 必须支持：
 
 1. CLI；
-2. Cursor；
-3. Codex；
-4. 其他可调用命令行的 agent 环境。
+2. Codex CLI；
+3. Codex IDE；
+4. Cursor；
+5. 其他可调用命令行的 agent 环境。
 
-核心实现应以 CLI 为中心，Cursor/Codex 通过调用 CLI 完成任务。
+核心实现应以 CLI 为中心，`/ai-review`、Cursor Rules、Codex 自定义命令只作为快捷入口调用 CLI。
 
 ## 2. 语言规则
 
@@ -20,7 +21,17 @@ AI Review skill 必须支持：
 3. 模型 JSON 字段名保持英文，字段值中的自然语言内容使用简体中文；
 4. 如果模型返回英文自然语言，聚合阶段应转换为简体中文后再写入文件。
 
-## 3. 推荐命令
+## 3. CLI 是唯一权威执行路径
+
+原则：
+
+1. `ai-review` CLI 负责真实执行 Git 检查、扫描、投票、聚合、写入、恢复；
+2. `/ai-review` 只负责把用户意图映射到 CLI 命令；
+3. Codex、Cursor 等 agent 不得绕过 CLI 批量手动修改仓库；
+4. 如果 CLI 不存在或不可用，agent 只能给出建议，不应写入仓库；
+5. 所有可写操作必须通过 CLI 的事务写入流程完成。
+
+## 4. 推荐命令
 
 ```bash
 ai-review review
@@ -49,7 +60,21 @@ ai-review review
 ai-review review --changed --dry-run
 ```
 
-## 4. limit 含义
+## 5. Slash Command 映射
+
+详见 `AI-Review/SLASH_COMMANDS.md`。推荐映射：
+
+```text
+/ai-review             -> ai-review review --changed --dry-run
+/ai-review apply       -> ai-review review --changed --apply
+/ai-review all         -> ai-review review --all --dry-run
+/ai-review all apply   -> ai-review review --all --apply
+/ai-review resume      -> ai-review review --resume
+/ai-review dashboard   -> ai-review dashboard
+/ai-review check       -> ai-review check
+```
+
+## 6. limit 含义
 
 `--limit N` 表示本次最多审查 N 个 ReviewUnit。
 
@@ -61,7 +86,7 @@ ai-review review --all --limit 20
 
 表示从待审查队列中取前 20 个标题段进行审查。
 
-## 5. Git 前置检查
+## 7. Git 前置检查
 
 写入前必须满足：
 
@@ -78,7 +103,7 @@ ai-review review --all --limit 20
 
 不满足则跳过对应仓库或停止运行。
 
-## 6. Submodule 规则
+## 8. Submodule 规则
 
 允许扫描和写入 submodule 中的 Markdown 文件。
 
@@ -105,7 +130,7 @@ git add path/to/submodule AI-Review
 git commit -m "docs: update AI review results"
 ```
 
-## 7. 主模型投票
+## 9. 主模型投票
 
 1. 当前主模型默认参与投票；
 2. 主模型必须和其他模型一样输出模型投票 JSON；
@@ -114,7 +139,7 @@ git commit -m "docs: update AI review results"
 5. 聚合阶段不得隐式抬高、降低或覆盖主模型投票；
 6. 如需关闭主模型投票，只能通过配置 `vote_enabled: false` 或 `voting.main_model_vote_enabled: false`。
 
-## 8. 可中断阶段
+## 10. 可中断阶段
 
 | 阶段 | 是否可中断 |
 |---|---|
@@ -135,7 +160,7 @@ git commit -m "docs: update AI review results"
 [可中断] 写入完成：ru000001
 ```
 
-## 9. 写入事务
+## 11. 写入事务
 
 所有写入必须事务化：
 
@@ -150,7 +175,7 @@ git commit -m "docs: update AI review results"
 9. 原子替换目标文件；
 10. 校验 git diff。
 
-## 10. 异常策略
+## 12. 异常策略
 
 模型异常包括：
 
@@ -167,7 +192,7 @@ git commit -m "docs: update AI review results"
 3. 如果没有可用模型，则该 ReviewUnit 标记为 Unknown 或跳过，按配置决定；
 4. 主模型不可用时，不写入该 ReviewUnit。
 
-## 11. Obsidian 语法支持范围
+## 13. Obsidian 语法支持范围
 
 支持：
 
@@ -190,7 +215,7 @@ git commit -m "docs: update AI review results"
 
 不支持的语法应 warning，不强行解析。
 
-## 12. 附件规则
+## 14. 附件规则
 
 支持：
 
@@ -214,10 +239,10 @@ git commit -m "docs: update AI review results"
 3. 只读取文本类文件；
 4. 限制体积和文件数量。
 
-## 13. CLI / Cursor / Codex 协作原则
+## 15. CLI / Cursor / Codex 协作原则
 
 1. CLI 是唯一写入入口；
-2. Cursor、Codex 等 agent 应先阅读 `AI-Review/README.md`、`DESIGN.md`、`IMPLEMENTATION.md`、`MODEL_PROTOCOL.md`、`CONFIG_REFERENCE.md`；
+2. Cursor、Codex 等 agent 应先阅读 `AI-Review/README.md`、`DESIGN.md`、`IMPLEMENTATION.md`、`MODEL_PROTOCOL.md`、`CONFIG_REFERENCE.md`、`SLASH_COMMANDS.md`；
 3. Agent 不应绕过 CLI 手动批量修改原文；
 4. 如果 CLI 不存在或不可用，agent 只能给出 dry-run 级别建议，不应写入仓库；
 5. Agent 的所有自然语言回复主语言必须是简体中文。

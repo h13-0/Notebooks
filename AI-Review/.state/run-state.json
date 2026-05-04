@@ -1,6 +1,6 @@
 {
-  "schema_version": 1,
+  "version": 1,
   "current_run": null,
   "last_run": null,
-  "note": "机器管理文件，不建议人工编辑。"
+  "note": "机器状态文件。请勿人工编辑。"
 }

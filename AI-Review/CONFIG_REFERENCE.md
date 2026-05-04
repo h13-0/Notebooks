@@ -35,13 +35,20 @@ language:
   primary: "zh-Hans"
   enforce_simplified_chinese: true
   allow_professional_english_terms: true
-  apply_to:
-    - chat_output
-    - issue_files
-    - dashboard
-    - warnings
-    - logs
-    - model_natural_language_fields
+
+entrypoints:
+  cli_is_authoritative: true
+  slash_command_is_wrapper: true
+  allow_agent_direct_write_without_cli: false
+
+slash_commands:
+  default: "ai-review review --changed --dry-run"
+  apply: "ai-review review --changed --apply"
+  all: "ai-review review --all --dry-run"
+  all_apply: "ai-review review --all --apply"
+  resume: "ai-review review --resume"
+  dashboard: "ai-review dashboard"
+  check: "ai-review check"
 
 default_mode:
   scope: "changed"
@@ -72,7 +79,6 @@ voting:
   main_model_vote_enabled: true
   main_model_vote_visible: true
   main_model_uses_same_scoring: true
-
   severity_thresholds:
     Correct:
       min_normalized_score: 0.50
@@ -89,7 +95,6 @@ voting:
 
 models:
   main: "gpt-main"
-
   voters:
     - id: "gpt-main"
       display_name: "GPT 主模型"
@@ -99,7 +104,6 @@ models:
       vote_enabled: true
       multimodal: true
       weight: 5
-
     - id: "deepseek-v4"
       display_name: "DeepSeek4.0"
       provider: "deepseek"
@@ -119,7 +123,6 @@ attachments:
   svg:
     convert_to_png: true
     cache: "temp"
-
   archive:
     enabled: true
     formats: [".zip"]

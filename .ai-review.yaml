@@ -14,6 +14,20 @@ language:
     - logs
     - model_natural_language_fields
 
+entrypoints:
+  cli_is_authoritative: true
+  slash_command_is_wrapper: true
+  allow_agent_direct_write_without_cli: false
+
+slash_commands:
+  default: "ai-review review --changed --dry-run"
+  apply: "ai-review review --changed --apply"
+  all: "ai-review review --all --dry-run"
+  all_apply: "ai-review review --all --apply"
+  resume: "ai-review review --resume"
+  dashboard: "ai-review dashboard"
+  check: "ai-review check"
+
 default_mode:
   scope: "changed"
   dry_run: true

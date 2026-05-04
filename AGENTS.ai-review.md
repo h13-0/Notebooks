@@ -15,9 +15,14 @@
 3. `AI-Review/IMPLEMENTATION.md`
 4. `AI-Review/MODEL_PROTOCOL.md`
 5. `AI-Review/CONFIG_REFERENCE.md`
-6. `.ai-review.yaml`
+6. `AI-Review/SLASH_COMMANDS.md`
+7. `.ai-review.yaml`
 
-优先使用 CLI：
+## 入口规则
+
+CLI 是唯一权威执行路径。`/ai-review`、Cursor Rules、Codex 自定义命令都只能作为 CLI 包装层。
+
+优先使用：
 
 ```bash
 ai-review check
@@ -26,6 +31,8 @@ ai-review review --changed --apply
 ai-review review --resume
 ai-review dashboard
 ```
+
+如果 `ai-review` CLI 不存在或不可用，agent 不得写入仓库，只能给出 dry-run 级别建议和缺失项说明。
 
 ## 核心规则
 

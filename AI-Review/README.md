@@ -13,13 +13,34 @@ AI Review 的目标是：
 5. 在原 Markdown 标题段后插入精简的 Obsidian 折叠块；
 6. 对错误、补充建议、未知问题生成独立 issue 文件；
 7. 支持中断恢复、重复运行、手动勾选已修复后复查；
-8. 支持 CLI、Cursor、Codex 等环境运行。
+8. 支持 CLI、Codex CLI、Codex IDE、Cursor 等环境运行。
 
 ## 语言规则
 
 AI Review 的所有输出、写入文件、Dashboard、issue 正文、warning、运行日志、提交建议脚本说明，主语言必须使用简体中文。
 
 允许保留必要的专业外文单词、命令、API 字段、模型名、路径、代码、配置键名和英文缩写，例如 `ReviewUnit`、`issue`、`Dashboard`、`git fetch`、`base_url`、`API key`。
+
+## 入口设计
+
+AI Review 推荐采用：
+
+```text
+/ai-review 或 agent 命令
+  ↓
+调用 ai-review CLI
+  ↓
+CLI 执行 Git 检查、段落扫描、多模型投票、事务写入和恢复
+```
+
+原则：
+
+1. CLI 是唯一权威执行路径；
+2. `/ai-review` 是快捷入口，不直接承载完整实现；
+3. Codex CLI、Codex IDE、Cursor 等环境可以通过 slash command、规则文件或终端调用 CLI；
+4. 如果 CLI 不存在或不可用，agent 只能给出检查建议，不应直接写入仓库。
+
+详见：`AI-Review/SLASH_COMMANDS.md`。
 
 ## 目录结构
 
