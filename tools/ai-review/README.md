@@ -80,6 +80,22 @@ AI-Review/.state/host-current-votes.json
 
 `--dry-run` 不写入仓库文件。`--apply` 执行 Git 前置检查、人工备注区校验、issue 生成、原文 AI-Review 折叠块更新、ledger 更新、Dashboard 更新和原子替换。
 
+## 扫描黑名单
+
+扫描范围可在 `.ai-review.yaml` 中配置：
+
+```yaml
+scan:
+  exclude_paths:
+    - "AI-Review"
+    - "skills"
+    - ".codex"
+    - ".cursor"
+    - "tools/ai-review"
+```
+
+黑名单支持目录名和仓库相对路径 glob。命中后不会生成 ReviewUnit，但不影响 CLI 维护 `AI-Review/` 下的 issue、Dashboard 和 state 文件。
+
 ## 结构化本地验证
 
 如只想验证扫描、ReviewUnit 切分、聚合和渲染链路，不调用外部模型：
