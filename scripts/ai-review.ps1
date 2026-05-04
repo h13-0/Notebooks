@@ -4,10 +4,13 @@ param(
   [string[]]$Rest
 )
 
+$Root = Resolve-Path (Join-Path $PSScriptRoot "..")
+$Cli = Join-Path $Root "tools\ai-review\ai_review_cli.py"
+
 switch ($Command) {
-  "review" { ai-review review @Rest }
-  "apply"  { ai-review review --changed --apply @Rest }
-  "all"    { ai-review review --all --dry-run @Rest }
-  "resume" { ai-review review --resume @Rest }
-  default   { ai-review $Command @Rest }
+  "review" { python $Cli review @Rest }
+  "apply"  { python $Cli review --changed --apply @Rest }
+  "all"    { python $Cli review --all --dry-run @Rest }
+  "resume" { python $Cli review --resume @Rest }
+  default   { python $Cli $Command @Rest }
 }
