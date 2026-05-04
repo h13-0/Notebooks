@@ -1,0 +1,106 @@
+version: 1
+
+review_dir: "AI-Review"
+
+default_mode:
+  scope: "changed"
+  dry_run: true
+
+unit:
+  split_by_headings: true
+  heading_levels: [1, 2, 3, 4, 5, 6]
+  skip_empty_heading: true
+
+normalize:
+  ignore_ai_review_blocks: true
+  trim_blank_lines: true
+  collapse_blank_lines: true
+  strip_trailing_spaces: true
+
+severity:
+  callout:
+    Correct: success
+    Enhance: tip
+    Minor: attention
+    Major: bug
+    Critical: danger
+    Unknown: question
+
+voting:
+  fallback_when_no_threshold_matched: "Unknown"
+  severity_thresholds:
+    Correct:
+      min_normalized_score: 0.50
+    Enhance:
+      min_normalized_score: 0.35
+    Minor:
+      min_normalized_score: 0.45
+    Major:
+      min_normalized_score: 0.40
+    Critical:
+      min_normalized_score: 0.35
+    Unknown:
+      min_normalized_score: 0.30
+
+models:
+  main: "gpt-main"
+  voters:
+    - id: "gpt-main"
+      display_name: "GPT"
+      provider: "openai-compatible"
+      model: "gpt-x"
+      multimodal: true
+      weight: 5
+    - id: "deepseek-v4"
+      display_name: "DeepSeek4.0"
+      provider: "deepseek"
+      model: "deepseek-v4"
+      multimodal: false
+      weight: 1
+
+context:
+  include_outlinks: true
+  include_backlinks: true
+  max_backlinks: 5
+  max_context_tokens: 6000
+
+attachments:
+  svg:
+    convert_to_png: true
+    cache: "temp"
+  archive:
+    enabled: true
+    formats: [".zip"]
+    max_size_mb: 5
+    max_files: 50
+
+git:
+  require_clean_worktree: true
+  require_synced_with_upstream: true
+  fetch_before_check: true
+
+submodules:
+  scan: true
+  write_annotations: true
+  require_clean_worktree: true
+  require_synced_with_upstream: true
+  skip_uninitialized: true
+  skip_if_head_mismatch: true
+
+dashboard:
+  top_n_per_section: 10
+  topic_keywords_per_issue: 5
+
+runtime:
+  max_concurrency: 3
+  request_timeout_sec: 120
+  retry: 2
+  warn_once_per_model: true
+  model_failure_policy: "skip_model"
+  no_eligible_model_policy: "unknown"
+
+write:
+  preserve_user_notes: true
+  compact_callout: true
+  auto_commit: false
+  backup: false
