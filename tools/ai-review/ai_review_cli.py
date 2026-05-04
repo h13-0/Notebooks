@@ -29,6 +29,14 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any, Iterable
 
+from ai_review_lib.model_client import (
+    ModelClientError,
+    call_model,
+    call_model_with_retry,
+    endpoint_for_provider,
+)
+from ai_review_lib.path_filter import configured_excludes, is_path_excluded
+
 
 SEVERITY_ORDER = ["Correct", "Enhance", "Minor", "Major", "Critical", "Unknown"]
 ISSUE_SEVERITIES = {"Enhance", "Minor", "Major", "Critical", "Unknown"}
@@ -326,16 +334,15 @@ def slugify_title(text: str, max_len: int = 36) -> str:
 
 
 def list_markdown_files(root: Path, review_dir: Path, scope: str, paths: list[str]) -> list[Path]:
-    excluded_parts = {".git", ".obsidian", ".codex", ".cursor", "__pycache__"}
-    review_rel = review_dir.relative_to(root)
+    config = load_yaml(root / ".ai-review.yaml")
+    excluded_parts, excluded_globs = configured_excludes(config, review_dir, root)
 
     def allowed(path: Path) -> bool:
         if path.suffix.lower() != ".md":
             return False
-        rel = path.relative_to(root)
-        if rel.parts and rel.parts[0] == review_rel.parts[0]:
-            return False
-        if any(part in excluded_parts for part in rel.parts):
+        # 中文说明：扫描黑名单必须在最早阶段生效，避免 AI Review
+        # 自身产物、skill、命令模板等 AI 生成文件参与普通笔记审查。
+        if is_path_excluded(path, root, excluded_parts, excluded_globs):
             return False
         return True
 
@@ -531,7 +538,10 @@ def build_prompt(unit: ReviewUnit, context_notes: list[str]) -> str:
 def load_host_votes(path: str | None) -> dict[str, dict[str, Any]]:
     raw = os.environ.get("AI_REVIEW_HOST_CURRENT_VOTES_JSON", "")
     if path:
-        raw = load_text(Path(path))
+        vote_path = Path(path)
+        if not vote_path.exists():
+            raise AiReviewError(f"host-current 投票文件不存在：{path}")
+        raw = load_text(vote_path)
     if not raw:
         return {}
     data = json.loads(raw)
@@ -542,50 +552,6 @@ def load_host_votes(path: str | None) -> dict[str, dict[str, Any]]:
     if isinstance(data, dict):
         return {str(k): v for k, v in data.items() if isinstance(v, dict)}
     raise AiReviewError("host-current 投票 JSON 必须是对象、数组或 unit_id 映射。")
-
-
-def endpoint_for_provider(provider: str, secrets: dict[str, Any]) -> tuple[str, str]:
-    item = deep_get(secrets, f"providers.{provider}", {})
-    base_url = str(item.get("base_url") or "").rstrip("/")
-    api_key = str(item.get("api_key") or "")
-    if not base_url or not api_key or api_key == "YOUR_API_KEY":
-        raise AiReviewError(f"provider `{provider}` 缺少 base_url/api_key")
-    if not base_url.endswith("/chat/completions"):
-        base_url = base_url.rstrip("/") + "/chat/completions"
-    return base_url, api_key
-
-
-def call_model(model: dict[str, Any], secrets: dict[str, Any], prompt: str, timeout: int) -> dict[str, Any]:
-    provider = str(model.get("provider") or "")
-    url, api_key = endpoint_for_provider(provider, secrets)
-    generation = model.get("generation") or {}
-    payload = {
-        "model": model.get("model") or model.get("id"),
-        "messages": [
-            {"role": "system", "content": "你是严格输出 JSON 的 AI Review 投票模型。"},
-            {"role": "user", "content": prompt},
-        ],
-        "temperature": generation.get("temperature", 0.1),
-        "max_tokens": generation.get("max_tokens", 4096),
-        "response_format": {"type": "json_object"},
-    }
-    body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
-    req = urllib.request.Request(
-        url,
-        data=body,
-        headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
-        method="POST",
-    )
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
-        data = json.loads(resp.read().decode("utf-8"))
-    content = data.get("choices", [{}])[0].get("message", {}).get("content", "")
-    if not content:
-        raise AiReviewError("模型返回为空")
-    content = content.strip()
-    if content.startswith("```"):
-        content = re.sub(r"^```(?:json)?\s*", "", content)
-        content = re.sub(r"\s*```$", "", content)
-    return json.loads(content)
 
 
 def collect_votes(
@@ -638,9 +604,15 @@ def collect_votes(
             continue
         voter_jobs.append(model)
     timeout = int(deep_get(config, "runtime.request_timeout_sec", 120))
+    if getattr(args, "model_timeout", None):
+        timeout = int(args.model_timeout)
     max_workers = max(1, int(deep_get(config, "runtime.max_concurrency", 3)))
     retry = max(0, int(deep_get(config, "runtime.retry", 0)))
+    if getattr(args, "model_retry", None) is not None:
+        retry = max(0, int(args.model_retry))
     prompt = build_prompt(unit, context_notes)
+    for model in voter_jobs:
+        print_info(f"{unit.unit_id} 调用外部 voter `{model.get('id')}`，timeout={timeout}s，retry={retry}")
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = {
             executor.submit(call_model_with_retry, model, secrets, prompt, timeout, retry): model
@@ -651,24 +623,11 @@ def collect_votes(
             try:
                 payload = future.result()
                 votes.append(Vote.from_json(payload, model, unit.unit_id))
-            except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, AiReviewError) as exc:
+            except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, AiReviewError, ModelClientError) as exc:
                 warn_once(warning_keys, f"voter:{model.get('id')}:{type(exc).__name__}", f"voter `{model.get('id')}` 调用失败：{exc}")
             except Exception as exc:
                 warn_once(warning_keys, f"voter:{model.get('id')}:unknown", f"voter `{model.get('id')}` 调用异常：{exc}")
     return votes
-
-
-def call_model_with_retry(model: dict[str, Any], secrets: dict[str, Any], prompt: str, timeout: int, retry: int) -> dict[str, Any]:
-    last_exc: Exception | None = None
-    for attempt in range(retry + 1):
-        try:
-            return call_model(model, secrets, prompt, timeout)
-        except Exception as exc:
-            last_exc = exc
-            if attempt < retry:
-                time.sleep(min(2 ** attempt, 8))
-    assert last_exc is not None
-    raise last_exc
 
 
 def warn_once(keys: set[str], key: str, message: str) -> None:
@@ -678,6 +637,8 @@ def warn_once(keys: set[str], key: str, message: str) -> None:
 
 
 def aggregate_votes(votes: list[Vote], config: dict[str, Any]) -> AggregateResult:
+    # 中文说明：主模型和 voter 在这里完全等价，统一按
+    # `模型权重 × 置信度` 累加，避免 host-current 在聚合阶段隐式覆盖。
     total_weight = sum(v.weight for v in votes) or 1.0
     scores = {sev: 0.0 for sev in SEVERITY_ORDER}
     for vote in votes:
@@ -1247,11 +1208,15 @@ def command_merge_host(args: argparse.Namespace) -> int:
         main="host-current",
         host_current_vote_file=args.host_current_vote_file,
         no_external=bool(args.no_external),
+        model_timeout=args.model_timeout,
+        model_retry=args.model_retry,
     )
     return command_review(ns)
 
 
 def command_review(args: argparse.Namespace) -> int:
+    # 中文说明：review 是唯一写入入口。prepare-host/merge-host 最终也会
+    # 回到这里，因此 issue 生命周期、Dashboard 和 ledger 只维护一份逻辑。
     root = Path.cwd().resolve()
     config = load_yaml(root / ".ai-review.yaml")
     review_dir = root / str(config.get("review_dir", "AI-Review"))
@@ -1446,6 +1411,8 @@ def build_parser() -> argparse.ArgumentParser:
     review.add_argument("--main", choices=["host-current", "configured", "none"], help="覆盖主模型模式")
     review.add_argument("--host-current-vote-file", help="注入 host-current 主模型投票 JSON")
     review.add_argument("--no-external", action="store_true", help="不调用外部 voter API，仅验证扫描、聚合和渲染路径")
+    review.add_argument("--model-timeout", type=int, help="临时覆盖单次外部模型请求超时秒数")
+    review.add_argument("--model-retry", type=int, help="临时覆盖外部模型重试次数")
 
     prepare = sub.add_parser("prepare-host", help="为 Codex/Cursor 当前会话模型准备 host-current 审查输入")
     prepare_scope = prepare.add_mutually_exclusive_group()
@@ -1473,6 +1440,8 @@ def build_parser() -> argparse.ArgumentParser:
     merge.add_argument("--prepare-file", default="AI-Review/.state/host-current-prepare.json", help="prepare-host 生成的 JSON")
     merge.add_argument("--host-current-vote-file", required=True, help="当前会话模型生成的投票 JSON")
     merge.add_argument("--no-external", action="store_true", help="不调用外部 voter API，仅使用 host-current 投票")
+    merge.add_argument("--model-timeout", type=int, help="临时覆盖单次外部模型请求超时秒数")
+    merge.add_argument("--model-retry", type=int, help="临时覆盖外部模型重试次数")
 
     dashboard = sub.add_parser("dashboard", help="更新 Dashboard")
     dashboard.add_argument("--dry-run", action="store_true")

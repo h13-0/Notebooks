@@ -51,6 +51,17 @@ normalize:
   collapse_blank_lines: true
   strip_trailing_spaces: true
 
+scan:
+  exclude_paths:
+    - "AI-Review"
+    - "skills"
+    - ".codex"
+    - ".cursor"
+    - "tools/ai-review"
+    - "AGENTS.ai-review.md"
+    - "AI-Review-SLASH_COMMANDS.md"
+    - "README.ai-review-skill.md"
+
 severity:
   callout:
     Correct: success

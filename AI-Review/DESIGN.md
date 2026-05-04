@@ -28,7 +28,34 @@ ReviewUnit 是 AI Review 的最小审查单位。
 7. 附件按原始 bytes 计算 hash。
 8. SVG 转 PNG 仅用于多模态审查，不写入笔记仓库，可放到系统临时目录。
 
-## 3. 主模型规则
+## 3. 扫描黑名单规则
+
+AI Review 必须支持配置扫描黑名单，用于排除不应作为普通笔记审查对象的目录或文件模式。
+
+配置示例：
+
+```yaml
+scan:
+  exclude_paths:
+    - "AI-Review"
+    - "skills"
+    - ".codex"
+    - ".cursor"
+    - "tools/ai-review"
+    - "AGENTS.ai-review.md"
+    - "AI-Review-SLASH_COMMANDS.md"
+    - "README.ai-review-skill.md"
+```
+
+规则：
+
+1. 黑名单在 Markdown 文件扫描阶段生效，命中后不生成 ReviewUnit。
+2. 黑名单支持目录名和仓库相对路径 glob。
+3. `AI-Review/`、`skills/`、`.codex/`、`.cursor/`、`tools/ai-review/`、`AGENTS.ai-review.md`、`AI-Review-SLASH_COMMANDS.md`、`README.ai-review-skill.md` 等 AI Review 自身产物、skill、命令模板和工具实现默认应排除。
+4. 即使未显式配置，`.git/`、`.obsidian/`、`.codex/`、`.cursor/`、`__pycache__/` 和当前 `review_dir` 也必须默认排除。
+5. 黑名单只影响扫描范围，不影响 CLI 显式维护 `AI-Review/` 下 issue、Dashboard 和 state 文件。
+
+## 4. 主模型规则
 
 主模型支持三种来源：
 
@@ -48,7 +75,7 @@ ReviewUnit 是 AI Review 的最小审查单位。
 4. 主模型投票必须在 issue 文件的模型投票表中可见。
 5. 独立 CLI 无法访问 `host-current` 时，必须报错，除非用户显式切换到 `configured` 主模型。
 
-## 4. Issue 生命周期
+## 5. Issue 生命周期
 
 Issue 状态包括：
 
@@ -70,7 +97,7 @@ Issue 状态包括：
 9. 旧问题被新问题替代时移动到 `Superseded/`。
 10. 无法判断的问题进入 `Unknown/`。
 
-## 5. 严重等级
+## 6. 严重等级
 
 | 等级 | 含义 | Obsidian Callout |
 |---|---|---|
@@ -81,7 +108,7 @@ Issue 状态包括：
 | Critical | 严重错误，核心结论错误 | `[!danger]` |
 | Unknown | 无法判断，需要人工确认 | `[!question]` |
 
-## 6. 多模型投票规则
+## 7. 多模型投票规则
 
 每个模型输出：
 
@@ -103,7 +130,7 @@ score(severity) = Σ(model_weight × model_confidence)
 
 每个 severity 都可以单独设置阈值。
 
-## 7. Topic 规则
+## 8. Topic 规则
 
 Issue 文件中必须包含 topic。
 
@@ -120,7 +147,7 @@ topic:
 2. topic 用于 Dashboard 分维度聚合。
 3. Correct 段落不列历史 issue，也不列历史 topic；只保留当前块 ID 和 Dashboard 链接。
 
-## 8. Issue 引用源块 ID
+## 9. Issue 引用源块 ID
 
 Issue 文件必须引用原始 ReviewUnit 块 ID，例如：
 
@@ -132,7 +159,7 @@ Issue 文件必须引用原始 ReviewUnit 块 ID，例如：
 
 原文折叠块中必须包含 `unit=ru000001`，并建议在需要兼容 Obsidian 块引用时额外保留 `^ru000001`。
 
-## 9. 人工备注区
+## 10. 人工备注区
 
 Issue 文件必须包含人工备注区：
 
@@ -151,7 +178,7 @@ Issue 文件必须包含人工备注区：
 3. AI 不得覆盖、删除、改写人工备注。
 4. 如果人工备注边界损坏，应停止更新该 issue 并 warning。
 
-## 10. 不允许直接修改正文
+## 11. 不允许直接修改正文
 
 AI Review 不得直接修改：
 
@@ -171,6 +198,6 @@ AI Review 只允许修改：
 6. `AI-Review/Dashboard.md`；
 7. `AI-Review/.state/`。
 
-## 11. 输出语言
+## 12. 输出语言
 
 所有自然语言输出主语言必须是简体中文。允许保留必要的专业外文单词、命令、路径、代码、API 字段、模型名和配置键名。

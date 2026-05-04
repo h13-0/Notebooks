@@ -22,6 +22,17 @@ normalize:
   collapse_blank_lines: true
   strip_trailing_spaces: true
 
+scan:
+  exclude_paths:
+    - "AI-Review"
+    - "skills"
+    - ".codex"
+    - ".cursor"
+    - "tools/ai-review"
+    - "AGENTS.ai-review.md"
+    - "AI-Review-SLASH_COMMANDS.md"
+    - "README.ai-review-skill.md"
+
 severity:
   callout:
     Correct: success
@@ -38,7 +49,7 @@ voting:
   fallback_when_no_threshold_matched: "Unknown"
   severity_thresholds:
     Correct:
-      min_normalized_score: 0.80
+      min_normalized_score: 0.60
     Enhance:
       min_normalized_score: 0.70
     Minor:
@@ -114,7 +125,7 @@ models:
         temperature: 0.1
     - id: "kimi-k2.6"
       display_name: "Kimi-K2.6"
-      provider: "moonlight"
+      provider: "moonshot"
       model: "kimi-k2.6"
       multimodal: true
       weight: 2
@@ -125,7 +136,7 @@ models:
         effort: "high"
       generation:
         max_tokens: 8192
-        temperature: 0.1
+        temperature: 1
 
 
 context:
