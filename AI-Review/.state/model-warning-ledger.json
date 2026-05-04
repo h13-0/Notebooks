@@ -1,5 +1,4 @@
 {
   "version": 1,
-  "warnings": {},
-  "note": "同一模型同类 warning 只提示一次。"
+  "warnings": {}
 }

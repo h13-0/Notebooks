@@ -1,38 +1,18 @@
 ---
-description: AI Review 工作流规则
-globs:
-  - "**/*.md"
-  - ".ai-review.yaml"
-  - "AI-Review/**"
+description: AI Review skill rules
 alwaysApply: false
 ---
 
-# AI Review Cursor Rule
+# AI Review for Cursor
 
-所有自然语言输出必须以简体中文为主。必要的命令、路径、配置键名、模型名、API 字段和专业英文术语可以保留英文。
+当用户要求执行 AI Review 或 `/ai-review` 时：
 
-在处理 AI Review 前，必须阅读：
-
-- `AI-Review/README.md`
-- `AI-Review/DESIGN.md`
-- `AI-Review/IMPLEMENTATION.md`
-- `AI-Review/MODEL_PROTOCOL.md`
-- `AI-Review/CONFIG_REFERENCE.md`
-- `AI-Review/SLASH_COMMANDS.md`
-- `.ai-review.yaml`
-
-CLI 是唯一权威执行路径。Cursor agent 不得绕过 CLI 手动批量修改笔记正文、issue、Dashboard 或 `.state`。
-
-优先执行：
-
-```bash
-ai-review review --changed --dry-run
-```
-
-用户明确要求写入时执行：
-
-```bash
-ai-review review --changed --apply
-```
-
-如果 `ai-review` CLI 不存在或不可用，不得写入仓库，只能说明缺失项和建议的下一步。
+1. 使用简体中文作为主语言。
+2. 当前 Cursor Agent 模型视为主模型 `host-current`。
+3. 主模型默认有投票权限，参与加权评分。
+4. 先读取 `AI-Review/` 下的设计文档。
+5. 通过 CLI 执行权威流程，不要手工随意改文件。
+6. 默认先执行 dry-run：`ai-review review --changed --dry-run`。
+7. 只有用户明确要求写入时，才执行 apply。
+8. 不得直接修改用户原始正文。
+9. 原文反向折叠块不显示 topic。

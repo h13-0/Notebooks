@@ -1,10 +1,13 @@
-$ErrorActionPreference = "Stop"
+param(
+  [string]$Command = "review",
+  [Parameter(ValueFromRemainingArguments=$true)]
+  [string[]]$Rest
+)
 
-$cmd = Get-Command ai-review -ErrorAction SilentlyContinue
-if (-not $cmd) {
-    Write-Error "错误：未找到 ai-review CLI。请先安装或实现 CLI 后再运行。"
-    exit 127
+switch ($Command) {
+  "review" { ai-review review @Rest }
+  "apply"  { ai-review review --changed --apply @Rest }
+  "all"    { ai-review review --all --dry-run @Rest }
+  "resume" { ai-review review --resume @Rest }
+  default   { ai-review $Command @Rest }
 }
-
-& ai-review @args
-exit $LASTEXITCODE

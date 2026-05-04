@@ -24,7 +24,7 @@
 
 `.ai-review-secrets.yaml` 必须加入 `.gitignore`。
 
-## 2. .ai-review.yaml 示例
+## 2. `.ai-review.yaml` 示例
 
 ```yaml
 version: 1
@@ -33,22 +33,8 @@ review_dir: "AI-Review"
 
 language:
   primary: "zh-Hans"
-  enforce_simplified_chinese: true
-  allow_professional_english_terms: true
-
-entrypoints:
-  cli_is_authoritative: true
-  slash_command_is_wrapper: true
-  allow_agent_direct_write_without_cli: false
-
-slash_commands:
-  default: "ai-review review --changed --dry-run"
-  apply: "ai-review review --changed --apply"
-  all: "ai-review review --all --dry-run"
-  all_apply: "ai-review review --all --apply"
-  resume: "ai-review review --resume"
-  dashboard: "ai-review dashboard"
-  check: "ai-review check"
+  require_simplified_chinese: true
+  allow_foreign_terms: true
 
 default_mode:
   scope: "changed"
@@ -75,10 +61,11 @@ severity:
     Unknown: question
 
 voting:
-  fallback_when_no_threshold_matched: "Unknown"
   main_model_vote_enabled: true
   main_model_vote_visible: true
-  main_model_uses_same_scoring: true
+  host_current_allowed: true
+  fallback_when_no_threshold_matched: "Unknown"
+
   severity_thresholds:
     Correct:
       min_normalized_score: 0.50
@@ -94,24 +81,39 @@ voting:
       min_normalized_score: 0.30
 
 models:
-  main: "gpt-main"
+  main:
+    mode: "host-current"   # host-current / configured / none
+    id: "host-current"
+    display_name: "当前 Codex/Cursor 主模型"
+    role: "main"
+    vote_enabled: true
+    weight: 5
+
+  configured_main:
+    id: "gpt-main"
+    display_name: "Configured Main Model"
+    provider: "openai-compatible"
+    model: "gpt-x"
+    multimodal: true
+    role: "main"
+    vote_enabled: true
+    weight: 5
+
   voters:
-    - id: "gpt-main"
-      display_name: "GPT 主模型"
-      provider: "openai-compatible"
-      model: "gpt-x"
-      role: "main"
-      vote_enabled: true
-      multimodal: true
-      weight: 5
-    - id: "deepseek-v4"
-      display_name: "DeepSeek4.0"
+    - id: "deepseek-v4-pro"
+      display_name: "DeepSeek-V4-Pro"
       provider: "deepseek"
-      model: "deepseek-v4"
-      role: "voter"
-      vote_enabled: true
+      model: "deepseek-v4-pro"
       multimodal: false
       weight: 1
+      role: "voter"
+      vote_enabled: true
+      thinking:
+        enabled: true
+        effort: "high"
+      generation:
+        max_tokens: 8192
+        temperature: 0.1
 
 context:
   include_outlinks: true
@@ -123,6 +125,7 @@ attachments:
   svg:
     convert_to_png: true
     cache: "temp"
+
   archive:
     enabled: true
     formats: [".zip"]
@@ -144,7 +147,7 @@ submodules:
 
 dashboard:
   top_n_per_section: 10
-  topic_keywords_per_issue: 5
+  topic_keywords_per_unit: 5
 
 runtime:
   max_concurrency: 3
@@ -161,7 +164,7 @@ write:
   backup: false
 ```
 
-## 3. .ai-review-secrets.template.yaml 示例
+## 3. `.ai-review-secrets.template.yaml` 示例
 
 ```yaml
 providers:
@@ -170,14 +173,22 @@ providers:
     api_key: "YOUR_API_KEY"
 
   deepseek:
-    base_url: "https://your-deepseek-endpoint/v1"
+    base_url: "https://api.deepseek.com"
     api_key: "YOUR_API_KEY"
 ```
 
-## 4. .gitignore 示例
+## 4. `.gitignore` 示例
 
 ```gitignore
 .ai-review-secrets.yaml
 AI-Review/.tmp/
 AI-Review/.cache/
 ```
+
+## 5. host-current 与 configured 的区别
+
+`host-current` 不需要 API key，因为它使用当前 Codex/Cursor 会话模型。
+
+`configured` 需要在 `.ai-review.yaml` 和 `.ai-review-secrets.yaml` 中配置 provider、model、base_url、api_key。
+
+如果在普通终端执行 CLI 且主模型配置为 `host-current`，CLI 应拒绝执行写入，并提示用户切换到 `configured` 或从 Codex/Cursor 的 `/ai-review` 入口运行。

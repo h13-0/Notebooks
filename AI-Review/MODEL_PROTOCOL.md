@@ -2,17 +2,21 @@
 
 #AI-Review
 
-## 1. 模型输出必须是 JSON
+## 1. 输出语言
 
-每个投票模型必须返回结构化 JSON。
+所有模型返回的自然语言字段必须使用简体中文为主。必要的专业外文单词、命令、路径、代码、API 字段、模型名和配置键名可以保留原文。
 
-当前主模型默认也是投票模型。主模型必须遵守同一 JSON schema，并与其他模型一样进入加权评分。
+## 2. 模型输出必须是 JSON
 
-## 2. 单模型输出格式
+每个投票模型必须返回结构化 JSON。主模型为 `host-current` 时，也必须按同一 schema 产生主模型投票。
+
+## 3. 单模型输出格式
 
 ```json
 {
   "unit_id": "ru000001",
+  "model_id": "host-current",
+  "model_role": "main",
   "result": "issue",
   "severity": "Major",
   "confidence": 0.82,
@@ -37,24 +41,26 @@
 }
 ```
 
-## 3. 字段说明
+## 4. 字段说明
 
 | 字段 | 类型 | 说明 |
 |---|---|---|
 | `unit_id` | string | ReviewUnit ID |
+| `model_id` | string | 模型 ID，当前宿主主模型使用 `host-current` |
+| `model_role` | string | `main` / `voter` |
 | `result` | string | `correct` / `issue` / `unknown` |
 | `severity` | string | `Correct` / `Enhance` / `Minor` / `Major` / `Critical` / `Unknown` |
 | `confidence` | number | 0 到 1 |
-| `title` | string | 问题标题，主语言使用简体中文 |
-| `topic` | string[] | topic 关键词，不写入原文折叠块 |
-| `summary` | string | 问题摘要，主语言使用简体中文 |
-| `evidence` | string[] | 依据，主语言使用简体中文 |
-| `suggested_fix` | string | 建议修改，主语言使用简体中文 |
+| `title` | string | 问题标题 |
+| `topic` | string[] | topic 关键词，只用于 issue 和 Dashboard，不写入原文反向块 |
+| `summary` | string | 问题摘要 |
+| `evidence` | string[] | 依据 |
+| `suggested_fix` | string | 建议修改 |
 | `requires_multimodal` | boolean | 是否依赖图片/多模态 |
 | `context_used` | string[] | 使用了哪些上下文 |
 | `relation_to_previous_issue` | string | 与旧 issue 的关系 |
 
-## 4. relation_to_previous_issue
+## 5. relation_to_previous_issue
 
 允许值：
 
@@ -66,11 +72,13 @@ unrelated_new_issue
 not_applicable
 ```
 
-## 5. Correct 输出示例
+## 6. Correct 输出示例
 
 ```json
 {
   "unit_id": "ru000001",
+  "model_id": "host-current",
+  "model_role": "main",
   "result": "correct",
   "severity": "Correct",
   "confidence": 0.91,
@@ -89,11 +97,13 @@ not_applicable
 }
 ```
 
-## 6. Unknown 输出示例
+## 7. Unknown 输出示例
 
 ```json
 {
   "unit_id": "ru000001",
+  "model_id": "deepseek-v4-pro",
+  "model_role": "voter",
   "result": "unknown",
   "severity": "Unknown",
   "confidence": 0.74,
@@ -114,7 +124,7 @@ not_applicable
 }
 ```
 
-## 7. 聚合规则
+## 8. 聚合规则
 
 最终等级计算：
 
@@ -126,6 +136,4 @@ score(severity) = Σ(model_weight × confidence)
 
 如果没有任何等级达到阈值，则按配置降级为 `Unknown` 或 `Correct`。
 
-## 8. 语言要求
-
-JSON 字段名保持英文。字段值中凡是自然语言内容，主语言必须使用简体中文。必要的专业外文术语、代码、命令、路径、模型名和 API 字段可以保留英文。
+主模型如果启用投票，必须作为普通加权 voter 参与计算，不得在聚合阶段隐式覆盖结果。
