@@ -1,23 +1,25 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+CLI="$ROOT/tools/ai-review/ai_review_cli.py"
 cmd="${1:-review}"
 shift || true
 
 case "$cmd" in
   review)
-    ai-review review "${@:-}"
+    python "$CLI" review "$@"
     ;;
   apply)
-    ai-review review --changed --apply "$@"
+    python "$CLI" review --changed --apply "$@"
     ;;
   all)
-    ai-review review --all --dry-run "$@"
+    python "$CLI" review --all --dry-run "$@"
     ;;
   resume)
-    ai-review review --resume "$@"
+    python "$CLI" review --resume "$@"
     ;;
   *)
-    ai-review "$cmd" "$@"
+    python "$CLI" "$cmd" "$@"
     ;;
 esac
