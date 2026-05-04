@@ -1,0 +1,91 @@
+[
+  {
+    "unit_id": "ru000001",
+    "model_id": "host-current",
+    "model_role": "main",
+    "result": "correct",
+    "severity": "Correct",
+    "confidence": 0.88,
+    "title": "",
+    "topic": ["Cortex-M", "参考文献"],
+    "summary": "该段为文档 frontmatter、标签和参考书目，未发现明显事实问题。",
+    "evidence": [],
+    "suggested_fix": "",
+    "requires_multimodal": false,
+    "context_used": ["current_unit"],
+    "relation_to_previous_issue": "not_applicable"
+  },
+  {
+    "unit_id": "ru000002",
+    "model_id": "host-current",
+    "model_role": "main",
+    "result": "correct",
+    "severity": "Correct",
+    "confidence": 0.9,
+    "title": "",
+    "topic": ["目录", "Markdown"],
+    "summary": "该段仅为目录标题和 toc 代码块，不涉及需要审查的技术结论。",
+    "evidence": [],
+    "suggested_fix": "",
+    "requires_multimodal": false,
+    "context_used": ["current_unit"],
+    "relation_to_previous_issue": "not_applicable"
+  },
+  {
+    "unit_id": "ru000003",
+    "model_id": "host-current",
+    "model_role": "main",
+    "result": "issue",
+    "severity": "Minor",
+    "confidence": 0.72,
+    "title": "Cortex-M3 与 ARMv7-M 架构关系表述不严谨",
+    "topic": ["Cortex-M3", "ARMv7-M", "处理器架构"],
+    "summary": "原文称 Cortex-M3 是 Arm v7 中 M 系列的一个分支，容易把架构版本、profile 和具体处理器内核混在一起。更严谨的说法是 Cortex-M3 是实现 ARMv7-M 架构的 Cortex-M 系列处理器内核。",
+    "evidence": [
+      "原文：Arm Cortex M3是Arm v7中M系列的一个分支。",
+      "Cortex-M3 通常描述为实现 ARMv7-M 架构的处理器内核，而不是 ARMv7 本身的一个分支。"
+    ],
+    "suggested_fix": "建议改为：Cortex-M3 是 ARM Cortex-M 系列处理器内核，基于 ARMv7-M 架构；采用哈佛总线结构，指令总线和数据总线分离，但访问统一的 4GB 地址空间。",
+    "requires_multimodal": false,
+    "context_used": ["current_unit"],
+    "relation_to_previous_issue": "unrelated_new_issue"
+  },
+  {
+    "unit_id": "ru000004",
+    "model_id": "host-current",
+    "model_role": "main",
+    "result": "issue",
+    "severity": "Minor",
+    "confidence": 0.7,
+    "title": "16 位 Thumb 指令只能访问 R0-R7 的说法过于绝对",
+    "topic": ["Cortex-M3", "Thumb", "核心寄存器"],
+    "summary": "原文称 16 位 Thumb 指令只能访问 R0-R7，作为概括有一定道理，但过于绝对。Thumb 16 位指令多数只能直接编码低寄存器，但也存在部分高寄存器操作或特殊指令可涉及 R8-R15、SP、LR、PC。",
+    "evidence": [
+      "原文：16位Thumb指令只能访问R0-R7，32位Thumb-2指令可以访问全部寄存器。",
+      "Thumb 指令集中部分 16 位高寄存器操作并不完全局限于 R0-R7。"
+    ],
+    "suggested_fix": "建议改为：多数 16 位 Thumb 指令只能直接访问 R0-R7；部分 16 位特殊指令可访问高寄存器，而 32 位 Thumb-2 指令提供更完整的寄存器访问能力。",
+    "requires_multimodal": false,
+    "context_used": ["current_unit"],
+    "relation_to_previous_issue": "unrelated_new_issue"
+  },
+  {
+    "unit_id": "ru000005",
+    "model_id": "host-current",
+    "model_role": "main",
+    "result": "issue",
+    "severity": "Major",
+    "confidence": 0.9,
+    "title": "FAULTMASK 寄存器拼写错误",
+    "topic": ["Cortex-M3", "特殊寄存器", "FAULTMASK"],
+    "summary": "原文将 `FAULTMASK` 写成了 `FAULTMASL`，这是寄存器名称错误，可能直接误导后续查阅和记忆。",
+    "evidence": [
+      "原文：`FAULTMASL` 为所有fault的屏蔽寄存器。",
+      "Cortex-M 架构中的正确寄存器名称是 `FAULTMASK`。"
+    ],
+    "suggested_fix": "建议将 `FAULTMASL` 更正为 `FAULTMASK`，并可补充其用于屏蔽除 NMI 外的可配置 fault 和中断。",
+    "requires_multimodal": false,
+    "context_used": ["current_unit"],
+    "relation_to_previous_issue": "unrelated_new_issue"
+  }
+]
