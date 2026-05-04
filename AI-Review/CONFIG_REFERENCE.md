@@ -31,18 +31,6 @@ version: 1
 
 review_dir: "AI-Review"
 
-language:
-  primary: "zh-Hans"
-  enforce_simplified_chinese: true
-  allow_professional_english_terms: true
-  apply_to:
-    - chat_output
-    - issue_files
-    - dashboard
-    - warnings
-    - logs
-    - model_natural_language_fields
-
 default_mode:
   scope: "changed"
   dry_run: true
@@ -69,9 +57,6 @@ severity:
 
 voting:
   fallback_when_no_threshold_matched: "Unknown"
-  main_model_vote_enabled: true
-  main_model_vote_visible: true
-  main_model_uses_same_scoring: true
 
   severity_thresholds:
     Correct:
@@ -92,11 +77,9 @@ models:
 
   voters:
     - id: "gpt-main"
-      display_name: "GPT 主模型"
+      display_name: "GPT"
       provider: "openai-compatible"
       model: "gpt-x"
-      role: "main"
-      vote_enabled: true
       multimodal: true
       weight: 5
 
@@ -104,8 +87,6 @@ models:
       display_name: "DeepSeek4.0"
       provider: "deepseek"
       model: "deepseek-v4"
-      role: "voter"
-      vote_enabled: true
       multimodal: false
       weight: 1
 
