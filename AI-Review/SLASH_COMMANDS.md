@@ -14,14 +14,14 @@
 
 ## 推荐映射
 
-| Slash Command | CLI 调用 |
+| Slash Command | CLI 桥接调用 |
 |---|---|
-| `/ai-review` | `ai-review review --changed --dry-run` |
-| `/ai-review apply` | `ai-review review --changed --apply` |
-| `/ai-review all` | `ai-review review --all --dry-run` |
-| `/ai-review all apply` | `ai-review review --all --apply` |
+| `/ai-review` | `ai-review prepare-host --changed --dry-run` → host-current 生成投票 → `ai-review merge-host --dry-run` |
+| `/ai-review apply` | `ai-review prepare-host --changed --apply` → host-current 生成投票 → `ai-review merge-host --apply` |
+| `/ai-review all` | `ai-review prepare-host --all --dry-run` → host-current 生成投票 → `ai-review merge-host --dry-run` |
+| `/ai-review all apply` | `ai-review prepare-host --all --apply` → host-current 生成投票 → `ai-review merge-host --apply` |
 | `/ai-review resume` | `ai-review review --resume` |
-| `/ai-review issue ar0001` | `ai-review review --issue ar0001 --dry-run` |
+| `/ai-review issue ar0001` | `ai-review prepare-host --issue ar0001 --dry-run` → host-current 生成投票 → `ai-review merge-host --dry-run` |
 
 ## host-current 流程
 
@@ -30,11 +30,11 @@
   ↓
 当前 Codex/Cursor 会话模型作为主模型
   ↓
-CLI 进行 Git 检查、扫描、上下文构建
+CLI prepare-host 进行 Git 检查、扫描、上下文构建，生成 host-current-prepare.json
+  ↓
+当前 host-current 主模型读取 prepare JSON，输出 host-current-votes.json
   ↓
 外部 voter 模型通过 API 投票
-  ↓
-host-current 主模型输出主投票 JSON
   ↓
 聚合器按权重和置信度评分
   ↓
