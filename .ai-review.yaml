@@ -142,6 +142,9 @@ models:
 context:
   include_outlinks: true
   include_backlinks: true
+  include_outlink_blocks: true
+  max_outlinks: 8
+  max_outlink_chars: 2500
   max_backlinks: 5
   max_context_tokens: 8192
 
@@ -175,6 +178,7 @@ dashboard:
 runtime:
   max_concurrency: 3
   request_timeout_sec: 120
+  stream: true
   retry: 2
   warn_once_per_model: true
   model_failure_policy: "skip_model"

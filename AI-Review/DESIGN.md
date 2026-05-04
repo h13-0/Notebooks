@@ -159,7 +159,45 @@ Issue 文件必须引用原始 ReviewUnit 块 ID，例如：
 
 原文折叠块中必须包含 `unit=ru000001`，并建议在需要兼容 Obsidian 块引用时额外保留 `^ru000001`。
 
-## 10. 人工备注区
+## 10. Obsidian 引用上下文
+
+AI Review 构建上下文时必须解析当前 ReviewUnit 中的 Obsidian 引用。
+
+支持：
+
+1. `[[note]]`
+2. `[[note#Heading]]`
+3. `[[note#^blockid]]`
+4. `[[note|Alias]]`
+5. `![[image.png]]`
+
+规则：
+
+1. 当配置 `context.include_outlink_blocks: true` 时，CLI 应把 `[[note#Heading]]` 对应标题段落拼接到模型上下文。
+2. 当引用为 `[[note#^blockid]]` 时，CLI 应定位目标文件中的块 ID，并拼接该块所属段落；如果块 ID 标记在标题上，则拼接该标题下的完整 ReviewUnit。
+3. 拼接内容必须标明来源链接，且受 `context.max_outlink_chars` 限制。
+4. 找不到目标文件或块 ID 时，只 warning，不得强行编造上下文。
+5. 该上下文仅供审查，不得写回原文正文。
+
+## 11. 联网资料规则
+
+当前宿主主模型 `host-current` 在必要时必须联网查询权威资料。
+
+必要场景包括：
+
+1. 当前知识不足以判断；
+2. 事实可能随版本、标准、API、内核行为或产品文档变化；
+3. 需要核对官方手册、标准、源码文档或厂商文档；
+4. 多个 voter 分歧较大，需要外部证据裁决。
+
+规则：
+
+1. 联网资料应优先使用官方文档、标准、源码、论文等一手来源。
+2. 投票 JSON 必须在 `external_sources` 字段列出 URL 或可追溯来源。
+3. `summary` 或 `evidence` 必须说明哪些判断来自外部资料。
+4. 无法联网或来源不足时，应降低 confidence 或返回 Unknown。
+
+## 12. 人工备注区
 
 Issue 文件必须包含人工备注区：
 
@@ -178,7 +216,7 @@ Issue 文件必须包含人工备注区：
 3. AI 不得覆盖、删除、改写人工备注。
 4. 如果人工备注边界损坏，应停止更新该 issue 并 warning。
 
-## 11. 不允许直接修改正文
+## 13. 不允许直接修改正文
 
 AI Review 不得直接修改：
 
@@ -198,6 +236,6 @@ AI Review 只允许修改：
 6. `AI-Review/Dashboard.md`；
 7. `AI-Review/.state/`。
 
-## 12. 输出语言
+## 14. 输出语言
 
 所有自然语言输出主语言必须是简体中文。允许保留必要的专业外文单词、命令、路径、代码、API 字段、模型名和配置键名。

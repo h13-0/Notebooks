@@ -37,6 +37,9 @@
     "outlinks",
     "backlinks"
   ],
+  "external_sources": [
+    "https://developer.arm.com/documentation/..."
+  ],
   "relation_to_previous_issue": "same_issue"
 }
 ```
@@ -58,6 +61,7 @@
 | `suggested_fix` | string | 建议修改 |
 | `requires_multimodal` | boolean | 是否依赖图片/多模态 |
 | `context_used` | string[] | 使用了哪些上下文 |
+| `external_sources` | string[] | 联网查询或外部资料来源 URL / 可追溯来源；未使用外部资料时为空数组 |
 | `relation_to_previous_issue` | string | 与旧 issue 的关系 |
 
 ## 5. relation_to_previous_issue
@@ -93,6 +97,7 @@ not_applicable
   "context_used": [
     "current_unit"
   ],
+  "external_sources": [],
   "relation_to_previous_issue": "not_applicable"
 }
 ```
@@ -120,6 +125,7 @@ not_applicable
     "current_unit",
     "image"
   ],
+  "external_sources": [],
   "relation_to_previous_issue": "not_applicable"
 }
 ```

@@ -45,7 +45,7 @@ AI_BLOCK_RE = re.compile(
     r"(?ms)^<!-- ai-review:start unit=ru[0-9]{6} -->.*?^<!-- ai-review:end -->\s*"
 )
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$")
-WIKI_LINK_RE = re.compile(r"!?\[\[([^\]|#]+)(?:#[^\]|]+)?(?:\|[^\]]+)?\]\]")
+WIKI_LINK_RE = re.compile(r"!?\[\[([^\]]+)\]\]")
 EMBED_RE = re.compile(r"!\[\[([^\]]+)\]\]")
 TAG_RE = re.compile(r"(?<!\w)#([\w\-\u4e00-\u9fff/]+)")
 USER_NOTES_RE = re.compile(
@@ -255,6 +255,7 @@ class Vote:
     requires_multimodal: bool
     context_used: list[str]
     relation_to_previous_issue: str
+    external_sources: list[str]
     weight: float
     display_name: str
 
@@ -280,6 +281,9 @@ class Vote:
         context_used = payload.get("context_used") or ["current_unit"]
         if isinstance(context_used, str):
             context_used = [context_used]
+        external_sources = payload.get("external_sources") or []
+        if isinstance(external_sources, str):
+            external_sources = [external_sources]
         return cls(
             unit_id=str(payload.get("unit_id") or unit_id),
             model_id=str(payload.get("model_id") or model.get("id") or "unknown-model"),
@@ -295,6 +299,7 @@ class Vote:
             requires_multimodal=bool(payload.get("requires_multimodal", False)),
             context_used=[str(x) for x in context_used],
             relation_to_previous_issue=str(payload.get("relation_to_previous_issue") or "not_applicable"),
+            external_sources=[str(x) for x in external_sources][:12],
             weight=float(model.get("weight", 1)),
             display_name=str(model.get("display_name") or model.get("id") or payload.get("model_id") or "unknown-model"),
         )
@@ -313,6 +318,7 @@ class AggregateResult:
     evidence: list[str]
     suggested_fix: str
     requires_multimodal: bool
+    external_sources: list[str]
 
 
 def normalize_unit_text(text: str) -> str:
@@ -321,6 +327,33 @@ def normalize_unit_text(text: str) -> str:
     text = "\n".join(line.rstrip() for line in text.splitlines())
     text = re.sub(r"\n{3,}", "\n\n", text)
     return text.strip()
+
+
+def split_obsidian_target(raw: str) -> tuple[str, str, str]:
+    """Split `path#fragment|alias` into parts."""
+    no_alias, _, alias = raw.partition("|")
+    path_part, _, fragment = no_alias.partition("#")
+    return path_part.strip(), fragment.strip(), alias.strip()
+
+
+def candidate_note_paths(root: Path, source_file: Path, target: str) -> list[Path]:
+    target = target.replace("\\", "/").strip()
+    if not target:
+        return []
+    p = Path(target)
+    candidates: list[Path] = []
+    if p.suffix:
+        candidates.extend([(source_file.parent / p).resolve(), (root / p).resolve()])
+    else:
+        candidates.extend([(source_file.parent / f"{target}.md").resolve(), (root / f"{target}.md").resolve()])
+    return candidates
+
+
+def find_existing_candidate(paths: list[Path]) -> Path | None:
+    for path in paths:
+        if path.exists() and path.is_file():
+            return path
+    return None
 
 
 def sha256_text(text: str) -> str:
@@ -464,6 +497,90 @@ def build_link_index(units: list[ReviewUnit]) -> dict[str, Any]:
     return {"version": 1, "backlinks": backlinks, "updated_at": now_date()}
 
 
+def extract_section_by_heading(text: str, heading: str) -> str:
+    lines = text.splitlines()
+    start = None
+    level = 0
+    for idx, line in enumerate(lines):
+        match = HEADING_RE.match(line)
+        if match and match.group(2).strip() == heading:
+            start = idx
+            level = len(match.group(1))
+            break
+    if start is None:
+        return ""
+    end = len(lines)
+    for idx in range(start + 1, len(lines)):
+        match = HEADING_RE.match(lines[idx])
+        if match and len(match.group(1)) <= level:
+            end = idx
+            break
+    return "\n".join(lines[start:end]).strip()
+
+
+def extract_section_from_heading_index(lines: list[str], start: int) -> str:
+    match = HEADING_RE.match(lines[start])
+    if not match:
+        return ""
+    level = len(match.group(1))
+    end = len(lines)
+    for idx in range(start + 1, len(lines)):
+        next_match = HEADING_RE.match(lines[idx])
+        if next_match and len(next_match.group(1)) <= level:
+            end = idx
+            break
+    return "\n".join(lines[start:end]).strip()
+
+
+def extract_block_by_id(text: str, block_id: str) -> str:
+    lines = text.splitlines()
+    marker = f"^{block_id}"
+    hit = next((idx for idx, line in enumerate(lines) if marker in line), None)
+    if hit is None:
+        return ""
+    heading_match = HEADING_RE.match(lines[hit].replace(marker, "").strip())
+    if heading_match:
+        return extract_section_from_heading_index(lines, hit).replace(marker, "").strip()
+    start = hit
+    while start > 0 and lines[start - 1].strip() and not HEADING_RE.match(lines[start - 1]):
+        start -= 1
+    end = hit + 1
+    while end < len(lines) and lines[end].strip() and not HEADING_RE.match(lines[end]):
+        end += 1
+    return "\n".join(lines[start:end]).replace(marker, "").strip()
+
+
+def extract_outlink_context(root: Path, unit: ReviewUnit, config: dict[str, Any], warnings: set[str]) -> list[str]:
+    if not deep_get(config, "context.include_outlinks", True) or not deep_get(config, "context.include_outlink_blocks", True):
+        return []
+    max_chars = int(deep_get(config, "context.max_outlink_chars", 2500))
+    notes: list[str] = []
+    for raw in unit.outlinks[: int(deep_get(config, "context.max_outlinks", 8))]:
+        target, fragment, _alias = split_obsidian_target(raw)
+        path = find_existing_candidate(candidate_note_paths(root, unit.file_path, target))
+        if not path:
+            continue
+        text = AI_BLOCK_RE.sub("", load_text(path))
+        excerpt = ""
+        if fragment.startswith("^"):
+            excerpt = extract_block_by_id(text, fragment[1:])
+        elif fragment:
+            excerpt = extract_section_by_heading(text, fragment)
+        if not excerpt:
+            continue
+        rel = path.relative_to(root).as_posix()
+        clipped = excerpt[:max_chars]
+        suffix = "\n..." if len(excerpt) > max_chars else ""
+        notes.append(f"Obsidian 引用上下文：[[{target}#{fragment}]]\n```markdown\n{clipped}{suffix}\n```")
+    return notes
+
+
+def build_context_notes(root: Path, unit: ReviewUnit, config: dict[str, Any], warnings: set[str]) -> list[str]:
+    notes = extract_attachment_context(root, unit, config, warnings)
+    notes.extend(extract_outlink_context(root, unit, config, warnings))
+    return notes
+
+
 def extract_attachment_context(root: Path, unit: ReviewUnit, config: dict[str, Any], warnings: set[str]) -> list[str]:
     notes: list[str] = []
     for attachment in unit.attachments:
@@ -523,6 +640,8 @@ def build_prompt(unit: ReviewUnit, context_notes: list[str]) -> str:
         - severity 只能是 Correct/Enhance/Minor/Major/Critical/Unknown。
         - topic 只用于 issue 和 Dashboard。
         - 如果依赖图片且无法判断，返回 Unknown。
+        - 如果当前知识不足、事实可能过时，或需要核验权威资料，host-current 主模型必须联网查询。
+        - 联网查询时必须在 JSON 中增加 external_sources，列出 URL 或可追溯来源；summary/evidence 应明确哪些判断来自外部资料。
 
         附加上下文：
         {json.dumps(context_notes, ensure_ascii=False)}
@@ -586,7 +705,13 @@ def collect_votes(
         model.setdefault("role", "main")
         if model.get("vote_enabled", True):
             try:
-                payload = call_model(model, secrets, build_prompt(unit, context_notes), int(deep_get(config, "runtime.request_timeout_sec", 120)))
+                payload = call_model(
+                    model,
+                    secrets,
+                    build_prompt(unit, context_notes),
+                    int(deep_get(config, "runtime.request_timeout_sec", 120)),
+                    stream=bool(deep_get(config, "runtime.stream", False)),
+                )
                 votes.append(Vote.from_json(payload, model, unit.unit_id))
             except Exception as exc:
                 warn_once(warning_keys, f"main:{model.get('id')}", f"主模型 `{model.get('id')}` 调用失败：{exc}")
@@ -611,11 +736,12 @@ def collect_votes(
     if getattr(args, "model_retry", None) is not None:
         retry = max(0, int(args.model_retry))
     prompt = build_prompt(unit, context_notes)
+    stream = bool(deep_get(config, "runtime.stream", False))
     for model in voter_jobs:
-        print_info(f"{unit.unit_id} 调用外部 voter `{model.get('id')}`，timeout={timeout}s，retry={retry}")
+        print_info(f"{unit.unit_id} 调用外部 voter `{model.get('id')}`，timeout={timeout}s，retry={retry}，stream={stream}")
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = {
-            executor.submit(call_model_with_retry, model, secrets, prompt, timeout, retry): model
+            executor.submit(call_model_with_retry, model, secrets, prompt, timeout, retry, stream=stream): model
             for model in voter_jobs
         }
         for future in as_completed(futures):
@@ -664,6 +790,7 @@ def aggregate_votes(votes: list[Vote], config: dict[str, Any]) -> AggregateResul
     suggested_fix = next((v.suggested_fix for v in issue_votes if v.suggested_fix), "")
     topic: list[str] = []
     evidence: list[str] = []
+    external_sources: list[str] = []
     for vote in issue_votes:
         for item in vote.topic:
             if item and item not in topic:
@@ -671,6 +798,9 @@ def aggregate_votes(votes: list[Vote], config: dict[str, Any]) -> AggregateResul
         for item in vote.evidence:
             if item and item not in evidence:
                 evidence.append(item)
+        for item in vote.external_sources:
+            if item and item not in external_sources:
+                external_sources.append(item)
     return AggregateResult(
         severity=severity,
         result=result,
@@ -683,6 +813,7 @@ def aggregate_votes(votes: list[Vote], config: dict[str, Any]) -> AggregateResul
         evidence=evidence[:8],
         suggested_fix=suggested_fix,
         requires_multimodal=any(v.requires_multimodal for v in votes),
+        external_sources=external_sources[:12],
     )
 
 
@@ -702,6 +833,7 @@ def fallback_unknown_vote(unit: ReviewUnit, reason: str) -> Vote:
         requires_multimodal=unit.requires_multimodal,
         context_used=["current_unit"],
         relation_to_previous_issue="not_applicable",
+        external_sources=[],
         weight=1.0,
         display_name="AI Review CLI",
     )
@@ -772,6 +904,7 @@ def render_issue(unit: ReviewUnit, issue_id: str, aggregate: AggregateResult, is
             f"| {v.display_name} | {v.model_role} | {conclusion} | {v.severity} | {v.confidence:.2f} | {v.weight:g} | {v.confidence * v.weight:.2f} |"
         )
     evidence = "\n".join(f"- {x}" for x in aggregate.evidence) if aggregate.evidence else "暂无。"
+    external_sources = "\n".join(f"- {x}" for x in aggregate.external_sources) if aggregate.external_sources else "暂无。"
     suggested = aggregate.suggested_fix or "暂无；AI Review 不直接修改原文正文。"
     return textwrap.dedent(
         f"""\
@@ -827,6 +960,10 @@ def render_issue(unit: ReviewUnit, issue_id: str, aggregate: AggregateResult, is
         ## 具体问题
 
         {evidence}
+
+        ## 外部来源
+
+        {external_sources}
 
         ## 建议修改
 
@@ -1002,17 +1139,10 @@ def validate_markdown_and_links(root: Path, files: Iterable[Path]) -> list[str]:
         if text.count("```") % 2:
             warnings.append(f"代码块围栏数量疑似不匹配：{path.relative_to(root).as_posix()}")
         for link in WIKI_LINK_RE.findall(text):
-            target = link.split("#", 1)[0].split("|", 1)[0]
+            target, _fragment, _alias = split_obsidian_target(link)
             if not target or re.match(r"https?://", target):
                 continue
-            suffix = Path(target).suffix
-            candidates = []
-            if suffix:
-                candidates.append((path.parent / target).resolve())
-                candidates.append((root / target).resolve())
-            else:
-                candidates.append((path.parent / f"{target}.md").resolve())
-                candidates.append((root / f"{target}.md").resolve())
+            candidates = candidate_note_paths(root, path, target)
             if not any(c.exists() for c in candidates):
                 warnings.append(f"Obsidian 链接目标未找到：{path.relative_to(root).as_posix()} -> {target}")
     return warnings
@@ -1112,7 +1242,7 @@ def discover_units_for_args(
 
 
 def serialize_unit_for_host(root: Path, unit: ReviewUnit, config: dict[str, Any], warning_keys: set[str]) -> dict[str, Any]:
-    context_notes = extract_attachment_context(root, unit, config, warning_keys)
+    context_notes = build_context_notes(root, unit, config, warning_keys)
     return {
         "unit_id": unit.unit_id,
         "source_file": unit.rel_path,
@@ -1249,7 +1379,7 @@ def command_review(args: argparse.Namespace) -> int:
         save_run_state(review_dir, {"version": 1, "active_run": {"stage": "VOTING", "units": len(all_units)}, "last_runs": []})
 
     for idx, unit in enumerate(all_units, start=1):
-        context_notes = extract_attachment_context(root, unit, config, warning_keys)
+        context_notes = build_context_notes(root, unit, config, warning_keys)
         votes = collect_votes(unit, config, secrets, args, context_notes, host_votes, warning_keys)
         if not votes:
             policy = str(deep_get(config, "runtime.no_eligible_model_policy", "unknown"))

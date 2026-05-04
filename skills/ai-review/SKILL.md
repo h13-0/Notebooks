@@ -14,6 +14,9 @@
 6. AI Review 不得直接修改原文正文，只能修改 AI-Review 折叠块、issue 文件、Dashboard 和状态文件。
 7. issue 永远不合并、不复用、不跨段落共享。
 8. 原文折叠块不显示 topic；topic 只写入 issue 文件和 Dashboard。
+9. CLI 构建上下文时必须解析 Obsidian 引用，必要时把 `[[note#Heading]]` 和 `[[note#^blockid]]` 对应段落拼接给模型。
+10. 当前宿主主模型 `host-current` 在必要时必须联网查询权威资料，并在投票 JSON 的 `external_sources` 中列出来源。
+11. 外部 voter 应优先使用流式请求；超时语义应按“空闲超时”处理，不能把持续输出但总耗时较长的响应误判为无响应。
 
 ## 必读文档
 
