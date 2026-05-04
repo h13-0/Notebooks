@@ -6,7 +6,13 @@
 
 每个投票模型必须返回结构化 JSON。
 
-## 2. 单模型输出格式
+当前主模型默认具有投票权限。主模型投票必须使用与其他模型相同的 JSON 格式，并进入同一套加权评分流程。
+
+## 2. 语言要求
+
+JSON 字段名保持英文，字段值中的自然语言内容必须使用简体中文。必要的专业外文单词、命令、路径、API 字段、模型名、代码片段可以保留英文。
+
+## 3. 单模型输出格式
 
 ```json
 {
@@ -35,7 +41,7 @@
 }
 ```
 
-## 3. 字段说明
+## 4. 字段说明
 
 | 字段 | 类型 | 说明 |
 |---|---|---|
@@ -43,16 +49,16 @@
 | `result` | string | `correct` / `issue` / `unknown` |
 | `severity` | string | `Correct` / `Enhance` / `Minor` / `Major` / `Critical` / `Unknown` |
 | `confidence` | number | 0 到 1 |
-| `title` | string | 问题标题 |
+| `title` | string | 问题标题，使用简体中文为主 |
 | `topic` | string[] | topic 关键词，只用于 issue 和 Dashboard，不写入原文折叠块 |
-| `summary` | string | 问题摘要 |
-| `evidence` | string[] | 依据 |
-| `suggested_fix` | string | 建议修改 |
+| `summary` | string | 问题摘要，使用简体中文 |
+| `evidence` | string[] | 依据，使用简体中文 |
+| `suggested_fix` | string | 建议修改，使用简体中文 |
 | `requires_multimodal` | boolean | 是否依赖图片/多模态 |
 | `context_used` | string[] | 使用了哪些上下文 |
 | `relation_to_previous_issue` | string | 与旧 issue 的关系 |
 
-## 4. relation_to_previous_issue
+## 5. relation_to_previous_issue
 
 允许值：
 
@@ -64,7 +70,7 @@ unrelated_new_issue
 not_applicable
 ```
 
-## 5. Correct 输出示例
+## 6. Correct 输出示例
 
 ```json
 {
@@ -87,7 +93,7 @@ not_applicable
 }
 ```
 
-## 6. Unknown 输出示例
+## 7. Unknown 输出示例
 
 ```json
 {
@@ -112,7 +118,7 @@ not_applicable
 }
 ```
 
-## 7. 聚合规则
+## 8. 聚合规则
 
 最终等级计算：
 
@@ -124,7 +130,15 @@ score(severity) = Σ(model_weight × confidence)
 
 如果没有任何等级达到阈值，则按配置降级为 `Unknown` 或 `Correct`。
 
-## 8. Issue 文件应引用原文块 ID
+主模型投票规则：
+
+1. 主模型默认参与投票；
+2. 主模型的 `weight` 从 `.ai-review.yaml` 读取；
+3. 主模型投票必须显示在 issue 的模型投票表中；
+4. 主模型不得在聚合阶段隐式覆盖投票结果；
+5. 是否允许主模型投票可以通过配置关闭，但默认开启。
+
+## 9. Issue 文件应引用原文块 ID
 
 Issue 文件必须记录原文 ReviewUnit 块 ID。
 

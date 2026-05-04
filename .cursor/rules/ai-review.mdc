@@ -5,21 +5,25 @@ alwaysApply: false
 
 # AI Review Rule
 
-When the user asks to run, design, update, or inspect AI Review:
+当用户要求运行、设计、更新或检查 AI Review 时：
 
-1. Read `AI-Review/README.md`, `AI-Review/DESIGN.md`, `AI-Review/IMPLEMENTATION.md`, `AI-Review/MODEL_PROTOCOL.md`, `AI-Review/CONFIG_REFERENCE.md`, and `.ai-review.yaml` first.
-2. Prefer the `ai-review` CLI if available.
-3. Do not directly modify original note text.
-4. Only modify AI-Review managed folded blocks, issue files, Dashboard, and state files.
-5. Do not show topic keywords in source note folded blocks.
-6. Put topic keywords in issue frontmatter/body and Dashboard only.
-7. Issue files must reference the source ReviewUnit block ID, for example `[[note.md#^ru000001]]`.
-8. Issue IDs are never reused, never merged, and never shared across ReviewUnits.
-9. Correct ReviewUnits do not get issue files.
-10. Empty heading sections are skipped.
-11. Sensitive API config belongs in `.ai-review-secrets.yaml`, not tracked files.
+1. 先阅读 `AI-Review/README.md`、`AI-Review/DESIGN.md`、`AI-Review/IMPLEMENTATION.md`、`AI-Review/MODEL_PROTOCOL.md`、`AI-Review/CONFIG_REFERENCE.md` 和 `.ai-review.yaml`；
+2. 所有自然语言回复、issue 文件、Dashboard、warning 和日志主语言必须使用简体中文；
+3. 必要的专业外文单词、命令、路径、代码、模型名、API 字段和配置键名可以保留英文；
+4. 优先使用 `ai-review` CLI；
+5. 不得直接修改原始笔记正文；
+6. 只允许修改 AI-Review 管理的折叠块、issue 文件、Dashboard 和状态文件；
+7. 原文折叠块中不得显示 topic；
+8. topic 只允许写入 issue frontmatter/body 和 Dashboard；
+9. issue 文件必须引用原文 ReviewUnit 块 ID，例如 `[[note.md#^ru000001]]`；
+10. issue ID 永不复用、永不合并、永不跨 ReviewUnit 共享；
+11. Correct ReviewUnit 不生成 issue 文件；
+12. 空标题段跳过；
+13. 当前主模型默认参与投票；
+14. 主模型投票必须和其他模型一样进入加权评分，并显式写入模型投票表；
+15. 敏感 API 配置只能放在 `.ai-review-secrets.yaml`，不得进入已跟踪文件。
 
-Managed block format:
+管理块格式：
 
 ```markdown
 <!-- ai-review:start unit=ru000001 -->

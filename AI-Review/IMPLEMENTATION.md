@@ -13,7 +13,14 @@ AI Review skill 必须支持：
 
 核心实现应以 CLI 为中心，Cursor/Codex 通过调用 CLI 完成任务。
 
-## 2. 推荐命令
+## 2. 语言规则
+
+1. 所有 CLI 输出、agent 回复、issue 文件、Dashboard、warning、日志和复查说明，主语言必须使用简体中文；
+2. 必要的专业英文术语、命令、路径、代码、配置字段、模型名和 API 字段可以保留英文；
+3. 模型 JSON 字段名保持英文，字段值中的自然语言内容使用简体中文；
+4. 如果模型返回英文自然语言，聚合阶段应转换为简体中文后再写入文件。
+
+## 3. 推荐命令
 
 ```bash
 ai-review review
@@ -42,7 +49,7 @@ ai-review review
 ai-review review --changed --dry-run
 ```
 
-## 3. limit 含义
+## 4. limit 含义
 
 `--limit N` 表示本次最多审查 N 个 ReviewUnit。
 
@@ -54,7 +61,7 @@ ai-review review --all --limit 20
 
 表示从待审查队列中取前 20 个标题段进行审查。
 
-## 4. Git 前置检查
+## 5. Git 前置检查
 
 写入前必须满足：
 
@@ -71,7 +78,7 @@ ai-review review --all --limit 20
 
 不满足则跳过对应仓库或停止运行。
 
-## 5. Submodule 规则
+## 6. Submodule 规则
 
 允许扫描和写入 submodule 中的 Markdown 文件。
 
@@ -98,7 +105,16 @@ git add path/to/submodule AI-Review
 git commit -m "docs: update AI review results"
 ```
 
-## 6. 可中断阶段
+## 7. 主模型投票
+
+1. 当前主模型默认参与投票；
+2. 主模型必须和其他模型一样输出模型投票 JSON；
+3. 主模型投票使用 `.ai-review.yaml` 中配置的 `weight`；
+4. 主模型投票必须写入 issue 的模型投票表；
+5. 聚合阶段不得隐式抬高、降低或覆盖主模型投票；
+6. 如需关闭主模型投票，只能通过配置 `vote_enabled: false` 或 `voting.main_model_vote_enabled: false`。
+
+## 8. 可中断阶段
 
 | 阶段 | 是否可中断 |
 |---|---|
@@ -119,7 +135,7 @@ git commit -m "docs: update AI review results"
 [可中断] 写入完成：ru000001
 ```
 
-## 7. 写入事务
+## 9. 写入事务
 
 所有写入必须事务化：
 
@@ -134,7 +150,7 @@ git commit -m "docs: update AI review results"
 9. 原子替换目标文件；
 10. 校验 git diff。
 
-## 8. 异常策略
+## 10. 异常策略
 
 模型异常包括：
 
@@ -151,7 +167,7 @@ git commit -m "docs: update AI review results"
 3. 如果没有可用模型，则该 ReviewUnit 标记为 Unknown 或跳过，按配置决定；
 4. 主模型不可用时，不写入该 ReviewUnit。
 
-## 9. Obsidian 语法支持范围
+## 11. Obsidian 语法支持范围
 
 支持：
 
@@ -174,7 +190,7 @@ git commit -m "docs: update AI review results"
 
 不支持的语法应 warning，不强行解析。
 
-## 10. 附件规则
+## 12. 附件规则
 
 支持：
 
@@ -198,9 +214,10 @@ git commit -m "docs: update AI review results"
 3. 只读取文本类文件；
 4. 限制体积和文件数量。
 
-## 11. CLI / Cursor / Codex 协作原则
+## 13. CLI / Cursor / Codex 协作原则
 
 1. CLI 是唯一写入入口；
 2. Cursor、Codex 等 agent 应先阅读 `AI-Review/README.md`、`DESIGN.md`、`IMPLEMENTATION.md`、`MODEL_PROTOCOL.md`、`CONFIG_REFERENCE.md`；
 3. Agent 不应绕过 CLI 手动批量修改原文；
-4. 如果 CLI 不存在或不可用，agent 只能给出 dry-run 级别建议，不应写入仓库。
+4. 如果 CLI 不存在或不可用，agent 只能给出 dry-run 级别建议，不应写入仓库；
+5. Agent 的所有自然语言回复主语言必须是简体中文。
