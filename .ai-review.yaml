@@ -57,6 +57,7 @@ voting:
   main_model_vote_enabled: true
   main_model_vote_visible: true
   main_model_uses_same_scoring: true
+  host_current_allowed: true
   severity_thresholds:
     Correct:
       min_normalized_score: 0.80
@@ -72,24 +73,25 @@ voting:
       min_normalized_score: 0.60
 
 models:
-  main: "gpt-main"
+  main:
+    mode: "host-current"   # host-current / configured / none
+    id: "host-current"
+    display_name: "当前主模型"
+    role: "main"
+    vote_enabled: true
+    weight: 5
   voters:
-    - id: "gpt-main"
-      display_name: "GPT 主模型"
-      provider: "openai-compatible"
-      model: "gpt-x"
-      role: "main"
-      vote_enabled: true
-      multimodal: true
-      weight: 5
-    - id: "deepseek-v4"
-      display_name: "DeepSeek4.0"
+    - id: "deepseek-v4-pro"
+      display_name: "DeepSeek-V4-Pro"
       provider: "deepseek"
       model: "deepseek-v4"
       role: "voter"
       vote_enabled: true
       multimodal: false
       weight: 1
+      thinking:
+        enabled: true
+        effort: "max"   # high / max
 
 context:
   include_outlinks: true
