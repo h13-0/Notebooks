@@ -4,29 +4,8 @@ review_dir: "AI-Review"
 
 language:
   primary: "zh-Hans"
-  enforce_simplified_chinese: true
-  allow_professional_english_terms: true
-  apply_to:
-    - chat_output
-    - issue_files
-    - dashboard
-    - warnings
-    - logs
-    - model_natural_language_fields
-
-entrypoints:
-  cli_is_authoritative: true
-  slash_command_is_wrapper: true
-  allow_agent_direct_write_without_cli: false
-
-slash_commands:
-  default: "ai-review review --changed --dry-run"
-  apply: "ai-review review --changed --apply"
-  all: "ai-review review --all --dry-run"
-  all_apply: "ai-review review --all --apply"
-  resume: "ai-review review --resume"
-  dashboard: "ai-review dashboard"
-  check: "ai-review check"
+  require_simplified_chinese: true
+  allow_foreign_terms: true
 
 default_mode:
   scope: "changed"
@@ -53,11 +32,10 @@ severity:
     Unknown: question
 
 voting:
-  fallback_when_no_threshold_matched: "Unknown"
   main_model_vote_enabled: true
   main_model_vote_visible: true
-  main_model_uses_same_scoring: true
   host_current_allowed: true
+  fallback_when_no_threshold_matched: "Unknown"
   severity_thresholds:
     Correct:
       min_normalized_score: 0.80
@@ -76,22 +54,36 @@ models:
   main:
     mode: "host-current"   # host-current / configured / none
     id: "host-current"
-    display_name: "当前主模型"
+    display_name: "当前 Codex/Cursor 主模型"
     role: "main"
     vote_enabled: true
     weight: 5
+
+  configured_main:
+    id: "gpt-main"
+    display_name: "Configured Main Model"
+    provider: "openai-compatible"
+    model: "gpt-x"
+    multimodal: true
+    role: "main"
+    vote_enabled: true
+    weight: 5
+
   voters:
     - id: "deepseek-v4-pro"
       display_name: "DeepSeek-V4-Pro"
       provider: "deepseek"
-      model: "deepseek-v4"
+      model: "deepseek-v4-pro"
+      multimodal: false
+      weight: 2
       role: "voter"
       vote_enabled: true
-      multimodal: false
-      weight: 1
       thinking:
         enabled: true
-        effort: "max"   # high / max
+        effort: "high"
+      generation:
+        max_tokens: 8192
+        temperature: 0.1
 
 context:
   include_outlinks: true
@@ -124,7 +116,7 @@ submodules:
 
 dashboard:
   top_n_per_section: 10
-  topic_keywords_per_issue: 5
+  topic_keywords_per_unit: 5
 
 runtime:
   max_concurrency: 3

@@ -12,26 +12,32 @@ AI Review skill 必须支持：
 4. Cursor；
 5. 其他可调用命令行的 agent 环境。
 
-核心实现应以 CLI 为中心，`/ai-review`、Cursor Rules、Codex 自定义命令只作为快捷入口调用 CLI。
+核心实现以 CLI 为权威执行路径，但 `/ai-review` 可以作为 Codex/Cursor 的快捷入口。
 
-## 2. 语言规则
+## 2. CLI 与 host-current 主模型的关系
 
-1. 所有 CLI 输出、agent 回复、issue 文件、Dashboard、warning、日志和复查说明，主语言必须使用简体中文；
-2. 必要的专业英文术语、命令、路径、代码、配置字段、模型名和 API 字段可以保留英文；
-3. 模型 JSON 字段名保持英文，字段值中的自然语言内容使用简体中文；
-4. 如果模型返回英文自然语言，聚合阶段应转换为简体中文后再写入文件。
+CLI 负责：
 
-## 3. CLI 是唯一权威执行路径
+1. Git 前置检查；
+2. Markdown 扫描；
+3. ReviewUnit hash；
+4. 上下文构建；
+5. 外部 voter 模型调用；
+6. issue 生命周期；
+7. 事务化写入；
+8. Dashboard 更新；
+9. run-state 恢复。
 
-原则：
+`host-current` 主模型负责：
 
-1. `ai-review` CLI 负责真实执行 Git 检查、扫描、投票、聚合、写入、恢复；
-2. `/ai-review` 只负责把用户意图映射到 CLI 命令；
-3. Codex、Cursor 等 agent 不得绕过 CLI 批量手动修改仓库；
-4. 如果 CLI 不存在或不可用，agent 只能给出建议，不应写入仓库；
-5. 所有可写操作必须通过 CLI 的事务写入流程完成。
+1. 主模型投票；
+2. 结合上下文做最终问题理解；
+3. 聚合解释；
+4. 生成面向用户的简体中文 issue 描述和 Dashboard 摘要。
 
-## 4. 推荐命令
+CLI 不能天然读取当前 Codex/Cursor 的内部模型状态，因此 `/ai-review` 快捷入口应把当前会话模型接入 AI Review 流程。
+
+## 3. 推荐命令
 
 ```bash
 ai-review review
@@ -44,6 +50,7 @@ ai-review review --resume
 ai-review review --dry-run
 ai-review review --apply
 ai-review review --limit 20
+ai-review review --main configured
 ai-review dashboard
 ai-review check
 ```
@@ -60,33 +67,35 @@ ai-review review
 ai-review review --changed --dry-run
 ```
 
-## 5. Slash Command 映射
+在普通终端中，如果配置要求 `models.main.mode: host-current`，CLI 应报错并提示：
 
-详见 `AI-Review/SLASH_COMMANDS.md`。推荐映射：
+1. 从 Codex/Cursor 的 `/ai-review` 运行；
+2. 或将 `models.main.mode` 改为 `configured`；
+3. 或临时使用 `--main configured`。
+
+## 4. `/ai-review` 推荐流程
 
 ```text
-/ai-review             -> ai-review review --changed --dry-run
-/ai-review apply       -> ai-review review --changed --apply
-/ai-review all         -> ai-review review --all --dry-run
-/ai-review all apply   -> ai-review review --all --apply
-/ai-review resume      -> ai-review review --resume
-/ai-review dashboard   -> ai-review dashboard
-/ai-review check       -> ai-review check
+/ai-review
+  ↓
+读取 AI-Review 规范文档
+  ↓
+调用 CLI 做检查与 prepare
+  ↓
+当前 Codex/Cursor 会话模型作为 host-current 主模型投票
+  ↓
+CLI 收集外部 voter 模型投票
+  ↓
+按 weight × confidence 聚合
+  ↓
+CLI 事务化写入或 dry-run 输出
 ```
 
-## 6. limit 含义
+## 5. limit 含义
 
 `--limit N` 表示本次最多审查 N 个 ReviewUnit。
 
-示例：
-
-```bash
-ai-review review --all --limit 20
-```
-
-表示从待审查队列中取前 20 个标题段进行审查。
-
-## 7. Git 前置检查
+## 6. Git 前置检查
 
 写入前必须满足：
 
@@ -103,7 +112,7 @@ ai-review review --all --limit 20
 
 不满足则跳过对应仓库或停止运行。
 
-## 8. Submodule 规则
+## 7. Submodule 规则
 
 允许扫描和写入 submodule 中的 Markdown 文件。
 
@@ -118,28 +127,7 @@ ai-review review --all --limit 20
 
 写入 submodule 后，需要输出提交脚本。
 
-示例：
-
-```bash
-cd path/to/submodule
-git add -A
-git commit -m "docs: update AI review results"
-
-cd /path/to/main-repo
-git add path/to/submodule AI-Review
-git commit -m "docs: update AI review results"
-```
-
-## 9. 主模型投票
-
-1. 当前主模型默认参与投票；
-2. 主模型必须和其他模型一样输出模型投票 JSON；
-3. 主模型投票使用 `.ai-review.yaml` 中配置的 `weight`；
-4. 主模型投票必须写入 issue 的模型投票表；
-5. 聚合阶段不得隐式抬高、降低或覆盖主模型投票；
-6. 如需关闭主模型投票，只能通过配置 `vote_enabled: false` 或 `voting.main_model_vote_enabled: false`。
-
-## 10. 可中断阶段
+## 8. 可中断阶段
 
 | 阶段 | 是否可中断 |
 |---|---|
@@ -151,16 +139,7 @@ git commit -m "docs: update AI review results"
 | VERIFYING | 不建议中断 |
 | DONE | 可中断 |
 
-运行时应输出状态：
-
-```text
-[可中断] 正在构建上下文：ru000001
-[可中断] 正在等待模型投票：ru000001
-[不可中断] 正在写入 Review 结果：ru000001
-[可中断] 写入完成：ru000001
-```
-
-## 11. 写入事务
+## 9. 写入事务
 
 所有写入必须事务化：
 
@@ -175,7 +154,7 @@ git commit -m "docs: update AI review results"
 9. 原子替换目标文件；
 10. 校验 git diff。
 
-## 12. 异常策略
+## 10. 异常策略
 
 模型异常包括：
 
@@ -192,7 +171,7 @@ git commit -m "docs: update AI review results"
 3. 如果没有可用模型，则该 ReviewUnit 标记为 Unknown 或跳过，按配置决定；
 4. 主模型不可用时，不写入该 ReviewUnit。
 
-## 13. Obsidian 语法支持范围
+## 11. Obsidian 语法支持范围
 
 支持：
 
@@ -215,7 +194,7 @@ git commit -m "docs: update AI review results"
 
 不支持的语法应 warning，不强行解析。
 
-## 14. 附件规则
+## 12. 附件规则
 
 支持：
 
@@ -231,18 +210,3 @@ git commit -m "docs: update AI review results"
 2. 视频；
 3. 音频；
 4. 外部网页链接。
-
-压缩包规则：
-
-1. 默认只支持 `.zip`；
-2. 不执行压缩包内任何脚本；
-3. 只读取文本类文件；
-4. 限制体积和文件数量。
-
-## 15. CLI / Cursor / Codex 协作原则
-
-1. CLI 是唯一写入入口；
-2. Cursor、Codex 等 agent 应先阅读 `AI-Review/README.md`、`DESIGN.md`、`IMPLEMENTATION.md`、`MODEL_PROTOCOL.md`、`CONFIG_REFERENCE.md`、`SLASH_COMMANDS.md`；
-3. Agent 不应绕过 CLI 手动批量修改原文；
-4. 如果 CLI 不存在或不可用，agent 只能给出 dry-run 级别建议，不应写入仓库；
-5. Agent 的所有自然语言回复主语言必须是简体中文。

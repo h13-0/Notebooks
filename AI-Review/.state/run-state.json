@@ -1,6 +1,5 @@
 {
   "version": 1,
-  "current_run": null,
-  "last_run": null,
-  "note": "机器状态文件。请勿人工编辑。"
+  "active_run": null,
+  "last_runs": []
 }

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "next_issue_id": "ar0001",
+  "next_issue_id_hex": "0001",
   "issues": {},
-  "note": "机器状态文件。请勿人工编辑。"
+  "notes": "issue ID 永不复用；topic 只用于 issue 和 Dashboard，不写入原文反向块。"
 }

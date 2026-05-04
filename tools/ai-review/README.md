@@ -1,13 +1,13 @@
-# AI Review CLI 占位目录
+# ai-review CLI Wrapper
 
-本目录预留给后续 CLI 实现。
+本目录仅放置 AI Review CLI 的说明。真正实现可以是 Python、Node、Rust 或其他语言，但必须暴露统一命令：
 
-预期命令接口见：
+```bash
+ai-review review --changed --dry-run
+ai-review review --changed --apply
+ai-review review --resume
+ai-review dashboard
+ai-review check
+```
 
-- `AI-Review/IMPLEMENTATION.md`
-- `.codex/skills/ai-review/SKILL.md`
-- `.cursor/rules/ai-review.mdc`
-
-在 CLI 实现之前，agent 应将 AI Review 修改视为设计或 dry-run 建议。除非用户明确要求实现 CLI，否则不要手动批量写入仓库。
-
-所有输出主语言必须使用简体中文，必要的专业外文单词除外。
+如果当前配置为 `models.main.mode: host-current`，普通终端 CLI 不能直接假装拥有主模型，必须从 Codex/Cursor 的 `/ai-review` 入口运行，或使用 `--main configured`。

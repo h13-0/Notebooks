@@ -1,9 +1,23 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if ! command -v ai-review >/dev/null 2>&1; then
-  echo "错误：未找到 ai-review CLI。请先安装或实现 CLI 后再运行。" >&2
-  exit 127
-fi
+cmd="${1:-review}"
+shift || true
 
-exec ai-review "$@"
+case "$cmd" in
+  review)
+    ai-review review "${@:-}"
+    ;;
+  apply)
+    ai-review review --changed --apply "$@"
+    ;;
+  all)
+    ai-review review --all --dry-run "$@"
+    ;;
+  resume)
+    ai-review review --resume "$@"
+    ;;
+  *)
+    ai-review "$cmd" "$@"
+    ;;
+esac
