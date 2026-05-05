@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "unit_id": "ru000001",
+  "task_id": "ru000001",
+  "content_hash": "sha256:602883dad0ea7a1f9415eeedbd99d1b7912fca88bb84a537fb6d38921888996d",
+  "task_hash": "sha256:602883dad0ea7a1f9415eeedbd99d1b7912fca88bb84a537fb6d38921888996d",
+  "model_id": "host-current",
+  "model_role": "main",
+  "created_at": "2026-05-05T21:00:53.711345",
+  "result": "correct",
+  "severity": "Correct",
+  "confidence": 0.86,
+  "title": "",
+  "topic": [
+    "Cortex-M3",
+    "????"
+  ],
+  "summary": "?????????????????? Cortex-M3/Cortex-M4 ?????????????? issue ???????",
+  "evidence": [
+    "???? Joseph Yiu ?????Cortex-M3 TRM ? ARMv7-M Architecture Application Level Reference Manual??????????????"
+  ],
+  "suggested_fix": "",
+  "requires_multimodal": false,
+  "context_used": [
+    "current_unit",
+    "prepare_external_sources"
+  ],
+  "external_sources": [
+    "https://developer.arm.com/Processors/Cortex-M3",
+    "https://developer.arm.com/-/media/Arm%20Developer%20Community/PDF/Processor%20Datasheets/Arm%20Cortex-M3%20Processor%20Datasheet.pdf"
+  ],
+  "relation_to_previous_issue": "not_applicable"
+}

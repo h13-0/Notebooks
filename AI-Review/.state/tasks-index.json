@@ -1,33 +1,21 @@
 {
   "version": 1,
-  "created_at": "2026-05-05T20:40:24.799604",
+  "kind": "ai-review-tasks-index",
+  "created_at": "2026-05-05T20:57:02.936302",
+  "prepared_by": "host-current",
+  "prepare_mode": "ai-assisted",
   "tasks": [
     "ru000001",
     "ru000002",
     "ru000003",
     "ru000004",
-    "ru000005",
-    "ru000006",
-    "ru000007",
-    "ru000008",
-    "ru000009",
-    "ru000010",
-    "ru000011",
-    "ru000012",
-    "ru000013",
-    "ru000014",
-    "ru000015",
-    "ru000016",
-    "ru000017",
-    "ru000002",
-    "ru000018",
-    "ru000019"
+    "ru000005"
   ],
   "mode": {
     "scope": "all",
     "dry_run": false,
     "apply": true,
-    "limit": 20,
+    "limit": 5,
     "issue": null,
     "paths": []
   }

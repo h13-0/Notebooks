@@ -1,0 +1,82 @@
+{
+  "unit_id": "ru000003",
+  "source_file": "ARM内核/ARM Cortex-M/ARM Cortex M3、M4学习笔记.md",
+  "source_block_ref": "[[ARM内核/ARM Cortex-M/ARM Cortex M3、M4学习笔记.md#^ru000003]]",
+  "heading_path": [
+    "2 ARM Cortex-M处理器简介"
+  ],
+  "heading": "2 ARM Cortex-M处理器简介",
+  "level": 1,
+  "start_line": 17,
+  "end_line": 20,
+  "content_hash": "sha256:0cfd8aa9c36dde236c8053ddecfdf22cdecfa6258a1d6b06725ad371860df9d1",
+  "requires_multimodal": false,
+  "attachments": [],
+  "outlinks": [],
+  "tags": [],
+  "context_notes": [],
+  "content": "# 2 ARM Cortex-M处理器简介\n\nArm Cortex M3是Arm v7中M系列的一个分支，其是哈佛架构，有独立的指令总线和数据总线，指令和数据共享同一个存储器空间。\n",
+  "prompt": "你是 AI Review 投票模型。请只返回符合协议的 JSON，不要输出 Markdown。\n\n        审查目标：\n        - unit_id: ru000003\n        - source_file: ARM内核/ARM Cortex-M/ARM Cortex M3、M4学习笔记.md\n        - heading_path: 2 ARM Cortex-M处理器简介\n        - content_hash: sha256:0cfd8aa9c36dde236c8053ddecfdf22cdecfa6258a1d6b06725ad371860df9d1\n\n        要求：\n        - 自然语言字段必须以简体中文为主。\n        - 只审查当前 ReviewUnit，不要直接改写原文。\n        - severity 只能是 Correct/Enhance/Minor/Major/Critical/Unknown。\n        - topic 只用于 issue 和 Dashboard。\n        - 如果依赖图片且无法判断，返回 Unknown。\n        - 如果当前知识不足、事实可能过时，或需要核验权威资料，host-current 主模型必须联网查询。\n        - 联网查询时必须在 JSON 中增加 external_sources，列出 URL 或可追溯来源；summary/evidence 应明确哪些判断来自外部资料。\n\n        附加上下文：\n        []\n\n        ReviewUnit 原文：\n        ```markdown\n        # 2 ARM Cortex-M处理器简介\n\nArm Cortex M3是Arm v7中M系列的一个分支，其是哈佛架构，有独立的指令总线和数据总线，指令和数据共享同一个存储器空间。\n\n        ```\n\n## AI-assisted prepare ??\n### ?????\n- ???? Cortex-M3 ?????Harvard ????????????????????\n- ??? Obsidian ????? ARM ??????????? TRM ???????\n\n### prepare ??????\n- Arm Cortex-M3 processor product page: https://developer.arm.com/Processors/Cortex-M3 (?? Cortex-M3 ??????????????)\n- Arm Cortex-M3 Datasheet: https://developer.arm.com/-/media/Arm%20Developer%20Community/PDF/Processor%20Datasheets/Arm%20Cortex-M3%20Processor%20Datasheet.pdf (?? Cortex-M3 ?? Armv7-M/Thumb ???????????????? TRM/ARM ???)\n- Arm Cortex-M4 Processor Datasheet: https://developer.arm.com/-/media/Arm%20Developer%20Community/PDF/Processor%20Datasheets/Arm%20Cortex-M4%20Processor%20Datasheet.pdf (?? Cortex-M4 ? Armv7E-M??? Harvard bus architecture??? M3/M4 ??????)\n\n### prepare ????\n- ?\n\n?????????????????? JSON ? external_sources ????? URL?? issue ??????\n",
+  "task_id": "ru000003",
+  "task_hash": "sha256:0cfd8aa9c36dde236c8053ddecfdf22cdecfa6258a1d6b06725ad371860df9d1",
+  "kind": "ai-review-task",
+  "version": 1,
+  "prepared_at": "2026-05-05T20:57:02.934662",
+  "prepared_by": "host-current",
+  "prepare_mode": "ai-assisted",
+  "prepare": {
+    "ai_assisted": true,
+    "prepared_by": "host-current",
+    "context_decisions": [
+      "???? Cortex-M3 ?????Harvard ????????????????????",
+      "??? Obsidian ????? ARM ??????????? TRM ???????"
+    ],
+    "external_sources": [
+      {
+        "title": "Arm Cortex-M3 processor product page",
+        "url": "https://developer.arm.com/Processors/Cortex-M3",
+        "source_type": "official_product_page",
+        "used_for": "?? Cortex-M3 ??????????????"
+      },
+      {
+        "title": "Arm Cortex-M3 Datasheet",
+        "url": "https://developer.arm.com/-/media/Arm%20Developer%20Community/PDF/Processor%20Datasheets/Arm%20Cortex-M3%20Processor%20Datasheet.pdf",
+        "source_type": "official_datasheet",
+        "used_for": "?? Cortex-M3 ?? Armv7-M/Thumb ???????????????? TRM/ARM ???"
+      },
+      {
+        "title": "Arm Cortex-M4 Processor Datasheet",
+        "url": "https://developer.arm.com/-/media/Arm%20Developer%20Community/PDF/Processor%20Datasheets/Arm%20Cortex-M4%20Processor%20Datasheet.pdf",
+        "source_type": "official_datasheet",
+        "used_for": "?? Cortex-M4 ? Armv7E-M??? Harvard bus architecture??? M3/M4 ??????"
+      }
+    ],
+    "warnings": [],
+    "candidate_source": "prepare-host helper output (transient, not retained)"
+  },
+  "external_sources": [
+    {
+      "title": "Arm Cortex-M3 processor product page",
+      "url": "https://developer.arm.com/Processors/Cortex-M3",
+      "source_type": "official_product_page",
+      "used_for": "?? Cortex-M3 ??????????????"
+    },
+    {
+      "title": "Arm Cortex-M3 Datasheet",
+      "url": "https://developer.arm.com/-/media/Arm%20Developer%20Community/PDF/Processor%20Datasheets/Arm%20Cortex-M3%20Processor%20Datasheet.pdf",
+      "source_type": "official_datasheet",
+      "used_for": "?? Cortex-M3 ?? Armv7-M/Thumb ???????????????? TRM/ARM ???"
+    },
+    {
+      "title": "Arm Cortex-M4 Processor Datasheet",
+      "url": "https://developer.arm.com/-/media/Arm%20Developer%20Community/PDF/Processor%20Datasheets/Arm%20Cortex-M4%20Processor%20Datasheet.pdf",
+      "source_type": "official_datasheet",
+      "used_for": "?? Cortex-M4 ? Armv7E-M??? Harvard bus architecture??? M3/M4 ??????"
+    }
+  ],
+  "prepare_warnings": [],
+  "context_decisions": [
+    "???? Cortex-M3 ?????Harvard ????????????????????",
+    "??? Obsidian ????? ARM ??????????? TRM ???????"
+  ]
+}
