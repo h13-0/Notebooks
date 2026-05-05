@@ -77,7 +77,7 @@ AI-Review/.state/host-current-votes.json
 推荐新流程把主模型和外部 voter 解耦为可恢复文件队列：
 
 ```powershell
-.\ai-review.cmd prepare --all --limit 20 --dry-run
+.\ai-review.cmd prepare --all --limit 20
 .\ai-review.cmd vote
 .\ai-review.cmd merge --dry-run
 ```
@@ -88,6 +88,8 @@ AI-Review/.state/host-current-votes.json
 AI-Review/.state/tasks/{task_id}.json
 AI-Review/.state/tasks-index.json
 ```
+
+`prepare --dry-run` 只打印将生成哪些 task，不写入 `.state/tasks`。不带 `--dry-run` 时直接写入 task 队列，不需要 `--apply`。
 
 `vote` 从 task 文件并行发起外部 review，成功结果写入：
 

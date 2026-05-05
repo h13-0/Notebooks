@@ -143,13 +143,15 @@ AI Review 必须支持可恢复的三阶段工作流，并逐步以该工作流�
 
 1. `prepare` 阶段按顺序扫描笔记、切分 ReviewUnit、解析 Obsidian 引用上下文，并把每个待审查单元写入 `AI-Review/.state/tasks/{task_id}.json`。
 2. Task 文件必须包含 `task_id`、`task_hash`、定位信息、原文内容、上下文片段和完整 prompt。
-3. `vote` 阶段只读取 task 文件，并把每个成功投票写入 `AI-Review/.state/votes/{model_id}/{task_id}.json`。
-4. 如果已有 vote 文件且其中 `task_hash` 与当前 task 一致，`vote` 阶段必须跳过该任务。
-5. 失败模型不得写入 vote 文件，也不得生成 `Unknown` 票。
-6. `merge` 阶段只读取 task 文件和 vote 文件，所有 reviewer 一视同仁参与加权聚合。
-7. `host-current`、外部 API 模型、人工补充模型都只是不同的 `model_id`，聚合阶段不得再区分“主模型”和“投票模型”。
-8. Codex/Cursor 当前会话模型参与投票时，应读取 task 文件，并把投票写入 `AI-Review/.state/votes/host-current/{task_id}.json`。
-9. `merge --apply` 才允许写入 issue、源文件 AI-Review 折叠块、Dashboard 和 ledger。
+3. `prepare --dry-run` 只打印将生成的 task 列表，不得写入 `.state/tasks` 或 `tasks-index.json`。
+4. 不带 `--dry-run` 的 `prepare` 直接写入 task 队列；不需要额外 `--apply`。
+5. `vote` 阶段只读取 task 文件，并把每个成功投票写入 `AI-Review/.state/votes/{model_id}/{task_id}.json`。
+6. 如果已有 vote 文件且其中 `task_hash` 与当前 task 一致，`vote` 阶段必须跳过该任务。
+7. 失败模型不得写入 vote 文件，也不得生成 `Unknown` 票。
+8. `merge` 阶段只读取 task 文件和 vote 文件，所有 reviewer 一视同仁参与加权聚合。
+9. `host-current`、外部 API 模型、人工补充模型都只是不同的 `model_id`，聚合阶段不得再区分“主模型”和“投票模型”。
+10. Codex/Cursor 当前会话模型参与投票时，应读取 task 文件，并把投票写入 `AI-Review/.state/votes/host-current/{task_id}.json`。
+11. `merge --apply` 才允许写入 issue、源文件 AI-Review 折叠块、Dashboard 和 ledger。
 
 ## 7.2 外部 Vote CLI 交互规则
 
