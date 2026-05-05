@@ -12,17 +12,17 @@
   "confidence": 0.8,
   "title": "",
   "topic": [
-    "??"
+    "目录"
   ],
-  "summary": "???? toc ????????????????????????????",
+  "summary": "该段只是 toc 目录占位，没有可审查的技术结论；作为目录段保留是合理的。",
   "evidence": [
-    "????? # 1 ?? ? ```toc``` ????"
+    "原文仅包含 # 1 目录 和 ```toc``` 代码块。"
   ],
   "suggested_fix": "",
   "requires_multimodal": false,
   "context_used": [
     "current_unit"
   ],
-  "external_sources": [],
-  "relation_to_previous_issue": "not_applicable"
+  "relation_to_previous_issue": "not_applicable",
+  "external_sources": []
 }

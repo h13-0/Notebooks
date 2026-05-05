@@ -13,11 +13,11 @@
   "title": "",
   "topic": [
     "Cortex-M3",
-    "????"
+    "参考资料"
   ],
-  "summary": "?????????????????? Cortex-M3/Cortex-M4 ?????????????? issue ???????",
+  "summary": "该段主要是文件前言和参考书目，列出的 Cortex-M3/Cortex-M4 资料方向合理，未发现需要生成 issue 的事实性错误。",
   "evidence": [
-    "???? Joseph Yiu ?????Cortex-M3 TRM ? ARMv7-M Architecture Application Level Reference Manual??????????????"
+    "原文列出 Joseph Yiu 相关书籍、Cortex-M3 TRM 和 ARMv7-M Architecture Application Level Reference Manual，均属于该主题常见参考资料。"
   ],
   "suggested_fix": "",
   "requires_multimodal": false,
@@ -25,9 +25,9 @@
     "current_unit",
     "prepare_external_sources"
   ],
+  "relation_to_previous_issue": "not_applicable",
   "external_sources": [
     "https://developer.arm.com/Processors/Cortex-M3",
     "https://developer.arm.com/-/media/Arm%20Developer%20Community/PDF/Processor%20Datasheets/Arm%20Cortex-M3%20Processor%20Datasheet.pdf"
-  ],
-  "relation_to_previous_issue": "not_applicable"
+  ]
 }

@@ -118,6 +118,8 @@ AI-Review/.state/votes/host-current/{task_id}.json
 
 `--dry-run` 不写入仓库文件。`--apply` 执行 Git 前置检查、人工备注区校验、issue 生成、原文 AI-Review 折叠块更新、ledger 更新、Dashboard 更新和原子替换。
 
+JSON 状态文件写入前会检查疑似编码损坏内容。若检测到连续问号 `????` 或 Unicode replacement character `�`，CLI 会拒绝写入；这通常说明生成脚本或终端管道把中文替换成了问号。
+
 ## 扫描黑名单
 
 扫描范围可在 `.ai-review.yaml` 中配置：

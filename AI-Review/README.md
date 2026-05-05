@@ -155,6 +155,10 @@ AI Review 不会覆盖或删除这里的内容。
 
 AI Review 默认不会把自身目录、skill、工具实现和 IDE 配置作为普通笔记审查对象。具体黑名单在 `.ai-review.yaml` 的 `scan.exclude_paths` 中配置。
 
+### 编码安全
+
+task 和 vote 必须保持 UTF-8 中文文本。如果看到 `????` 或 `�` 这类替换字符，说明生成过程发生了编码损坏，应先修复对应 `.state/tasks` 或 `.state/votes` 文件，再继续投票或合并。
+
 ## 维护文档
 
 用户通常只需要读本文件和 `Dashboard.md`。更底层的规则和实现细节在：

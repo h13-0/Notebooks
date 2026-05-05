@@ -23,6 +23,8 @@
 15. 推荐使用 `prepare / vote / merge` 三阶段流程；`host-current` 与外部模型都必须把结果写入 `AI-Review/.state/votes/{model_id}/{task_id}.json`，聚合阶段不再区分主模型和投票模型。
 16. 执行 `/ai-review vote` 时，应读取 `.state/tasks/*.json`，逐个生成符合 `AI-Review/MODEL_PROTOCOL.md` 的 JSON，并写入 `.state/votes/host-current/*.json`。
 17. 已失败或未成功返回协议 JSON 的外部模型不得写入 vote 文件，不得被转成 `Unknown`。
+18. 写入 task/vote 时必须保持 UTF-8；不得用会把中文替换为 `?` 的 PowerShell 管道或临时脚本写入自然语言字段。
+19. 写入前如发现连续问号 `????` 或 Unicode replacement character `�`，必须停止并修复编码来源，不能继续 vote/merge。
 
 ## 必读文档
 
@@ -66,3 +68,9 @@ ai-review review --resume
 3. 每个 task 写入 `AI-Review/.state/votes/host-current/{task_id}.json`。
 4. 如果已有 host-current vote 且 `task_hash` 一致，可以跳过或覆盖，但不得调用外部模型。
 5. 外部模型投票由用户另行运行 `.\ai-review.cmd vote`。
+
+## 编码安全
+
+1. 生成 task/vote 的自然语言字段必须直接来自当前会话模型或 UTF-8 文件。
+2. 不要把包含中文的内联脚本通过 PowerShell 管道传给解释器；如果必须用脚本，脚本内容应只含 ASCII 转义，或写入 UTF-8 文件后再执行。
+3. 写完 task/vote 后检查 `.state/tasks` 和 `.state/votes/host-current` 中是否存在 `????` 或 `�`；存在时立即修复，不得进入 merge。
