@@ -1,0 +1,16 @@
+{
+  "unit_id": "ru000001",
+  "severity": "Correct",
+  "topic": "文档元数据与参考文献",
+  "summary": "该单元为笔记前言与参考文献声明，列出了Cortex-M3/M4相关的权威指南书籍及ARM官方技术手册。书目名称、作者（Joseph Yiu）及译者信息均准确无误，符合嵌入式ARM内核学习的标准参考资料规范，无事实性错误。",
+  "evidence": "经核对，《Cortex-M3 权威指南》及《ARM Cortex-M3与Cortex-M4权威指南(第3版)》均为Joseph Yiu所著的经典教材，中文译者信息与国内公开出版记录一致。所列Technical Reference Manual与Architecture Reference Manual为ARM官方标准文档命名格式。内容仅为参考资料罗列，不涉及技术论断。",
+  "suggestions": "当前内容准确且结构清晰，无需修改。若需增强可追溯性，建议为官方手册补充具体的ARM文档编号（如DDI0337等）或开发者官网的固定下载链接。",
+  "external_sources": [],
+  "version": 1,
+  "task_id": "ru000001",
+  "task_hash": "sha256:602883dad0ea7a1f9415eeedbd99d1b7912fca88bb84a537fb6d38921888996d",
+  "content_hash": "sha256:602883dad0ea7a1f9415eeedbd99d1b7912fca88bb84a537fb6d38921888996d",
+  "model_id": "qwen3.6-max-preview",
+  "model_role": "reviewer",
+  "created_at": "2026-05-05T21:02:40.452232"
+}

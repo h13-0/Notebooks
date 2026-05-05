@@ -90,13 +90,15 @@ AI-Review/.state/tasks-index.json
 
 在正式 `/ai-review prepare` 中，Codex/Cursor 当前会话模型必须读取候选段落，自动解析 Obsidian 引用，必要时联网补充权威来源，并把最终 task 写入 `.state/tasks`；普通 CLI 不能替代这一步。
 
-`vote` 从 task 文件并行发起外部 review，成功结果写入：
+`.\ai-review.cmd vote` 只负责外部模型投票，不代表 Codex/Cursor 当前会话模型。当前会话模型的 `/ai-review vote` 必须由 skill 自己写入 `votes/host-current`，不得通过本 CLI 调外部模型。
+
+外部 `vote` 从 task 文件并行发起外部 review，成功结果写入：
 
 ```text
 AI-Review/.state/votes/{model_id}/{task_id}.json
 ```
 
-已有 vote 文件且 `task_hash` 一致时会自动跳过，因此 Ctrl+C 中断后可直接重新运行 `vote` 恢复。Codex/Cursor 当前会话模型参与投票时，也写入同一目录，例如：
+已有外部 vote 文件且 `task_hash` 一致时会自动跳过，因此 Ctrl+C 中断后可直接重新运行 `.\ai-review.cmd vote` 恢复。Codex/Cursor 当前会话模型参与投票时，也写入同一目录，例如：
 
 ```text
 AI-Review/.state/votes/host-current/{task_id}.json

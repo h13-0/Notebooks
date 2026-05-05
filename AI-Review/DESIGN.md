@@ -149,19 +149,20 @@ AI Review 必须支持可恢复的三阶段工作流，并逐步以该工作流�
 6. Task 文件必须包含 `task_id`、`task_hash`、定位信息、原文内容、引用上下文、AI 选择/裁剪后的上下文、外部资料来源和完整 prompt。
 7. `/ai-review prepare --dry-run` 只打印将生成的 task 列表和上下文/资料来源摘要，不得写入 `.state/tasks` 或 `tasks-index.json`。
 8. `/ai-review prepare` 写入 `AI-Review/.state/tasks/{task_id}.json`；写入内容必须已经过当前会话模型准备，不得只是机械字符串切分结果。
-9. `vote` 阶段只读取 task 文件，并把每个成功投票写入 `AI-Review/.state/votes/{model_id}/{task_id}.json`。
-10. 如果已有 vote 文件且其中 `task_hash` 与当前 task 一致，`vote` 阶段必须跳过该任务。
-11. 失败模型不得写入 vote 文件，也不得生成 `Unknown` 票。
-12. `merge` 阶段只读取 task 文件和 vote 文件，所有 reviewer 一视同仁参与加权聚合。
-13. `host-current`、外部 API 模型、人工补充模型都只是不同的 `model_id`，聚合阶段不得再区分“主模型”和“投票模型”。
-14. Codex/Cursor 当前会话模型参与投票时，应读取 task 文件，并把投票写入 `AI-Review/.state/votes/host-current/{task_id}.json`。
-15. `merge --apply` 才允许写入 issue、源文件 AI-Review 折叠块、Dashboard 和 ledger。
+9. `/ai-review vote` 只代表当前 Codex/Cursor 会话模型投票，必须写入 `AI-Review/.state/votes/host-current/{task_id}.json`。
+10. `/ai-review vote` 不得调用外部模型 API；外部模型投票必须由普通终端显式运行 `.\ai-review.cmd vote`。
+11. 外部 `.\ai-review.cmd vote` 只读取 task 文件，并把每个成功投票写入 `AI-Review/.state/votes/{model_id}/{task_id}.json`。
+12. 如果已有 vote 文件且其中 `task_hash` 与当前 task 一致，外部 vote 阶段必须跳过该任务。
+13. 失败模型不得写入 vote 文件，也不得生成 `Unknown` 票。
+14. `merge` 阶段只读取 task 文件和 vote 文件，所有 reviewer 一视同仁参与加权聚合。
+15. `host-current`、外部 API 模型、人工补充模型都只是不同的 `model_id`，聚合阶段不得再区分“主模型”和“投票模型”。
+16. `merge --apply` 才允许写入 issue、源文件 AI-Review 折叠块、Dashboard 和 ledger。
 
 ## 7.2 外部 Vote CLI 交互规则
 
 外部 voter CLI 必须面向长时间并发审查设计。
 
-1. `vote` 命令必须并行请求多个模型，并支持按模型配置 `concurrency`。
+1. `.\ai-review.cmd vote` 命令必须并行请求多个外部模型，并支持按模型配置 `concurrency`。
 2. CLI 必须实时显示每个活跃任务的模型名、task id、状态、耗时、近似 token 速度、token 消耗和一行流式输出预览。
 3. 流式输出预览最多占用一行；内容过长时用省略号保留尾部。
 4. 流式请求下，`request_timeout_sec` 表示 socket 空闲超时；只要服务端持续输出 chunk，就不应被判定为无响应。

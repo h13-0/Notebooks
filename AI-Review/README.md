@@ -92,13 +92,19 @@ Correct 段落通常只保留一个简短状态和 Dashboard 链接：
 AI-Review/.state/votes/host-current/{task_id}.json
 ```
 
+`/ai-review vote` 只负责当前 Codex/Cursor 会话模型自己的投票，不会调用外部模型。外部模型需要在普通终端显式运行：
+
+```powershell
+.\ai-review.cmd vote
+```
+
 外部模型投票写入：
 
 ```text
 AI-Review/.state/votes/{model_id}/{task_id}.json
 ```
 
-`vote` 可被中断和恢复。重新运行时，hash 一致且已经完成的投票会自动跳过。
+外部 `.\ai-review.cmd vote` 可被中断和恢复。重新运行时，hash 一致且已经完成的外部投票会自动跳过。
 
 ## 详细规则
 

@@ -1,0 +1,17 @@
+{
+  "unit_id": "ru000005",
+  "severity": "Major",
+  "topic": "特殊功能寄存器组描述错误",
+  "summary": "原文中 FAULTMASL 应为 FAULTMASK，拼写错误导致寄存器名称不正确。",
+  "evidence": "Arm Cortex-M3 Technical Reference Manual 中寄存器集包含 FAULTMASK，而非 FAULTMASL。图片附件在此处未能直接确认，但外部资料证实正确名称为 FAULTMASK。",
+  "external_sources": [
+    "https://developer.arm.com/documentation/ddi0290/g/programmer-s-model/registers/the-register-set?lang=en"
+  ],
+  "version": 1,
+  "task_id": "ru000005",
+  "task_hash": "sha256:6ce03c10d6a2e66471d50ea01cc2928fdf6ec771a2e94b2d18008e40b1901356",
+  "content_hash": "sha256:6ce03c10d6a2e66471d50ea01cc2928fdf6ec771a2e94b2d18008e40b1901356",
+  "model_id": "deepseek-v4-pro",
+  "model_role": "reviewer",
+  "created_at": "2026-05-05T21:02:41.344995"
+}

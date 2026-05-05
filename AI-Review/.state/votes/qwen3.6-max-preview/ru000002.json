@@ -1,0 +1,16 @@
+{
+  "unit_id": "ru000002",
+  "severity": "Minor",
+  "topic": "结构/低信息量",
+  "summary": "该单元仅为目录占位符（toc代码块），无实质技术内容可供审查。属于文档结构性标记，当前状态符合笔记草稿特征。",
+  "evidence": "原文仅包含标题“# 1 目录”及空的“```toc```”代码块，未涉及任何ARM Cortex-M3/M4的具体知识点、参数或技术论述。",
+  "suggestion": "无需修改。请确保最终渲染环境（如Obsidian、VitePress或特定Markdown插件）支持该toc语法。待正文内容补充完整后，目录将自动生成。",
+  "external_sources": [],
+  "version": 1,
+  "task_id": "ru000002",
+  "task_hash": "sha256:256b73f34ca6e7f32c4ca3c8862fafbe99b46adee11430e31376a19e6b529c47",
+  "content_hash": "sha256:256b73f34ca6e7f32c4ca3c8862fafbe99b46adee11430e31376a19e6b529c47",
+  "model_id": "qwen3.6-max-preview",
+  "model_role": "reviewer",
+  "created_at": "2026-05-05T21:07:37.059532"
+}

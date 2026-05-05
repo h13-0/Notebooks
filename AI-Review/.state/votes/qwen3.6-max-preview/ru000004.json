@@ -1,0 +1,19 @@
+{
+  "unit_id": "ru000004",
+  "severity": "Minor",
+  "topic": "内容完整性与技术严谨性",
+  "summary": "原文对Cortex-M3核心寄存器组的描述基本符合ARM架构规范，但存在文本截断与细节表述不够严谨的问题。文末R15(PC)的描述未完成，需补全。此外，关于32位Thumb-2指令访问寄存器的描述略显绝对，实际Thumb-2主要扩展了对高寄存器(R8-R12)的访问，但并非所有指令均可访问全部寄存器。核心事实正确，建议完善结尾并微调指令集描述。",
+  "evidence": "依据ARM Cortex-M3 Technical Reference Manual (DDI0290G)第4章Programmer's Model：R0-R12为通用寄存器；R13(SP)物理上分为MSP和PSP，由CONTROL寄存器的SPSEL位选择当前可见的堆栈指针，且SP低两位硬件强制为0以保证字对齐；R14(LR)保存子程序返回地址；R15(PC)为程序计数器。原文技术点准确，但R15描述截断属于排版/完整性问题。关于Thumb/Thumb-2的寄存器访问规则，外部资料明确指出Thumb-2扩展了高寄存器访问能力，但部分16/32位混合指令仍受限于低寄存器组，原文“可以访问全部寄存器”属教学简化表述，建议增加限定词以提升严谨性。",
+  "external_sources": [
+    "https://developer.arm.com/documentation/ddi0290/g/programmer-s-model/registers/the-register-set?lang=en"
+  ],
+  "requires_multimodal": false,
+  "suggestion": "1. 补全R15程序计数器的功能描述（如：指向当前正在执行的指令地址，且最低位通常用于指示Thumb状态）。\n2. 将“32位Thumb-2指令可以访问全部寄存器”修改为“32位Thumb-2指令扩展了对高寄存器(R8-R12)的访问能力，多数指令可操作全部通用寄存器”。\n3. 图片仅为寄存器布局示意图，不影响文本事实核查，当前文本已具备独立审查条件。",
+  "version": 1,
+  "task_id": "ru000004",
+  "task_hash": "sha256:7df8587b9d868dc00dc3a1df00387b5611a9340d274bce792b6818ab5bfd280c",
+  "content_hash": "sha256:7df8587b9d868dc00dc3a1df00387b5611a9340d274bce792b6818ab5bfd280c",
+  "model_id": "qwen3.6-max-preview",
+  "model_role": "reviewer",
+  "created_at": "2026-05-05T21:06:41.138163"
+}
