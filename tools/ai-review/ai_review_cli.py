@@ -1217,9 +1217,16 @@ def git_preflight(root: Path, config: dict[str, Any], apply: bool) -> list[str]:
             raise AiReviewError(f"git fetch 失败：{proc.stderr.strip()}")
     if deep_get(config, "git.require_clean_worktree", True):
         proc = run_git(["status", "--porcelain"], root)
+        submodule_rels = set(submodule_paths(root))
         allowed = []
         for line in proc.stdout.splitlines():
             if "AI-Review/.tmp/" in line or "AI-Review/.cache/" in line:
+                continue
+            raw = line[3:].strip()
+            if " -> " in raw:
+                raw = raw.split(" -> ", 1)[1]
+            raw = raw.strip('"').replace("\\", "/")
+            if raw in submodule_rels:
                 continue
             allowed.append(line)
         if allowed:
@@ -1234,6 +1241,53 @@ def git_preflight(root: Path, config: dict[str, Any], apply: bool) -> list[str]:
             raise AiReviewError("当前 HEAD 与 upstream 不同步。")
     warnings.extend(check_submodules(root, config, apply))
     return warnings
+
+
+def submodule_paths(root: Path) -> list[str]:
+    proc = run_git(["submodule", "status", "--recursive"], root)
+    if proc.returncode != 0 or not proc.stdout.strip():
+        return []
+    result: list[str] = []
+    for line in proc.stdout.splitlines():
+        parts = line[1:].split()
+        if len(parts) >= 2:
+            result.append(parts[1].replace("\\", "/"))
+    return result
+
+
+def dirty_submodule_paths(root: Path, config: dict[str, Any], apply: bool) -> set[str]:
+    dirty: set[str] = set()
+    if not apply or not deep_get(config, "submodules.scan", True):
+        return dirty
+    proc = run_git(["submodule", "status", "--recursive"], root)
+    if proc.returncode != 0 or not proc.stdout.strip():
+        return dirty
+    for line in proc.stdout.splitlines():
+        state = line[:1]
+        parts = line[1:].split()
+        if len(parts) < 2:
+            continue
+        sha, rel = parts[0], parts[1].replace("\\", "/")
+        sub = root / rel
+        if state == "-" or not sub.exists():
+            dirty.add(rel)
+            continue
+        if deep_get(config, "submodules.require_clean_worktree", True):
+            st = run_git(["status", "--porcelain"], sub)
+            if st.stdout.strip():
+                dirty.add(rel)
+                continue
+        if deep_get(config, "submodules.skip_if_head_mismatch", True):
+            head = run_git(["rev-parse", "HEAD"], sub)
+            if head.returncode == 0 and head.stdout.strip() != sha:
+                dirty.add(rel)
+    return dirty
+
+
+def is_under_repo_rel(path: Path, root: Path, rel: str) -> bool:
+    path_rel = path.relative_to(root).as_posix()
+    rel = rel.rstrip("/")
+    return path_rel == rel or path_rel.startswith(rel + "/")
 
 
 def check_submodules(root: Path, config: dict[str, Any], apply: bool) -> list[str]:
@@ -1601,6 +1655,20 @@ def command_identity(args: argparse.Namespace) -> int:
     unit_ledger_path = review_dir / ".state" / "review-unit-ledger.json"
     unit_ledger = load_json(unit_ledger_path, {"version": 1, "next_unit_id": 1, "units": {}})
     files, units = discover_units_for_args(root, config, review_dir, args, unit_ledger)
+    skipped_submodules = dirty_submodule_paths(root, config, bool(args.apply))
+    if skipped_submodules:
+        kept_files = []
+        for path in files:
+            if any(is_under_repo_rel(path, root, rel) for rel in skipped_submodules):
+                continue
+            kept_files.append(path)
+        files = kept_files
+        units = [
+            unit for unit in units
+            if not any(is_under_repo_rel(unit.file_path, root, rel) for rel in skipped_submodules)
+        ]
+        for rel in sorted(skipped_submodules):
+            print_warning(f"identity 跳过 dirty/unavailable submodule：{rel}")
     by_file: dict[Path, list[ReviewUnit]] = {}
     for unit in units:
         by_file.setdefault(unit.file_path, []).append(unit)
