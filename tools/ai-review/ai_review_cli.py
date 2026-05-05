@@ -1324,16 +1324,25 @@ def normalize_vote_payload(payload: dict[str, Any], model: dict[str, Any], task:
 
 def command_prepare_tasks(args: argparse.Namespace) -> int:
     review_dir, payload = host_prepare_payload(args)
+    units = [normalize_task_payload(x) for x in payload.get("units", [])]
+    payload.setdefault("mode", {})["dry_run"] = bool(getattr(args, "dry_run", False))
+    payload.setdefault("mode", {})["apply"] = not bool(getattr(args, "dry_run", False))
+    if getattr(args, "dry_run", False):
+        print_info(f"prepare dry-run：将生成 task {len(units)} 个，不写入 .state/tasks。")
+        for task in units:
+            heading = " > ".join(str(x) for x in task.get("heading_path", [])) or str(task.get("heading") or "")
+            print(f"- {task['task_id']}: {task.get('source_file')}:{task.get('start_line')} {heading}")
+        return 0
+
     tasks_dir, _votes_dir = task_dirs(review_dir)
     written = 0
-    for unit_payload in payload.get("units", []):
-        task = normalize_task_payload(unit_payload)
+    for task in units:
         write_json_atomic(task_path(tasks_dir, task["task_id"]), task)
         written += 1
     write_json_atomic(review_dir / ".state" / "tasks-index.json", {
         "version": 1,
         "created_at": _dt.datetime.now().isoformat(),
-        "tasks": [normalize_task_payload(x)["task_id"] for x in payload.get("units", [])],
+        "tasks": [x["task_id"] for x in units],
         "mode": payload.get("mode", {}),
     })
     print_info(f"已生成 task：{written} 个，目录：{tasks_dir}")
@@ -1961,11 +1970,9 @@ def main(argv: list[str] | None = None) -> int:
                     args.changed = str(default.get("scope", "changed")) == "changed"
             return command_review(args)
         if args.command == "prepare":
-            if not args.dry_run and not args.apply:
+            if not args.changed and not args.all and not args.paths:
                 default = load_yaml(Path.cwd() / ".ai-review.yaml").get("default_mode", {})
-                args.dry_run = bool(default.get("dry_run", True))
-                if not args.changed and not args.all and not args.paths:
-                    args.changed = str(default.get("scope", "changed")) == "changed"
+                args.changed = str(default.get("scope", "changed")) == "changed"
             return command_prepare_tasks(args)
         if args.command == "vote":
             return command_vote_tasks(args)

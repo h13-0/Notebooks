@@ -39,7 +39,7 @@ ai-review review --changed --dry-run
 ai-review review --changed --apply
 ai-review review --all --limit 20
 ai-review review --resume
-ai-review prepare --changed --dry-run
+ai-review prepare --changed
 ai-review vote
 ai-review merge --dry-run
 ```

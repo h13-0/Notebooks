@@ -226,3 +226,5 @@ models:
 `runtime.stream_total_timeout_sec` 是单个流式 review 的总时长上限，用于防止无限输出。复杂 review 建议设置为 1800 秒或更高。
 
 `ai-review vote --concurrency N` 会临时覆盖每个模型的 `concurrency`。
+
+`ai-review prepare --dry-run` 只预览 task，不写入 `.state/tasks`；`ai-review prepare` 直接写入 task 队列。
