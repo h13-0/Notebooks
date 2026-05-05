@@ -18,10 +18,11 @@
 10. prepare 阶段必须自动解析 Obsidian 引用，必要时把 `[[note#Heading]]` 和 `[[note#^blockid]]` 对应段落拼接到 task 上下文中。
 11. prepare 阶段在必要时必须联网查询权威资料，并把来源写入 task 的 `external_sources` 或等价字段，供 issue 修改者核实。
 12. 当前宿主主模型 `host-current` 在投票时如果继续使用外部资料，也必须在投票 JSON 的 `external_sources` 中列出来源。
-13. 外部 voter 应优先使用流式请求；超时语义应按“空闲超时”处理，不能把持续输出但总耗时较长的响应误判为无响应。
-14. 推荐使用 `prepare / vote / merge` 三阶段流程；`host-current` 与外部模型都必须把结果写入 `AI-Review/.state/votes/{model_id}/{task_id}.json`，聚合阶段不再区分主模型和投票模型。
-15. 执行 `/ai-review` 时，如果需要当前 Codex/Cursor 会话模型参与投票，应先完成 AI-assisted prepare，读取 `.state/tasks/*.json`，逐个生成符合 `AI-Review/MODEL_PROTOCOL.md` 的 JSON，并写入 `.state/votes/host-current/*.json`。
-16. 已失败或未成功返回协议 JSON 的外部模型不得写入 vote 文件，不得被转成 `Unknown`。
+13. `/ai-review vote` 只负责当前 Codex/Cursor 会话模型自己的投票，必须写入 `.state/votes/host-current/*.json`，不得调用外部模型 API。
+14. 外部 voter 必须由普通终端显式运行 `.\ai-review.cmd vote` 调用；外部 voter 应优先使用流式请求，超时语义应按“空闲超时”处理。
+15. 推荐使用 `prepare / vote / merge` 三阶段流程；`host-current` 与外部模型都必须把结果写入 `AI-Review/.state/votes/{model_id}/{task_id}.json`，聚合阶段不再区分主模型和投票模型。
+16. 执行 `/ai-review vote` 时，应读取 `.state/tasks/*.json`，逐个生成符合 `AI-Review/MODEL_PROTOCOL.md` 的 JSON，并写入 `.state/votes/host-current/*.json`。
+17. 已失败或未成功返回协议 JSON 的外部模型不得写入 vote 文件，不得被转成 `Unknown`。
 
 ## 必读文档
 
@@ -57,3 +58,11 @@ ai-review review --resume
 5. 判断是否需要联网。涉及版本、标准、API、芯片/内核行为、外部工具、厂商文档或模型知识不确定时，必须联网查询一手来源。
 6. 将联网来源写入 task，至少包含 URL 或可追溯来源名、标题和用途摘要。
 7. 写入 `AI-Review/.state/tasks/{task_id}.json`；`--dry-run` 只打印 task 摘要、引用上下文摘要和外部来源摘要，不写文件。
+
+## `/ai-review vote` 工作流
+
+1. 只读取 `AI-Review/.state/tasks/*.json`。
+2. 只生成当前会话模型 `host-current` 的投票。
+3. 每个 task 写入 `AI-Review/.state/votes/host-current/{task_id}.json`。
+4. 如果已有 host-current vote 且 `task_hash` 一致，可以跳过或覆盖，但不得调用外部模型。
+5. 外部模型投票由用户另行运行 `.\ai-review.cmd vote`。

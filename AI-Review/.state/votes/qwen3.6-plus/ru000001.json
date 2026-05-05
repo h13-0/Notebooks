@@ -1,0 +1,20 @@
+{
+  "unit_id": "ru000001",
+  "severity": "Correct",
+  "topic": "参考文献准确性",
+  "summary": "该前置部分列出的参考书籍与技术手册均为ARM Cortex-M3/M4架构学习与开发的标准权威资料，作者、译者及书名信息准确无误，符合嵌入式系统学习资料的引用规范。",
+  "evidence": "经联网核对官方ARM开发者门户及国内图书出版目录，确认《Cortex-M3权威指南》（宋岩译）与《ARM Cortex-M3与Cortex-M4权威指南（第3版）》（吴常玉等译）均为Joseph Yiu所著的经典译本，信息准确。所列《The Cortex-M3 Technical Reference Manual》与《The ARMv7-M Architecture Application Level Reference Manual》均为ARM官方发布的核心技术文档，名称规范。本判断基于外部权威资料交叉验证得出。",
+  "external_sources": [
+    "https://developer.arm.com/Processors/Cortex-M3",
+    "https://developer.arm.com/documentation",
+    "https://book.douban.com/subject/3648388/",
+    "https://book.douban.com/subject/26316338/"
+  ],
+  "version": 1,
+  "task_id": "ru000001",
+  "task_hash": "sha256:602883dad0ea7a1f9415eeedbd99d1b7912fca88bb84a537fb6d38921888996d",
+  "content_hash": "sha256:602883dad0ea7a1f9415eeedbd99d1b7912fca88bb84a537fb6d38921888996d",
+  "model_id": "qwen3.6-plus",
+  "model_role": "reviewer",
+  "created_at": "2026-05-05T21:03:37.073884"
+}

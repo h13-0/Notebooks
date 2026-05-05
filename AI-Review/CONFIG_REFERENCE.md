@@ -228,3 +228,5 @@ models:
 `ai-review vote --concurrency N` 会临时覆盖每个模型的 `concurrency`。
 
 完整 `/ai-review prepare` 必须由 Codex/Cursor skill 做 AI-assisted 准备。普通 CLI 不提供 `prepare` 子命令，因为它无法主动与当前会话模型通信。
+
+`/ai-review vote` 只写当前会话模型的 `host-current` 投票；外部模型并发、超时和流式参数只适用于普通终端中的 `.\ai-review.cmd vote`。

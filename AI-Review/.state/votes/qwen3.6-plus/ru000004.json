@@ -1,0 +1,19 @@
+{
+  "unit_id": "ru000004",
+  "source_file": "ARM内核/ARM Cortex-M/ARM Cortex M3、M4学习笔记.md",
+  "heading_path": "2 ARM Cortex-M处理器简介 > 2.1 核心寄存器组",
+  "content_hash": "sha256:7df8587b9d868dc00dc3a1df00387b5611a9340d274bce792b6818ab5bfd280c",
+  "severity": "Correct",
+  "topic": "ARM Cortex-M3 寄存器组技术准确性",
+  "summary": "原文对Cortex-M3核心寄存器组的描述准确，包括R0-R15的功能划分、堆栈指针双寄存器机制、Thumb指令访问限制及CONTROL寄存器作用均符合ARM架构规范。",
+  "evidence": "根据ARM Cortex-M3 Technical Reference Manual (DDI0290) 第2.2节寄存器组说明：R13(SP)确实由MSP/PSP双寄存器实现且通过CONTROL[0]切换；R14(LR)用于子程序返回地址存储；R15(PC)为程序计数器；16位Thumb指令仅支持R0-R7访问。堆栈指针低两位恒0确保4字节对齐的描述与架构要求一致。",
+  "external_sources": [
+    "https://developer.arm.com/documentation/ddi0290/g/programmer-s-model/registers/the-register-set?lang=en"
+  ],
+  "version": 1,
+  "task_id": "ru000004",
+  "task_hash": "sha256:7df8587b9d868dc00dc3a1df00387b5611a9340d274bce792b6818ab5bfd280c",
+  "model_id": "qwen3.6-plus",
+  "model_role": "reviewer",
+  "created_at": "2026-05-05T21:04:52.870906"
+}
