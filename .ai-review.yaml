@@ -89,6 +89,7 @@ models:
       weight: 2
       role: "voter"
       vote_enabled: true
+      concurrency: 2
       thinking:
         enabled: true
         effort: "high"
@@ -103,6 +104,7 @@ models:
       weight: 2
       role: "voter"
       vote_enabled: true
+      concurrency: 1
       thinking:
         enabled: true
         effort: "high"
@@ -117,6 +119,7 @@ models:
       weight: 2
       role: "voter"
       vote_enabled: true
+      concurrency: 1
       thinking:
         enabled: true
         effort: "high"
@@ -131,6 +134,7 @@ models:
       weight: 2
       role: "voter"
       vote_enabled: true
+      concurrency: 1
       thinking:
         enabled: true
         effort: "high"
@@ -177,10 +181,10 @@ dashboard:
 
 runtime:
   max_concurrency: 3
-  request_timeout_sec: 120
+  request_timeout_sec: 300
   stream: true
-  stream_total_timeout_sec: 240
-  retry: 2
+  stream_total_timeout_sec: 1800
+  retry: 1
   warn_once_per_model: true
   model_failure_policy: "skip_model"
   no_eligible_model_policy: "skip"

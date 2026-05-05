@@ -119,6 +119,7 @@ models:
       weight: 1
       role: "voter"
       vote_enabled: true
+      concurrency: 1
       thinking:
         enabled: true
         effort: "high"
@@ -165,10 +166,10 @@ dashboard:
 
 runtime:
   max_concurrency: 3
-  request_timeout_sec: 120
+  request_timeout_sec: 300
   stream: true
-  stream_total_timeout_sec: 240
-  retry: 2
+  stream_total_timeout_sec: 1800
+  retry: 1
   warn_once_per_model: true
   model_failure_policy: "skip_model"
   no_eligible_model_policy: "skip"
@@ -207,4 +208,21 @@ AI-Review/.cache/
 
 `configured` 需要在 `.ai-review.yaml` 和 `.ai-review-secrets.yaml` 中配置 provider、model、base_url、api_key。
 
-如果在普通终端执行 CLI 且主模型配置为 `host-current`，CLI 应拒绝执行写入，并提示用户切换到 `configured` 或从 Codex/Cursor 的 `/ai-review` 入口运行。
+普通终端 CLI 无法直接访问 `host-current`。需要当前 Codex/Cursor 会话模型参与时，应使用 `prepare / vote / merge` 工作流，并由当前会话模型把投票写入 `AI-Review/.state/votes/host-current/{task_id}.json`。
+
+## 6. Task / Vote / Merge 相关配置
+
+外部 voter 可配置单模型并发：
+
+```yaml
+models:
+  voters:
+    - id: "deepseek-v4-pro"
+      concurrency: 2
+```
+
+`runtime.request_timeout_sec` 是单次 HTTP socket 空闲超时。启用 `runtime.stream: true` 后，只要服务端持续输出 SSE chunk，就不会因为总耗时较长而被判定为无响应。
+
+`runtime.stream_total_timeout_sec` 是单个流式 review 的总时长上限，用于防止无限输出。复杂 review 建议设置为 1800 秒或更高。
+
+`ai-review vote --concurrency N` 会临时覆盖每个模型的 `concurrency`。
