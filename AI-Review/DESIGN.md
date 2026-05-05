@@ -142,7 +142,7 @@ score(severity) = Σ(model_weight × model_confidence)
 AI Review 必须支持可恢复的三阶段工作流，并逐步以该工作流取代旧的同步式主模型/投票模型耦合流程。
 
 1. `prepare` 必须是 AI-assisted 阶段，由 Codex/Cursor 当前会话模型通过 skill 编排完成。
-2. 普通 CLI 不得被视为完整 prepare；CLI 只能提供候选切分、文件写入等底层工具。
+2. 普通 CLI 不得提供 `prepare` 子命令；因为 CLI 无法主动与 Codex/Cursor 当前会话模型通信，也无法独立完成必要的联网判断和上下文选择。
 3. 当前会话模型必须读取候选段落，按标题、内容、引用关系和审查目标决定最终 task。
 4. 当前会话模型必须解析 Obsidian 引用，并把必要的 `[[note#Heading]]`、`[[note#^blockid]]` 目标段落拼接进 task 上下文。
 5. 当前会话模型在必要时必须联网查询权威资料，并把来源写入 task 的 `external_sources` 或等价字段。

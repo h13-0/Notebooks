@@ -227,4 +227,4 @@ models:
 
 `ai-review vote --concurrency N` 会临时覆盖每个模型的 `concurrency`。
 
-完整 `/ai-review prepare` 必须由 Codex/Cursor skill 做 AI-assisted 准备。普通 CLI 的 `prepare` 只能作为候选切分 helper；`ai-review prepare --dry-run` 只预览候选 task，不写入 `.state/tasks`。
+完整 `/ai-review prepare` 必须由 Codex/Cursor skill 做 AI-assisted 准备。普通 CLI 不提供 `prepare` 子命令，因为它无法主动与当前会话模型通信。

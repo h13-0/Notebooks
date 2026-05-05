@@ -74,24 +74,21 @@ AI-Review/.state/host-current-votes.json
 
 ## Task / Vote / Merge 流程
 
-推荐新流程把主模型和外部 voter 解耦为可恢复文件队列。注意：完整 `prepare` 必须由 Codex/Cursor skill 进行 AI-assisted 准备；本工具目录中的 CLI 只能作为底层候选切分和文件写入 helper。
+推荐新流程把主模型和外部 voter 解耦为可恢复文件队列。注意：完整 `prepare` 必须由 Codex/Cursor skill 进行 AI-assisted 准备；本工具目录中的 CLI 不提供 `prepare` 子命令。
 
 ```powershell
-.\ai-review.cmd prepare --all --limit 20
 .\ai-review.cmd vote
 .\ai-review.cmd merge --dry-run
 ```
 
-CLI `prepare` 写入候选 task：
+正式 `/ai-review prepare` 写入：
 
 ```text
 AI-Review/.state/tasks/{task_id}.json
 AI-Review/.state/tasks-index.json
 ```
 
-`prepare --dry-run` 只打印将生成哪些候选 task，不写入 `.state/tasks`。不带 `--dry-run` 时直接写入候选 task 队列，不需要 `--apply`。
-
-在正式 `/ai-review prepare` 中，Codex/Cursor 当前会话模型必须读取候选段落，自动解析 Obsidian 引用，必要时联网补充权威来源，并把最终 task 写入 `.state/tasks`；不得把 CLI 的机械切分结果直接当作完整 prepare 结果。
+在正式 `/ai-review prepare` 中，Codex/Cursor 当前会话模型必须读取候选段落，自动解析 Obsidian 引用，必要时联网补充权威来源，并把最终 task 写入 `.state/tasks`；普通 CLI 不能替代这一步。
 
 `vote` 从 task 文件并行发起外部 review，成功结果写入：
 
