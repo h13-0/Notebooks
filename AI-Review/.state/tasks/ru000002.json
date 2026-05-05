@@ -16,31 +16,31 @@
   "tags": [],
   "context_notes": [],
   "content": "# 1 目录\n\n```toc\n```\n",
-  "prompt": "你是 AI Review 投票模型。请只返回符合协议的 JSON，不要输出 Markdown。\n\n        审查目标：\n        - unit_id: ru000002\n        - source_file: ARM内核/ARM Cortex-M/ARM Cortex M3、M4学习笔记.md\n        - heading_path: 1 目录\n        - content_hash: sha256:256b73f34ca6e7f32c4ca3c8862fafbe99b46adee11430e31376a19e6b529c47\n\n        要求：\n        - 自然语言字段必须以简体中文为主。\n        - 只审查当前 ReviewUnit，不要直接改写原文。\n        - severity 只能是 Correct/Enhance/Minor/Major/Critical/Unknown。\n        - topic 只用于 issue 和 Dashboard。\n        - 如果依赖图片且无法判断，返回 Unknown。\n        - 如果当前知识不足、事实可能过时，或需要核验权威资料，host-current 主模型必须联网查询。\n        - 联网查询时必须在 JSON 中增加 external_sources，列出 URL 或可追溯来源；summary/evidence 应明确哪些判断来自外部资料。\n\n        附加上下文：\n        []\n\n        ReviewUnit 原文：\n        ```markdown\n        # 1 目录\n\n```toc\n```\n\n        ```\n\n## AI-assisted prepare ??\n### ?????\n- ??????? toc ?????????????????????? task ??? limit=5 ??????\n\n### prepare ??????\n- ?\n\n### prepare ????\n- low_information_unit: ???????????????\n\n?????????????????? JSON ? external_sources ????? URL?? issue ??????\n",
+  "prompt": "你是 AI Review 投票模型。请只返回符合协议的 JSON，不要输出 Markdown。\n\n        审查目标：\n        - unit_id: ru000002\n        - source_file: ARM内核/ARM Cortex-M/ARM Cortex M3、M4学习笔记.md\n        - heading_path: 1 目录\n        - content_hash: sha256:256b73f34ca6e7f32c4ca3c8862fafbe99b46adee11430e31376a19e6b529c47\n\n        要求：\n        - 自然语言字段必须以简体中文为主。\n        - 只审查当前 ReviewUnit，不要直接改写原文。\n        - severity 只能是 Correct/Enhance/Minor/Major/Critical/Unknown。\n        - topic 只用于 issue 和 Dashboard。\n        - 如果依赖图片且无法判断，返回 Unknown。\n        - 如果当前知识不足、事实可能过时，或需要核验权威资料，host-current 主模型必须联网查询。\n        - 联网查询时必须在 JSON 中增加 external_sources，列出 URL 或可追溯来源；summary/evidence 应明确哪些判断来自外部资料。\n\n        附加上下文：\n        []\n\n        ReviewUnit 原文：\n        ```markdown\n        # 1 目录\n\n```toc\n```\n\n        ```\n\n## AI-assisted prepare 补充\n### 上下文选择\n- 该段仅包含目录 toc 代码块，无事实性知识点；仍生成 task 以保持 limit=10 的顺序一致。\n\n### prepare 阶段外部来源\n- 无\n\n### prepare 阶段警告\n- low_information_unit: 目录段通常不需要模型深度审查。\n\n投票模型如使用上述外部来源，请在返回 JSON 的 external_sources 中保留相关 URL，供 issue 修改者核实。\n",
   "task_id": "ru000002",
   "task_hash": "sha256:256b73f34ca6e7f32c4ca3c8862fafbe99b46adee11430e31376a19e6b529c47",
   "kind": "ai-review-task",
   "version": 1,
-  "prepared_at": "2026-05-05T20:57:02.932980",
+  "prepared_at": "2026-05-05T21:22:02.024336",
   "prepared_by": "host-current",
   "prepare_mode": "ai-assisted",
+  "external_sources": [],
+  "prepare_warnings": [
+    "low_information_unit: 目录段通常不需要模型深度审查。"
+  ],
+  "context_decisions": [
+    "该段仅包含目录 toc 代码块，无事实性知识点；仍生成 task 以保持 limit=10 的顺序一致。"
+  ],
   "prepare": {
     "ai_assisted": true,
     "prepared_by": "host-current",
     "context_decisions": [
-      "??????? toc ?????????????????????? task ??? limit=5 ??????"
+      "该段仅包含目录 toc 代码块，无事实性知识点；仍生成 task 以保持 limit=10 的顺序一致。"
     ],
     "external_sources": [],
     "warnings": [
-      "low_information_unit: ???????????????"
+      "low_information_unit: 目录段通常不需要模型深度审查。"
     ],
     "candidate_source": "prepare-host helper output (transient, not retained)"
-  },
-  "external_sources": [],
-  "prepare_warnings": [
-    "low_information_unit: ???????????????"
-  ],
-  "context_decisions": [
-    "??????? toc ?????????????????????? task ??? limit=5 ??????"
-  ]
+  }
 }

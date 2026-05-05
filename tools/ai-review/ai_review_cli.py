@@ -45,6 +45,7 @@ STATUS_DIRS = {"open": "Open", "closed": "Closed", "superseded": "Superseded", "
 AI_BLOCK_RE = re.compile(
     r"(?ms)^<!-- ai-review:start unit=ru[0-9]{6} -->.*?^<!-- ai-review:end -->\s*"
 )
+SUSPICIOUS_ENCODING_RE = re.compile(r"\?{4,}|\ufffd")
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$")
 WIKI_LINK_RE = re.compile(r"!?\[\[([^\]]+)\]\]")
 EMBED_RE = re.compile(r"!\[\[([^\]]+)\]\]")
@@ -120,7 +121,13 @@ def load_json(path: Path, default: Any) -> Any:
 
 
 def write_json_atomic(path: Path, data: Any) -> None:
-    write_text_atomic(path, json.dumps(data, ensure_ascii=False, indent=2) + "\n")
+    text = json.dumps(data, ensure_ascii=False, indent=2) + "\n"
+    if SUSPICIOUS_ENCODING_RE.search(text):
+        raise AiReviewError(
+            f"拒绝写入疑似编码损坏的 JSON：{path}。"
+            "检测到连续问号或 Unicode 替换字符，请检查生成脚本/终端编码。"
+        )
+    write_text_atomic(path, text)
 
 
 def parse_scalar(value: str) -> Any:

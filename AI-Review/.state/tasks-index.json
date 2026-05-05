@@ -1,7 +1,7 @@
 {
   "version": 1,
   "kind": "ai-review-tasks-index",
-  "created_at": "2026-05-05T20:57:02.936302",
+  "created_at": "2026-05-05T21:22:02.037595",
   "prepared_by": "host-current",
   "prepare_mode": "ai-assisted",
   "tasks": [
@@ -9,13 +9,18 @@
     "ru000002",
     "ru000003",
     "ru000004",
-    "ru000005"
+    "ru000005",
+    "ru000006",
+    "ru000007",
+    "ru000008",
+    "ru000009",
+    "ru000010"
   ],
   "mode": {
     "scope": "all",
     "dry_run": false,
     "apply": true,
-    "limit": 5,
+    "limit": 10,
     "issue": null,
     "paths": []
   }

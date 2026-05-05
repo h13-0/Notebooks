@@ -230,3 +230,5 @@ models:
 完整 `/ai-review prepare` 必须由 Codex/Cursor skill 做 AI-assisted 准备。普通 CLI 不提供 `prepare` 子命令，因为它无法主动与当前会话模型通信。
 
 `/ai-review vote` 只写当前会话模型的 `host-current` 投票；外部模型并发、超时和流式参数只适用于普通终端中的 `.\ai-review.cmd vote`。
+
+JSON 状态写入会拒绝疑似编码损坏内容，包括连续问号 `????` 和 Unicode replacement character `�`。如果触发该错误，应检查生成 task/vote 的终端编码或脚本输入方式。

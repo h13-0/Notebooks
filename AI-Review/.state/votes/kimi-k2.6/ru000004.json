@@ -1,0 +1,28 @@
+{
+  "unit_id": "ru000004",
+  "content_hash": "sha256:7df8587b9d868dc00dc3a1df00387b5611a9340d274bce792b6818ab5bfd280c",
+  "verdict": "needs_fix",
+  "issues": [
+    {
+      "severity": "Minor",
+      "topic": "content_incomplete",
+      "message": "R15（程序计数寄存器 PC）的描述在逗号处意外截断，语句不完整。建议补充其功能说明，例如 PC 指向当前取指的指令地址、读取时值始终为奇数（最低位为 1，指示 Thumb 状态）等关键特性。",
+      "location_hint": "R15为程序计数寄存器(PC)，"
+    }
+  ],
+  "external_sources": [
+    {
+      "url": "https://developer.arm.com/documentation/ddi0290/g/programmer-s-model/registers/the-register-set",
+      "title": "ARM Cortex-M3 Technical Reference Manual: The Register Set",
+      "accessed_date": "2025-01-21",
+      "summary": "用于核对 Cortex-M3 核心寄存器（R0-R15）及特殊功能寄存器的官方定义。核实结果：原文对 R0-R12、R13（主/进程堆栈指针切换机制）、R14（连接寄存器）以及 CONTROL 寄存器决定堆栈指针选择的描述与官方文档一致；官方文档中 R15（PC）具备完整的功能与状态位说明，而原文在此处缺失后续内容。"
+    }
+  ],
+  "summary": "该 ReviewUnit 对 Cortex-M3 核心寄存器组的描述整体准确，R0-R14 的相关说明及 CONTROL 寄存器控制堆栈指针选择的机制，经 ARM 官方技术参考手册核验无误。主要缺陷为末尾 R15（PC）的描述被截断，语句不完整，需补充其功能定义。",
+  "version": 1,
+  "task_id": "ru000004",
+  "task_hash": "sha256:7df8587b9d868dc00dc3a1df00387b5611a9340d274bce792b6818ab5bfd280c",
+  "model_id": "kimi-k2.6",
+  "model_role": "reviewer",
+  "created_at": "2026-05-05T21:19:41.884740"
+}

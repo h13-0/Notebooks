@@ -170,6 +170,16 @@ AI Review 必须支持可恢复的三阶段工作流，并逐步以该工作流�
 6. 用户按 Ctrl+C 时，CLI 必须取消尚未开始和尚未写入文件的任务，并等待正在写入文件的原子写入完成后退出。
 7. 中断后再次运行 `vote` 必须通过 `task_hash` 跳过已完成投票，从未完成任务恢复。
 
+## 7.3 编码与写入规则
+
+AI Review 写入 task、vote、ledger 和 issue 时必须保持 UTF-8 语义完整。
+
+1. 不得通过会把非 ASCII 字符替换为 `?` 的终端管道生成 task 或 vote。
+2. 生成脚本、skill 和 CLI 必须把自然语言字段作为 UTF-8 文本处理。
+3. JSON 写入前必须拒绝疑似编码损坏内容，例如连续问号 `????` 或 Unicode replacement character `�`。
+4. 如果发现已写入的 task/vote 出现编码替换，必须先修复或删除该文件，再继续 vote/merge。
+5. 外部模型基于损坏 task 生成的 vote 视为无效，不应进入 merge。
+
 ## 8. Topic 规则
 
 Issue 文件中必须包含 topic。
