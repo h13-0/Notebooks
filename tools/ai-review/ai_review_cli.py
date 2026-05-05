@@ -21,6 +21,7 @@ import subprocess
 import sys
 import tempfile
 import textwrap
+import threading
 import time
 import urllib.error
 import urllib.request
@@ -1216,6 +1217,246 @@ def check_submodules(root: Path, config: dict[str, Any], apply: bool) -> list[st
 
 def save_run_state(review_dir: Path, state: dict[str, Any]) -> None:
     write_json_atomic(review_dir / ".state" / "run-state.json", state)
+
+
+class VoteStatusBoard:
+    """Small multi-model status display for `ai-review vote`.
+
+    中文说明：每个活跃任务占一行。流式内容只展示最后一小段，
+    前面用省略号压缩，避免模型输出刷满终端。
+    """
+
+    def __init__(self) -> None:
+        self._lock = threading.Lock()
+        self._rows: dict[str, dict[str, Any]] = {}
+        self._last_render = 0.0
+
+    def update(self, key: str, **fields: Any) -> None:
+        with self._lock:
+            row = self._rows.setdefault(key, {"started": time.monotonic(), "chars": 0, "preview": ""})
+            row.update(fields)
+            now = time.monotonic()
+            if now - self._last_render >= 0.25 or fields.get("done"):
+                self._last_render = now
+                self._render_locked()
+
+    def _render_locked(self) -> None:
+        print("\n[vote status]")
+        for key in sorted(self._rows):
+            row = self._rows[key]
+            elapsed = max(time.monotonic() - float(row.get("started", time.monotonic())), 0.01)
+            chars = int(row.get("chars", 0))
+            approx_tokens = max(chars // 4, int(row.get("tokens", 0) or 0))
+            speed = approx_tokens / elapsed
+            preview = str(row.get("preview", "")).replace("\n", " ").replace("\r", " ")
+            if len(preview) > 72:
+                preview = "..." + preview[-69:]
+            status = row.get("status", "running")
+            print(f"- {key:<34} {status:<12} {elapsed:6.1f}s {speed:6.1f} tok/s {approx_tokens:5d} tok {preview}")
+
+
+def task_dirs(review_dir: Path) -> tuple[Path, Path]:
+    tasks_dir = review_dir / ".state" / "tasks"
+    votes_dir = review_dir / ".state" / "votes"
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    votes_dir.mkdir(parents=True, exist_ok=True)
+    return tasks_dir, votes_dir
+
+
+def task_path(tasks_dir: Path, task_id: str) -> Path:
+    return tasks_dir / f"{task_id}.json"
+
+
+def vote_path(votes_dir: Path, model_id: str, task_id: str) -> Path:
+    return votes_dir / model_id / f"{task_id}.json"
+
+
+def task_to_unit(root: Path, task: dict[str, Any]) -> ReviewUnit:
+    return ReviewUnit(
+        unit_id=str(task["task_id"]),
+        file_path=root / str(task["source_file"]),
+        rel_path=str(task["source_file"]),
+        heading_path=[str(x) for x in task.get("heading_path", [])],
+        heading=str(task.get("heading") or ""),
+        level=int(task.get("level") or 0),
+        content=str(task.get("content") or ""),
+        normalized=normalize_unit_text(str(task.get("content") or "")),
+        content_hash=str(task.get("task_hash") or task.get("content_hash") or ""),
+        start_line=int(task.get("start_line") or 0),
+        end_line=int(task.get("end_line") or 0),
+        requires_multimodal=bool(task.get("requires_multimodal", False)),
+        attachments=[str(x) for x in task.get("attachments", [])],
+        outlinks=[str(x) for x in task.get("outlinks", [])],
+        tags=[str(x) for x in task.get("tags", [])],
+    )
+
+
+def normalize_task_payload(unit_payload: dict[str, Any]) -> dict[str, Any]:
+    task = dict(unit_payload)
+    task["task_id"] = task.get("task_id") or task.get("unit_id")
+    task["task_hash"] = task.get("task_hash") or task.get("content_hash")
+    task["unit_id"] = task["task_id"]
+    task["content_hash"] = task["task_hash"]
+    return task
+
+
+def normalize_vote_payload(payload: dict[str, Any], model: dict[str, Any], task: dict[str, Any]) -> dict[str, Any]:
+    vote = dict(payload)
+    vote["version"] = vote.get("version", 1)
+    vote["task_id"] = vote.get("task_id") or vote.get("unit_id") or task["task_id"]
+    vote["unit_id"] = vote["task_id"]
+    vote["task_hash"] = vote.get("task_hash") or task["task_hash"]
+    vote["content_hash"] = vote["task_hash"]
+    vote["model_id"] = vote.get("model_id") or model.get("id")
+    vote["model_role"] = vote.get("model_role") or "reviewer"
+    vote["created_at"] = vote.get("created_at") or _dt.datetime.now().isoformat()
+    return vote
+
+
+def command_prepare_tasks(args: argparse.Namespace) -> int:
+    review_dir, payload = host_prepare_payload(args)
+    tasks_dir, _votes_dir = task_dirs(review_dir)
+    written = 0
+    for unit_payload in payload.get("units", []):
+        task = normalize_task_payload(unit_payload)
+        write_json_atomic(task_path(tasks_dir, task["task_id"]), task)
+        written += 1
+    write_json_atomic(review_dir / ".state" / "tasks-index.json", {
+        "version": 1,
+        "created_at": _dt.datetime.now().isoformat(),
+        "tasks": [normalize_task_payload(x)["task_id"] for x in payload.get("units", [])],
+        "mode": payload.get("mode", {}),
+    })
+    print_info(f"已生成 task：{written} 个，目录：{tasks_dir}")
+    return 0
+
+
+def reviewer_models(config: dict[str, Any], args: argparse.Namespace) -> list[dict[str, Any]]:
+    voters = [dict(x) for x in deep_get(config, "models.voters", []) or [] if x.get("vote_enabled", True)]
+    if getattr(args, "model", None):
+        voters = [x for x in voters if x.get("id") == args.model]
+    return voters
+
+
+def command_vote_tasks(args: argparse.Namespace) -> int:
+    root = Path.cwd().resolve()
+    config = load_yaml(root / ".ai-review.yaml")
+    secrets = load_yaml(root / ".ai-review-secrets.yaml")
+    review_dir = root / str(config.get("review_dir", "AI-Review"))
+    tasks_dir, votes_dir = task_dirs(review_dir)
+    tasks = [load_json(p, {}) for p in sorted(tasks_dir.glob("*.json"))]
+    if args.limit:
+        tasks = tasks[: int(args.limit)]
+    models = reviewer_models(config, args)
+    if not models:
+        raise AiReviewError("没有可运行的外部 reviewer。")
+
+    timeout = int(args.model_timeout or deep_get(config, "runtime.request_timeout_sec", 120))
+    retry = int(args.model_retry if args.model_retry is not None else deep_get(config, "runtime.retry", 0))
+    stream = bool(deep_get(config, "runtime.stream", True))
+    stream_total_timeout = int(args.stream_total_timeout or deep_get(config, "runtime.stream_total_timeout_sec", 1800))
+    board = VoteStatusBoard()
+    interrupted = threading.Event()
+    jobs: list[tuple[dict[str, Any], dict[str, Any]]] = []
+    skipped = 0
+    for model in models:
+        model_id = str(model.get("id"))
+        for task in tasks:
+            task = normalize_task_payload(task)
+            out = vote_path(votes_dir, model_id, task["task_id"])
+            old = load_json(out, None) if out.exists() else None
+            if old and old.get("task_hash") == task.get("task_hash"):
+                skipped += 1
+                continue
+            jobs.append((model, task))
+
+    def run_one(model: dict[str, Any], task: dict[str, Any]) -> tuple[str, str]:
+        model_id = str(model.get("id"))
+        task_id = str(task["task_id"])
+        key = f"{model_id}/{task_id}"
+        board.update(key, status="running")
+
+        def progress(event: dict[str, Any]) -> None:
+            if event.get("type") == "delta":
+                preview = str(event.get("content", ""))
+                chars = int(event.get("chars", 0))
+                board.update(key, status="stream", preview=preview, chars=chars)
+            elif event.get("type") == "usage":
+                usage = event.get("usage") or {}
+                board.update(key, tokens=int(usage.get("total_tokens") or 0))
+
+        payload = call_model_with_retry(
+            model,
+            secrets,
+            str(task.get("prompt") or ""),
+            timeout,
+            retry,
+            stream=stream,
+            stream_total_timeout=stream_total_timeout,
+            progress=progress,
+        )
+        vote = normalize_vote_payload(payload, model, task)
+        out = vote_path(votes_dir, model_id, task_id)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        write_json_atomic(out, vote)
+        board.update(key, status="done", done=True)
+        return model_id, task_id
+
+    print_info(f"vote 任务：待运行 {len(jobs)}，已跳过 {skipped}，stream={stream}")
+    max_workers = max(1, int(args.concurrency or deep_get(config, "runtime.max_concurrency", 3)))
+    completed = 0
+    failed = 0
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = {executor.submit(run_one, model, task): (model, task) for model, task in jobs}
+        try:
+            for future in as_completed(futures):
+                model, task = futures[future]
+                try:
+                    future.result()
+                    completed += 1
+                except Exception as exc:
+                    failed += 1
+                    print_warning(f"{model.get('id')}/{task.get('task_id')} 投票失败：{exc}")
+        except KeyboardInterrupt:
+            interrupted.set()
+            print_warning("收到 Ctrl+C：取消尚未开始/未写入的 vote 任务，等待正在写入的文件完成。")
+            executor.shutdown(wait=True, cancel_futures=True)
+            raise AiReviewError("vote 已中断，可重新运行命令恢复；hash 一致的已完成 vote 会跳过。")
+    print_info(f"vote 完成：成功 {completed}，失败 {failed}，跳过 {skipped}")
+    return 0
+
+
+def command_merge_tasks(args: argparse.Namespace) -> int:
+    root = Path.cwd().resolve()
+    config = load_yaml(root / ".ai-review.yaml")
+    review_dir = root / str(config.get("review_dir", "AI-Review"))
+    tasks_dir, votes_dir = task_dirs(review_dir)
+    tasks = [normalize_task_payload(load_json(p, {})) for p in sorted(tasks_dir.glob("*.json"))]
+    if args.limit:
+        tasks = tasks[: int(args.limit)]
+    model_map = {str(m.get("id")): dict(m) for m in deep_get(config, "models.voters", []) or []}
+    main = dict(deep_get(config, "models.main", {}) or {})
+    model_map[str(main.get("id", "host-current"))] = {**main, "role": "reviewer"}
+    aggregates: dict[str, AggregateResult] = {}
+    for task in tasks:
+        votes: list[Vote] = []
+        for path in votes_dir.glob(f"*/{task['task_id']}.json"):
+            payload = load_json(path, {})
+            if payload.get("task_hash") != task.get("task_hash"):
+                continue
+            model_id = str(payload.get("model_id") or path.parent.name)
+            model = model_map.get(model_id, {"id": model_id, "display_name": model_id, "weight": 1, "role": "reviewer"})
+            votes.append(Vote.from_json(payload, model, task["task_id"]))
+        if not votes:
+            print_warning(f"{task['task_id']} 没有有效 vote，跳过。")
+            continue
+        aggregates[task["task_id"]] = aggregate_votes(votes, config)
+    print_info("merge 结果：")
+    for task_id, aggregate in aggregates.items():
+        print(f"- {task_id}: {aggregate.severity} · {aggregate.title} · votes={len(aggregate.votes)}")
+    if args.apply:
+        raise AiReviewError("新版 task/vote/merge 的 apply 写入尚未启用；请先使用 --dry-run 校验结果。")
+    return 0
 
 
 def discover_units_for_args(
