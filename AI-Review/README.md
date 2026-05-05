@@ -52,35 +52,41 @@ Correct 段落通常只保留一个简短状态和 Dashboard 链接：
 
 ## 如何使用
 
-在仓库根目录运行：
+在 Codex/Cursor 中运行：
 
-```powershell
-.\ai-review.cmd prepare --changed
-.\ai-review.cmd vote
-.\ai-review.cmd merge --dry-run
+```text
+/ai-review prepare --changed
+/ai-review vote
+/ai-review merge --dry-run
 ```
 
 确认聚合结果无误后写入：
 
-```powershell
-.\ai-review.cmd merge --apply
+```text
+/ai-review merge --apply
 ```
 
 审查全仓库或限制数量：
 
-```powershell
-.\ai-review.cmd prepare --all --limit 20
-.\ai-review.cmd vote
-.\ai-review.cmd merge --dry-run
+```text
+/ai-review prepare --all --limit 20
+/ai-review vote
+/ai-review merge --dry-run
 ```
 
 只预览将生成哪些 task，不写入队列：
 
-```powershell
-.\ai-review.cmd prepare --all --limit 20 --dry-run
+```text
+/ai-review prepare --all --limit 20 --dry-run
 ```
 
-如果在 Codex/Cursor 中通过 `/ai-review` 使用，当前会话模型应读取 `AI-Review/.state/tasks/*.json`，并把自己的投票写入：
+`prepare` 必须由 Codex/Cursor 当前会话模型参与完成，而不是普通终端里的字符串切分命令。当前会话模型需要做三件事：
+
+1. 根据标题、段落内容和引用关系决定 task 的审查上下文。
+2. 自动把必要的 Obsidian 引用段落拼接进 task。
+3. 必要时联网查询权威资料，并把来源写入 task，供后续 issue 修改者核实。
+
+当前会话模型投票时，应读取 `AI-Review/.state/tasks/*.json`，并把自己的投票写入：
 
 ```text
 AI-Review/.state/votes/host-current/{task_id}.json
