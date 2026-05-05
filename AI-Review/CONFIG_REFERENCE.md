@@ -210,6 +210,8 @@ AI-Review/.cache/
 
 普通终端 CLI 无法直接访问 `host-current`。需要当前 Codex/Cursor 会话模型参与时，应使用 `prepare / vote / merge` 工作流，并由当前会话模型把投票写入 `AI-Review/.state/votes/host-current/{task_id}.json`。
 
+在 `prepare` 前应运行 `identity` 写入稳定段落 ID。`identity --dry-run` 只预览，`identity --apply` 写入缺失的 AI-Review identity 块；空段落会跳过，已有块会保留。
+
 ## 6. Task / Vote / Merge 相关配置
 
 外部 voter 可配置单模型并发：
@@ -230,5 +232,7 @@ models:
 完整 `/ai-review prepare` 必须由 Codex/Cursor skill 做 AI-assisted 准备。普通 CLI 不提供 `prepare` 子命令，因为它无法主动与当前会话模型通信。
 
 `/ai-review vote` 只写当前会话模型的 `host-current` 投票；外部模型并发、超时和流式参数只适用于普通终端中的 `.\ai-review.cmd vote`。
+
+`prepare` 和 `vote` 默认应按 `unit_id + content_hash` 增量跳过已处理结果；重新生成单段或全量结果必须显式指定 `--regenerate`。
 
 JSON 状态写入会拒绝疑似编码损坏内容，包括连续问号 `????` 和 Unicode replacement character `�`。如果触发该错误，应检查生成 task/vote 的终端编码或脚本输入方式。

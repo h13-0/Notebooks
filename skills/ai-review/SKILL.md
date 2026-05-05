@@ -20,11 +20,13 @@
 12. 当前宿主主模型 `host-current` 在投票时如果继续使用外部资料，也必须在投票 JSON 的 `external_sources` 中列出来源。
 13. `/ai-review vote` 只负责当前 Codex/Cursor 会话模型自己的投票，必须写入 `.state/votes/host-current/*.json`，不得调用外部模型 API。
 14. 外部 voter 必须由普通终端显式运行 `.\ai-review.cmd vote` 调用；外部 voter 应优先使用流式请求，超时语义应按“空闲超时”处理。
-15. 推荐使用 `prepare / vote / merge` 三阶段流程；`host-current` 与外部模型都必须把结果写入 `AI-Review/.state/votes/{model_id}/{task_id}.json`，聚合阶段不再区分主模型和投票模型。
-16. 执行 `/ai-review vote` 时，应读取 `.state/tasks/*.json`，逐个生成符合 `AI-Review/MODEL_PROTOCOL.md` 的 JSON，并写入 `.state/votes/host-current/*.json`。
-17. 已失败或未成功返回协议 JSON 的外部模型不得写入 vote 文件，不得被转成 `Unknown`。
-18. 写入 task/vote 时必须保持 UTF-8；不得用会把中文替换为 `?` 的 PowerShell 管道或临时脚本写入自然语言字段。
-19. 写入前如发现连续问号 `????` 或 Unicode replacement character `�`，必须停止并修复编码来源，不能继续 vote/merge。
+15. 推荐使用 `identity / prepare / vote / merge` 四阶段流程；`host-current` 与外部模型都必须把结果写入 `AI-Review/.state/votes/{model_id}/{task_id}.json`，聚合阶段不再区分主模型和投票模型。
+16. `/ai-review prepare` 前必须确保目标段落已有稳定 AI-Review identity 块；缺失时应提示或运行 `.\ai-review.cmd identity --apply`。
+17. prepare 和 vote 默认必须增量处理：已有 task/vote 且 hash 一致时跳过；只有显式重新生成标志才覆盖。
+18. 执行 `/ai-review vote` 时，应读取 `.state/tasks/*.json`，逐个生成符合 `AI-Review/MODEL_PROTOCOL.md` 的 JSON，并写入 `.state/votes/host-current/*.json`。
+19. 已失败或未成功返回协议 JSON 的外部模型不得写入 vote 文件，不得被转成 `Unknown`。
+20. 写入 task/vote 时必须保持 UTF-8；不得用会把中文替换为 `?` 的 PowerShell 管道或临时脚本写入自然语言字段。
+21. 写入前如发现连续问号 `????` 或 Unicode replacement character `�`，必须停止并修复编码来源，不能继续 vote/merge。
 
 ## 必读文档
 
@@ -51,22 +53,33 @@ ai-review review --resume
 
 在 Codex/Cursor 中，推荐使用 `/ai-review` 快捷入口。
 
+## `identity` 工作流
+
+1. `identity` 是普通 CLI 功能，不需要 AI 判断。
+2. 运行 `.\ai-review.cmd identity --changed --dry-run` 或 `.\ai-review.cmd identity --all --dry-run` 预览。
+3. 确认后运行 `.\ai-review.cmd identity ... --apply` 写入缺失的 AI-Review identity 块。
+4. 空段落、空标题段和只包含 AI-Review 块的段落必须跳过。
+5. 已有 AI-Review 块必须原样保留，不得降级成待审查块。
+
 ## `/ai-review prepare` 工作流
 
 1. 读取 `AI-Review/DESIGN.md`、`AI-Review/MODEL_PROTOCOL.md` 和 `.ai-review.yaml`。
-2. 可调用 CLI 或本地代码作为候选段落发现工具，但不得把机械切分结果直接当成最终 task。
-3. 对每个候选 ReviewUnit，读取原文、标题路径、相邻必要上下文和已有 AI Review 块。
-4. 解析该段中的 Obsidian 引用，自动定位并摘取必要目标段落；找不到目标时在 task 中记录 warning，不得编造上下文。
-5. 判断是否需要联网。涉及版本、标准、API、芯片/内核行为、外部工具、厂商文档或模型知识不确定时，必须联网查询一手来源。
-6. 将联网来源写入 task，至少包含 URL 或可追溯来源名、标题和用途摘要。
-7. 写入 `AI-Review/.state/tasks/{task_id}.json`；`--dry-run` 只打印 task 摘要、引用上下文摘要和外部来源摘要，不写文件。
+2. 确认目标段落已有 `unit=ruXXXXXX` identity 块；缺失则先运行 identity。
+3. 可调用 CLI 或本地代码作为候选段落发现工具，但不得把机械切分结果直接当成最终 task。
+4. 默认跳过已有 task 且 `task_hash` 一致的段落；`--regenerate` 才覆盖。
+5. 支持 `--unit ruXXXXXX` 定位单段，支持 `--all --regenerate` 重新生成全部扫描范围。
+6. 对每个候选 ReviewUnit，读取原文、标题路径、相邻必要上下文和已有 AI Review 块。
+7. 解析该段中的 Obsidian 引用，自动定位并摘取必要目标段落；找不到目标时在 task 中记录 warning，不得编造上下文。
+8. 判断是否需要联网。涉及版本、标准、API、芯片/内核行为、外部工具、厂商文档或模型知识不确定时，必须联网查询一手来源。
+9. 将联网来源写入 task，至少包含 URL 或可追溯来源名、标题和用途摘要。
+10. 写入 `AI-Review/.state/tasks/{task_id}.json`；`--dry-run` 只打印 task 摘要、引用上下文摘要和外部来源摘要，不写文件。
 
 ## `/ai-review vote` 工作流
 
 1. 只读取 `AI-Review/.state/tasks/*.json`。
 2. 只生成当前会话模型 `host-current` 的投票。
 3. 每个 task 写入 `AI-Review/.state/votes/host-current/{task_id}.json`。
-4. 如果已有 host-current vote 且 `task_hash` 一致，可以跳过或覆盖，但不得调用外部模型。
+4. 如果已有 host-current vote 且 `task_hash` 一致，默认跳过；`--regenerate` 才覆盖。
 5. 外部模型投票由用户另行运行 `.\ai-review.cmd vote`。
 
 ## 编码安全
