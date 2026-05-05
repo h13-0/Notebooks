@@ -55,6 +55,7 @@ Correct 段落通常只保留一个简短状态和 Dashboard 链接：
 在 Codex/Cursor 中运行：
 
 ```text
+/ai-review identity --changed
 /ai-review prepare --changed
 /ai-review vote
 /ai-review merge --dry-run
@@ -69,6 +70,7 @@ Correct 段落通常只保留一个简短状态和 Dashboard 链接：
 审查全仓库或限制数量：
 
 ```text
+/ai-review identity --all
 /ai-review prepare --all --limit 20
 /ai-review vote
 /ai-review merge --dry-run
@@ -85,6 +87,22 @@ Correct 段落通常只保留一个简短状态和 Dashboard 链接：
 1. 根据标题、段落内容和引用关系决定 task 的审查上下文。
 2. 自动把必要的 Obsidian 引用段落拼接进 task。
 3. 必要时联网查询权威资料，并把来源写入 task，供后续 issue 修改者核实。
+
+`identity` 是 prepare 前的身份锚定步骤。它会给非空段落写入稳定的 AI-Review 块，例如 `unit=ru000123`，让后续 task、vote 和 merge 都能绑定到同一个段落。普通终端入口是：
+
+```powershell
+.\ai-review.cmd identity --changed --dry-run
+.\ai-review.cmd identity --changed --apply
+```
+
+空段落、空标题段和只包含 AI-Review 块的段落不会分配 ID。已有 AI-Review 块会保留，不会被覆盖成待审查块。
+
+默认情况下，prepare 和 vote 都是增量的：已有 task/vote 且 hash 一致时跳过。只有显式重新生成时才覆盖，例如：
+
+```text
+/ai-review prepare --unit ru000123 --regenerate
+/ai-review vote --unit ru000123 --regenerate
+```
 
 当前会话模型投票时，应读取 `AI-Review/.state/tasks/*.json`，并把自己的投票写入：
 

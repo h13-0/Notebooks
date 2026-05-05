@@ -420,6 +420,15 @@ def detect_existing_unit_id(text: str) -> str | None:
     return match.group(1) if match else None
 
 
+def existing_ai_blocks_by_unit(text: str) -> dict[str, str]:
+    blocks: dict[str, str] = {}
+    for match in AI_BLOCK_RE.finditer(text):
+        unit_match = re.search(r"unit=(ru[0-9]{6})", match.group(0))
+        if unit_match:
+            blocks[unit_match.group(1)] = match.group(0).rstrip() + "\n"
+    return blocks
+
+
 def split_units(path: Path, root: Path, unit_ledger: dict[str, Any]) -> list[ReviewUnit]:
     original = load_text(path)
     text = AI_BLOCK_RE.sub("", original)
@@ -1017,6 +1026,42 @@ def render_ai_block(unit: ReviewUnit, aggregate: AggregateResult, issues: list[t
     return "\n".join(lines) + "\n"
 
 
+def render_identity_block(unit: ReviewUnit) -> str:
+    lines = [
+        f"<!-- ai-review:start unit={unit.unit_id} -->",
+        f"> [!question]- AI Review `{unit.unit_id}`",
+        "> - 待审查",
+        f"> `{now_date()}` · identity",
+        f"^{unit.unit_id}",
+        "<!-- ai-review:end -->",
+    ]
+    return "\n".join(lines) + "\n"
+
+
+def replace_identity_blocks_for_file(path: Path, units: list[ReviewUnit]) -> tuple[str, int]:
+    original = load_text(path)
+    existing_blocks = existing_ai_blocks_by_unit(original)
+    text = AI_BLOCK_RE.sub("", original).rstrip() + "\n"
+    lines = text.splitlines()
+    inserts: dict[int, str] = {}
+    created = 0
+    for unit in units:
+        block = existing_blocks.get(unit.unit_id)
+        if not block:
+            block = render_identity_block(unit)
+            created += 1
+        inserts[unit.end_line] = block
+    out: list[str] = []
+    for idx, line in enumerate(lines, start=1):
+        out.append(line)
+        if idx in inserts:
+            if out and out[-1].strip():
+                out.append("")
+            out.extend(inserts[idx].rstrip().splitlines())
+            out.append("")
+    return "\n".join(out).rstrip() + "\n", created
+
+
 def replace_ai_blocks_for_file(path: Path, units: list[ReviewUnit], aggregates: dict[str, AggregateResult], issue_links: dict[str, list[tuple[str, Path]]]) -> str:
     text = AI_BLOCK_RE.sub("", load_text(path)).rstrip() + "\n"
     lines = text.splitlines()
@@ -1544,6 +1589,45 @@ def command_merge_tasks(args: argparse.Namespace) -> int:
     return 0
 
 
+def command_identity(args: argparse.Namespace) -> int:
+    root = Path.cwd().resolve()
+    config = load_yaml(root / ".ai-review.yaml")
+    review_dir = root / str(config.get("review_dir", "AI-Review"))
+    ensure_review_dirs(root, review_dir)
+    warnings = git_preflight(root, config, bool(args.apply))
+    for warning in warnings:
+        print_warning(warning)
+
+    unit_ledger_path = review_dir / ".state" / "review-unit-ledger.json"
+    unit_ledger = load_json(unit_ledger_path, {"version": 1, "next_unit_id": 1, "units": {}})
+    files, units = discover_units_for_args(root, config, review_dir, args, unit_ledger)
+    by_file: dict[Path, list[ReviewUnit]] = {}
+    for unit in units:
+        by_file.setdefault(unit.file_path, []).append(unit)
+
+    planned: list[tuple[Path, str, int, int]] = []
+    total_created = 0
+    for path, file_units in by_file.items():
+        updated, created = replace_identity_blocks_for_file(path, file_units)
+        total_created += created
+        planned.append((path, updated, created, len(file_units)))
+
+    print_info(f"identity 扫描 Markdown 文件 {len(files)} 个，非空 ReviewUnit {len(units)} 个。")
+    for path, _updated, created, count in planned:
+        rel = path.relative_to(root).as_posix()
+        print(f"- {rel}: units={count}, new_identity_blocks={created}")
+
+    if args.dry_run or not args.apply:
+        print_info("identity dry-run：未写入源文。使用 --apply 写入缺失的 AI-Review identity 块。")
+        return 0
+
+    for path, updated, _created, _count in planned:
+        write_text_atomic(path, updated)
+    write_json_atomic(unit_ledger_path, unit_ledger)
+    print_info(f"identity 写入完成：新增 identity 块 {total_created} 个。")
+    return 0
+
+
 def discover_units_for_args(
     root: Path,
     config: dict[str, Any],
@@ -1873,6 +1957,17 @@ def build_parser() -> argparse.ArgumentParser:
     review.add_argument("--model-retry", type=int, help="临时覆盖外部模型重试次数")
     review.add_argument("--stream-total-timeout", type=int, help="临时覆盖单次流式响应总时长上限秒数")
 
+    identity = sub.add_parser("identity", help="为非空 ReviewUnit 写入稳定 AI-Review identity 块")
+    identity_scope = identity.add_mutually_exclusive_group()
+    identity_scope.add_argument("--changed", action="store_true", help="只处理 Git 变更文件")
+    identity_scope.add_argument("--all", action="store_true", help="处理全仓库")
+    identity.add_argument("paths", nargs="*", help="指定文件或目录")
+    identity.add_argument("--issue", help="只定位指定 issue 对应段落")
+    identity.add_argument("--limit", type=int, help="最多处理 N 个 ReviewUnit")
+    identity_mode = identity.add_mutually_exclusive_group()
+    identity_mode.add_argument("--dry-run", action="store_true", help="只预览，不写入源文")
+    identity_mode.add_argument("--apply", action="store_true", help="写入缺失的 AI-Review identity 块")
+
     vote = sub.add_parser("vote", help="并行调用外部 reviewer，写入 .state/votes/{model}/{task}.json")
     vote.add_argument("--model", help="只运行指定模型 id；默认运行所有启用 voter")
     vote.add_argument("--limit", type=int, help="最多处理 N 个 task")
@@ -1938,6 +2033,13 @@ def main(argv: list[str] | None = None) -> int:
                 if not args.changed and not args.all and not args.paths:
                     args.changed = str(default.get("scope", "changed")) == "changed"
             return command_review(args)
+        if args.command == "identity":
+            if not args.dry_run and not args.apply:
+                args.dry_run = True
+            if not args.changed and not args.all and not args.paths:
+                default = load_yaml(Path.cwd() / ".ai-review.yaml").get("default_mode", {})
+                args.changed = str(default.get("scope", "changed")) == "changed"
+            return command_identity(args)
         if args.command == "vote":
             return command_vote_tasks(args)
         if args.command == "merge":

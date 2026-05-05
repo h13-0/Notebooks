@@ -13,6 +13,8 @@ tools/ai-review/ai_review_cli.py
 .\ai-review.cmd review --all --limit 20 --dry-run
 .\ai-review.cmd review --changed --apply
 .\ai-review.cmd review --resume
+.\ai-review.cmd identity --changed --dry-run
+.\ai-review.cmd identity --changed --apply
 .\ai-review.cmd dashboard
 .\ai-review.cmd check
 ```
@@ -75,6 +77,15 @@ AI-Review/.state/host-current-votes.json
 ## Task / Vote / Merge 流程
 
 推荐新流程把主模型和外部 voter 解耦为可恢复文件队列。注意：完整 `prepare` 必须由 Codex/Cursor skill 进行 AI-assisted 准备；本工具目录中的 CLI 不提供 `prepare` 子命令。
+
+在 prepare 之前，应先用 CLI 做身份锚定：
+
+```powershell
+.\ai-review.cmd identity --changed --dry-run
+.\ai-review.cmd identity --changed --apply
+```
+
+`identity` 只给非空 ReviewUnit 写入缺失的 AI-Review identity 块；已有块原样保留，空段落跳过。
 
 ```powershell
 .\ai-review.cmd vote
