@@ -42,7 +42,7 @@ $env:AI_REVIEW_HOST_CURRENT_VOTES_JSON = Get-Content -Raw host-votes.json
 .\ai-review.cmd review --changed --dry-run --host-current-vote-file host-votes.json
 ```
 
-如果未注入 `host-current` 投票，CLI 会继续调用配置的 voter 模型；如果没有任何可用模型，则按配置降级为 `Unknown`。
+如果未注入 `host-current` 投票，CLI 会继续调用配置的 voter 模型；如果没有任何成功投票，则跳过该 ReviewUnit，不会把失败模型降级成 `Unknown`。
 
 ## Codex/Cursor 桥接流程
 
@@ -71,6 +71,41 @@ AI-Review/.state/host-current-votes.json
 ```
 
 写入模式把 `prepare-host` 和 `merge-host` 的 `--dry-run` 都替换为 `--apply`。
+
+## Task / Vote / Merge 流程
+
+推荐新流程把主模型和外部 voter 解耦为可恢复文件队列：
+
+```powershell
+.\ai-review.cmd prepare --all --limit 20 --dry-run
+.\ai-review.cmd vote
+.\ai-review.cmd merge --dry-run
+```
+
+`prepare` 写入：
+
+```text
+AI-Review/.state/tasks/{task_id}.json
+AI-Review/.state/tasks-index.json
+```
+
+`vote` 从 task 文件并行发起外部 review，成功结果写入：
+
+```text
+AI-Review/.state/votes/{model_id}/{task_id}.json
+```
+
+已有 vote 文件且 `task_hash` 一致时会自动跳过，因此 Ctrl+C 中断后可直接重新运行 `vote` 恢复。Codex/Cursor 当前会话模型参与投票时，也写入同一目录，例如：
+
+```text
+AI-Review/.state/votes/host-current/{task_id}.json
+```
+
+`merge` 只读取 task 和 vote 文件，统一聚合所有成功投票；没有成功运行的模型不会生成 `Unknown` 票，也不会参与评分。写入结果时使用：
+
+```powershell
+.\ai-review.cmd merge --apply
+```
 
 ## 外部 voter
 
@@ -111,6 +146,8 @@ CLI 会解析当前 ReviewUnit 中的 `[[note#Heading]]` 和 `[[note#^blockid]]`
 
 `runtime.stream: true` 时，外部 voter 使用 OpenAI-compatible SSE stream。此时 `request_timeout_sec` 是 socket 空闲超时：只要模型持续输出 chunk，就不会因为总输出时间较长而被误判为无响应。
 `runtime.stream_total_timeout_sec` 是单次流式响应总时长上限，用于防止模型无限输出 reasoning 或服务端迟迟不发 `[DONE]`。
+
+`vote` 命令会在终端中实时显示多个模型的状态、进度、近似 token 速度、token 消耗和一行流式输出预览。每个 voter 可在 `.ai-review.yaml` 中配置 `concurrency`，也可用 `--concurrency` 临时覆盖每个模型的并发数。
 
 ## 结构化本地验证
 

@@ -1,6 +1,0 @@
-{
-  "version": 1,
-  "next_issue_id_hex": "0001",
-  "issues": {},
-  "notes": "issue ID 永不复用；topic 只用于 issue 和 Dashboard，不写入原文反向块。"
-}

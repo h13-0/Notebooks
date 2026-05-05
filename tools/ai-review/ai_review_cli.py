@@ -1230,6 +1230,8 @@ class VoteStatusBoard:
         self._lock = threading.Lock()
         self._rows: dict[str, dict[str, Any]] = {}
         self._last_render = 0.0
+        self._printed_lines = 0
+        self._interactive = sys.stdout.isatty()
 
     def update(self, key: str, **fields: Any) -> None:
         with self._lock:
@@ -1241,7 +1243,7 @@ class VoteStatusBoard:
                 self._render_locked()
 
     def _render_locked(self) -> None:
-        print("\n[vote status]")
+        lines = ["[vote status]"]
         for key in sorted(self._rows):
             row = self._rows[key]
             elapsed = max(time.monotonic() - float(row.get("started", time.monotonic())), 0.01)
@@ -1249,10 +1251,17 @@ class VoteStatusBoard:
             approx_tokens = max(chars // 4, int(row.get("tokens", 0) or 0))
             speed = approx_tokens / elapsed
             preview = str(row.get("preview", "")).replace("\n", " ").replace("\r", " ")
-            if len(preview) > 72:
-                preview = "..." + preview[-69:]
+            if len(preview) > 64:
+                preview = "..." + preview[-61:]
             status = row.get("status", "running")
-            print(f"- {key:<34} {status:<12} {elapsed:6.1f}s {speed:6.1f} tok/s {approx_tokens:5d} tok {preview}")
+            lines.append(f"- {key:<34} {status:<10} {elapsed:6.1f}s {speed:6.1f} tok/s {approx_tokens:5d} tok {preview}")
+        if self._interactive and self._printed_lines:
+            sys.stdout.write(f"\x1b[{self._printed_lines}F")
+        for line in lines:
+            prefix = "\x1b[2K" if self._interactive else ""
+            sys.stdout.write(prefix + line[:160] + "\n")
+        sys.stdout.flush()
+        self._printed_lines = len(lines) if self._interactive else 0
 
 
 def task_dirs(review_dir: Path) -> tuple[Path, Path]:
@@ -1351,12 +1360,11 @@ def command_vote_tasks(args: argparse.Namespace) -> int:
     if not models:
         raise AiReviewError("没有可运行的外部 reviewer。")
 
-    timeout = int(args.model_timeout or deep_get(config, "runtime.request_timeout_sec", 120))
+    timeout = int(args.model_timeout or deep_get(config, "runtime.request_timeout_sec", 300))
     retry = int(args.model_retry if args.model_retry is not None else deep_get(config, "runtime.retry", 0))
     stream = bool(deep_get(config, "runtime.stream", True))
     stream_total_timeout = int(args.stream_total_timeout or deep_get(config, "runtime.stream_total_timeout_sec", 1800))
     board = VoteStatusBoard()
-    interrupted = threading.Event()
     jobs: list[tuple[dict[str, Any], dict[str, Any]]] = []
     skipped = 0
     for model in models:
@@ -1369,6 +1377,15 @@ def command_vote_tasks(args: argparse.Namespace) -> int:
                 skipped += 1
                 continue
             jobs.append((model, task))
+
+    if getattr(args, "concurrency", None):
+        per_model_concurrency = {str(model.get("id")): max(1, int(args.concurrency)) for model in models}
+    else:
+        per_model_concurrency = {
+            str(model.get("id")): max(1, int(model.get("concurrency") or 1))
+            for model in models
+        }
+    semaphores = {model_id: threading.Semaphore(limit) for model_id, limit in per_model_concurrency.items()}
 
     def run_one(model: dict[str, Any], task: dict[str, Any]) -> tuple[str, str]:
         model_id = str(model.get("id"))
@@ -1385,25 +1402,30 @@ def command_vote_tasks(args: argparse.Namespace) -> int:
                 usage = event.get("usage") or {}
                 board.update(key, tokens=int(usage.get("total_tokens") or 0))
 
-        payload = call_model_with_retry(
-            model,
-            secrets,
-            str(task.get("prompt") or ""),
-            timeout,
-            retry,
-            stream=stream,
-            stream_total_timeout=stream_total_timeout,
-            progress=progress,
-        )
-        vote = normalize_vote_payload(payload, model, task)
-        out = vote_path(votes_dir, model_id, task_id)
-        out.parent.mkdir(parents=True, exist_ok=True)
-        write_json_atomic(out, vote)
-        board.update(key, status="done", done=True)
-        return model_id, task_id
+        with semaphores[model_id]:
+            payload = call_model_with_retry(
+                model,
+                secrets,
+                str(task.get("prompt") or ""),
+                timeout,
+                retry,
+                stream=stream,
+                stream_total_timeout=stream_total_timeout,
+                progress=progress,
+            )
+            vote = normalize_vote_payload(payload, model, task)
+            out = vote_path(votes_dir, model_id, task_id)
+            out.parent.mkdir(parents=True, exist_ok=True)
+            write_json_atomic(out, vote)
+            board.update(key, status="done", done=True)
+            return model_id, task_id
 
-    print_info(f"vote 任务：待运行 {len(jobs)}，已跳过 {skipped}，stream={stream}")
-    max_workers = max(1, int(args.concurrency or deep_get(config, "runtime.max_concurrency", 3)))
+    print_info(
+        "vote 任务："
+        f"待运行 {len(jobs)}，已跳过 {skipped}，stream={stream}，"
+        f"per_model_concurrency={per_model_concurrency}"
+    )
+    max_workers = max(1, sum(per_model_concurrency.values()))
     completed = 0
     failed = 0
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -1416,9 +1438,9 @@ def command_vote_tasks(args: argparse.Namespace) -> int:
                     completed += 1
                 except Exception as exc:
                     failed += 1
+                    board.update(f"{model.get('id')}/{task.get('task_id')}", status="failed", done=True)
                     print_warning(f"{model.get('id')}/{task.get('task_id')} 投票失败：{exc}")
         except KeyboardInterrupt:
-            interrupted.set()
             print_warning("收到 Ctrl+C：取消尚未开始/未写入的 vote 任务，等待正在写入的文件完成。")
             executor.shutdown(wait=True, cancel_futures=True)
             raise AiReviewError("vote 已中断，可重新运行命令恢复；hash 一致的已完成 vote 会跳过。")
@@ -1454,8 +1476,82 @@ def command_merge_tasks(args: argparse.Namespace) -> int:
     print_info("merge 结果：")
     for task_id, aggregate in aggregates.items():
         print(f"- {task_id}: {aggregate.severity} · {aggregate.title} · votes={len(aggregate.votes)}")
-    if args.apply:
-        raise AiReviewError("新版 task/vote/merge 的 apply 写入尚未启用；请先使用 --dry-run 校验结果。")
+    if args.dry_run or not args.apply:
+        return 0
+
+    warnings = git_preflight(root, config, True)
+    for warning in warnings:
+        print_warning(warning)
+    validate_issue_notes(review_dir)
+
+    units_by_id = {task["task_id"]: task_to_unit(root, task) for task in tasks}
+    active_units = [units_by_id[task_id] for task_id in aggregates if task_id in units_by_id]
+    issue_ledger_path = review_dir / ".state" / "issue-ledger.json"
+    unit_ledger_path = review_dir / ".state" / "review-unit-ledger.json"
+    issue_ledger = load_json(issue_ledger_path, {"version": 1, "next_issue_id_hex": "0001", "issues": {}})
+    unit_ledger = load_json(unit_ledger_path, {"version": 1, "next_unit_id": 1, "units": {}})
+    existing_issues = collect_issues(review_dir)
+    link_index = build_link_index(active_units)
+    issue_links: dict[str, list[tuple[str, Path]]] = {}
+    planned_issue_text: dict[Path, str] = {}
+    planned_moves: list[tuple[Path, Path, str, str]] = []
+
+    save_run_state(review_dir, {"version": 1, "active_run": {"stage": "MERGE_WRITING", "units": len(active_units)}, "last_runs": []})
+    for unit in active_units:
+        aggregate = aggregates[unit.unit_id]
+        open_existing = [
+            item for item in existing_issues
+            if item.get("source_unit_id") == unit.unit_id and item.get("status") in {"Open", "Unknown"}
+        ]
+        if aggregate.severity == "Correct":
+            for item in open_existing:
+                planned_moves.append((item["path"], issue_move_target(review_dir, item["path"], "Closed"), "Closed", item["id"]))
+            continue
+        if aggregate.severity in ISSUE_SEVERITIES:
+            for item in open_existing:
+                planned_moves.append((item["path"], issue_move_target(review_dir, item["path"], "Superseded"), "Superseded", item["id"]))
+            issue_id = next_issue_id(issue_ledger)
+            path = issue_path(review_dir, issue_id, aggregate.severity, aggregate.title)
+            issue_links.setdefault(unit.unit_id, []).append((issue_id, path.relative_to(root)))
+            planned_issue_text[path] = render_issue(unit, issue_id, aggregate, path, root)
+            issue_ledger.setdefault("issues", {})[issue_id] = {
+                "status": "unknown" if aggregate.severity == "Unknown" else "open",
+                "severity": aggregate.severity,
+                "source_file": unit.rel_path,
+                "source_unit_id": unit.unit_id,
+                "content_hash": unit.content_hash,
+                "path": path.relative_to(root).as_posix(),
+                "created_at": now_date(),
+            }
+
+    for src, dst, status, issue_id in planned_moves:
+        text = update_issue_status_text(load_text(src), status)
+        write_text_atomic(dst, text)
+        if src != dst and src.exists():
+            src.unlink()
+        if issue_id in issue_ledger.get("issues", {}):
+            issue_ledger["issues"][issue_id]["status"] = status.lower()
+            issue_ledger["issues"][issue_id]["path"] = dst.relative_to(root).as_posix()
+            issue_ledger["issues"][issue_id]["updated_at"] = now_date()
+    for path, text in planned_issue_text.items():
+        validate_frontmatter_text(text)
+        write_text_atomic(path, text)
+    by_file: dict[Path, list[ReviewUnit]] = {}
+    for unit in active_units:
+        by_file.setdefault(unit.file_path, []).append(unit)
+    for path, units in by_file.items():
+        updated = replace_ai_blocks_for_file(path, units, aggregates, issue_links)
+        write_text_atomic(path, updated)
+    write_json_atomic(unit_ledger_path, unit_ledger)
+    write_json_atomic(issue_ledger_path, issue_ledger)
+    write_json_atomic(review_dir / ".state" / "link-index.json", link_index)
+    write_text_atomic(review_dir / "Dashboard.md", render_dashboard(review_dir, int(deep_get(config, "dashboard.top_n_per_section", 10))))
+    for warning in validate_markdown_and_links(root, list(planned_issue_text) + list(by_file)):
+        print_warning(warning)
+    diff = run_git(["diff", "--stat"], root)
+    print(diff.stdout.rstrip())
+    save_run_state(review_dir, {"version": 1, "active_run": None, "last_runs": [{"mode": "merge-apply", "finished_at": _dt.datetime.now().isoformat(), "units": len(active_units)}]})
+    print_info("merge 写入完成。")
     return 0
 
 
@@ -1788,6 +1884,31 @@ def build_parser() -> argparse.ArgumentParser:
     review.add_argument("--model-retry", type=int, help="临时覆盖外部模型重试次数")
     review.add_argument("--stream-total-timeout", type=int, help="临时覆盖单次流式响应总时长上限秒数")
 
+    task_prepare = sub.add_parser("prepare", help="生成可恢复的 ReviewTask 文件，供 host-current 和外部 reviewer 投票")
+    task_prepare_scope = task_prepare.add_mutually_exclusive_group()
+    task_prepare_scope.add_argument("--changed", action="store_true", help="只准备 Git 变更文件")
+    task_prepare_scope.add_argument("--all", action="store_true", help="准备全仓库")
+    task_prepare.add_argument("paths", nargs="*", help="指定文件或目录")
+    task_prepare.add_argument("--issue", help="准备复查指定 issue")
+    task_prepare.add_argument("--limit", type=int, help="最多准备 N 个 ReviewUnit")
+    task_prepare_mode = task_prepare.add_mutually_exclusive_group()
+    task_prepare_mode.add_argument("--dry-run", action="store_true", help="按 dry-run 模式准备")
+    task_prepare_mode.add_argument("--apply", action="store_true", help="按 apply 模式准备")
+
+    vote = sub.add_parser("vote", help="并行调用外部 reviewer，写入 .state/votes/{model}/{task}.json")
+    vote.add_argument("--model", help="只运行指定模型 id；默认运行所有启用 voter")
+    vote.add_argument("--limit", type=int, help="最多处理 N 个 task")
+    vote.add_argument("--concurrency", type=int, help="临时覆盖每个模型的并发数")
+    vote.add_argument("--model-timeout", type=int, help="socket 空闲超时秒数；流式输出持续到达时不会触发")
+    vote.add_argument("--model-retry", type=int, help="临时覆盖外部模型重试次数")
+    vote.add_argument("--stream-total-timeout", type=int, help="单个流式 review 的总时长上限秒数")
+
+    task_merge = sub.add_parser("merge", help="聚合 .state/votes 中所有成功投票并更新结果")
+    task_merge_mode = task_merge.add_mutually_exclusive_group()
+    task_merge_mode.add_argument("--dry-run", action="store_true", help="只预览聚合结果")
+    task_merge_mode.add_argument("--apply", action="store_true", help="写入 issue、源文件 AI 块和 Dashboard")
+    task_merge.add_argument("--limit", type=int, help="最多聚合 N 个 task")
+
     prepare = sub.add_parser("prepare-host", help="为 Codex/Cursor 当前会话模型准备 host-current 审查输入")
     prepare_scope = prepare.add_mutually_exclusive_group()
     prepare_scope.add_argument("--changed", action="store_true", help="只准备 Git 变更文件")
@@ -1839,6 +1960,20 @@ def main(argv: list[str] | None = None) -> int:
                 if not args.changed and not args.all and not args.paths:
                     args.changed = str(default.get("scope", "changed")) == "changed"
             return command_review(args)
+        if args.command == "prepare":
+            if not args.dry_run and not args.apply:
+                default = load_yaml(Path.cwd() / ".ai-review.yaml").get("default_mode", {})
+                args.dry_run = bool(default.get("dry_run", True))
+                if not args.changed and not args.all and not args.paths:
+                    args.changed = str(default.get("scope", "changed")) == "changed"
+            return command_prepare_tasks(args)
+        if args.command == "vote":
+            return command_vote_tasks(args)
+        if args.command == "merge":
+            if not args.dry_run and not args.apply:
+                default = load_yaml(Path.cwd() / ".ai-review.yaml").get("default_mode", {})
+                args.dry_run = bool(default.get("dry_run", True))
+            return command_merge_tasks(args)
         if args.command == "prepare-host":
             if not args.dry_run and not args.apply:
                 default = load_yaml(Path.cwd() / ".ai-review.yaml").get("default_mode", {})

@@ -1,0 +1,24 @@
+{
+  "unit_id": "ru000001",
+  "source_file": "ARM内核/ARM Cortex-M/ARM Cortex M3、M4学习笔记.md",
+  "source_block_ref": "[[ARM内核/ARM Cortex-M/ARM Cortex M3、M4学习笔记.md#^ru000001]]",
+  "heading_path": [
+    "_preamble"
+  ],
+  "heading": "_preamble",
+  "level": 0,
+  "start_line": 1,
+  "end_line": 11,
+  "content_hash": "sha256:602883dad0ea7a1f9415eeedbd99d1b7912fca88bb84a537fb6d38921888996d",
+  "requires_multimodal": false,
+  "attachments": [],
+  "outlinks": [],
+  "tags": [
+    "嵌入式"
+  ],
+  "context_notes": [],
+  "content": "---\nnumber headings: auto, first-level 1, max 6, 1.1\n---\n#嵌入式 \n\n参考书籍：\n- Cortex-M3 权威指南，Joseph Yiu著；宋岩译。\n- ARM Cortex-M3与Cortex-M4权威指南(第3版)，Joseph Yiu著；吴常玉，曹孟娟，王丽红译。\n- The Cortex-M3 Technical Reference Manual\n- The ARMv7-M Architecture Application Level Reference Manual\n",
+  "prompt": "你是 AI Review 投票模型。请只返回符合协议的 JSON，不要输出 Markdown。\n\n        审查目标：\n        - unit_id: ru000001\n        - source_file: ARM内核/ARM Cortex-M/ARM Cortex M3、M4学习笔记.md\n        - heading_path: _preamble\n        - content_hash: sha256:602883dad0ea7a1f9415eeedbd99d1b7912fca88bb84a537fb6d38921888996d\n\n        要求：\n        - 自然语言字段必须以简体中文为主。\n        - 只审查当前 ReviewUnit，不要直接改写原文。\n        - severity 只能是 Correct/Enhance/Minor/Major/Critical/Unknown。\n        - topic 只用于 issue 和 Dashboard。\n        - 如果依赖图片且无法判断，返回 Unknown。\n        - 如果当前知识不足、事实可能过时，或需要核验权威资料，host-current 主模型必须联网查询。\n        - 联网查询时必须在 JSON 中增加 external_sources，列出 URL 或可追溯来源；summary/evidence 应明确哪些判断来自外部资料。\n\n        附加上下文：\n        []\n\n        ReviewUnit 原文：\n        ```markdown\n        ---\nnumber headings: auto, first-level 1, max 6, 1.1\n---\n#嵌入式 \n\n参考书籍：\n- Cortex-M3 权威指南，Joseph Yiu著；宋岩译。\n- ARM Cortex-M3与Cortex-M4权威指南(第3版)，Joseph Yiu著；吴常玉，曹孟娟，王丽红译。\n- The Cortex-M3 Technical Reference Manual\n- The ARMv7-M Architecture Application Level Reference Manual\n\n        ```",
+  "task_id": "ru000001",
+  "task_hash": "sha256:602883dad0ea7a1f9415eeedbd99d1b7912fca88bb84a537fb6d38921888996d"
+}
