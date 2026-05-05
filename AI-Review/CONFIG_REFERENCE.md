@@ -227,4 +227,4 @@ models:
 
 `ai-review vote --concurrency N` 会临时覆盖每个模型的 `concurrency`。
 
-`ai-review prepare --dry-run` 只预览 task，不写入 `.state/tasks`；`ai-review prepare` 直接写入 task 队列。
+完整 `/ai-review prepare` 必须由 Codex/Cursor skill 做 AI-assisted 准备。普通 CLI 的 `prepare` 只能作为候选切分 helper；`ai-review prepare --dry-run` 只预览候选 task，不写入 `.state/tasks`。

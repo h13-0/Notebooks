@@ -141,17 +141,21 @@ score(severity) = Σ(model_weight × model_confidence)
 
 AI Review 必须支持可恢复的三阶段工作流，并逐步以该工作流取代旧的同步式主模型/投票模型耦合流程。
 
-1. `prepare` 阶段按顺序扫描笔记、切分 ReviewUnit、解析 Obsidian 引用上下文，并把每个待审查单元写入 `AI-Review/.state/tasks/{task_id}.json`。
-2. Task 文件必须包含 `task_id`、`task_hash`、定位信息、原文内容、上下文片段和完整 prompt。
-3. `prepare --dry-run` 只打印将生成的 task 列表，不得写入 `.state/tasks` 或 `tasks-index.json`。
-4. 不带 `--dry-run` 的 `prepare` 直接写入 task 队列；不需要额外 `--apply`。
-5. `vote` 阶段只读取 task 文件，并把每个成功投票写入 `AI-Review/.state/votes/{model_id}/{task_id}.json`。
-6. 如果已有 vote 文件且其中 `task_hash` 与当前 task 一致，`vote` 阶段必须跳过该任务。
-7. 失败模型不得写入 vote 文件，也不得生成 `Unknown` 票。
-8. `merge` 阶段只读取 task 文件和 vote 文件，所有 reviewer 一视同仁参与加权聚合。
-9. `host-current`、外部 API 模型、人工补充模型都只是不同的 `model_id`，聚合阶段不得再区分“主模型”和“投票模型”。
-10. Codex/Cursor 当前会话模型参与投票时，应读取 task 文件，并把投票写入 `AI-Review/.state/votes/host-current/{task_id}.json`。
-11. `merge --apply` 才允许写入 issue、源文件 AI-Review 折叠块、Dashboard 和 ledger。
+1. `prepare` 必须是 AI-assisted 阶段，由 Codex/Cursor 当前会话模型通过 skill 编排完成。
+2. 普通 CLI 不得被视为完整 prepare；CLI 只能提供候选切分、文件写入等底层工具。
+3. 当前会话模型必须读取候选段落，按标题、内容、引用关系和审查目标决定最终 task。
+4. 当前会话模型必须解析 Obsidian 引用，并把必要的 `[[note#Heading]]`、`[[note#^blockid]]` 目标段落拼接进 task 上下文。
+5. 当前会话模型在必要时必须联网查询权威资料，并把来源写入 task 的 `external_sources` 或等价字段。
+6. Task 文件必须包含 `task_id`、`task_hash`、定位信息、原文内容、引用上下文、AI 选择/裁剪后的上下文、外部资料来源和完整 prompt。
+7. `/ai-review prepare --dry-run` 只打印将生成的 task 列表和上下文/资料来源摘要，不得写入 `.state/tasks` 或 `tasks-index.json`。
+8. `/ai-review prepare` 写入 `AI-Review/.state/tasks/{task_id}.json`；写入内容必须已经过当前会话模型准备，不得只是机械字符串切分结果。
+9. `vote` 阶段只读取 task 文件，并把每个成功投票写入 `AI-Review/.state/votes/{model_id}/{task_id}.json`。
+10. 如果已有 vote 文件且其中 `task_hash` 与当前 task 一致，`vote` 阶段必须跳过该任务。
+11. 失败模型不得写入 vote 文件，也不得生成 `Unknown` 票。
+12. `merge` 阶段只读取 task 文件和 vote 文件，所有 reviewer 一视同仁参与加权聚合。
+13. `host-current`、外部 API 模型、人工补充模型都只是不同的 `model_id`，聚合阶段不得再区分“主模型”和“投票模型”。
+14. Codex/Cursor 当前会话模型参与投票时，应读取 task 文件，并把投票写入 `AI-Review/.state/votes/host-current/{task_id}.json`。
+15. `merge --apply` 才允许写入 issue、源文件 AI-Review 折叠块、Dashboard 和 ledger。
 
 ## 7.2 外部 Vote CLI 交互规则
 

@@ -1322,33 +1322,6 @@ def normalize_vote_payload(payload: dict[str, Any], model: dict[str, Any], task:
     return vote
 
 
-def command_prepare_tasks(args: argparse.Namespace) -> int:
-    review_dir, payload = host_prepare_payload(args)
-    units = [normalize_task_payload(x) for x in payload.get("units", [])]
-    payload.setdefault("mode", {})["dry_run"] = bool(getattr(args, "dry_run", False))
-    payload.setdefault("mode", {})["apply"] = not bool(getattr(args, "dry_run", False))
-    if getattr(args, "dry_run", False):
-        print_info(f"prepare dry-run：将生成 task {len(units)} 个，不写入 .state/tasks。")
-        for task in units:
-            heading = " > ".join(str(x) for x in task.get("heading_path", [])) or str(task.get("heading") or "")
-            print(f"- {task['task_id']}: {task.get('source_file')}:{task.get('start_line')} {heading}")
-        return 0
-
-    tasks_dir, _votes_dir = task_dirs(review_dir)
-    written = 0
-    for task in units:
-        write_json_atomic(task_path(tasks_dir, task["task_id"]), task)
-        written += 1
-    write_json_atomic(review_dir / ".state" / "tasks-index.json", {
-        "version": 1,
-        "created_at": _dt.datetime.now().isoformat(),
-        "tasks": [x["task_id"] for x in units],
-        "mode": payload.get("mode", {}),
-    })
-    print_info(f"已生成 task：{written} 个，目录：{tasks_dir}")
-    return 0
-
-
 def reviewer_models(config: dict[str, Any], args: argparse.Namespace) -> list[dict[str, Any]]:
     voters = [dict(x) for x in deep_get(config, "models.voters", []) or [] if x.get("vote_enabled", True)]
     if getattr(args, "model", None):
@@ -1893,17 +1866,6 @@ def build_parser() -> argparse.ArgumentParser:
     review.add_argument("--model-retry", type=int, help="临时覆盖外部模型重试次数")
     review.add_argument("--stream-total-timeout", type=int, help="临时覆盖单次流式响应总时长上限秒数")
 
-    task_prepare = sub.add_parser("prepare", help="生成可恢复的 ReviewTask 文件，供 host-current 和外部 reviewer 投票")
-    task_prepare_scope = task_prepare.add_mutually_exclusive_group()
-    task_prepare_scope.add_argument("--changed", action="store_true", help="只准备 Git 变更文件")
-    task_prepare_scope.add_argument("--all", action="store_true", help="准备全仓库")
-    task_prepare.add_argument("paths", nargs="*", help="指定文件或目录")
-    task_prepare.add_argument("--issue", help="准备复查指定 issue")
-    task_prepare.add_argument("--limit", type=int, help="最多准备 N 个 ReviewUnit")
-    task_prepare_mode = task_prepare.add_mutually_exclusive_group()
-    task_prepare_mode.add_argument("--dry-run", action="store_true", help="按 dry-run 模式准备")
-    task_prepare_mode.add_argument("--apply", action="store_true", help="按 apply 模式准备")
-
     vote = sub.add_parser("vote", help="并行调用外部 reviewer，写入 .state/votes/{model}/{task}.json")
     vote.add_argument("--model", help="只运行指定模型 id；默认运行所有启用 voter")
     vote.add_argument("--limit", type=int, help="最多处理 N 个 task")
@@ -1969,11 +1931,6 @@ def main(argv: list[str] | None = None) -> int:
                 if not args.changed and not args.all and not args.paths:
                     args.changed = str(default.get("scope", "changed")) == "changed"
             return command_review(args)
-        if args.command == "prepare":
-            if not args.changed and not args.all and not args.paths:
-                default = load_yaml(Path.cwd() / ".ai-review.yaml").get("default_mode", {})
-                args.changed = str(default.get("scope", "changed")) == "changed"
-            return command_prepare_tasks(args)
         if args.command == "vote":
             return command_vote_tasks(args)
         if args.command == "merge":
