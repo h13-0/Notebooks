@@ -4,7 +4,7 @@ import json
 import time
 import urllib.error
 import urllib.request
-from typing import Any
+from typing import Any, Callable
 
 
 class ModelClientError(RuntimeError):
@@ -26,7 +26,10 @@ def _parse_non_stream_response(data: dict[str, Any]) -> str:
     return data.get("choices", [{}])[0].get("message", {}).get("content", "")
 
 
-def _parse_stream_response(resp: Any, max_total_seconds: int | None = None) -> str:
+ProgressCallback = Callable[[dict[str, Any]], None]
+
+
+def _parse_stream_response(resp: Any, max_total_seconds: int | None = None, progress: ProgressCallback | None = None) -> str:
     """Parse OpenAI-compatible SSE chunks.
 
     中文说明：开启 stream 后，timeout 变成 socket 空闲超时。只要服务端持续
@@ -53,6 +56,10 @@ def _parse_stream_response(resp: Any, max_total_seconds: int | None = None) -> s
         content = delta.get("content") or message.get("content") or ""
         if content:
             pieces.append(content)
+            if progress:
+                progress({"type": "delta", "content": content, "chars": len("".join(pieces))})
+        if data.get("usage") and progress:
+            progress({"type": "usage", "usage": data["usage"]})
     return "".join(pieces)
 
 
@@ -63,6 +70,7 @@ def call_model(
     timeout: int,
     stream: bool = False,
     stream_total_timeout: int | None = None,
+    progress: ProgressCallback | None = None,
 ) -> dict[str, Any]:
     """Call one OpenAI-compatible chat completion endpoint.
 
@@ -84,6 +92,7 @@ def call_model(
     }
     if stream:
         payload["stream"] = True
+        payload["stream_options"] = {"include_usage": True}
     body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
     req = urllib.request.Request(
         url,
@@ -94,11 +103,13 @@ def call_model(
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             if stream:
-                content = _parse_stream_response(resp, max_total_seconds=stream_total_timeout)
+                content = _parse_stream_response(resp, max_total_seconds=stream_total_timeout, progress=progress)
                 data = None
             else:
                 data = json.loads(resp.read().decode("utf-8"))
                 content = _parse_non_stream_response(data)
+                if progress and data.get("usage"):
+                    progress({"type": "usage", "usage": data["usage"]})
     except urllib.error.HTTPError as exc:
         body = exc.read().decode("utf-8", errors="replace")[:1000]
         raise ModelClientError(f"HTTP {exc.code}: {body}") from exc
@@ -121,11 +132,20 @@ def call_model_with_retry(
     retry: int,
     stream: bool = False,
     stream_total_timeout: int | None = None,
+    progress: ProgressCallback | None = None,
 ) -> dict[str, Any]:
     last_exc: Exception | None = None
     for attempt in range(retry + 1):
         try:
-            return call_model(model, secrets, prompt, timeout, stream=stream, stream_total_timeout=stream_total_timeout)
+            return call_model(
+                model,
+                secrets,
+                prompt,
+                timeout,
+                stream=stream,
+                stream_total_timeout=stream_total_timeout,
+                progress=progress,
+            )
         except Exception as exc:
             last_exc = exc
             if attempt < retry:
