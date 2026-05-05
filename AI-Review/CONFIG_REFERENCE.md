@@ -167,10 +167,11 @@ runtime:
   max_concurrency: 3
   request_timeout_sec: 120
   stream: true
+  stream_total_timeout_sec: 240
   retry: 2
   warn_once_per_model: true
   model_failure_policy: "skip_model"
-  no_eligible_model_policy: "unknown"
+  no_eligible_model_policy: "skip"
 
 write:
   preserve_user_notes: true

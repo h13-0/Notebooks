@@ -711,6 +711,7 @@ def collect_votes(
                     build_prompt(unit, context_notes),
                     int(deep_get(config, "runtime.request_timeout_sec", 120)),
                     stream=bool(deep_get(config, "runtime.stream", False)),
+                    stream_total_timeout=int(deep_get(config, "runtime.stream_total_timeout_sec", 240)),
                 )
                 votes.append(Vote.from_json(payload, model, unit.unit_id))
             except Exception as exc:
@@ -737,11 +738,14 @@ def collect_votes(
         retry = max(0, int(args.model_retry))
     prompt = build_prompt(unit, context_notes)
     stream = bool(deep_get(config, "runtime.stream", False))
+    stream_total_timeout = int(deep_get(config, "runtime.stream_total_timeout_sec", 240))
+    if getattr(args, "stream_total_timeout", None):
+        stream_total_timeout = int(args.stream_total_timeout)
     for model in voter_jobs:
-        print_info(f"{unit.unit_id} 调用外部 voter `{model.get('id')}`，timeout={timeout}s，retry={retry}，stream={stream}")
+        print_info(f"{unit.unit_id} 调用外部 voter `{model.get('id')}`，timeout={timeout}s，retry={retry}，stream={stream}，stream_total_timeout={stream_total_timeout}s")
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = {
-            executor.submit(call_model_with_retry, model, secrets, prompt, timeout, retry, stream=stream): model
+            executor.submit(call_model_with_retry, model, secrets, prompt, timeout, retry, stream=stream, stream_total_timeout=stream_total_timeout): model
             for model in voter_jobs
         }
         for future in as_completed(futures):
@@ -1340,6 +1344,7 @@ def command_merge_host(args: argparse.Namespace) -> int:
         no_external=bool(args.no_external),
         model_timeout=args.model_timeout,
         model_retry=args.model_retry,
+        stream_total_timeout=args.stream_total_timeout,
     )
     return command_review(ns)
 
@@ -1382,11 +1387,8 @@ def command_review(args: argparse.Namespace) -> int:
         context_notes = build_context_notes(root, unit, config, warning_keys)
         votes = collect_votes(unit, config, secrets, args, context_notes, host_votes, warning_keys)
         if not votes:
-            policy = str(deep_get(config, "runtime.no_eligible_model_policy", "unknown"))
-            if policy == "skip":
-                print_warning(f"{unit.unit_id} 无可用模型，跳过。")
-                continue
-            votes = [fallback_unknown_vote(unit, "没有可用模型完成审查。")]
+            print_warning(f"{unit.unit_id} 没有任何成功模型投票，跳过；失败模型不生成 Unknown 票。")
+            continue
         aggregate = aggregate_votes(votes, config)
         aggregates[unit.unit_id] = aggregate
         open_existing = [
@@ -1543,6 +1545,7 @@ def build_parser() -> argparse.ArgumentParser:
     review.add_argument("--no-external", action="store_true", help="不调用外部 voter API，仅验证扫描、聚合和渲染路径")
     review.add_argument("--model-timeout", type=int, help="临时覆盖单次外部模型请求超时秒数")
     review.add_argument("--model-retry", type=int, help="临时覆盖外部模型重试次数")
+    review.add_argument("--stream-total-timeout", type=int, help="临时覆盖单次流式响应总时长上限秒数")
 
     prepare = sub.add_parser("prepare-host", help="为 Codex/Cursor 当前会话模型准备 host-current 审查输入")
     prepare_scope = prepare.add_mutually_exclusive_group()
@@ -1572,6 +1575,7 @@ def build_parser() -> argparse.ArgumentParser:
     merge.add_argument("--no-external", action="store_true", help="不调用外部 voter API，仅使用 host-current 投票")
     merge.add_argument("--model-timeout", type=int, help="临时覆盖单次外部模型请求超时秒数")
     merge.add_argument("--model-retry", type=int, help="临时覆盖外部模型重试次数")
+    merge.add_argument("--stream-total-timeout", type=int, help="临时覆盖单次流式响应总时长上限秒数")
 
     dashboard = sub.add_parser("dashboard", help="更新 Dashboard")
     dashboard.add_argument("--dry-run", action="store_true")
