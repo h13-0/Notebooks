@@ -130,6 +130,13 @@ score(severity) = Σ(model_weight × model_confidence)
 
 每个 severity 都可以单独设置阈值。
 
+模型调用失败规则：
+
+1. 超时、限流、HTTP 错误、返回空内容、返回 JSON 格式错误的模型视为本 ReviewUnit 投票失败。
+2. 失败模型不得生成 `Unknown` 投票，也不得参与加权评分。
+3. `Unknown` 只能由成功返回的模型显式投出。
+4. 如果一个 ReviewUnit 没有任何成功投票，则跳过该 ReviewUnit，并输出 warning。
+
 ## 8. Topic 规则
 
 Issue 文件中必须包含 topic。

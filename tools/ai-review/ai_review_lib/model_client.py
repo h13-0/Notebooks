@@ -26,14 +26,17 @@ def _parse_non_stream_response(data: dict[str, Any]) -> str:
     return data.get("choices", [{}])[0].get("message", {}).get("content", "")
 
 
-def _parse_stream_response(resp: Any) -> str:
+def _parse_stream_response(resp: Any, max_total_seconds: int | None = None) -> str:
     """Parse OpenAI-compatible SSE chunks.
 
     中文说明：开启 stream 后，timeout 变成 socket 空闲超时。只要服务端持续
     输出 chunk，`readline()` 就会持续返回，不会因为总生成时间长而被误判为无响应。
     """
     pieces: list[str] = []
+    started = time.monotonic()
     for raw_line in resp:
+        if max_total_seconds and time.monotonic() - started > max_total_seconds:
+            raise ModelClientError(f"stream total timeout after {max_total_seconds}s")
         line = raw_line.decode("utf-8", errors="replace").strip()
         if not line or not line.startswith("data:"):
             continue
@@ -53,7 +56,14 @@ def _parse_stream_response(resp: Any) -> str:
     return "".join(pieces)
 
 
-def call_model(model: dict[str, Any], secrets: dict[str, Any], prompt: str, timeout: int, stream: bool = False) -> dict[str, Any]:
+def call_model(
+    model: dict[str, Any],
+    secrets: dict[str, Any],
+    prompt: str,
+    timeout: int,
+    stream: bool = False,
+    stream_total_timeout: int | None = None,
+) -> dict[str, Any]:
     """Call one OpenAI-compatible chat completion endpoint.
 
     中文说明：外部 voter 统一走 OpenAI-compatible chat/completions。
@@ -84,7 +94,7 @@ def call_model(model: dict[str, Any], secrets: dict[str, Any], prompt: str, time
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             if stream:
-                content = _parse_stream_response(resp)
+                content = _parse_stream_response(resp, max_total_seconds=stream_total_timeout)
                 data = None
             else:
                 data = json.loads(resp.read().decode("utf-8"))
@@ -103,11 +113,19 @@ def call_model(model: dict[str, Any], secrets: dict[str, Any], prompt: str, time
     return json.loads(content)
 
 
-def call_model_with_retry(model: dict[str, Any], secrets: dict[str, Any], prompt: str, timeout: int, retry: int, stream: bool = False) -> dict[str, Any]:
+def call_model_with_retry(
+    model: dict[str, Any],
+    secrets: dict[str, Any],
+    prompt: str,
+    timeout: int,
+    retry: int,
+    stream: bool = False,
+    stream_total_timeout: int | None = None,
+) -> dict[str, Any]:
     last_exc: Exception | None = None
     for attempt in range(retry + 1):
         try:
-            return call_model(model, secrets, prompt, timeout, stream=stream)
+            return call_model(model, secrets, prompt, timeout, stream=stream, stream_total_timeout=stream_total_timeout)
         except Exception as exc:
             last_exc = exc
             if attempt < retry:

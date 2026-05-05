@@ -110,6 +110,7 @@ CLI 会解析当前 ReviewUnit 中的 `[[note#Heading]]` 和 `[[note#^blockid]]`
 ## 流式外部 voter
 
 `runtime.stream: true` 时，外部 voter 使用 OpenAI-compatible SSE stream。此时 `request_timeout_sec` 是 socket 空闲超时：只要模型持续输出 chunk，就不会因为总输出时间较长而被误判为无响应。
+`runtime.stream_total_timeout_sec` 是单次流式响应总时长上限，用于防止模型无限输出 reasoning 或服务端迟迟不发 `[DONE]`。
 
 ## 结构化本地验证
 
