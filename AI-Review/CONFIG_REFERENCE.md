@@ -64,7 +64,6 @@ scan:
 
 severity:
   callout:
-    Correct: success
     Enhance: tip
     Minor: attention
     Major: bug
@@ -75,11 +74,10 @@ voting:
   main_model_vote_enabled: true
   main_model_vote_visible: true
   host_current_allowed: true
-  fallback_when_no_threshold_matched: "Unknown"
+  issue_score_threshold: 3.0
+  max_missing_vote_ratio: 0.5
 
   severity_thresholds:
-    Correct:
-      min_normalized_score: 0.50
     Enhance:
       min_normalized_score: 0.35
     Minor:
@@ -88,8 +86,6 @@ voting:
       min_normalized_score: 0.40
     Critical:
       min_normalized_score: 0.35
-    Unknown:
-      min_normalized_score: 0.30
 
 models:
   main:
@@ -229,10 +225,14 @@ models:
 
 `ai-review vote --concurrency N` 会临时覆盖每个模型的 `concurrency`。
 
-完整 `/ai-review prepare` 必须由 Codex/Cursor skill 做 AI-assisted 准备。普通 CLI 不提供 `prepare` 子命令，因为它无法主动与当前会话模型通信。
+完整 `/ai-review prepare` 必须由 Codex/Cursor skill 做 AI-assisted 准备。CLI `prepare` 只提供确定性 task 队列和候选上下文支撑。
 
 `/ai-review vote` 只写当前会话模型的 `host-current` 投票；外部模型并发、超时和流式参数只适用于普通终端中的 `.\ai-review.cmd vote`。
 
 `prepare` 和 `vote` 默认应按 `unit_id + content_hash` 增量跳过已处理结果；重新生成单段或全量结果必须显式指定 `--regenerate`。
+
+`voting.issue_score_threshold` 是单个 finding 进入 `Open` 的最低总分。完整性通过但低于该阈值的 finding 进入 `Rejected`。
+
+`voting.max_missing_vote_ratio` 是有投票权模型中失败或缺失投票的最大比例。超过该比例的 finding 进入 `PendingVote`，不进入 `Open` 或 `Rejected`。
 
 JSON 状态写入会拒绝疑似编码损坏内容，包括连续问号 `????` 和 Unicode replacement character `�`。如果触发该错误，应检查生成 task/vote 的终端编码或脚本输入方式。

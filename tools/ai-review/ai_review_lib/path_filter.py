@@ -58,7 +58,12 @@ def is_path_excluded(path: Path, root: Path, excluded_parts: set[str], excluded_
     if any(part in excluded_parts for part in path.relative_to(root).parts):
         return True
     for pattern in excluded_globs:
-        if fnmatch.fnmatch(rel, pattern) or fnmatch.fnmatch(rel + "/", pattern.rstrip("/") + "/"):
+        directory_pattern = pattern.rstrip("/")
+        if (
+            fnmatch.fnmatch(rel, pattern)
+            or fnmatch.fnmatch(rel + "/", directory_pattern + "/")
+            or rel.startswith(directory_pattern + "/")
+        ):
             return True
     return False
 

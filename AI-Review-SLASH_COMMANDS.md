@@ -14,14 +14,13 @@
 
 ## 推荐映射
 
-| Slash Command | CLI 调用 |
+| Slash Command | 行为 |
 |---|---|
-| `/ai-review` | `ai-review review --changed --dry-run` |
-| `/ai-review apply` | `ai-review review --changed --apply` |
-| `/ai-review all` | `ai-review review --all --dry-run` |
-| `/ai-review all apply` | `ai-review review --all --apply` |
-| `/ai-review resume` | `ai-review review --resume` |
-| `/ai-review issue ar0001` | `ai-review review --issue ar0001 --dry-run` |
+| `/ai-review` | `identity --changed --dry-run` → `/ai-review prepare --changed --dry-run` → `/ai-review vote` 生成 `findings[]` → `ai-review vote` → `ai-review merge --dry-run` |
+| `/ai-review apply` | `identity --changed --apply` → `/ai-review prepare --changed --apply` → `/ai-review vote` → `ai-review vote` → `ai-review merge --apply` |
+| `/ai-review all` | `identity --all --dry-run` → `/ai-review prepare --all --dry-run` → `/ai-review vote` → `ai-review vote` → `ai-review merge --dry-run` |
+| `/ai-review all apply` | `identity --all --apply` → `/ai-review prepare --all --apply` → `/ai-review vote` → `ai-review vote` → `ai-review merge --apply` |
+| `/ai-review issue ar0001` | `/ai-review prepare --issue ar0001 --dry-run` → `/ai-review vote` → `ai-review merge --dry-run` |
 
 ## host-current 流程
 
@@ -30,30 +29,19 @@
   ↓
 当前 Codex/Cursor 会话模型作为主模型
   ↓
-CLI 进行 Git 检查、扫描、上下文构建
+CLI identity 校验或写入稳定 ReviewUnit ID
   ↓
-外部 voter 模型通过 API 投票
+/ai-review prepare skill 写入 .state/tasks
   ↓
-host-current 主模型输出主投票 JSON
+/ai-review vote skill 写入 .state/votes/host-current，其中包含 findings[]
+  ↓
+普通终端 ai-review vote 调用外部 voter，对每个 finding 投 support/oppose/skip
   ↓
 聚合器按权重和置信度评分
   ↓
-CLI dry-run 或事务化写入
+ai-review merge dry-run 或事务化写入
 ```
 
 ## 独立 CLI 降级
 
-如果用户不在 Codex/Cursor 环境中运行，并且配置是：
-
-```yaml
-models:
-  main:
-    mode: "host-current"
-```
-
-CLI 必须报错并提示：
-
-```text
-当前配置要求 host-current 主模型，但当前运行环境没有宿主主模型。
-请从 /ai-review 运行，或将 models.main.mode 改为 configured。
-```
+如果用户不在 Codex/Cursor 环境中运行，普通 CLI 只能执行 `identity`、确定性 `prepare` 辅助、外部 `vote`、`merge`、`dashboard` 和 `check`。`host-current` 投票必须由 `/ai-review vote` skill 写入。
