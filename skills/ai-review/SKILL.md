@@ -16,7 +16,7 @@
 8. 原文折叠块不显示 topic；topic 只写入 issue 文件和 Dashboard。
 9. `/ai-review prepare` 必须由当前 Codex/Cursor 会话模型参与完成，不得只调用 CLI 做机械字符串切分。
 10. prepare 阶段必须自动解析 Obsidian 引用，必要时把 `[[note#Heading]]` 和 `[[note#^blockid]]` 对应段落拼接到 task 上下文中。
-11. prepare 阶段在必要时必须联网查询权威资料，并把来源写入 task 的 `external_sources` 或等价字段，供 issue 修改者核实。
+11. prepare 阶段在必要时必须联网查询权威资料，并把来源写入 task 的 `external_sources` 或等价字段；必须包含正文或足以独立判断的关键摘录，供无联网能力的外部 voter 和 issue 修改者核实。
 12. 当前宿主主模型 `host-current` 在投票时如果继续使用外部资料，也必须在投票 JSON 的 `external_sources` 中列出来源。
 13. `/ai-review prepare` 是 skill 工作流：可以调用 `.\ai-review.cmd prepare` 获取候选 task，但最终上下文裁剪、引用取舍、联网来源和 prompt 必须由当前会话模型参与确认。
 14. `/ai-review vote` 是 skill 工作流，只负责当前 Codex/Cursor 会话模型自己的投票，必须写入 `.state/votes/host-current/*.json`，不得调用外部模型 API。
@@ -74,7 +74,7 @@ ai-review merge --dry-run
 6. 对每个候选 ReviewUnit，读取原文、标题路径、相邻必要上下文和已有 AI Review 块。
 7. 解析该段中的 Obsidian 引用，自动定位并摘取必要目标段落；找不到目标时在 task 中记录 warning，不得编造上下文。
 8. 判断是否需要联网。涉及版本、标准、API、芯片/内核行为、外部工具、厂商文档或模型知识不确定时，必须联网查询一手来源。
-9. 将联网来源写入 task，至少包含 URL 或可追溯来源名、标题和用途摘要。
+9. 将联网来源写入 task，至少包含 URL 或可追溯来源名、标题、用途摘要，以及正文或足以支撑判断的关键摘录；不得只写链接和 title。
 10. 写入 `AI-Review/.state/tasks/{task_id}.json`；`--dry-run` 只打印 task 摘要、引用上下文摘要和外部来源摘要，不写文件。
 
 ## `/ai-review vote` 工作流

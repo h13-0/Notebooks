@@ -33,7 +33,8 @@
     {
       "url": "https://example.com/spec",
       "title": "Spec title",
-      "purpose": "核对版本行为"
+      "purpose": "核对版本行为",
+      "content": "prepare 阶段获取的正文或足以支撑判断的关键摘录..."
     }
   ],
   "prompt": "发送给投票模型的完整提示词"
@@ -50,8 +51,18 @@
 | `source_block_ref` | string | Obsidian 块引用定位 |
 | `context_notes` | string[] | 确定性上下文，如附件、outlink、block 引用摘录 |
 | `prepared_context` | string[] | 当前会话模型选择或裁剪后的审查上下文 |
-| `external_sources` | object[] | prepare 阶段联网来源；未联网时为空数组 |
+| `external_sources` | object[] | prepare 阶段联网来源；未联网时为空数组。联网时必须包含可追溯来源信息，并提供 `content` 或 `excerpt`，让无联网能力的外部 voter 可直接使用资料正文判断 |
 | `prompt` | string | 外部 voter 和 host-current vote 使用的完整输入 |
+
+`external_sources` 对象建议字段：
+
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| `url` | string | URL 或可追溯来源标识 |
+| `title` | string | 来源标题 |
+| `purpose` | string | 该资料用于核对什么问题 |
+| `content` | string | 资料正文或经过裁剪后仍可独立判断的关键正文；联网成功时必须提供 |
+| `excerpt` | string | 可选摘录；当全文过长时可与 `content` 二选一，但必须足以支持判断 |
 
 已有 task 且 `task_hash` 与当前 ReviewUnit 一致时，`prepare` 默认跳过；显式 `--regenerate` 才覆盖。
 
@@ -96,6 +107,8 @@ main_score = main_model_weight × confidence
 ## 4. 外部 Voter 输出格式
 
 外部 voter 只对主模型已提出的 finding 投票，不在本轮新增可 merge 的 bug。
+
+外部 voter 可能通过没有内置联网搜索能力的 API 服务调用，因此 vote prompt 必须包含 task 的 `external_sources`，并保留其中的 `content` / `excerpt` 正文。外部 voter 不应假设自己可以再联网获取资料。
 
 ```json
 {
