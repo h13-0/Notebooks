@@ -10,6 +10,7 @@
 - `AGENTS.ai-review.md`：给 Codex、Cursor 等 agent 读取的规则；
 - `.codex/commands/*.md`：推荐的 Codex slash command 包装模板；
 - `.cursor/rules/ai-review.mdc`：推荐的 Cursor rule；
+- `ai-review.cmd` / `ai-review.sh`：仓库根目录命令入口；
 - `scripts/ai-review.sh` / `scripts/ai-review.ps1`：可选命令包装脚本。
 
 ## 注意

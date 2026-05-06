@@ -20,7 +20,7 @@
 12. 当前宿主主模型 `host-current` 在投票时如果继续使用外部资料，也必须在投票 JSON 的 `external_sources` 中列出来源。
 13. `/ai-review prepare` 是 skill 工作流：可以调用 `.\ai-review.cmd prepare` 获取候选 task，但最终上下文裁剪、引用取舍、联网来源和 prompt 必须由当前会话模型参与确认。
 14. `/ai-review vote` 是 skill 工作流，只负责当前 Codex/Cursor 会话模型自己的投票，必须写入 `.state/votes/host-current/*.json`，不得调用外部模型 API。
-15. 外部 voter 必须由普通终端显式运行 `.\ai-review.cmd vote` 调用；外部 voter 应优先使用流式请求，超时语义应按“空闲超时”处理。
+15. 外部 voter 必须由普通终端显式运行 `.\ai-review.cmd vote`（Linux/macOS 可用 `./ai-review.sh vote`）调用；外部 voter 应优先使用流式请求，超时语义应按“空闲超时”处理。
 16. 必须使用 `identity / prepare / vote / merge` 四阶段流程；`host-current` 写入 findings，外部模型对每个 finding 写入 `support/oppose/skip`，聚合阶段逐 finding 计算。
 17. `/ai-review prepare` 前必须确保目标段落已有稳定 AI-Review identity 块；缺失时应提示或运行 `.\ai-review.cmd identity --apply`。
 18. prepare 和 vote 默认必须增量处理：已有 task/vote 且 hash 一致时跳过；只有显式重新生成标志才覆盖。
@@ -59,8 +59,8 @@ ai-review merge --dry-run
 ## `identity` 工作流
 
 1. `identity` 是普通 CLI 功能，不需要 AI 判断。
-2. 运行 `.\ai-review.cmd identity --changed --dry-run` 或 `.\ai-review.cmd identity --all --dry-run` 预览。
-3. 确认后运行 `.\ai-review.cmd identity ... --apply` 写入缺失的 AI-Review identity 块。
+2. 运行 `.\ai-review.cmd identity --changed --dry-run` 或 `.\ai-review.cmd identity --all --dry-run` 预览；Linux/macOS 可使用 `./ai-review.sh ...`。
+3. 确认后运行 `.\ai-review.cmd identity ... --apply` 或 `./ai-review.sh identity ... --apply` 写入缺失的 AI-Review identity 块。
 4. 空段落、空标题段和只包含 AI-Review 块的段落必须跳过。
 5. 已有 AI-Review 块必须原样保留，不得降级成待审查块。
 
