@@ -52,6 +52,7 @@ scan:
     - ".codex"
     - ".cursor"
     - "tools/ai-review"
+    - "AI-Review/README.md"
     - "AGENTS.ai-review.md"
     - "AI-Review-SLASH_COMMANDS.md"
     - "README.ai-review-skill.md"
@@ -61,7 +62,7 @@ scan:
 
 1. 黑名单在 Markdown 文件扫描阶段生效，命中后不生成 ReviewUnit。
 2. 黑名单支持目录名和仓库相对路径 glob。
-3. `AI-Review/`、`skills/`、`.codex/`、`.cursor/`、`tools/ai-review/`、`AGENTS.ai-review.md`、`AI-Review-SLASH_COMMANDS.md`、`README.ai-review-skill.md` 等 AI Review 自身产物、skill、命令模板和工具实现默认应排除。
+3. `AI-Review/`、`AI-Review/README.md`、`skills/`、`.codex/`、`.cursor/`、`tools/ai-review/`、`AGENTS.ai-review.md`、`AI-Review-SLASH_COMMANDS.md`、`README.ai-review-skill.md` 等 AI Review 自身产物、skill、命令模板和工具实现默认应排除。
 4. 即使未显式配置，`.git/`、`.obsidian/`、`.codex/`、`.cursor/`、`__pycache__/` 和当前 `review_dir` 也必须默认排除。
 5. 黑名单只影响扫描范围，不影响 CLI 显式维护 `AI-Review/` 下 issue、Dashboard 和 state 文件。
 
