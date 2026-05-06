@@ -269,6 +269,17 @@ class ReviewUnit:
     attachments: list[str] = dataclasses.field(default_factory=list)
     outlinks: list[str] = dataclasses.field(default_factory=list)
     tags: list[str] = dataclasses.field(default_factory=list)
+    existing_unit_id: str | None = None
+    identity_block: "AiReviewBlock | None" = None
+
+
+@dataclasses.dataclass
+class AiReviewBlock:
+    unit_id: str
+    text: str
+    anchor_line: int
+    start_line: int
+    end_line: int
 
 
 @dataclasses.dataclass
@@ -476,16 +487,148 @@ def detect_existing_unit_id(text: str) -> str | None:
 
 def existing_ai_blocks_by_unit(text: str) -> dict[str, str]:
     blocks: dict[str, str] = {}
-    for match in AI_BLOCK_RE.finditer(text):
-        unit_match = re.search(r"unit=(ru[0-9]{6})", match.group(0))
-        if unit_match:
-            blocks[unit_match.group(1)] = match.group(0).rstrip() + "\n"
+    for block in collect_ai_blocks(text):
+        blocks.setdefault(block.unit_id, block.text)
     return blocks
 
 
-def split_units(path: Path, root: Path, unit_ledger: dict[str, Any]) -> list[ReviewUnit]:
+def collect_ai_blocks(text: str) -> list[AiReviewBlock]:
+    blocks: list[AiReviewBlock] = []
+    kept_lines = 0
+    lines = text.splitlines()
+    index = 0
+    while index < len(lines):
+        line = lines[index]
+        start_match = re.match(r"<!-- ai-review:start unit=(ru[0-9]{6}) -->", line)
+        if not start_match:
+            kept_lines += 1
+            index += 1
+            continue
+        start_line = index + 1
+        block_lines = [line]
+        index += 1
+        while index < len(lines):
+            block_lines.append(lines[index])
+            if lines[index].strip() == "<!-- ai-review:end -->":
+                index += 1
+                break
+            index += 1
+        blocks.append(
+            AiReviewBlock(
+                unit_id=start_match.group(1),
+                text="\n".join(block_lines).rstrip() + "\n",
+                anchor_line=kept_lines,
+                start_line=start_line,
+                end_line=index,
+            )
+        )
+    return blocks
+
+
+def strip_ai_blocks_with_map(text: str) -> tuple[str, list[int], list[AiReviewBlock]]:
+    cleaned: list[str] = []
+    clean_to_original: list[int] = []
+    blocks: list[AiReviewBlock] = []
+    lines = text.splitlines()
+    index = 0
+    while index < len(lines):
+        line = lines[index]
+        start_match = re.match(r"<!-- ai-review:start unit=(ru[0-9]{6}) -->", line)
+        if not start_match:
+            cleaned.append(line)
+            clean_to_original.append(index + 1)
+            index += 1
+            continue
+        start_line = index + 1
+        block_lines = [line]
+        index += 1
+        while index < len(lines):
+            block_lines.append(lines[index])
+            if lines[index].strip() == "<!-- ai-review:end -->":
+                index += 1
+                break
+            index += 1
+        blocks.append(
+            AiReviewBlock(
+                unit_id=start_match.group(1),
+                text="\n".join(block_lines).rstrip() + "\n",
+                anchor_line=len(cleaned),
+                start_line=start_line,
+                end_line=index,
+            )
+        )
+    return "\n".join(cleaned), clean_to_original, blocks
+
+
+def find_block_for_range(blocks: list[AiReviewBlock], start_line: int, end_line: int) -> AiReviewBlock | None:
+    candidates = [block for block in blocks if start_line <= block.anchor_line <= end_line + 1]
+    return candidates[-1] if candidates else None
+
+
+def locator_matches(entry: Any, rel_path: str, heading_path: list[str]) -> bool:
+    return (
+        isinstance(entry, dict)
+        and entry.get("file") == rel_path
+        and entry.get("heading_path") == heading_path
+        and isinstance(entry.get("unit_id"), str)
+    )
+
+
+def ledger_unit_ids(unit_ledger: dict[str, Any]) -> set[str]:
+    ids: set[str] = set()
+    for entry in unit_ledger.get("by_locator", {}).values():
+        if isinstance(entry, dict) and isinstance(entry.get("unit_id"), str):
+            ids.add(entry["unit_id"])
+    return ids
+
+
+def next_unique_unit_id(unit_ledger: dict[str, Any], claimed_ids: dict[str, str]) -> str:
+    used = ledger_unit_ids(unit_ledger) | set(claimed_ids)
+    next_id = int(unit_ledger.get("next_unit_id", 1))
+    while True:
+        unit_id = f"ru{next_id:06d}"
+        next_id += 1
+        if unit_id not in used:
+            unit_ledger["next_unit_id"] = next_id
+            return unit_id
+
+
+def claimable_unit_id(unit_id: str | None, locator: str, claimed_ids: dict[str, str]) -> bool:
+    if not unit_id:
+        return False
+    owner = claimed_ids.get(unit_id)
+    return owner is None or owner == locator
+
+
+def remember_hash_unit(by_hash: dict[str, Any], content_hash: str, unit_id: str) -> None:
+    value = by_hash.get(content_hash)
+    if isinstance(value, list):
+        if unit_id not in value:
+            value.append(unit_id)
+        return
+    if isinstance(value, str):
+        by_hash[content_hash] = [value] if value == unit_id else [value, unit_id]
+        return
+    by_hash[content_hash] = [unit_id]
+
+
+def duplicate_existing_blocks(files: list[Path], root: Path) -> dict[str, list[str]]:
+    seen: dict[str, list[str]] = {}
+    for path in files:
+        rel = path.relative_to(root).as_posix()
+        for block in collect_ai_blocks(load_text(path)):
+            seen.setdefault(block.unit_id, []).append(f"{rel}:{block.start_line}")
+    return {unit_id: locs for unit_id, locs in seen.items() if len(locs) > 1}
+
+
+def split_units(
+    path: Path,
+    root: Path,
+    unit_ledger: dict[str, Any],
+    claimed_ids: dict[str, str] | None = None,
+) -> list[ReviewUnit]:
     original = load_text(path)
-    text = AI_BLOCK_RE.sub("", original)
+    text, _clean_to_original, blocks = strip_ai_blocks_with_map(original)
     lines = text.splitlines()
     headings: list[tuple[int, int, str]] = []
     for i, line in enumerate(lines):
@@ -513,19 +656,23 @@ def split_units(path: Path, root: Path, unit_ledger: dict[str, Any]) -> list[Rev
     rel_path = path.relative_to(root).as_posix()
     by_locator = unit_ledger.setdefault("by_locator", {})
     by_hash = unit_ledger.setdefault("by_hash", {})
+    claimed_ids = claimed_ids if claimed_ids is not None else {}
     for start, end, level, heading, heading_path in ranges:
         content = "\n".join(lines[start:end]).rstrip() + "\n"
         normalized = normalize_unit_text(content)
         content_hash = sha256_text(normalized)
         locator = f"{rel_path}::{' > '.join(heading_path)}"
-        existing = detect_existing_unit_id(original)
-        unit_id = by_locator.get(locator, {}).get("unit_id") or by_hash.get(content_hash)
-        if not unit_id and existing and len(ranges) == 1:
-            unit_id = existing
-        if not unit_id:
-            next_id = int(unit_ledger.get("next_unit_id", 1))
-            unit_id = f"ru{next_id:06d}"
-            unit_ledger["next_unit_id"] = next_id + 1
+        block = find_block_for_range(blocks, start + 1, end)
+        existing_unit_id = block.unit_id if block else None
+        locator_entry = by_locator.get(locator)
+        locator_unit_id = locator_entry.get("unit_id") if locator_matches(locator_entry, rel_path, heading_path) else None
+        if claimable_unit_id(existing_unit_id, locator, claimed_ids):
+            unit_id = str(existing_unit_id)
+        elif claimable_unit_id(locator_unit_id, locator, claimed_ids):
+            unit_id = str(locator_unit_id)
+        else:
+            unit_id = next_unique_unit_id(unit_ledger, claimed_ids)
+        claimed_ids[unit_id] = locator
         by_locator[locator] = {
             "unit_id": unit_id,
             "file": rel_path,
@@ -533,7 +680,7 @@ def split_units(path: Path, root: Path, unit_ledger: dict[str, Any]) -> list[Rev
             "content_hash": content_hash,
             "updated_at": now_date(),
         }
-        by_hash[content_hash] = unit_id
+        remember_hash_unit(by_hash, content_hash, unit_id)
         outlinks = sorted(set(WIKI_LINK_RE.findall(content)))
         attachments = sorted(set(EMBED_RE.findall(content)))
         tags = sorted(set(TAG_RE.findall(content)))
@@ -555,6 +702,8 @@ def split_units(path: Path, root: Path, unit_ledger: dict[str, Any]) -> list[Rev
                 attachments=attachments,
                 outlinks=outlinks,
                 tags=tags,
+                existing_unit_id=existing_unit_id,
+                identity_block=block,
             )
         )
     return units
@@ -933,24 +1082,46 @@ def render_identity_block(unit: ReviewUnit) -> str:
 
 def replace_identity_blocks_for_file(path: Path, units: list[ReviewUnit]) -> tuple[str, int]:
     original = load_text(path)
-    existing_blocks = existing_ai_blocks_by_unit(original)
-    text = AI_BLOCK_RE.sub("", original).rstrip() + "\n"
-    lines = text.splitlines()
-    inserts: dict[int, str] = {}
+    _cleaned, clean_to_original, _blocks = strip_ai_blocks_with_map(original)
+    lines = original.splitlines()
+    inserts: dict[int, list[str]] = {}
+    replacements: dict[int, tuple[int, str]] = {}
     created = 0
     for unit in units:
-        block = existing_blocks.get(unit.unit_id)
-        if not block:
-            block = render_identity_block(unit)
+        if unit.identity_block and unit.existing_unit_id == unit.unit_id:
+            continue
+        block = render_identity_block(unit)
+        if unit.identity_block and unit.existing_unit_id != unit.unit_id:
+            replacements[unit.identity_block.start_line] = (unit.identity_block.end_line, block)
+        else:
+            original_line = clean_to_original[unit.end_line - 1] if 0 < unit.end_line <= len(clean_to_original) else len(lines)
+            inserts.setdefault(original_line, []).append(block)
             created += 1
-        inserts[unit.end_line] = block
     out: list[str] = []
-    for idx, line in enumerate(lines, start=1):
-        out.append(line)
-        if idx in inserts:
+    idx = 1
+    while idx <= len(lines):
+        if idx in replacements:
+            end_line, block = replacements[idx]
             if out and out[-1].strip():
                 out.append("")
-            out.extend(inserts[idx].rstrip().splitlines())
+            out.extend(block.rstrip().splitlines())
+            out.append("")
+            idx = end_line + 1
+            continue
+        line = lines[idx - 1]
+        out.append(line)
+        if idx in inserts:
+            for block in inserts[idx]:
+                if out and out[-1].strip():
+                    out.append("")
+                out.extend(block.rstrip().splitlines())
+                out.append("")
+        idx += 1
+    if 0 in inserts or not lines:
+        for block in inserts.get(0, []):
+            if out and out[-1].strip():
+                out.append("")
+            out.extend(block.rstrip().splitlines())
             out.append("")
     return "\n".join(out).rstrip() + "\n", created
 
@@ -1832,6 +2003,11 @@ def command_identity(args: argparse.Namespace) -> int:
         planned.append((path, updated, created, len(file_units)))
 
     print_info(f"identity 扫描 Markdown 文件 {len(files)} 个，非空 ReviewUnit {len(units)} 个。")
+    duplicates = duplicate_existing_blocks(files, root)
+    for unit_id, locations in sorted(duplicates.items()):
+        shown = ", ".join(locations[:5])
+        suffix = " ..." if len(locations) > 5 else ""
+        print_warning(f"发现重复 identity ID {unit_id}：{shown}{suffix}")
     for path, _updated, created, count in planned:
         rel = path.relative_to(root).as_posix()
         print(f"- {rel}: units={count}, new_identity_blocks={created}")
@@ -1857,8 +2033,9 @@ def discover_units_for_args(
     scope = "all" if getattr(args, "all", False) else "changed"
     files = list_markdown_files(root, review_dir, scope, getattr(args, "paths", []))
     all_units: list[ReviewUnit] = []
+    claimed_ids: dict[str, str] = {}
     for path in files:
-        all_units.extend(split_units(path, root, unit_ledger))
+        all_units.extend(split_units(path, root, unit_ledger, claimed_ids))
     issue_id = getattr(args, "issue", None)
     if issue_id:
         issue = next((x for x in collect_issues(review_dir) if x["id"] == issue_id), None)

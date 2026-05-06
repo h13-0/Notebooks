@@ -63,6 +63,8 @@ ai-review merge --dry-run
 3. 确认后运行 `.\ai-review.cmd identity ... --apply` 或 `./ai-review.sh identity ... --apply` 写入缺失的 AI-Review identity 块。
 4. 空段落、空标题段和只包含 AI-Review 块的段落必须跳过。
 5. 已有 AI-Review 块必须原样保留，不得降级成待审查块。
+6. `identity` 必须幂等：段落正文和已有块未变化时，重复运行不得刷新日期、移动块或重分配 ID。
+7. 相同内容段落不得因为 hash 相同共享 `unit_id`；发现重复 ID 时应保留第一处明确归属，其它重复处重新分配唯一 ID 并输出 warning。
 
 ## `/ai-review prepare` 工作流
 

@@ -66,6 +66,8 @@
 
 已有 task 且 `task_hash` 与当前 ReviewUnit 一致时，`prepare` 默认跳过；显式 `--regenerate` 才覆盖。
 
+`task_id` / `unit_id` 必须在当前扫描范围内唯一。`identity` 阶段不得因为两个段落内容 hash 相同而复用同一个 ID；重复内容段落必须生成不同的 ReviewUnit ID。
+
 ## 3. 主模型 Findings 输出必须是 JSON
 
 `/ai-review vote` 中的 `host-current` 主模型必须先提出候选 bug 清单。一个 ReviewUnit 可以有 0 个、1 个或多个 finding。
