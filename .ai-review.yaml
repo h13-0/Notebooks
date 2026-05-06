@@ -35,7 +35,6 @@ scan:
 
 severity:
   callout:
-    Correct: success
     Enhance: tip
     Minor: attention
     Major: bug
@@ -46,10 +45,9 @@ voting:
   main_model_vote_enabled: true
   main_model_vote_visible: true
   host_current_allowed: true
-  fallback_when_no_threshold_matched: "Unknown"
+  issue_score_threshold: 3.0
+  max_missing_vote_ratio: 0.5
   severity_thresholds:
-    Correct:
-      min_normalized_score: 0.60
     Enhance:
       min_normalized_score: 0.70
     Minor:
@@ -58,8 +56,6 @@ voting:
       min_normalized_score: 0.70
     Critical:
       min_normalized_score: 0.70
-    Unknown:
-      min_normalized_score: 0.60
 
 models:
   main:

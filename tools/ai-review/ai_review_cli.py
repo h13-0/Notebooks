@@ -23,25 +23,28 @@ import tempfile
 import textwrap
 import threading
 import time
-import urllib.error
-import urllib.request
 import zipfile
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any, Iterable
 
 from ai_review_lib.model_client import (
-    ModelClientError,
-    call_model,
     call_model_with_retry,
-    endpoint_for_provider,
 )
 from ai_review_lib.path_filter import configured_excludes, is_path_excluded
 
 
-SEVERITY_ORDER = ["Correct", "Enhance", "Minor", "Major", "Critical", "Unknown"]
-ISSUE_SEVERITIES = {"Enhance", "Minor", "Major", "Critical", "Unknown"}
-STATUS_DIRS = {"open": "Open", "closed": "Closed", "superseded": "Superseded", "unknown": "Unknown"}
+SEVERITY_ORDER = ["Enhance", "Minor", "Major", "Critical", "Unknown"]
+ISSUE_SEVERITIES = set(SEVERITY_ORDER)
+ISSUE_STATUS_DIRS = ["Open", "Closed", "PendingVote", "Rejected", "Superseded"]
+STATUS_DIRS = {
+    "open": "Open",
+    "closed": "Closed",
+    "pendingvote": "PendingVote",
+    "pending_vote": "PendingVote",
+    "rejected": "Rejected",
+    "superseded": "Superseded",
+}
 AI_BLOCK_RE = re.compile(
     r"(?ms)^<!-- ai-review:start unit=ru[0-9]{6} -->.*?^<!-- ai-review:end -->\s*"
 )
@@ -53,6 +56,14 @@ TAG_RE = re.compile(r"(?<!\w)#([\w\-\u4e00-\u9fff/]+)")
 USER_NOTES_RE = re.compile(
     r"(?ms)<!-- user-notes:start -->.*?<!-- user-notes:end -->"
 )
+MAINTENANCE_CONTRACT_FILES = [
+    "AI-Review/DESIGN.md",
+    "AI-Review/IMPLEMENTATION.md",
+    "AI-Review/MODEL_PROTOCOL.md",
+    "skills/ai-review/SKILL.md",
+    ".codex/skills/ai-review/SKILL.md",
+    "tools/ai-review/README.md",
+]
 
 
 class AiReviewError(RuntimeError):
@@ -173,7 +184,15 @@ def parse_simple_yaml(text: str) -> dict[str, Any]:
     root: dict[str, Any] = {}
     stack: list[tuple[int, Any]] = [(-1, root)]
     lines = text.splitlines()
-    for raw in lines:
+
+    def next_content_line(start: int) -> tuple[int, str] | None:
+        for next_raw in lines[start:]:
+            if not next_raw.strip() or next_raw.lstrip().startswith("#"):
+                continue
+            return len(next_raw) - len(next_raw.lstrip(" ")), next_raw.strip()
+        return None
+
+    for index, raw in enumerate(lines):
         if not raw.strip() or raw.lstrip().startswith("#"):
             continue
         indent = len(raw) - len(raw.lstrip(" "))
@@ -187,26 +206,31 @@ def parse_simple_yaml(text: str) -> dict[str, Any]:
                 raise AiReviewError("简易 YAML 解析失败：列表缩进不合法")
             if ":" in item_text and not item_text.startswith('"'):
                 key, val = item_text.split(":", 1)
-                item: dict[str, Any] = {key.strip(): parse_scalar(val)}
+                item: dict[str, Any] = {}
+                if val.strip():
+                    item[key.strip()] = parse_scalar(val)
+                else:
+                    next_line = next_content_line(index + 1)
+                    item[key.strip()] = [] if next_line and next_line[0] > indent and next_line[1].startswith("- ") else {}
                 parent.append(item)
                 stack.append((indent, item))
             else:
                 parent.append(parse_scalar(item_text))
             continue
+        if ":" not in line:
+            raise AiReviewError(f"简易 YAML 解析失败：缺少键值分隔符：{line}")
         key, val = line.split(":", 1)
         key = key.strip()
         val = val.strip()
+        if not isinstance(parent, dict):
+            raise AiReviewError("简易 YAML 解析失败：映射缩进不合法")
         if val == "":
-            next_container: Any = {}
+            next_line = next_content_line(index + 1)
+            next_container: Any = [] if next_line and next_line[0] > indent and next_line[1].startswith("- ") else {}
             parent[key] = next_container
             stack.append((indent, next_container))
         else:
             parent[key] = parse_scalar(val)
-        next_index = lines.index(raw) + 1
-        if val == "" and next_index < len(lines):
-            pass
-    # Convert empty dicts that are followed by list syntax is intentionally not
-    # attempted here. Current repository config is parsed by PyYAML in normal use.
     return root
 
 
@@ -220,9 +244,9 @@ def deep_get(data: dict[str, Any], path: str, default: Any = None) -> Any:
 
 
 def ensure_review_dirs(root: Path, review_dir: Path) -> None:
-    for rel in ["Open", "Closed", "Superseded", "Unknown", ".state", ".tmp", ".cache"]:
+    for rel in [*ISSUE_STATUS_DIRS, ".state", ".tmp", ".cache"]:
         (review_dir / rel).mkdir(parents=True, exist_ok=True)
-    for rel in ["Open/.gitkeep", "Closed/.gitkeep", "Superseded/.gitkeep", "Unknown/.gitkeep"]:
+    for rel in [f"{status}/.gitkeep" for status in ISSUE_STATUS_DIRS]:
         p = review_dir / rel
         if not p.exists():
             p.write_text("", encoding="utf-8")
@@ -248,11 +272,9 @@ class ReviewUnit:
 
 
 @dataclasses.dataclass
-class Vote:
+class Finding:
+    finding_id: str
     unit_id: str
-    model_id: str
-    model_role: str
-    result: str
     severity: str
     confidence: float
     title: str
@@ -262,71 +284,103 @@ class Vote:
     suggested_fix: str
     requires_multimodal: bool
     context_used: list[str]
-    relation_to_previous_issue: str
     external_sources: list[str]
-    weight: float
-    display_name: str
 
     @classmethod
-    def from_json(cls, payload: dict[str, Any], model: dict[str, Any], unit_id: str) -> "Vote":
+    def from_json(cls, payload: dict[str, Any], unit_id: str, index: int) -> "Finding":
         severity = str(payload.get("severity") or "Unknown")
         if severity not in SEVERITY_ORDER:
             severity = "Unknown"
-        result = str(payload.get("result") or ("correct" if severity == "Correct" else "issue")).lower()
-        if result not in {"correct", "issue", "unknown"}:
-            result = "unknown"
-        confidence = payload.get("confidence", 0.0)
-        try:
-            confidence = max(0.0, min(1.0, float(confidence)))
-        except Exception:
-            confidence = 0.0
-        topic = payload.get("topic") or []
-        if isinstance(topic, str):
-            topic = [topic]
-        evidence = payload.get("evidence") or []
-        if isinstance(evidence, str):
-            evidence = [evidence]
-        context_used = payload.get("context_used") or ["current_unit"]
-        if isinstance(context_used, str):
-            context_used = [context_used]
-        external_sources = payload.get("external_sources") or []
-        if isinstance(external_sources, str):
-            external_sources = [external_sources]
+        confidence = clamp_confidence(payload.get("confidence", 0.0))
+        topic = as_string_list(payload.get("topic"))[:8]
+        evidence = as_string_list(payload.get("evidence"))[:8]
+        context_used = as_string_list(payload.get("context_used")) or ["current_unit"]
+        external_sources = as_string_list(payload.get("external_sources"))[:12]
+        finding_id = str(payload.get("finding_id") or f"{unit_id}-f{index:03d}")
         return cls(
+            finding_id=finding_id,
             unit_id=str(payload.get("unit_id") or unit_id),
-            model_id=str(payload.get("model_id") or model.get("id") or "unknown-model"),
-            model_role=str(payload.get("model_role") or model.get("role") or "voter"),
-            result=result,
             severity=severity,
             confidence=confidence,
-            title=str(payload.get("title") or ""),
-            topic=[str(x) for x in topic][:8],
+            title=str(payload.get("title") or "未命名问题"),
+            topic=topic or ["未分类"],
             summary=str(payload.get("summary") or ""),
-            evidence=[str(x) for x in evidence][:8],
+            evidence=evidence,
             suggested_fix=str(payload.get("suggested_fix") or ""),
             requires_multimodal=bool(payload.get("requires_multimodal", False)),
             context_used=[str(x) for x in context_used],
-            relation_to_previous_issue=str(payload.get("relation_to_previous_issue") or "not_applicable"),
-            external_sources=[str(x) for x in external_sources][:12],
-            weight=float(model.get("weight", 1)),
-            display_name=str(model.get("display_name") or model.get("id") or payload.get("model_id") or "unknown-model"),
+            external_sources=external_sources,
         )
 
 
 @dataclasses.dataclass
-class AggregateResult:
-    severity: str
-    result: str
-    score_by_severity: dict[str, float]
-    normalized_score_by_severity: dict[str, float]
-    votes: list[Vote]
-    title: str
-    topic: list[str]
-    summary: str
+class FindingVote:
+    finding_id: str
+    model_id: str
+    model_role: str
+    display_name: str
+    decision: str
+    confidence: float
+    weight: float
+    score: float
+    rationale: str
     evidence: list[str]
-    suggested_fix: str
-    requires_multimodal: bool
     external_sources: list[str]
+
+    @classmethod
+    def from_json(cls, payload: dict[str, Any], model: dict[str, Any]) -> "FindingVote":
+        decision = str(payload.get("decision") or "skip").lower()
+        if decision not in {"support", "oppose", "skip"}:
+            decision = "skip"
+        confidence = clamp_confidence(payload.get("confidence", 0.0))
+        weight = float(model.get("weight", 1))
+        sign = 1 if decision == "support" else (-1 if decision == "oppose" else 0)
+        return cls(
+            finding_id=str(payload.get("finding_id") or ""),
+            model_id=str(payload.get("model_id") or model.get("id") or "unknown-model"),
+            model_role=str(payload.get("model_role") or model.get("role") or "voter"),
+            display_name=str(model.get("display_name") or model.get("id") or payload.get("model_id") or "unknown-model"),
+            decision=decision,
+            confidence=confidence,
+            weight=weight,
+            score=sign * weight * confidence,
+            rationale=str(payload.get("rationale") or ""),
+            evidence=as_string_list(payload.get("evidence"))[:8],
+            external_sources=as_string_list(payload.get("external_sources"))[:12],
+        )
+
+
+@dataclasses.dataclass
+class FindingAggregate:
+    finding: Finding
+    status: str
+    score: float
+    score_threshold: float
+    missing_vote_ratio: float
+    support_votes: list[FindingVote]
+    oppose_votes: list[FindingVote]
+    skip_votes: list[FindingVote]
+    missing_models: list[str]
+    failed_models: list[str]
+    eligible_models: list[str]
+    all_votes: list[FindingVote]
+
+
+def clamp_confidence(value: Any) -> float:
+    try:
+        return max(0.0, min(1.0, float(value)))
+    except Exception:
+        return 0.0
+
+
+def as_string_list(value: Any) -> list[str]:
+    if value is None:
+        return []
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, list):
+        return [str(x) for x in value]
+    return [str(value)]
 
 
 def normalize_unit_text(text: str) -> str:
@@ -643,7 +697,7 @@ def build_prompt(unit: ReviewUnit, context_notes: list[str]) -> str:
     heading = " > ".join(unit.heading_path)
     return textwrap.dedent(
         f"""
-        你是 AI Review 投票模型。请只返回符合协议的 JSON，不要输出 Markdown。
+        你是 AI Review 主模型。请只返回符合协议的 JSON，不要输出 Markdown。
 
         审查目标：
         - unit_id: {unit.unit_id}
@@ -654,11 +708,14 @@ def build_prompt(unit: ReviewUnit, context_notes: list[str]) -> str:
         要求：
         - 自然语言字段必须以简体中文为主。
         - 只审查当前 ReviewUnit，不要直接改写原文。
-        - severity 只能是 Correct/Enhance/Minor/Major/Critical/Unknown。
+        - 输出必须包含 findings 数组；一个段落有多个独立问题时必须输出多个 finding。
+        - 如果没有发现问题，findings 必须是空数组。
+        - 每个 finding 的 finding_id 建议使用 {unit.unit_id}-f001、{unit.unit_id}-f002。
+        - severity 只能是 Enhance/Minor/Major/Critical/Unknown。
         - topic 只用于 issue 和 Dashboard。
-        - 如果依赖图片且无法判断，返回 Unknown。
+        - 如果依赖图片或多模态内容，finding.requires_multimodal 必须为 true。
         - 如果当前知识不足、事实可能过时，或需要核验权威资料，host-current 主模型必须联网查询。
-        - 联网查询时必须在 JSON 中增加 external_sources，列出 URL 或可追溯来源；summary/evidence 应明确哪些判断来自外部资料。
+        - 联网查询时必须在 finding.external_sources 中列出 URL 或可追溯来源；summary/evidence 应明确哪些判断来自外部资料。
 
         附加上下文：
         {json.dumps(context_notes, ensure_ascii=False)}
@@ -669,195 +726,6 @@ def build_prompt(unit: ReviewUnit, context_notes: list[str]) -> str:
         ```
         """
     ).strip()
-
-
-def load_host_votes(path: str | None) -> dict[str, dict[str, Any]]:
-    raw = os.environ.get("AI_REVIEW_HOST_CURRENT_VOTES_JSON", "")
-    if path:
-        vote_path = Path(path)
-        if not vote_path.exists():
-            raise AiReviewError(f"host-current 投票文件不存在：{path}")
-        raw = load_text(vote_path)
-    if not raw:
-        return {}
-    data = json.loads(raw)
-    if isinstance(data, list):
-        return {str(item.get("unit_id")): item for item in data if isinstance(item, dict)}
-    if isinstance(data, dict) and "unit_id" in data:
-        return {str(data.get("unit_id")): data}
-    if isinstance(data, dict):
-        return {str(k): v for k, v in data.items() if isinstance(v, dict)}
-    raise AiReviewError("host-current 投票 JSON 必须是对象、数组或 unit_id 映射。")
-
-
-def collect_votes(
-    unit: ReviewUnit,
-    config: dict[str, Any],
-    secrets: dict[str, Any],
-    args: argparse.Namespace,
-    context_notes: list[str],
-    host_votes: dict[str, dict[str, Any]],
-    warning_keys: set[str],
-) -> list[Vote]:
-    votes: list[Vote] = []
-    if getattr(args, "no_external", False):
-        payload = host_votes.get(unit.unit_id)
-        main = dict(deep_get(config, "models.main", {}) or {})
-        if payload:
-            return [Vote.from_json(payload, {**main, "role": "main"}, unit.unit_id)]
-        return []
-    main = dict(deep_get(config, "models.main", {}) or {})
-    main_mode = args.main or main.get("mode") or "host-current"
-    if main_mode == "host-current" and main.get("vote_enabled", True):
-        payload = host_votes.get(unit.unit_id)
-        if payload:
-            votes.append(Vote.from_json(payload, {**main, "role": "main"}, unit.unit_id))
-        else:
-            key = "host-current-missing"
-            if key not in warning_keys:
-                warning_keys.add(key)
-                print_warning("host-current 主模型投票未注入；独立 CLI 无法直接读取当前 Codex/Cursor 模型。")
-    elif main_mode == "configured":
-        model = dict(deep_get(config, "models.configured_main", {}) or {})
-        model.setdefault("role", "main")
-        if model.get("vote_enabled", True):
-            try:
-                payload = call_model(
-                    model,
-                    secrets,
-                    build_prompt(unit, context_notes),
-                    int(deep_get(config, "runtime.request_timeout_sec", 120)),
-                    stream=bool(deep_get(config, "runtime.stream", False)),
-                    stream_total_timeout=int(deep_get(config, "runtime.stream_total_timeout_sec", 240)),
-                )
-                votes.append(Vote.from_json(payload, model, unit.unit_id))
-            except Exception as exc:
-                warn_once(warning_keys, f"main:{model.get('id')}", f"主模型 `{model.get('id')}` 调用失败：{exc}")
-    elif main_mode == "none":
-        pass
-    else:
-        raise AiReviewError(f"不支持的主模型模式：{main_mode}")
-
-    voter_jobs: list[dict[str, Any]] = []
-    for model in deep_get(config, "models.voters", []) or []:
-        if not model.get("vote_enabled", True):
-            continue
-        if unit.requires_multimodal and not model.get("multimodal", False):
-            warn_once(warning_keys, f"multimodal:{model.get('id')}", f"模型 `{model.get('id')}` 不支持多模态，跳过依赖图片的 ReviewUnit。")
-            continue
-        voter_jobs.append(model)
-    timeout = int(deep_get(config, "runtime.request_timeout_sec", 120))
-    if getattr(args, "model_timeout", None):
-        timeout = int(args.model_timeout)
-    max_workers = max(1, int(deep_get(config, "runtime.max_concurrency", 3)))
-    retry = max(0, int(deep_get(config, "runtime.retry", 0)))
-    if getattr(args, "model_retry", None) is not None:
-        retry = max(0, int(args.model_retry))
-    prompt = build_prompt(unit, context_notes)
-    stream = bool(deep_get(config, "runtime.stream", False))
-    stream_total_timeout = int(deep_get(config, "runtime.stream_total_timeout_sec", 240))
-    if getattr(args, "stream_total_timeout", None):
-        stream_total_timeout = int(args.stream_total_timeout)
-    for model in voter_jobs:
-        print_info(f"{unit.unit_id} 调用外部 voter `{model.get('id')}`，timeout={timeout}s，retry={retry}，stream={stream}，stream_total_timeout={stream_total_timeout}s")
-    with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        futures = {
-            executor.submit(call_model_with_retry, model, secrets, prompt, timeout, retry, stream=stream, stream_total_timeout=stream_total_timeout): model
-            for model in voter_jobs
-        }
-        for future in as_completed(futures):
-            model = futures[future]
-            try:
-                payload = future.result()
-                votes.append(Vote.from_json(payload, model, unit.unit_id))
-            except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, AiReviewError, ModelClientError) as exc:
-                warn_once(warning_keys, f"voter:{model.get('id')}:{type(exc).__name__}", f"voter `{model.get('id')}` 调用失败：{exc}")
-            except Exception as exc:
-                warn_once(warning_keys, f"voter:{model.get('id')}:unknown", f"voter `{model.get('id')}` 调用异常：{exc}")
-    return votes
-
-
-def warn_once(keys: set[str], key: str, message: str) -> None:
-    if key not in keys:
-        keys.add(key)
-        print_warning(message)
-
-
-def aggregate_votes(votes: list[Vote], config: dict[str, Any]) -> AggregateResult:
-    # 中文说明：主模型和 voter 在这里完全等价，统一按
-    # `模型权重 × 置信度` 累加，避免 host-current 在聚合阶段隐式覆盖。
-    total_weight = sum(v.weight for v in votes) or 1.0
-    scores = {sev: 0.0 for sev in SEVERITY_ORDER}
-    for vote in votes:
-        scores[vote.severity] = scores.get(vote.severity, 0.0) + vote.weight * vote.confidence
-    normalized = {sev: score / total_weight for sev, score in scores.items()}
-    thresholds = deep_get(config, "voting.severity_thresholds", {}) or {}
-    candidates = []
-    for sev in SEVERITY_ORDER:
-        threshold = float(deep_get({"x": thresholds}, f"x.{sev}.min_normalized_score", 0.0))
-        if normalized.get(sev, 0.0) >= threshold:
-            candidates.append((scores.get(sev, 0.0), SEVERITY_ORDER.index(sev), sev))
-    if candidates:
-        candidates.sort(reverse=True)
-        severity = candidates[0][2]
-    else:
-        severity = str(deep_get(config, "voting.fallback_when_no_threshold_matched", "Unknown"))
-    if severity not in SEVERITY_ORDER:
-        severity = "Unknown"
-    result = "correct" if severity == "Correct" else ("unknown" if severity == "Unknown" else "issue")
-    issue_votes = [v for v in votes if v.severity == severity] or votes
-    title = next((v.title for v in issue_votes if v.title), "")
-    summary = next((v.summary for v in issue_votes if v.summary), "未发现可用模型投票；按配置标记为 Unknown。")
-    suggested_fix = next((v.suggested_fix for v in issue_votes if v.suggested_fix), "")
-    topic: list[str] = []
-    evidence: list[str] = []
-    external_sources: list[str] = []
-    for vote in issue_votes:
-        for item in vote.topic:
-            if item and item not in topic:
-                topic.append(item)
-        for item in vote.evidence:
-            if item and item not in evidence:
-                evidence.append(item)
-        for item in vote.external_sources:
-            if item and item not in external_sources:
-                external_sources.append(item)
-    return AggregateResult(
-        severity=severity,
-        result=result,
-        score_by_severity=scores,
-        normalized_score_by_severity=normalized,
-        votes=votes,
-        title=title or ("无法判断" if severity == "Unknown" else "未命名问题"),
-        topic=topic[:8] or ["未分类"],
-        summary=summary,
-        evidence=evidence[:8],
-        suggested_fix=suggested_fix,
-        requires_multimodal=any(v.requires_multimodal for v in votes),
-        external_sources=external_sources[:12],
-    )
-
-
-def fallback_unknown_vote(unit: ReviewUnit, reason: str) -> Vote:
-    return Vote(
-        unit_id=unit.unit_id,
-        model_id="ai-review-cli",
-        model_role="voter",
-        result="unknown",
-        severity="Unknown",
-        confidence=0.8,
-        title="没有可用模型完成审查",
-        topic=["模型不可用"],
-        summary=reason,
-        evidence=[],
-        suggested_fix="请配置可用模型或从支持 host-current 的宿主入口重新运行。",
-        requires_multimodal=unit.requires_multimodal,
-        context_used=["current_unit"],
-        relation_to_previous_issue="not_applicable",
-        external_sources=[],
-        weight=1.0,
-        display_name="AI Review CLI",
-    )
 
 
 def next_issue_id(issue_ledger: dict[str, Any]) -> str:
@@ -874,8 +742,8 @@ def source_block_ref(unit: ReviewUnit) -> str:
     return f"[[{unit.rel_path}#^{unit.unit_id}]]"
 
 
-def issue_path(review_dir: Path, issue_id: str, severity: str, title: str) -> Path:
-    status_dir = "Unknown" if severity == "Unknown" else "Open"
+def issue_path(review_dir: Path, issue_id: str, status: str, severity: str, title: str) -> Path:
+    status_dir = STATUS_DIRS.get(status.lower(), status)
     return review_dir / status_dir / f"{issue_id}-{severity}-{slugify_title(title)}.md"
 
 
@@ -910,31 +778,44 @@ def yaml_list(items: list[str], indent: int = 2) -> str:
     return "\n".join(f"{pad}- {json.dumps(item, ensure_ascii=False)}" for item in items)
 
 
-def render_issue(unit: ReviewUnit, issue_id: str, aggregate: AggregateResult, issue_file: Path, root: Path) -> str:
+def render_issue(unit: ReviewUnit, issue_id: str, aggregate: FindingAggregate, issue_file: Path, root: Path) -> str:
     today = now_date()
     head = git_head(root)
-    status = "unknown" if aggregate.severity == "Unknown" else "open"
-    topic_yaml = yaml_list(aggregate.topic, 2)
+    finding = aggregate.finding
+    status = aggregate.status.lower()
+    topic_yaml = yaml_list(finding.topic, 2)
     heading_yaml = yaml_list(unit.heading_path, 2)
-    models_supported = [v.model_id for v in aggregate.votes]
-    models_yaml = yaml_list(models_supported, 2)
+    models_supported = [v.model_id for v in aggregate.support_votes]
+    models_disagreed = [v.model_id for v in aggregate.oppose_votes]
+    models_skipped = [v.model_id for v in aggregate.skip_votes]
+    models_missing = [*aggregate.missing_models, *aggregate.failed_models]
     votes_rows = []
-    for v in aggregate.votes:
-        conclusion = {"correct": "正确", "issue": "有问题", "unknown": "无法判断"}.get(v.result, v.result)
+    for v in aggregate.all_votes:
         votes_rows.append(
-            f"| {v.display_name} | {v.model_role} | {conclusion} | {v.severity} | {v.confidence:.2f} | {v.weight:g} | {v.confidence * v.weight:.2f} |"
+            f"| {v.display_name} | {v.model_role} | {v.decision} | {v.confidence:.2f} | {v.weight:g} | {v.score:.2f} | {v.rationale or '暂无。'} |"
         )
-    evidence = "\n".join(f"- {x}" for x in aggregate.evidence) if aggregate.evidence else "暂无。"
-    external_sources = "\n".join(f"- {x}" for x in aggregate.external_sources) if aggregate.external_sources else "暂无。"
-    suggested = aggregate.suggested_fix or "暂无；AI Review 不直接修改原文正文。"
+    evidence_items = list(finding.evidence)
+    for vote in aggregate.all_votes:
+        for item in vote.evidence:
+            if item and item not in evidence_items:
+                evidence_items.append(item)
+    external_source_items = list(finding.external_sources)
+    for vote in aggregate.all_votes:
+        for item in vote.external_sources:
+            if item and item not in external_source_items:
+                external_source_items.append(item)
+    evidence = "\n".join(f"- {x}" for x in evidence_items) if evidence_items else "暂无。"
+    external_sources = "\n".join(f"- {x}" for x in external_source_items) if external_source_items else "暂无。"
+    suggested = finding.suggested_fix or "暂无；AI Review 不直接修改原文正文。"
     return textwrap.dedent(
         f"""\
         ---
         id: {issue_id}
         status: {status}
-        severity: {aggregate.severity}
+        severity: {finding.severity}
         source_file: {json.dumps(unit.rel_path, ensure_ascii=False)}
         source_unit_id: {json.dumps(unit.unit_id, ensure_ascii=False)}
+        source_finding_id: {json.dumps(finding.finding_id, ensure_ascii=False)}
         source_block_ref: {json.dumps(source_block_ref(unit), ensure_ascii=False)}
         source_heading_path:
         {heading_yaml}
@@ -946,13 +827,21 @@ def render_issue(unit: ReviewUnit, issue_id: str, aggregate: AggregateResult, is
         updated_git_hash: {json.dumps(head)}
         content_hash: {json.dumps(unit.content_hash)}
         models_supported:
-        {models_yaml}
-        models_disagreed: []
+        {yaml_list(models_supported, 2)}
+        models_disagreed:
+        {yaml_list(models_disagreed, 2)}
+        models_skipped:
+        {yaml_list(models_skipped, 2)}
+        models_missing:
+        {yaml_list(models_missing, 2)}
+        score: {aggregate.score:.4f}
+        score_threshold: {aggregate.score_threshold:.4f}
+        missing_vote_ratio: {aggregate.missing_vote_ratio:.4f}
         tags:
           - AI-Review
         ---
 
-        # {aggregate.title} ^{issue_id}
+        # {finding.title} ^{issue_id}
 
         #AI-Review
 
@@ -962,21 +851,31 @@ def render_issue(unit: ReviewUnit, issue_id: str, aggregate: AggregateResult, is
 
         ## 问题等级
 
-        {aggregate.severity}
+        {finding.severity}
 
         ## Topic
 
-        {chr(10).join(f"- {x}" for x in aggregate.topic)}
+        {chr(10).join(f"- {x}" for x in finding.topic)}
 
         ## 问题摘要
 
-        {aggregate.summary}
+        {finding.summary}
 
         ## 模型投票
 
-        | 模型 | 角色 | 结论 | 等级 | 置信度 | 权重 | 加权得分 |
-        |---|---|---|---|---:|---:|---:|
-        {chr(10).join(votes_rows) if votes_rows else "| 无 | - | 无可用投票 | Unknown | 0.00 | 0 | 0.00 |"}
+        | 模型 | 角色 | 决策 | 置信度 | 权重 | 分数 | 理由 |
+        |---|---|---|---:|---:|---:|---|
+        {chr(10).join(votes_rows) if votes_rows else "| 无 | - | skip | 0.00 | 0 | 0.00 | 无可用投票 |"}
+
+        ## 投票汇总
+
+        - 支持模型：{", ".join(models_supported) if models_supported else "无"}
+        - 反对模型：{", ".join(models_disagreed) if models_disagreed else "无"}
+        - 跳过模型：{", ".join(models_skipped) if models_skipped else "无"}
+        - 缺失/失败模型：{", ".join(models_missing) if models_missing else "无"}
+        - 总分：{aggregate.score:.2f}
+        - 合入阈值：{aggregate.score_threshold:.2f}
+        - 缺失/失败比例：{aggregate.missing_vote_ratio:.2f}
 
         ## 具体问题
 
@@ -1003,22 +902,15 @@ def render_issue(unit: ReviewUnit, issue_id: str, aggregate: AggregateResult, is
     )
 
 
-def render_ai_block(unit: ReviewUnit, aggregate: AggregateResult, issues: list[tuple[str, Path]], model_names: list[str]) -> str:
-    callout = {
-        "Correct": "success",
-        "Enhance": "tip",
-        "Minor": "attention",
-        "Major": "bug",
-        "Critical": "danger",
-        "Unknown": "question",
-    }.get(aggregate.severity, "question")
+def render_ai_block(unit: ReviewUnit, issues: list[tuple[str, Path]], model_names: list[str]) -> str:
+    callout = "bug" if issues else "success"
     lines = [f"<!-- ai-review:start unit={unit.unit_id} -->", f"> [!{callout}]- AI Review `{unit.unit_id}`"]
-    if aggregate.severity == "Correct":
-        lines.append("> - [[AI-Review/Dashboard|Dashboard]]")
-    else:
+    if issues:
         for issue_id, path in issues:
             link = path.with_suffix("").as_posix()
             lines.append(f"> - [ ] [[{link}|{issue_id}]]")
+    else:
+        lines.append("> - [[AI-Review/Dashboard|Dashboard]]")
     names = "/".join(model_names) if model_names else "无可用模型"
     lines.append(f"> `{now_date()}` · {names}")
     lines.append(f"^{unit.unit_id}")
@@ -1062,14 +954,12 @@ def replace_identity_blocks_for_file(path: Path, units: list[ReviewUnit]) -> tup
     return "\n".join(out).rstrip() + "\n", created
 
 
-def replace_ai_blocks_for_file(path: Path, units: list[ReviewUnit], aggregates: dict[str, AggregateResult], issue_links: dict[str, list[tuple[str, Path]]]) -> str:
+def replace_ai_blocks_for_file(path: Path, units: list[ReviewUnit], aggregates: dict[str, Any], issue_links: dict[str, list[tuple[str, Path]]]) -> str:
     text = AI_BLOCK_RE.sub("", load_text(path)).rstrip() + "\n"
     lines = text.splitlines()
     inserts: dict[int, str] = {}
     for unit in units:
-        aggregate = aggregates[unit.unit_id]
-        model_names = [v.display_name for v in aggregate.votes]
-        inserts[unit.end_line] = render_ai_block(unit, aggregate, issue_links.get(unit.unit_id, []), model_names)
+        inserts[unit.end_line] = render_ai_block(unit, issue_links.get(unit.unit_id, []), [])
     out: list[str] = []
     for idx, line in enumerate(lines, start=1):
         out.append(line)
@@ -1097,7 +987,7 @@ def parse_frontmatter(text: str) -> dict[str, str]:
 
 def collect_issues(review_dir: Path) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
-    for status_dir in ["Open", "Closed", "Superseded", "Unknown"]:
+    for status_dir in ISSUE_STATUS_DIRS:
         for path in (review_dir / status_dir).glob("*.md"):
             text = load_text(path)
             meta = parse_frontmatter(text)
@@ -1112,6 +1002,7 @@ def collect_issues(review_dir: Path) -> list[dict[str, Any]]:
                     "severity": meta.get("severity", "Unknown"),
                     "source_file": meta.get("source_file", ""),
                     "source_unit_id": meta.get("source_unit_id", ""),
+                    "source_finding_id": meta.get("source_finding_id", ""),
                     "title": re.search(r"^# (.+?)(?: \^ar[0-9a-f]+)?$", text, re.M).group(1)
                     if re.search(r"^# (.+?)(?: \^ar[0-9a-f]+)?$", text, re.M)
                     else path.stem,
@@ -1123,10 +1014,10 @@ def collect_issues(review_dir: Path) -> list[dict[str, Any]]:
 
 def render_dashboard(review_dir: Path, top_n: int) -> str:
     issues = collect_issues(review_dir)
-    counts = {status: 0 for status in ["Open", "Closed", "Superseded", "Unknown"]}
+    counts = {status: 0 for status in ISSUE_STATUS_DIRS}
     for item in issues:
         counts[item["status"]] += 1
-    open_like = [x for x in issues if x["status"] in {"Open", "Unknown"}]
+    open_like = [x for x in issues if x["status"] in {"Open", "PendingVote"}]
     sev_rank = {"Critical": 5, "Major": 4, "Minor": 3, "Enhance": 2, "Unknown": 1, "Correct": 0}
     open_like.sort(key=lambda x: (sev_rank.get(x["severity"], 0), x["id"]), reverse=True)
     top_lines = []
@@ -1140,10 +1031,10 @@ def render_dashboard(review_dir: Path, top_n: int) -> str:
     topic_lines = []
     for topic, vals in sorted(topic_map.items(), key=lambda kv: (-len(kv[1]), kv[0])):
         topic_lines.append(f"- {topic}：{len(vals)}")
-    unknown_lines = []
-    for item in [x for x in issues if x["status"] == "Unknown"][:top_n]:
+    pending_lines = []
+    for item in [x for x in issues if x["status"] == "PendingVote"][:top_n]:
         link = item["path"].with_suffix("").as_posix()
-        unknown_lines.append(f"- [[{link}|{item['id']}]] · {item['title']}")
+        pending_lines.append(f"- [[{link}|{item['id']}]] · {item['title']}")
     return textwrap.dedent(
         f"""\
         # AI Review Dashboard
@@ -1158,8 +1049,9 @@ def render_dashboard(review_dir: Path, top_n: int) -> str:
         |---|---:|
         | Open | {counts['Open']} |
         | Closed | {counts['Closed']} |
+        | PendingVote | {counts['PendingVote']} |
+        | Rejected | {counts['Rejected']} |
         | Superseded | {counts['Superseded']} |
-        | Unknown | {counts['Unknown']} |
 
         ## 当前最重要问题 Top N
 
@@ -1173,9 +1065,9 @@ def render_dashboard(review_dir: Path, top_n: int) -> str:
 
         暂无。
 
-        ## Unknown / 需要人工确认
+        ## PendingVote / 待投票
 
-        {chr(10).join(unknown_lines) if unknown_lines else "暂无。"}
+        {chr(10).join(pending_lines) if pending_lines else "暂无。"}
         """
     )
 
@@ -1415,6 +1307,92 @@ def normalize_task_payload(unit_payload: dict[str, Any]) -> dict[str, Any]:
     return task
 
 
+def normalize_findings(payload: dict[str, Any], task: dict[str, Any]) -> list[Finding]:
+    findings_raw = payload.get("findings") or []
+    if not isinstance(findings_raw, list):
+        raise AiReviewError(f"host-current vote 的 findings 必须是数组：{task['task_id']}")
+    findings: list[Finding] = []
+    for index, item in enumerate(findings_raw, start=1):
+        if isinstance(item, dict):
+            findings.append(Finding.from_json(item, str(task["task_id"]), index))
+    return findings
+
+
+def host_vote_path(votes_dir: Path, task_id: str) -> Path:
+    return vote_path(votes_dir, "host-current", task_id)
+
+
+def load_host_findings(votes_dir: Path, task: dict[str, Any]) -> list[Finding]:
+    path = host_vote_path(votes_dir, str(task["task_id"]))
+    if not path.exists():
+        return []
+    payload = load_json(path, {})
+    if payload.get("task_hash") != task.get("task_hash"):
+        return []
+    return normalize_findings(payload, task)
+
+
+def model_can_vote_finding(model: dict[str, Any], finding: Finding) -> bool:
+    return not finding.requires_multimodal or bool(model.get("multimodal", False)) or str(model.get("id")) == "host-current"
+
+
+def build_voter_prompt(task: dict[str, Any], findings: list[Finding]) -> str:
+    findings_payload = [
+        {
+            "finding_id": finding.finding_id,
+            "severity": finding.severity,
+            "title": finding.title,
+            "summary": finding.summary,
+            "evidence": finding.evidence,
+            "suggested_fix": finding.suggested_fix,
+            "requires_multimodal": finding.requires_multimodal,
+            "topic": finding.topic,
+            "external_sources": finding.external_sources,
+        }
+        for finding in findings
+    ]
+    return textwrap.dedent(
+        f"""
+        你是 AI Review 外部 voter。请只返回符合协议的 JSON，不要输出 Markdown。
+
+        任务：
+        - task_id: {task['task_id']}
+        - unit_id: {task['unit_id']}
+        - task_hash: {task['task_hash']}
+        - source_file: {task.get('source_file')}
+
+        要求：
+        - 只对给定 findings 投票，不要把新问题加入本轮 votes。
+        - 每个 finding 必须返回一票，decision 只能是 support/oppose/skip。
+        - support 表示支持该 bug 成立；oppose 表示反对该 bug 成立；skip 表示无投票权或无法判断。
+        - confidence 必须是 0 到 1。
+        - 自然语言字段必须以简体中文为主。
+
+        输出格式：
+        {{
+          "task_id": "{task['task_id']}",
+          "unit_id": "{task['unit_id']}",
+          "task_hash": "{task['task_hash']}",
+          "votes": [
+            {{"finding_id": "...", "decision": "support", "confidence": 0.8, "rationale": "...", "evidence": [], "external_sources": []}}
+          ],
+          "new_findings_suggestion": []
+        }}
+
+        候选 findings：
+        {json.dumps(findings_payload, ensure_ascii=False, indent=2)}
+
+        附加上下文：
+        {json.dumps(task.get("prepared_context") or task.get("context_notes") or [], ensure_ascii=False, indent=2)}
+
+        ReviewUnit 原文：
+        ```markdown
+        {task.get("content") or ""}
+        ```
+        """
+    ).strip()
+
+
 def normalize_vote_payload(payload: dict[str, Any], model: dict[str, Any], task: dict[str, Any]) -> dict[str, Any]:
     vote = dict(payload)
     vote["version"] = vote.get("version", 1)
@@ -1424,6 +1402,19 @@ def normalize_vote_payload(payload: dict[str, Any], model: dict[str, Any], task:
     vote["content_hash"] = vote["task_hash"]
     vote["model_id"] = vote.get("model_id") or model.get("id")
     vote["model_role"] = vote.get("model_role") or "reviewer"
+    normalized_votes = []
+    raw_votes = vote.get("votes") or []
+    if isinstance(raw_votes, dict):
+        raw_votes = [raw_votes]
+    if isinstance(raw_votes, list):
+        for item in raw_votes:
+            if not isinstance(item, dict):
+                continue
+            item = dict(item)
+            item["model_id"] = vote["model_id"]
+            item["model_role"] = vote["model_role"]
+            normalized_votes.append(dataclasses.asdict(FindingVote.from_json(item, model)))
+    vote["votes"] = normalized_votes
     vote["created_at"] = vote.get("created_at") or _dt.datetime.now().isoformat()
     return vote
 
@@ -1432,7 +1423,122 @@ def reviewer_models(config: dict[str, Any], args: argparse.Namespace) -> list[di
     voters = [dict(x) for x in deep_get(config, "models.voters", []) or [] if x.get("vote_enabled", True)]
     if getattr(args, "model", None):
         voters = [x for x in voters if x.get("id") == args.model]
+    voters = [x for x in voters if str(x.get("id")) != "host-current"]
     return voters
+
+
+def validate_task_sources(root: Path, review_dir: Path, tasks: list[dict[str, Any]]) -> None:
+    unit_ledger = load_json(review_dir / ".state" / "review-unit-ledger.json", {"version": 1, "next_unit_id": 1, "units": {}})
+    units_by_file: dict[Path, dict[str, ReviewUnit]] = {}
+    for task in tasks:
+        source_file = root / str(task.get("source_file") or "")
+        if not source_file.exists():
+            raise AiReviewError(f"task 源文件不存在：{task.get('source_file')}")
+        if source_file not in units_by_file:
+            units_by_file[source_file] = {unit.unit_id: unit for unit in split_units(source_file, root, unit_ledger)}
+        unit = units_by_file[source_file].get(str(task.get("task_id")))
+        if not unit:
+            raise AiReviewError(f"task 对应 ReviewUnit 不存在：{task.get('task_id')}")
+        blocks = existing_ai_blocks_by_unit(load_text(source_file))
+        if unit.unit_id not in blocks:
+            raise AiReviewError(f"源文件缺少 identity 块：{task.get('source_file')} -> {unit.unit_id}")
+        if unit.content_hash != task.get("task_hash"):
+            raise AiReviewError(f"task 已过期：{task.get('task_id')} 当前 hash={unit.content_hash} task_hash={task.get('task_hash')}")
+
+
+def configured_model_map(config: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    models = {str(m.get("id")): dict(m) for m in deep_get(config, "models.voters", []) or [] if m.get("vote_enabled", True)}
+    main = dict(deep_get(config, "models.main", {}) or {})
+    main.setdefault("id", "host-current")
+    main.setdefault("role", "main")
+    models[str(main.get("id"))] = main
+    return models
+
+
+def aggregate_finding(
+    finding: Finding,
+    task: dict[str, Any],
+    votes_dir: Path,
+    model_map: dict[str, dict[str, Any]],
+    config: dict[str, Any],
+) -> FindingAggregate:
+    main_model = model_map.get("host-current", {"id": "host-current", "role": "main", "weight": 1, "display_name": "host-current"})
+    main_vote = FindingVote(
+        finding_id=finding.finding_id,
+        model_id="host-current",
+        model_role="main",
+        display_name=str(main_model.get("display_name") or "host-current"),
+        decision="support",
+        confidence=finding.confidence,
+        weight=float(main_model.get("weight", 1)),
+        score=float(main_model.get("weight", 1)) * finding.confidence,
+        rationale="主模型提出该 finding。",
+        evidence=finding.evidence,
+        external_sources=finding.external_sources,
+    )
+    support_votes = [main_vote]
+    oppose_votes: list[FindingVote] = []
+    skip_votes: list[FindingVote] = []
+    missing_models: list[str] = []
+    failed_models: list[str] = []
+    eligible_models: list[str] = ["host-current"]
+
+    for model_id, model in sorted(model_map.items()):
+        if model_id == "host-current":
+            continue
+        if not model_can_vote_finding(model, finding):
+            continue
+        eligible_models.append(model_id)
+        path = vote_path(votes_dir, model_id, str(task["task_id"]))
+        if not path.exists():
+            missing_models.append(model_id)
+            continue
+        payload = load_json(path, {})
+        if payload.get("task_hash") != task.get("task_hash"):
+            missing_models.append(model_id)
+            continue
+        raw_votes = payload.get("votes") or []
+        if not isinstance(raw_votes, list):
+            failed_models.append(model_id)
+            continue
+        matched = next((item for item in raw_votes if isinstance(item, dict) and item.get("finding_id") == finding.finding_id), None)
+        if not matched:
+            missing_models.append(model_id)
+            continue
+        vote = FindingVote.from_json({**matched, "model_id": model_id, "model_role": model.get("role", "voter")}, model)
+        if vote.decision == "support":
+            support_votes.append(vote)
+        elif vote.decision == "oppose":
+            oppose_votes.append(vote)
+        else:
+            skip_votes.append(vote)
+
+    all_votes = [*support_votes, *oppose_votes, *skip_votes]
+    score = sum(v.score for v in all_votes)
+    eligible_count = max(len(eligible_models), 1)
+    missing_ratio = (len(missing_models) + len(failed_models)) / eligible_count
+    score_threshold = float(deep_get(config, "voting.issue_score_threshold", 3.0))
+    missing_threshold = float(deep_get(config, "voting.max_missing_vote_ratio", 0.5))
+    if missing_ratio > missing_threshold:
+        status = "PendingVote"
+    elif score >= score_threshold:
+        status = "Open"
+    else:
+        status = "Rejected"
+    return FindingAggregate(
+        finding=finding,
+        status=status,
+        score=score,
+        score_threshold=score_threshold,
+        missing_vote_ratio=missing_ratio,
+        support_votes=support_votes,
+        oppose_votes=oppose_votes,
+        skip_votes=skip_votes,
+        missing_models=missing_models,
+        failed_models=failed_models,
+        eligible_models=eligible_models,
+        all_votes=all_votes,
+    )
 
 
 def command_vote_tasks(args: argparse.Namespace) -> int:
@@ -1459,6 +1565,10 @@ def command_vote_tasks(args: argparse.Namespace) -> int:
         model_id = str(model.get("id"))
         for task in tasks:
             task = normalize_task_payload(task)
+            findings = load_host_findings(votes_dir, task)
+            if not findings:
+                print_warning(f"{task['task_id']} 缺少有效 host-current findings，外部 voter 跳过。")
+                continue
             out = vote_path(votes_dir, model_id, task["task_id"])
             old = load_json(out, None) if out.exists() else None
             if old and old.get("task_hash") == task.get("task_hash"):
@@ -1480,6 +1590,27 @@ def command_vote_tasks(args: argparse.Namespace) -> int:
         task_id = str(task["task_id"])
         key = f"{model_id}/{task_id}"
         board.update(key, status="running")
+        findings = load_host_findings(votes_dir, task)
+        eligible = [finding for finding in findings if model_can_vote_finding(model, finding)]
+        skip_votes = [
+            dataclasses.asdict(
+                FindingVote(
+                    finding_id=finding.finding_id,
+                    model_id=model_id,
+                    model_role=str(model.get("role") or "voter"),
+                    display_name=str(model.get("display_name") or model_id),
+                    decision="skip",
+                    confidence=1.0,
+                    weight=float(model.get("weight", 1)),
+                    score=0.0,
+                    rationale="该 finding 需要多模态能力，当前模型无投票权。",
+                    evidence=[],
+                    external_sources=[],
+                )
+            )
+            for finding in findings
+            if finding not in eligible
+        ]
 
         def progress(event: dict[str, Any]) -> None:
             if event.get("type") == "delta":
@@ -1491,17 +1622,24 @@ def command_vote_tasks(args: argparse.Namespace) -> int:
                 board.update(key, tokens=int(usage.get("total_tokens") or 0))
 
         with semaphores[model_id]:
-            payload = call_model_with_retry(
-                model,
-                secrets,
-                str(task.get("prompt") or ""),
-                timeout,
-                retry,
-                stream=stream,
-                stream_total_timeout=stream_total_timeout,
-                progress=progress,
-            )
-            vote = normalize_vote_payload(payload, model, task)
+            if eligible:
+                prompt_task = dict(task)
+                prompt_task["prompt"] = build_voter_prompt(task, eligible)
+                payload = call_model_with_retry(
+                    model,
+                    secrets,
+                    prompt_task["prompt"],
+                    timeout,
+                    retry,
+                    stream=stream,
+                    stream_total_timeout=stream_total_timeout,
+                    progress=progress,
+                )
+                vote = normalize_vote_payload(payload, model, task)
+            else:
+                vote = normalize_vote_payload({"votes": []}, model, task)
+            existing_ids = {item.get("finding_id") for item in vote.get("votes", [])}
+            vote["votes"].extend([item for item in skip_votes if item.get("finding_id") not in existing_ids])
             out = vote_path(votes_dir, model_id, task_id)
             out.parent.mkdir(parents=True, exist_ok=True)
             write_json_atomic(out, vote)
@@ -1544,26 +1682,29 @@ def command_merge_tasks(args: argparse.Namespace) -> int:
     tasks = [normalize_task_payload(load_json(p, {})) for p in sorted(tasks_dir.glob("*.json"))]
     if args.limit:
         tasks = tasks[: int(args.limit)]
-    model_map = {str(m.get("id")): dict(m) for m in deep_get(config, "models.voters", []) or []}
-    main = dict(deep_get(config, "models.main", {}) or {})
-    model_map[str(main.get("id", "host-current"))] = {**main, "role": "reviewer"}
-    aggregates: dict[str, AggregateResult] = {}
+    model_map = configured_model_map(config)
+    aggregates: dict[str, FindingAggregate] = {}
+    task_by_finding: dict[str, dict[str, Any]] = {}
     for task in tasks:
-        votes: list[Vote] = []
-        for path in votes_dir.glob(f"*/{task['task_id']}.json"):
-            payload = load_json(path, {})
-            if payload.get("task_hash") != task.get("task_hash"):
-                continue
-            model_id = str(payload.get("model_id") or path.parent.name)
-            model = model_map.get(model_id, {"id": model_id, "display_name": model_id, "weight": 1, "role": "reviewer"})
-            votes.append(Vote.from_json(payload, model, task["task_id"]))
-        if not votes:
-            print_warning(f"{task['task_id']} 没有有效 vote，跳过。")
+        findings = load_host_findings(votes_dir, task)
+        if not findings:
+            print_warning(f"{task['task_id']} 没有有效 host-current findings，跳过 merge。")
             continue
-        aggregates[task["task_id"]] = aggregate_votes(votes, config)
+        for finding in findings:
+            aggregate = aggregate_finding(finding, task, votes_dir, model_map, config)
+            aggregates[finding.finding_id] = aggregate
+            task_by_finding[finding.finding_id] = task
+            if aggregate.status == "PendingVote":
+                print_warning(
+                    f"{finding.finding_id} 缺失/失败投票比例 {aggregate.missing_vote_ratio:.2f} "
+                    f"超过阈值，进入 PendingVote。"
+                )
     print_info("merge 结果：")
-    for task_id, aggregate in aggregates.items():
-        print(f"- {task_id}: {aggregate.severity} · {aggregate.title} · votes={len(aggregate.votes)}")
+    for finding_id, aggregate in aggregates.items():
+        print(
+            f"- {finding_id}: {aggregate.status} · {aggregate.finding.severity} · "
+            f"{aggregate.finding.title} · score={aggregate.score:.2f} · votes={len(aggregate.all_votes)}"
+        )
     if args.dry_run or not args.apply:
         return 0
 
@@ -1571,9 +1712,15 @@ def command_merge_tasks(args: argparse.Namespace) -> int:
     for warning in warnings:
         print_warning(warning)
     validate_issue_notes(review_dir)
+    validate_task_sources(root, review_dir, tasks)
 
     units_by_id = {task["task_id"]: task_to_unit(root, task) for task in tasks}
-    active_units = [units_by_id[task_id] for task_id in aggregates if task_id in units_by_id]
+    active_units_by_id = {
+        task["task_id"]: units_by_id[task["task_id"]]
+        for task in task_by_finding.values()
+        if task["task_id"] in units_by_id
+    }
+    active_units = list(active_units_by_id.values())
     issue_ledger_path = review_dir / ".state" / "issue-ledger.json"
     unit_ledger_path = review_dir / ".state" / "review-unit-ledger.json"
     issue_ledger = load_json(issue_ledger_path, {"version": 1, "next_issue_id_hex": "0001", "issues": {}})
@@ -1585,32 +1732,31 @@ def command_merge_tasks(args: argparse.Namespace) -> int:
     planned_moves: list[tuple[Path, Path, str, str]] = []
 
     save_run_state(review_dir, {"version": 1, "active_run": {"stage": "MERGE_WRITING", "units": len(active_units)}, "last_runs": []})
-    for unit in active_units:
-        aggregate = aggregates[unit.unit_id]
+    for finding_id, aggregate in aggregates.items():
+        task = task_by_finding[finding_id]
+        unit = units_by_id[task["task_id"]]
         open_existing = [
             item for item in existing_issues
-            if item.get("source_unit_id") == unit.unit_id and item.get("status") in {"Open", "Unknown"}
+            if item.get("source_unit_id") == unit.unit_id
+            and item.get("source_finding_id") == aggregate.finding.finding_id
+            and item.get("status") in {"Open", "PendingVote", "Rejected"}
         ]
-        if aggregate.severity == "Correct":
-            for item in open_existing:
-                planned_moves.append((item["path"], issue_move_target(review_dir, item["path"], "Closed"), "Closed", item["id"]))
-            continue
-        if aggregate.severity in ISSUE_SEVERITIES:
-            for item in open_existing:
-                planned_moves.append((item["path"], issue_move_target(review_dir, item["path"], "Superseded"), "Superseded", item["id"]))
-            issue_id = next_issue_id(issue_ledger)
-            path = issue_path(review_dir, issue_id, aggregate.severity, aggregate.title)
-            issue_links.setdefault(unit.unit_id, []).append((issue_id, path.relative_to(root)))
-            planned_issue_text[path] = render_issue(unit, issue_id, aggregate, path, root)
-            issue_ledger.setdefault("issues", {})[issue_id] = {
-                "status": "unknown" if aggregate.severity == "Unknown" else "open",
-                "severity": aggregate.severity,
-                "source_file": unit.rel_path,
-                "source_unit_id": unit.unit_id,
-                "content_hash": unit.content_hash,
-                "path": path.relative_to(root).as_posix(),
-                "created_at": now_date(),
-            }
+        for item in open_existing:
+            planned_moves.append((item["path"], issue_move_target(review_dir, item["path"], "Superseded"), "Superseded", item["id"]))
+        issue_id = next_issue_id(issue_ledger)
+        path = issue_path(review_dir, issue_id, aggregate.status, aggregate.finding.severity, aggregate.finding.title)
+        issue_links.setdefault(unit.unit_id, []).append((issue_id, path.relative_to(root)))
+        planned_issue_text[path] = render_issue(unit, issue_id, aggregate, path, root)
+        issue_ledger.setdefault("issues", {})[issue_id] = {
+            "status": aggregate.status.lower(),
+            "severity": aggregate.finding.severity,
+            "source_file": unit.rel_path,
+            "source_unit_id": unit.unit_id,
+            "source_finding_id": aggregate.finding.finding_id,
+            "content_hash": unit.content_hash,
+            "path": path.relative_to(root).as_posix(),
+            "created_at": now_date(),
+        }
 
     for src, dst, status, issue_id in planned_moves:
         text = update_issue_status_text(load_text(src), status)
@@ -1628,7 +1774,7 @@ def command_merge_tasks(args: argparse.Namespace) -> int:
     for unit in active_units:
         by_file.setdefault(unit.file_path, []).append(unit)
     for path, units in by_file.items():
-        updated = replace_ai_blocks_for_file(path, units, aggregates, issue_links)
+        updated = replace_ai_blocks_for_file(path, units, {}, issue_links)
         write_text_atomic(path, updated)
     write_json_atomic(unit_ledger_path, unit_ledger)
     write_json_atomic(issue_ledger_path, issue_ledger)
@@ -1723,10 +1869,16 @@ def discover_units_for_args(
     return files, all_units
 
 
-def serialize_unit_for_host(root: Path, unit: ReviewUnit, config: dict[str, Any], warning_keys: set[str]) -> dict[str, Any]:
+def serialize_unit_for_task(root: Path, unit: ReviewUnit, config: dict[str, Any], warning_keys: set[str]) -> dict[str, Any]:
     context_notes = build_context_notes(root, unit, config, warning_keys)
     return {
+        "version": 1,
+        "schema_version": 1,
+        "kind": "ai-review-task",
+        "task_id": unit.unit_id,
         "unit_id": unit.unit_id,
+        "task_hash": unit.content_hash,
+        "content_hash": unit.content_hash,
         "source_file": unit.rel_path,
         "source_block_ref": source_block_ref(unit),
         "heading_path": unit.heading_path,
@@ -1740,205 +1892,90 @@ def serialize_unit_for_host(root: Path, unit: ReviewUnit, config: dict[str, Any]
         "outlinks": unit.outlinks,
         "tags": unit.tags,
         "context_notes": context_notes,
+        "prepared_context": context_notes,
+        "external_sources": [],
         "content": unit.content,
         "prompt": build_prompt(unit, context_notes),
     }
 
 
-def host_prepare_payload(args: argparse.Namespace) -> tuple[Path, dict[str, Any]]:
+def units_missing_identity(root: Path, units: list[ReviewUnit]) -> list[ReviewUnit]:
+    blocks_by_file: dict[Path, dict[str, str]] = {}
+    missing: list[ReviewUnit] = []
+    for unit in units:
+        blocks = blocks_by_file.get(unit.file_path)
+        if blocks is None:
+            blocks = existing_ai_blocks_by_unit(load_text(unit.file_path))
+            blocks_by_file[unit.file_path] = blocks
+        if unit.unit_id not in blocks:
+            missing.append(unit)
+    return missing
+
+
+def command_prepare_tasks(args: argparse.Namespace) -> int:
     root = Path.cwd().resolve()
     config = load_yaml(root / ".ai-review.yaml")
     review_dir = root / str(config.get("review_dir", "AI-Review"))
     ensure_review_dirs(root, review_dir)
     warning_keys: set[str] = set()
-    warnings = git_preflight(root, config, False)
+    warnings = git_preflight(root, config, bool(getattr(args, "apply", False)))
     for warning in warnings:
         print_warning(warning)
     validate_issue_notes(review_dir)
     unit_ledger = load_json(review_dir / ".state" / "review-unit-ledger.json", {"version": 1, "next_unit_id": 1, "units": {}})
     files, units = discover_units_for_args(root, config, review_dir, args, unit_ledger)
-    payload = {
+    if getattr(args, "unit", None):
+        units = [unit for unit in units if unit.unit_id == args.unit]
+        if not units:
+            raise AiReviewError(f"未找到 ReviewUnit：{args.unit}")
+
+    missing = units_missing_identity(root, units)
+    if missing:
+        examples = ", ".join(f"{unit.rel_path}:{unit.start_line}({unit.unit_id})" for unit in missing[:5])
+        raise AiReviewError(f"prepare 前必须先写入 identity；缺失示例：{examples}。请先运行 identity --apply。")
+
+    tasks_dir, _votes_dir = task_dirs(review_dir)
+    planned_tasks = [serialize_unit_for_task(root, unit, config, warning_keys) for unit in units]
+    written = 0
+    skipped = 0
+    for task in planned_tasks:
+        out = task_path(tasks_dir, task["task_id"])
+        old = load_json(out, None) if out.exists() else None
+        if old and old.get("task_hash") == task.get("task_hash") and not getattr(args, "regenerate", False):
+            skipped += 1
+            continue
+        if getattr(args, "apply", False):
+            write_json_atomic(out, task)
+            written += 1
+
+    index = {
         "version": 1,
-        "kind": "ai-review-host-current-prepare",
-        "created_at": _dt.datetime.now().isoformat(),
-        "repo_root": str(root),
-        "review_dir": str(review_dir.relative_to(root).as_posix()),
-        "mode": {
-            "scope": "all" if getattr(args, "all", False) else "changed",
-            "dry_run": bool(getattr(args, "dry_run", False) or not getattr(args, "apply", False)),
-            "apply": bool(getattr(args, "apply", False)),
-            "limit": getattr(args, "limit", None),
-            "issue": getattr(args, "issue", None),
-            "paths": getattr(args, "paths", []),
-        },
-        "model_protocol": "AI-Review/MODEL_PROTOCOL.md",
-        "output_contract": {
-            "format": "JSON object or array",
-            "accepted_shapes": [
-                "数组：每项是一个单模型投票对象",
-                "对象：{unit_id: vote_object}",
-                "单对象：包含 unit_id 的 vote_object",
-            ],
-            "required_model_id": "host-current",
-            "required_model_role": "main",
-        },
+        "schema_version": 1,
+        "kind": "ai-review-tasks-index",
+        "updated_at": _dt.datetime.now().isoformat(),
+        "scope": "all" if getattr(args, "all", False) else "changed",
         "files": [p.relative_to(root).as_posix() for p in files],
-        "units": [serialize_unit_for_host(root, unit, config, warning_keys) for unit in units],
+        "tasks": [
+            {
+                "task_id": task["task_id"],
+                "task_hash": task["task_hash"],
+                "source_file": task["source_file"],
+                "source_block_ref": task["source_block_ref"],
+                "heading_path": task["heading_path"],
+            }
+            for task in planned_tasks
+        ],
         "warnings": sorted(warning_keys),
     }
-    return review_dir, payload
+    if getattr(args, "apply", False):
+        write_json_atomic(review_dir / ".state" / "tasks-index.json", index)
 
-
-def command_prepare_host(args: argparse.Namespace) -> int:
-    review_dir, payload = host_prepare_payload(args)
-    output = Path(args.output) if args.output else review_dir / ".state" / "host-current-prepare.json"
-    write_json_atomic(output, payload)
-    print_info(f"host-current prepare 已生成：{output}")
-    print_info(f"待当前会话模型审查 ReviewUnit：{len(payload['units'])}")
-    if args.print_json:
-        print(json.dumps(payload, ensure_ascii=False, indent=2))
-    return 0
-
-
-def command_merge_host(args: argparse.Namespace) -> int:
-    if not args.host_current_vote_file:
-        raise AiReviewError("merge-host 需要 --host-current-vote-file。")
-    prepare_payload: dict[str, Any] = {}
-    if args.prepare_file:
-        prepare_payload = load_json(Path(args.prepare_file), {})
-    mode_data = prepare_payload.get("mode", {}) if isinstance(prepare_payload, dict) else {}
-    ns = argparse.Namespace(
-        command="review",
-        changed=not bool(args.all or mode_data.get("scope") == "all"),
-        all=bool(args.all or mode_data.get("scope") == "all"),
-        paths=args.paths or mode_data.get("paths", []),
-        issue=args.issue or mode_data.get("issue"),
-        resume=False,
-        dry_run=bool(args.dry_run or (not args.apply and mode_data.get("dry_run", True))),
-        apply=bool(args.apply or mode_data.get("apply", False)),
-        limit=args.limit if args.limit is not None else mode_data.get("limit"),
-        main="host-current",
-        host_current_vote_file=args.host_current_vote_file,
-        no_external=bool(args.no_external),
-        model_timeout=args.model_timeout,
-        model_retry=args.model_retry,
-        stream_total_timeout=args.stream_total_timeout,
-    )
-    return command_review(ns)
-
-
-def command_review(args: argparse.Namespace) -> int:
-    # 中文说明：review 是唯一写入入口。prepare-host/merge-host 最终也会
-    # 回到这里，因此 issue 生命周期、Dashboard 和 ledger 只维护一份逻辑。
-    root = Path.cwd().resolve()
-    config = load_yaml(root / ".ai-review.yaml")
-    review_dir = root / str(config.get("review_dir", "AI-Review"))
-    ensure_review_dirs(root, review_dir)
-    secrets = load_yaml(root / ".ai-review-secrets.yaml")
-    warning_keys: set[str] = set()
-    warnings = git_preflight(root, config, bool(args.apply))
-    for warning in warnings:
-        print_warning(warning)
-    validate_issue_notes(review_dir)
-
-    unit_ledger_path = review_dir / ".state" / "review-unit-ledger.json"
-    issue_ledger_path = review_dir / ".state" / "issue-ledger.json"
-    unit_ledger = load_json(unit_ledger_path, {"version": 1, "next_unit_id": 1, "units": {}})
-    issue_ledger = load_json(issue_ledger_path, {"version": 1, "next_issue_id_hex": "0001", "issues": {}})
-
-    files, all_units = discover_units_for_args(root, config, review_dir, args, unit_ledger)
-    if args.apply:
-        save_run_state(review_dir, {"version": 1, "active_run": {"stage": "SCANNING", "started_at": _dt.datetime.now().isoformat(), "units": len(all_units)}, "last_runs": []})
-    print_info(f"扫描到 {len(files)} 个 Markdown 文件，待审查 ReviewUnit：{len(all_units)}")
-
-    link_index = build_link_index(all_units)
-    host_votes = load_host_votes(args.host_current_vote_file)
-    existing_issues = collect_issues(review_dir)
-    aggregates: dict[str, AggregateResult] = {}
-    issue_links: dict[str, list[tuple[str, Path]]] = {}
-    planned_issue_text: dict[Path, str] = {}
-    planned_moves: list[tuple[Path, Path, str, str]] = []
-    if args.apply:
-        save_run_state(review_dir, {"version": 1, "active_run": {"stage": "VOTING", "units": len(all_units)}, "last_runs": []})
-
-    for idx, unit in enumerate(all_units, start=1):
-        context_notes = build_context_notes(root, unit, config, warning_keys)
-        votes = collect_votes(unit, config, secrets, args, context_notes, host_votes, warning_keys)
-        if not votes:
-            print_warning(f"{unit.unit_id} 没有任何成功模型投票，跳过；失败模型不生成 Unknown 票。")
-            continue
-        aggregate = aggregate_votes(votes, config)
-        aggregates[unit.unit_id] = aggregate
-        open_existing = [
-            item for item in existing_issues
-            if item.get("source_unit_id") == unit.unit_id and item.get("status") in {"Open", "Unknown"}
-        ]
-        if aggregate.severity == "Correct":
-            for item in open_existing:
-                src = item["path"]
-                dst = issue_move_target(review_dir, src, "Closed")
-                planned_moves.append((src, dst, "Closed", item["id"]))
-            print_info(f"{idx}/{len(all_units)} {unit.unit_id} {unit.rel_path}:{unit.start_line} -> {aggregate.severity}")
-            continue
-        if aggregate.severity in ISSUE_SEVERITIES:
-            for item in open_existing:
-                src = item["path"]
-                dst = issue_move_target(review_dir, src, "Superseded")
-                planned_moves.append((src, dst, "Superseded", item["id"]))
-            issue_id = next_issue_id(issue_ledger)
-            path = issue_path(review_dir, issue_id, aggregate.severity, aggregate.title)
-            issue_links.setdefault(unit.unit_id, []).append((issue_id, path.relative_to(root)))
-            planned_issue_text[path] = render_issue(unit, issue_id, aggregate, path, root)
-            issue_ledger.setdefault("issues", {})[issue_id] = {
-                "status": "unknown" if aggregate.severity == "Unknown" else "open",
-                "severity": aggregate.severity,
-                "source_file": unit.rel_path,
-                "source_unit_id": unit.unit_id,
-                "content_hash": unit.content_hash,
-                "path": path.relative_to(root).as_posix(),
-                "created_at": now_date(),
-            }
-        print_info(f"{idx}/{len(all_units)} {unit.unit_id} {unit.rel_path}:{unit.start_line} -> {aggregate.severity}")
-
-    if args.dry_run or not args.apply:
-        print_info("dry-run 结果：")
-        for unit_id, aggregate in aggregates.items():
-            print(f"- {unit_id}: {aggregate.severity} · {aggregate.title} · votes={len(aggregate.votes)}")
-        for src, dst, status, issue_id in planned_moves:
-            print(f"- move {issue_id}: {src.relative_to(root).as_posix()} -> {dst.relative_to(root).as_posix()} ({status})")
-        return 0
-
-    save_run_state(review_dir, {"version": 1, "active_run": {"stage": "WRITING", "units": len(aggregates)}, "last_runs": []})
-    for src, dst, status, issue_id in planned_moves:
-        text = update_issue_status_text(load_text(src), status)
-        write_text_atomic(dst, text)
-        if src != dst and src.exists():
-            src.unlink()
-        if issue_id in issue_ledger.get("issues", {}):
-            issue_ledger["issues"][issue_id]["status"] = status.lower()
-            issue_ledger["issues"][issue_id]["path"] = dst.relative_to(root).as_posix()
-            issue_ledger["issues"][issue_id]["updated_at"] = now_date()
-    for path, text in planned_issue_text.items():
-        validate_frontmatter_text(text)
-        write_text_atomic(path, text)
-    by_file: dict[Path, list[ReviewUnit]] = {}
-    for unit in all_units:
-        if unit.unit_id in aggregates:
-            by_file.setdefault(unit.file_path, []).append(unit)
-    for path, units in by_file.items():
-        updated = replace_ai_blocks_for_file(path, units, aggregates, issue_links)
-        write_text_atomic(path, updated)
-    write_json_atomic(unit_ledger_path, unit_ledger)
-    write_json_atomic(issue_ledger_path, issue_ledger)
-    write_json_atomic(review_dir / ".state" / "link-index.json", link_index)
-    write_json_atomic(review_dir / ".state" / "model-warning-ledger.json", {"version": 1, "warnings": sorted(warning_keys)})
-    write_text_atomic(review_dir / "Dashboard.md", render_dashboard(review_dir, int(deep_get(config, "dashboard.top_n_per_section", 10))))
-    for warning in validate_markdown_and_links(root, list(planned_issue_text) + list(by_file)):
-        print_warning(warning)
-    diff = run_git(["diff", "--stat"], root)
-    print(diff.stdout.rstrip())
-    save_run_state(review_dir, {"version": 1, "active_run": None, "last_runs": [{"mode": "apply", "finished_at": _dt.datetime.now().isoformat(), "units": len(aggregates)}]})
-    print_info("写入完成。")
+    print_info(f"prepare 扫描 Markdown 文件 {len(files)} 个，候选 task {len(planned_tasks)} 个。")
+    print_info(f"prepare 结果：写入 {written}，跳过 {skipped}，dry_run={not getattr(args, 'apply', False)}")
+    for task in planned_tasks:
+        print(f"- {task['task_id']}: {task['source_file']}:{task['start_line']}-{task['end_line']} · context={len(task['context_notes'])} · sources={len(task['external_sources'])}")
+    if getattr(args, "print_json", False):
+        print(json.dumps({"tasks": planned_tasks, "index": index}, ensure_ascii=False, indent=2))
     return 0
 
 
@@ -1947,6 +1984,14 @@ def validate_frontmatter_text(text: str) -> None:
         raise AiReviewError("frontmatter 校验失败。")
     if text.count("<!-- user-notes:start -->") != 1 or text.count("<!-- user-notes:end -->") != 1:
         raise AiReviewError("人工备注区校验失败。")
+
+
+def validate_maintenance_contract(root: Path) -> list[str]:
+    warnings: list[str] = []
+    for relative_path in MAINTENANCE_CONTRACT_FILES:
+        if not (root / relative_path).exists():
+            warnings.append(f"维护同步文件缺失：{relative_path}")
+    return warnings
 
 
 def command_dashboard(args: argparse.Namespace) -> int:
@@ -1974,6 +2019,7 @@ def command_check(args: argparse.Namespace) -> int:
         validate_issue_notes(review_dir)
     except AiReviewError as exc:
         errors.append(str(exc))
+    warnings.extend(validate_maintenance_contract(root))
     warnings.extend(git_preflight(root, config, False))
     warnings.extend(validate_markdown_and_links(root, list(review_dir.rglob("*.md"))))
     for warning in warnings:
@@ -1986,44 +2032,9 @@ def command_check(args: argparse.Namespace) -> int:
     return 0
 
 
-def command_resume(args: argparse.Namespace) -> int:
-    root = Path.cwd().resolve()
-    config = load_yaml(root / ".ai-review.yaml")
-    review_dir = root / str(config.get("review_dir", "AI-Review"))
-    state = load_json(review_dir / ".state" / "run-state.json", {"version": 1, "active_run": None, "last_runs": []})
-    if not state.get("active_run"):
-        print_info("没有可恢复的 active_run。")
-        return 0
-    print_info(f"检测到未完成 run：{json.dumps(state['active_run'], ensure_ascii=False)}")
-    ns = argparse.Namespace(**vars(args))
-    ns.resume = False
-    ns.changed = True
-    ns.all = False
-    ns.paths = []
-    ns.issue = None
-    return command_review(ns)
-
-
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="ai-review", description="AI Review CLI")
     sub = parser.add_subparsers(dest="command")
-    review = sub.add_parser("review", help="审查 Markdown ReviewUnit")
-    scope = review.add_mutually_exclusive_group()
-    scope.add_argument("--changed", action="store_true", help="只审查 Git 变更文件")
-    scope.add_argument("--all", action="store_true", help="审查全仓库")
-    review.add_argument("paths", nargs="*", help="指定文件或目录")
-    review.add_argument("--issue", help="复查指定 issue")
-    review.add_argument("--resume", action="store_true", help="恢复上次运行")
-    mode = review.add_mutually_exclusive_group()
-    mode.add_argument("--dry-run", action="store_true", help="只预览，不写入")
-    mode.add_argument("--apply", action="store_true", help="事务化写入")
-    review.add_argument("--limit", type=int, help="最多审查 N 个 ReviewUnit")
-    review.add_argument("--main", choices=["host-current", "configured", "none"], help="覆盖主模型模式")
-    review.add_argument("--host-current-vote-file", help="注入 host-current 主模型投票 JSON")
-    review.add_argument("--no-external", action="store_true", help="不调用外部 voter API，仅验证扫描、聚合和渲染路径")
-    review.add_argument("--model-timeout", type=int, help="临时覆盖单次外部模型请求超时秒数")
-    review.add_argument("--model-retry", type=int, help="临时覆盖外部模型重试次数")
-    review.add_argument("--stream-total-timeout", type=int, help="临时覆盖单次流式响应总时长上限秒数")
 
     identity = sub.add_parser("identity", help="为非空 ReviewUnit 写入稳定 AI-Review identity 块")
     identity_scope = identity.add_mutually_exclusive_group()
@@ -2035,6 +2046,20 @@ def build_parser() -> argparse.ArgumentParser:
     identity_mode = identity.add_mutually_exclusive_group()
     identity_mode.add_argument("--dry-run", action="store_true", help="只预览，不写入源文")
     identity_mode.add_argument("--apply", action="store_true", help="写入缺失的 AI-Review identity 块")
+
+    prepare = sub.add_parser("prepare", help="生成 .state/tasks/{task}.json task 队列")
+    prepare_scope = prepare.add_mutually_exclusive_group()
+    prepare_scope.add_argument("--changed", action="store_true", help="只准备 Git 变更文件")
+    prepare_scope.add_argument("--all", action="store_true", help="准备全仓库")
+    prepare.add_argument("paths", nargs="*", help="指定文件或目录")
+    prepare.add_argument("--issue", help="准备复查指定 issue")
+    prepare.add_argument("--unit", help="只准备指定 ReviewUnit id")
+    prepare.add_argument("--limit", type=int, help="最多准备 N 个 task")
+    prepare_mode = prepare.add_mutually_exclusive_group()
+    prepare_mode.add_argument("--dry-run", action="store_true", help="只预览，不写入 task 文件")
+    prepare_mode.add_argument("--apply", action="store_true", help="写入 task 文件和 tasks-index.json")
+    prepare.add_argument("--regenerate", action="store_true", help="覆盖 task_hash 一致的既有 task")
+    prepare.add_argument("--print-json", action="store_true", help="同时向 stdout 打印 task JSON")
 
     vote = sub.add_parser("vote", help="并行调用外部 reviewer，写入 .state/votes/{model}/{task}.json")
     vote.add_argument("--model", help="只运行指定模型 id；默认运行所有启用 voter")
@@ -2050,36 +2075,6 @@ def build_parser() -> argparse.ArgumentParser:
     task_merge_mode.add_argument("--apply", action="store_true", help="写入 issue、源文件 AI 块和 Dashboard")
     task_merge.add_argument("--limit", type=int, help="最多聚合 N 个 task")
 
-    prepare = sub.add_parser("prepare-host", help="为 Codex/Cursor 当前会话模型准备 host-current 审查输入")
-    prepare_scope = prepare.add_mutually_exclusive_group()
-    prepare_scope.add_argument("--changed", action="store_true", help="只准备 Git 变更文件")
-    prepare_scope.add_argument("--all", action="store_true", help="准备全仓库")
-    prepare.add_argument("paths", nargs="*", help="指定文件或目录")
-    prepare.add_argument("--issue", help="准备复查指定 issue")
-    prepare.add_argument("--limit", type=int, help="最多准备 N 个 ReviewUnit")
-    prepare_mode = prepare.add_mutually_exclusive_group()
-    prepare_mode.add_argument("--dry-run", action="store_true", help="准备 dry-run 审查")
-    prepare_mode.add_argument("--apply", action="store_true", help="准备 apply 审查")
-    prepare.add_argument("--output", help="prepare JSON 输出路径，默认 AI-Review/.state/host-current-prepare.json")
-    prepare.add_argument("--print-json", action="store_true", help="同时向 stdout 打印完整 JSON")
-
-    merge = sub.add_parser("merge-host", help="合并 Codex/Cursor 当前会话模型投票并继续 CLI 流程")
-    merge_scope = merge.add_mutually_exclusive_group()
-    merge_scope.add_argument("--changed", action="store_true", help="只审查 Git 变更文件")
-    merge_scope.add_argument("--all", action="store_true", help="审查全仓库")
-    merge.add_argument("paths", nargs="*", help="指定文件或目录")
-    merge.add_argument("--issue", help="复查指定 issue")
-    merge_mode = merge.add_mutually_exclusive_group()
-    merge_mode.add_argument("--dry-run", action="store_true", help="只预览，不写入")
-    merge_mode.add_argument("--apply", action="store_true", help="事务化写入")
-    merge.add_argument("--limit", type=int, help="最多审查 N 个 ReviewUnit")
-    merge.add_argument("--prepare-file", default="AI-Review/.state/host-current-prepare.json", help="prepare-host 生成的 JSON")
-    merge.add_argument("--host-current-vote-file", required=True, help="当前会话模型生成的投票 JSON")
-    merge.add_argument("--no-external", action="store_true", help="不调用外部 voter API，仅使用 host-current 投票")
-    merge.add_argument("--model-timeout", type=int, help="临时覆盖单次外部模型请求超时秒数")
-    merge.add_argument("--model-retry", type=int, help="临时覆盖外部模型重试次数")
-    merge.add_argument("--stream-total-timeout", type=int, help="临时覆盖单次流式响应总时长上限秒数")
-
     dashboard = sub.add_parser("dashboard", help="更新 Dashboard")
     dashboard.add_argument("--dry-run", action="store_true")
     sub.add_parser("check", help="检查配置、状态和链接")
@@ -2090,17 +2085,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     if not args.command:
-        args = parser.parse_args(["review", "--changed", "--dry-run"])
+        args = parser.parse_args(["check"])
     try:
-        if args.command == "review":
-            if getattr(args, "resume", False):
-                return command_resume(args)
-            if not args.dry_run and not args.apply:
-                default = load_yaml(Path.cwd() / ".ai-review.yaml").get("default_mode", {})
-                args.dry_run = bool(default.get("dry_run", True))
-                if not args.changed and not args.all and not args.paths:
-                    args.changed = str(default.get("scope", "changed")) == "changed"
-            return command_review(args)
         if args.command == "identity":
             if not args.dry_run and not args.apply:
                 args.dry_run = True
@@ -2108,6 +2094,14 @@ def main(argv: list[str] | None = None) -> int:
                 default = load_yaml(Path.cwd() / ".ai-review.yaml").get("default_mode", {})
                 args.changed = str(default.get("scope", "changed")) == "changed"
             return command_identity(args)
+        if args.command == "prepare":
+            if not args.dry_run and not args.apply:
+                default = load_yaml(Path.cwd() / ".ai-review.yaml").get("default_mode", {})
+                args.dry_run = bool(default.get("dry_run", True))
+            if not args.changed and not args.all and not args.paths and not args.issue and not args.unit:
+                default = load_yaml(Path.cwd() / ".ai-review.yaml").get("default_mode", {})
+                args.changed = str(default.get("scope", "changed")) == "changed"
+            return command_prepare_tasks(args)
         if args.command == "vote":
             return command_vote_tasks(args)
         if args.command == "merge":
@@ -2115,15 +2109,6 @@ def main(argv: list[str] | None = None) -> int:
                 default = load_yaml(Path.cwd() / ".ai-review.yaml").get("default_mode", {})
                 args.dry_run = bool(default.get("dry_run", True))
             return command_merge_tasks(args)
-        if args.command == "prepare-host":
-            if not args.dry_run and not args.apply:
-                default = load_yaml(Path.cwd() / ".ai-review.yaml").get("default_mode", {})
-                args.dry_run = bool(default.get("dry_run", True))
-                if not args.changed and not args.all and not args.paths:
-                    args.changed = str(default.get("scope", "changed")) == "changed"
-            return command_prepare_host(args)
-        if args.command == "merge-host":
-            return command_merge_host(args)
         if args.command == "dashboard":
             return command_dashboard(args)
         if args.command == "check":

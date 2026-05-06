@@ -6,15 +6,24 @@
 tools/ai-review/ai_review_cli.py
 ```
 
+## 维护约束
+
+AI Review 的工具实现必须与设计文档和 skill 说明同步演进。修改 `tools/ai-review/`、`ai-review.cmd` 或 `scripts/ai-review.*` 的行为时，应同时检查并更新 `AI-Review/` 下的设计/协议文档以及 `skills/ai-review/SKILL.md` 和实际加载的 skill 副本；如果其中某一层无需变更，应在交付说明中说明原因。
+
+## 配置解析
+
+CLI 优先使用 PyYAML 读取 `.ai-review.yaml`。如果运行环境没有 PyYAML，会退回到内置简易 YAML 解析器；该解析器覆盖当前仓库配置使用的 YAML 子集，包括嵌套映射、标量列表和列表中的映射项。
+
 仓库根目录提供 Windows 入口：
 
 ```powershell
-.\ai-review.cmd review --changed --dry-run
-.\ai-review.cmd review --all --limit 20 --dry-run
-.\ai-review.cmd review --changed --apply
-.\ai-review.cmd review --resume
 .\ai-review.cmd identity --changed --dry-run
 .\ai-review.cmd identity --changed --apply
+.\ai-review.cmd prepare --changed --dry-run
+.\ai-review.cmd prepare --changed --apply
+.\ai-review.cmd vote
+.\ai-review.cmd merge --dry-run
+.\ai-review.cmd merge --apply
 .\ai-review.cmd dashboard
 .\ai-review.cmd check
 ```
@@ -22,61 +31,26 @@ tools/ai-review/ai_review_cli.py
 也可以使用包装脚本：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\ai-review.ps1 review --all --limit 20 --dry-run
+powershell -ExecutionPolicy Bypass -File scripts\ai-review.ps1 prepare --all --limit 20 --dry-run
 ```
 
 ```bash
-scripts/ai-review.sh review --all --limit 20 --dry-run
+scripts/ai-review.sh prepare --all --limit 20 --dry-run
 ```
 
 ## host-current
 
-普通终端进程无法直接读取 Codex/Cursor 当前会话模型。需要主模型投票时，可通过下列方式注入符合 `AI-Review/MODEL_PROTOCOL.md` 的 JSON：
-
-```powershell
-$env:AI_REVIEW_HOST_CURRENT_VOTES_JSON = Get-Content -Raw host-votes.json
-.\ai-review.cmd review --changed --dry-run
-```
-
-或：
-
-```powershell
-.\ai-review.cmd review --changed --dry-run --host-current-vote-file host-votes.json
-```
-
-如果未注入 `host-current` 投票，CLI 会继续调用配置的 voter 模型；如果没有任何成功投票，则跳过该 ReviewUnit，不会把失败模型降级成 `Unknown`。
-
-## Codex/Cursor 桥接流程
-
-Codex/Cursor 的 `/ai-review` 应使用两段式桥接：
-
-```powershell
-.\ai-review.cmd prepare-host --changed --dry-run
-```
-
-该命令生成：
+普通终端进程无法直接读取 Codex/Cursor 当前会话模型。`host-current` 只能由 `/ai-review vote` skill 写入：
 
 ```text
-AI-Review/.state/host-current-prepare.json
+AI-Review/.state/votes/host-current/{task_id}.json
 ```
 
-宿主模型读取其中 `units`，逐个生成符合 `AI-Review/MODEL_PROTOCOL.md` 的投票，并写入：
-
-```text
-AI-Review/.state/host-current-votes.json
-```
-
-随后合并：
-
-```powershell
-.\ai-review.cmd merge-host --prepare-file AI-Review/.state/host-current-prepare.json --host-current-vote-file AI-Review/.state/host-current-votes.json --dry-run
-```
-
-写入模式把 `prepare-host` 和 `merge-host` 的 `--dry-run` 都替换为 `--apply`。
+CLI 不再接受单文件注入的 `host-current` 投票，也不再提供 `prepare-host` / `merge-host` 桥接入口。
 
 ## Task / Vote / Merge 流程
 
-推荐新流程把主模型和外部 voter 解耦为可恢复文件队列。注意：完整 `prepare` 必须由 Codex/Cursor skill 进行 AI-assisted 准备；本工具目录中的 CLI 不提供 `prepare` 子命令。
+四阶段流程把主模型和外部 voter 解耦为可恢复文件队列。完整 `/ai-review prepare` 必须由 Codex/Cursor skill 进行 AI-assisted 准备；CLI `prepare` 提供确定性的 task 队列生成、identity 校验和上下文候选写入。
 
 在 prepare 之前，应先用 CLI 做身份锚定：
 
@@ -88,6 +62,8 @@ AI-Review/.state/host-current-votes.json
 `identity` 只给非空 ReviewUnit 写入缺失的 AI-Review identity 块；已有块原样保留，空段落跳过。
 
 ```powershell
+.\ai-review.cmd prepare --changed --dry-run
+.\ai-review.cmd prepare --changed --apply
 .\ai-review.cmd vote
 .\ai-review.cmd merge --dry-run
 ```
@@ -99,11 +75,11 @@ AI-Review/.state/tasks/{task_id}.json
 AI-Review/.state/tasks-index.json
 ```
 
-在正式 `/ai-review prepare` 中，Codex/Cursor 当前会话模型必须读取候选段落，自动解析 Obsidian 引用，必要时联网补充权威来源，并把最终 task 写入 `.state/tasks`；普通 CLI 不能替代这一步。
+在正式 `/ai-review prepare` 中，Codex/Cursor 当前会话模型必须读取候选段落，自动解析 Obsidian 引用，必要时联网补充权威来源，并把最终 task 写入 `.state/tasks`。CLI `prepare` 的输出可作为候选 task，但不能替代当前会话模型的最终判断。
 
-`.\ai-review.cmd vote` 只负责外部模型投票，不代表 Codex/Cursor 当前会话模型。当前会话模型的 `/ai-review vote` 必须由 skill 自己写入 `votes/host-current`，不得通过本 CLI 调外部模型。
+`.\ai-review.cmd vote` 只负责外部模型投票，不代表 Codex/Cursor 当前会话模型。当前会话模型的 `/ai-review vote` 必须由 skill 自己写入 `votes/host-current`，其中包含 `findings[]`；不得通过本 CLI 调外部模型。
 
-外部 `vote` 从 task 文件并行发起外部 review，成功结果写入：
+外部 `vote` 从 task 文件和 host-current findings 并行发起外部 review。外部模型只对已有 finding 投 `support/oppose/skip`，成功结果写入：
 
 ```text
 AI-Review/.state/votes/{model_id}/{task_id}.json
@@ -115,7 +91,7 @@ AI-Review/.state/votes/{model_id}/{task_id}.json
 AI-Review/.state/votes/host-current/{task_id}.json
 ```
 
-`merge` 只读取 task 和 vote 文件，统一聚合所有成功投票；没有成功运行的模型不会生成 `Unknown` 票，也不会参与评分。写入结果时使用：
+`merge` 只读取 task 和 vote 文件，逐 finding 聚合所有成功投票；没有成功运行的模型按缺失投票比例处理，不会生成 `Unknown` 票。写入结果时使用：
 
 ```powershell
 .\ai-review.cmd merge --apply
@@ -167,8 +143,10 @@ CLI 会解析当前 ReviewUnit 中的 `[[note#Heading]]` 和 `[[note#^blockid]]`
 
 ## 结构化本地验证
 
-如只想验证扫描、ReviewUnit 切分、聚合和渲染链路，不调用外部模型：
+如只想验证扫描、ReviewUnit 切分和 task 生成链路：
 
 ```powershell
-.\ai-review.cmd review --all --limit 20 --dry-run --no-external
+.\ai-review.cmd identity --all --limit 20 --dry-run
+.\ai-review.cmd prepare --all --limit 20 --dry-run
+.\ai-review.cmd merge --dry-run
 ```

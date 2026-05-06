@@ -14,6 +14,16 @@ AI Review skill 必须支持：
 
 核心实现以 CLI 为权威执行路径，但 `/ai-review` 可以作为 Codex/Cursor 的快捷入口。
 
+## 1.1 维护同步约束
+
+实现改动不得只落在单一层。修改 AI Review 的行为、协议、命令、状态文件、编码策略或 agent 工作流时，必须同步检查：
+
+1. `AI-Review/DESIGN.md`、`AI-Review/IMPLEMENTATION.md`、`AI-Review/MODEL_PROTOCOL.md` 等设计和协议文档；
+2. `skills/ai-review/SKILL.md` 以及 agent 实际加载的 AI Review skill 副本；
+3. `tools/ai-review/`、`ai-review.cmd`、`scripts/ai-review.*` 和 CLI 帮助文本。
+
+若某一层没有对应改动，应在交付说明中说明“已检查，无需变更”的原因。
+
 ## 2. CLI 与 host-current 主模型的关系
 
 CLI 负责：
@@ -21,7 +31,7 @@ CLI 负责：
 1. Git 前置检查；
 2. Markdown 扫描；
 3. ReviewUnit hash；
-4. 上下文构建；
+4. 确定性上下文构建；
 5. 外部 voter 模型调用；
 6. issue 生命周期；
 7. 事务化写入；
@@ -30,27 +40,25 @@ CLI 负责：
 
 `host-current` 主模型负责：
 
-1. 主模型投票；
+1. 为每个 task 提出 `findings[]` 候选 bug 清单；
 2. 结合上下文做最终问题理解；
-3. 聚合解释；
-4. 生成面向用户的简体中文 issue 描述和 Dashboard 摘要。
+3. 为每个 finding 提供初始支持票；
+4. 生成面向用户的简体中文 finding 描述和建议修改。
 
-CLI 不能天然读取当前 Codex/Cursor 的内部模型状态，因此 `/ai-review` 快捷入口应把当前会话模型接入 AI Review 流程。
+CLI 不能天然读取当前 Codex/Cursor 的内部模型状态，因此当前会话模型必须通过 `/ai-review prepare` 和 `/ai-review vote` skill 把 task/vote 文件写入统一状态目录。CLI 只负责确定性辅助、外部 voter 和最终 merge。
 
 ## 3. 推荐命令
 
 ```bash
-ai-review review
-ai-review review --changed
-ai-review review --all
-ai-review review path/to/file.md
-ai-review review path/to/folder/
-ai-review review --issue ar0001
-ai-review review --resume
-ai-review review --dry-run
-ai-review review --apply
-ai-review review --limit 20
-ai-review review --main configured
+ai-review identity --changed --dry-run
+ai-review identity --changed --apply
+ai-review prepare --changed --dry-run
+ai-review prepare --changed --apply
+ai-review prepare --all --limit 20 --dry-run
+ai-review vote
+ai-review vote --model deepseek-v4-pro
+ai-review merge --dry-run
+ai-review merge --apply
 ai-review dashboard
 ai-review check
 ```
@@ -58,20 +66,14 @@ ai-review check
 默认行为：
 
 ```bash
-ai-review review
+ai-review check
 ```
 
-等价于：
+不带子命令时只执行 `check`，不再隐式运行旧的同步审查流程。
 
-```bash
-ai-review review --changed --dry-run
-```
+### 3.1 配置解析
 
-在普通终端中，如果配置要求 `models.main.mode: host-current`，CLI 应报错并提示：
-
-1. 从 Codex/Cursor 的 `/ai-review` 运行；
-2. 或将 `models.main.mode` 改为 `configured`；
-3. 或临时使用 `--main configured`。
+CLI 运行时优先使用 PyYAML 解析 `.ai-review.yaml`；环境缺少 PyYAML 时，必须使用内置简易解析器解析当前仓库配置所需的 YAML 子集，包括嵌套映射、标量列表以及列表中的映射项。
 
 ## 4. `/ai-review` 推荐流程
 
@@ -80,13 +82,15 @@ ai-review review --changed --dry-run
   ↓
 读取 AI-Review 规范文档
   ↓
-调用 CLI 做检查与 prepare
+ai-review identity --changed --dry-run，必要时提示用户 apply
   ↓
-当前 Codex/Cursor 会话模型作为 host-current 主模型投票
+/ai-review prepare --changed 生成 .state/tasks
   ↓
-CLI 收集外部 voter 模型投票
+/ai-review vote 写入 .state/votes/host-current
   ↓
-按 weight × confidence 聚合
+用户在普通终端运行 ai-review vote，对每个 finding 写入 support/oppose/skip
+  ↓
+ai-review merge 按 finding 分数阈值和缺票比例聚合
   ↓
 CLI 事务化写入或 dry-run 输出
 ```
@@ -168,8 +172,20 @@ CLI 事务化写入或 dry-run 输出
 
 1. 该模型跳过本 ReviewUnit 的投票；
 2. 同一模型同类问题只 warning 一次；
-3. 如果没有可用模型，则该 ReviewUnit 标记为 Unknown 或跳过，按配置决定；
-4. 主模型不可用时，不写入该 ReviewUnit。
+3. 如果 finding 的失败/缺失投票比例超过 `voting.max_missing_vote_ratio`，该 finding 进入 `PendingVote`；
+4. 主模型未写入 `findings[]` 时，外部 voter 和 merge 都跳过该 ReviewUnit。
+
+## 10.1 Finding 聚合
+
+每个 finding 独立聚合：
+
+1. 主模型初始支持分为 `main_model.weight × finding.confidence`。
+2. 外部 `support` 票为 `+1 × model.weight × confidence`。
+3. 外部 `oppose` 票为 `-1 × model.weight × confidence`。
+4. `skip` 不计分，但写入 issue 的跳过模型列表。
+5. 分数达到 `voting.issue_score_threshold` 时进入 `Open`。
+6. 分数低于阈值且投票完整性足够时进入 `Rejected`。
+7. 投票完整性不足时进入 `PendingVote`。
 
 ## 11. Obsidian 语法支持范围
 

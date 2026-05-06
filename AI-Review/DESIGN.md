@@ -2,6 +2,16 @@
 
 #AI-Review
 
+## 0. 维护同步约束
+
+AI Review 能力的设计文档、skill 说明和工具实现必须一起演进。任何协议、流程、命令语义、状态文件或编码规则变更，都应同时检查并更新：
+
+1. `AI-Review/` 下的设计和协议文档；
+2. `skills/ai-review/SKILL.md` 以及实际会被 agent 读取的 AI Review skill 副本；
+3. `tools/ai-review/`、入口脚本和相关 CLI 帮助说明。
+
+如果某一层无需改动，变更说明中应明确写出原因，避免设计、skill 和实现长期漂移。
+
 ## 1. ReviewUnit 规则
 
 ReviewUnit 是 AI Review 的最小审查单位。
@@ -82,7 +92,8 @@ Issue 状态包括：
 1. `Open`
 2. `Closed`
 3. `Superseded`
-4. `Unknown`
+4. `PendingVote`
+5. `Rejected`
 
 规则：
 
@@ -95,13 +106,13 @@ Issue 状态包括：
 7. Correct 不生成 issue 文件。
 8. 问题修复后移动到 `Closed/`。
 9. 旧问题被新问题替代时移动到 `Superseded/`。
-10. 无法判断的问题进入 `Unknown/`。
+10. 投票缺失或失败比例过高的问题进入 `PendingVote/`。
+11. 投票完整性足够但分数低于阈值的问题进入 `Rejected/`。
 
 ## 6. 严重等级
 
 | 等级 | 含义 | Obsidian Callout |
 |---|---|---|
-| Correct | 正确 | `[!success]` |
 | Enhance | 建议补充重点知识 | `[!tip]` |
 | Minor | 轻微错误或不严谨 | `[!attention]` |
 | Major | 明显错误，可能误导理解 | `[!bug]` |
@@ -110,62 +121,78 @@ Issue 状态包括：
 
 ## 7. 多模型投票规则
 
-每个模型输出：
+一个 ReviewUnit 可以有多个候选 bug finding。主模型必须先提出 `findings[]` 清单；每个 finding 独立投票、独立计分、独立进入 issue 生命周期。
 
-1. severity；
-2. confidence；
-3. topic；
-4. 问题摘要；
-5. 建议修改；
-6. 是否需要多模态；
-7. 是否使用了上下文。
+主模型 finding 包含：
 
-最终等级按加权得分决定：
+1. `finding_id`；
+2. severity；
+3. confidence；
+4. topic；
+5. 问题摘要；
+6. 建议修改；
+7. 是否需要多模态；
+8. 使用的上下文和外部来源。
+
+主模型对每个 finding 的初始票为支持票：
 
 ```text
-score(severity) = Σ(model_weight × model_confidence)
+main_score = main_model_weight × confidence
 ```
 
-最终等级为得分最高且达到该等级阈值的 severity。
+外部 voter 只能对主模型提出的 finding 投 `support`、`oppose` 或 `skip`：
 
-每个 severity 都可以单独设置阈值。
+```text
+support_score = +1 × model_weight × confidence
+oppose_score = -1 × model_weight × confidence
+skip_score = 0
+```
 
-模型调用失败规则：
+每个 finding 最终得分：
 
-1. 超时、限流、HTTP 错误、返回空内容、返回 JSON 格式错误的模型视为本 ReviewUnit 投票失败。
-2. 失败模型不得生成 `Unknown` 投票，也不得参与加权评分。
-3. `Unknown` 只能由成功返回的模型显式投出。
-4. 如果一个 ReviewUnit 没有任何成功投票，则跳过该 ReviewUnit，并输出 warning。
+```text
+score(finding) = main_score + Σ(support_score) + Σ(oppose_score)
+```
+
+完整性规则：
+
+1. 有投票权限的模型包括 `host-current` 和配置中启用的外部 voter。
+2. `requires_multimodal=true` 的 finding 只能由支持多模态的模型投票；不支持多模态的模型视为无投票权，不计入缺失比例。
+3. 对有投票权模型，失败或未投票比例高于 `voting.max_missing_vote_ratio` 时，该 finding 进入 `PendingVote`，并输出 warning。
+4. 完整性通过后，`score >= voting.issue_score_threshold` 的 finding 进入 `Open`。
+5. 完整性通过但分数低于阈值的 finding 进入 `Rejected`。
+6. 失败模型不得被转成 `Unknown` 票；`Unknown` 不再作为默认 issue 状态使用。
 
 ## 7.1 Identity / Prepare / Vote / Merge 工作流
 
-AI Review 必须支持可恢复的四阶段工作流，并逐步以该工作流取代旧的同步式主模型/投票模型耦合流程。
+AI Review 必须使用可恢复的四阶段工作流；旧的 `review`、`prepare-host`、`merge-host` 同步桥接流程不再作为入口保留。
 
 1. `identity` 是确定性 CLI 阶段，负责给非空 ReviewUnit 写入稳定 AI-Review 块。
 2. 空标题段、空正文段、仅 AI-Review 块构成的段落必须跳过，不分配 ID。
 3. `identity` 必须保留已有 AI-Review 块内容；仅为缺失块的段落新增最小 identity 块。
 4. `identity --dry-run` 只预览；`identity --apply` 才允许修改源文。
 5. `identity --apply` 遇到 dirty、未初始化或 HEAD 不匹配的子仓库时必须跳过该子仓库并输出 warning，不得因此阻止主仓库其他安全路径写入。
-6. `prepare` 必须是 AI-assisted 阶段，由 Codex/Cursor 当前会话模型通过 skill 编排完成。
-7. 普通 CLI 不得提供 `prepare` 子命令；因为 CLI 无法主动与 Codex/Cursor 当前会话模型通信，也无法独立完成必要的联网判断和上下文选择。
-8. `prepare` 必须基于已经存在的 `unit=ruXXXXXX` 身份块工作；如果目标段落没有 identity，应先运行 `identity --apply`。
-9. 默认 `prepare` 是增量的：已有 task 且 `unit_id + content_hash + schema_version` 兼容时必须跳过，除非显式指定重新生成。
-10. 当前会话模型必须读取候选段落，按标题、内容、引用关系和审查目标决定最终 task。
-11. 当前会话模型必须解析 Obsidian 引用，并把必要的 `[[note#Heading]]`、`[[note#^blockid]]` 目标段落拼接进 task 上下文。
-12. 当前会话模型在必要时必须联网查询权威资料，并把来源写入 task 的 `external_sources` 或等价字段。
-13. Task 文件必须包含 `task_id`、`task_hash`、定位信息、原文内容、引用上下文、AI 选择/裁剪后的上下文、外部资料来源和完整 prompt。
-14. `/ai-review prepare --dry-run` 只打印将生成的 task 列表和上下文/资料来源摘要，不得写入 `.state/tasks` 或 `tasks-index.json`。
-15. `/ai-review prepare --unit ru000123 --regenerate` 可重新生成单个段落；`/ai-review prepare --all --regenerate` 可重新生成全范围。
-16. `/ai-review vote` 只代表当前 Codex/Cursor 会话模型投票，必须写入 `AI-Review/.state/votes/host-current/{task_id}.json`。
-17. `/ai-review vote` 默认增量跳过已有且 `task_hash` 一致的 host-current vote；除非显式指定重新投票。
-18. `/ai-review vote` 不得调用外部模型 API；外部模型投票必须由普通终端显式运行 `.\ai-review.cmd vote`。
-19. 外部 `.\ai-review.cmd vote` 只读取 task 文件，并把每个成功投票写入 `AI-Review/.state/votes/{model_id}/{task_id}.json`。
-20. 如果已有 vote 文件且其中 `task_hash` 与当前 task 一致，外部 vote 阶段必须跳过该任务。
-21. 失败模型不得写入 vote 文件，也不得生成 `Unknown` 票。
-22. `merge` 阶段只读取 task 文件和 vote 文件，所有 reviewer 一视同仁参与加权聚合。
-23. `merge` 必须重新读取源文并校验 `unit_id` 和 `content_hash`；块缺失或 hash 不一致时不得写入旧结果。
-24. `host-current`、外部 API 模型、人工补充模型都只是不同的 `model_id`，聚合阶段不得再区分“主模型”和“投票模型”。
-25. `merge --apply` 才允许写入 issue、源文件 AI-Review 折叠块、Dashboard 和 ledger。
+6. `prepare` 是 task 生成阶段，task 必须在此阶段写入 `AI-Review/.state/tasks/{task_id}.json`。
+7. `.\ai-review.cmd prepare` 负责确定性扫描、identity 校验、候选上下文构建、task JSON 原子写入和 `tasks-index.json` 更新。
+8. `/ai-review prepare` 是 skill 工作流，必须基于 CLI 生成的候选信息补全 AI-assisted 上下文裁剪、Obsidian 引用取舍、必要联网来源和最终 prompt。
+9. `prepare` 必须基于已经存在的 `unit=ruXXXXXX` 身份块工作；如果目标段落没有 identity，应先运行 `identity --apply`。
+10. 默认 `prepare` 是增量的：已有 task 且 `unit_id + content_hash + schema_version` 兼容时必须跳过，除非显式指定重新生成。
+11. 当前会话模型必须读取候选段落，按标题、内容、引用关系和审查目标决定最终 task。
+12. 当前会话模型必须解析 Obsidian 引用，并把必要的 `[[note#Heading]]`、`[[note#^blockid]]` 目标段落拼接进 task 上下文。
+13. 当前会话模型在必要时必须联网查询权威资料，并把来源写入 task 的 `external_sources` 或等价字段。
+14. Task 文件必须包含 `version`、`task_id`、`unit_id`、`task_hash`、定位信息、原文内容、引用上下文、AI 选择/裁剪后的上下文、外部资料来源和完整 prompt。
+15. `/ai-review prepare --dry-run` 和 `.\ai-review.cmd prepare --dry-run` 只打印将生成的 task 列表和上下文/资料来源摘要，不得写入 `.state/tasks` 或 `tasks-index.json`。
+16. `/ai-review prepare --unit ru000123 --regenerate` 可重新生成单个段落；`/ai-review prepare --all --regenerate` 可重新生成全范围。
+17. `/ai-review vote` 只代表当前 Codex/Cursor 会话模型投票，必须为每个 task 写入 `findings[]` 到 `AI-Review/.state/votes/host-current/{task_id}.json`。
+18. `/ai-review vote` 默认增量跳过已有且 `task_hash` 一致的 host-current vote；除非显式指定重新投票。
+19. `/ai-review vote` 不得调用外部模型 API；外部模型投票必须由普通终端显式运行 `.\ai-review.cmd vote`。
+20. 外部 `.\ai-review.cmd vote` 只读取 task 文件和 host-current findings，并把每个模型对每个 finding 的 `support/oppose/skip` 写入 `AI-Review/.state/votes/{model_id}/{task_id}.json`。
+21. 如果已有 vote 文件且其中 `task_hash` 与当前 task 一致，外部 vote 阶段必须跳过该任务。
+22. 失败模型不得写入 vote 文件，也不得生成 `Unknown` 票。
+23. `merge` 阶段只读取 task 文件、host-current findings 和外部 vote 文件，逐 finding 聚合。
+24. `merge` 必须重新读取源文并校验 `unit_id` 和 `content_hash`；块缺失或 hash 不一致时不得写入旧结果。
+25. `host-current`、外部 API 模型、人工补充模型都只是不同的 `model_id`，聚合阶段只按 finding 和投票权处理。
+26. `merge --apply` 才允许写入 issue、源文件 AI-Review 折叠块、Dashboard 和 ledger。
 
 ## 7.2 外部 Vote CLI 交互规则
 
@@ -204,7 +231,7 @@ topic:
 
 1. topic 不在原文反向折叠块中显示。
 2. topic 用于 Dashboard 分维度聚合。
-3. Correct 段落不列历史 issue，也不列历史 topic；只保留当前块 ID 和 Dashboard 链接。
+3. 无 finding 的段落不列历史 issue，也不列历史 topic；只保留当前块 ID 和 Dashboard 链接。
 
 ## 9. Issue 引用源块 ID
 
@@ -291,9 +318,10 @@ AI Review 只允许修改：
 2. `AI-Review/Open/`；
 3. `AI-Review/Closed/`；
 4. `AI-Review/Superseded/`；
-5. `AI-Review/Unknown/`；
-6. `AI-Review/Dashboard.md`；
-7. `AI-Review/.state/`。
+5. `AI-Review/PendingVote/`；
+6. `AI-Review/Rejected/`；
+7. `AI-Review/Dashboard.md`；
+8. `AI-Review/.state/`。
 
 ## 14. 输出语言
 
