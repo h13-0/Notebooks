@@ -75,6 +75,17 @@ ai-review check
 
 CLI 运行时优先使用 PyYAML 解析 `.ai-review.yaml`；环境缺少 PyYAML 时，必须使用内置简易解析器解析当前仓库配置所需的 YAML 子集，包括嵌套映射、标量列表以及列表中的映射项。
 
+### 3.2 Identity 幂等性
+
+`identity` 写入必须是保守补块流程：
+
+1. 扫描 ReviewUnit 时先解析当前段落范围内已有的 AI-Review 块，并优先沿用块中的 `unit_id`。
+2. 对已经有块且未发生重复 ID 冲突的段落，写回时原样保留该块，不刷新日期、不移动位置。
+3. 只对缺失块的 ReviewUnit 新增 identity 块。
+4. 不得用全局内容 hash 直接复用 `unit_id`；相同内容出现在不同 locator 时仍必须拥有不同 ReviewUnit ID。
+5. 发现重复 `unit_id` 时，保留扫描顺序中第一处，其它重复处重新分配唯一 ID，并输出 warning。
+6. 对当前扫描无法归属的旧 AI-Review 块，默认保留并 warning，不主动删除。
+
 ## 4. `/ai-review` 推荐流程
 
 ```text

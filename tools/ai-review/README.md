@@ -71,7 +71,7 @@ CLI 不再接受单文件注入的 `host-current` 投票，也不再提供 `prep
 .\ai-review.cmd identity --changed --apply
 ```
 
-`identity` 只给非空 ReviewUnit 写入缺失的 AI-Review identity 块；已有块原样保留，空段落跳过。
+`identity` 只给非空 ReviewUnit 写入缺失的 AI-Review identity 块；已有块原样保留，空段落跳过。重复运行必须幂等：段落正文和已有块未变化时，不刷新日期、不移动块、不重分配 ID。相同内容出现在不同文件或标题下时不能共享同一个 `unit_id`；发现重复 ID 时保留第一处明确归属，后续重复处重新分配唯一 ID 并输出 warning。
 
 ```powershell
 .\ai-review.cmd prepare --changed --dry-run
