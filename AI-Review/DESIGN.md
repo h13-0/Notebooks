@@ -173,7 +173,7 @@ AI Review 必须使用可恢复的四阶段工作流；旧的 `review`、`prepar
 4. `identity --dry-run` 只预览；`identity --apply` 才允许修改源文。
 5. `identity --apply` 遇到 dirty、未初始化或 HEAD 不匹配的子仓库时必须跳过该子仓库并输出 warning，不得因此阻止主仓库其他安全路径写入。
 6. `prepare` 是 task 生成阶段，task 必须在此阶段写入 `AI-Review/.state/tasks/{task_id}.json`。
-7. `.\ai-review.cmd prepare` 负责确定性扫描、identity 校验、候选上下文构建、task JSON 原子写入和 `tasks-index.json` 更新。
+7. `.\ai-review.cmd prepare`（Linux/macOS 可用 `./ai-review.sh prepare`）负责确定性扫描、identity 校验、候选上下文构建、task JSON 原子写入和 `tasks-index.json` 更新。
 8. `/ai-review prepare` 是 skill 工作流，必须基于 CLI 生成的候选信息补全 AI-assisted 上下文裁剪、Obsidian 引用取舍、必要联网来源和最终 prompt。
 9. `prepare` 必须基于已经存在的 `unit=ruXXXXXX` 身份块工作；如果目标段落没有 identity，应先运行 `identity --apply`。
 10. 默认 `prepare` 是增量的：已有 task 且 `unit_id + content_hash + schema_version` 兼容时必须跳过，除非显式指定重新生成。
@@ -185,8 +185,8 @@ AI Review 必须使用可恢复的四阶段工作流；旧的 `review`、`prepar
 16. `/ai-review prepare --unit ru000123 --regenerate` 可重新生成单个段落；`/ai-review prepare --all --regenerate` 可重新生成全范围。
 17. `/ai-review vote` 只代表当前 Codex/Cursor 会话模型投票，必须为每个 task 写入 `findings[]` 到 `AI-Review/.state/votes/host-current/{task_id}.json`。
 18. `/ai-review vote` 默认增量跳过已有且 `task_hash` 一致的 host-current vote；除非显式指定重新投票。
-19. `/ai-review vote` 不得调用外部模型 API；外部模型投票必须由普通终端显式运行 `.\ai-review.cmd vote`。
-20. 外部 `.\ai-review.cmd vote` 只读取 task 文件和 host-current findings，并把每个模型对每个 finding 的 `support/oppose/skip` 写入 `AI-Review/.state/votes/{model_id}/{task_id}.json`。
+19. `/ai-review vote` 不得调用外部模型 API；外部模型投票必须由普通终端显式运行 `.\ai-review.cmd vote` 或 `./ai-review.sh vote`。
+20. 外部 `.\ai-review.cmd vote` / `./ai-review.sh vote` 只读取 task 文件和 host-current findings，并把每个模型对每个 finding 的 `support/oppose/skip` 写入 `AI-Review/.state/votes/{model_id}/{task_id}.json`。
 21. 如果已有 vote 文件且其中 `task_hash` 与当前 task 一致，外部 vote 阶段必须跳过该任务。
 22. 失败模型不得写入 vote 文件，也不得生成 `Unknown` 票。
 23. `merge` 阶段只读取 task 文件、host-current findings 和外部 vote 文件，逐 finding 聚合。

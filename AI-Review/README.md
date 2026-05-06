@@ -95,6 +95,11 @@ Correct 段落通常只保留一个简短状态和 Dashboard 链接：
 .\ai-review.cmd identity --changed --apply
 ```
 
+```bash
+./ai-review.sh identity --changed --dry-run
+./ai-review.sh identity --changed --apply
+```
+
 空段落、空标题段和只包含 AI-Review 块的段落不会分配 ID。已有 AI-Review 块会保留，不会被覆盖成待审查块。
 
 默认情况下，prepare 和 vote 都是增量的：已有 task/vote 且 hash 一致时跳过。只有显式重新生成时才覆盖，例如：
@@ -116,13 +121,17 @@ AI-Review/.state/votes/host-current/{task_id}.json
 .\ai-review.cmd vote
 ```
 
+```bash
+./ai-review.sh vote
+```
+
 外部模型投票写入：
 
 ```text
 AI-Review/.state/votes/{model_id}/{task_id}.json
 ```
 
-外部 `.\ai-review.cmd vote` 可被中断和恢复。重新运行时，hash 一致且已经完成的外部投票会自动跳过。
+外部 `.\ai-review.cmd vote` / `./ai-review.sh vote` 可被中断和恢复。重新运行时，hash 一致且已经完成的外部投票会自动跳过。
 
 ## 详细规则
 

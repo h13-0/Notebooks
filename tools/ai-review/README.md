@@ -14,7 +14,7 @@ AI Review 的工具实现必须与设计文档和 skill 说明同步演进。修
 
 CLI 优先使用 PyYAML 读取 `.ai-review.yaml`。如果运行环境没有 PyYAML，会退回到内置简易 YAML 解析器；该解析器覆盖当前仓库配置使用的 YAML 子集，包括嵌套映射、标量列表和列表中的映射项。
 
-仓库根目录提供 Windows 入口：
+仓库根目录提供 Windows 和 Linux/macOS 入口：
 
 ```powershell
 .\ai-review.cmd identity --changed --dry-run
@@ -26,6 +26,18 @@ CLI 优先使用 PyYAML 读取 `.ai-review.yaml`。如果运行环境没有 PyYA
 .\ai-review.cmd merge --apply
 .\ai-review.cmd dashboard
 .\ai-review.cmd check
+```
+
+```bash
+./ai-review.sh identity --changed --dry-run
+./ai-review.sh identity --changed --apply
+./ai-review.sh prepare --changed --dry-run
+./ai-review.sh prepare --changed --apply
+./ai-review.sh vote
+./ai-review.sh merge --dry-run
+./ai-review.sh merge --apply
+./ai-review.sh dashboard
+./ai-review.sh check
 ```
 
 也可以使用包装脚本：
