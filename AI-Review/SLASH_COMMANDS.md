@@ -32,6 +32,7 @@
 CLI identity 写入或校验稳定 ReviewUnit ID
   ↓
 /ai-review prepare skill 写入 .state/tasks/{task_id}.json
+  - 必要时联网查询，并把外部资料正文或关键摘录写入 task.external_sources
   ↓
 /ai-review vote skill 写入 .state/votes/host-current/{task_id}.json，其中包含 findings[]
   ↓

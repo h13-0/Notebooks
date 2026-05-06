@@ -87,7 +87,7 @@ AI-Review/.state/tasks/{task_id}.json
 AI-Review/.state/tasks-index.json
 ```
 
-在正式 `/ai-review prepare` 中，Codex/Cursor 当前会话模型必须读取候选段落，自动解析 Obsidian 引用，必要时联网补充权威来源，并把最终 task 写入 `.state/tasks`。CLI `prepare` 的输出可作为候选 task，但不能替代当前会话模型的最终判断。
+在正式 `/ai-review prepare` 中，Codex/Cursor 当前会话模型必须读取候选段落，自动解析 Obsidian 引用，必要时联网补充权威来源，并把外部资料的正文或关键摘录写入 `.state/tasks` 的 `external_sources`。CLI `prepare` 的输出可作为候选 task，但不能替代当前会话模型的最终判断。
 
 `.\ai-review.cmd vote` 只负责外部模型投票，不代表 Codex/Cursor 当前会话模型。当前会话模型的 `/ai-review vote` 必须由 skill 自己写入 `votes/host-current`，其中包含 `findings[]`；不得通过本 CLI 调外部模型。
 
@@ -111,7 +111,7 @@ AI-Review/.state/votes/host-current/{task_id}.json
 
 ## 外部 voter
 
-外部模型从 `.ai-review.yaml` 读取模型列表，从 `.ai-review-secrets.yaml` 读取 provider 的 `base_url` 和 `api_key`。请求使用 OpenAI-compatible `/chat/completions` 形态，模型必须返回协议 JSON。
+外部模型从 `.ai-review.yaml` 读取模型列表，从 `.ai-review-secrets.yaml` 读取 provider 的 `base_url` 和 `api_key`。请求使用 OpenAI-compatible `/chat/completions` 形态，模型必须返回协议 JSON。外部 voter prompt 会携带 task 中的 `external_sources` 正文或摘录，不能依赖 API 服务商内置联网搜索。
 
 ## 写入约束
 

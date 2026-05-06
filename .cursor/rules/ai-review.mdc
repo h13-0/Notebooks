@@ -14,7 +14,7 @@ alwaysApply: false
 5. 通过 CLI 执行权威流程，不要手工随意改文件。
 6. 默认先执行四阶段 dry-run 流程：
    - `.\ai-review.cmd identity --changed --dry-run`
-   - `/ai-review prepare --changed --dry-run`：由当前 Cursor Agent 模型补全上下文并写入或预览 `AI-Review/.state/tasks/*.json`
+   - `/ai-review prepare --changed --dry-run`：由当前 Cursor Agent 模型补全上下文并写入或预览 `AI-Review/.state/tasks/*.json`；如联网查询，必须把资料正文或关键摘录写入 task 的 `external_sources`
    - `/ai-review vote`：当前 Cursor Agent 模型逐个生成符合 `AI-Review/MODEL_PROTOCOL.md` 的投票，写入 `AI-Review/.state/votes/host-current/*.json`
    - 提示用户在普通终端运行 `.\ai-review.cmd vote`（Linux/macOS 可运行 `./ai-review.sh vote`）
    - `.\ai-review.cmd merge --dry-run`

@@ -180,7 +180,7 @@ AI Review 必须使用可恢复的四阶段工作流；旧的 `review`、`prepar
 10. 默认 `prepare` 是增量的：已有 task 且 `unit_id + content_hash + schema_version` 兼容时必须跳过，除非显式指定重新生成。
 11. 当前会话模型必须读取候选段落，按标题、内容、引用关系和审查目标决定最终 task。
 12. 当前会话模型必须解析 Obsidian 引用，并把必要的 `[[note#Heading]]`、`[[note#^blockid]]` 目标段落拼接进 task 上下文。
-13. 当前会话模型在必要时必须联网查询权威资料，并把来源写入 task 的 `external_sources` 或等价字段。
+13. 当前会话模型在必要时必须联网查询权威资料，并把来源写入 task 的 `external_sources` 或等价字段；每个联网来源必须包含正文或足以独立判断的关键摘录，不能只写 URL 和标题。
 14. Task 文件必须包含 `version`、`task_id`、`unit_id`、`task_hash`、定位信息、原文内容、引用上下文、AI 选择/裁剪后的上下文、外部资料来源和完整 prompt。
 15. `/ai-review prepare --dry-run` 和 `.\ai-review.cmd prepare --dry-run` 只打印将生成的 task 列表和上下文/资料来源摘要，不得写入 `.state/tasks` 或 `tasks-index.json`。
 16. `/ai-review prepare --unit ru000123 --regenerate` 可重新生成单个段落；`/ai-review prepare --all --regenerate` 可重新生成全范围。
@@ -280,9 +280,11 @@ AI Review 构建上下文时必须解析当前 ReviewUnit 中的 Obsidian 引用
 规则：
 
 1. 联网资料应优先使用官方文档、标准、源码、论文等一手来源。
-2. 投票 JSON 必须在 `external_sources` 字段列出 URL 或可追溯来源。
-3. `summary` 或 `evidence` 必须说明哪些判断来自外部资料。
-4. 无法联网或来源不足时，应降低 confidence 或返回 Unknown。
+2. prepare 阶段写入 task 的 `external_sources` 必须包含 URL 或可追溯来源、标题、用途，以及 `content` 或 `excerpt` 正文，供无联网能力的外部 voter 直接判断。
+3. 外部 voter prompt 必须注入 task 的 `external_sources`，不得只给参考链接和标题。
+4. 投票 JSON 必须在 `external_sources` 字段列出 URL 或可追溯来源。
+5. `summary` 或 `evidence` 必须说明哪些判断来自外部资料。
+6. 无法联网或来源不足时，应降低 confidence 或返回 Unknown。
 
 ## 12. 人工备注区
 

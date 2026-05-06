@@ -45,7 +45,7 @@ CLI 负责：
 3. 为每个 finding 提供初始支持票；
 4. 生成面向用户的简体中文 finding 描述和建议修改。
 
-CLI 不能天然读取当前 Codex/Cursor 的内部模型状态，因此当前会话模型必须通过 `/ai-review prepare` 和 `/ai-review vote` skill 把 task/vote 文件写入统一状态目录。CLI 只负责确定性辅助、外部 voter 和最终 merge。
+CLI 不能天然读取当前 Codex/Cursor 的内部模型状态，因此当前会话模型必须通过 `/ai-review prepare` 和 `/ai-review vote` skill 把 task/vote 文件写入统一状态目录。CLI 只负责确定性辅助、外部 voter 和最终 merge。`/ai-review prepare` 联网查询到的资料必须以正文或关键摘录形式写入 task，CLI 外部 voter prompt 会把这些资料一并发送给无联网能力的 API 模型。
 
 ## 3. 推荐命令
 

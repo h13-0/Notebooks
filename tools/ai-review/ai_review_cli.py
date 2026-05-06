@@ -715,6 +715,7 @@ def build_prompt(unit: ReviewUnit, context_notes: list[str]) -> str:
         - topic 只用于 issue 和 Dashboard。
         - 如果依赖图片或多模态内容，finding.requires_multimodal 必须为 true。
         - 如果当前知识不足、事实可能过时，或需要核验权威资料，host-current 主模型必须联网查询。
+        - prepare 阶段写入 task.external_sources 时，必须包含 URL/标题/用途以及可供外部 voter 离线判断的正文或关键摘录。
         - 联网查询时必须在 finding.external_sources 中列出 URL 或可追溯来源；summary/evidence 应明确哪些判断来自外部资料。
 
         附加上下文：
@@ -1367,6 +1368,7 @@ def build_voter_prompt(task: dict[str, Any], findings: list[Finding]) -> str:
         - support 表示支持该 bug 成立；oppose 表示反对该 bug 成立；skip 表示无投票权或无法判断。
         - confidence 必须是 0 到 1。
         - 自然语言字段必须以简体中文为主。
+        - 不要假设当前 API 模型具备联网能力；如需外部资料，必须优先使用下方“prepare 阶段外部资料”中的 content/excerpt。
 
         输出格式：
         {{
@@ -1384,6 +1386,9 @@ def build_voter_prompt(task: dict[str, Any], findings: list[Finding]) -> str:
 
         附加上下文：
         {json.dumps(task.get("prepared_context") or task.get("context_notes") or [], ensure_ascii=False, indent=2)}
+
+        prepare 阶段外部资料：
+        {json.dumps(task.get("external_sources") or [], ensure_ascii=False, indent=2)}
 
         ReviewUnit 原文：
         ```markdown

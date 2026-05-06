@@ -86,7 +86,7 @@ Correct 段落通常只保留一个简短状态和 Dashboard 链接：
 
 1. 根据标题、段落内容和引用关系决定 task 的审查上下文。
 2. 自动把必要的 Obsidian 引用段落拼接进 task。
-3. 必要时联网查询权威资料，并把来源写入 task，供后续 issue 修改者核实。
+3. 必要时联网查询权威资料，并把来源正文或关键摘录写入 task，供无联网能力的外部 voter 和后续 issue 修改者核实。
 
 `identity` 是 prepare 前的身份锚定步骤。它会给非空段落写入稳定的 AI-Review 块，例如 `unit=ru000123`，让后续 task、vote 和 merge 都能绑定到同一个段落。普通终端入口是：
 
