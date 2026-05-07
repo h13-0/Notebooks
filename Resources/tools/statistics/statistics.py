@@ -4,6 +4,7 @@ import json
 import argparse
 import logging
 import shutil
+import fnmatch
 from collections import defaultdict, deque
 from datetime import date, datetime, timedelta, timezone
 import git
@@ -20,9 +21,93 @@ plt.rcParams['axes.unicode_minus'] = False
 logger = logging.getLogger(__name__)
 
 
+AI_REVIEW_BLOCK_RE = re.compile(
+    r"(?ms)^<!-- ai-review:start unit=ru[0-9]{6} -->.*?^<!-- ai-review:end -->\s*"
+)
+AI_REVIEW_ANCHOR_RE = re.compile(r"(?m)(?:\s*\^ru[0-9]{6}\b)")
+
+DEFAULT_FILTER_CONFIG = {
+    "exclude_paths": [
+        "AI-Review",
+        "tools/ai-review",
+        "skills/ai-review",
+        ".codex/skills/ai-review",
+        ".cursor/rules/ai-review.mdc",
+        "AGENTS.ai-review.md",
+        "AI-Review-SLASH_COMMANDS.md",
+        "README.ai-review-skill.md",
+    ],
+    "exclude_globs": [
+        ".codex/commands/ai-review*.md",
+        "*.ai-review.md",
+    ],
+    "strip_ai_review_blocks": True,
+    "strip_ai_review_anchors": True,
+}
+
+
+def normalize_rel_path(path: str) -> str:
+    return path.replace("\\", "/").strip("/")
+
+
+def load_filter_config(config_path: str | None) -> dict:
+    config = json.loads(json.dumps(DEFAULT_FILTER_CONFIG))
+    if not config_path:
+        return config
+    try:
+        with open(config_path, "r", encoding="utf-8") as file:
+            user_config = json.load(file)
+    except FileNotFoundError:
+        logger.warning(f"Statistics filter config not found: {config_path}; using defaults")
+        return config
+    except Exception as exc:
+        raise RuntimeError(f"Error loading statistics filter config {config_path}: {exc}") from exc
+
+    for key in ("exclude_paths", "exclude_globs"):
+        if key in user_config:
+            config[key] = user_config[key] or []
+    for key in ("strip_ai_review_blocks", "strip_ai_review_anchors"):
+        if key in user_config:
+            config[key] = bool(user_config[key])
+    return config
+
+
+def filter_config_hash(config: dict) -> str:
+    payload = json.dumps(config, ensure_ascii=False, sort_keys=True)
+    import hashlib
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def is_excluded_path(rel_path: str, config: dict) -> bool:
+    rel = normalize_rel_path(rel_path)
+    parts = rel.split("/")
+    for raw in config.get("exclude_paths", []):
+        item = normalize_rel_path(str(raw))
+        if not item:
+            continue
+        if rel == item or rel.startswith(item + "/"):
+            return True
+        if "/" not in item and item in parts:
+            return True
+    for raw in config.get("exclude_globs", []):
+        pattern = normalize_rel_path(str(raw))
+        if pattern and fnmatch.fnmatch(rel, pattern):
+            return True
+    return False
+
+
+def sanitize_markdown_for_statistics(content: str, config: dict) -> str:
+    if config.get("strip_ai_review_blocks", True):
+        content = AI_REVIEW_BLOCK_RE.sub("", content)
+    if config.get("strip_ai_review_anchors", True):
+        content = AI_REVIEW_ANCHOR_RE.sub("", content)
+    return content
+
+
 class DocStatistics:
-    def __init__(self, path: str):
+    def __init__(self, path: str, filter_config: dict):
         self.path = path
+        self.filter_config = filter_config
         self.line_count = 0
         self.char_count = 0
         self.update_statistics()
@@ -30,7 +115,7 @@ class DocStatistics:
     def update_statistics(self):
         try:
             with open(self.path, 'r', encoding='utf-8') as file:
-                content = file.read()
+                content = sanitize_markdown_for_statistics(file.read(), self.filter_config)
                 self.line_count = content.count('\n') + 1
                 self.char_count = self._count_words(content)
         except Exception as e:
@@ -47,8 +132,9 @@ class DocStatistics:
 
 
 class RepoStatistics:
-    def __init__(self, repo_path: str):
+    def __init__(self, repo_path: str, filter_config: dict | None = None):
         self.repo_path = repo_path
+        self.filter_config = filter_config or DEFAULT_FILTER_CONFIG
         self._doc_types = [".md"]
         self._doc_statistics = []
         self._top_level_word_counts = defaultdict(int)
@@ -61,7 +147,10 @@ class RepoStatistics:
             for file in files:
                 if any(file.endswith(ext) for ext in self._doc_types):
                     file_path = os.path.join(root, file)
-                    doc_statistics = DocStatistics(file_path)
+                    rel_path = os.path.relpath(file_path, self.repo_path)
+                    if is_excluded_path(rel_path, self.filter_config):
+                        continue
+                    doc_statistics = DocStatistics(file_path, self.filter_config)
                     self._doc_statistics.append(doc_statistics)
                     top_level = self._get_top_level_folder(file_path)
                     self._top_level_word_counts[top_level] += doc_statistics.char_count
@@ -401,6 +490,8 @@ def main():
                         help='Path to statistics cache file')
     parser.add_argument('--repo-path', type=str, default='./Notebooks',
                         help='Path to the target repository for statistics')
+    parser.add_argument('--filter-config', type=str, default=None,
+                        help='Path to statistics filter config JSON')
     # 添加日志路径参数
     parser.add_argument('--log', type=str, default=None,
                         help='Path to log file (appended mode)')
@@ -436,6 +527,15 @@ def main():
     # 初始化仓库
     repo_path = os.path.abspath(args.repo_path)
     logger.info(f"Using repository path: {repo_path}")
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    filter_config_path = args.filter_config
+    if filter_config_path is None:
+        filter_config_path = os.path.join(script_dir, "statistics_config.json")
+    elif not os.path.isabs(filter_config_path):
+        filter_config_path = os.path.abspath(filter_config_path)
+    filter_config = load_filter_config(filter_config_path)
+    current_filter_hash = filter_config_hash(filter_config)
+    logger.info(f"Using statistics filter config: {filter_config_path}")
     repo = git.Repo(repo_path)
     repo.git.checkout("-f", "master")
     repo.git.pull()
@@ -456,7 +556,8 @@ def main():
     new_entries = 0
     for commit in commits:
         hexsha = commit.hexsha
-        if hexsha in statistics_cache:
+        cached = statistics_cache.get(hexsha)
+        if isinstance(cached, dict) and cached.get('filter_hash') == current_filter_hash:
             continue
             
         try:
@@ -465,11 +566,12 @@ def main():
             clean_worktree(repo, logger)
             remove_orphan_submodule_dirs(repo_path, repo, logger)
             update_submodules(repo)
-            repo_stats = RepoStatistics(repo_path)
+            repo_stats = RepoStatistics(repo_path, filter_config)
             statistics_cache[hexsha] = {
                 'date': commit.committed_datetime.isoformat(),
                 'line_count': repo_stats.line_count,
-                'word_count': repo_stats.word_count
+                'word_count': repo_stats.word_count,
+                'filter_hash': current_filter_hash,
             }
             new_entries += 1
             logger.info(
@@ -487,7 +589,7 @@ def main():
     clean_worktree(repo, logger)
     remove_orphan_submodule_dirs(repo_path, repo, logger)
     update_submodules(repo)
-    repo_stats_current = RepoStatistics(repo_path)
+    repo_stats_current = RepoStatistics(repo_path, filter_config)
     top_level_word_count = repo_stats_current.top_level_word_counts
     
     if new_entries:
