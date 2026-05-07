@@ -29,6 +29,8 @@ scripts:
       - statistics/statistics.json
       - --output
       - "{statistics_image}"
+      - --filter-config
+      - statistics/statistics_config.json
 
 remote:
   port: 22
