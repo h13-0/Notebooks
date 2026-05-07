@@ -51,6 +51,29 @@ class IdentityStabilityTests(unittest.TestCase):
             self.assertEqual(created, 0)
             self.assertEqual(rerun, updated)
 
+    def test_obsidian_tag_is_not_markdown_heading(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            note = root / "note.md"
+            note.write_text(
+                "#tag\n"
+                "#中文标签\n"
+                "#\u3000not-heading\n\n"
+                "# Real Heading\n\n"
+                "body\n",
+                encoding="utf-8",
+            )
+            ledger = {"version": 1, "next_unit_id": 1, "by_locator": {}, "by_hash": {}}
+
+            units = ai_review_cli.split_units(note, root, ledger, {})
+
+            self.assertEqual(len(units), 2)
+            self.assertEqual(units[0].heading, "_preamble")
+            self.assertIn("#tag", units[0].content)
+            self.assertIn("#中文标签", units[0].content)
+            self.assertIn("#\u3000not-heading", units[0].content)
+            self.assertEqual(units[1].heading, "Real Heading")
+
     def test_duplicate_existing_ids_are_remapped_after_first_claim(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

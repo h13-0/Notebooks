@@ -16,7 +16,7 @@ AI Review 能力的设计文档、skill 说明和工具实现必须一起演进�
 
 ReviewUnit 是 AI Review 的最小审查单位。
 
-1. 按 Markdown 1-6 级标题划分。
+1. 按 Markdown 1-6 级 ATX 标题划分，标题标记必须形如 `# text` 或 `#\ttext`。
 2. 一个标题及其下方正文，直到下一个任意级别标题之前，构成一个 ReviewUnit。
 3. 如果两个标题之间没有正文内容，则跳过，不生成 ReviewUnit，不插入 AI Review 折叠块。
 4. 文件开头在第一个标题前的正文可作为 `_preamble` ReviewUnit。
@@ -28,6 +28,7 @@ ReviewUnit 是 AI Review 的最小审查单位。
 10. 已有块优先绑定其所在 ReviewUnit；ledger locator 只作为缺块或迁移时的辅助信息。
 11. 内容 hash 不得跨 locator 直接复用 `unit_id`，避免不同文件或重复内容段落共享同一个 ReviewUnit ID。
 12. 如果发现重复 `unit_id`，保留扫描顺序中第一处明确归属的块，其它重复处必须重新分配唯一 ID，并输出 warning。
+13. Obsidian 标签如 `#tag`、`#中文标签` 不是 Markdown 标题，必须保留在当前 ReviewUnit 内容中，不得触发段落切分。
 
 ## 2. Hash 规则
 

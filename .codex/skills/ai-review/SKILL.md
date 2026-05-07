@@ -65,6 +65,7 @@ ai-review merge --dry-run
 5. 已有 AI-Review 块必须原样保留，不得降级成待审查块。
 6. `identity` 必须幂等：段落正文和已有块未变化时，重复运行不得刷新日期、移动块或重分配 ID。
 7. 相同内容段落不得因为 hash 相同共享 `unit_id`；发现重复 ID 时应保留第一处明确归属，其它重复处重新分配唯一 ID 并输出 warning。
+8. ReviewUnit 只按 `# text` / `#\ttext` 形式的 Markdown 标题切分；`#tag`、`#中文标签` 等 Obsidian 标签必须留在当前段落正文中。
 
 ## `/ai-review prepare` 工作流
 

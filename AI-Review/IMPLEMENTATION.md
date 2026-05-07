@@ -219,6 +219,8 @@ CLI 事务化写入或 dry-run 输出
 15. Mermaid 代码块
 16. 普通代码块
 
+ReviewUnit 切分只识别 `# text` / `#\ttext` 形式的 Markdown ATX 标题。`#tag`、`#中文标签` 等 Obsidian 标签应按正文处理，不能参与标题栈或段落切分。
+
 不支持的语法应 warning，不强行解析。
 
 ## 12. 附件规则

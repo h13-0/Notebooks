@@ -49,7 +49,9 @@ AI_BLOCK_RE = re.compile(
     r"(?ms)^<!-- ai-review:start unit=ru[0-9]{6} -->.*?^<!-- ai-review:end -->\s*"
 )
 SUSPICIOUS_ENCODING_RE = re.compile(r"\?{4,}|\ufffd")
-HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$")
+# Markdown ATX headings require whitespace after the opening # run.
+# Obsidian tags such as #label must stay inside the current ReviewUnit.
+HEADING_RE = re.compile(r"^(#{1,6})[ \t]+(.+?)\s*$")
 WIKI_LINK_RE = re.compile(r"!?\[\[([^\]]+)\]\]")
 EMBED_RE = re.compile(r"!\[\[([^\]]+)\]\]")
 TAG_RE = re.compile(r"(?<!\w)#([\w\-\u4e00-\u9fff/]+)")
