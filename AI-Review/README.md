@@ -195,3 +195,12 @@ task 和 vote 必须保持 UTF-8 中文文本。如果看到 `????` 或 `�` �
 - `MODEL_PROTOCOL.md`：模型投票 JSON 协议。
 - `IMPLEMENTATION.md`：实现说明。
 - `SLASH_COMMANDS.md`：命令入口说明。
+## 文档收拢说明
+
+AI Review 的用户说明和 agent 说明现在统一收拢到 `AI-Review/` 目录下，避免把说明文档直接暴露在项目根目录。
+
+- `README.md`：面向用户的总览和使用方式。
+- `SLASH_COMMANDS.md`：`/ai-review` 快捷入口规范。
+- `AGENT_GUIDE.md`：agent 执行约束与仓库内入口说明。
+
+仓库根目录仅保留运行所需入口与配置，例如 `.ai-review.yaml`、`ai-review.cmd`、`ai-review.sh` 以及 `scripts/ai-review.*`。

@@ -30,9 +30,6 @@ scan:
     - ".cursor"
     - "tools/ai-review"
     - "Readme.md"
-    - "AGENTS.ai-review.md"
-    - "AI-Review-SLASH_COMMANDS.md"
-    - "README.ai-review-skill.md"
     - "Linux内核原理及其开发/minimal-linux-drivers"
 
 severity:

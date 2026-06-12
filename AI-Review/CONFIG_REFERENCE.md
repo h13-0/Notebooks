@@ -59,9 +59,6 @@ scan:
     - ".cursor"
     - "tools/ai-review"
     - "Readme.md"
-    - "AGENTS.ai-review.md"
-    - "AI-Review-SLASH_COMMANDS.md"
-    - "README.ai-review-skill.md"
 
 severity:
   callout:

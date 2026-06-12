@@ -33,9 +33,6 @@ DEFAULT_FILTER_CONFIG = {
         "skills/ai-review",
         ".codex/skills/ai-review",
         ".cursor/rules/ai-review.mdc",
-        "AGENTS.ai-review.md",
-        "AI-Review-SLASH_COMMANDS.md",
-        "README.ai-review-skill.md",
     ],
     "exclude_globs": [
         ".codex/commands/ai-review*.md",
