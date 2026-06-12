@@ -27,6 +27,8 @@ AI_REVIEW_BLOCK_RE = re.compile(
 AI_REVIEW_ANCHOR_RE = re.compile(r"(?m)(?:\s*\^ru[0-9]{6}\b)")
 
 DEFAULT_FILTER_CONFIG = {
+    "include_paths": [],
+    "include_globs": [],
     "exclude_paths": [
         "AI-Review",
         "tools/ai-review",
@@ -60,7 +62,7 @@ def load_filter_config(config_path: str | None) -> dict:
     except Exception as exc:
         raise RuntimeError(f"Error loading statistics filter config {config_path}: {exc}") from exc
 
-    for key in ("exclude_paths", "exclude_globs"):
+    for key in ("include_paths", "include_globs", "exclude_paths", "exclude_globs"):
         if key in user_config:
             config[key] = user_config[key] or []
     for key in ("strip_ai_review_blocks", "strip_ai_review_anchors"):
@@ -75,10 +77,10 @@ def filter_config_hash(config: dict) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
-def is_excluded_path(rel_path: str, config: dict) -> bool:
+def matches_path_rules(rel_path: str, path_rules: list[str], glob_rules: list[str]) -> bool:
     rel = normalize_rel_path(rel_path)
     parts = rel.split("/")
-    for raw in config.get("exclude_paths", []):
+    for raw in path_rules:
         item = normalize_rel_path(str(raw))
         if not item:
             continue
@@ -86,11 +88,27 @@ def is_excluded_path(rel_path: str, config: dict) -> bool:
             return True
         if "/" not in item and item in parts:
             return True
-    for raw in config.get("exclude_globs", []):
+    for raw in glob_rules:
         pattern = normalize_rel_path(str(raw))
         if pattern and fnmatch.fnmatch(rel, pattern):
             return True
     return False
+
+
+def is_included_path(rel_path: str, config: dict) -> bool:
+    include_paths = config.get("include_paths", [])
+    include_globs = config.get("include_globs", [])
+    if not include_paths and not include_globs:
+        return True
+    return matches_path_rules(rel_path, include_paths, include_globs)
+
+
+def is_excluded_path(rel_path: str, config: dict) -> bool:
+    return matches_path_rules(
+        rel_path,
+        config.get("exclude_paths", []),
+        config.get("exclude_globs", []),
+    )
 
 
 def sanitize_markdown_for_statistics(content: str, config: dict) -> str:
@@ -145,6 +163,8 @@ class RepoStatistics:
                 if any(file.endswith(ext) for ext in self._doc_types):
                     file_path = os.path.join(root, file)
                     rel_path = os.path.relpath(file_path, self.repo_path)
+                    if not is_included_path(rel_path, self.filter_config):
+                        continue
                     if is_excluded_path(rel_path, self.filter_config):
                         continue
                     doc_statistics = DocStatistics(file_path, self.filter_config)

@@ -1,4 +1,6 @@
 {
+  "include_paths": [],
+  "include_globs": [],
   "exclude_paths": [
     "AI-Review",
     "tools/ai-review",
