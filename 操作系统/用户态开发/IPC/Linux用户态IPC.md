@@ -26,12 +26,94 @@ Linux用户态IPC的方式主要有如下几种：
 ## 3 管道
 
 机制：
-- 管道是内核维护的一段缓冲区，一个进程写入，另一个进程读取
+- 管道是内核维护的一段缓冲区，一个进程写入，另一个进程读取(<font color="#c00000">单向传递</font>)
 
+常见种类有：
+- 匿名管道 `pipe` ，通常用于父子进程
+- 命名管道 `FIFO` ，可以用于无亲缘关系的进程
 
+Demo：
+
+```C
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/wait.h>
+
+int main() {
+    int fd[2];
+    pipe(fd);
+
+    pid_t pid = fork();
+
+    if (pid == 0) {
+        close(fd[1]);
+
+        char buf[128] = {0};
+        read(fd[0], buf, sizeof(buf));
+
+        printf("child read: %s\n", buf);
+
+        close(fd[0]);
+    } else {
+        close(fd[0]);
+
+        const char *msg = "hello pipe";
+        write(fd[1], msg, strlen(msg));
+
+        close(fd[1]);
+        wait(NULL);
+    }
+
+    return 0;
+}
+```
 
 ## 4 信号
 
+机制：
+- 一种异步通知机制，常见信号有：
+	- `SIGINT`  Ctrl+C
+	- `SIGKILL` 强制终止
+	- `SIGTERM` 请求终止
+	- `SIGCHLD` 子进程退出
+	- `SIGUSR1` 用户自定义信号
+	具体可见[[../信号/可监听的信号列表|可监听的信号列表]]
+
+Demo:
+
+```C
+#include <stdio.h>
+#include <unistd.h>
+#include <signal.h>
+#include <sys/wait.h>
+
+void handler(int signo) {
+    write(STDOUT_FILENO, "child received signal\n", 22);
+}
+
+int main() {
+    pid_t pid = fork();
+
+    if (pid == 0) {
+        signal(SIGUSR1, handler);
+
+        while (1) {
+            pause();
+        }
+    } else {
+        sleep(1);
+        kill(pid, SIGUSR1);
+
+        sleep(1);
+        kill(pid, SIGKILL);
+
+        wait(NULL);
+    }
+
+    return 0;
+}
+```
 
 ## 5 消息队列
 
