@@ -3377,6 +3377,16 @@ constexpr ForwardIt lower_bound( ForwardIt first, ForwardIt last,
                                  const T& value, Compare comp );
 ```
 
+关于为什么叫 `lower_bound` 和 `upper_bound` ：
+1. CPP中，<font color="#c00000">区间统一为左闭右开</font>
+2. 则 `[lower_bound(x), upper_bound(x))` <span style="background:#fff88f"><font color="#c00000">表示所有值等于</font></span> `x` <span style="background:#fff88f"><font color="#c00000">的元素区间</font></span>
+
+```text
+1 2 2 2 3 4
+  |     |
+lower  upper
+```
+
 ##### 4.3.1.3.3 搜索第一个大于目标值的位置(upper_bound)
 
 `std::upper_bound` ：
@@ -3430,8 +3440,6 @@ constexpr ForwardIt upper_bound( ForwardIt first, ForwardIt last,
 	- <font color="#c00000">容器中元素必须按</font> `Compare` <font color="#c00000">排序</font>，即：
 		- 当<font color="#c00000">使用默认</font> `Compare` <font color="#c00000">时</font>，传入容器<span style="background:#fff88f"><font color="#c00000"><u>必须为升序容器</u></font></span>
 		- 当传入降序容器时，必须指定自定义[[CPP/C2CPP/C2CPP#^t2nyfa|Compare]]
-
-
 
 ### 4.3.2 替换
 
