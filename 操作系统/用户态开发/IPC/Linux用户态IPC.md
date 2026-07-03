@@ -188,7 +188,42 @@ int main() {
 
 机制：
 - 把多个进程把**同一块物理内存**映射到自己的虚拟地址空间中
-- 速度快，但本身不负责进程间同步
 
+优点：
+- 速度非常快，适合大量数据共享
 
+缺点：
+- 本身不提供同步机制
+- 容易出现竞态条件
+
+Demo：
+
+```C
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/mman.h>
+#include <sys/wait.h>
+
+int main() {
+    char *shm = mmap(NULL, 4096,
+                     PROT_READ | PROT_WRITE,
+                     MAP_SHARED | MAP_ANONYMOUS,
+                     -1, 0);
+
+    pid_t pid = fork();
+
+    if (pid == 0) {
+        sleep(1);
+        printf("child read: %s\n", shm);
+    } else {
+        strcpy(shm, "hello shared memory");
+
+        wait(NULL);
+        munmap(shm, 4096);
+    }
+
+    return 0;
+}
+```
 
