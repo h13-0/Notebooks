@@ -201,33 +201,66 @@ int main() {
 - System V获取共享内存ID并挂载
 - 匿名内存文件(不挂载到VFS)，传fd并挂载
 
+常用同步方法为：
+- 在共享内存中创建一个<font color="#c00000">支持跨进程的</font>互斥锁或条件变量
+- 按内存结构解析，随后跨进程使用
 
 Demo：
 
 ```C
 #include <stdio.h>
 #include <string.h>
+#include <fcntl.h>
 #include <unistd.h>
+#include <semaphore.h>
 #include <sys/mman.h>
-#include <sys/wait.h>
 
-int main() {
-    char *shm = mmap(NULL, 4096,
+#define SHM_NAME "/demo_shm"
+#define SEM_EMPTY "/demo_empty"
+#define SEM_FULL  "/demo_full"
+#define SIZE 256
+
+int main(int argc, char *argv[]) {
+    int fd = shm_open(SHM_NAME, O_CREAT | O_RDWR, 0666);
+    ftruncate(fd, SIZE);
+
+    char *buf = mmap(NULL, SIZE,
                      PROT_READ | PROT_WRITE,
-                     MAP_SHARED | MAP_ANONYMOUS,
-                     -1, 0);
+                     MAP_SHARED,
+                     fd, 0);
 
-    pid_t pid = fork();
+    close(fd);
 
-    if (pid == 0) {
-        sleep(1);
-        printf("child read: %s\n", shm);
-    } else {
-        strcpy(shm, "hello shared memory");
+    sem_t *empty = sem_open(SEM_EMPTY, O_CREAT, 0666, 1);
+    sem_t *full  = sem_open(SEM_FULL,  O_CREAT, 0666, 0);
 
-        wait(NULL);
-        munmap(shm, 4096);
+    if (argc < 2) {
+        printf("usage:\n");
+        printf("  %s read\n", argv[0]);
+        printf("  %s write \"hello\"\n", argv[0]);
+        printf("  %s clean\n", argv[0]);
+        return 0;
     }
+
+    if (strcmp(argv[1], "write") == 0) {
+        sem_wait(empty);
+        snprintf(buf, SIZE, "%s", argv[2]);
+        sem_post(full);
+    }
+    else if (strcmp(argv[1], "read") == 0) {
+        sem_wait(full);
+        printf("read: %s\n", buf);
+        sem_post(empty);
+    }
+    else if (strcmp(argv[1], "clean") == 0) {
+        shm_unlink(SHM_NAME);
+        sem_unlink(SEM_EMPTY);
+        sem_unlink(SEM_FULL);
+    }
+
+    munmap(buf, SIZE);
+    sem_close(empty);
+    sem_close(full);
 
     return 0;
 }
