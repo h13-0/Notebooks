@@ -1,14 +1,14 @@
 ---
-number headings: auto, first-level 2, max 6, 1.1
+number headings: auto, first-level 1, max 6, 1.1
 ---
 #Linux用户态开发
 
-## 1 目录
+# 1 目录
 
 ```toc
 ```
 
-## 2 概述
+# 2 概述
 
 Linux用户态IPC的方式主要有如下几种：
 1. 管道：通过内核缓冲区在进程间按字节流传递数据，常用于父子进程或通过FIFO用于无亲缘进程。
@@ -23,7 +23,7 @@ Linux用户态IPC的方式主要有如下几种：
 用户态常用IPC库有：
 - [Remote Call Framework (RCF) - Delta V Software](https://www.deltavsoft.com/)
 
-## 3 管道
+# 3 管道
 
 机制：
 - 管道是内核维护的一段缓冲区，一个进程写入，另一个进程读取(<font color="#c00000">单向传递</font>)
@@ -69,7 +69,7 @@ int main() {
 }
 ```
 
-## 4 信号
+# 4 信号
 
 机制：
 - 一种异步通知机制，常见信号有：
@@ -117,12 +117,78 @@ int main() {
 }
 ```
 
-## 5 消息队列
+# 5 消息队列
 
 机制：
 - 由内核维护，进程可以往队列中发送消息，另一个进程从队列中读取消息
 - 消息队列与管道之间的区别：
 	- 管道：按字节流传输
 	- 消息队列：按消息为单位传输
+- Linux下通常有如下两类队列：
+	- System V 消息队列
+	- POSIX 消息队列
+
+优点：
+- 有消息边界；
+- 支持按消息类型读取；
+- 不要求两个进程同时在线。
+
+缺点：
+- 需要内核拷贝数据，性能不如共享内存；
+- 消息大小和队列容量有限；
+- 需要手动删除队列资源。
+
+适用场景：
+- 进程间传递结构化小消息，例如任务通知、命令分发、日志消息等。
+
+Demo：
+
+```C
+#include <stdio.h>
+#include <string.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+struct msgbuf {
+    long mtype;
+    char mtext[64];
+};
+
+int main() {
+    int msgid = msgget(IPC_PRIVATE, 0666 | IPC_CREAT);
+
+    pid_t pid = fork();
+
+    if (pid == 0) {
+        struct msgbuf msg;
+
+        msgrcv(msgid, &msg, sizeof(msg.mtext), 1, 0);
+
+        printf("child received: %s\n", msg.mtext);
+    } else {
+        struct msgbuf msg;
+
+        msg.mtype = 1;
+        strcpy(msg.mtext, "hello message queue");
+
+        msgsnd(msgid, &msg, sizeof(msg.mtext), 0);
+
+        wait(NULL);
+
+        msgctl(msgid, IPC_RMID, NULL);
+    }
+
+    return 0;
+}
+```
+
+# 6 共享内存
+
+机制：
+- 把多个进程把**同一块物理内存**映射到自己的虚拟地址空间中
+- 速度快，但本身不负责进程间同步
+
 
 
