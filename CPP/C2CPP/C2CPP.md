@@ -1541,14 +1541,13 @@ lambda可以理解为一个匿名函数对象：
 	此外需要注意：
 	- `[=]` 与 `[&]` 不可混用
 	- 不可重复捕获同一个变量：
-		- `[=, v]` => 错误
-		- `[&, &v]` => 错误
-		- `[v, v]` => 错误
+		- `[=, v]` => <font color="#c00000">错误</font>
+		- `[&, &v]` => <font color="#c00000">错误</font>
+		- `[v, v]` => <font color="#c00000">错误</font>
+		- `[=, &v]` 、`[&, v]` => <font color="#c00000">正确</font>
 - `parameter list` 为匿名函数的参数列表
 - `return type` 为返回值类型
 - `function body` 为函数本体实现
-
-此外，在
 
 ### 3.4.12 std::function
 
