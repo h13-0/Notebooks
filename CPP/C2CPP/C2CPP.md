@@ -1523,6 +1523,23 @@ auto sv = "Hello World"sv;     // 类型直接推导为 std::string_view
 
 
 
+### 3.4.11 lambda
+
+lambda可以理解为一个匿名函数对象：
+
+```CPP
+[capture list] (parameter list) -> return type { function body }
+```
+
+其中：
+- `capture list` 为捕获列表
+- `parameter list` 为匿名函数的参数列表
+- `return type` 为返回值类型
+- `function body` 为函数本体实现
+
+此外，在
+
+### std::function
 
 
 
@@ -3247,13 +3264,12 @@ for (const auto& t : scores) {
 
 `std::map` 内部通常基于红黑树实现，<font color="#c00000">元素始终按键的升序排序</font>。
 
-## 4.3 算法
 
-### 4.3.1 排序
+### 4.2.11 排序
 
-#### 4.3.1.1 通用基础内容
+#### 4.2.11.1 通用基础内容
 
-##### 4.3.1.1.1 Compare要求 ^t2nyfa
+##### 4.2.11.1.1 Compare要求 ^t2nyfa
 
 Compare要求建立如下的严格弱序关系：
 - <font color="#c00000">弱序时返回</font> `true` ：`compare(0, 1) == true`
@@ -3269,19 +3285,19 @@ Compare要求建立如下的严格弱序关系：
 - `std::less<T>` ：要求实现 `x > y` 的函数对象，推导参数和返回类型
 - `std::greater<T>` ：要求实现 `x > y` 的函数对象，推导参数和返回类型
 
-#### 4.3.1.2 std::sort(混合排序)
+#### 4.2.11.2 std::sort(混合排序)
 
 `std::sort` 使用的排序方法会根据需要排序的元素数量动态切换排序方式，是<span style="background:#fff88f"><font color="#c00000">不稳定</font></span><font color="#c00000">排序</font>。其先使用快速排序对数据进行分段，
 - 
 
-##### 4.3.1.2.1 普通升序排序(串行)
+##### 4.2.11.2.1 普通升序排序(串行)
 
 ```CPP
 template< class RandomIt >
 void sort( RandomIt first, RandomIt last );
 ```
 
-##### 4.3.1.2.2 按指定策略升序排序
+##### 4.2.11.2.2 按指定策略升序排序
 
 ```CPP
 template< class ExecutionPolicy, class RandomIt >
@@ -3291,7 +3307,7 @@ void sort( ExecutionPolicy&& policy,
 
 
 
-##### 4.3.1.2.3 按自定义逻辑执行排序(串行)
+##### 4.2.11.2.3 按自定义逻辑执行排序(串行)
 
 ```CPP
 template< class RandomIt, class Compare >
@@ -3301,7 +3317,7 @@ void sort( RandomIt first, RandomIt last, Compare comp );
 其中：
 - `Compare comp` 应当满足[[CPP/C2CPP/C2CPP#^t2nyfa|Compare要求]]
 
-##### 4.3.1.2.4 按自定义逻辑和指定策略执行排序
+##### 4.2.11.2.4 按自定义逻辑和指定策略执行排序
 
 ```CPP
 template< class ExecutionPolicy, class RandomIt, class Compare >
@@ -3309,9 +3325,9 @@ void sort( ExecutionPolicy&& policy,
            RandomIt first, RandomIt last, Compare comp );
 ```
 
-#### 4.3.1.3 二分搜索(C++20) ^1gb857
+#### 4.2.11.3 二分搜索(C++20) ^1gb857
 
-##### 4.3.1.3.1 搜索是否存在目标值(binary_search)
+##### 4.2.11.3.1 搜索是否存在目标值(binary_search)
 
 `std::binary_search` ：
 - 头文件：`<algorithm>` 
@@ -3343,7 +3359,7 @@ constexpr bool binary_search( ForwardIt first, ForwardIt last,
                               const T& value, Compare comp );
 ```
 
-##### 4.3.1.3.2 搜索第一个大于等于目标值的位置(lower_bound)
+##### 4.2.11.3.2 搜索第一个大于等于目标值的位置(lower_bound)
 
 `std::lower_bound` ：
 - 头文件：`<algorithm>` 
@@ -3387,7 +3403,7 @@ constexpr ForwardIt lower_bound( ForwardIt first, ForwardIt last,
 lower  upper
 ```
 
-##### 4.3.1.3.3 搜索第一个大于目标值的位置(upper_bound)
+##### 4.2.11.3.3 搜索第一个大于目标值的位置(upper_bound)
 
 `std::upper_bound` ：
 - 函数功能：搜索 `[first, last)` 区间内的第一个<span style="background:#fff88f"><font color="#c00000">大于</font></span> `value` 的元素位置
@@ -3420,7 +3436,7 @@ constexpr ForwardIt upper_bound( ForwardIt first, ForwardIt last,
                                  const T& value, Compare comp );
 ```
 
-##### 4.3.1.3.4 搜索等于目标值的区间范围(equal_range)
+##### 4.2.11.3.4 搜索等于目标值的区间范围(equal_range)
 
 `std::equal_range` ：
 - 函数功能：找到 `[first, last)` 范围内所有与 `value` 等效的元素
@@ -3441,9 +3457,9 @@ constexpr ForwardIt upper_bound( ForwardIt first, ForwardIt last,
 		- 当<font color="#c00000">使用默认</font> `Compare` <font color="#c00000">时</font>，传入容器<span style="background:#fff88f"><font color="#c00000"><u>必须为升序容器</u></font></span>
 		- 当传入降序容器时，必须指定自定义[[CPP/C2CPP/C2CPP#^t2nyfa|Compare]]
 
-### 4.3.2 替换
+### 4.2.12 替换
 
-#### 4.3.2.1 std::replace
+#### 4.2.12.1 std::replace
 
 # 5 新增标准库
 
