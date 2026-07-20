@@ -26,7 +26,11 @@ number headings: auto, first-level 1, max 6, 1.1
 
 此外，需要额外说明的有：
 1. 当对象在构造过程中，<font color="#c00000">由于异常等构造失败时</font>，<span style="background:#fff88f"><font color="#c00000">析构函数不会被调用</font></span>，先前已经动态申请的对象也不会被释放(需要考虑RAII范式)
-2. 在C++中规定：<span style="background:#fff88f"><font color="#c00000">任何可以被解析为函数声明的代码都会被解析为函数声明</font></span>。因此在类的定义中，有如下注意事项：
+2. 在C++中规定：<span style="background:#fff88f"><font color="#c00000">任何可以被解析为函数声明的代码都会被解析为函数声明</font></span>。
+3. 但是C++中，<span style="background:#fff88f"><font color="#c00000">初始化列表又会优先于构造函数</font></span>。
+
+因此在类的定义中，有如下注意事项：
+
 ```CPP
 // 正确：调用默认构造函数
 ClassName obj;
@@ -39,6 +43,9 @@ ClassName obj(123);
 
 // C++11及以后正确：使用花括号避免歧义，本质为使用std::initializer_list
 ClassName obj{};
+
+// 错误：需要注意初始化列表优先于构造函数
+vector<int> dp{n, -1};  // => 只包含n和-1两个元素
 ```
 
 ### 3.1.2 struct与class ^of8se6
