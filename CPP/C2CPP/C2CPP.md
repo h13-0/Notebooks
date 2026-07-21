@@ -2375,6 +2375,9 @@ template<
 - `Pointer` ：定义指向元素的指针的类型，默认填充为 `T*`
 - `Reference` ：定义指向元素的引用的类型，默认填充为 `T&`
 
+注意：
+- 对于特定的容器，我们声明迭代器类型时，<span style="background:#fff88f"><font color="#c00000">往往不需要构造复杂的迭代器类型</font></span>，<span style="background:#fff88f"><font color="#c00000">直接</font></span> `type::iterator` <span style="background:#fff88f"><font color="#c00000">即可</font></span>，例如： `std::list<int>::iterator` 
+
 ### 4.1.1 从容器中获取迭代器
 
 通常来说容器都会提供如下几个迭代器：
