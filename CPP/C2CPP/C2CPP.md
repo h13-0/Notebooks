@@ -2448,7 +2448,7 @@ STL容器主要有如下三类：
 <span style="background:#fff88f"><font color="#c00000">其常用成员函数有</font></span>：
 - 元素增加：
 	- `insert()` ：插入元素
-		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^wvyidh|list]]、
 	- `insert_range()` 
 		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `insert_or_assign()` ：插入元素或如果键已存在则赋值给当前元素
@@ -2479,7 +2479,7 @@ STL容器主要有如下三类：
 		- [[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 - 元素删除：
 	- `erase()` ：删除元素
-		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^wvyidh|list]]、
 		- 补充说明：[[CPP/C2CPP/C2CPP#^8t8324|遍历时安全删除元素]]
 	- `pop_back()` ：移除末尾元素
 		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
@@ -2500,16 +2500,16 @@ STL容器主要有如下三类：
 	- `contains` ：检查容器是否包含具有特定键的元素
 		- [[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]
 	- `front()` ：访问第一个元素
-		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、[[CPP/C2CPP/C2CPP#^wvyidh|list]]、
 	- `back()` ：访问最后一个元素
-		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、[[CPP/C2CPP/C2CPP#^wvyidh|list]]、
 	- `count()` ：返回匹配特定键的元素数量
 		- [[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]
 	- `equal_range()` ：返回与特定键匹配的元素范围
 		- [[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]
 - 容器修改：
 	- `clear()` ：清空容器
-		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^wvyidh|list]]、
 	- `resize()` ：修改容器大小
 		- 若元素数量大于目标容器大小，则删除后续元素并缩小
 		- 若元素数量小于目标容器大小，则填充默认值或指定值
@@ -2525,7 +2525,7 @@ STL容器主要有如下三类：
 	- `empty()` ：判断是否为空
 		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `size()` ：返回元素成员数量
-		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]
+		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、[[CPP/C2CPP/C2CPP#^vsyig3|queue]]、
 	- `max_size()` ：返回容器能够容纳的最大元素数量，取决于系统或库实现
 		- [[CPP/C2CPP/C2CPP#^33a2f1|basic_string]]、[[CPP/C2CPP/C2CPP#^xlcxlf|vector]]、[[CPP/C2CPP/C2CPP#^hr97in|unordered_map]]、[[CPP/C2CPP/C2CPP#^xkoeis|deque]]、
 	- `reserve()` ：<font color="#c00000">预留存储空间</font>
@@ -3015,18 +3015,28 @@ template<
 
 
 
+### 4.2.9 list ^wvyidh
+
+`std::list` 是STL提供的双向链表
+
+#### 4.2.9.1 模板定义
+
+```CPP
+#include <list>
+template<
+    class T,
+    class Allocator = std::allocator<T>
+> class list;
+```
 
 
 
 
-
-
-
-### 4.2.9 std::unordered_map ^hr97in
+### 4.2.10 std::unordered_map ^hr97in
 
 `std::unordered_map` <font color="#c00000">基于哈希表实现</font>，内部元素无序存储。
 
-#### 4.2.9.1 模板定义
+#### 4.2.10.1 模板定义
 
 ```CPP
 template<
@@ -3045,9 +3055,9 @@ template<
 - `class KeyEqual` 为键值比较函数对象类型
 - `class Allocator` 为内存分配器类型
 
-#### 4.2.9.2 常用方法
+#### 4.2.10.2 常用方法
 
-##### 4.2.9.2.1 构造函数
+##### 4.2.10.2.1 构造函数
 
 ```CPP
 unordered_map();
@@ -3058,15 +3068,15 @@ unordered_map();
 - `mapped_type` ：即 `class T` ，值类型
 - `value_type` ：`std::pair<const Key, T>` ^o36e6j 
 
-##### 4.2.9.2.2 清空容器(clear)
+##### 4.2.10.2.2 清空容器(clear)
 
 ```CPP
 void clear() noexcept;
 ```
 
-##### 4.2.9.2.3 插入元素(insert)
+##### 4.2.10.2.3 插入元素(insert)
 
-###### 4.2.9.2.3.1 插入单个元素
+###### 4.2.10.2.3.1 插入单个元素
 
 ```CPP
 std::pair<iterator, bool> insert( const value_type& value ); 
@@ -3089,7 +3099,7 @@ auto ret1 = map.insert({1, "one"});               // ret1.second == true
 auto ret2 = map.insert(std::make_pair(1, "one")); // 此时ret2.second为false
 ```
 
-###### 4.2.9.2.3.2 批量插入(通过初始化列表)
+###### 4.2.10.2.3.2 批量插入(通过初始化列表)
 
 ```CPP
 void insert( std::initializer_list<value_type> ilist );
@@ -3102,7 +3112,7 @@ void insert( std::initializer_list<value_type> ilist );
 	- 若参数中有重复键，则只插入第一个
 	- 不会修改已有键值
 
-###### 4.2.9.2.3.3 批量插入(通过迭代器)
+###### 4.2.10.2.3.3 批量插入(通过迭代器)
 
 ```C
 template< class InputIt >
@@ -3111,11 +3121,11 @@ void insert( InputIt first, InputIt last );
 
 
 
-###### 4.2.9.2.3.4 带位置提示的插入
+###### 4.2.10.2.3.4 带位置提示的插入
 
-##### 4.2.9.2.4 删除元素(erase)
+##### 4.2.10.2.4 删除元素(erase)
 
-###### 4.2.9.2.4.1 通过key值删除
+###### 4.2.10.2.4.1 通过key值删除
 
 ```CPP
 size_type erase( const Key& key );
@@ -3129,7 +3139,7 @@ size_type erase( const Key& key );
 - 平均 $O(1)$
 - 最坏 $O(size)$
 
-###### 4.2.9.2.4.2 通过迭代器删除单个元素
+###### 4.2.10.2.4.2 通过迭代器删除单个元素
 
 ```CPP
 iterator erase( iterator pos );
@@ -3141,7 +3151,7 @@ iterator erase( iterator pos );
 		- 因为<font color="#c00000">只要map不为空</font>，<font color="#c00000">其最后一个元素就不是</font> `end()` ，所以<font color="#c00000">非空时</font>删除最后一个元素应当使用 `map.erase(std::prev(map.end()))`
 - 返回值为被删除元素之后元素的迭代器。如果删除的是最后一个元素，则返回 `end()` 。
 
-###### 4.2.9.2.4.3 通过迭代器范围删除元素
+###### 4.2.10.2.4.3 通过迭代器范围删除元素
 
 ```CPP
 iterator erase( const_iterator first, const_iterator last );
@@ -3160,9 +3170,9 @@ iterator erase( const_iterator first, const_iterator last );
 - 平均 $O(n)$
 - 最坏 $O(n\times size)$
 
-##### 4.2.9.2.5 查询(at)
+##### 4.2.10.2.5 查询(at)
 
-###### 4.2.9.2.5.1 普通查找
+###### 4.2.10.2.5.1 普通查找
 
 普通查找有如下两个不同的成员函数：
 
@@ -3184,7 +3194,7 @@ std::string& ref = map.at(1);
 const std::string& cref = const_map.at(1);
 ```
 
-###### 4.2.9.2.5.2 异构查找(C++26)
+###### 4.2.10.2.5.2 异构查找(C++26)
 
 在普通查找时，其参数只能为Key的类型，而不能是可以和Key透明比较的类型。例如：
 
@@ -3198,7 +3208,7 @@ int value1 = traditional_map.at("view");
 int value2 = transparent_map.at(std::string_view("view"));
 ```
 
-##### 4.2.9.2.6 查询/新增(operator\[\])
+##### 4.2.10.2.6 查询/新增(operator\[\])
 
 其对应的运算符重载函数签名为：
 
@@ -3214,7 +3224,7 @@ T& operator[]( Key&& key );
 | 键值不存在时 | 抛出异常   | 插入新元素，<font color="#c00000">值会按照</font> `Type{}` <font color="#c00000">进行初始化</font> |
 | 只读访问   | 可用     | 不可，会插入新元素                                                                           |
 
-##### 4.2.9.2.7 查找(find)
+##### 4.2.10.2.7 查找(find)
 
 `find` 用于查找是否包含对应的键值：
 
@@ -3234,7 +3244,7 @@ const_iterator find( const K& x ) const;
 
 该函数的返回值为指向键值对应的元素的迭代器，若没有该元素则返回 `end()` 迭代器
 
-##### 4.2.9.2.8 查找(count)
+##### 4.2.10.2.8 查找(count)
 
 `count` 也可用于查找是否存在对应的元素，由于hash表特性，其值只能为0或1。
 
@@ -3249,14 +3259,14 @@ template< class K >
 size_type count( const K& x ) const;
 ```
 
-##### 4.2.9.2.9 原地插入(emplace)
+##### 4.2.10.2.9 原地插入(emplace)
 
 
-##### 4.2.9.2.10 迭代器
+##### 4.2.10.2.10 迭代器
 
 `unordered_map` 提供了 `.begin()` 和 `.end()` 两个获取迭代器的方法，返回的类型为前向迭代器。
 
-##### 4.2.9.2.11 k, v遍历 ^vx7gf9
+##### 4.2.10.2.11 k, v遍历 ^vx7gf9
 
 ```CPP
 std::unordered_map<std::string, int> scores = {
@@ -3277,16 +3287,16 @@ for (const auto& t : scores) {
 }
 ```
 
-### 4.2.10 std::map
+### 4.2.11 std::map
 
 `std::map` 内部通常基于红黑树实现，<font color="#c00000">元素始终按键的升序排序</font>。
 
 
-### 4.2.11 排序
+### 4.2.12 排序
 
-#### 4.2.11.1 通用基础内容
+#### 4.2.12.1 通用基础内容
 
-##### 4.2.11.1.1 Compare要求 ^t2nyfa
+##### 4.2.12.1.1 Compare要求 ^t2nyfa
 
 Compare要求建立如下的严格弱序关系：
 - <font color="#c00000">弱序时返回</font> `true` ：`compare(0, 1) == true`
@@ -3302,19 +3312,19 @@ Compare要求建立如下的严格弱序关系：
 - `std::less<T>` ：要求实现 `x > y` 的函数对象，推导参数和返回类型
 - `std::greater<T>` ：要求实现 `x > y` 的函数对象，推导参数和返回类型
 
-#### 4.2.11.2 std::sort(混合排序)
+#### 4.2.12.2 std::sort(混合排序)
 
 `std::sort` 使用的排序方法会根据需要排序的元素数量动态切换排序方式，是<span style="background:#fff88f"><font color="#c00000">不稳定</font></span><font color="#c00000">排序</font>。其先使用快速排序对数据进行分段，
 - 
 
-##### 4.2.11.2.1 普通升序排序(串行)
+##### 4.2.12.2.1 普通升序排序(串行)
 
 ```CPP
 template< class RandomIt >
 void sort( RandomIt first, RandomIt last );
 ```
 
-##### 4.2.11.2.2 按指定策略升序排序
+##### 4.2.12.2.2 按指定策略升序排序
 
 ```CPP
 template< class ExecutionPolicy, class RandomIt >
@@ -3324,7 +3334,7 @@ void sort( ExecutionPolicy&& policy,
 
 
 
-##### 4.2.11.2.3 按自定义逻辑执行排序(串行)
+##### 4.2.12.2.3 按自定义逻辑执行排序(串行)
 
 ```CPP
 template< class RandomIt, class Compare >
@@ -3334,7 +3344,7 @@ void sort( RandomIt first, RandomIt last, Compare comp );
 其中：
 - `Compare comp` 应当满足[[CPP/C2CPP/C2CPP#^t2nyfa|Compare要求]]
 
-##### 4.2.11.2.4 按自定义逻辑和指定策略执行排序
+##### 4.2.12.2.4 按自定义逻辑和指定策略执行排序
 
 ```CPP
 template< class ExecutionPolicy, class RandomIt, class Compare >
@@ -3342,9 +3352,9 @@ void sort( ExecutionPolicy&& policy,
            RandomIt first, RandomIt last, Compare comp );
 ```
 
-#### 4.2.11.3 二分搜索(C++20) ^1gb857
+#### 4.2.12.3 二分搜索(C++20) ^1gb857
 
-##### 4.2.11.3.1 搜索是否存在目标值(binary_search)
+##### 4.2.12.3.1 搜索是否存在目标值(binary_search)
 
 `std::binary_search` ：
 - 头文件：`<algorithm>` 
@@ -3376,7 +3386,7 @@ constexpr bool binary_search( ForwardIt first, ForwardIt last,
                               const T& value, Compare comp );
 ```
 
-##### 4.2.11.3.2 搜索第一个大于等于目标值的位置(lower_bound)
+##### 4.2.12.3.2 搜索第一个大于等于目标值的位置(lower_bound)
 
 `std::lower_bound` ：
 - 头文件：`<algorithm>` 
@@ -3420,7 +3430,7 @@ constexpr ForwardIt lower_bound( ForwardIt first, ForwardIt last,
 lower  upper
 ```
 
-##### 4.2.11.3.3 搜索第一个大于目标值的位置(upper_bound)
+##### 4.2.12.3.3 搜索第一个大于目标值的位置(upper_bound)
 
 `std::upper_bound` ：
 - 函数功能：搜索 `[first, last)` 区间内的第一个<span style="background:#fff88f"><font color="#c00000">大于</font></span> `value` 的元素位置
@@ -3453,7 +3463,7 @@ constexpr ForwardIt upper_bound( ForwardIt first, ForwardIt last,
                                  const T& value, Compare comp );
 ```
 
-##### 4.2.11.3.4 搜索等于目标值的区间范围(equal_range)
+##### 4.2.12.3.4 搜索等于目标值的区间范围(equal_range)
 
 `std::equal_range` ：
 - 函数功能：找到 `[first, last)` 范围内所有与 `value` 等效的元素
@@ -3474,9 +3484,9 @@ constexpr ForwardIt upper_bound( ForwardIt first, ForwardIt last,
 		- 当<font color="#c00000">使用默认</font> `Compare` <font color="#c00000">时</font>，传入容器<span style="background:#fff88f"><font color="#c00000"><u>必须为升序容器</u></font></span>
 		- 当传入降序容器时，必须指定自定义[[CPP/C2CPP/C2CPP#^t2nyfa|Compare]]
 
-### 4.2.12 替换
+### 4.2.13 替换
 
-#### 4.2.12.1 std::replace
+#### 4.2.13.1 std::replace
 
 # 5 新增标准库
 
