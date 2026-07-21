@@ -77,6 +77,8 @@ number headings: auto, first-level 2, max 6, 1.1
 - 线程数量太多所带来的附加问题
 针对上述BIO线程数过多的问题，BSD提出了IO多路复用方案：<font color="#c00000">让一个线程同时监听多个IO的指定事件</font>。
 
+严格意义上来讲，<span style="background:#fff88f"><font color="#c00000">IO多路复用不算异步IO</font></span>。
+
 #### 3.3.1 select解决方案
 
 BSD socket最开始是为了BSD系统(类Unix系统)设计的，而类Unix系统的设计理念之一就是"一切皆文件"，因此BSD为socket等文件设计了如下的 `select` 解决方案：
