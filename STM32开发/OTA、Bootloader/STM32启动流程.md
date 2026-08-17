@@ -98,7 +98,7 @@ Reset_Handler:
 
 - 其主要流程为： ^gb5pov
 	1. 调用 `SystemInit` 函数，主要初始化系统时钟源、PLL锁等。
-	2. 初始化(拷贝) `.data` 段。
+	2. 初始化(拷贝) `.data` 段(会初始化全局变量)。
 	3. 跳转 `LoopCopyDataInit` 函数：
 	   4. 清零 `.bss` 段。
 	   5. 调用 `__libc_init_array` 函数初始化C库。
