@@ -22,7 +22,7 @@ number headings: auto, first-level 1, max 6, 1.1
 
 ## 2.1 字符串的二分查找
 
-[[数据结构/数据结构算法/LeetCode/LeetCode题目汇总#208 前缀树|LeetCode 208]]
+[[数据结构/数据结构算法/LeetCode/LeetCode题目汇总#208 前缀树|LeetCode 208|LeetCode 208]]：
 ![[数据结构/数据结构算法/LeetCode/LeetCode题目汇总#208 前缀树|LeetCode 208]]
 
 ```CPP
@@ -51,3 +51,4 @@ public:
     }
 };
 ```
+
