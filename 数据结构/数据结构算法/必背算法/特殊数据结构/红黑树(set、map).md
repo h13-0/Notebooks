@@ -1,0 +1,12 @@
+---
+number headings: auto, first-level 1, max 6, 1.1
+---
+#数据结构算法 #应试笔记与八股 
+
+# 1 目录
+
+```toc
+```
+
+# 2 
+
