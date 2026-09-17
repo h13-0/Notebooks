@@ -97,6 +97,10 @@ FTL根据执行方的不同，可以分为：
 
 ### 3.2.3 HMB
 
+上述二级映射表所带来的延迟开销还是比较大的，因此在NVME 1.2之后提供了一个新特性：
+- <font color="#9bbb59">HMB</font>：Host Memory Buffer，<font color="#c00000">从主机中划出一片内存给SSD使用</font>
+	![[Resources/Pasted image 20260917170526.png]]
 
+在性能表现上，HMB的性能介于板载DRAM和非板载DRAM之间。且NVME并没有规定SSD需要在HMB中存储什么。
 
-
+在移动存储方面，UFS3.1
