@@ -35,13 +35,24 @@ FTL为内存转换层(Flash Translation Layer)，用于完成主机逻辑地址�
 - <font color="#9bbb59">异常掉电处理</font>
 
 FTL根据执行方的不同，可以分为：
-- Host-Based：使用主机(计算机)的CPU资源进行
-- Device-Based：使用SSD自己的控制器进行
+- Host-Based：使用主机(计算机)的CPU资源进行，例如：
+	- SPI NAND
+- Device-Based：使用SSD自己的控制器进行，<span style="background:#fff88f"><font color="#c00000">是主流的实现方式</font></span>，例如：
+	- UFS、TF卡、eMMC、SSD等
+
+## 3.2 映射管理
+
+### 3.2.1 映射的种类
+
+根据映射粒度的不同，FTL可以分为：
+- 块映射：以内存块为映射粒度，一个用户逻辑块可以映射为任意一个闪存物理块
+	- 优点：映射表空间小、连续大尺寸数据写入性能良好
+	- 缺点：<font color="#c00000">小数据块写入性能差</font>，当写入小尺寸数据时，即使只更新一个逻辑页，也需要把整个物理块读取出来，改变数据，写入整块
+- 页映射：以内存页为映射粒度，<span style="background:#fff88f"><font color="#c00000">是SSD常用的映射方式</font></span>
+	- 有
+- 混合映射：
 
 
 
-## 3.2 
 
-
-
-
+ 
