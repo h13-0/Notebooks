@@ -11,7 +11,7 @@ number headings: auto, first-level 1, max 6, 1.1
 ```toc
 ```
 
-# 2 基础概述
+# 2 NAND闪存
 
 
 NAND特性：
