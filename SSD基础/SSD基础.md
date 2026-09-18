@@ -13,6 +13,9 @@ number headings: auto, first-level 1, max 6, 1.1
 
 # 2 NAND闪存
 
+NAND通常有如下两个理解模型：
+- 
+
 
 NAND特性：
 - 闪存块必须先擦除才能写入，不可覆盖写入
