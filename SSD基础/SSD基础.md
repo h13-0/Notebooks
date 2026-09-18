@@ -14,8 +14,12 @@ number headings: auto, first-level 1, max 6, 1.1
 # 2 NAND闪存
 
 NAND通常有如下两个理解模型：
-- 
+- 从存储原理看，可以将其理解为一个电容结构
+- 从器件结构看，其是带有用于存储电子的Floating Gate的MOSFET
 
+
+
+zai
 
 NAND特性：
 - 闪存块必须先擦除才能写入，不可覆盖写入
