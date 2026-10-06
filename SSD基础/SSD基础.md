@@ -13,6 +13,10 @@ number headings: auto, first-level 1, max 6, 1.1
 
 # 2 NAND闪存
 
+## 2.1 闪存基本原理
+
+### 2.1.1 存储单元及相关操作
+
 NAND通常有如下两个理解模型：
 - 从存储原理看，可以将其理解为一个电容结构
 - 从器件结构看，其是带有用于存储电子的Floating Gate的MOSFET
@@ -32,6 +36,8 @@ NAND通常有如下两个理解模型：
 需要读取已存入的数据时，则可以通过NAND单元的控制极导通电压来判定其中存储的电子数量，从而确定当前的数据状态。
 	![[Resources/Pasted image 20260918100459.png]]
 
+### 2.1.2 闪存类型
+
 对于SLC、MCL、TLC、QLC等，其通过控制在浮栅存储的电子数量来区分更多的状态。
 	![[Resources/Pasted image 20260918110020.png]]
 
@@ -42,6 +48,14 @@ NAND通常有如下两个理解模型：
 NAND Flash：
 - 页面：最小读写单位，通常为4~16KB
 - 块：最小擦除单位，通常为128~512页
+
+
+
+
+![[../Resources/msedge_8hZnGvEkuv.png]]
+
+
+
 
 # 3 FTL技术
 
