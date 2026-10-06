@@ -43,7 +43,16 @@ NAND通常有如下两个理解模型：
 
 对于SLC、MCL、TLC、QLC等，其<font color="#c00000">储存单元</font>通过控制在浮栅存储的电子数量来区分更多的状态。
 	![[Resources/Pasted image 20260918110020.png]]
-但是需要注意，从MLC开始，每个存储单元不再单独隶属于一个Page，其变成了一个较为复杂的组织方式，如下图所示：
+<span style="background:#fff88f"><font color="#c00000">明显地有如下特性</font></span>：
+1. MLC、TLC、QLC分别<span style="background:#fff88f"><font color="#c00000">用不同的电荷量</font></span>表示2、4、8个Bit
+2. <span style="background:#fff88f"><font color="#c00000">不同的电荷量又决定了MOSFET的导通电压</font></span>
+3. 因此MLC、TLC、QLC想要读取Cell中的所有Bit，<font color="#c00000">则需要分别施加</font><span style="background:#fff88f"><font color="#c00000">2、3、4次不同的栅极电压</font></span>
+4. 当想要读取MLC、TLC、QLC中某一位的Bit时，则均需要施加2次同的栅极电压
+
+因此有如下结论：
+1. 想从MLC、TLC、QLC读取Cell中所有Bit较为麻烦，<font color="#c00000">需要施加多个不同的栅极电压</font>
+
+而常见的硬件扫描结构为行列式扫描：
 	![[Resources/NAND示意图_1.svg]]
 上图中主要需要注意两点：
 1. <font color="#c00000">Block、Page、Byte之间</font>是<span style="background:#fff88f"><font color="#c00000">严格的层级关系组合</font></span>：
