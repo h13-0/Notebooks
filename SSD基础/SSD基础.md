@@ -49,12 +49,12 @@ NAND通常有如下两个理解模型：
 1. <font color="#c00000">Block、Page、Byte之间</font>是<span style="background:#fff88f"><font color="#c00000">严格的层级关系组合</font></span>：
 	- Page：页面、最小读写单位，通常为4/8/16KB
 	- Block：块、最小擦除单位，通常为128/512页
-2. 而<font color="#c00000">Byte、Cell、Bit之间</font>则以Word Line、$2^n$ 等为单位进行组合：
+2. 而<font color="#c00000">Byte、Cell、Bit之间</font>则以Word Line、$n$ 等为单位进行组合：
 	- 将WL个Cell并排组合成一个Word Line，Word Line宽度通常为8
 	- 每个存储Cell被划分为 $n$ 个Bit，WL个固定位置的Bit组合成一个Byte
 
 其中，需要着重注意的就是Byte和Cell之间组合的问题，
-1. NAND中，可以很轻松地实现给整个Word Line加参考电压，然后同时判断
+1. 可以使用类似于行列扫描的方式实现
 
 
 当我们需要读取数据时：
