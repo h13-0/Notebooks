@@ -53,6 +53,12 @@ NAND通常有如下两个理解模型：
 1. 想从MLC、TLC、QLC读取Cell中所有Bit较为麻烦，<font color="#c00000">需要施加多个不同的栅极电压</font>
 
 而常见的硬件扫描结构为行列式扫描：
+	![[Resources/NAND行列式扫描.drawio.svg]]
+上图中：
+1. 一个Word Line可以串起成千上万个Cell
+2. 对每个Word Line施加不同的电压，即可并行判断各bit数值
+
+随后则有如下的组织结构：
 	![[Resources/NAND示意图_1.svg]]
 上图中主要需要注意两点：
 1. <font color="#c00000">Block、Page、Byte之间</font>是<span style="background:#fff88f"><font color="#c00000">严格的层级关系组合</font></span>：
@@ -62,26 +68,8 @@ NAND通常有如下两个理解模型：
 	- 将WL个Cell并排组合成一个Word Line，Word Line宽度通常为8
 	- 每个存储Cell被划分为 $n$ 个Bit，WL个固定位置的Bit组合成一个Byte
 
-其中，需要着重注意的就是Byte和Cell之间组合的问题，
-1. 可以使用类似于行列扫描的方式实现
-
-
-当我们需要读取数据时：
-- SLC直接判定MOSFET的导通性即可
-- MLC则需要把数据存储到低位页(LP)和高位页(UP)两个不同的页面上
-
-
-
-
-
-
+因此，SLC、MLC、TLC、QLC有如下的参数表现：
 ![[../Resources/msedge_8hZnGvEkuv.png]]
-
-
-
-NAND Flash：
-- 页面：最小读写单位，通常为4~16KB
-- 块：最小擦除单位，通常为128~512页
 
 # 3 FTL技术
 
