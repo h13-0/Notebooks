@@ -45,7 +45,7 @@ NAND通常有如下两个理解模型：
 	![[Resources/Pasted image 20260918110020.png]]
 当我们需要读取数据时：
 - SLC直接判定MOSFET的导通性即可
-- MLC需要
+- MLC则需要把数据存储到低位页(LP)和高位页(UP)两个不同的页面上
 
 
 
