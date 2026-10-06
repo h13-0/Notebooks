@@ -44,8 +44,14 @@ NAND通常有如下两个理解模型：
 对于SLC、MCL、TLC、QLC等，其<font color="#c00000">储存单元</font>通过控制在浮栅存储的电子数量来区分更多的状态。
 	![[Resources/Pasted image 20260918110020.png]]
 但是需要注意，从MLC开始，每个存储单元不再单独隶属于一个Page，其变成了一个较为复杂的组织方式，如下图所示：
-
-
+	![[Resources/NAND示意图_1.svg]]
+上图中主要需要注意两点：
+1. <font color="#c00000">Block、Page、Byte之间</font>是<span style="background:#fff88f"><font color="#c00000">严格的层级关系组合</font></span>：
+	- Page：页面、最小读写单位，通常为4/8/16KB
+	- Block：块、最小擦除单位，通常为128/512页
+2. 而Byte、Cell、Bit之间则以Word Line、$2^n$ 等为单位进行组合：
+	- 将WL个Cell并排组合成一个Word Line，Word Line宽度通常为8
+	- 每个存储Cell被划分为 $n$ 个Bit，WL个固定位置的Bit组合成一个Byte
 
 当我们需要读取数据时：
 - SLC直接判定MOSFET的导通性即可
