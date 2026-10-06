@@ -76,6 +76,11 @@ NAND通常有如下两个理解模型：
 2. Die是接受和执行命令的基本单元，每个Die可以独立接收和执行不同的命令
 3. 单个Die内一次只能执行一个命令
 4. 一个Die通常又分为若干个Plane，早期通常为2个Plane，现在通常为4个Plane
+5. 每个Plane配备了<font color="#9bbb59">页缓存</font>和<font color="#9bbb59">内存缓存</font>：
+	- <font color="#9bbb59">内存缓存</font>：用于在主控和内存之间进行数据缓存
+	- <font color="#9bbb59">页缓存</font>：用于存储Sense Amplifier中读出的数据，直到拼成完整的页面
+		- 对于SLC，通常配备一个页缓存即可
+		- 对于MLC、TLC、QLC，其还需要存储多次数据读取时的缓存
 	![[../Resources/msedge_0u3reO5fwU.png]]
 
 
