@@ -39,7 +39,7 @@ NAND通常有如下两个理解模型：
 - <font color="#c00000">写寿命限制</font>：在擦写过程中，随着擦写次数增加，用来隔离浮栅极的隧道氧化层绝缘性能会下降，导致电子进出浮栅极难度降低，从而导致可靠性降低
 - <span style="background:#fff88f"><font color="#c00000">写入前需要擦除闪存</font></span>：一个闪存块的所有单元必须一起擦除
 
-### 2.1.2 闪存类型
+### 2.1.2 闪存类型与组织结构
 
 对于SLC、MCL、TLC、QLC等，其<font color="#c00000">储存单元</font>通过控制在浮栅存储的电子数量来区分更多的状态。
 	![[Resources/Pasted image 20260918110020.png]]
@@ -49,8 +49,11 @@ NAND通常有如下两个理解模型：
 3. 因此MLC、TLC、QLC想要读取Cell中的所有Bit，<font color="#c00000">则需要分别施加</font><span style="background:#fff88f"><font color="#c00000">2、3、4次不同的栅极电压</font></span>
 4. 当想要读取MLC、TLC、QLC中某一位的Bit时，则均需要施加2次同的栅极电压
 
-因此有如下结论：
+其中重要结论为：
 1. 想从MLC、TLC、QLC读取Cell中所有Bit较为麻烦，<font color="#c00000">需要施加多个不同的栅极电压</font>
+
+此外，SLC、MLC、TLC、QLC有如下的参数表现：
+![[../Resources/msedge_8hZnGvEkuv.png]]
 
 而常见的硬件扫描结构为行列式扫描：
 	![[Resources/NAND行列式扫描.drawio.svg]]
@@ -68,8 +71,9 @@ NAND通常有如下两个理解模型：
 	- 将WL个Cell并排组合成一个Word Line，Word Line宽度通常为8
 	- 每个存储Cell被划分为 $n$ 个Bit，WL个固定位置的Bit组合成一个Byte
 
-因此，SLC、MLC、TLC、QLC有如下的参数表现：
-![[../Resources/msedge_8hZnGvEkuv.png]]
+回到芯片本身
+	![[../Resources/msedge_0u3reO5fwU.png]]
+
 
 # 3 FTL技术
 
