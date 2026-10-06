@@ -71,7 +71,11 @@ NAND通常有如下两个理解模型：
 	- 将WL个Cell并排组合成一个Word Line，Word Line宽度通常为8
 	- 每个存储Cell被划分为 $n$ 个Bit，WL个固定位置的Bit组合成一个Byte
 
-回到芯片本身
+回到芯片本身，其：
+1. 通常由一个到多个晶圆(Die，或者LUN)构成，多个Die之间近似独立工作(甚至坏了其中一个Die不影响其他Die的正常工作)
+2. Die是接受和执行命令的基本单元，每个Die可以独立接收和执行不同的命令
+3. 单个Die内一次只能执行一个命令
+4. 一个Die通常又分为若干个Plane，早期通常为2个Plane，现在通常为4个Plane
 	![[../Resources/msedge_0u3reO5fwU.png]]
 
 
