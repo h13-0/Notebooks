@@ -217,8 +217,9 @@ $$
 其主要有如下几个关键概念：
 1. <font color="#9bbb59">冷数据</font>：用户不常更新的数据，例如已归档的文件等
 2. <font color="#9bbb59">热数据</font>：用户频繁更新的数据，例如分页文件等
-3. <font color="#9bbb59">年老块</font>：擦写次数较多的块，即
-4. <font color="#9bbb59">年轻块</font>：擦写次数较少的块
+3. <font color="#9bbb59">年老块</font>：擦写次数较多的块，即EC较多的块
+4. <font color="#9bbb59">年轻块</font>：擦写次数较少的块，即EC较少的块
+5. <font color="#9bbb59">EC</font>：Erase Count，擦除计数
 
 
 ## 3.6 掉电恢复
