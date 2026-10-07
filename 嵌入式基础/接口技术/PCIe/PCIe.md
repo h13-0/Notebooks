@@ -10,6 +10,9 @@ number headings: auto, first-level 1, max 6, 1.1
 
 # 2 PCI总线
 
+
+并行在高速通信时，难以满足时序要求
+
 # 3 PCIe总线
 
 相较于PCI总线，PCIe的提升主要在于：
