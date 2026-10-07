@@ -316,9 +316,12 @@ SSD掉电主要分为如下两种：
 
 核心原理如上，具体而言逻辑地址映射表的重建主要有如下策略：
 1. 全盘扫描：最简单但是速度最慢
-2. 检查点：定时将RAM数据存储到NAND，该数据被称作检查点(快照)，断电之后
-
-
+2. 使用<font color="#9bbb59">检查点</font>和<font color="#9bbb59">映射更新日志</font><font color="#c00000">增量恢复</font>(了解即可)：
+	- <font color="#9bbb59">检查点</font>：定时将RAM中的重要存储到NAND，该数据被称作检查点(快照)，其包含：
+		- 映射表
+		- 缓存的用户数据
+		- <font color="#9bbb59">OpenBlock</font>：已经开始顺序Program，但还没写满、还没正式close的Block
+	- <font color="#9bbb59">映射更新日志</font>：检查点之后的增量修改
 
 ## 3.8 坏块处理
 
