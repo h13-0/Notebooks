@@ -18,4 +18,7 @@ number headings: auto, first-level 1, max 6, 1.1
 相较于PCI总线，PCIe的提升主要在于：
 1. 使用串行传输代替并行传输
 
+## 3.1 PCIe总线拓扑
+
+
 
