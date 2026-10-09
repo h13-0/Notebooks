@@ -68,7 +68,7 @@ NAND通常有如下两个理解模型：
 	- Page：页面、最小读写单位，通常为4/8/16KB
 	- Block：块、最小擦除单位，通常为128/512页
 2. 而<font color="#c00000">Byte、Cell、Bit之间</font>则以Word Line、$n$ 等为单位进行组合：
-	- 将WL个Cell并排组合成一个Word Line，Word Line宽度通常为8
+	- 将WL个Cell并排组合成一个Word Line，Word Line宽度通常非常高，以容纳高并发
 	- 每个存储Cell被划分为 $n$ 个Bit，WL个固定位置的Bit组合成一个Byte
 
 回到芯片本身，其：
