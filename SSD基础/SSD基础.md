@@ -99,7 +99,7 @@ FTL为内存转换层(Flash Translation Layer)，用于完成主机逻辑地址�
 - <font color="#9bbb59">数据保持问题</font>：由于电荷流失，在SSD上电时，定期扫描闪存并刷新数据
 - <font color="#9bbb59">虚拟SLC</font>：可以把TLC或QLC配置成SLC，当作缓存，增加读写速度和可靠性
 - <font color="#9bbb59">坏块管理</font>：屏蔽不可使用的坏块
-- <font color="#9bbb59">异常掉电处理</font>
+- <font color="#9bbb59">异常掉电处理</font>：异常掉电时，逻辑地址到物理地址的映射表来不及保存，需要重建
 
 FTL根据执行方的不同，可以分为：
 - Host-Based：使用主机(计算机)的CPU资源进行，例如：
