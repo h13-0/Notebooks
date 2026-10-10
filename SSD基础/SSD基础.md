@@ -136,6 +136,10 @@ FTL根据执行方的不同，可以分为：
 	4. <font color="#c00000">将原页面标记为失效</font>
 	5. 后续GC回收
 
+基本概念：
+- <font color="#9bbb59">LBA</font>：Logical Block Address，逻辑块地址
+- <font color="#9bbb59">PPA</font>：Physical Page Address，物理页地址
+
 ### 3.2.2 映射的基本原理
 
 #### 3.2.2.1 一级映射
