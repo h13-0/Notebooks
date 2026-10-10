@@ -86,7 +86,7 @@ NAND通常有如下两个理解模型：
 
 # 3 FTL技术
 
-## 3.1 FTL概述
+## 3.1 FTL概述 ^pmsweg
 
 FTL为内存转换层(Flash Translation Layer)，用于完成主机逻辑地址空间到闪存物理空间的转换。
 
